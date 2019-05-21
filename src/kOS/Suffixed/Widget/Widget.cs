@@ -1,8 +1,9 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using UnityEngine;
 using System.Collections.Generic;
 using kOS.Safe.Utilities;
+using kOS.Safe.Exceptions;
 using kOS.Safe.Execution;
 using System.IO;
 using System;
@@ -21,6 +22,13 @@ namespace kOS.Suffixed.Widget
     abstract public class Widget : Structure
     {
         protected Box parent;
+
+        /// <summary>
+        /// Temporarily set to "true" to tell the widget that any state changes
+        /// are happening because of a gui activity (rather than because of a script
+        /// deliberately changing a value for example).
+        /// </summary>
+        protected bool guiCaused;
 
         // The WidgetStyle is cheap as it only creates a new GUIStyle if it is
         // actually changed, otherwise it just refers to the one in the GUI:SKIN.
@@ -47,6 +55,11 @@ namespace kOS.Suffixed.Widget
             Enabled = true;
             Shown = true;
             RegisterInitializer(InitializeSuffixes);
+        }
+
+        public Box GetParent()
+        {
+            return parent;
         }
 
         /// <summary>
@@ -128,7 +141,12 @@ namespace kOS.Suffixed.Widget
         {
             if (relativePath == "") return null;
             if (textureCache == null)
-                textureCache = new Dictionary<string, TexFileInfo>();
+                textureCache = new Dictionary<string, TexFileInfo> ();
+
+            string path = Path.GetFullPath (Path.Combine (SafeHouse.ArchiveFolder, relativePath));
+            if (!path.StartsWith (SafeHouse.ArchiveFolder, StringComparison.Ordinal))
+                throw new KOSInvalidPathException ("Path refers to parent directory", path);
+
             TexFileInfo t;
             if (textureCache.TryGetValue(relativePath, out t)) {
                 if (t.texture != null) {
@@ -140,9 +158,9 @@ namespace kOS.Suffixed.Widget
                 t = new TexFileInfo();
                 textureCache.Add(relativePath, t);
             }
-            string path = Path.Combine(SafeHouse.ArchiveFolder, relativePath);
+
             var r = new Texture2D(0, 0, TextureFormat.ARGB32, false);
-            string[] exts = { ".png", "" };
+            string[] exts = {".png", "" };
             foreach (string ext in exts) {
                 string filename = path + ext;
                 if (File.Exists(filename)) {
@@ -157,11 +175,13 @@ namespace kOS.Suffixed.Widget
 
         virtual protected void Communicate(Action a)
         {
+            guiCaused = true;
             GUIWidgets gui = FindGUI();
             if (gui != null)
                 gui.Communicate(this,ToString(),a);
             else
                 a();
+            guiCaused = false;
         }
 
         public override string ToString()

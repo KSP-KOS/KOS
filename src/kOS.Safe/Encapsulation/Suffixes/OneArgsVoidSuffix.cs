@@ -1,3 +1,5 @@
+using System;
+
 namespace kOS.Safe.Encapsulation.Suffixes
 {
     public class OneArgsSuffix<TParam> : SuffixBase where TParam : Structure
@@ -11,9 +13,18 @@ namespace kOS.Safe.Encapsulation.Suffixes
             this.del = del;
         }
 
-        public override ISuffixResult Get()
+        protected override object Call(object[] args)
         {
-            return new DelegateSuffixResult(del);
+            del((TParam)args[0]);
+            return null;
+        }
+
+        protected override Delegate Delegate
+        {
+            get
+            {
+                return del;
+            }
         }
     }
 }

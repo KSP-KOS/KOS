@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Binding;
+using kOS.Safe.Binding;
 using kOS.Safe.Callback;
 using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
@@ -16,48 +16,51 @@ namespace kOS.Safe.Execution
 {
     public class CPU : ICpu
     {
-        private enum Section
-        {
-            Main = 1,
-            Trigger = 2
-        }
-
         private readonly IStack stack;
         private readonly VariableScope globalVariables;
-        private Section currentRunSection;
-        private List<YieldFinishedDetector> triggerYields;
-        private List<YieldFinishedDetector> mainYields;
-        
+
+
+        private class YieldFinishedWithPriority
+        {
+            public YieldFinishedDetector detector;
+            public InterruptPriority priority;
+        }
+        private List<YieldFinishedWithPriority> yields;
+
         private double currentTime;
         private readonly SafeSharedObjects shared;
         private readonly List<ProgramContext> contexts;
         private ProgramContext currentContext;
         private VariableScope savedPointers;
-        private int instructionsSoFarInUpdate;
         private int instructionsPerUpdate;
 
-        public int InstructionsThisUpdate { get { return instructionsSoFarInUpdate; } }
+        public int InstructionsThisUpdate { get; private set; }
 
         // statistics
         private double totalCompileTime;
-
-        private double totalUpdateTime;
-        private double totalExecutionTime;
-        private double maxUpdateTime;
-        private double maxExecutionTime;
         private Stopwatch instructionWatch = new Stopwatch();
         private Stopwatch updateWatch = new Stopwatch();
         private Stopwatch executionWatch = new Stopwatch();
         private Stopwatch compileWatch = new Stopwatch();
-        private int maxMainlineInstructionsSoFar;
         private readonly StringBuilder executeLog = new StringBuilder();
+
+        private Dictionary<InterruptPriority, ExecutionStatBlock> executionStats = new Dictionary<InterruptPriority, ExecutionStatBlock>();
 
         public int InstructionPointer
         {
             get { return currentContext.InstructionPointer; }
             set { currentContext.InstructionPointer = value; }
         }
-        
+        public InterruptPriority CurrentPriority
+        {
+            get { return currentContext.CurrentPriority; }
+            set { currentContext.CurrentPriority = value; }
+        }
+        public int NextTriggerInstanceId
+        {
+            get { return currentContext.NextTriggerInstanceId; }
+        }
+
         public double SessionTime { get { return currentTime; } }
         
         public List<string> ProfileResult { get; private set; }
@@ -81,10 +84,9 @@ namespace kOS.Safe.Execution
             this.shared = shared;
             this.shared.Cpu = this;
             stack = new Stack();
-            globalVariables = new VariableScope(0, -1);
+            globalVariables = new VariableScope(0, null);
             contexts = new List<ProgramContext>();
-            mainYields = new List<YieldFinishedDetector>();
-            triggerYields = new List<YieldFinishedDetector>();
+            yields = new List<YieldFinishedWithPriority>();
             if (this.shared.UpdateHandler != null) this.shared.UpdateHandler.AddFixedObserver(this);
             popContextNotifyees = new List<WeakReference>();
         }
@@ -96,14 +98,12 @@ namespace kOS.Safe.Execution
             contexts.Clear();            
             if (shared.GameEventDispatchManager != null) shared.GameEventDispatchManager.Clear();
             PushInterpreterContext();
-            currentRunSection = Section.Main;
+            CurrentPriority = InterruptPriority.Normal;
             currentTime = 0;
-            maxUpdateTime = 0.0;
-            maxExecutionTime = 0.0;
             // clear stack (which also orphans all local variables so they can get garbage collected)
             stack.Clear();
             // clear global variables
-            globalVariables.Variables.Clear();
+            globalVariables.Clear();
             // clear interpreter
             if (shared.Interpreter != null) shared.Interpreter.Reset();
             // load functions
@@ -192,6 +192,7 @@ namespace kOS.Safe.Execution
             SaveAndClearPointers();
             contexts.Add(context);
             currentContext = contexts.Last();
+            CurrentPriority = InterruptPriority.Normal;
             shared.GameEventDispatchManager.SetDispatcherFor(currentContext);
 
             if (contexts.Count > 1)
@@ -209,6 +210,7 @@ namespace kOS.Safe.Execution
                 // remove the last context
                 ProgramContext contextRemove = contexts.Last();
                 NotifyPopContextNotifyees(contextRemove);
+                contextRemove.ClearTriggers();
                 contexts.Remove(contextRemove);
                 shared.GameEventDispatchManager.RemoveDispatcherFor(currentContext);
                 contextRemove.DisableActiveFlyByWire(shared.BindingMgr);
@@ -284,27 +286,38 @@ namespace kOS.Safe.Execution
             popContextNotifyees.RemoveAll((item)=>(!item.IsAlive) || item.Target == null);
         }
 
-        /// <summary>
-        /// Push a single thing onto the secret "over" stack.
-        /// </summary>
-        public void PushAboveStack(object thing)
+        public void PushNewScope(Int16 scopeId, Int16 parentScopeId)
         {
-            PushStack(thing);
-            MoveStackPointer(-1);
+            VariableScope parentScope = parentScopeId == 0 ? globalVariables : stack.FindScope(parentScopeId);
+            stack.PushScope(new VariableScope(scopeId, parentScope));
         }
 
         /// <summary>
-        /// Pop one or more things from the secret "over" stack, only returning the
+        /// Push a single thing onto the scope stack.  If it's a context record it will encode the current
+        /// priority into it as the ComeFromPriority.
+        /// </summary>
+        public void PushScopeStack(object thing)
+        {
+            SubroutineContext context = thing as SubroutineContext;
+            if (context != null)
+                context.CameFromPriority = CurrentPriority;
+            stack.PushScope(thing);
+        }
+
+        /// <summary>
+        /// Pop one or more things from the scope stack, only returning the
         /// finalmost thing popped.  (i.e if you pop 3 things then you get:
         /// pop once and throw away, pop again and throw away, pop again and return the popped thing.)
         /// </summary>
-        public object PopAboveStack(int howMany)
+        public object PopScopeStack(int howMany)
         {
             object returnVal = new int(); // bogus return val if given a bogus "pop zero things" request.
             while (howMany > 0)
             {
-                MoveStackPointer(1);
-                returnVal = PopStack();
+                returnVal = stack.PopScope();
+                SubroutineContext context = returnVal as SubroutineContext;
+                if (context != null)
+                    CurrentPriority = context.CameFromPriority;
                 --howMany;
             }
 
@@ -326,12 +339,19 @@ namespace kOS.Safe.Execution
         public List<VariableScope> GetCurrentClosure()
         {
             var closureList = new List<VariableScope>();
-            GetNestedDictionary("", closureList);
-            // The closure's variable scopes need to be marked as such, so the
-            // 'popscope' opcode knows to pop them off in one go when it hits
-            // them on the stack:
-            foreach (VariableScope scope in closureList)
-                scope.IsClosure = true;
+
+            var currentScope = GetCurrentScope();
+            while (currentScope != null)
+            {
+                // The closure's variable scopes need to be marked as such, so the
+                // 'popscope' opcode knows to pop them off in one go when it hits
+                // them on the stack:
+                currentScope.IsClosure = true;
+                closureList.Add(currentScope);
+
+                currentScope = currentScope.ParentScope;
+            }
+
             return closureList;
         }
 
@@ -392,13 +412,13 @@ namespace kOS.Safe.Execution
             // Pointer variables include:
             //   IP jump location for subprograms.
             //   IP jump location for functions.
-            savedPointers = new VariableScope(0, -1);
-            var pointers = new List<string>(globalVariables.Variables.Keys.Where(v => v.Contains('*')));
+            savedPointers = new VariableScope(0, null);
+            var pointers = new List<KeyValuePair<string, Variable>>(globalVariables.Locals.Where(entry => StringUtil.EndsWith(entry.Key, "*")));
 
-            foreach (string pointerName in pointers)
+            foreach (var entry in pointers)
             {
-                savedPointers.Variables.Add(pointerName, globalVariables.Variables[pointerName]);
-                globalVariables.Variables.Remove(pointerName);
+                savedPointers.Add(entry.Key, entry.Value);
+                globalVariables.Remove(entry.Key);
             }
             SafeHouse.Logger.Log(string.Format("Saving and removing {0} pointers", pointers.Count));
         }
@@ -412,23 +432,18 @@ namespace kOS.Safe.Execution
             var restoredPointers = 0;
             var deletedPointers = 0;
 
-            foreach (KeyValuePair<string, Variable> item in savedPointers.Variables)
+            foreach (KeyValuePair<string, Variable> item in savedPointers.Locals)
             {
-                if (globalVariables.Variables.ContainsKey(item.Key))
+                if (globalVariables.Contains(item.Key))
                 {
-                    // if the pointer exists it means it was redefined from inside a program
-                    // and it's going to be invalid outside of it, so we remove it
-                    globalVariables.Variables.Remove(item.Key);
+                    // If the pointer exists it means it was redefined from inside a program
+                    // and it's going to be invalid outside of it, so just to be sure, remove
+                    // it entirely in preparation for restoring the old one:
+                    globalVariables.Remove(item.Key);
                     deletedPointers++;
-                    // also remove the corresponding trigger if exists
-                    if (item.Value.Value is int)
-                        RemoveTrigger((int)item.Value.Value);
                 }
-                else
-                {
-                    globalVariables.Variables.Add(item.Key, item.Value);
-                    restoredPointers++;
-                }
+                globalVariables.Add(item.Key, item.Value);
+                restoredPointers++;
             }
 
             SafeHouse.Logger.Log(string.Format("Deleting {0} pointers and restoring {1} pointers", deletedPointers, restoredPointers));
@@ -461,7 +476,6 @@ namespace kOS.Safe.Execution
                 {
                     PopFirstContext();
                     shared.Screen.Print("Program aborted.");
-                    shared.BindingMgr.UnBindAll();
                     shared.SoundMaker.StopAllVoices(); // stop voices if execution was manually broken, but not if the program ends normally
                     PrintStatistics();
                     stack.Clear();
@@ -473,7 +487,6 @@ namespace kOS.Safe.Execution
                     if (contexts.Count == 1 && !silent)
                     {
                         shared.Screen.Print("Program ended.");
-                        shared.BindingMgr.UnBindAll();
                         PrintStatistics();
                         stack.Clear();
                     }
@@ -481,9 +494,12 @@ namespace kOS.Safe.Execution
             }
             else
             {
-                currentContext.ClearTriggers();   // remove all the triggers
+                if (manual)
+                    currentContext.ClearTriggers(); // Removes the interpreter's triggers on Control-C and the like, but not on errors.
                 SkipCurrentInstructionId();
             }
+            CurrentPriority = InterruptPriority.Normal;
+            ResetStatistics();
         }
 
         /// <summary>
@@ -498,71 +514,49 @@ namespace kOS.Safe.Execution
         /// <param name="yieldTracker"></param>
         public void YieldProgram(YieldFinishedDetector yieldTracker)
         {
-            switch (currentRunSection)
-            {
-                case Section.Main:
-                    mainYields.Add(yieldTracker);
-                    break;
-                case Section.Trigger:
-                    triggerYields.Add(yieldTracker);
-                    break;
-                default:
-                    // Should hypothetically be impossible unless we add more values to the enum.
-                    break;
-            }
+            yields.Add(new YieldFinishedWithPriority() { detector = yieldTracker, priority = CurrentPriority });
             yieldTracker.creationTimeStamp = currentTime;
             yieldTracker.Begin(shared);
         }
 
         private bool IsYielding()
         {
-            List<YieldFinishedDetector> yieldTrackers;
-            
-            // Decide if we should operate on the yield trackers that are
-            // at the main code level or the ones that are at the trigger
-            // level:
-            switch (currentRunSection)
+            int numStillBlocking = 0;
+
+            // Iterating backward because items will be getting deleted as we
+            // iterate over the list and this way the index doesn't become wrong
+            // as we do so.  (also, those deletions are why foreach() isn't used here):
+            for (int i = yields.Count - 1; i >= 0; --i)
             {
-                case Section.Main:
-                    yieldTrackers = mainYields;
-                    break;
-                case Section.Trigger:
-                    yieldTrackers = triggerYields;
-                    break;
-                default:
-                    // Should hypothetically be impossible unless we add more values to the enum.
-                    return false;
+                YieldFinishedWithPriority yielder = yields[i];
+                // A yield blockage that is blocking mainline code while
+                // we are in a trigger isn't relevant.  Only check the ones
+                // that are blocking current priority or higher:
+                if (yielder.priority >= CurrentPriority)
+                {
+                    YieldFinishedDetector detector = yielder.detector;
+                    if (detector.creationTimeStamp != currentTime && detector.IsFinished())
+                        yields.RemoveAt(i);
+                    else
+                        ++numStillBlocking;
+                }
             }
-            // Query the yield trackers and remove all the ones that claim they are finished.
-            // Always treat them as unfinished if this is the same fixed time stamp as the
-            // one in which the yield got Begin()'ed regardless of what their IsFinished() claims,
-            // because all waits will always wait at least one tick, according to all our docs.
-            yieldTrackers.RemoveAll((t) => t.creationTimeStamp != currentTime && t.IsFinished());
-            
-            // If any are still present, that means not all yielders in this context (main or trigger)
-            // are finished and we should still return that we are waiting:
-            return yieldTrackers.Count > 0;
+            return (numStillBlocking > 0);
         }
         
         private void AbortAllYields()
         {
-            mainYields.Clear();
-            triggerYields.Clear();
+            yields.Clear();
         }
         
-        public void PushStack(object item)
+        public void PushArgumentStack(object item)
         {
-            stack.Push(item);
+            stack.PushArgument(item);
         }
 
-        public object PopStack()
+        public object PopArgumentStack()
         {
-            return stack.Pop();
-        }
-
-        public void MoveStackPointer(int delta)
-        {
-            stack.MoveStackPointer(delta);
+            return stack.PopArgument();
         }
 
         /// <summary>Throw exception if the user delegate is not one the CPU can call right now.</summary>
@@ -598,119 +592,6 @@ namespace kOS.Safe.Execution
 
                 throw new KOSInvalidDelegateContextException(currentContextName, delegateContextName);
            }
-        }
-
-        /// <summary>
-        /// Gets the dictionary N levels of nesting down the dictionary stack,
-        /// where zero is the current localmost level.
-        /// Never errors out or fails.  If N is too large you just end up with
-        /// the global scope dictionary.
-        /// Does not allow the walk to go past the start of the current function
-        /// scope.
-        /// </summary>
-        /// <param name="peekDepth">how far down the peek under the top.  0 = localmost.</param>
-        /// <returns>The dictionary found, or the global dictionary if peekDepth is too big.</returns>
-        private VariableScope GetNestedDictionary(int peekDepth)
-        {
-            object stackItem = true; // any non-null value will do here, just to get the loop started.
-            for (var rawStackDepth = 0; stackItem != null && peekDepth >= 0; ++rawStackDepth)
-            {
-                stackItem = stack.Peek(-1 - rawStackDepth);
-                if (stackItem is VariableScope)
-                    --peekDepth;
-                if (stackItem is SubroutineContext)
-                    stackItem = null; // once we hit the bottom of the current subroutine on the runtime stack - jump all the way out to global.
-            }
-
-            var scope = stackItem as VariableScope;
-            return scope ?? globalVariables;
-        }
-
-        /// <summary>
-        /// Gets the dictionary that contains the given identifier, starting the
-        /// search at the local level and scanning the scopes upward all the
-        /// way to the global dictionary.<br/>
-        /// Does not allow the walk to use scope frames that were not directly in this
-        /// scope's lexical chain.  It skips over scope frames from other branches
-        /// of the parse tree.  (i.e. if a function calls a function elsewhere).<br/>
-        /// Returns null when no hit was found.<br/>
-        /// </summary>
-        /// <param name="identifier">identifier name to search for.  Pass an empty string to guarantee no hits will
-        ///   be found (which is useful to do when using the searchReport argument).</param>
-        /// <param name="searchReport">If you want to see the list of all the scopes that constituted the search
-        ///   path, not just the final hit, pass an empty list here and this method will fill it for you with
-        ///   that report.  Pass in a null to not get a report.</param>
-        /// <returns>The dictionary found, or null if no dictionary contains the identifier.</returns>
-        private VariableScope GetNestedDictionary(string identifier, List<VariableScope> searchReport = null)
-        {
-            if (searchReport != null)
-                searchReport.Clear();
-            short rawStackDepth = 0;
-            while (true) /*all of this loop's exits are explicit break or return statements*/
-            {
-                object stackItem;
-                bool stackExhausted = !(stack.PeekCheck(-1 - rawStackDepth, out stackItem));
-                if (stackExhausted)
-                    break;
-                var localDict = stackItem as VariableScope;
-                if (localDict == null) // some items on the stack might not be variable scopes.  skip them.
-                {
-                    ++rawStackDepth;
-                    continue;
-                }
-
-                if (searchReport != null)
-                    searchReport.Add(localDict);
-
-                if (localDict.Variables.ContainsKey(identifier))
-                    return localDict;
-
-                // Get the next VariableScope that is valid, where valid means:
-                //    It is the lexical (not runtime) parent of this scope.
-                // -------------------------------------------------------------------------------
-
-                // Scan the stack until the variable scope with the right parent ID is seen:
-                short skippedLevels = 0;
-                while (!(stackExhausted))
-                {
-                    var needsIncrement = true;
-                    var scopeFrame = stackItem as VariableScope;
-                    if (scopeFrame != null) // skip cases where the thing on the stack isn't a variable scope.
-                    {
-                        // If the scope id of this frame is my parent ID, then we found it and are done.
-                        if (scopeFrame.ScopeId == localDict.ParentScopeId)
-                        {
-                            break;
-                        }
-                        // In the case where the variable scope is the SAME lexical ID as myself, that
-                        // means I recursively called myself and the thing on the runtime stack just before
-                        // me is ... another instance of me.  In that case just follow it's parent skip level
-                        if (scopeFrame.ScopeId == localDict.ScopeId && scopeFrame.ParentSkipLevels > 0)
-                        {
-                            skippedLevels += scopeFrame.ParentSkipLevels;
-                            rawStackDepth += scopeFrame.ParentSkipLevels;
-                            needsIncrement = false;
-                        }
-                    }
-                    if (needsIncrement)
-                    {
-                        ++skippedLevels;
-                        ++rawStackDepth;
-                    }
-                    stackExhausted = !(stack.PeekCheck(-1 - rawStackDepth, out stackItem));
-                }
-
-                // Record how many levels had to be skipped for that to work.  In future calls of this
-                // method, it will know how far to jump in the stack without doing that scan.  This can
-                // be quite a speedup when dealing with nested recursion, where the runtime stack might
-                // be a hundred levels deep of the same function calling itself before hitting its lexical parent.
-                if (stackItem != null && localDict.ParentSkipLevels == 0)
-                    localDict.ParentSkipLevels = skippedLevels;
-            }
-            if (globalVariables.Variables.ContainsKey(identifier))
-                return globalVariables;
-            else
-                return null;
         }
 
         /// <summary>
@@ -761,13 +642,13 @@ namespace kOS.Safe.Execution
             msg.AppendLine("============== STACK VARIABLES ===============");
             DumpStack();
             msg.AppendLine("============== GLOBAL VARIABLES ==============");
-            foreach (string ident in globalVariables.Variables.Keys)
+            foreach (var entry in globalVariables.Locals)
             {
                 string line;
                 try
                 {
-                    Variable v = globalVariables.Variables[ident];
-                    line = ident;
+                    line = entry.Key;
+                    var v = entry.Value;
                     if (v == null || v.Value == null)
                         line += " is <null>";
                     else
@@ -777,7 +658,7 @@ namespace kOS.Safe.Execution
                 {
                     // This is necessary because of the deprecation exceptions that
                     // get raised by FlightStats when you try to print all of them out:
-                    line = ident + " is <value caused exception>\n    " + e.Message;
+                    line = entry.Key + " is <value caused exception>\n    " + e.Message;
                 }
                 msg.AppendLine(line);
             }
@@ -788,6 +669,32 @@ namespace kOS.Safe.Execution
         public string DumpStack()
         {
             return stack.Dump();
+        }
+
+        private VariableScope GetCurrentScope()
+        {
+            VariableScope currentScope = stack.GetCurrentScope();
+            if (currentScope == null)
+            {
+                currentScope = globalVariables;
+            }
+            return currentScope;
+        }
+
+        public SubroutineContext GetCurrentSubroutineContext()
+        {
+            return stack.GetCurrentSubroutineContext();
+        }
+
+        /// <summary>
+        /// Find any trigger call contexts that are on the callstack to be executed
+        /// that match the given trigger.
+        /// </summary>
+        /// <returns>List of matching trigger call contexts.  Zero length if none.</returns>
+        /// <param name="trigger">Trigger.</param>
+        public List<SubroutineContext> GetTriggerCallContexts(TriggerInfo trigger)
+        {
+            return stack.GetTriggerCallContexts(trigger);
         }
 
         /// <summary>
@@ -803,9 +710,12 @@ namespace kOS.Safe.Execution
         private Variable GetVariable(string identifier, bool barewordOkay = false, bool failOkay = false)
         {
             identifier = identifier.ToLower();
-            VariableScope foundDict = GetNestedDictionary(identifier);
-            if (foundDict != null)
-                return foundDict.Variables[identifier];
+            Variable value = GetCurrentScope().GetNested(identifier);
+            if (value != null)
+            {
+                return value;
+            }
+
             if (barewordOkay)
             {
                 string strippedIdent = identifier.TrimStart('$');
@@ -816,7 +726,7 @@ namespace kOS.Safe.Execution
             // In the case where we were looking for a function pointer but didn't find one, and would
             // have failed with exception, then it's still acceptable to find a hit that isn't a function
             // pointer (has no trailing asterisk '*') but only if it's a delegate of some sort:
-            if (identifier.EndsWith("*"))
+            if (StringUtil.EndsWith(identifier, "*"))
             {
                 string trimmedTail = identifier.TrimEnd('*');
                 Variable retryVal = GetVariable(trimmedTail, barewordOkay, failOkay);
@@ -840,22 +750,24 @@ namespace kOS.Safe.Execution
         /// <param name="overwrite">true if it's okay to overwrite an existing variable</param>
         public void AddVariable(Variable variable, string identifier, bool local, bool overwrite = false)
         {
-            identifier = identifier.ToLower();
-
-            if (!identifier.StartsWith("$"))
+            if (!StringUtil.StartsWith(identifier, "$"))
             {
                 identifier = "$" + identifier;
             }
 
-            VariableScope whichDict = local ? GetNestedDictionary(0) : globalVariables;
-            if (whichDict.Variables.ContainsKey(identifier))
+            VariableScope currentScope = local ? GetCurrentScope() : globalVariables;
+
+            Variable existing = currentScope.GetLocal(identifier);
+
+            if (existing != null)
             {
-                if (whichDict.Variables[identifier].Value is BoundVariable)
+                if (existing.Value is BoundVariable)
                     if (!overwrite)
                         throw new KOSIdentiferClashException(identifier);
-                whichDict.Variables.Remove(identifier);
+                currentScope.Remove(identifier);
             }
-            whichDict.Variables.Add(identifier, variable);
+
+            currentScope.Add(identifier, variable);
         }
 
         public bool VariableIsRemovable(Variable variable)
@@ -872,15 +784,13 @@ namespace kOS.Safe.Execution
         /// <param name="identifier">varible to remove.</param>
         public void RemoveVariable(string identifier)
         {
-            identifier = identifier.ToLower();
-            VariableScope foundDict = GetNestedDictionary(identifier);
-            if (foundDict != null && VariableIsRemovable(foundDict.Variables[identifier]))
+            VariableScope currentScope = GetCurrentScope();
+            Variable variable = currentScope.RemoveNested(identifier);
+            if (variable != null)
             {
                 // Tell Variable to orphan its old value now.  Faster than relying
                 // on waiting several seconds for GC to eventually call ~Variable()
-                foundDict.Variables[identifier].Value = null;
-
-                foundDict.Variables.Remove(identifier);
+                variable.Value = null;
             }
         }
 
@@ -933,9 +843,10 @@ namespace kOS.Safe.Execution
         /// <param name="value">value to put into it</param>
         public void SetNewLocal(string identifier, object value)
         {
-            Variable variable;
-            VariableScope localDict = GetNestedDictionary(0);
-            if (!localDict.Variables.TryGetValue(identifier, out variable))
+            VariableScope currentScope = GetCurrentScope();
+
+            Variable variable = currentScope.GetLocal(identifier);
+            if (variable == null)
             {
                 variable = new Variable { Name = identifier };
                 AddVariable(variable, identifier, true);
@@ -955,11 +866,11 @@ namespace kOS.Safe.Execution
         /// <param name="value">value to put into it</param>
         public void SetGlobal(string identifier, object value)
         {
-            Variable variable;
             // Attempt to get it as a global.  Make a new one if it's not found.
             // This preserves the "bound-ness" of the variable if it's a
             // BoundVariable, whereas unconditionally making a new Variable wouldn't:
-            if (!globalVariables.Variables.TryGetValue(identifier, out variable))
+            Variable variable = globalVariables.GetLocal(identifier);
+            if (variable == null)
             {
                 variable = new Variable { Name = identifier };
                 AddVariable(variable, identifier, false, true);
@@ -1006,20 +917,20 @@ namespace kOS.Safe.Execution
         }
 
         /// <summary>
-        /// Pop a value off the stack, and if it's a variable name then get its value,
+        /// Pop a value off the argument stack, and if it's a variable name then get its value,
         /// else just return it as it is.
         /// </summary>
         /// <param name="barewordOkay">Is this a context in which it's acceptable for
         ///   a variable not existing error to occur (in which case the identifier itself
         ///   should therefore become a string object returned)?</param>
         /// <returns>value off the stack</returns>
-        public object PopValue(bool barewordOkay = false)
+        public object PopValueArgument(bool barewordOkay = false)
         {
-            return GetValue(PopStack(), barewordOkay);
+            return GetValue(PopArgumentStack(), barewordOkay);
         }
 
         /// <summary>
-        /// Peek at a value atop the stack without popping it, and if it's a variable name then get its value,
+        /// Peek at a value atop the argument stack without popping it, and if it's a variable name then get its value,
         /// else just return it as it is.<br/>
         /// <br/>
         /// NOTE: Evaluating variables when you don't really need to is pointlessly expensive, as it
@@ -1031,9 +942,9 @@ namespace kOS.Safe.Execution
         ///   a variable not existing error to occur (in which case the identifier itself
         ///   should therefore become a string object returned)?</param>
         /// <returns>value off the stack</returns>
-        public object PeekValue(int digDepth, bool barewordOkay = false)
+        public object PeekValueArgument(int digDepth, bool barewordOkay = false)
         {
-            return GetValue(stack.Peek(digDepth), barewordOkay);
+            return GetValue(stack.PeekArgument(digDepth), barewordOkay);
         }
 
         /// <summary>
@@ -1049,9 +960,9 @@ namespace kOS.Safe.Execution
         ///   a variable not existing error to occur (in which case the identifier itself
         ///   should therefore become a string object returned)?</param>
         /// <returns>value off the stack</returns>
-        public Structure PopStructureEncapsulated(bool barewordOkay = false)
+        public Structure PopStructureEncapsulatedArgument(bool barewordOkay = false)
         {
-            return Structure.FromPrimitiveWithAssert( PopValue(barewordOkay) );
+            return Structure.FromPrimitiveWithAssert( PopValueArgument(barewordOkay) );
         }
 
         /// <summary>
@@ -1068,9 +979,9 @@ namespace kOS.Safe.Execution
         ///   a variable not existing error to occur (in which case the identifier itself
         ///   should therefore become a string object returned)?</param>
         /// <returns>value off the stack</returns>
-        public Structure PeekStructureEncapsulated(int digDepth, bool barewordOkay = false)
+        public Structure PeekStructureEncapsulatedArgument(int digDepth, bool barewordOkay = false)
         {
-            return Structure.FromPrimitiveWithAssert(PeekValue(digDepth, barewordOkay));
+            return Structure.FromPrimitiveWithAssert(PeekValueArgument(digDepth, barewordOkay));
         }
 
         /// <summary>
@@ -1092,7 +1003,7 @@ namespace kOS.Safe.Execution
         ///   is the value?
         /// </param>
         /// <returns>The value after the steps described have been performed.</returns>
-        public Structure GetStructureEncapsulated(Structure testValue, bool barewordOkay = false)
+        public Structure GetStructureEncapsulatedArgument(Structure testValue, bool barewordOkay = false)
         {
             return Structure.FromPrimitiveWithAssert(GetValue(testValue, barewordOkay));
         }
@@ -1109,9 +1020,9 @@ namespace kOS.Safe.Execution
         ///   a variable not existing error to occur (in which case the identifier itself
         ///   should therefore become a string object returned)?</param>
         /// <returns>value off the stack</returns>
-        public object PopValueEncapsulated(bool barewordOkay = false)
+        public object PopValueEncapsulatedArgument(bool barewordOkay = false)
         {
-            return Structure.FromPrimitive( PopValue(barewordOkay) );
+            return Structure.FromPrimitive( PopValueArgument(barewordOkay) );
         }
 
         /// <summary>
@@ -1127,33 +1038,49 @@ namespace kOS.Safe.Execution
         ///   a variable not existing error to occur (in which case the identifier itself
         ///   should therefore become a string object returned)?</param>
         /// <returns>value off the stack</returns>
-        public object PeekValueEncapsulated(int digDepth, bool barewordOkay = false)
+        public object PeekValueEncapsulatedArgument(int digDepth, bool barewordOkay = false)
         {
-            return Structure.FromPrimitive(PeekValue(digDepth, barewordOkay));
+            return Structure.FromPrimitive(PeekValueArgument(digDepth, barewordOkay));
         }
 
         /// <summary>
-        /// Peek at a value atop the stack without popping it, and without evaluating it to get the variable's
+        /// Peek at a value atop the argument stack without popping it, and without evaluating it to get the variable's
         /// value.  (i.e. if the thing in the stack is $foo, and the variable foo has value 5, you'll get the string
         /// "$foo" returned, not the integer 5).
         /// </summary>
         /// <param name="digDepth">Peek at the element this far down the stack (0 means top, 1 means just under the top, etc)</param>
         /// <param name="checkOkay">Tells you whether or not the stack was exhausted.  If it's false, then the peek went too deep.</param>
         /// <returns>value off the stack</returns>
-        public object PeekRaw(int digDepth, out bool checkOkay)
+        public object PeekRawArgument(int digDepth, out bool checkOkay)
         {
             object returnValue;
-            checkOkay = stack.PeekCheck(digDepth, out returnValue);
+            checkOkay = stack.PeekCheckArgument(digDepth, out returnValue);
             return returnValue;
         }
 
-        public int GetStackSize()
+        /// <summary>
+        /// Peek at a value atop the scope stack without popping it.
+        /// </summary>
+        /// <param name="digDepth">Peek at the element this far down the stack (0 means top, 1 means just under the top, etc)</param>
+        /// <param name="checkOkay">Tells you whether or not the stack was exhausted.  If it's false, then the peek went too deep.</param>
+        /// <returns>value off the stack</returns>
+        public object PeekRawScope(int digDepth, out bool checkOkay)
         {
-            return stack.GetLogicalSize();
+            object returnValue;
+            checkOkay = stack.PeekCheckScope(digDepth, out returnValue);
+            return returnValue;
         }
 
+        public int GetArgumentStackSize()
+        {
+            return stack.GetArgumentStackSize();
+        }
+
+
         /// <summary>
-        /// Schedules a trigger function call to occur near the start of the next CPU update tick.
+        /// Schedules a trigger function call to occur soon.  There are two ways you can
+        /// do this: (A) On the next Cpu.KOSFixedUpdate() before it will happen,
+        /// or (B) When the next Opcode was about to execute.  This is decided by the 'immediate' argument.
         /// If multiple such function calls get inserted between ticks, they will behave like
         /// a nested stack of function calls.  Mainline code will not continue until all such
         /// functions have finished at least once.  This type of trigger must be a function that
@@ -1162,19 +1089,30 @@ namespace kOS.Safe.Execution
         /// when it finishes.  If its return is false, it won't fire off again.
         /// </summary>
         /// <param name="triggerFunctionPointer">The entry point of this trigger function.</param>
+        /// <param name="priority">The priority that this trigger will interrupt with.</param> 
+        /// <param name="instanceId">pass in TriggerInfo.NextInstance if you desire the ability for
+        /// more than one instance of a trigger to exist for this same triggerFunctionPointer.  Pass
+        /// a zero to indicate you want to prevent multiple instances of triggers from this same
+        /// entry point to be invokable.</param> 
+        /// <param name="immediate">Trigger should happen immediately on next opcode instead of waiting till next fixeupdate</parem>
         /// <param name="closure">The closure the trigger should be called with.  If this is
         /// null, then the trigger will only be able to see global variables reliably.</param>
         /// <returns>A TriggerInfo structure describing this new trigger, which probably isn't very useful
         /// tp the caller in most circumstances where this is a fire-and-forget trigger.</returns>
-        public TriggerInfo AddTrigger(int triggerFunctionPointer, List<VariableScope> closure)
+        public TriggerInfo AddTrigger(int triggerFunctionPointer, InterruptPriority priority, int instanceId, bool immediate, List<VariableScope> closure)
         {
-            TriggerInfo triggerRef = new TriggerInfo(currentContext, triggerFunctionPointer, closure);
-            currentContext.AddPendingTrigger(triggerRef);
+            TriggerInfo triggerRef = new TriggerInfo(currentContext, triggerFunctionPointer, priority, instanceId, closure);
+            if (immediate)
+                currentContext.AddImmediateTrigger(triggerRef);
+            else
+                currentContext.AddPendingTrigger(triggerRef);
             return triggerRef;
         }
 
         /// <summary>
-        /// Schedules a trigger function call to occur near the start of the next CPU update tick.
+        /// Schedules a trigger function call to occur soon.  There are two ways you can
+        /// do this: (A) On the next Cpu.KOSFixedUpdate() before it will happen,
+        /// or (B) When the next Opcode was about to execute.  This is decided by the 'immediate' argument.
         /// If multiple such function calls get inserted between ticks, they will behave like
         /// a nested stack of function calls.  Mainline code will not continue until all such
         /// functions have finished at least once.<br/>
@@ -1191,6 +1129,12 @@ namespace kOS.Safe.Execution
         /// callback won't execute only matters when you were expecting to read its return value.
         /// </summary>
         /// <param name="del">A UserDelegate that was created using the CPU's current program context.</param>
+        /// <param name="priority">The priority that this trigger will interrupt with.</param> 
+        /// <param name="instanceId">pass in TriggerInfo.NextInstance if you desire the ability for
+        /// more than one instance of a trigger to exist for this same triggerFunctionPointer.  Pass
+        /// a zero to indicate you want to prevent multiple instances of triggers from this same
+        /// entry point to be invokable.</param> 
+        /// <param name="immediate">Trigger should happen immediately on next opcode instead of waiting till next fixeupdate</parem>
         /// <param name="args">The list of arguments to pass to the UserDelegate when it gets called.</param>
         /// <returns>A TriggerInfo structure describing this new trigger.  It can be used to monitor
         /// the progress of the function call: To see if it has had a chance to finish executing yet,
@@ -1198,17 +1142,22 @@ namespace kOS.Safe.Execution
         /// for an "illegal" program context.  Null returns are used instead of throwing an exception
         /// because this condition is expected to occur often when a program just ended that had callback hooks
         /// in it.</returns>
-        public TriggerInfo AddTrigger(UserDelegate del, List<Structure> args)
+        public TriggerInfo AddTrigger(UserDelegate del, InterruptPriority priority, int instanceId, bool immediate, List<Structure> args)
         {
             if (del.ProgContext != currentContext)
                 return null;
-            TriggerInfo callbackRef = new TriggerInfo(currentContext, del.EntryPoint, del.Closure, args);
-            currentContext.AddPendingTrigger(callbackRef);
+            TriggerInfo callbackRef = new TriggerInfo(currentContext, del.EntryPoint, priority, instanceId, del.Closure, del.GetMergedArgs(args));
+            if (immediate)
+                currentContext.AddImmediateTrigger(callbackRef);
+            else
+                currentContext.AddPendingTrigger(callbackRef);
             return callbackRef;
         }
 
         /// <summary>
-        /// Schedules a trigger function call to occur near the start of the next CPU update tick.
+        /// Schedules a trigger function call to occur soon.  There are two ways you can
+        /// do this: (A) On the next Cpu.KOSFixedUpdate() before it will happen,
+        /// or (B) When the next Opcode was about to execute.  This is decided by the 'immediate' argument.
         /// If multiple such function calls get inserted between ticks, they will behave like
         /// a nested stack of function calls.  Mainline code will not continue until all such
         /// functions have finished at least once.<br/>
@@ -1225,6 +1174,12 @@ namespace kOS.Safe.Execution
         /// callback won't execute only matters when you were expecting to read its return value.
         /// </summary>
         /// <param name="del">A UserDelegate that was created using the CPU's current program context.</param>
+        /// <param name="priority">The priority that this trigger will interrupt with.</param> 
+        /// <param name="instanceID">pass in TriggerInfo.NextInstance if you desire the ability for
+        /// more than one instance of a trigger to exist for this same UserDelegate.  Pass
+        /// a zero to indicate you want to prevent multiple instances of triggers from this same
+        /// Delegate to be invokable.</param> 
+        /// <param name="immediate">Trigger should happen immediately on next opcode instead of waiting till next fixeupdate</parem>
         /// <param name="args">A parms list of arguments to pass to the UserDelegate when it gets called.</param>
         /// <returns>A TriggerInfo structure describing this new trigger.  It can be used to monitor
         /// the progress of the function call: To see if it has had a chance to finish executing yet,
@@ -1232,15 +1187,18 @@ namespace kOS.Safe.Execution
         /// for an "illegal" program context.  Null returns are used instead of throwing an exception
         /// because this condition is expected to occur often when a program is ended that had callback hooks
         /// in it.</returns>
-        public TriggerInfo AddTrigger(UserDelegate del, params Structure[] args)
+        public TriggerInfo AddTrigger(UserDelegate del, InterruptPriority priority, int instanceId, bool immediate, params Structure[] args)
         {
             if (del.ProgContext != currentContext)
                 return null;
-            return AddTrigger(del, new List<Structure>(args));
+            TriggerInfo triggerRef = AddTrigger(del, priority, instanceId, immediate, new List<Structure>(args));
+            return triggerRef;
         }
 
         /// <summary>
-        /// Schedules a trigger function call to occur near the start of the next CPU update tick.
+        /// Schedules a trigger function call to occur soon.  There are two ways you can
+        /// do this: (A) On the next Cpu.KOSFixedUpdate() before it will happen,
+        /// or (B) When the next Opcode was about to execute.  This is decided by the 'immediate' argument.
         /// If multiple such function calls get inserted between ticks, they will behave like
         /// a nested stack of function calls.  Mainline code will not continue until all such
         /// functions have finished at least once.<br/>
@@ -1251,20 +1209,30 @@ namespace kOS.Safe.Execution
         /// If the TriggerInfo you pass in was built for a different ProgramContext than the one that
         /// is currently running, then this will return null and refuse to do anything.
         /// </summary>
+        /// <param name="immediate">Trigger should happen immediately on next opcode instead of waiting till next fixeupdate</parem>
         /// <returns>To be in agreement with how the other AddTrigger() methods work, this returns
         /// a TriggerInfo which is just the same one you passed in.  It will return a null, however,
         /// in cases where the TriggerInfo you passed in is for a different ProgramContext.</returns>
-        public TriggerInfo AddTrigger(TriggerInfo trigger)
+        public TriggerInfo AddTrigger(TriggerInfo trigger, bool immediate)
         {
             if (trigger.ContextId != currentContext.ContextId)
                 return null;
-            currentContext.AddPendingTrigger(trigger);
+            if (immediate)
+                currentContext.AddImmediateTrigger(trigger);
+            else
+                currentContext.AddPendingTrigger(trigger);
             return trigger;
         }
 
-        public void RemoveTrigger(int triggerFunctionPointer)
+        /// <summary>
+        /// Removes a trigger looking like this if one exists.
+        /// </summary>
+        /// <param name="triggerFunctionPointer">Trigger's entry point (instruction pointer)</param>
+        /// <param name="instanceId">If nonzero, only remove the trigger if it has this Id.  If zero, 
+        /// then remove all triggers with this entry point, regardless of their instance Id.</param>
+        public void RemoveTrigger(int triggerFunctionPointer, int instanceId)
         {
-            currentContext.RemoveTrigger(new TriggerInfo(currentContext, triggerFunctionPointer, null));
+            currentContext.RemoveTrigger(new TriggerInfo(currentContext, triggerFunctionPointer, 0/*dummy*/, instanceId, null));
         }
 
         public void RemoveTrigger(TriggerInfo trigger)
@@ -1272,25 +1240,44 @@ namespace kOS.Safe.Execution
             currentContext.RemoveTrigger(trigger);
         }
 
+        /// <summary>
+        /// Cancels any pending calls to triggers that match the criteria.
+        /// </summary>
+        /// <param name="triggerFunctionPointer">Trigger's entry point (instruction pointer)</param>
+        /// <param name="instanceId">If nonzero, only affect the trigger if it has this Id.  If zero, 
+        /// then affect all triggers with this entry point, regardless of their instance Id.</param>
+        public void CancelCalledTriggers(int triggerFunctionPointer, int instanceId)
+        {
+            CancelCalledTriggers(new TriggerInfo(currentContext, triggerFunctionPointer, 0 /*dummy*/, instanceId, null));
+        }
+
+        public void CancelCalledTriggers(TriggerInfo trigger)
+        {
+            // Inform any already existing calls to the trigger that they should cancel themselves
+            // if they support the cancellation logic (if they pay attention to OpcodeTestCancelled).
+            List<SubroutineContext> calls = GetTriggerCallContexts(trigger);
+            for (int i = 0; i < calls.Count; ++i)
+            {
+                calls[i].Cancel();
+            }
+        }
+
         public void KOSFixedUpdate(double deltaTime)
         {
             bool showStatistics = SafeHouse.Config.ShowStatistics;
-            var executionElapsed = 0.0;
 
             // If the script changes config value, it doesn't take effect until next update:
             instructionsPerUpdate = SafeHouse.Config.InstructionsPerUpdate;
-            instructionsSoFarInUpdate = 0;
-            var numMainlineInstructions = 0;
-
-            if (showStatistics)
+            InstructionsThisUpdate = 0;
+                
+            updateWatch.Reset();
+            executionWatch.Reset();
+            instructionWatch.Reset();
+            if (!compileWatch.IsRunning)
             {
-                updateWatch.Reset();
-                executionWatch.Reset();
-                instructionWatch.Reset();
-                compileWatch.Stop();
                 compileWatch.Reset();
-                updateWatch.Start();
             }
+            updateWatch.Start();
 
             currentTime = shared.UpdateHandler.CurrentFixedTime;
 
@@ -1300,15 +1287,12 @@ namespace kOS.Safe.Execution
 
                 if (currentContext != null && currentContext.Program != null)
                 {
-                    ProcessTriggers();
-
                     if (showStatistics)
                     {
                         executionWatch.Start();
                         instructionWatch.Start();
                     }
                     ContinueExecution(showStatistics);
-                    numMainlineInstructions = instructionsSoFarInUpdate;
                     if (showStatistics)
                     {
                         executionWatch.Stop();
@@ -1338,6 +1322,12 @@ namespace kOS.Safe.Execution
                     // interpreter context
                     SkipCurrentInstructionId();
                     stack.Clear(); // Get rid of this interpreter command's cruft.
+
+                    // If it threw exception during a trigger with higher priority (like lock steering) before
+                    // reaching its OpcodeReturn, it's important to drop the interpreter context's priority
+                    // back down so interrupts will work correctly again.  Unlike with a *Program*, with the
+                    // interpreter we're re-using the same programcontext after the crash:
+                    CurrentPriority = InterruptPriority.Normal;
                 }
                 else
                 {
@@ -1346,22 +1336,10 @@ namespace kOS.Safe.Execution
                     stack.Clear(); // If breaking all execution, get rid of the cruft here too.
                 }
             }
+            updateWatch.Stop();
 
-            if (showStatistics)
-            {
-                updateWatch.Stop();
-                double updateElapsed = updateWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
-                totalUpdateTime += updateElapsed;
-                executionElapsed = executionWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
-                totalExecutionTime += executionElapsed;
-                totalCompileTime += compileWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
-                if (maxMainlineInstructionsSoFar < numMainlineInstructions)
-                    maxMainlineInstructionsSoFar = numMainlineInstructions;
-                if (maxUpdateTime < updateElapsed)
-                    maxUpdateTime = updateElapsed;
-                if (maxExecutionTime < executionElapsed)
-                    maxExecutionTime = executionElapsed;
-            }
+            foreach (ExecutionStatBlock statBlock in executionStats.Values)
+                statBlock.EndOneUpdate();
         }
 
         private void PreUpdateBindings()
@@ -1387,20 +1365,20 @@ namespace kOS.Safe.Execution
 
             int currentInstructionPointer = currentContext.InstructionPointer;
             var triggersToBeExecuted = new List<TriggerInfo>();
-            
-            // To ensure triggers execute in the same order in which they
-            // got added (thus ensuring the system favors trying the least
-            // recently added trigger first in a more fair round-robin way),
-            // the nested function calls get built in stack order, so that
-            // they execute in normal order.  Thus the backward iteration
-            // order used in the loop below:
-            for (int index = currentContext.ActiveTriggerCount() - 1 ; index >= 0 ; --index)
+
+            // Recurring triggers tend to only get put on the callstack one at a time because
+            // when they are the same priority they won't enter the callstack till the
+            // previous one is done.  Therefore even though this is going on a stack, it
+            // still is getting inserted in LIFO order:
+            for (int index = 0 ; index < currentContext.ActiveTriggerCount() ; ++index)
             {
                 TriggerInfo trigger = currentContext.GetTriggerByIndex(index);
-                
+
                 // If the program is ended from within a trigger, the trigger list will be empty and the pointer
-                // will be invalid.  Only execute the trigger if it still exists.
-                if (currentContext.ContainsTrigger(trigger))
+                // will be invalid.  Only execute the trigger if it still exists, AND if it's of a higher priority
+                // than the current CPU priority level.  (If it's the same or less priority as the curent CPU priority,
+                // then leave it in the list to be added later once we return back to a lower priority that allows it.)
+                if (currentContext.ContainsTrigger(trigger) && (trigger.Priority == InterruptPriority.NoChange || trigger.Priority > CurrentPriority))
                 {
                     if (trigger is NoDelegate)
                     {
@@ -1418,22 +1396,27 @@ namespace kOS.Safe.Execution
                         // first line of the trigger, like OpcodeCall would do.
                         SubroutineContext contextRecord =
                             new SubroutineContext(currentInstructionPointer, trigger);
-                        PushAboveStack(contextRecord);
+                        PushScopeStack(contextRecord);
 
-                        // Reverse-push the closure's scope record, if there is one, just after the function return context got put on the stack.
+                        // Push the closure's scope record, if there is one, just after the function return context got put on the stack.
                         if (trigger.Closure != null)
                             for (int i = trigger.Closure.Count - 1 ; i >= 0 ; --i)
-                                PushAboveStack(trigger.Closure[i]);
+                                PushScopeStack(trigger.Closure[i]);
 
-                        PushStack(new KOSArgMarkerType());
+                        PushArgumentStack(new KOSArgMarkerType());
 
                         if (trigger.IsCSharpCallback)
-                            for (int argIndex = trigger.Args.Count - 1; argIndex >= 0 ; --argIndex) // TODO test with more than 1 arg to see if this is the right order!
-                                PushStack(trigger.Args[argIndex]);
-                        
+                            for (int argIndex = trigger.Args.Count - 1; argIndex >= 0 ; --argIndex)
+                                PushArgumentStack(trigger.Args[argIndex]);
+
                         triggersToBeExecuted.Add(trigger);
 
                         currentInstructionPointer = trigger.EntryPoint;
+
+                        // elevate priority to the priority of the trigger:
+                        if (trigger.Priority != InterruptPriority.NoChange)
+                            CurrentPriority = trigger.Priority;
+
                         // Triggers can chain in this loop if more than one fire off at once - the second trigger
                         // will look like it was a function that was called from the start of the first trigger.
                         // The third trigger will look like a function that was called from the start of the second, etc.
@@ -1455,20 +1438,28 @@ namespace kOS.Safe.Execution
         private void ContinueExecution(bool doProfiling)
         {
             var executeNext = true;
-            int howManyMainLine = 0;
-            currentRunSection = Section.Trigger; // assume we begin with trigger mode until we hit mainline code.
-            
-            executeLog.Remove(0, executeLog.Length); // In .net 2.0, StringBuilder had no Clear(), which is what this is simulating.
+            int howManyNormalPriority = 0;
+            bool okayToActivatePendingTriggers = false;
 
-            while (instructionsSoFarInUpdate < instructionsPerUpdate &&
+            executeLog.Remove(0, executeLog.Length); // In .net 2.0, StringBuilder had no Clear(), which is what this is simulating.
+            while (InstructionsThisUpdate < instructionsPerUpdate &&
                    executeNext &&
                    currentContext != null)
             {
-                if (! stack.HasTriggerContexts())
+                // ProcessTriggers is in this loop because opcodes can result in changes that
+                // cause callbacks to be invoked, and this can make those callback invocations
+                // happen immediately on the next opcode:
+                ProcessTriggers();
+
+                // It is not okay to re-activate pending triggers till all existing active triggers
+                // of Recurring priority have been flushed out and executed:
+                if ((! okayToActivatePendingTriggers) &&
+                    (! stack.HasDelayingTriggerContexts()) &&
+                    ! currentContext.HasActiveTriggersAtLeastPriority(InterruptPriority.Recurring))
                 {
-                    currentRunSection = Section.Main;
+                    okayToActivatePendingTriggers = true;
                 }
-                
+
                 if (IsYielding())
                 {
                     executeNext = false;
@@ -1476,28 +1467,34 @@ namespace kOS.Safe.Execution
                 else
                 {
                     executeNext = ExecuteInstruction(currentContext, doProfiling);
-                    instructionsSoFarInUpdate++;
-                    if (currentRunSection == Section.Main)
-                       ++howManyMainLine;
+                    ++InstructionsThisUpdate;
+                    if (CurrentPriority == InterruptPriority.Normal)
+                        ++howManyNormalPriority;
                 }
             }
+            // Do this once more after the loop, just in case the very last Opcode in the update
+            // caused a callback that was meant to occur immediately in the current priority level
+            // using InterruptPriority.NoChange.  It's important to get that call pushed onto the
+            // callstack now at the current priority, before the next update might escalate the
+            // priority with a trigger.
+            ProcessTriggers();
 
-            // As long as at least one line of actual main code was reached, then re-enable all
-            // triggers that wanted to be re-enabled.  This delay in re-enabling them
-            // ensures that a nested bunch of triggers interruping other triggers can't
-            // *completely* starve mainline code of execution, no matter how invasive
-            // and cpu-hogging the user may have been written them to be:
-            if (currentRunSection == Section.Main)
+            // As long as all there are no more of the "pending" kinds of trigger
+            // on the callstack and we have reached at least one opcode of mainline
+            // code or of immediate trigger code, then it's okay to activate the
+            // pending triggers now:
+            if (okayToActivatePendingTriggers)
+            {
                 currentContext.ActivatePendingTriggers();
+            }
 
             if (executeLog.Length > 0)
                 SafeHouse.Logger.Log(executeLog.ToString());
         }
 
-        private bool ExecuteInstruction(IProgramContext context, bool doProfiling)
-        {            
+        private bool ExecuteInstruction(ProgramContext context, bool doProfiling)
+        {
             Opcode opcode = context.Program[context.InstructionPointer];
-            
             if (SafeHouse.Config.DebugEachOpcode)
             {
                 executeLog.Append(string.Format("Executing Opcode {0:0000}/{1:0000} {2} {3}\n", context.InstructionPointer, context.Program.Count, opcode.Label, opcode));
@@ -1510,18 +1507,23 @@ namespace kOS.Safe.Execution
 
                 opcode.Execute(this);
 
+                // This will count *all* the time between the end of the prev instruction and now:
+                instructionWatch.Stop();
                 if (doProfiling)
                 {
-                    // This will count *all* the time between the end of the prev instruction and now:
-                    instructionWatch.Stop();
                     opcode.ProfileTicksElapsed += instructionWatch.ElapsedTicks;
                     opcode.ProfileExecutionCount++;
                     
-                    // start the *next* instruction's timer right after this instruction ended
-                    instructionWatch.Reset();
-                    instructionWatch.Start();
                 }
-                
+                // Add the time this took to the exeuction stats for current priority level:
+                if (! executionStats.ContainsKey(CurrentPriority))
+                    executionStats[CurrentPriority] = new ExecutionStatBlock();
+                executionStats[CurrentPriority].LogOneInstruction(instructionWatch.ElapsedTicks);
+
+                // start the *next* instruction's timer right after this instruction ended
+                instructionWatch.Reset();
+                instructionWatch.Start();
+
                 if (opcode.AbortProgram)
                 {
                     BreakExecution(false);
@@ -1597,19 +1599,60 @@ namespace kOS.Safe.Execution
         public string StatisticsDump(bool doProfiling)
         {
             if (!SafeHouse.Config.ShowStatistics) return "";
-            
-            string delimiter = "";
-            if (doProfiling)
-                delimiter = ",";
-            
-            StringBuilder sb = new StringBuilder();
 
-            sb.Append(string.Format("{0}{0}{0}{0}Total compile time: {0}{1:F3}ms\n", delimiter, totalCompileTime));
-            sb.Append(string.Format("{0}{0}{0}{0}Total update time: {0}{1:F3}ms\n", delimiter, totalUpdateTime));
-            sb.Append(string.Format("{0}{0}{0}{0}Total execution time: {0}{1:F3}ms\n", delimiter, totalExecutionTime));
-            sb.Append(string.Format("{0}{0}{0}{0}Maximum update time: {0}{1:F3}ms\n", delimiter, maxUpdateTime));
-            sb.Append(string.Format("{0}{0}{0}{0}Maximum execution time: {0}{1:F3}ms\n", delimiter, maxExecutionTime));
-            sb.Append(string.Format("{0}{0}{0}{0}Most Mainline instructions in one update: {0}{1}\n", delimiter, maxMainlineInstructionsSoFar));
+            StringBuilder sb = new StringBuilder();
+            string formatterHeader = "{0,14},{1,7},{2,10},{3,7},{4,7},{5,7},{6,7}\n";
+            string formatterValues = "{0,14},{1,7:D},{2,10:F2},{3,7:F0},{4,7:F3},{5,7:D},{6,7:F3}\n";
+            sb.Append(string.Format("Total compile time: {0:F3}ms\n", totalCompileTime));
+            sb.Append(string.Format(formatterHeader, "Interrupt", "Total", "Total", "Mean", "Mean", "Max", "Max"));
+            sb.Append(string.Format(formatterHeader, "Priority", "inst", "ms", "instr/", "ms/", "instr/", "ms/"));
+            sb.Append(string.Format(formatterHeader, "", "", "", "update", "update", "update", "update"));
+            sb.Append(string.Format(formatterHeader, "-------------", "------", "------", "------", "------", "------", "------"));
+
+            int overallInstr = 0;
+            double overallMillis = 0.0;
+            double overallMeanInstr = 0.0;
+            double weightedSumMeanInstr = 0.0;
+            double overallMeanMillis = 0.0;
+            double weightedSumMeanMillis = 0.0;
+            long overallMaxInstr = 0;
+            double overallMaxMillis = 0.0;
+
+            foreach (InterruptPriority pri in executionStats.Keys)
+            {
+                ExecutionStatBlock stats = executionStats[pri];
+                stats.SealHangingUpdateIfAny(); // In case it aborted funny and didn't finish the last update.
+
+                sb.Append(string.Format(formatterValues,
+                    pri.ToString(),
+                    stats.TotalInstructions,
+                    stats.TotalMilliseconds,
+                    stats.MeanInstructionsPerUpdate,
+                    stats.MeanMillisecondsPerUpdate,
+                    stats.MaxInstructionsPerUpdate,
+                    stats.MaxMillisecondsInOneUpdate
+                ));
+
+                overallInstr += stats.TotalInstructions;
+                overallMillis += stats.TotalMilliseconds;
+
+                // Need to track a weighted mean depending on how many
+                // instructions came from which priority level, thus the
+                // mulitplication by how many total there were:
+                weightedSumMeanInstr += (stats.TotalInstructions * stats.MeanInstructionsPerUpdate);
+                weightedSumMeanMillis += (stats.TotalInstructions * stats.MeanMillisecondsPerUpdate);
+
+                if (overallMaxInstr < stats.MaxInstructionsPerUpdate)
+                    overallMaxInstr = stats.MaxInstructionsPerUpdate;
+                if (overallMaxMillis < stats.MaxMillisecondsInOneUpdate)
+                    overallMaxMillis = stats.MaxMillisecondsInOneUpdate;
+            }
+            overallMeanInstr = weightedSumMeanInstr / overallInstr;
+            overallMeanMillis = weightedSumMeanMillis / overallInstr;
+
+            sb.Append(string.Format(formatterValues,
+                "TOTAL:", overallInstr, overallMillis, overallMeanInstr, overallMeanMillis, overallMaxInstr, overallMaxMillis ));
+
             if (!doProfiling)
                 sb.Append("(`log ProfileResult() to file.csv` for more information.)\n");
             sb.Append(" \n");
@@ -1619,11 +1662,7 @@ namespace kOS.Safe.Execution
         public void ResetStatistics()
         {
             totalCompileTime = 0D;
-            totalUpdateTime = 0D;
-            totalExecutionTime = 0D;
-            maxUpdateTime = 0.0;
-            maxExecutionTime = 0.0;
-            maxMainlineInstructionsSoFar = 0;
+            executionStats.Clear();
         }
         
         private void PrintStatistics()

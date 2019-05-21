@@ -128,7 +128,7 @@ namespace kOS.Persistence
             {
                 if (SafeHouse.Config.UseCompressedPersistence)
                 {
-                    node.AddValue("binary", EncodeBase64(content.String));
+                    node.AddValue("binary", PersistenceUtilities.EncodeBase64(content.Bytes));
                 }
                 else
                 {
@@ -151,9 +151,5 @@ namespace kOS.Persistence
             }
         }
 
-        private static string EncodeBase64(string input)
-        {
-            return PersistenceUtilities.EncodeBase64(Encoding.ASCII.GetBytes(input));
-        }
     }
 }

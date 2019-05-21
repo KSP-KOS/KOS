@@ -10,6 +10,8 @@ namespace kOS.Safe.Test.Opcode
         private readonly Stack<object> fakeStack;
         public bool IsPoppingContext { get { return false; } }
 
+        public int NextTriggerInstanceId { get { return -99;} }
+
         public FakeCpu()
         {
             fakeStack = new Stack<object>();
@@ -25,32 +27,37 @@ namespace kOS.Safe.Test.Opcode
             throw new NotImplementedException();
         }
 
-        public void PushStack(object item)
+        public void PushArgumentStack(object item)
         {
             fakeStack.Push(item);
         }
 
-        public object PopStack()
+        public object PopArgumentStack()
         {
             return fakeStack.Pop();
         }
 
-        public void MoveStackPointer(int delta)
+        public void PushScopeStack(object thing)
         {
             throw new NotImplementedException();
         }
 
-        public void PushAboveStack(object thing)
+        public object PopScopeStack(int howMany)
         {
             throw new NotImplementedException();
         }
 
-        public object PopAboveStack(int howMany)
+        public void PushNewScope(Int16 scopeId, Int16 parentScopeId)
         {
             throw new NotImplementedException();
         }
 
         public List<VariableScope> GetCurrentClosure()
+        {
+            throw new NotImplementedException();
+        }
+
+        public SubroutineContext GetCurrentSubroutineContext()
         {
             throw new NotImplementedException();
         }
@@ -70,47 +77,52 @@ namespace kOS.Safe.Test.Opcode
             throw new NotImplementedException();
         }
 
-        public object PopValue(bool barewordOkay = false)
+        public object PopValueArgument(bool barewordOkay = false)
         {
-            return PopStack();
+            return PopArgumentStack();
         }
 
-        public object PeekValue(int digDepth, bool barewordOkay = false)
+        public object PeekValueArgument(int digDepth, bool barewordOkay = false)
         {
             throw new NotImplementedException();
         }
 
-        public object PeekRaw(int digDepth, out bool checkOkay)
+        public object PeekRawArgument(int digDepth, out bool checkOkay)
         {
             throw new NotImplementedException();
         }
 
-        public Encapsulation.Structure GetStructureEncapsulated(Encapsulation.Structure testValue, bool barewordOkay = false)
+        public object PeekRawScope(int digDepth, out bool checkOkay)
         {
             throw new NotImplementedException();
         }
 
-        public Encapsulation.Structure PopStructureEncapsulated(bool barewordOkay = false)
+        public Encapsulation.Structure GetStructureEncapsulatedArgument(Encapsulation.Structure testValue, bool barewordOkay = false)
         {
-            return kOS.Safe.Encapsulation.Structure.FromPrimitiveWithAssert(PopValue(barewordOkay));
+            throw new NotImplementedException();
         }
 
-        public Encapsulation.Structure PeekStructureEncapsulated(int digDepth, bool barewordOkay = false)
+        public Encapsulation.Structure PopStructureEncapsulatedArgument(bool barewordOkay = false)
         {
-            return kOS.Safe.Encapsulation.Structure.FromPrimitiveWithAssert(PeekValue(digDepth, barewordOkay));
+            return kOS.Safe.Encapsulation.Structure.FromPrimitiveWithAssert(PopValueArgument(barewordOkay));
+        }
+
+        public Encapsulation.Structure PeekStructureEncapsulatedArgument(int digDepth, bool barewordOkay = false)
+        {
+            return kOS.Safe.Encapsulation.Structure.FromPrimitiveWithAssert(PeekValueArgument(digDepth, barewordOkay));
         }
         
-        public object PopValueEncapsulated(bool barewordOkay = false)
+        public object PopValueEncapsulatedArgument(bool barewordOkay = false)
         {
-            return kOS.Safe.Encapsulation.Structure.FromPrimitive(PopValue(barewordOkay));
+            return kOS.Safe.Encapsulation.Structure.FromPrimitive(PopValueArgument(barewordOkay));
         }
 
-        public object PeekValueEncapsulated(int digDepth, bool barewordOkay = false)
+        public object PeekValueEncapsulatedArgument(int digDepth, bool barewordOkay = false)
         {
-            return kOS.Safe.Encapsulation.Structure.FromPrimitive(PeekValue(digDepth, barewordOkay));
+            return kOS.Safe.Encapsulation.Structure.FromPrimitive(PeekValueArgument(digDepth, barewordOkay));
         }
 
-        public int GetStackSize()
+        public int GetArgumentStackSize()
         {
             return fakeStack.Count;
         }
@@ -170,32 +182,42 @@ namespace kOS.Safe.Test.Opcode
         {
             get { throw new NotImplementedException(); }
         }
-        public TriggerInfo AddTrigger(int triggerFunctionPointer, List<VariableScope> closure)
+        public TriggerInfo AddTrigger(int triggerFunctionPointer, InterruptPriority priority, int instanceId, bool immediate, List<VariableScope> closure)
         {
             throw new NotImplementedException();
         }
 
-        public TriggerInfo AddTrigger(UserDelegate del, List<kOS.Safe.Encapsulation.Structure> args)
+        public TriggerInfo AddTrigger(UserDelegate del, InterruptPriority priority, int instanceId,bool immediate, List<kOS.Safe.Encapsulation.Structure> args)
         {
             throw new NotImplementedException();
         }
 
-        public TriggerInfo AddTrigger(UserDelegate del, params kOS.Safe.Encapsulation.Structure[] args)
+        public TriggerInfo AddTrigger(UserDelegate del, InterruptPriority priority, int instanceId, bool immediate, params kOS.Safe.Encapsulation.Structure[] args)
         {
             throw new NotImplementedException();
         }
 
-        public TriggerInfo AddTrigger(TriggerInfo trigger)
+        public TriggerInfo AddTrigger(TriggerInfo trigger, bool immediate)
         {
             throw new NotImplementedException();
         }
 
-        public void RemoveTrigger(int triggerFunctionPointer)
+        public void RemoveTrigger(int triggerFunctionPointer, int instanceId)
         {
             throw new NotImplementedException();
         }
 
         public void RemoveTrigger(TriggerInfo trigger)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CancelCalledTriggers(int triggerFunctionPointer, int instanceId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CancelCalledTriggers(TriggerInfo trigger)
         {
             throw new NotImplementedException();
         }

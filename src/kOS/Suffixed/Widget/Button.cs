@@ -81,8 +81,14 @@ namespace kOS.Suffixed.Widget
 
             if (UserOnToggle != null)
             {
-                UserOnToggle.TriggerNextUpdate(new BooleanValue(pressed));
+                if (guiCaused)
+                    UserOnToggle.TriggerOnFutureUpdate(InterruptPriority.CallbackOnce, new BooleanValue(pressed));
+                else
+                    UserOnToggle.TriggerOnNextOpcode(InterruptPriority.NoChange, new BooleanValue(pressed));
+            }
 
+            if (parent != null && parent.UserOnRadioChange != null)
+            {
                 // For a radio button set, whichever button became true will
                 // also cause the parent box to fire the change event hook.
                 // (Don't fire it for the button that became false or it will fire
@@ -90,12 +96,17 @@ namespace kOS.Suffixed.Widget
                 if (IsExclusive && IsToggle && pressed)
                     parent.ScheduleOnRadioChange(this);
             }
+
             // Toggles generate clicks on every button state change, while non-toggle buttons
             // should only generate click events on the button-goes-in state,
             // not the button-goes-out state that should auto-activate when it's read:
             if (UserOnClick != null && (IsToggle || pressed))
             {
-                UserOnClick.TriggerNextUpdate();
+                if (guiCaused)
+                    UserOnClick.TriggerOnNextOpcode(InterruptPriority.CallbackOnce);
+                else
+                    UserOnClick.TriggerOnNextOpcode(InterruptPriority.NoChange);
+
                 if (!IsToggle)
                     causeRelease = true;
             }

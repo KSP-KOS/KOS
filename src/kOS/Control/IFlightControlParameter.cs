@@ -13,7 +13,11 @@ namespace kOS.Control
         void UpdateValue(object value, SharedObjects shared);
         object GetValue();
         SharedObjects GetShared();
-        void UpdateState();
+        /// <summary>
+        /// The vessel that was responsible for having set this control.
+        /// </summary>
+        /// <returns>The responsible vessel.</returns>
+        Vessel GetResponsibleVessel();
         void UpdateAutopilot(FlightCtrlState c);
         void EnableControl(SharedObjects shared);
         void DisableControl(SharedObjects shared);

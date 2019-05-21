@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace kOS.Safe.Persistence
 {
     public static class PersistenceUtilities
     {
-        public static readonly byte[] GzipHeader = new byte[] { (GZipConstants.GZIP_MAGIC >> 8), (GZipConstants.GZIP_MAGIC & 0xff), Deflater.DEFLATED, 0 };
+        public static readonly byte[] GzipHeader = new byte[] { (byte)(GZipConstants.GZIP_MAGIC >> 8), (byte)(GZipConstants.GZIP_MAGIC & 0xff), (byte)Deflater.DEFLATED, 0 };
         public static bool IsBinary(FileCategory category)
         {
             return category == FileCategory.BINARY || category == FileCategory.KSM;
@@ -113,7 +114,7 @@ namespace kOS.Safe.Persistence
                     if (semicolonPos < 0)
                         throw new KOSPersistenceException("Improperly encoded saved file contains '&' without closing ';'");
                     int charOrdinal;
-                    if (!int.TryParse(input.Substring(inputPos + 2, semicolonPos - (inputPos + 2)), out charOrdinal))
+                    if (!int.TryParse(input.Substring(inputPos + 2, semicolonPos - (inputPos + 2)), NumberStyles.Integer, CultureInfo.InvariantCulture, out charOrdinal))
                         throw new KOSPersistenceException("Improperly encoded saved file contains non-digits between the '&#' and the ';'");
                     output.Append((char)charOrdinal);
                     inputPos = semicolonPos; // skip to the end of the encoding section, as if everything between '&' and ';' was one char of input.

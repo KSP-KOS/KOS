@@ -1,16 +1,18 @@
-﻿using kOS.Communication;
+using kOS.Communication;
 using kOS.Execution;
 using kOS.Screen;
 using kOS.Callback;
 using kOS.Sound;
 using System.Collections.Generic;
 using System;
+using kOS.Suffixed;
 
 namespace kOS
 {
     public class SharedObjects : Safe.SafeSharedObjects
     {
         public Vessel Vessel { get; set; }
+        public VesselTarget VesselTarget { get { return VesselTarget.CreateOrGetExisting(this); } }
         public ProcessorManager ProcessorMgr { get; set; }
         public Part KSPPart { get; set; }
         public TermWindow Window { get; set; }
@@ -41,11 +43,11 @@ namespace kOS
 
         public void DestroyObjects()
         {
-            if (BindingMgr != null) { BindingMgr.Dispose(); }
             if (Window != null) { UnityEngine.Object.Destroy(Window); }
             if (SoundMaker != null) { SoundMaker.StopAllVoices(); }
             if (UpdateHandler != null) { UpdateHandler.ClearAllObservers(); }
             if (GameEventDispatchManager != null) { GameEventDispatchManager.Clear(); }
+            if (Interpreter != null) { Interpreter.RemoveAllResizeNotifiers(); }
             var props = typeof(SharedObjects).GetProperties();
             IDisposable tempDisp;
             foreach (var prop in props)

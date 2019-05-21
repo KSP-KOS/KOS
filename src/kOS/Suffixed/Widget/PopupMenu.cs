@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Execution;
 using UnityEngine;
@@ -39,7 +39,7 @@ namespace kOS.Suffixed.Widget
             popupStyle = FindStyle("popupWindow");
 
             list = new ListValue();
-            SetInitialContentImage(GameDatabase.Instance.GetTexture("kOS/GFX/popupmenu", false));
+            SetInitialContentImage(Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_popupmenu", false));
             RegisterInitializer(InitializeSuffixes);
         }
 
@@ -48,7 +48,7 @@ namespace kOS.Suffixed.Widget
             AddSuffix("OPTIONS", new SetSuffix<ListValue>(() => list, value => list = value));
             AddSuffix("ADDOPTION", new OneArgsSuffix<Structure>(AddOption));
             AddSuffix("VALUE", new SetSuffix<Structure>(GetValue, value => Choose(value)));
-            AddSuffix("INDEX", new SetSuffix<ScalarIntValue>(() => Index, value => { Index = value; if (Index >= 0 && Index < list.Count()) SetVisibleText(GetItemString(list[Index])); }));
+            AddSuffix("INDEX", new SetSuffix<ScalarIntValue>(() => Index, value => { Index = value; if (Index >= 0 && Index < list.Count) SetVisibleText(GetItemString(list[Index])); }));
             AddSuffix("CLEAR", new NoArgsVoidSuffix(Clear));
             AddSuffix("CHANGED", new SetSuffix<BooleanValue>(() => TakeChange(), value => changed = value));
             AddSuffix("MAXVISIBLE", new SetSuffix<ScalarIntValue>(() => maxVisible, value => maxVisible = value));
@@ -66,14 +66,17 @@ namespace kOS.Suffixed.Widget
 
         public Structure GetValue()
         {
-            return (Index >= 0 && Index < list.Count()) ? list[Index] : new StringValue("");
+            return (Index >= 0 && Index < list.Count) ? list[Index] : new StringValue("");
         }
 
         protected virtual void ScheduleChangeCallback()
         {
             if (UserOnChange != null)
             {
-                UserOnChange.TriggerNextUpdate(GetValue());
+                if (guiCaused)
+                    UserOnChange.TriggerOnFutureUpdate(InterruptPriority.CallbackOnce, GetValue());
+                else
+                    UserOnChange.TriggerOnNextOpcode(InterruptPriority.NoChange, GetValue());
                 changed = false;
             }
         }
@@ -96,7 +99,7 @@ namespace kOS.Suffixed.Widget
 
         public void AddOption(Structure opt)
         {
-            if (list.Count() == Index)
+            if (list.Count == Index)
                 SetVisibleText(GetItemString(opt));
             list.Add(opt);
             Communicate(() => changed = true);
@@ -104,13 +107,13 @@ namespace kOS.Suffixed.Widget
 
         public void Choose(Structure v)
         {
-            for (Index = 0; Index < list.Count(); ++Index) {
+            for (Index = 0; Index < list.Count; ++Index) {
                 if (list[Index] == v) {
                     return;
                 }
             }
             string vs = GetItemString(v);
-            for (Index = 0; Index < list.Count(); ++Index) {
+            for (Index = 0; Index < list.Count; ++Index) {
                 if (GetItemString(list[Index]) == vs) {
                     return;
                 }
@@ -147,7 +150,7 @@ namespace kOS.Suffixed.Widget
         /// <returns>The total height.</returns>
         private float CalcPopupViewHeight()
         {
-            int visibleRows = list.Count();
+            int visibleRows = list.Count;
             bool extendsPastBottom = (maxVisible > 0 && visibleRows > maxVisible);
             if (extendsPastBottom)
                 visibleRows = maxVisible;
@@ -187,7 +190,7 @@ namespace kOS.Suffixed.Widget
         {
             rememberScrollSpot = GUILayout.BeginScrollView(rememberScrollSpot, popupStyle.ReadOnly);
             GUILayout.BeginVertical(popupStyle.ReadOnly);
-            for (int i=0; i<list.Count(); ++i) {
+            for (int i=0; i<list.Count; ++i) {
                 if (GUILayout.Button(GetItemString(list[i]), itemStyle.ReadOnly)) {
                     int newindex = i;
                     Communicate(() => Index = newindex);

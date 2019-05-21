@@ -18,7 +18,7 @@ namespace kOS.Safe.Persistence
         public const char PathSeparator = '/';
         public const string UpSegment = "..";
         public const int MaxSegmentLength = 255;
-        public const string SegmentRegexString = @"\A[^/]+\Z";
+        public const string SegmentRegexString = @"\A[^/\\]+\Z";
         private static readonly Regex segmentRegex = new Regex(SegmentRegexString);
 
         /// <summary>
@@ -219,13 +219,26 @@ namespace kOS.Safe.Persistence
         {
             VolumePath otherPath = other as VolumePath;
 
-            if (otherPath == null)
+            if (ReferenceEquals(otherPath,null)) // ReferenceEquals prevents infinite recursion with overloaded == operator.
             {
                 return false;
             }
 
             return Segments.SequenceEqual(otherPath.Segments);
         }
+
+        public static bool operator ==(VolumePath left, VolumePath right)
+        {
+            if (ReferenceEquals(left,null) || ReferenceEquals(right,null)) // ReferenceEquals prevents infinite recursion with overloaded == operator.
+                return ReferenceEquals(left, null) && ReferenceEquals(right, null); // ReferenceEquals prevents infinite recursion with overloaded == operator.
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(VolumePath left, VolumePath right)
+        {
+            return !(left == right);
+        }
+
 
         public override string ToString()
         {

@@ -27,6 +27,7 @@ GUI structure
     :attr:`DRAGGABLE`                     :struct:`Boolean`               True = user can move window.
     :attr:`EXTRADELAY`                    :struct:`scalar` (seconds)      Add artificial delay to all communication with this GUI (good for testing before you get into deep space)
     :attr:`SKIN`                          :struct:`Skin`                  The skin defining the default style of widgets in this GUI.
+    :attr:`TOOLTIP`                       :struct:`String`                Current value of hovertext
     :meth:`SHOW`                          none                            Call to make the gui appear
     :meth:`HIDE`                          none                            Call to make the gui disappear
     ===================================== =============================== =============
@@ -93,6 +94,20 @@ GUI structure
         suffix you can assign a different Skin to the window, which will then
         be used by default by all the widgets of the appropriate type
         inside the window.
+
+    .. attribute:: TOOLTIP
+
+        :type: :struct:`String`
+        :access: Get/Set
+
+        If the mouse pointer is hovering over a GUI label widget inside this
+        window somewhere that has its :attr:`Label:TOOLTIP` property set, then
+        this string will contain that TOOLTIP property copied into it (otherwise
+        it will be an empty string, ``""``).  This is the value that will be
+        displayed inside this window's :struct:`TipDisplay` widget if you add
+        a TipDisplay widget to the window.  Using this value, you can come up
+        with your own alternate ways to display tooltips to the user, if you
+        like, instead of using the baked-in :struct:`TipDisplay` technique.
 
     .. method:: SHOW
 

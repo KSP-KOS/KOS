@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Compilation;
+using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Execution;
@@ -22,19 +22,19 @@ namespace kOS.Safe.Test.Opcode
         {
             var list = new ListValue();
             list.Add(new StringValue("bar"));
-            cpu.PushStack(list);
+            cpu.PushArgumentStack(list);
 
             const int INDEX = 0;
-            cpu.PushStack(INDEX);
+            cpu.PushArgumentStack(INDEX);
 
             const string VALUE = "foo";
-            cpu.PushStack(VALUE);
+            cpu.PushArgumentStack(VALUE);
             
             var opcode = new OpcodeSetIndex();
 
             opcode.Execute(cpu);
 
-            Assert.AreEqual(1, list.Count());
+            Assert.AreEqual(1, list.Count);
             Assert.AreNotEqual(new StringValue("bar"), list[0]);
             Assert.AreEqual(new StringValue("foo"), list[0]);
         }
@@ -44,19 +44,19 @@ namespace kOS.Safe.Test.Opcode
         {
             var list = new ListValue();
             list.Add(new StringValue("bar"));
-            cpu.PushStack(list);
+            cpu.PushArgumentStack(list);
 
             const float INDEX = 0.0f;
-            cpu.PushStack(INDEX);
+            cpu.PushArgumentStack(INDEX);
 
             const string VALUE = "foo";
-            cpu.PushStack(VALUE);
+            cpu.PushArgumentStack(VALUE);
             
             var opcode = new OpcodeSetIndex();
 
             opcode.Execute(cpu);
 
-            Assert.AreEqual(1, list.Count());
+            Assert.AreEqual(1, list.Count);
             Assert.AreNotEqual(new StringValue("bar"), list[0]);
             Assert.AreEqual(new StringValue("foo"), list[0]);
         }
@@ -66,19 +66,19 @@ namespace kOS.Safe.Test.Opcode
         {
             var list = new ListValue();
             list.Add(new StringValue("bar"));
-            cpu.PushStack(list);
+            cpu.PushArgumentStack(list);
 
             const double INDEX = 0.0d;
-            cpu.PushStack(INDEX);
+            cpu.PushArgumentStack(INDEX);
 
             const string VALUE = "foo";
-            cpu.PushStack(VALUE);
+            cpu.PushArgumentStack(VALUE);
             
             var opcode = new OpcodeSetIndex();
 
             opcode.Execute(cpu);
 
-            Assert.AreEqual(1, list.Count());
+            Assert.AreEqual(1, list.Count);
             Assert.AreNotEqual(new StringValue("bar"), list[0]);
             Assert.AreEqual(new StringValue("foo"), list[0]);
         }
@@ -89,13 +89,13 @@ namespace kOS.Safe.Test.Opcode
         {
             var list = new ListValue();
             list.Add(new StringValue("bar"));
-            cpu.PushStack(list);
+            cpu.PushArgumentStack(list);
 
             const string INDEX = "fizz";
-            cpu.PushStack(INDEX);
+            cpu.PushArgumentStack(INDEX);
 
             const string VALUE = "foo";
-            cpu.PushStack(VALUE);
+            cpu.PushArgumentStack(VALUE);
             
             var opcode = new OpcodeSetIndex();
 
@@ -109,12 +109,12 @@ namespace kOS.Safe.Test.Opcode
 
             var lex = new Lexicon();
             lex.Add(index, new StringValue("bar"));
-            cpu.PushStack(lex);
+            cpu.PushArgumentStack(lex);
 
-            cpu.PushStack(index);
+            cpu.PushArgumentStack(index);
 
             const string VALUE = "fizz";
-            cpu.PushStack(VALUE);
+            cpu.PushArgumentStack(VALUE);
             
             var opcode = new OpcodeSetIndex();
 
@@ -131,12 +131,12 @@ namespace kOS.Safe.Test.Opcode
             const string INDEX = "foo";
 
             var lex = new object();
-            cpu.PushStack(lex);
+            cpu.PushArgumentStack(lex);
 
-            cpu.PushStack(INDEX);
+            cpu.PushArgumentStack(INDEX);
 
             const string VALUE = "fizz";
-            cpu.PushStack(VALUE);
+            cpu.PushArgumentStack(VALUE);
             
             var opcode = new OpcodeSetIndex();
 

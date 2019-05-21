@@ -5,6 +5,7 @@ using kOS.Safe.Function;
 using kOS.Safe.Persistence;
 using kOS.Suffixed;
 using kOS.Suffixed.Part;
+using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -67,6 +68,10 @@ namespace kOS.Function
 
                 case "config":
                     list = GetConfigList();
+                    break;
+
+                case "fonts":
+                    list = GetFontList();
                     break;
 
                 default:
@@ -155,6 +160,19 @@ namespace kOS.Function
             foreach (var body in FlightGlobals.fetch.bodies)
             {
                 list.AddItem(body.bodyName, Vector3d.Distance(body.position, shared.Vessel.CoMD));
+            }
+
+            return list;
+        }
+
+        private kList GetFontList()
+        {
+            var list = new kList();
+            list.AddColumn("Font Name", 15, ColumnAlignment.Left);
+
+            foreach (Font f in Resources.FindObjectsOfTypeAll<Font>())
+            {
+                list.AddItem(f.name);
             }
 
             return list;

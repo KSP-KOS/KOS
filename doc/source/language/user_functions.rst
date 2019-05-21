@@ -50,26 +50,19 @@ DECLARE FUNCTION
 In kerboscript, you can make your own user functions using the
 DECLARE FUNCTION command, which has syntax as follows:
 
-  [``declare``] [``local``] ``function`` *identifier* ``{`` *statements* ``}`` *optional dot (.)*
+  [``declare``] [``local``|``global``] ``function`` *identifier* ``{`` *statements* ``}`` *optional dot (.)*
 
 The statement is called a "declare function" statement even when the optional
 word "declare" was left off.
 
-The following are all identical in meaning::
+::
 
     declare function hi { print "hello". }
     declare local function hi { print "hello". }
+    declare global function hi { print "hello". }
     local function hi { print "hello". }
+    global function hi { print "hello". }
     function hi { print "hello". }
-
-Functions are presumed to have scope local to the location where
-they are declared when the explicit local scope keyword is missing.
-
-At the moment, it is redundant to mention the ``local`` keyword,
-although it is allowed.
-
-It is best to just leave all the optional keywords of and merely say
-``function`` by itself.
 
 Example::
 
@@ -99,9 +92,34 @@ Example::
 
     print_corner(4,"That's me in the corner").
 
+Default varies when local or global are omitted
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When the explicit ``local`` or ``global`` scope keyword is missing,
+the default that is chosen depends on where the function is declared.
+If the function was declared in the outermost file scope, it will be
+assumed to be global.  If it was declared inside some braces, it will
+be assumed to be local to those braces::
+
+    // f1 behaves as if it was declared global
+    // because this is the outermost file scope:
+    function f1 {
+       print "I am in f1".
+    }
+    if true {
+      // f2 behaves as if it was declared local
+      // because this is inside some braces ("{","}"):
+      function f2 {
+       print "I am in f2".
+      }
+      f2(). // can be called from here.
+    }
+    f2(). // This throws an error because f2 was local to the "if true" braces.
+    
 A declare function command can appear anywhere in a kerboscript program,
 and once its been "parsed" by the compiler, the function can be called
-from anywhere in the program.
+from anywhere in the program that is able to see the function according
+to the scoping rules.
 
 The best design pattern is probably to create your library of function
 calls as one or more separate .ks files that contain just function
@@ -301,12 +319,6 @@ expression, the expression will not get executed if the calling
 function had an argument present in that position.  The expression
 only gets executed if the system needed to pad a missing argument.
 
-.. note::
-    .. versionadded:: 0.18.3
-        Optional Parameters were added as a new feature in kOS 0.18.3
-
-
-
 .. _interpreter functions:
 
 Functions and the terminal interpreter
@@ -326,7 +338,7 @@ up jumping into random parts of your code that have nothing
 to do with the actual function call you're trying to
 make.
 
-As a rule of thumb, in kOS 0.17.0, make sure you only use
+As a rule of thumb, make sure you only use
 functions from inside script programs.  Don't try to call
 them interactively from the interpreter prompt.  You will
 get very strange and (seemingly) inexplicable errors.
@@ -405,10 +417,10 @@ This is now **illegal** syntax::
 .. warning::
   .. versionadded:: 0.17
     **Breaking Change:** The kerboscript from prior versions
-    of kOS did allow you do make ``declare`` statements
+    of kOS did allow you to make ``declare`` statements
     without any initializers in them (and in fact you couldn't
     provide an initializer for them in prior versions even if
-    you wanted to).
+    you wanted to).	
 
 In order to avoid the issue of having uninitialized variables in
 kerboscript, any declare statement *requires* the use of the
@@ -629,7 +641,7 @@ User Function Gotchas
 Calling program's functions from the interpreter
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-As :ref:`explained above <interpreter functions>`, kOS 0.17.0 does
+As :ref:`explained above <interpreter functions>`, kOS does
 not support the calling of a function from the interpreter console
 and if you attempt it you will get very strange and random errors
 that you might waste a lot of time trying to track down.

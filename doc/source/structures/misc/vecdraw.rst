@@ -36,6 +36,35 @@ Drawing Vectors on the Screen
               0.2
             ).
 
+    Vector arrows can also be created with dynamic positioning and color.  To do
+    this, instead of passing static values for the first three arguments of
+    ``VECDRAW()`` or ``VECDRAWARGS()``, you can pass a
+    :ref:`Delegate <delegates>` for any of them, which returns a value of the
+    correct type.  Here's an example where the Start, Vec, and Color are all
+    dynamically adjusted by anonymous delegates that kOS will frequently call
+    for you as it draws the arrow::
+
+        // Small dynamically moving vecdraw example:
+        SET anArrow TO VECDRAW(
+          { return (6-4*cos(100*time:seconds)) * up:vector. },
+          { return (4*sin(100*time:seconds)) * up:vector.  },
+          { return RGBA(1, 1, RANDOM(), 1). },
+          "Jumping arrow!",
+          1.0,
+          TRUE,
+          0.2
+        ).
+        wait 20. // Give user time to see it in motion.
+        set anArrow:show to false. // Make it stop drawing.
+
+    In the above example, ``VECDRAW()`` detects that the first argument
+    is a delegate, and it uses this information to decide to assign
+    it into :attr:`VecDraw:STARTUPDATER`, instead of into :attr:`VecDraw:START`.
+    Similarly it detects that the second argument is a delegate, so it
+    assigns it into :attr:`VecDraw:VECUPDATER` instead of into :attr:`VecDraw:VEC`.
+    And it does the same thing with the third argument, assigning it into
+    :attr:`VecDraw:COLORUPDATER`, instead of :attr:`VecDraw:COLOR`.
+
     All the parameters of the ``VECDRAW()`` and ``VECDRAWARGS()`` are
     optional.  You can leave any of the lastmost parameters off and they
     will be given a default::
@@ -192,12 +221,6 @@ Drawing Vectors on the Screen
     Optional, defaults to 1.0. Scalar to multiply the VEC by, and the WIDTH,
     but not the START.
 
-    .. versionchanged:: 0.19.0
-
-        In previous versions, this also moved the start location, but most
-        users found that useless and confusing and that has been
-        changed as described above.
-
 .. attribute:: VecDraw:SHOW
 
     :access: Get/Set
@@ -213,10 +236,6 @@ Drawing Vectors on the Screen
     Define the width of the drawn line, in meters.  The deafult is 0.2 if
     left off.  Note, this also causes the font of the label to be enlarged
     to match if set to a value larger than 0.2.
-
-    .. versionadded:: 0.19.0
-
-        This parameter didn't exist before kOS 0.19.0.
 
 .. attribute:: VecDraw:STARTUPDATER
 

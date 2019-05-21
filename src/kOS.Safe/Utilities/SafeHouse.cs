@@ -1,4 +1,5 @@
-﻿using kOS.Safe.Encapsulation;
+﻿using System.IO;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Safe.Utilities
 {
@@ -14,7 +15,7 @@ namespace kOS.Safe.Utilities
         {
             Config = config;
             IsWindows = isWindows;
-            ArchiveFolder = archiveFolder;
+            ArchiveFolder = Path.GetFullPath(archiveFolder);
             Version = versionInfo;
             DocumentationURL = docURL;
         }

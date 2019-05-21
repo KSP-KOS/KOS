@@ -483,7 +483,7 @@ suffix that corresponds to them, as given in the example below::
     SET V0:ATTACK to 0.1.
     SET V0:DECAY to 0.2.
     SET V0:SUSTAIN to 0.7. // 70% volume while sustaining.
-    SET V0:RELEASE to 0.5 // takes half a second to fade out.
+    SET V0:RELEASE to 0.5. // takes half a second to fade out.
 
 Note()
 ~~~~~~

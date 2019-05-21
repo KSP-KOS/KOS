@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Serialization;
@@ -7,7 +7,7 @@ using System;
 namespace kOS.Suffixed
 {
     [kOS.Safe.Utilities.KOSNomenclature("Orbit")]
-    public class OrbitInfo : Structure, IHasSharedObjects
+    public class OrbitInfo : Structure
     {
         private Orbit orbit;
         public SharedObjects Shared { get; set; }
@@ -29,7 +29,10 @@ namespace kOS.Suffixed
         {
             Shared = sharedObj;
             orbit = orb;
-            name = "<unnamed>";
+            if (orb.referenceBody == null)
+                name = "<unnamed>"; // I have no clue when or how this could ever happen.  What is an orbit around nothing?
+            else
+                name = orb.referenceBody.name;
         }
 
         private void InitializeSuffixes()
@@ -45,8 +48,14 @@ namespace kOS.Suffixed
             AddSuffix("SEMIMINORAXIS", new Suffix<ScalarValue>(() => orbit.semiMinorAxis));
             AddSuffix(new[]{"LAN", "LONGITUDEOFASCENDINGNODE"}, new Suffix<ScalarValue>(() => orbit.LAN));
             AddSuffix("ARGUMENTOFPERIAPSIS", new Suffix<ScalarValue>(() => orbit.argumentOfPeriapsis));
-            AddSuffix("TRUEANOMALY", new Suffix<ScalarValue>(() => Utilities.Utils.DegreeFix(Utilities.Utils.RadiansToDegrees(orbit.trueAnomaly),0.0)));
-            AddSuffix("MEANANOMALYATEPOCH", new Suffix<ScalarValue>(() => Utilities.Utils.DegreeFix(Utilities.Utils.RadiansToDegrees(orbit.meanAnomalyAtEpoch), 0.0)));
+            AddSuffix("TRUEANOMALY", new Suffix<ScalarValue>(() => orbit.eccentricity < 1.0 ? 
+                                                             Utilities.Utils.DegreeFix(Utilities.Utils.RadiansToDegrees(orbit.trueAnomaly),0.0) :
+                                                             Utilities.Utils.DegreeFix (Utilities.Utils.RadiansToDegrees (orbit.trueAnomaly), -180.0)
+                                                            ));
+            AddSuffix("MEANANOMALYATEPOCH", new Suffix<ScalarValue>(() => orbit.eccentricity < 1.0 ? 
+                                                                    Utilities.Utils.DegreeFix(Utilities.Utils.RadiansToDegrees(orbit.meanAnomalyAtEpoch), 0.0) :
+                                                                    Utilities.Utils.RadiansToDegrees(orbit.meanAnomalyAtEpoch)
+                                                                   ));
             AddSuffix("EPOCH", new Suffix<ScalarValue>(() => orbit.epoch));
             AddSuffix("TRANSITION", new Suffix<StringValue>(() => orbit.patchEndTransition.ToString()));
             AddSuffix("POSITION", new Suffix<Vector>(() => GetPositionAtUT( new TimeSpan(Planetarium.GetUniversalTime() ) )));

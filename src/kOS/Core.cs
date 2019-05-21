@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Persistence;
 using kOS.Safe.Utilities;
@@ -20,7 +20,13 @@ namespace kOS
         static Core()
         {
             var ver = typeof(Core).Assembly.GetName().Version;
-            VersionInfo = new VersionInfo(ver.Major, ver.Minor, ver.Build);
+            // NOTICE: there is a clash of nomenclature here.  C# calls the
+            // 3rd number "BUILD" and the 4th number "Revision" while the AVC mod
+            // (and presumably CKAN) calls the 3rd number "PATCH" and the 4th number "BUILD".
+            // We'll be using the AVC terminology in kerboscript, thus why this next line
+            // passes in "ver.Revision" where the VersionInfo's "BUILD" goes, and the
+            // "ver.Build" where VersionInfo's "PATCH" goes:
+            VersionInfo = new VersionInfo(ver.Major, ver.Minor, ver.Build, ver.Revision);
         }
 
         public Core(kOSProcessor processor, SharedObjects shared):base(processor, shared)
@@ -41,7 +47,7 @@ namespace kOS
         private ElementValue GetEelement()
         {
             var elList = shared.KSPPart.vessel.PartList("elements", shared);
-            var part = new PartValue(shared.KSPPart, shared);
+            var part = VesselTarget.CreateOrGetExisting(shared)[shared.KSPPart];
             return elList.Cast<ElementValue>().FirstOrDefault(el => el.Parts.Contains(part));
         }
 

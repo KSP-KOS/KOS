@@ -48,6 +48,7 @@ namespace kOS.Safe.Encapsulation
                 {
                     callback.Invoke();
                 }
+                needToInitializeSuffixes = false;
             }
         }
         

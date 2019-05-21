@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using kOS.Safe.Binding;
 using kOS.Safe.Compilation;
@@ -13,7 +13,8 @@ namespace kOS.Safe.Execution
 
         public List<Opcode> Program { get; set; }
         public int InstructionPointer { get; set; }
-        
+        public InterruptPriority CurrentPriority { get; set; }
+
         // Increments every time we construct a new ProgramContext.
         private static int globalInstanceCount = 0;
         
@@ -27,7 +28,14 @@ namespace kOS.Safe.Execution
         /// List of triggers that are currently active
         /// </summary>
         private List<TriggerInfo> Triggers { get; set; }
-        
+
+        private int nextTriggerInstanceId = 1;
+        public int NextTriggerInstanceId { get {return nextTriggerInstanceId++;} }
+        public void ResetTriggerInstanceIdCounter()
+        {
+            nextTriggerInstanceId = 1;
+        }
+
         /// <summary>
         /// List of triggers that are *about to become* currently active, but only after
         /// the CPU tells us it's a good safe time to re-insert them.  This delay is done
@@ -172,19 +180,32 @@ namespace kOS.Safe.Execution
         /// <summary>
         /// Add a trigger to the list of triggers pending insertion.
         /// It will not *finish* inserting it until the CPU tells us it's a good
-        /// time to do so, by calling ActivatePendingTriggers().
+        /// time to do so (i.e. next time CPU does a FixedUpdate), by calling
+        /// ActivatePendingTriggers().
         /// It will also refuse to insert a WHEN/ON/LOCK trigger that's already either active
         /// or pending insertion to the active list (avoids duplication).
         /// </summary>
         /// <param name="trigger"></param>
         public void AddPendingTrigger(TriggerInfo trigger)
         {
-            // CntainsTrigger is a sequential walk, but that should be okay
+            // ContainsTrigger is a sequential walk, but that should be okay
             // because it should be unlikely that there's hundreds of
             // triggers.  There'll be at most tens of them, and even that's
             // unlikely.
+            trigger.IsImmediateTrigger = false;
             if (! ContainsTrigger(trigger))
                 TriggersToInsert.Add(trigger);
+        }
+
+        /// <summary>
+        /// Adds a trigger to happen immediately on the next opcode, instead of
+        /// waiting for the next CPU FixedUpdate like AddPendingTrigger does.
+        /// </summary>
+        /// <param name="trigger">Trigger to be inserted</param>
+        public void AddImmediateTrigger(TriggerInfo trigger)
+        {
+            trigger.IsImmediateTrigger = true;
+            Triggers.Add(trigger);
         }
         
         /// <summary>
@@ -194,8 +215,8 @@ namespace kOS.Safe.Execution
         /// <param name="trigger"></param>
         public void RemoveTrigger(TriggerInfo trigger)
         {
-            Triggers.Remove(trigger); // can ignore if it wasn't in the list.
-            TriggersToInsert.Remove(trigger); // can ignore if it wasn't in the list.
+            Triggers.RemoveAll((item) => item.Equals(trigger)); // can ignore if it wasn't in the list.
+            TriggersToInsert.RemoveAll((item) => item.Equals(trigger)); // can ignore if it wasn't in the list.
         }
         
         /// <summary>
@@ -239,6 +260,11 @@ namespace kOS.Safe.Execution
         {
             Triggers.AddRange(TriggersToInsert);
             TriggersToInsert.Clear();
+        }
+
+        public bool HasActiveTriggersAtLeastPriority(InterruptPriority pri)
+        {
+            return Triggers.Exists(t => t.Priority >= pri && !t.IsImmediateTrigger);
         }
 
         public List<string> GetCodeFragment(int contextLines)

@@ -85,6 +85,11 @@ namespace kOS.Safe.Screen
             Notifyees.Remove(notifier);
         }
 
+        public void RemoveAllResizeNotifiers()
+        {
+            Notifyees.Clear();
+        }
+
         public void SetSize(int rows, int columns)
         {
             RowCount = rows;

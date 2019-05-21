@@ -34,19 +34,25 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
           - Tweaked thrust limit
         * - :attr:`MAXTHRUST`
           - :ref:`scalar <scalar>` (kN)
-          - Untweaked thrust limit
+          - Untweaked thrust limit. Zero if engine disabled.
         * - :meth:`MAXTHRUSTAT(pressure)`
           - :ref:`scalar <scalar>` (kN)
-          - Max thrust at the specified pressure (in standard Kerbin atmospheres).
+          - Max thrust at the specified pressure (in standard Kerbin atmospheres). Zero if engine disabled.
         * - :attr:`THRUST`
           - :ref:`scalar <scalar>` (kN)
-          - Current thrust
+          - Current thrust. Zero if engine disabled.
         * - :attr:`AVAILABLETHRUST`
           - :ref:`scalar <scalar>` (kN)
-          - Available thrust at full throttle accounting for thrust limiter
+          - Available thrust at full throttle accounting for thrust limiter. Zero if engine disabled.
         * - :meth:`AVAILABLETHRUSTAT(pressure)`
           - :ref:`scalar <scalar>` (kN)
-          - Available thrust at the specified pressure (in standard Kerbin atmospheres).
+          - Available thrust at the specified pressure (in standard Kerbin atmospheres). Zero if engine disabled.
+        * - :attr:`POSSIBLETHRUST`
+          - :ref:`scalar <scalar>` (kN)
+          - Possible thrust at full throttle accounting for thrust limiter, when the engine is enabled.
+        * - :meth:`POSSIBLETHRUSTAT(pressure)`
+          - :ref:`scalar <scalar>` (kN)
+          - Possible thrust at the specified pressure (in standard Kerbin atmospheres), when the engine is enabled.
         * - :attr:`FUELFLOW`
           - :ref:`scalar <scalar>` (l/s maybe)
           - Rate of fuel burn
@@ -143,7 +149,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     do something like ``set ship:part[20]:thrustlimit to 10.5123.`` in
     your script, then look at the rightclick menu for the engine, the very
     act of just looking at the menu will cause it to become 10.5 instead 
-    of 10.5123.  There isn't much that kOS can to to change this.  It's a
+    of 10.5123.  There isn't much that kOS can do to change this.  It's a
     user interface decision baked into the stock game.
 
 .. _engine_MAXTHRUST:
@@ -153,7 +159,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :access: Get only
     :type: :ref:`scalar <scalar>` (kN)
 
-    How much thrust would this engine give at its current atmospheric pressure and velocity if the throttle was max at 1.0, and the thrust limiter was max at 100%.  Note this might not be the engine's actual max thrust it could have under other air pressure conditions.  Some engines have a very different value for MAXTHRUST in vacuum as opposed to at sea level pressure.  Also, some jet engines have a very different value for MAXTHRUST depending on how fast they are currently being rammed through the air.
+    How much thrust would this engine give at its current atmospheric pressure and velocity if the throttle was max at 1.0, and the thrust limiter was max at 100%.  Note this might not be the engine's actual max thrust it could have under other air pressure conditions.  Some engines have a very different value for MAXTHRUST in vacuum as opposed to at sea level pressure.  Also, some jet engines have a very different value for MAXTHRUST depending on how fast they are currently being rammed through the air. Also note that this will read zero if the engine is currently disabled.
 
 .. _engine_MAXTHRUSTAT:
 
@@ -162,7 +168,9 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
     :type: :ref:`scalar <scalar>` (kN)
 
-    How much thrust would this engine give if both the throttle and thrust limtier was max at the current velocity, and at the given atmospheric pressure.  Use a pressure of 0.0 for vacuum, and 1.0 for sea level (on Kerbin) (or more than 1 for thicker atmospheres like on Eve).
+    How much thrust would this engine give if both the throttle and thrust limtier was max at the current velocity, and at the given atmospheric pressure.  Use a pressure of 0.0 for vacuum, and 1.0 for sea level (on Kerbin) (or more than 1 for thicker atmospheres like on Eve). Note that this will read zero if the engine is currently disabled.
+    (Pressure must be greater than or equal to zero.  If you pass in a
+    negative value, it will be treated as if you had given a zero instead.)
 
 .. attribute:: Engine:THRUST
 
@@ -178,7 +186,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :access: Get only
     :type: :ref:`scalar <scalar>` (kN)
 
-    Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and atmospheric pressure and velocity conditions.
+    Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and atmospheric pressure and velocity conditions. Note that this will read zero if the engine is currently disabled.
 
 .. _engine_AVAILABLETHRUSTAT:
 
@@ -187,8 +195,30 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
     :type: :ref:`scalar <scalar>` (kN)
 
-    Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and velocity, but at a different atmospheric pressure you pass into it.  The pressure is measured in ATM's, meaning 0.0 is a vacuum, 1.0 is seal level at Kerbin.
+    Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and velocity, but at a different atmospheric pressure you pass into it.  The pressure is measured in ATM's, meaning 0.0 is a vacuum, 1.0 is seal level at Kerbin.  Note that this will read zero if the engine is currently disabled.
+    (Pressure must be greater than or equal to zero.  If you pass in a
+    negative value, it will be treated as if you had given a zero instead.)
 
+.. _engine_POSSIBLETHRUST:
+
+.. attribute:: Engine:POSSIBLETHRUST
+
+    :access: Get only
+    :type: :ref:`scalar <scalar>` (kN)
+
+    Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and atmospheric pressure and velocity conditions. This will give the correct value even if the engine is currently disabled.
+
+.. _engine_POSSIBLETHRUSTAT:
+
+.. method:: Engine:POSSIBLETHRUSTAT(pressure)
+
+    :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
+    :type: :ref:`scalar <scalar>` (kN)
+
+    Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and velocity, but at a different atmospheric pressure you pass into it.  The pressure is measured in ATM's, meaning 0.0 is a vacuum, 1.0 is seal level at Kerbin.  This will give the correct value even if the engine is currently disabled.
+    (Pressure must be greater than or equal to zero.  If you pass in a
+    negative value, it will be treated as if you had given a zero instead.)
+    
 .. attribute:: Engine:FUELFLOW
 
     :access: Get only
@@ -209,6 +239,8 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :type: :ref:`scalar <scalar>`
 
     `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
+    (Pressure must be greater than or equal to zero.  If you pass in a
+    negative value, it will be treated as if you had given a zero instead.)
 
 .. attribute:: Engine:VACUUMISP
 

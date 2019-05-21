@@ -7,7 +7,7 @@ using System.Linq;
 namespace kOS.Binding
 {
     [AssemblyWalk(AttributeType = typeof(BindingAttribute), InherritedType = typeof(SafeBindingBase), StaticRegisterMethod = "RegisterMethod")]
-    public class BindingManager : IDisposable, IBindingManager
+    public class BindingManager : IBindingManager
     {
         private readonly SharedObjects shared;
         private readonly List<kOS.Safe.Binding.SafeBindingBase> bindings = new List<kOS.Safe.Binding.SafeBindingBase>();
@@ -132,22 +132,6 @@ namespace kOS.Binding
             if (flightControl != null)
             {
                 flightControl.ToggleFlyByWire(paramName, enabled);
-            }
-        }
-
-        public void UnBindAll()
-        {
-            if (flightControl != null)
-            {
-                flightControl.UnBind();
-            }
-        }
-
-        public void Dispose()
-        {
-            if (flightControl != null)
-            {
-                flightControl.Dispose();
             }
         }
 

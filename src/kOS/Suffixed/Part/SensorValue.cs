@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 
@@ -9,10 +9,14 @@ namespace kOS.Suffixed.Part
     {
         private readonly ModuleEnviroSensor sensor;
 
-        public SensorValue(global::Part part, ModuleEnviroSensor sensor, SharedObjects sharedObj) : base(part,sharedObj)
+        /// <summary>
+        /// Do not call! VesselTarget.ConstructPart uses this, would use `friend VesselTarget` if this was C++!
+        /// </summary>
+        internal SensorValue(SharedObjects shared, global::Part part, PartValue parent, DecouplerValue decoupler, ModuleEnviroSensor sensor) :
+            base(shared, part, parent, decoupler)
         {
             this.sensor = sensor;
-            SensorInitializeSuffixes();
+            RegisterInitializer(SensorInitializeSuffixes);
         }
 
         private void SensorInitializeSuffixes()
@@ -27,14 +31,11 @@ namespace kOS.Suffixed.Part
         public static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects sharedObj)
         {
             var toReturn = new ListValue();
+            var vessel = VesselTarget.CreateOrGetExisting(sharedObj);
             foreach (var part in parts)
             {
-                foreach (PartModule module in part.Modules)
-                {
-                    var sensor = module as ModuleEnviroSensor;
-                    if (sensor == null) continue;
-                    toReturn.Add(new SensorValue(part, sensor, sharedObj));
-                }
+                if(part.Modules.Contains<ModuleEnviroSensor>())
+                    toReturn.Add(vessel[part]);
             }
             return toReturn;
         }

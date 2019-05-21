@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using kOS.Safe.Encapsulation.Suffixes;
@@ -20,6 +20,9 @@ namespace kOS.Safe.Encapsulation
     public class StringValue : PrimitiveStructure, IIndexable, IConvertible, IEnumerable<string>
     {
         private readonly string internalString;
+
+        public static StringValue Empty { get; } = new StringValue();
+        public static StringValue None { get; } = new StringValue("None");
 
         public StringValue(): 
             this (string.Empty)
@@ -242,6 +245,13 @@ namespace kOS.Safe.Encapsulation
             return new BooleanValue(Regex.IsMatch(internalString, pattern, RegexOptions.IgnoreCase));
         }
 
+        public StringValue Format(params Structure[] args)
+        {
+            if (args.Length == 0)
+                return this;
+            return new StringValue(string.Format(CultureInfo.InvariantCulture, this, args));
+        }
+
         private void StringInitializeSuffixes()
         {
             AddSuffix("LENGTH",     new NoArgsSuffix<ScalarValue>( () => Length));
@@ -264,11 +274,12 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("TRIMSTART",  new NoArgsSuffix<StringValue>(() => TrimStart()));
             AddSuffix("MATCHESPATTERN", new OneArgsSuffix<BooleanValue, StringValue>( one => MatchesPattern(one)));
             AddSuffix(new[] { "TONUMBER", "TOSCALAR" }, new VarArgsSuffix<ScalarValue, Structure>(ToScalarVarArgsWrapper));
+            AddSuffix("FORMAT",     new VarArgsSuffix<StringValue, Structure>(Format));
 
             // Aliased "IndexOf" with "Find" to match "FindAt" (since IndexOfAt doesn't make sense, but I wanted to stick with common/C# names when possible)
             AddSuffix(new[] { "INDEXOF",     "FIND" },     new OneArgsSuffix<ScalarValue, StringValue>   ( one => IndexOf(one)));
             AddSuffix(new[] { "LASTINDEXOF", "FINDLAST" }, new OneArgsSuffix<ScalarValue, StringValue>   ( s => LastIndexOf(s)));
-            AddSuffix ("ITERATOR", new NoArgsSuffix<Enumerator>( () => new Enumerator(GetEnumerator()) ));
+            AddSuffix("ITERATOR", new NoArgsSuffix<Enumerator>( () => new Enumerator(GetEnumerator()) ));
         }
 
         public static bool operator ==(StringValue val1, StringValue val2)

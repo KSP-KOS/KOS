@@ -11,16 +11,8 @@ These functions are built-in for performing basic math operations in kOS.
 Fundamental Constants
 ---------------------
 
-There is a bound variable called CONSTANT which contains some basic fundamental
-constants about the universe that you may find handy in your math operations.
-
-.. versionadded:: 0.18
-    Prior to kOS version 0.18, ``constant`` was a function call, and
-    therefore to say ``constant:pi``, you had to say ``constant():pi``.
-    The function call ``constant()`` still exists and still works, but
-    the new way without the parentheses is preferred going forward,
-    and the way with the parentheses may become deprecated later.
-    For the moment, both ways of doing it work.
+There is a bound variable called `CONSTANT` which contains some basic fundamental
+constants about the universe that you may find handy in your math operations.  Prior to kOS version 0.18, `CONSTANT` was implemented as a function call, so values were accessed as `CONSTANT():PI` and the like.  This functionality has been retained for backward compatibility, but new code should instead call `CONSTANT:PI`.
 
 .. list-table::
     :header-rows: 1
@@ -30,7 +22,9 @@ constants about the universe that you may find handy in your math operations.
       - Description
 
     * - :global:`G`
-      - Newton's Gravitational Constant
+      - Newton's Gravitational Constant.
+    * - :global:`g0`
+      - gravity acceleration (m/s^2) at sea level on Earth.
     * - :global:`E`
       - Base of the natural log (Euler's number)
     * - :global:`PI`
@@ -49,7 +43,63 @@ constants about the universe that you may find handy in your math operations.
 
 .. global:: Constant:G
 
-    Newton's Gravitational Constant, 6.67384E-11::
+    Newton's Gravitational Constant that the game's planetary
+    bodies are implying in their configuration data.
+    (6.67384E-11 as of the last update to these documents).
+
+    Note, the stock KSP game never technically records a value
+    for G in its data.  kOS derives this value by calculating it
+    based on the Sun's Mass and its Gravitational Parameter.  It
+    is possible for a mod (or perhaps a future release of KSP, if
+    mistakes were made) to define a universe in which Newton's
+    Gravitational Constant, G, isn't actually constant at all
+    within that game universe, and instead varies from one sphere
+    of influence to the next.  Such a universe would be breaking
+    some laws of physics by a lot, but it is technically possible
+    in the game's data model.  Due to this strange misfeature in
+    the game's data model, it is probably safer to always have
+    your scripts use the body's Mu in your formulas instead of
+    explicitly doing mass*G to derive it.
+
+    Do NOT confuse this with ``Constant:g0`` below.
+
+    Example::
+
+        PRINT "Gravitational parameter of Kerbin, calculated:".
+        PRINT constant:G * Kerbin:Mass.
+        PRINT "Gravitational parameter of Kerbin, hardcoded:".
+        PRINT Kerbin:Mu.
+        PRINT "The above two numbers had *better* agree.".
+        PRINT "If they do not, then your solar system is badly configured.".
+
+.. global:: Constant:g0
+
+    Standard value the game uses for acceleration due to
+    gravity at sea level on Earth.  (9.80655 m/s^2 as
+    of the last update to these documents).
+
+    Do NOT confuse this with ``Constant:G`` above.
+
+    The place where this matters the most is in ISP
+    calculations.  The rocket equation using ISP 
+    contains an inherent conversion from mass to weight
+    that basically means, "what would this mass of fuel
+    have weighed at g0?".  Some kind of official standard
+    value of g0 is needed to use ISP to predict truly
+    accurately how much fuel will be burned in a scenario.
+
+    In pretty much any other calculation other than using
+    ISP in the Rocketry Equation, you should probably
+    not use g0 and instead calculate your local gravity
+    more precisely based on your actual radius to the body
+    center.  Not only because this is more accurate, but
+    because the g0 you see here is NOT the g0 you would
+    actually have on Kerbin's sea level.  It's the g0 on
+    Earth, which is what the game's ISP numbers are using.
+    Kerbin's sea level g0 is ever so slightly different
+    from Earth's g0 (but not by much.)
+
+    ::
 
         PRINT "Gravitational parameter of Kerbin is:".
         PRINT constant:G * Kerbin:Mass.

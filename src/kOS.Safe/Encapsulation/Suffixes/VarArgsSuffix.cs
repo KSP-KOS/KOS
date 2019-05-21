@@ -1,3 +1,5 @@
+using System;
+
 namespace kOS.Safe.Encapsulation.Suffixes
 {
     public class VarArgsSuffix<TReturn, TParam> : SuffixBase where TReturn : Structure where TParam : Structure
@@ -11,9 +13,17 @@ namespace kOS.Safe.Encapsulation.Suffixes
             this.del = del;
         }
 
-        public override ISuffixResult Get()
+        protected override object Call(object[] args)
         {
-            return new DelegateSuffixResult(del);
+            return (TReturn)del((TParam[])args[0]);
+        }
+
+        protected override Delegate Delegate
+        {
+            get
+            {
+                return del;
+            }
         }
     }
 }

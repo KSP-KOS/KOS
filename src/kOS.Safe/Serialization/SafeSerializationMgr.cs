@@ -1,8 +1,10 @@
-﻿using System;
+using System;
+using System.Text;
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using System.Linq;
+using System.Reflection;
 using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Serialization
@@ -115,14 +117,27 @@ namespace kOS.Safe.Serialization
 
         public virtual IDumper CreateAndLoad(string typeFullName, Dump data)
         {
-            IDumper instance = CreateInstance(typeFullName);
-
-            instance.LoadDump(data);
-
+            Type loadedType = GetTypeFromFullname(typeFullName);
+            Type[] paramSignature = new Type[] { typeof(SafeSharedObjects), typeof(Dump) };
+            MethodInfo method = loadedType.GetMethod("CreateFromDump", BindingFlags.Public | BindingFlags.Static, null, paramSignature, null);
+            IDumper instance;
+            try
+            {
+                instance = (IDumper)method.Invoke(null, new object[] { safeSharedObjects, data });
+            }
+            catch (TargetInvocationException reflectiveCallException)
+            {
+                // When you call a method via reflection with MethodInfo.Invoke(),
+                // it hides any exceptions that method tried to throw inside its own
+                // wrapper called TargetInvocationException.  That would mask our
+                // intended error messages to the user if we didn't re-throw the actual 
+                // exception the method wanted to generate like so:
+                throw reflectiveCallException.InnerException;
+            }
             return instance;
         }
 
-        public virtual IDumper CreateInstance(string typeFullName)
+        protected virtual Type GetTypeFromFullname(string typeFullName)
         {
             var deserializedType = Type.GetType(typeFullName);
 
@@ -137,16 +152,64 @@ namespace kOS.Safe.Serialization
                     }
                 }
             }
+            return deserializedType;
+        }
 
-            IDumper instance = Activator.CreateInstance(deserializedType) as IDumper;
+        static bool staticsAlreadyChecked= false;
+        /// <summary>
+        /// Ensure all classes implementing IDumper have the required static method in
+        /// them, which is something the compiler cannot enforce itself because an Interface
+        /// can't contain static things.
+        /// </summary>
+        /// Since interfaces don't enforce static things, this enforcement
+        /// is being done via this Reflection check upon loading that will make nag messages
+        /// if the CreateFromDump is missing on one of the classes.
+        /// Note, if we ever need this check elsewhere for another "static" thing in an interface,
+        /// It should be possible to make this more generic and make a library method here that
+        /// takes any interface name and any method name and checks to see if it exists.
+        public static void CheckIDumperStatics()
+        {
+            if (staticsAlreadyChecked)
+                return;
 
-            if (instance is IHasSafeSharedObjects)
+            StringBuilder message = new StringBuilder(1000);
+
+            Type dumperInterface = typeof(IDumper);
+
+            // It's ugly to be checking ALL KSP mods here, but just in case someone
+            // extends kOS in another mod, it's not safe to check ONLY kOS.dll and kOS.Safe.dll:
+            Assembly[] allKSPAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+            // All the classes in which the class is derived from IDumper, and instances of the class are
+            // actually constructable because it isn't Abstract:
+            IEnumerable<Type> iDumperClasses = allKSPAssemblies.SelectMany(a => ReflectUtil.GetLoadedTypes(a)).Where(
+                b => dumperInterface.IsAssignableFrom(b) && b.IsClass && !b.IsAbstract);
+
+            List<string> offendingClasses = new List<string>();
+            Type[] paramSignature  = new Type[] { typeof(SafeSharedObjects), typeof(Dump) };
+            foreach (Type t in iDumperClasses)
             {
-                IHasSafeSharedObjects withSharedObjects = instance as IHasSafeSharedObjects;
-                withSharedObjects.Shared = safeSharedObjects;
+                if (t.GetMethod("CreateFromDump", BindingFlags.Public | BindingFlags.Static, null, paramSignature, null) == null)
+                    offendingClasses.Add(t.FullName);
             }
 
-            return instance;
+            if (offendingClasses.Count() > 0)
+            {
+                message.Append(
+                    "kOS DEV TEAM ERROR.\n " +
+                    "  This is a kOS source problem that the compiler\n" +
+                    "  cannot check for because of limitations in C#.\n" +
+                    "  (So we check it at runtime and give this error\n" +
+                    "  if it's detected.)\n" +
+                    "  \n" +
+                    "  The following class(es) implement IDumper, but\n" +
+                    "  lack the required CreateFromDump() static method\n" +
+                    "  that we need all IDumper's to have:\n" +
+                    "    ");
+                message.Append(string.Join(", ", offendingClasses.ToArray()));
+                Debug.AddNagMessage(Debug.NagType.NAGFOREVER, message.ToString());
+            }
+            staticsAlreadyChecked = true;
         }
 
         public IDumper Deserialize(string input, IFormatReader formatter)

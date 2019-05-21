@@ -26,11 +26,11 @@ StyleState
         This string is an image filename that must be stored in the archive
         folder (it cannot be on a local drive).  The image files are always
         found relative to volume 0 (the Ships/Scripts directory) and
-        specifying a ".png" extension is optional.  Note, that this ignores the
-        normal rules about finding the archive within comms range.  You are
-        allowed to access these files even when not in range of the archive,
-        because they represent the visual look of your ship's control panels,
-        not actual files sent on the ship.
+        specifying a ".png" extension is optional.  Note, that this ignores
+        the normal rules about finding the archive within comms range.
+        You are allowed to access these files even when not
+        in range of the archive, because they represent the visual look
+        of your ship's control panels, not actual files sent on the ship.
 
         This image is what is called a "9-slice image".  This is a kind of image
         designed to handle the difficulty of stretching an image properly

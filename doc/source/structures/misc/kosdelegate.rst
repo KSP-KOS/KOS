@@ -51,7 +51,7 @@ Structure
           - another KOSDelegate
           - creates a new KOSDelegate with some arguments predefined.
         * - :attr:`ISDEAD`
-          - :atruct:`Boolean`
+          - :struct:`Boolean`
           - True if the delegate refers to a program that's gone.
 
 .. method:: KOSDelegate:CALL(varying arguments)

@@ -17,11 +17,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
     // in case the target vessel changes.
     SET MY_VESS TO TARGET.
 
-.. note::
-
-    .. versionadded:: 0.13
-        A vessel is now a type of :struct:`Orbitable`. Much of what a Vessel can do can now by done by any orbitable object. The documentation for those abilities has been moved to the :ref:`orbitable page <orbitable>`.
-
+Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associated suffixes as well as some additional suffixes.
 
 .. structure:: Vessel
 
@@ -46,11 +42,12 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :attr:`VERTICALSPEED`                    :struct:`scalar` (m/s)          How fast the ship is moving "up"
     :attr:`GROUNDSPEED`                      :struct:`scalar` (m/s)          How fast the ship is moving "horizontally"
     :attr:`AIRSPEED`                         :struct:`scalar` (m/s)          How fast the ship is moving relative to the air
-    :attr:`TERMVELOCITY`                     :struct:`scalar` (m/s)          terminal velocity of the vessel
+    :attr:`TERMVELOCITY` (DEPRECATED)        :struct:`scalar` (m/s)          terminal velocity of the vessel
     :attr:`SHIPNAME`                         :struct:`string`                The name of the vessel
     :attr:`NAME`                             :struct:`string`                Synonym for SHIPNAME
     :attr:`STATUS`                           :struct:`string`                Current ship status
     :attr:`TYPE`                             :struct:`string`                Ship type
+    :meth:`STARTTRACKING`                    None                            Start tracking the "vessel" via the tracking statin
     :attr:`ANGULARMOMENTUM`                  :struct:`Vector`                In :ref:`SHIP_RAW <ship-raw>`
     :attr:`ANGULARVEL`                       :struct:`Vector`                In :ref:`SHIP_RAW <ship-raw>`
     :attr:`SENSORS`                          :struct:`VesselSensors`         Sensor data
@@ -123,6 +120,8 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :type: :ref:`scalar <scalar>` (kN)
 
     Sum of all the :ref:`engines' MAXTHRUSTATs <engine_MAXTHRUSTAT>` of all the currently active engines In Kilonewtons at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
+    (Pressure must be greater than or equal to zero.  If you pass in a
+    negative value, it will be treated as if you had given a zero instead.)
 
 .. attribute:: Vessel:AVAILABLETHRUST
 
@@ -137,6 +136,8 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :type: :ref:`scalar <scalar>` (kN)
 
     Sum of all the :ref:`engines' AVAILABLETHRUSTATs <engine_AVAILABLETHRUSTAT>` of all the currently active engines taking into account their throttlelimits at the given atmospheric pressure. Result is in Kilonewtons.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
+    (Pressure must be greater than or equal to zero.  If you pass in a
+    negative value, it will be treated as if you had given a zero instead.)
 
 .. attribute:: Vessel:FACING
 
@@ -202,12 +203,11 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     .. note::
 
-        .. versionadded:: 0.18
-            The old name for this value was SURFACESPEED.  The name was changed
-            because it was confusing before.  "surface speed" implied it's the
-            :ref:`scalar <scalar>` magnitude of "surface velocity", but it wasn't, because of how
-            it ignores the vertical component.
-
+       .. versionadded:: 0.18
+           The old name for this value was SURFACESPEED.  The name was changed
+           because it was confusing before.  "surface speed" implied it's the
+           :ref:`scalar <scalar>` magnitude of "surface velocity", but it wasn't, because of how
+           it ignores the vertical component.
 
 .. attribute:: Vessel:AIRSPEED
 
@@ -215,13 +215,6 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :access: Get only
 
     How fast the ship is moving relative to the air. KSP models atmosphere as simply a solid block of air "glued" to the planet surface (the weather on Kerbin is boring and there's no wind). Therefore airspeed is generally the same thing as as the magnitude of the surface velocity.
-
-.. attribute:: Vessel:TERMVELOCITY
-
-    :type: :ref:`scalar <scalar>` (m/s)
-    :access: Get only
-
-    terminal velocity of the vessel in freefall through atmosphere, based on the vessel's current altitude above sea level, and its drag properties. Warning, can cause values of Infinity if used in a vacuum, and kOS sometimes does not let you store Infinity in a variable.
 
 .. attribute:: Vessel:SHIPNAME
 
@@ -247,6 +240,23 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :access: Get/Set
 
     The ship's type as described `on the KSP wiki <http://wiki.kerbalspaceprogram.com/wiki/Craft#Vessel_types>`_.
+
+.. method:: Vessel:STARTTRACKING
+
+    :return: None
+
+    Call this method to start tracking the object.  This is functionally the
+    same as clicking on the "Start Tracking" button in the Tracking Station
+    interface.  The primary purpose is to change asteroids from being displayed
+    in the tracking station or on the map as ``"Unknown"`` to being displayed as
+    ``"SpaceObject"``.  By doing so, the asteroid will not be de-spawned by
+    KSP's asteroid management system.
+
+    .. note::
+        This does not change the value returned by :attr:`Vessel:TYPE`.  KSP
+        internally manages the "discovery information" for vessels, including
+        assteroids, in a different system. As a result, the value kOS reads for
+        ``TYPE`` may be different from that displayed on the map.
 
 .. attribute:: Vessel:ANGULARMOMENTUM
 
@@ -275,12 +285,6 @@ All vessels share a structure. To get a variable referring to any vessel you can
     helpful formulae about angular momentum.  This is why kOS doesn't
     use degrees here.  (That an backward compatibility for old scripts.
     It's been like this for quite a while.).
-
-    .. note::
-
-        .. versionchanged:: 0.15.4
-
-            This has been changed to a vector, as it should have been all along.
 
 .. attribute:: Vessel:ANGULARVEL
 
@@ -510,3 +514,20 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :return: :struct:`MessageQueue`
 
     Returns this vessel's message queue. You can only access this attribute for your current vessel (using for example `SHIP:MESSAGES`).
+
+
+Deprecated Suffix
+-----------------
+
+.. attribute:: Vessel:TERMVELOCITY
+
+    :type: :ref:`scalar <scalar>` (m/s)
+    :access: Get only
+
+    terminal velocity of the vessel in freefall through atmosphere, based on the vessel's current altitude above sea level, and its drag properties. Warning, can cause values of Infinity if used in a vacuum, and kOS sometimes does not let you store Infinity in a variable.
+
+    .. note::
+
+        .. deprecated:: 0.17.2
+
+           Removed to account for significant changes to planetary atmosphere mechanics introduced in KSP 1.0

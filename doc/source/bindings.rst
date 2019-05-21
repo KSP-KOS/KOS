@@ -24,6 +24,8 @@ SHIP:
   CPU part that is running this Kerboscript code at the moment. This is
   the `CPU Vessel <general/cpu_vessel.html>`__.
 
+.. _target:
+
 TARGET:
 
 - **Variable Name**: TARGET
@@ -92,7 +94,7 @@ APOAPSIS         Same as SHIP:APOAPSIS
 PERIAPSIS        Same as SHIP:PERIAPSIS
 SENSORS          Same as SHIP:SENSORS
 SRFPROGRADE      Same as SHIP:SRFPROGRADE
-SRFREROGRADE     Same as SHIP:SRFREROGRADE
+SRFRETROGRADE    Same as SHIP:SRFRETROGRADE
 OBT              Same as SHIP:OBT
 STATUS           Same as SHIP:STATUS
 SHIPNAME         Same as SHIP:NAME
@@ -270,7 +272,7 @@ Variable Name                   Can Read     Can Set     Source    What it manag
 :global:`LEGS`                  yes          yes          kOS       The extended state of all landing legs
 :global:`CHUTES`                yes          yes          kOS       The armed state of all parachutes
 :global:`CHUTESSAFE`            yes          yes          kOS       The armed state of all "safe" parachutes
-:global:`PANELS`                yes          yes          kOS       The deployed state of solar panels
+:global:`PANELS`                yes          yes          kOS       The state of retractable solar panels
 :global:`RADIATORS`             yes          yes          kOS       The deployed state of radiators
 :global:`LADDERS`               yes          yes          kOS       The extended state of ladders
 :global:`BAYS`                  yes          yes          kOS       The opened state of payload/service bays
@@ -379,10 +381,11 @@ something entirely outside the in-character experience.
 
 ::
 
-    PRINT VERSION.            // Returns operating system version number. e.g. 0.8.6
-    PRINT VERSION:MAJOR.      // Returns major version number. e.g. 0
-    PRINT VERSION:MINOR.      // Returns minor version number. e.g. 8
-    PRINT VERSION:BUILD.      // Returns build version number. e.g. 6
+    PRINT VERSION.            // Returns operating system version number. e.g. 0.1.2.3
+    PRINT VERSION:MAJOR.      // Returns major version number. e.g. 0 if version is 0.1.2.3
+    PRINT VERSION:MINOR.      // Returns minor version number. e.g. 1 if version is 0.1.2.3
+    PRINT VERSION:PATCH.      // Returns patch version number. e.g. 2 if version is 0.1.2.3
+    PRINT VERSION:BUILD.      // Returns build version number. e.g. 3 if version is 0.1.2.3
     PRINT SESSIONTIME.        // Returns amount of time, in seconds, from vessel load.
 
 NOTE the following important difference:

@@ -13,17 +13,17 @@ namespace kOS.Safe.Screen
         public int PositionRow { get; set; }
         public int PositionColumn { get; set; }
         public bool Enabled { get; set; }
+        public bool WillTruncate { get; set; }
 
         /// <summary>
         /// Stretch/shrink the subbuffer to a new size, trying as best as possible to
-        /// preserve existing contents.  Note that if the new size is too small to hold
-        /// the contents,  then it WILL refuse to make it that small, and will add rows to your
-        /// intended size as needed to preserve contents.
-        /// <br/><br/>
-        /// Example: contents are "xxxxxxxxxx\nxxxxx" and you try to make it size 1,5.  You'll
-        /// end up with it being size 3,5 instead so it could store all 15 characters in it.
+        /// preserve existing contents, including wrapping lines if needed.  Note that
+        /// if the new size is too small to hold the contents, and WillTruncate is false,
+        /// then it will refuse to make it that small, and will use more rows than you
+        /// requested as needed to preserve contents.
+        /// You can override this by setting this SubBuffer's WillTruncate property to true.
         /// </summary>
-        /// <param name="rowCount">Desired new number of rows (this may end up larger than you requested if necessary to hold contents)</param>
+        /// <param name="rowCount">Requested new number of rows (only guaranteed to be obeyed if WillTruncate is true)</param>
         /// <param name="columnCount">Desired new number of columns (this will be adhered to faithfully).</param>
         public void SetSize(int rowCount, int columnCount)
         {
@@ -58,6 +58,11 @@ namespace kOS.Safe.Screen
             return ResizeBuffer();
         }
 
+        /// <summary>
+        /// Replaces Buffer with one of the new current size, copying old contents
+        /// over.
+        /// </summary>
+        /// <returns>(Not implemented, hardcoded to zero) The new row to scroll to if need be.</returns>
         protected virtual int ResizeBuffer()
         {
             // This method also is being left open for potential overriding in subclasses
@@ -71,20 +76,29 @@ namespace kOS.Safe.Screen
             int newRow = 0;
             int oldRow = 0;
             int newCol = 0;
-            
+            bool isFull = false;
+
             // First, copy everything from old to new, and perhaps enlarge the new if the old won't fit.
-            while (oldRow < Buffer.Count)
+            while (oldRow < Buffer.Count && !isFull)
             {
                 int oldCol = 0;
-                while (oldCol < Buffer[oldRow].Length)
+                while (oldCol < Buffer[oldRow].Length && !isFull)
                 {
                     if (newCol >= ColumnCount) // wrap to new line when cur line is full.
                     {
                         ++newRow;
                         newCol = 0;
                     }
-                    if (newRow >= newBuffer.Count) // grow to required size.
-                        newBuffer.Add(new ScreenBufferLine(ColumnCount));
+                    if (newRow >= newBuffer.Count) // grow to required size, or quit if we aren't supposed to grow
+                    {
+                        if (WillTruncate)
+                        {
+                            isFull = true;
+                            break;
+                        }
+                        else
+                            newBuffer.Add(new ScreenBufferLine(ColumnCount));
+                    }
                     newBuffer[newRow][newCol] = Buffer[oldRow][oldCol];
                     ++newCol;
                     ++oldCol;

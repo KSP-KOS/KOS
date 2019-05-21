@@ -104,6 +104,11 @@ namespace kOS.Safe.Persistence
 
             HarddiskDirectory directory = ParentDirectoryForPath(path);
 
+            if (directory == null)
+            {
+                return false;
+            }
+
             return directory.Delete(path.Name, ksmDefault);
         }
 

@@ -24,6 +24,226 @@ release.
 
 ****
 
+Changes in 1.1.8.0
+------------------
+
+Nothing but minor documentation error corrections - no new features
+documented.
+
+Changes in 1.1.7.0
+------------------
+
+IR Next
+:::::::
+
+Documented the change to using :ref:`IR Next instead of IR <IR>`.
+
+CORE:TAG
+::::::::
+
+Documented :attr:`CORE:TAG`.
+
+TIME
+::::
+
+Documented :func:`TIME(universal_time)`.
+
+PAUSE
+:::::
+
+Added ability to pause the game with :meth:`Kuniverse:PAUSE()`.
+
+List Fonts
+::::::::::
+
+Added :ref:`FONTS <list_fonts>` to the things you can LIST.
+
+Changes in 1.1.6.2
+------------------
+
+Nothing of significance changed in the docs.  This was a fix to
+switch files from PNG format to DDS format for GUI icons kOS uses.
+
+Changes in 1.1.6.1
+------------------
+
+The various thrust and ISP calculations that take pressure
+as a parameter prevent you from using negative values for
+pressure.  Now they are clamped to be no lower than zero.
+This change documents this fact.
+
+Changes in 1.1.6.0
+------------------
+
+GUI tooltips
+::::::::::::
+
+Described how to make GUI tooltips work.  See:
+
+- :attr:`Label:TOOLTIP`
+- :attr:`GuiWidgets:TOOLTIP`
+- :attr:`TIPDISPLAY`
+
+5% null zone
+::::::::::::
+
+Mentioned the stock :ref:`null zone<raw null zone>` issue with RCS
+translation.
+
+Part:CID
+::::::::
+
+Added new suffix, :attr:`Part:CID`
+
+An External Tutorial
+::::::::::::::::::::
+
+Added an external tutorial link to the :ref:`Tutorials <tutorials>` page.
+
+G and G0 constants
+::::::::::::::::::
+
+Added :attr:`constant:G` and :attr:`constant:G0`.
+
+Removed old notices
+:::::::::::::::::::
+
+Some "this changed in version ...." notices had aged beyond their usefulness
+and were removed.
+
+Document Simulate in BG
+:::::::::::::::::::::::
+
+Documented the need to have Simulate in BG enabled when playing in windwed mode,
+on the :ref:`Telnet <telnet>` page.
+
+Stage/decouple docs
+:::::::::::::::::::
+
+Many edits to the pages about :ref:`stages<stage>` and
+:ref:`decouplers<decoupler>` to clarify points.
+
+Vecdraw delegate
+::::::::::::::::
+
+Documented that the :ref:`Vecdraw constructor<vecdraw>` can
+now take delegates.
+
+Vector math link changes
+::::::::::::::::::::::::
+
+External links explaining vector operations such as dot product and
+cross product now link to different sites on the
+:ref:`Vectors<vectors>` page.
+
+New suffixes on Body page
+:::::::::::::::::::::::::
+
+:ref:`Body <body>` page now has more fleshed-out examples and documentation
+to go with the new :HASOCEAN, :HASSURFACE, and :CHILDREN suffixes
+
+New Basic tutoial
+:::::::::::::::::
+
+New Basic Tutorial page.
+
+Clarified CPU hardware page
+:::::::::::::::::::::::::::
+
+Much of the :ref:`CPU hardware<cpu hardware>` page has been re-done to reflect
+some of the refactors that have happened in this revision.
+
+
+Changes in 1.1.5.2
+------------------
+
+This was a compatibility release for KSP 1.4.1
+
+Changes in 1.1.5.0
+------------------
+
+This was a compatibility release for KSP 1.3.1
+
+Changes in 1.1.4.0
+------------------
+
+There were numerous optimizations applied to the source code that most end
+users will not see directly.  Users should however see a performance boost.
+Notable modifications were to the regular expressions engine used to parse
+script files, optimization of internal string operations, better caching of
+suffix information, and migrating to a dual stack cpu instead of a single stack
+with hidden offsets.
+
+File scope was also modified so that each file properly defines a scope.  This
+means that local variables declared in script files called from other scripts
+are no longer treated as part of the global scope.  It also means that script
+parameters are local to the file itself and will not overwrite global variables.
+
+Work also began to include identifier information within opcodes themselves
+rather than as a pushed string literal to be evaluated separately.  This should
+help with execution time and reduce the number of opcode calls within the kOS
+virtual machine.
+
+Changes in 1.1.3.0
+------------------
+
+Made documentation of how SAS fights with lock steering more prominent
+and mentioned in more places.
+
+Documentation for :meth:`Skin:ADD` fixed to mention the second parameter.
+
+Documentation no longer implies TERMVELOCITY is a suffix (it was obsoleted,
+but the documentation wasn't removed).
+
+Changes in 1.1.2
+----------------
+
+None: This was a dummy version increase needed to "kick" CKAN and alert it
+to a version number change that we messed up on in the previous release.
+
+Changes in 1.1.1
+----------------
+
+None:  This was a pure compatibility with KSP 1.3 update, nothing more.
+
+Changes in 1.1.0
+----------------
+
+GUI
+:::
+
+The :ref:`GUI system <gui>` was added new with version 1.1.0.
+
+Terminal Font
+:::::::::::::
+
+Now that the terminal can display any font from your OS, you
+can now display any Unicode character you like.
+
+Regex Part Searches
+:::::::::::::::::::
+
+You may now use :meth:`Vessel:PARTSTAGGEDPATTERN` to perform regular
+expression searches for part tags.
+
+Triggers take locals
+::::::::::::::::::::
+
+The previous restriction that triggers such as WHEN and ON must only
+use global variables in their check expressions has been removed.
+Now they can use local variables and will remember their closures.
+
+Altitude pressure
+:::::::::::::::::
+
+:meth:`Atmosphere:ALTITUDEPRESSURE` added.
+
+LATLNG of other body
+::::::::::::::::::::
+
+New suffix :meth:`Body:GEOPOSITIONLATLNG` lets you get a LATLNG from a body
+other than the current body you are orbiting.
+
 Changes in 1.0.3
 ----------------
 

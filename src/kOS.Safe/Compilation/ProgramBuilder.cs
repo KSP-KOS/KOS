@@ -108,14 +108,10 @@ namespace kOS.Safe.Compilation
             // low level kRISC does not so the parameters have to be read in stack order:
             
             // store parameter 2 in a local name:
-            boilerplate.Add(new OpcodePush("$runonce") {Label = nextLabel, SourcePath = path});
-            boilerplate.Add(new OpcodeSwap() {Label = nextLabel, SourcePath = path});
-            boilerplate.Add(new OpcodeStoreLocal() {Label = nextLabel, SourcePath = path});
+            boilerplate.Add(new OpcodeStoreLocal("$runonce") {Label = nextLabel, SourcePath = path});
 
             // store parameter 1 in a local name:
-            boilerplate.Add(new OpcodePush("$filename") {Label = nextLabel, SourcePath = path});
-            boilerplate.Add(new OpcodeSwap() {Label = nextLabel, SourcePath = path});
-            boilerplate.Add(new OpcodeStoreLocal() {Label = nextLabel, SourcePath = path});
+            boilerplate.Add(new OpcodeStoreLocal("$filename") {Label = nextLabel, SourcePath = path});
             
             // Unconditionally call load() no matter what.  load() will abort and return
             // early if the program was already compiled, and tell us that on the stack:
@@ -138,16 +134,29 @@ namespace kOS.Safe.Compilation
             boilerplate.Add(new OpcodePush("$runonce") {Label = nextLabel, SourcePath = path});
             Opcode branchFromTwo = new OpcodeBranchIfFalse() {Label = nextLabel, SourcePath = path};
             boilerplate.Add(branchFromTwo);
-            boilerplate.Add(new OpcodePop() {Label = nextLabel, SourcePath = path}); // onsume the entry point that load() returned. We won't be calling it.
-            boilerplate.Add(new OpcodePush(0) {Label = nextLabel, SourcePath = path});   // ---+-- The dummy do-nothing return.
+
+            // If we fall through to this opcode (the br.false above doesn't jump), we are
+            // in the "program already ran, so skip running it" clause of a RUN ONCE.
+            // In that case the stack will still have the jump address returned by load(),
+            // and also all the args that were meant to be passed to the program (which is not
+            // getting run.)  In that case, we need to pop the stack of everything above the
+            // next KOSArgMarker to emulate what a call would have done to the stack had it run.
+            Opcode loopStart = new OpcodePop() {Label = nextLabel, SourcePath = path};
+            boilerplate.Add(loopStart);
+            boilerplate.Add(new OpcodeTestArgBottom() { Label = nextLabel, SourcePath = path });
+            Opcode branchThatExitsLoop = new OpcodeBranchIfTrue() { Label = nextLabel, SourcePath = path };
+            boilerplate.Add(branchThatExitsLoop);
+            boilerplate.Add(new OpcodeBranchJump() { Label = nextLabel, SourcePath = path, DestinationLabel = loopStart.Label });
+            Opcode afterLoop = new OpcodePop() { Label = nextLabel, SourcePath = path }; // Pop the KOSArgMarker that was under the args
+            boilerplate.Add(afterLoop);
+            branchThatExitsLoop.DestinationLabel = afterLoop.Label;
+            boilerplate.Add(new OpcodePush(0) { Label = nextLabel, SourcePath = path });   // ---+-- The dummy do-nothing return.
             boilerplate.Add(new OpcodeReturn(1) {Label = nextLabel, SourcePath = path}); // ---'
             
             // Actually call the Program from its entry Point, which is now the thing left on top
             // of the stack from the second return value of load():
-            Opcode branchTo = new OpcodePush("$entrypoint") {Label = nextLabel, SourcePath = path};
+            Opcode branchTo = new OpcodeStoreLocal("$entrypoint") {Label = nextLabel, SourcePath = path};
             boilerplate.Add(branchTo);
-            boilerplate.Add(new OpcodeSwap() {Label = nextLabel, SourcePath = path});
-            boilerplate.Add(new OpcodeStoreLocal() {Label = nextLabel, SourcePath = path});
             boilerplate.Add(new OpcodeCall("$entrypoint") {Label = nextLabel, SourcePath = path});
             
             boilerplate.Add(new OpcodePop() {Label = nextLabel, SourcePath = path});

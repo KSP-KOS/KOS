@@ -1,6 +1,7 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Execution;
 using UnityEngine;
 
 namespace kOS.Suffixed.Widget
@@ -35,7 +36,7 @@ namespace kOS.Suffixed.Widget
             AddSuffix("TOOLTIP", new SetSuffix<StringValue>(() => content.tooltip, value => { if (content.tooltip != value) { content.tooltip = value; Communicate(() => content_visible.tooltip = value); } }));
         }
 
-        private void SetText(string newValue)
+        protected void SetText(string newValue)
         {
             if (content.text != newValue)
             {
@@ -100,7 +101,9 @@ namespace kOS.Suffixed.Widget
                 if (UserTextUpdateResult.CallbackFinished)
                 {
                     SetText(UserTextUpdateResult.ReturnValue.ToString());
-                    UserTextUpdateResult = UserTextUpdater.TriggerNextUpdate();
+                    UserTextUpdateResult = (guiCaused ?
+                        UserTextUpdater.TriggerOnFutureUpdate(InterruptPriority.CallbackOnce) :
+                        UserTextUpdater.TriggerOnNextOpcode(InterruptPriority.NoChange ));
                 }
                 // Else just do nothing because a previous call is still pending its return result.
                 // don't start up a second call while still waiting for the first one to finish.  (we
@@ -108,7 +111,9 @@ namespace kOS.Suffixed.Widget
             }
             else
             {
-                UserTextUpdateResult = UserTextUpdater.TriggerNextUpdate();
+                UserTextUpdateResult = (guiCaused ?
+                    UserTextUpdater.TriggerOnFutureUpdate(InterruptPriority.CallbackOnce) :
+                    UserTextUpdater.TriggerOnNextOpcode(InterruptPriority.NoChange));
             }
         }
 

@@ -93,28 +93,53 @@ namespace kOS.Utilities
                 case "DOCKINGPORTS":
                     list = DockingPortValue.PartsToList(partList, sharedObj);
                     break;
+
+                case "DECOUPLERS":
+                case "SEPARATORS":
+                    list = DecouplerValue.PartsToList(partList, sharedObj);
+                    break;
             }
             return list;
         }
 
-        public static double GetMaxThrust(Vessel vessel, double atmPressure = -1.0)
+        /// <summary>
+        /// Get total thrust (of operational engines at full throttle,
+        /// not counting with thrust limits - assuming 100% unless useThrustLimit: true)
+        /// </summary>
+        /// <param name="vessel">The vessel/ship</param>
+        /// <param name="atmPressure">
+        ///   Atmospheric pressure (defaults to pressure at current location if omitted/null,
+        ///   1.0 means Earth/Kerbin sea level, 0.0 is vacuum)</param>
+        /// <param name="useThrustLimit">Use current thrust limit (assume 100% if false)</param>
+        /// <returns>Total thrust</returns>
+        public static double GetMaxThrust(Vessel vessel, double? atmPressure = null, bool useThrustLimit = false)
         {
             var thrust = 0.0;
 
             foreach (var p in vessel.parts)
             {
-                foreach (PartModule pm in p.Modules)
+                foreach (PartModule module in p.Modules)
                 {
-                    if (!pm.isEnabled) continue;
-                    if (pm is ModuleEngines)
-                    {
-                        thrust += ModuleEngineAdapter.GetEngineThrust((ModuleEngines)pm, atmPressure: atmPressure);
-                    }
+                    if (!module.isEnabled) continue;
+                    var engine = module as ModuleEngines;
+                    if (engine != null)
+                        thrust += engine.GetThrust(useThrustLimit: useThrustLimit, atmPressure: atmPressure);
                 }
             }
 
             return thrust;
         }
+        /// <summary>
+        /// Get total available thrust (of operational engines at full throttle,
+        /// counting with thrust limits)
+        /// </summary>
+        /// <param name="vessel">The vessel/ship</param>
+        /// <param name="atmPressure">
+        ///   Atmospheric pressure (defaults to pressure at current location if omitted/null,
+        ///   1.0 means Earth/Kerbin sea level, 0.0 is vacuum)</param>
+        /// <returns>Total available thrust</returns>
+        public static double GetAvailableThrust(Vessel vessel, double? atmPressure = null)
+            => GetMaxThrust(vessel, atmPressure, useThrustLimit: true);
 
         private static Vessel TryGetVesselByName(string name, Vessel origin)
         {
@@ -156,7 +181,26 @@ namespace kOS.Utilities
             else if (val.GetVessel() == currentVessel)
                 throw new Safe.Exceptions.KOSInvalidTargetException("A ship cannot set TARGET to a part of itself.");
 
+            // If any kOS terminal (not just the one this CPU uses as its Shared.Window, but ANY kOS terminal
+            // from any kOS CPU) is the focused window right now, causing input lockouts, we must
+            // temporarily turn off that input lock in order for the main game allow the SetVesselTarget()
+            // call in the lines below to perform its task fully:
+            //
+            // Note the preferred solution would be to walk all control locks and suppress *any* that are turning
+            // off the targeting, regardless of whether they're kOS or not, but InputLockManager does not provide
+            // any methods for iteratinng the collection of all control lock masks, and it's also not possible to turn
+            // a lock OFF by masking it with a new control lock, since all the locks in the stack are OR'ed together.)
+
+            ControlTypes termInputLock = InputLockManager.GetControlLock(Screen.TermWindow.CONTROL_LOCKOUT);
+            // (Note, KSP returns ControlTypes.None rather than null when no such lock was found, because it's
+            // a non-nullable enum)
+            if (termInputLock != ControlTypes.None)
+                InputLockManager.RemoveControlLock(Screen.TermWindow.CONTROL_LOCKOUT);
+
             FlightGlobals.fetch.SetVesselTarget(val, true);
+
+            if (termInputLock != ControlTypes.None)
+                InputLockManager.SetControlLock(termInputLock, Screen.TermWindow.CONTROL_LOCKOUT);
         }
 
         public static float AngleDelta(float a, float b)
@@ -361,10 +405,16 @@ namespace kOS.Utilities
                 {
                     atLeastOneSolarPanel = true;
 
-                    if (c.deployState == ModuleDeployablePart.DeployState.RETRACTED) // apparently this was "simplified"
+                    // To fix #2488 - KSP calls all solar panels "ModuleDeployableSolarPanel" even if
+                    // they aren't deployable.   The only way to tell if it's actually deployable
+                    // (versus fixed in place) is to see if it had an animation defined.
+                    if (c.useAnimation)
                     {
-                        // If just one panel is not deployed return false
-                        return false;
+                        if (c.deployState == ModuleDeployablePart.DeployState.RETRACTED) // apparently this was "simplified"
+                        {
+                            // If just one panel is not deployed return false
+                            return false;
+                        }
                     }
                 }
             }
@@ -378,8 +428,14 @@ namespace kOS.Utilities
             {
                 foreach (var c in p.FindModulesImplementing<ModuleDeployableSolarPanel>())
                 {
-                    if (state) { c.Extend(); }
-                    else { c.Retract(); }
+                    // To fix #2488 - KSP calls all solar panels "ModuleDeployableSolarPanel" even if
+                    // they aren't deployable.   The only way to tell if it's actually deployable
+                    // (versus fixed in place) is to see if it had an animation defined.
+                    if (c.useAnimation)
+                    {
+                        if (state) { c.Extend(); }
+                        else { c.Retract(); }
+                    }
                 }
             }
         }
@@ -733,24 +789,6 @@ namespace kOS.Utilities
         public static void UnsetTarget()
         {
             FlightGlobals.fetch.SetVesselTarget(null);
-        }
-
-        public static double GetAvailableThrust(Vessel vessel, double atmPressure = -1.0)
-        {
-            var thrust = 0.0;
-
-            foreach (var p in vessel.parts)
-            {
-                foreach (PartModule pm in p.Modules)
-                {
-                    if (pm.isEnabled && pm is ModuleEngines)
-                    {
-                        thrust += ModuleEngineAdapter.GetEngineThrust((ModuleEngines)pm, useThrustLimit: true, atmPressure: atmPressure);
-                    }
-                }
-            }
-
-            return thrust;
         }
 
         public static Direction GetFacing(Vessel vessel)

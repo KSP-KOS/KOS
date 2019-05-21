@@ -6,10 +6,6 @@ Terminal
 The TERMINAL identifier refers to a special structure that lets you access
 some of the information about the screen you are running on.
 
-Warning: Features related to the in-game terminal GUI may change
-when KSP 1.1 comes out, as we may redesign some of the user
-interface.
-
 Structure
 ---------
 
@@ -27,12 +23,12 @@ Structure
         * - :attr:`WIDTH`
           - :struct:`Scalar`
           - get and set
-          - Terminal width in characters
+          - Terminal width in characters.
 
         * - :attr:`HEIGHT`
           - :struct:`Scalar`
           - get and set
-          - Terminal height in characters
+          - Terminal height in characters.
 
         * - :attr:`REVERSE`
           - :struct:`Boolean`
@@ -51,8 +47,8 @@ Structure
 
         * - :attr:`CHARWIDTH`
           - :struct:`Scalar`
-          - get and set
-          - Width of a character cell in pixels.
+          - get
+          - Width of a character cell in pixels.  Get-only because the font chooses it based on CHARHEIGHT.
 
         * - :attr:`CHARHEIGHT`
           - :struct:`Scalar`
@@ -84,7 +80,7 @@ Structure
     :access: Get/Set
     :type: :struct:`Scalar`.
 
-    If you read the width it will return a number of character cells tall the terminal
+    If you read the height it will return a number of character cells tall the terminal
     is.  If you set this value, it will cause the terminal to resize.
     If there's multiple terminals connected to the same CPU part via telnet clients,
     then kOS will attempt to keep them all the same size, and one terminal being resized
@@ -146,23 +142,19 @@ Structure
     The values range from 0.0 (minimum) to 1.0 (maximum).  At
     zero, the effect is to entirely hide the letters altogether.
 
-    Warning: Features related to the in-game terminal GUI may change
-    when KSP 1.1 comes out, as we may redesign some of the user
-    interface.
-
 .. attribute:: Terminal:CHARWIDTH
 
-    :access: Get/Set
+    :access: Get
     :type: :struct:`Scalar`
 
     Width of a character cell in the display terminal, in pixels.
-    The value is forced to remain in the range [4..24] and be
-    divisible by 2.  If you try to set it to any other value, it
-    will snap to the allowed range and increment.
 
-    Warning: Features related to the in-game terminal GUI may change
-    when KSP 1.1 comes out, as we may redesign some of the user
-    interface.
+    Please note that this value is not settable anymore.  It
+    can only be changed as a side-effect of changing the 
+    :attr:`CHARHEIGHT`.  This is because the font is in
+    charge of choosing the ratio between a letter's height and
+    its width.  You can't force the font to render a letter
+    at a different aspect ratio than it wants to.
 
 .. attribute:: Terminal:CHARHEIGHT
 
@@ -173,10 +165,6 @@ Structure
     The value is forced to remain in the range [4..24] and be
     divisible by 2.  If you try to set it to any other value, it
     will snap to the allowed range and increment.
-
-    Warning: Features related to the in-game terminal GUI may change
-    when KSP 1.1 comes out, as we may redesign some of the user
-    interface.
 
 .. attribute:: Terminal:INPUT
 

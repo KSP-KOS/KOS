@@ -9,22 +9,37 @@ namespace kOS.Safe.Encapsulation.Suffixes
 {
     public class DelegateSuffixResult : ISuffixResult
     {
-        private readonly Delegate del;
+        /// <summary>
+        /// Information about the delegate obtained via reflection.
+        /// This is retrieved once per suffix and cached thereafter to
+        /// avoid the expensive reflection lookups on every call.
+        /// </summary>
+        private readonly DelegateInfo delInfo;
+        /// <summary>
+        /// Although the delegate `del` knows via reflection how many
+        /// arguments it should expect, using reflection to invoke it is
+        /// slow.  This delegate `call` is a wrapper around `del` that
+        /// can be called with a fixed argument array of known length
+        /// without having to dynamically query the delegate signature
+        /// with reflection at runtime.  (i.e. OneArgSuffix can hardcode
+        /// at compile time that its `call` expects exactly 1 argument.
+        /// TwoArgSuffix can hardcode at compile time that it's `call`
+        /// expects exactly 2 arguments, etc.)
+        /// </summary>
+        private readonly CallDel call;
         private Structure value;
-
-        public Delegate Del
-        {
-            get { return del; }
-        }
 
         public Structure Value
         {
             get { return value; }
         }
 
-        public DelegateSuffixResult(Delegate del)
+        public delegate object CallDel(object[] args);
+
+        public DelegateSuffixResult(DelegateInfo delInfo, CallDel call)
         {
-            this.del = del;
+            this.delInfo = delInfo;
+            this.call = call;
         }
 
         public bool HasValue
@@ -34,8 +49,6 @@ namespace kOS.Safe.Encapsulation.Suffixes
 
         public void Invoke(ICpu cpu)
         {
-            MethodInfo methInfo = del.Method;
-            ParameterInfo[] paramArray = methInfo.GetParameters();
             var args = new List<object>();
             var paramArrayArgs = new List<Structure>();
 
@@ -44,27 +57,25 @@ namespace kOS.Safe.Encapsulation.Suffixes
             bool isParamArrayArg = false;
 
             CpuUtility.ReverseStackArgs(cpu, false);
-            for (int i = 0; i < paramArray.Length; ++i)
+            for (int i = 0; i < delInfo.Parameters.Length; ++i)
             {
-                object arg = cpu.PopValue();
-                Type argType = arg.GetType();
-                ParameterInfo paramInfo = paramArray[i];
+                DelegateParameter paramInfo = delInfo.Parameters[i];
 
-                // If this is the lastmost parameter then it might be a 'param' array which expects all the rest of
-                // the arguments to be collected together into one single array parameter when invoking the method:
-                isParamArrayArg = (i == paramArray.Length - 1 && Attribute.IsDefined(paramInfo, typeof(ParamArrayAttribute)));
+                object arg = cpu.PopValueArgument();
+                Type argType = arg.GetType();
+                isParamArrayArg = i == delInfo.Parameters.Length - 1 && delInfo.Parameters[i].IsParams;
 
                 if (arg != null && arg.GetType() == CpuUtility.ArgMarkerType)
                 {
                     if (isParamArrayArg)
                         break; // with param arguments, you want to consume everything to the arg bottom - it's normal.
                     else
-                        throw new KOSArgumentMismatchException(paramArray.Length, paramArray.Length - (i + 1));
+                        throw new KOSArgumentMismatchException(delInfo.Parameters.Length, delInfo.Parameters.Length - (i + 1));
                 }
 
                 // Either the expected type of this one parameter, or if it's a 'param' array as the last arg, then
                 // the expected type of that array's elements:
-                Type paramType = (isParamArrayArg ? paramInfo.ParameterType.GetElementType() : paramInfo.ParameterType);
+                Type paramType = (paramInfo.IsParams ? paramInfo.ParameterType.GetElementType() : paramInfo.ParameterType);
 
                 // Parameter type-safe checking:
                 bool inheritable = paramType.IsAssignableFrom(argType);
@@ -86,7 +97,7 @@ namespace kOS.Safe.Encapsulation.Suffixes
                     }
                     if (castError)
                     {
-                        throw new Exception(string.Format("Argument {0}({1}) to method {2} should be {3} instead of {4}.", (paramArray.Length - i), arg, methInfo.Name, paramType.Name, argType));
+                        throw new Exception(string.Format("Argument {0}({1}) to method {2} should be {3} instead of {4}.", (delInfo.Parameters.Length - i), arg, delInfo.Name, paramType.Name, argType));
                     }
                 }
 
@@ -112,57 +123,37 @@ namespace kOS.Safe.Encapsulation.Suffixes
             {
                 bool foundArgMarker = false;
                 int numExtraArgs = 0;
-                while (cpu.GetStackSize() > 0 && !foundArgMarker)
+                while (cpu.GetArgumentStackSize() > 0 && !foundArgMarker)
                 {
-                    object marker = cpu.PopValue();
+                    object marker = cpu.PopValueArgument();
                     if (marker != null && marker.GetType() == CpuUtility.ArgMarkerType)
                         foundArgMarker = true;
                     else
                         ++numExtraArgs;
                 }
                 if (numExtraArgs > 0)
-                    throw new KOSArgumentMismatchException(paramArray.Length, paramArray.Length + numExtraArgs);
+                    throw new KOSArgumentMismatchException(delInfo.Parameters.Length, delInfo.Parameters.Length + numExtraArgs);
             }
 
             // Delegate.DynamicInvoke expects a null, rather than an array of zero length, when
             // there are no arguments to pass:
             object[] argArray = (args.Count > 0) ? args.ToArray() : null;
 
-            try
+            object val = call(argArray);
+            if (delInfo.ReturnType == typeof(void))
             {
-                // I could find no documentation on what DynamicInvoke returns when the delegate
-                // is a function returning void.  Does it return a null?  I don't know.  So to avoid the
-                // problem, I split this into these two cases:
-                if (methInfo.ReturnType == typeof(void))
-                {
-                    del.DynamicInvoke(argArray);
-                    value = ScalarValue.Create(0);
-                    // By adding this we can unconditionally assume all functionshave a return value
-                    // to be used or popped away, even if "void".  In order to mainain consistency with
-                    // the void return value of functions, and to ensure that we don't accidentally pass
-                    // a value back to the user that they cannot interact with (null), we return zero.
-                }
-                else
-                {
-                    // Convert a primitive return type to a structure.  This is done in the opcode, since
-                    // the opcode calls the deligate directly and cannot be (quickly) intercepted
-                    value = Structure.FromPrimitiveWithAssert(del.DynamicInvoke(argArray));
-                }
+                value = ScalarValue.Create(0);
             }
-            catch (TargetInvocationException e)
+            else
             {
-                // Annoyingly, calling DynamicInvoke on a delegate wraps any exceptions the delegate throws inside
-                // this TargetInvocationException, which hides them from the kOS user unless we do this:
-                if (e.InnerException != null)
-                    throw e.InnerException;
-                throw;
+                value = Structure.FromPrimitiveWithAssert(val);
             }
         }
 
         // Not something the user should ever see, but still useful for our debugging when we dump the stack:
         public override string ToString()
         {
-            return string.Format("[DelegateSuffixResult Del={0}, Value={1}]", del, (HasValue ? value.ToString() : "<null>"));
+            return string.Format("[DelegateSuffixResult Del={0}, Value={1}]", delInfo, (HasValue ? value.ToString() : "<null>"));
         }
     }
 }

@@ -47,17 +47,34 @@ namespace kOS.Safe.Encapsulation
             PreBoundArgs.Add(arg);
         }
 
+        /// <summary>
+        /// Get list of pre-bound args and provided args.
+        /// Used by CPU.AddTrigger.
+        /// </summary>
+        /// <param name="args">Arguments to add to returned list</param>
+        /// <returns>PreBoundArgs + args (or args if PreBoundArgs.Count = 0)</returns>
+        public List<Structure> GetMergedArgs(List<Structure> args)
+        {
+            if (PreBoundArgs.Count == 0) return args;
+            var merged = new List<Structure>(PreBoundArgs.Count + args.Count);
+            merged.AddRange(PreBoundArgs);
+            merged.AddRange(args);
+            return merged;
+        }
+
         public Structure CallPassingArgs(params Structure[] args)
         {
+            if (Cpu == null)
+                throw new KOSCannotCallException();
             PushUnderArgs();
-            Cpu.PushStack(new KOSArgMarkerType());
+            Cpu.PushArgumentStack(new KOSArgMarkerType());
             foreach (Structure arg in PreBoundArgs)
             {
-                Cpu.PushStack(arg);
+                Cpu.PushArgumentStack(arg);
             }
             foreach (Structure arg in args)
             {
-                Cpu.PushStack(arg);
+                Cpu.PushArgumentStack(arg);
             }
             return CallWithArgsPushedAlready();
         }
@@ -78,11 +95,13 @@ namespace kOS.Safe.Encapsulation
         /// </summary>
         public void InsertPreBoundArgs()
         {
+            if (Cpu == null)
+                throw new KOSCannotCallException();
             Stack<object> aboveArgs = new Stack<object>();
             object arg = ""; // doesn't matter what it is as long as it's non-null for the while check below.
             while (arg != null && !(arg is KOSArgMarkerType))
             {
-                arg = Cpu.PopStack();
+                arg = Cpu.PopArgumentStack();
                 if (!(arg is KOSArgMarkerType))
                     aboveArgs.Push(arg);
             }
@@ -91,14 +110,14 @@ namespace kOS.Safe.Encapsulation
                                        "Contact the kOS devs.  This message should 'never' happen.");
             // Now re-push the args back, putting the preBound ones at the bottom
             // where they belong:
-            Cpu.PushStack(new KOSArgMarkerType());
+            Cpu.PushArgumentStack(new KOSArgMarkerType());
             foreach (Structure item in PreBoundArgs)
             {
-                Cpu.PushStack(item);
+                Cpu.PushArgumentStack(item);
             }
             foreach (object item in aboveArgs) // Because this was pushed to a stack, this should show in reverse order.
             {
-                Cpu.PushStack(item);
+                Cpu.PushArgumentStack(item);
             }
         }
 

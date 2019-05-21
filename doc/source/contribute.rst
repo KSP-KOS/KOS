@@ -6,7 +6,7 @@ Contribute
 How to Contribute to this Project
 ---------------------------------
 
-Do you know or are willing to learn C# and the **KSP** public API? Great, we could use your help! The source code for **kOS** is kept on `github`_ under http://github.io/KSP-KOS/KOS.
+Do you know or are willing to learn C# and the **KSP** public API? Great, we could use your help! The source code for **kOS** is kept on `github`_ under https://github.com/KSP-KOS/KOS.
 
 If you are already quite familiar with git and Github, the usual Github project development path is used:
 

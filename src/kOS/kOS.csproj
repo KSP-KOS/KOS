@@ -63,7 +63,6 @@
     <Compile Include="AddOns\RemoteTech\IRemoteTechAPIv1.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechAPI.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechHook.cs" />
-    <Compile Include="AddOns\RemoteTech\RemoteTechUtility.cs" />
     <Compile Include="AddOns\Trajectories\Addon.cs" />
     <Compile Include="AddOns\Trajectories\TRWrapper.cs" />
     <Compile Include="Binding\ActionGroups.cs" />
@@ -87,13 +86,15 @@
     <Compile Include="Binding\TerminalSettings.cs" />
     <Compile Include="Binding\BindingsUniverse.cs" />
     <Compile Include="Control\IFlightControlParameter.cs" />
+    <Compile Include="Control\ThrottleManager.cs" />
+    <Compile Include="Control\WheelSteeringManager.cs" />
+    <Compile Include="Control\WheelThrottleManager.cs" />
     <Compile Include="Function\BuildList.cs" />
     <Compile Include="Function\HighlightStructure.cs" />
     <Compile Include="Function\Math.cs" />
     <Compile Include="Function\Misc.cs" />
     <Compile Include="Function\Persistence.cs" />
     <Compile Include="Function\Suffixed.cs" />
-    <Compile Include="Function\Trigonometry.cs" />
     <Compile Include="KSPLogger.cs" />
     <Compile Include="Module\Bootstrapper.cs" />
     <Compile Include="Module\kOSCustomParameters.cs" />
@@ -122,9 +123,10 @@
     <Compile Include="Sound\Voice.cs" />
     <Compile Include="Sound\VoiceValue.cs" />
     <Compile Include="Suffixed\CraftTemplate.cs" />
-    <Compile Include="Suffixed\HsvColor.cs" />
     <Compile Include="Suffixed\KUniverseValue.cs" />
     <Compile Include="Suffixed\LoadDistanceValue.cs" />
+    <Compile Include="Suffixed\Part\DecouplerValue.cs" />
+    <Compile Include="Suffixed\Part\LaunchClampValue.cs" />
     <Compile Include="Suffixed\ResourceTransferValue.cs" />
     <Compile Include="Screen\DelegateDialog.cs" />
     <Compile Include="Screen\KOSManagedWindow.cs" />
@@ -140,7 +142,6 @@
     <Compile Include="Suffixed\PartModuleField\PartModuleFields.cs" />
     <Compile Include="Suffixed\PartModuleField\PartModuleFieldsFactory.cs" />
     <Compile Include="Suffixed\PartModuleField\GimbalFields.cs" />
-    <Compile Include="Suffixed\Part\ModuleEngineAdapter.cs" />
     <Compile Include="Suffixed\Part\PartValueFactory.cs" />
     <Compile Include="Suffixed\RgbaColor.cs" />
     <Compile Include="Suffixed\Config.cs" />
@@ -167,8 +168,11 @@
     <Compile Include="Suffixed\VectorRenderer.cs" />
     <Compile Include="Suffixed\VesselAlt.cs" />
     <Compile Include="Suffixed\VesselEta.cs" />
+    <Compile Include="Suffixed\VesselTarget.Hooks.cs" />
+    <Compile Include="Suffixed\VesselTarget.Parts.cs" />
     <Compile Include="Suffixed\WaypointValue.cs" />
     <Compile Include="Execution\TransferManager.cs" />
+    <Compile Include="Suffixed\Widget\TipDisplay.cs" />
     <Compile Include="Suffixed\Widget\Slider.cs" />
     <Compile Include="Suffixed\Widget\Spacing.cs" />
     <Compile Include="Suffixed\Widget\Label.cs" />
@@ -224,7 +228,6 @@
     <Compile Include="Communication\PermitAllConnectivityManager.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechConnectivityManager.cs" />
     <Compile Include="Serialization\SerializationMgr.cs" />
-    <Compile Include="Serialization\IHasSharedObjects.cs" />
     <Compile Include="Suffixed\ScienceDataValue.cs" />
     <Compile Include="Suffixed\PartModuleField\ScienceExperimentFieldsFactory.cs" />
     <Compile Include="AddOns\OrbitalScience\DMModuleScienceAnimateFields.cs" />
@@ -244,6 +247,7 @@
     <Compile Include="Communication\MessageQueue.cs" />
     <Compile Include="Module\AssetManager.cs" />
     <Compile Include="Screen\ListPickerDialog.cs" />
+    <Compile Include="Suffixed\HsvaColor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">

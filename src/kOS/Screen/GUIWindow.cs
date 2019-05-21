@@ -56,7 +56,7 @@ namespace kOS.Screen
             commDelayStyle.stretchHeight = true;
             commDelayStyle.fontSize = 10;
             commDelayStyle.fontStyle = FontStyle.Bold;
-            commDelayedTexture = GameDatabase.Instance.GetTexture("kOS/GFX/commDelay", false);
+            commDelayedTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_commDelay", false);
             var solidWhite = new Texture2D(1, 1);
             solidWhite.SetPixel(0, 0, Color.white);
             commDelayStyle.normal.background = solidWhite;
@@ -83,15 +83,7 @@ namespace kOS.Screen
         void OnShowUI()
         {
             uiGloballyHidden = false;            
-        }
-        
-        public override void GetFocus()
-        {
-        }
-        
-        public override void LoseFocus()
-        {
-        }
+        }        
 
         public override void Open()
         {

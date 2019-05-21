@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using kOS.Safe.Serialization;
 using kOS.Safe.Persistence;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Encapsulation;
 using System.Linq;
+using kOS.Safe.Function;
 
 namespace kOS.Safe
 {
@@ -15,8 +16,34 @@ namespace kOS.Safe
     /// Instances of this class are on the other hand created only for the user.
     /// </summary>
     [kOS.Safe.Utilities.KOSNomenclature("Path")]
-    public class PathValue : SerializableStructure, IHasSafeSharedObjects
+    public class PathValue : SerializableStructure
     {
+        [Function("path")]
+        public class FunctionPath : SafeFunctionBase
+        {
+            public override void Execute(SafeSharedObjects shared)
+            {
+                int remaining = CountRemainingArgs(shared);
+
+                GlobalPath path;
+
+                if (remaining == 0)
+                {
+                    path = GlobalPath.FromVolumePath(shared.VolumeMgr.CurrentDirectory.Path,
+                                                     shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume));
+                }
+                else
+                {
+                    object pathObject = PopValueAssert(shared, true);
+                    path = shared.VolumeMgr.GlobalPathFromObject(pathObject);
+                }
+
+                AssertArgBottomAndConsume(shared);
+
+                ReturnValue = new PathValue(path, shared);
+            }
+        }
+
         private const string DumpPath = "path";
 
         public GlobalPath Path { get; private set; }
@@ -29,7 +56,10 @@ namespace kOS.Safe
             }
         }
 
-        public PathValue()
+        // Only used by CreateFromDump() and other peer constructors.
+        // Don't make it public because it leaves fields
+        // unpopulated:
+        private PathValue()
         {
             InitializeSuffixes();
         }
@@ -38,6 +68,15 @@ namespace kOS.Safe
         {
             Path = path;
             this.sharedObjects = sharedObjects;
+        }
+
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static PathValue CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new PathValue();
+            newObj.Shared = shared;
+            newObj.LoadDump(d);
+            return newObj;
         }
 
         public PathValue FromPath(GlobalPath path)
@@ -94,6 +133,38 @@ namespace kOS.Safe
         {
             return Path.ToString();
         }
+
+        public override bool Equals(object other)
+        {
+            PathValue pVal = other as PathValue;
+            if (!ReferenceEquals(pVal,null)) // ReferenceEquals prevents infinite recursion with overloaded == operator.
+                return Path == pVal.Path;
+            GlobalPath gVal = other as GlobalPath;
+            if (!ReferenceEquals(gVal,null)) // ReferenceEquals prevents infinite recursion with overloaded == operator.
+                return Path == gVal;
+
+            // fallback:
+            return base.Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            if (!ReferenceEquals(Path,null)) // ReferenceEquals prevents infinite recursion with overloaded == operator.
+                return Path.GetHashCode();
+            return base.GetHashCode();
+        }
+
+        public static bool operator ==(PathValue left, PathValue right)
+        {
+            if (ReferenceEquals(left,null) || ReferenceEquals(right,null)) // ReferenceEquals prevents infinite recursion with overloaded == operator.
+                return ReferenceEquals(left, null) && ReferenceEquals(right, null); // ReferenceEquals prevents infinite recursion with overloaded == operator.
+            return left.Equals(right);
+        }
+        public static bool operator !=(PathValue left, PathValue right)
+        {
+            return !(left == right);
+        }
+
     }
 }
 

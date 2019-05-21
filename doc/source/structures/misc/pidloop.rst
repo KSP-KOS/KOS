@@ -30,14 +30,6 @@ The `PIDLoop` has multiple constructors available.  Valid syntax can be seen her
 
 Please see the bottom of this page for information on the derivation of the loop's output.
 
-.. note::
-
-    .. versionadded:: 0.18
-        While the `PIDLOOP` structure was added in version 0.18, you may feel free to continue to use any
-        previously implemented PID logic.  This loop is intended to be a basic and flexible PID, but you
-        may still find benefit in using customized logic.
-
-
 .. structure:: PIDLoop
 
     ===================================== ========================= =============

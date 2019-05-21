@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using kOS.Communication;
 using kOS.Module;
 
@@ -39,25 +39,27 @@ namespace kOS.AddOns.RemoteTech
 
         public double GetDelay(Vessel vessel1, Vessel vessel2)
         {
-            if (!(RemoteTechHook.IsAvailable(vessel1.id) && RemoteTechHook.IsAvailable(vessel2.id)))
-                return -1; // default to no connection if one of the vessels isn't configured for RT.
+            if (!(RemoteTechHook.IsAvailable()))
+                return -1; // default to no connection if RT itself isn't available.
             double delay = RemoteTechHook.Instance.GetSignalDelayToSatellite(vessel1.id, vessel2.id);
-            return delay != double.PositiveInfinity ? delay : -1;
+            return Double.IsPositiveInfinity(delay) ? -1 : delay;
         }
 
         public double GetDelayToControl(Vessel vessel)
         {
-            if (!RemoteTechHook.IsAvailable(vessel.id))
-                return -1; // default to no connection if the vessel isn't configured for RT.
-            return RemoteTechUtility.GetInputWaitTime(vessel);
+            if (!RemoteTechHook.IsAvailable())
+                return -1; // default to no connection if RT itself isn't available.
+            if (RemoteTechHook.Instance.HasLocalControl(vessel.id)) return 0d;
+            double delay = RemoteTechHook.Instance.GetShortestSignalDelay(vessel.id);
+            return Double.IsPositiveInfinity(delay) ? -1 : delay;
         }
 
         public double GetDelayToHome(Vessel vessel)
         {
-            if (!RemoteTechHook.IsAvailable(vessel.id))
-                return -1; // default to no connection if the vessel isn't configured for RT.
+            if (!RemoteTechHook.IsAvailable())
+                return -1; // default to no connection if RT itself isn't available.
             double delay = RemoteTechHook.Instance.GetSignalDelayToKSC(vessel.id);
-            return delay != double.PositiveInfinity ? delay : -1;
+            return Double.IsPositiveInfinity(delay) ? -1 : delay;
         }
 
         public bool HasConnection(Vessel vessel1, Vessel vessel2)
@@ -68,16 +70,16 @@ namespace kOS.AddOns.RemoteTech
 
         public bool HasConnectionToHome(Vessel vessel)
         {
-            if (!RemoteTechHook.IsAvailable(vessel.id))
-                return false; // default to no connection if the vessel isn't configured for RT.
+            if (!RemoteTechHook.IsAvailable())
+                return false; // default to no connection if RT itself isn't available.
             return RemoteTechHook.Instance.HasConnectionToKSC(vessel.id);
         }
 
         public bool HasConnectionToControl(Vessel vessel)
         {
-            if (!RemoteTechHook.IsAvailable(vessel.id))
-                return false; // default to no connection if the vessel isn't configured for RT.
-            return RemoteTechHook.Instance.HasAnyConnection(vessel.id);
+            if (!RemoteTechHook.IsAvailable())
+                return vessel.CurrentControlLevel >= Vessel.ControlLevel.PARTIAL_MANNED; // default to checking for local control if RT itself isn't available.
+            return RemoteTechHook.Instance.HasAnyConnection(vessel.id) || RemoteTechHook.Instance.HasLocalControl(vessel.id);
         }
 
         public void AddAutopilotHook(Vessel vessel, FlightInputCallback hook)
@@ -91,6 +93,15 @@ namespace kOS.AddOns.RemoteTech
                     callbacks[hook] = action;
                 }
                 RemoteTechHook.Instance.AddSanctionedPilot(vessel.id, action);
+                // removing the callback from stock if not already added doesn't throw an error
+                vessel.OnPreAutopilotUpdate -= hook;
+            }
+            else // fallback to stock events when RT isn't available, this may have unexpected results if RT availability changes
+            {
+                // removing the callback if not already added doesn't throw an error
+                // but adding it a 2nd time will result in 2 calls.  Remove to be safe.
+                vessel.OnPreAutopilotUpdate -= hook;
+                vessel.OnPreAutopilotUpdate += hook;
             }
         }
 
@@ -103,6 +114,12 @@ namespace kOS.AddOns.RemoteTech
             {
                 RemoteTechHook.Instance.RemoveSanctionedPilot(vessel.id, action);
                 callbacks.Remove(hook);
+                // removing the callback from stock if not already added doesn't throw an error
+                vessel.OnPreAutopilotUpdate -= hook;
+            }
+            else // remove fallback event hook
+            {
+                vessel.OnPreAutopilotUpdate -= hook;
             }
         }
     }

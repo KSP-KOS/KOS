@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
 using kOS.Execution;
@@ -185,112 +186,6 @@ namespace kOS.Function
             ReturnValue = result;
         }
     }
-
-    [Function("list")]
-    public class FunctionList : FunctionBase
-    {
-        public override void Execute(SharedObjects shared)
-        {
-            Structure[] argArray = new Structure[CountRemainingArgs(shared)];
-            for (int i = argArray.Length - 1 ; i >= 0 ; --i)
-                argArray[i] = PopStructureAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
-            AssertArgBottomAndConsume(shared);
-            var listValue = new ListValue(argArray.ToList());
-            ReturnValue = listValue;
-        }
-    }
-
-    [Function("queue")]
-    public class FunctionQueue : FunctionBase
-    {
-        public override void Execute(SharedObjects shared)
-        {
-            Structure[] argArray = new Structure[CountRemainingArgs(shared)];
-            for (int i = argArray.Length - 1 ; i >= 0 ; --i)
-                argArray[i] = PopStructureAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
-            AssertArgBottomAndConsume(shared);
-            var queueValue = new QueueValue(argArray.ToList());
-            ReturnValue = queueValue;
-        }
-    }
-
-    [Function("stack")]
-    public class FunctionStack : FunctionBase
-    {
-        public override void Execute(SharedObjects shared)
-        {
-            Structure[] argArray = new Structure[CountRemainingArgs(shared)];
-            for (int i = argArray.Length - 1 ; i >= 0 ; --i)
-                argArray[i] = PopStructureAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
-            AssertArgBottomAndConsume(shared);
-            var stackValue = new StackValue(argArray.ToList());
-            ReturnValue = stackValue;
-        }
-    }
-
-    [Function("uniqueset")]
-    public class FunctionSet : FunctionBase
-    {
-        public override void Execute(SharedObjects shared)
-        {
-            Structure[] argArray = new Structure[CountRemainingArgs(shared)];
-            for (int i = argArray.Length - 1 ; i >= 0 ; --i)
-                argArray[i] = PopStructureAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
-            AssertArgBottomAndConsume(shared);
-            var setValue = new UniqueSetValue(argArray.ToList());
-            ReturnValue = setValue;
-        }
-    }
-
-    [Function("range")]
-    public class FunctionRange : FunctionBase
-    {
-        public override void Execute(SharedObjects shared)
-        {
-            // Default values for parameters
-            int from = RangeValue.DEFAULT_START;
-            int to = RangeValue.DEFAULT_STOP;
-            int step = RangeValue.DEFAULT_STEP;
-
-            int argCount = CountRemainingArgs(shared);
-            // assign parameter values from the stack, pop them in reverse order
-            switch (argCount)
-            {
-                case 1:
-                    to = GetInt(PopStructureAssertEncapsulated(shared));
-                    break;
-                case 2:
-                    to = GetInt(PopStructureAssertEncapsulated(shared));
-                    from = GetInt(PopStructureAssertEncapsulated(shared));
-                    break;
-                case 3:
-                    step = GetInt(PopStructureAssertEncapsulated(shared));
-                    to = GetInt(PopStructureAssertEncapsulated(shared));
-                    from = GetInt(PopStructureAssertEncapsulated(shared));
-                    break;
-                default:
-                    throw new KOSArgumentMismatchException(new int[] { 1, 2, 3 }, argCount, "Thrown from function RANGE()");
-            }
-            AssertArgBottomAndConsume(shared);
-
-            ReturnValue = new RangeValue(from, to, step);
-        }
-    }
-
-    [Function("lex", "lexicon")]
-    public class FunctionLexicon : FunctionBase
-    {
-        public override void Execute(SharedObjects shared)
-        {
-
-            Structure[] argArray = new Structure[CountRemainingArgs(shared)];
-            for (int i = argArray.Length - 1 ; i >= 0 ; --i)
-                argArray[i] = PopStructureAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
-            AssertArgBottomAndConsume(shared);
-            var lexicon = new Lexicon(argArray.ToList());
-            ReturnValue = lexicon;
-        }
-    }
     
     [Function("slidenote")]
     public class FunctionSlideNote : FunctionBase
@@ -381,6 +276,34 @@ namespace kOS.Function
         }
     }
 
+    [Function("time")]
+    public class Time : FunctionBase
+    {
+        // Note: "TIME" is both a bound variable AND a built-in function now.
+        // If it gets called with parentheses(), the script calls this built-in function.
+        // If it gets called without them, then the bound variable is what gets called instead.
+        // Calling it using parentheses but with empty args: TIME() gives the same result
+        // as the bound variable.  While it would be cleaner to make it JUST a built-in function,
+        // the bound variable had to be retained for backward compatibility with scripts
+        // that call TIME without parentheses.
+        public override void Execute(SharedObjects shared)
+        {
+            double ut;
+            // Accepts zero or one arg:
+            int argCount = CountRemainingArgs(shared);
+
+            // If zero args, then the default is to assume you want to
+            // make a Timespan of "now":
+            if (argCount == 0)
+                ut = Planetarium.GetUniversalTime();
+            else
+                ut = GetDouble(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
+
+            ReturnValue = new kOS.Suffixed.TimeSpan(ut);
+        }
+    }
+
     [Function("hsv")]
     public class FunctionHsv : FunctionBase
     {
@@ -390,7 +313,7 @@ namespace kOS.Function
             var s = (float) GetDouble(PopValueAssert(shared));
             var h = (float) GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
-            ReturnValue = new HsvColor(h,s,v);
+            ReturnValue = new HsvaColor(h,s,v);
         }
     }
 
@@ -404,7 +327,7 @@ namespace kOS.Function
             var s = (float) GetDouble(PopValueAssert(shared));
             var h = (float) GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
-            ReturnValue = new HsvColor(h,s,v,a);
+            ReturnValue = new HsvaColor(h,s,v,a);
         }
     }
 
@@ -446,23 +369,51 @@ namespace kOS.Function
     [Function("vecdraw", "vecdrawargs")]
     public class FunctionVecDrawNull : FunctionBase
     {
+        protected RgbaColor GetDefaultColor()
+        {
+            return new RgbaColor(1.0f, 1.0f, 1.0f);
+        }
+
+        protected Vector GetDefaultVector()
+        {
+            return new Vector(1.0, 0.0, 0.0);
+        }
+
+        protected Vector GetDefaultStart()
+        {
+            return new Vector(0, 0, 0);
+        }
+
         public override void Execute(SharedObjects shared)
         {
             int argc = CountRemainingArgs(shared);
 
             // Handle the var args that might be passed in, or give defaults if fewer args:
-            double width   = (argc >= 7) ? GetDouble(PopValueAssert(shared))         : 0.2;
-            bool   show    = (argc >= 6) ? Convert.ToBoolean(PopValueAssert(shared)) : false;
-            double scale   = (argc >= 5) ? GetDouble(PopValueAssert(shared))         : 1.0;
-            string str     = (argc >= 4) ? PopValueAssert(shared).ToString()         : "";
-            RgbaColor rgba = (argc >= 3) ? GetRgba(PopValueAssert(shared))           : new RgbaColor(1.0f, 1.0f, 1.0f);
-            Vector vec     = (argc >= 2) ? GetVector(PopValueAssert(shared))         : new Vector(1.0, 0.0, 0.0);
-            Vector start   = (argc >= 1) ? GetVector(PopValueAssert(shared))         : new Vector(0.0, 0.0, 0.0);
+            double width    = (argc >= 7) ? GetDouble(PopValueAssert(shared))         : 0.2;
+            bool   show     = (argc >= 6) ? Convert.ToBoolean(PopValueAssert(shared)) : false;
+            double scale    = (argc >= 5) ? GetDouble(PopValueAssert(shared))         : 1.0;
+            string str      = (argc >= 4) ? PopValueAssert(shared).ToString()         : "";
+
+            // Pop the arguments or use the default if omitted
+            object argRgba  = (argc >= 3) ? PopValueAssert(shared) : GetDefaultColor();
+            object argVec   = (argc >= 2) ? PopValueAssert(shared) : GetDefaultVector();
+            object argStart = (argc >= 1) ? PopValueAssert(shared) : GetDefaultStart();
+
+            // Assign the arguments of type delegate or null otherwise
+            KOSDelegate colorUpdater = argRgba  as KOSDelegate;
+            KOSDelegate vecUpdater   = argVec   as KOSDelegate;
+            KOSDelegate startUpdater = argStart as KOSDelegate;
+
+            // Get the values or use the default if its a delegate
+            RgbaColor rgba = (colorUpdater == null) ? GetRgba(argRgba)    : GetDefaultColor();
+            Vector vec     = (vecUpdater == null)   ? GetVector(argVec)   : GetDefaultVector();
+            Vector start   = (startUpdater == null) ? GetVector(argStart) : GetDefaultStart();
+
             AssertArgBottomAndConsume(shared);
-            DoExecuteWork(shared, start, vec, rgba, str, scale, show, width);
+            DoExecuteWork(shared, start, vec, rgba, str, scale, show, width, colorUpdater, vecUpdater, startUpdater);
         }
         
-        public void DoExecuteWork(SharedObjects shared, Vector start, Vector vec, RgbaColor rgba, string str, double scale, bool show, double width)
+        public void DoExecuteWork(SharedObjects shared, Vector start, Vector vec, RgbaColor rgba, string str, double scale, bool show, double width, KOSDelegate colorUpdater, KOSDelegate vecUpdater, KOSDelegate startUpdater)
         {
             var vRend = new VectorRenderer( shared.UpdateHandler, shared )
                 {
@@ -474,6 +425,15 @@ namespace kOS.Function
                 };
             vRend.SetLabel( str );
             vRend.SetShow( show );
+
+            if (colorUpdater != null)
+                vRend.SetSuffix("COLORUPDATER", colorUpdater);
+
+            if (vecUpdater != null)
+                vRend.SetSuffix("VECUPDATER", vecUpdater);
+
+            if (startUpdater != null)
+                vRend.SetSuffix("STARTUPDATER", startUpdater);
             
             ReturnValue = vRend;
         }
@@ -574,16 +534,6 @@ namespace kOS.Function
         }
     }
     
-    [Function("constant")]
-    public class FunctionConstant : FunctionBase
-    {
-        public override void Execute(SharedObjects shared)
-        {
-            AssertArgBottomAndConsume(shared); // no args
-            ReturnValue = new ConstantValue();
-        }
-    }
-    
     [Function("allwaypoints")]
     public class FunctionAllWaypoints : FunctionBase
     {
@@ -631,17 +581,30 @@ namespace kOS.Function
             if (wpm == null)
                 throw new KOSInvalidArgumentException("waypoint", "\""+pointName+"\"", "no waypoints exist");
             
+            // If this name has a greek letter in it's spelling like "alpha", "beta", etc, then it
+            // is probably part of a waypoint cluster.
+            // Waypoint clusters are actually 1 waypoint with an array of "children" by index number.
+            // where the waypoint's name is just the base part with the "alpha", "beta", etc suffix removed.
             string baseName;
             int index;
             bool hasGreek = WaypointValue.GreekToInteger(pointName, out index, out baseName);
-            if (hasGreek)
-                pointName = baseName;
-            Waypoint point = wpm.Waypoints.FirstOrDefault(
-                p => string.Equals(p.name, pointName,StringComparison.CurrentCultureIgnoreCase) && (!hasGreek || p.index == index));
-            
-            // We can't communicate the concept of a lookup fail to the script in a way it can catch (can't do
-            // nulls), so bomb out here:
-            if (point ==null)
+
+            Waypoint point = null;
+            if (hasGreek) // Attempt to find it as part of a waypoint cluster.
+            {
+                point = wpm.Waypoints.FirstOrDefault(
+                    p => string.Equals(p.name, baseName,StringComparison.CurrentCultureIgnoreCase) && (!hasGreek || p.index == index));
+                if (point != null) // Will be null if this name is not really a waypoint cluster.
+                    pointName = baseName;
+            }
+            if (point == null) // Either it had no greek letter, or it did but wasn't a waypoint cluster.  Try it as a vanilla waypoint:
+            {
+                point = wpm.Waypoints.FirstOrDefault(
+                    p => string.Equals(p.name, pointName, StringComparison.CurrentCultureIgnoreCase) && (!hasGreek || p.index == index));
+            }
+
+            // If it's still null at this point then give up - we can't find such a waypoint name:
+            if (point == null)
                 throw new KOSInvalidArgumentException("waypoint", "\""+pointName+"\"", "no such waypoint");
 
             ReturnValue = new WaypointValue(point, shared);
@@ -690,7 +653,7 @@ namespace kOS.Function
             }
 
             double parsedAmount;
-            if (Double.TryParse(amount.ToString(), out parsedAmount))
+            if (Double.TryParse(amount.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out parsedAmount))
             {
                 object toPush = shared.TransferManager.CreateTransfer(resourceInfo, transferTo, transferFrom, parsedAmount);
                 ReturnValue = toPush;

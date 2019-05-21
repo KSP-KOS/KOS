@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -115,7 +115,7 @@ namespace kOS.Safe.Utilities
 
         public static void LoadWalkAttribute(Assembly assembly)
         {
-            foreach (Type type in assembly.GetTypes())
+            foreach (Type type in ReflectUtil.GetLoadedTypes(assembly))
             {
                 var attr = type.GetCustomAttributes(typeof(AssemblyWalkAttribute), true).FirstOrDefault() as AssemblyWalkAttribute;
                 if (attr != null)
@@ -222,7 +222,7 @@ namespace kOS.Safe.Utilities
 
         public static void WalkAssembly(Assembly assembly)
         {
-            foreach (Type type in assembly.GetTypes())
+            foreach (Type type in ReflectUtil.GetLoadedTypes(assembly))
             {
                 foreach (AssemblyWalkAttribute walkAttribute in AllWalkAttributes.Keys)
                 {

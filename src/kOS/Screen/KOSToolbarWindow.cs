@@ -1,4 +1,4 @@
-﻿using kOS.Module;
+using kOS.Module;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Module;
 using kOS.Safe.Utilities;
@@ -6,6 +6,7 @@ using kOS.UserIO;
 using kOS.Utilities;
 using KSP.UI.Screens;
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -91,11 +92,11 @@ namespace kOS.Screen
         /// </summary>
         public static void FirstTimeSetup()
         {
-            launcherButtonTexture = GameDatabase.Instance.GetTexture("kOS/GFX/launcher-button", false);
-            terminalOpenIconTexture = GameDatabase.Instance.GetTexture("kOS/GFX/terminal-icon-open", false);
-            terminalClosedIconTexture = GameDatabase.Instance.GetTexture("kOS/GFX/terminal-icon-closed", false);
-            terminalOpenTelnetIconTexture = GameDatabase.Instance.GetTexture("kOS/GFX/terminal-icon-open-telnet", false);
-            terminalClosedTelnetIconTexture = GameDatabase.Instance.GetTexture("kOS/GFX/terminal-icon-closed-telnet", false);
+            launcherButtonTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_launcher-button", false);
+            terminalOpenIconTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_terminal-icon-open", false);
+            terminalClosedIconTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_terminal-icon-closed", false);
+            terminalOpenTelnetIconTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_terminal-icon-open-telnet", false);
+            terminalClosedTelnetIconTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_terminal-icon-closed-telnet", false);
 
             windowRect = new Rect(0, 0, 1f, 1f); // this origin point will move when opened/closed.
             panelSkin = BuildPanelSkin();
@@ -112,6 +113,7 @@ namespace kOS.Screen
             GameEvents.onGUIApplicationLauncherUnreadifying.Add(RemoveButton);
             GameEvents.onHideUI.Add(OnHideUI);
             GameEvents.onShowUI.Add(OnShowUI);
+            GameEvents.onGameStateSave.Add(OnGameStateSave);
             GameObject.DontDestroyOnLoad(this);
 
             fontPicker = null;
@@ -187,7 +189,7 @@ namespace kOS.Screen
             if (!ToolbarManager.ToolbarAvailable) return;
 
             blizzyButton = ToolbarManager.Instance.add("kOS", "kOSButton");
-            blizzyButton.TexturePath = "kOS/GFX/launcher-button-blizzy";
+            blizzyButton.TexturePath = "kOS/GFX/dds_launcher-button-blizzy";
             blizzyButton.ToolTip = "kOS";
             blizzyButton.OnClick += e => CallbackOnClickBlizzy();
         }
@@ -254,6 +256,7 @@ namespace kOS.Screen
 
             GameEvents.onHideUI.Remove(OnHideUI);
             GameEvents.onShowUI.Remove(OnShowUI);
+            GameEvents.onGameStateSave.Remove(OnGameStateSave);
 
             GoAway();
             SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] OnDestroy successful");
@@ -404,6 +407,18 @@ namespace kOS.Screen
         void OnShowUI()
         {
             uiGloballyHidden = false;
+        }
+
+        // As long as the user can get this toolbar menu dialog to show up, that means
+        // they can change a setting in it.  Those changes should be persisted even when
+        // there's no KOSProcessor modules loaded in the scene.  (Thus why the config
+        // save is done here as well as in KOSProcessor.)
+        void OnGameStateSave(ConfigNode node) // ConfigNode ignored.
+        {
+            if (SafeHouse.Config != null)
+            {
+                SafeHouse.Config.SaveConfig();
+            }
         }
 
         public void OnGUI()
@@ -610,7 +625,7 @@ namespace kOS.Screen
             int newInt = -99; // Nonzero value to act as a flag to detect if the following line got triggered:
             if (fieldValue.Length == 0)
                 newInt = 0;// Empty or whitespace input should be a zero, instead of letting int.TryParse() call it an error.
-            if (newInt == 0 || int.TryParse(fieldValue, out newInt))
+            if (newInt == 0 || int.TryParse(fieldValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out newInt))
             {
                 backingConfigInts[whichInt] = newInt;
                 // Don't commit the temp value back to the CONFIGs unless RETURN is being pressed right now:

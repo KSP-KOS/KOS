@@ -35,7 +35,7 @@ Structure
 
         * - :attr:`EMPTY`
           - :struct:`Boolean`
-          - true if there are messages in the queue
+          - true if there are no messages in the queue
         * - :attr:`LENGTH`
           - :struct:`Scalar`
           - number of messages in the queue

@@ -1,7 +1,8 @@
-﻿using kOS.Safe.Compilation.KS;
+using kOS.Safe.Compilation.KS;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Execution;
 using kOS.Safe.Utilities;
 using System;
 using System.IO;
@@ -30,6 +31,7 @@ namespace kOS.Suffixed
             AddSuffix("REVERTTOEDITOR", new NoArgsVoidSuffix(RevertToEditor));
             AddSuffix("REVERTTO", new OneArgsSuffix<StringValue>(RevertTo));
             AddSuffix("CANQUICKSAVE", new Suffix<BooleanValue>(CanQuicksave));
+            AddSuffix("PAUSE", new NoArgsVoidSuffix(PauseGame));
             AddSuffix("QUICKSAVE", new NoArgsVoidSuffix(QuickSave));
             AddSuffix("QUICKLOAD", new NoArgsVoidSuffix(QuickLoad));
             AddSuffix("QUICKSAVETO", new OneArgsSuffix<StringValue>(QuickSaveTo));
@@ -47,6 +49,7 @@ namespace kOS.Suffixed
             AddSuffix("CRAFTLIST", new Suffix<ListValue>(CraftTemplate.GetAllTemplates));
             AddSuffix("SWITCHVESSELWATCHERS", new NoArgsSuffix<UniqueSetValue<UserDelegate>>(() => shared.DispatchManager.CurrentDispatcher.GetSwitchVesselNotifyees()));
             AddSuffix("TIMEWARP", new Suffix<TimeWarpValue>(() => TimeWarpValue.Instance));
+            AddSuffix(new string[] { "REALWORLDTIME", "REALTIME" }, new Suffix<ScalarValue>(GetRealWorldTime));
         }
 
 
@@ -159,7 +162,20 @@ namespace kOS.Suffixed
             }
             return false;
         }
-        
+
+        public void PauseGame()
+        {
+            string textToHud = "kOS script has triggered a Pause Game.  Manual intervention needed to resume.";
+            ScreenMessages.PostScreenMessage("<color=#ffff80><size=20>" + textToHud + "</size></color>", 10, ScreenMessageStyle.UPPER_CENTER);
+
+            PauseMenu.Display();
+
+            // It would be weird to execute the rest of the IPU's instructions when the script said to pause the game.
+            // Presumably most users would expect calling Pause to make the script stop right there, not
+            // like 3 or 4 lines later.  Therefore stop this FixedUpdate tick here:
+            shared.Cpu.YieldProgram(new YieldFinishedNextTick());
+        }
+
         public void QuickSave()
         {
             if (HighLogic.CurrentGame.Parameters.Flight.CanQuickSave)
@@ -272,6 +288,13 @@ namespace kOS.Suffixed
             return ret;
         }
 
+        public ScalarDoubleValue GetRealWorldTime()
+        {
+            // returns the current unix-timestamp the host operating system is set to
+            var timeSpan = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
+            return new ScalarDoubleValue(timeSpan.TotalSeconds);
+        }
+
         public CraftTemplate GetCraft(StringValue name, StringValue editor)
         {
             return CraftTemplate.GetTemplateByName(name, editor);
@@ -322,7 +345,7 @@ namespace kOS.Suffixed
             preFlightCheck.AddTest(new CanAffordLaunchTest(ship.InnerTemplate, Funding.Instance));
             preFlightCheck.AddTest(new FacilityOperational(launchSiteName, launchSiteName));
             preFlightCheck.AddTest(new NoControlSources(manifest));
-            preFlightCheck.AddTest(new LaunchSiteClear(launchSiteName, HighLogic.CurrentGame));
+            preFlightCheck.AddTest(new LaunchSiteClear(launchSiteName, launchSiteName, HighLogic.CurrentGame));
             preFlightCheck.RunTests();
             shared.Cpu.GetCurrentOpcode().AbortProgram = true;
             SafeHouse.Logger.Log("Craft waiting for preflight checks!");

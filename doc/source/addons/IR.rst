@@ -3,19 +3,33 @@
 Infernal Robotics
 =================
 
-- Download: http://kerbal.curseforge.com/ksp-mods/220267
-- Alternative download: https://github.com/MagicSmokeIndustries/InfernalRobotics/releases
-- Forum thread, including full instructions: http://forum.kerbalspaceprogram.com/index.php?/topic/104535-/
+.. warning::
+    The Infernal Robotics mod has been migrating to Infernal Robotics Next. kOS
+    includes support for IR Next only, and no longer supports re-compiled
+    versions of the original IR.  The links to the original mod forum thread and
+    downloads remain in this file for historical context and reference.
+
+- Infernal Robotics Next download: https://github.com/meirumeiru/InfernalRobotics/releases
+- Infernal Robotics Next forum thread: https://forum.kerbalspaceprogram.com/index.php?/topic/170898--/
+- Historical download: http://kerbal.curseforge.com/ksp-mods/220267
+- Historical alternative download: https://github.com/MagicSmokeIndustries/InfernalRobotics/releases
+- Historical Forum thread, including full instructions: http://forum.kerbalspaceprogram.com/index.php?/topic/104535--/
 
 Infernal Robotics might not be installed on your copy of the game.
 Your script can test whether or not it's installed by using
 the boolean expression ``addons:available("ir")``.
 
+.. warning::
+    At the time of this writing, IR Next officially supports KSP 1.3.1 and 1.4.2
+    with the beta 3 patch 7 "pre-release".  The addon has been tested using
+    this 1.4.2 zip file running on KSP 1.6.1 with no errors reported.  While
+    using this addon, please keep in mind that IR Next may have underlying
+    issues due to KSP version mismatch, and that newer releases to IR Next may
+    cause this addon to break in unexpected ways.
+
 Infernal Robotics introduces robotics parts to the game, letting you create moving or spinning contraptions that just aren't possible under stock KSP.
 
 .. figure:: http://i.imgur.com/O94LBvF.png
-
-Starting version 0.20 of the Infernal Robotics, mod creators introduced API to for easier access to robotic features.
 
 Access structure IRAddon via ``ADDONS:IR``.
 
@@ -53,7 +67,7 @@ Access structure IRAddon via ``ADDONS:IR``.
     :type: :struct:`List` of :struct:`IRControlGroup` objects
     :access: Get only
 
-    Lists all Servo Groups for the Vessel on which the script is being executed. On IR versions prior to 0.21.5 will always return servo groups for current focused vessel.
+    Lists all Servo Groups for the Vessel on which the script is being executed.
     Example of use::
 
         for g in ADDONS:IR:GROUPS
@@ -67,7 +81,7 @@ Access structure IRAddon via ``ADDONS:IR``.
     :type: :struct:`List` of :struct:`IRServo` objects
     :access: Get only
 
-    Lists all Servos for the Vessel on which the script is being executed. On IR versions prior to 0.21.5 will always return servos for current focused vessel.
+    Lists all Servos for the Vessel on which the script is being executed.
     Example of use::
 
         for s in ADDONS:IR:ALLSERVOS
@@ -94,7 +108,7 @@ Access structure IRAddon via ``ADDONS:IR``.
      :attr:`FORWARDKEY`                    :ref:`string <string>`    Key assigned to forward movement
      :attr:`REVERSEKEY`                    :ref:`string <string>`    Key assigned to reverse movement
      :attr:`SERVOS`                        List (readonly)           List of servos in the group
-     :attr:`VESSEL`                        :struct:`Vessel`          Vessel object, owning this servo group. Readonly, requires IR version 0.21.5 or later.
+     :attr:`VESSEL`                        :struct:`Vessel`          Vessel object, owning this servo group. Readonly.
 
      :meth:`MOVERIGHT()`                   void                      Commands servos in the group to move in positive direction
      :meth:`MOVELEFT()`                    void                      Commands servos in the group to move in negative direction
@@ -160,7 +174,7 @@ Access structure IRAddon via ``ADDONS:IR``.
     :type: :struct:`Vessel`
     :access: Get only
 
-    If IR 0.21.5 or later is installed will return a Vessel that owns this ServoGroup, otherwise will return current focused Vessel
+    Returns a Vessel that owns this ServoGroup
 
 .. method:: IRControlGroup:MOVERIGHT()
 
