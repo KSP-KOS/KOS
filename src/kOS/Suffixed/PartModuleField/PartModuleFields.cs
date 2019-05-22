@@ -247,7 +247,7 @@ namespace kOS.Suffixed.PartModuleField
         /// <summary>
         /// Return the field itself that goes with the name (the BaseField, not the value).
         /// </summary>
-        /// <param name="cookedGuiName">The case-insensitive guiName of the field.</param>
+        /// <param name="cookedGuiName">The case-insensitive guiName (or name if guiname is empty) of the field.</param>
         /// <returns>a BaseField - a KSP type that can be used to get the value, or its GUI name or its reflection info.</returns>
         protected BaseField GetField(string cookedGuiName)
         {
@@ -308,7 +308,7 @@ namespace kOS.Suffixed.PartModuleField
         /// <summary>
         /// Return the KSP BaseEvent going with the given name.
         /// </summary>
-        /// <param name="cookedGuiName">The event's case-insensitive guiname.</param>
+        /// <param name="cookedGuiName">The event's case-insensitive guiname (or name if guiname is empty).</param>
         /// <returns></returns>
         private BaseEvent GetEvent(string cookedGuiName)
         {
@@ -363,7 +363,7 @@ namespace kOS.Suffixed.PartModuleField
         /// <summary>
         /// Return the KSP BaseAction going with the given name.
         /// </summary>
-        /// <param name="cookedGuiName">The event's case-insensitive guiname.</param>
+        /// <param name="cookedGuiName">The event's case-insensitive guiname (or name if guiname is empty).</param>
         /// <returns></returns>
         private BaseAction GetAction(string cookedGuiName)
         {
