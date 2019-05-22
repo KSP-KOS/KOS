@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Suffixed.Part;
@@ -181,6 +181,19 @@ namespace kOS.Suffixed.PartModuleField
             return isLegal;
         }
 
+        protected string GetFieldName(BaseField kspField)
+        {
+            return kspField.guiName.Length > 0 ? kspField.guiName : kspField.name;
+        }
+        // Note that BaseEvent has the GUIName property which effectively does this already.
+        protected string GetEventName(BaseEvent kspEvent)
+        {
+            return kspEvent.GUIName;
+        }
+        protected string GetActionName(BaseAction kspAction)
+        {
+            return kspAction.guiName.Length > 0 ? kspAction.guiName : kspAction.name;
+        }
         /// <summary>
         /// Return a list of all the strings of all KSPfields registered to this PartModule
         /// which are currently showing on the part's RMB menu.
@@ -196,7 +209,7 @@ namespace kOS.Suffixed.PartModuleField
             {
                 returnValue.Add(new StringValue(string.Format(formatter,
                                               IsEditable(field) ? "settable" : "get-only",
-                                              field.guiName.ToLower(),
+                                              GetFieldName(field).ToLower(),
                                               Utilities.Utils.KOSType(field.FieldInfo.FieldType))));
             }
             return returnValue;
@@ -215,7 +228,7 @@ namespace kOS.Suffixed.PartModuleField
 
             foreach (BaseField field in visibleFields)
             {
-                returnValue.Add(new StringValue(field.guiName.ToLower()));
+                returnValue.Add(new StringValue(GetFieldName(field).ToLower()));
             }
             return returnValue;
         }
@@ -239,7 +252,7 @@ namespace kOS.Suffixed.PartModuleField
         protected BaseField GetField(string cookedGuiName)
         {
             return partModule.Fields.Cast<BaseField>().
-                FirstOrDefault(field => string.Equals(field.guiName, cookedGuiName, StringComparison.CurrentCultureIgnoreCase));
+                FirstOrDefault(field => string.Equals(GetFieldName(field), cookedGuiName, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
@@ -257,7 +270,7 @@ namespace kOS.Suffixed.PartModuleField
             {
                 returnValue.Add(new StringValue(string.Format(formatter,
                                               "callable",
-                                              kspEvent.guiName.ToLower(),
+                                              GetEventName(kspEvent).ToLower(),
                                               "KSPEvent")));
             }
             return returnValue;
@@ -276,7 +289,7 @@ namespace kOS.Suffixed.PartModuleField
 
             foreach (BaseEvent kspEvent in visibleEvents)
             {
-                returnValue.Add(new StringValue(kspEvent.guiName.ToLower()));
+                returnValue.Add(new StringValue(GetEventName(kspEvent).ToLower()));
             }
             return returnValue;
         }
@@ -300,7 +313,7 @@ namespace kOS.Suffixed.PartModuleField
         private BaseEvent GetEvent(string cookedGuiName)
         {
             return partModule.Events.
-                FirstOrDefault(kspEvent => string.Equals(kspEvent.guiName, cookedGuiName, StringComparison.CurrentCultureIgnoreCase));
+                FirstOrDefault(kspEvent => string.Equals(GetEventName(kspEvent), cookedGuiName, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
@@ -315,7 +328,7 @@ namespace kOS.Suffixed.PartModuleField
             {
                 returnValue.Add(new StringValue(string.Format(formatter,
                                               "callable",
-                                              kspAction.guiName.ToLower(),
+                                              GetActionName(kspAction).ToLower(),
                                               "KSPAction")));
             }
             return returnValue;
@@ -331,7 +344,7 @@ namespace kOS.Suffixed.PartModuleField
 
             foreach (BaseAction kspAction in partModule.Actions)
             {
-                returnValue.Add(new StringValue(kspAction.guiName.ToLower()));
+                returnValue.Add(new StringValue(GetActionName(kspAction).ToLower()));
             }
             return returnValue;
         }
@@ -344,7 +357,7 @@ namespace kOS.Suffixed.PartModuleField
         /// <returns>true if it is on the PartModule, false if it is not</returns>
         public BooleanValue HasAction(StringValue actionName)
         {
-            return partModule.Actions.Any(kspAction => string.Equals(kspAction.guiName, actionName, StringComparison.CurrentCultureIgnoreCase));
+            return partModule.Actions.Any(kspAction => string.Equals(GetActionName(kspAction), actionName, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
@@ -354,7 +367,7 @@ namespace kOS.Suffixed.PartModuleField
         /// <returns></returns>
         private BaseAction GetAction(string cookedGuiName)
         {
-            return partModule.Actions.FirstOrDefault(kspAction => string.Equals(kspAction.guiName, cookedGuiName, StringComparison.CurrentCultureIgnoreCase));
+            return partModule.Actions.FirstOrDefault(kspAction => string.Equals(GetActionName(kspAction), cookedGuiName, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
