@@ -465,7 +465,13 @@ namespace kOS.Safe.Execution
         public void BreakExecution(bool manual)
         {
             SafeHouse.Logger.Log(string.Format("Breaking Execution {0} Contexts: {1}", manual ? "Manually" : "Automatically", contexts.Count));
-            if (contexts.Count > 1)
+            if (contexts.Count == 0)
+            {
+                // Skip most of what this method does, since there's no execution to break.
+                // This case should only be posisble if BreakExecution() is called while the
+                // CPU is off or power starved, as can happen during OnLoad().
+            }
+            else if (contexts.Count > 1)
             {
                 AbortAllYields();
 
@@ -491,14 +497,15 @@ namespace kOS.Safe.Execution
                         stack.Clear();
                     }
                 }
+                CurrentPriority = InterruptPriority.Normal;
             }
             else
             {
                 if (manual)
                     currentContext.ClearTriggers(); // Removes the interpreter's triggers on Control-C and the like, but not on errors.
                 SkipCurrentInstructionId();
+                CurrentPriority = InterruptPriority.Normal;
             }
-            CurrentPriority = InterruptPriority.Normal;
             ResetStatistics();
         }
 
