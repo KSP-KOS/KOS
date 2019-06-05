@@ -383,4 +383,13 @@ namespace kOS.Safe.Function
             ReturnValue = new BuiltinDelegate(shared.Cpu, name);
         }
     }
+
+    [Function("allowinterrupt")]
+    public class AllowInterrupt : SafeFunctionBase
+    {
+        public override void Execute(SafeSharedObjects shared)
+        {
+            shared.Cpu.SetLowerPriority(InterruptPriority.Normal);
+        }
+    }
 }

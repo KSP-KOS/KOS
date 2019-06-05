@@ -602,6 +602,19 @@ namespace kOS.Safe.Execution
         }
 
         /// <summary>
+        /// Allow kOS code to lower the CPU priority (only the CPU is allowed to raise
+        /// it via its interrupts system, but code is allowed to lower it if it wants).
+        /// If the new value is higher than the current value, the attempt is silently
+        /// ignored
+        /// </summary>
+        /// <param name="newPriority"></param>
+        public void SetLowerPriority(InterruptPriority newPriority)
+        {
+            if (newPriority < CurrentPriority)
+                CurrentPriority = newPriority;
+        }
+
+        /// <summary>
         /// Return the subroutine call trace of how the code got to where it is right now.
         /// </summary>
         /// <returns>The first item in the list is the current instruction pointer.
@@ -1446,7 +1459,6 @@ namespace kOS.Safe.Execution
         {
             var executeNext = true;
             int howManyNormalPriority = 0;
-            bool okayToActivateAllPendingTriggers = false;
 
             executeLog.Remove(0, executeLog.Length); // In .net 2.0, StringBuilder had no Clear(), which is what this is simulating.
             while (InstructionsThisUpdate < instructionsPerUpdate &&
@@ -1457,17 +1469,6 @@ namespace kOS.Safe.Execution
                 // cause callbacks to be invoked, and this can make those callback invocations
                 // happen immediately on the next opcode:
                 ProcessTriggers();
-
-                // It is not okay to re-activate things like GUI triggers till all existing active triggers
-                // of Recurring priority have been flushed out and executed.  Without this check,
-                // a pair of recurring triggers could starve everything else of CPU time as they
-                // keep re-triggering each other never letting the code get back down to mainline:
-                if ((! okayToActivateAllPendingTriggers) &&
-                    (! stack.HasDelayingTriggerContexts()) &&
-                    ! currentContext.HasActiveTriggersAtLeastPriority(InterruptPriority.Recurring))
-                {
-                    okayToActivateAllPendingTriggers = true;
-                }
 
                 if (IsYielding())
                 {
@@ -1488,32 +1489,7 @@ namespace kOS.Safe.Execution
             // priority with a trigger.
             ProcessTriggers();
 
-            // InterruptPriority.CallbackOnce triggers *can* be interrupted by other triggers
-            // of equal priority, while RECURRING trigger code needs to wait for the RECURRING trigger
-            // to finish first, only letting itself be interrupted if the interrupting trigger
-            // is higher priority (like a LOCK THROTTLE for example would be).
-            // The reason for preventing recurring triggers of equal priority from interrupting
-            // each other is that they keep re-activating themselves when they end, and thus two
-            // recurring triggers activating each other could starve mainline code of CPU time
-            // in a way that CALLBACKONCE triggers do not.
-            //
-            // The ability for CallbackOnce triggers to interrupt each other was needed because
-            // scripts contained the (bad) design pattern of putting long term code in an ONCLICK
-            // callback of a button press.  (i.e. imagine a button called "Do Launch", with all the
-            // code for the launch in the ONCLICK callback.)  In this case you want to still let
-            // other GUI code interrupt you so the rest of the GUI still responds to user activity.
-            //
-            // IMO the better design would be to make this work the SAME for all types of trigger
-            // (Always require the interruption to be of higher priority whether it's GUI code
-            // or timed triggers or whatever), but then provide GUI scripters with a routine
-            // they could run that says "allow interuption" in their ONCLICK that would willingly
-            // decrement their priority by 1 as they enter into the long-lasting part of their callback.
-            // But that would require people to re-write their GUI scripts.
-            //
-            InterruptPriority enoughPriorityToInterrupt = 
-                (okayToActivateAllPendingTriggers ? CurrentPriority : CurrentPriority + 1);
-
-            currentContext.ActivatePendingTriggersAtLeastPriority(enoughPriorityToInterrupt);
+            currentContext.ActivatePendingTriggersAbovePriority(CurrentPriority);
 
             if (executeLog.Length > 0)
                 SafeHouse.Logger.Log(executeLog.ToString());

@@ -252,13 +252,14 @@ namespace kOS.Safe.Execution
 
         /// <summary>
         /// Take only those pending triggers that AddPendingTrigger added who's
-        /// Priority is equal to or higher than the given value, and make them become active.
+        /// Priority is higher than the given value, and make them become active.
+        /// ("active" here means "called on the callstack like a subroutine.")
         /// </summary>
         /// <param name="aboveThis"></param>
-        public void ActivatePendingTriggersAtLeastPriority(InterruptPriority aboveThis)
+        public void ActivatePendingTriggersAbovePriority(InterruptPriority aboveThis)
         {
-            Triggers.AddRange(TriggersToInsert.FindAll(t => t.Priority >= aboveThis));
-            TriggersToInsert.RemoveAll(t => t.Priority >= aboveThis);
+            Triggers.AddRange(TriggersToInsert.FindAll(t => t.Priority > aboveThis));
+            TriggersToInsert.RemoveAll(t => t.Priority > aboveThis);
         }
 
         public bool HasActiveTriggersAtLeastPriority(InterruptPriority pri)

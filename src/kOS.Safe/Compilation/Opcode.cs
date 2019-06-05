@@ -2196,7 +2196,7 @@ namespace kOS.Safe.Compilation
             cpu.PushArgumentStack(new BooleanValue((sr == null ? false : sr.IsCancelled)));
         }
     }
-    
+
     /// <summary>
     /// <para>
     /// Push the thing atop the stack onto the stack again so there are now two of it atop the stack.
