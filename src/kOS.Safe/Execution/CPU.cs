@@ -1446,7 +1446,7 @@ namespace kOS.Safe.Execution
         {
             var executeNext = true;
             int howManyNormalPriority = 0;
-            bool okayToActivatePendingTriggers = false;
+            bool okayToActivateAllPendingTriggers = false;
 
             executeLog.Remove(0, executeLog.Length); // In .net 2.0, StringBuilder had no Clear(), which is what this is simulating.
             while (InstructionsThisUpdate < instructionsPerUpdate &&
@@ -1458,13 +1458,15 @@ namespace kOS.Safe.Execution
                 // happen immediately on the next opcode:
                 ProcessTriggers();
 
-                // It is not okay to re-activate pending triggers till all existing active triggers
-                // of Recurring priority have been flushed out and executed:
-                if ((! okayToActivatePendingTriggers) &&
+                // It is not okay to re-activate things like GUI triggers till all existing active triggers
+                // of Recurring priority have been flushed out and executed.  Without this check,
+                // a pair of recurring triggers could starve everything else of CPU time as they
+                // keep re-triggering each other never letting the code get back down to mainline:
+                if ((! okayToActivateAllPendingTriggers) &&
                     (! stack.HasDelayingTriggerContexts()) &&
                     ! currentContext.HasActiveTriggersAtLeastPriority(InterruptPriority.Recurring))
                 {
-                    okayToActivatePendingTriggers = true;
+                    okayToActivateAllPendingTriggers = true;
                 }
 
                 if (IsYielding())
@@ -1486,14 +1488,32 @@ namespace kOS.Safe.Execution
             // priority with a trigger.
             ProcessTriggers();
 
-            // As long as all there are no more of the "pending" kinds of trigger
-            // on the callstack and we have reached at least one opcode of mainline
-            // code or of immediate trigger code, then it's okay to activate the
-            // pending triggers now:
-            if (okayToActivatePendingTriggers)
-            {
-                currentContext.ActivatePendingTriggers();
-            }
+            // InterruptPriority.CallbackOnce triggers *can* be interrupted by other triggers
+            // of equal priority, while RECURRING trigger code needs to wait for the RECURRING trigger
+            // to finish first, only letting itself be interrupted if the interrupting trigger
+            // is higher priority (like a LOCK THROTTLE for example would be).
+            // The reason for preventing recurring triggers of equal priority from interrupting
+            // each other is that they keep re-activating themselves when they end, and thus two
+            // recurring triggers activating each other could starve mainline code of CPU time
+            // in a way that CALLBACKONCE triggers do not.
+            //
+            // The ability for CallbackOnce triggers to interrupt each other was needed because
+            // scripts contained the (bad) design pattern of putting long term code in an ONCLICK
+            // callback of a button press.  (i.e. imagine a button called "Do Launch", with all the
+            // code for the launch in the ONCLICK callback.)  In this case you want to still let
+            // other GUI code interrupt you so the rest of the GUI still responds to user activity.
+            //
+            // IMO the better design would be to make this work the SAME for all types of trigger
+            // (Always require the interruption to be of higher priority whether it's GUI code
+            // or timed triggers or whatever), but then provide GUI scripters with a routine
+            // they could run that says "allow interuption" in their ONCLICK that would willingly
+            // decrement their priority by 1 as they enter into the long-lasting part of their callback.
+            // But that would require people to re-write their GUI scripts.
+            //
+            InterruptPriority enoughPriorityToInterrupt = 
+                (okayToActivateAllPendingTriggers ? CurrentPriority : CurrentPriority + 1);
+
+            currentContext.ActivatePendingTriggersAtLeastPriority(enoughPriorityToInterrupt);
 
             if (executeLog.Length > 0)
                 SafeHouse.Logger.Log(executeLog.ToString());

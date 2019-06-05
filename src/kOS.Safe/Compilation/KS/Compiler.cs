@@ -2509,7 +2509,7 @@ namespace kOS.Safe.Compilation.KS
                 {
                     Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
                     AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
-                    AddOpcode(new OpcodeAddTrigger(false));
+                    AddOpcode(new OpcodeAddTrigger(false, InterruptPriority.RecurringControl));
                 }
                     
                 // enable this FlyByWire parameter
@@ -2590,7 +2590,7 @@ namespace kOS.Safe.Compilation.KS
                 VisitNode(node.Nodes[1]); // the expression in the on statement.
                 AddOpcode(new OpcodeStore(triggerObject.OldValueIdentifier));
                 AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
-                AddOpcode(new OpcodeAddTrigger());
+                AddOpcode(new OpcodeAddTrigger(InterruptPriority.Recurring));
             }
         }
 
@@ -2604,7 +2604,7 @@ namespace kOS.Safe.Compilation.KS
             if (triggerObject.IsInitialized())
             {
                 AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
-                AddOpcode(new OpcodeAddTrigger());
+                AddOpcode(new OpcodeAddTrigger(InterruptPriority.Recurring));
             }
         }
 
