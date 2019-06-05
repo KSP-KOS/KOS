@@ -226,6 +226,20 @@ short and fast to execute.  If it consists of multiple clauses, try
 to take advantage of* :ref:`short circuit boolean <short_circuit>`
 *logic by putting the fastest part of the check first.*
 
+Triggers for GUI callbacks
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Another type of trigger is the callback delegates that you can
+write for the :ref:`GUI system <gui>` when using the
+:ref:`Callback technique <gui_callback_technique>`.  (For example,
+using :attr:`Button:ONCLICK`, :attr:`Slider:ONCHANGE`, and so on.)
+
+When you give a GUI a callback hook to call, the CPU will implement
+that as a trigger as well.  When you click the button or move the
+slider, etc, then kOS will interrupt your program at the next available
+opportunity (usually the start of the next IPU's worth of instructions),
+to call your callback delegate.
+
 .. _wait_in_trigger:
 
 Wait in a Trigger
@@ -235,6 +249,11 @@ While ``WAIT`` is possible from inside a trigger and it won't crash
 the script to use it, it's probably not a good design choice to use
 ``WAIT`` inside a trigger.  Triggers should be designed to execute
 all the way through to the end in one fast pass, if possible.
+
+Exception: If you are careful, you can have a trigger lower its
+priority back down to normal, and then other triggers (or itself)
+can interrupt it again.  To see how this works, look at
+:func:`ALLOWINTERRUPT()`, explained below on this page.
 
 Do Not Loop a Long Time in a Trigger Body!
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -255,6 +274,11 @@ This is because while you are in a trigger, main-line code isn't being
 executed, and other triggers of equal or lesser priority aren't being
 executed.  A trigger that performs a long-running loop will starve the
 rest of the code in your kerboscript program from being allowed to run.
+
+Exception: If you are careful, you can have a trigger lower its
+priority back down to normal, and then other triggers (or itself)
+can interrupt it again.  To see how this works, look at
+:func:`ALLOWINTERRUPT()`, explained below on this page.
 
 But I Want a Loop!!
 ~~~~~~~~~~~~~~~~~~~
@@ -282,8 +306,9 @@ is allowed to interrupt the program flow depending on what the program
 is doing right now.  This is accomplished by having a few priority
 levels, shown in this list:
 
-* Priority 20: :ref:`Recurring Interrupts <recurring_trigger>`
-* Priority 10: :ref:`Callback-Once Interrupts <callback_once_trigger>`
+* Priority 30: :ref:`Cooked control Interrupts <trigger_steering>` (i.e. LOCK STEERING)
+* Priority 20: :ref:`Recurring Interrupts <recurring_trigger>` (i.e. WHEN or ON)
+* Priority 10: :ref:`Callback-Once Interrupts <callback_once_trigger>` (i.e. GUI callbacks)
 * Priority 0: Normal (non-interrupting) code.
 
 **A Trigger will only interrupt something of lower priority than itself**.
@@ -302,7 +327,7 @@ to happen again and again with speed, while the callback-once
 interrupts are probably not as time-sensitive since they respond
 to one-shot events like user clicks.
 
-**A trigger cannot interrupt *itself* if it's still running**.
+**most triggers cannot interrupt *themselves* if they're still running**.
 
 When you have recurring triggers that keep re-running themselves
 again and again, the way they work is that they wait till the previous
@@ -320,6 +345,100 @@ fine-grained if that becomes necessary later.  Never write code that
 is too dependant on the priorities being exactly this way.  (This is
 why these numbers aren't even exposed to the script at the moment,
 to avoid that design pattern.)
+
+
+.. _allowinterrupt:
+
+Deliberately reducing your priority in long running triggers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Normally if you did something like this::
+
+    local done is false.
+
+    set Gwin to GUI(200).
+    set b1 to Gwin:addbutton("beep").
+    set b1:onclick to { getvoice(0):play(note(300,0.2)). }.
+    set b2 to GWin:addbutton("count").
+    set b2:onclick to count@.
+    set b3 to Gwin:addbutton("quit").
+    set b3:onclick to { set done to true. }.
+
+    GWin:show().
+    wait until done.
+    GWin:Dispose().
+
+    function count {
+      local i is 5.
+      until i = 0 {
+        print "Counting.. " + i.
+        set i to i - 1.
+        wait 1.
+      }
+    }
+
+It would mean that while you press the "count" button, and it prints the
+countdown from 5 to 1, the other buttons, including "beep" and "quit"
+would have no effect until the countdown is done.  Because ``count()``
+is the callback for a GUI button, it runs at a higher than normal priority,
+which means it won't let itself get interrupted by other GUI callbacks.
+Instead those other GUI callbacks will be delayed until count() is done.
+
+If you wish, you can deliberately reduce your current priority level
+back down to "Normal" (10) using the following special built-in function:
+
+.. function:: ALLOWINTERRUPT()
+
+    After this built-in function is executed, your current run priority
+    is dropped back down to "normal" (10) so that you are allowing any
+    triggers to interrupt you again.  It only has meaning when used inside
+    the body of triggers that would normally have prevented other triggers
+    from interrupting them according to the rules mentioned above in 
+    this page.
+
+    Be aware that once you ``ALLOWINTERRUPT()``, you also are making it
+    so that the SAME trigger you are currently inside of could fire off
+    again too.  It may be a good idea to protect yourself against that,
+    if it is not desired, by setting a flag variable to record the fact
+    that you are inside the trigger at the time and should not re-run it.
+
+So in the above GUI example, if you added ``ALLOWINTERRUPT`` as shown
+in the edited version of the example, below, then the other buttons
+like the "beep" button, would work while the count() is happening::
+
+    local done is false.
+
+    set Gwin to GUI(200).
+    set b1 to Gwin:addbutton("beep").
+    set b1:onclick to { getvoice(0):play(note(300,0.2)). }.
+    set b2 to GWin:addbutton("count").
+    set b2:onclick to count@.
+    set b3 to Gwin:addbutton("quit").
+    set b3:onclick to { set done to true. }.
+
+    GWin:show().
+    wait until done.
+    GWin:Dispose().
+
+    function count {
+
+      ALLOWINTERRUPT(). // <--- NEW LINE ADDED HERE
+
+      local i is 5.
+      until i = 0 {
+        print "Counting.. " + i.
+        set i to i - 1.
+        wait 1.
+      }
+    }
+
+Once you call ``ALLOWINTERRUPT()``, then from then on, you are effectively no
+longer a trigger, as far as the interruption system is concerned.
+
+BE CAREFUL - if you do this then it is possible for the same trigger or
+callback to interrupt *itself* again.  In the above example where
+ALLOWINTERRUPT() was added, you could press the "count" button twice in
+quick succession and one press would interrupt the other.
 
 Wait!!!
 -------
