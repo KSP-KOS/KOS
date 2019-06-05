@@ -52,7 +52,7 @@ namespace kOS.Safe.Test.Opcode
             throw new NotImplementedException();
         }
 
-        public void SetLowerPriority(InterruptPriority newPriority)
+        public void DropBackPriority()
         {
             throw new NotImplementedException();
         }

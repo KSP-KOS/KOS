@@ -253,7 +253,7 @@ all the way through to the end in one fast pass, if possible.
 Exception: If you are careful, you can have a trigger lower its
 priority back down to normal, and then other triggers (or itself)
 can interrupt it again.  To see how this works, look at
-:func:`ALLOWINTERRUPT()`, explained below on this page.
+:func:`DROPPRIORITY()`, explained below on this page.
 
 Do Not Loop a Long Time in a Trigger Body!
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -278,7 +278,7 @@ rest of the code in your kerboscript program from being allowed to run.
 Exception: If you are careful, you can have a trigger lower its
 priority back down to normal, and then other triggers (or itself)
 can interrupt it again.  To see how this works, look at
-:func:`ALLOWINTERRUPT()`, explained below on this page.
+:func:`DROPPRIORITY()`, explained below on this page.
 
 But I Want a Loop!!
 ~~~~~~~~~~~~~~~~~~~
@@ -347,7 +347,7 @@ why these numbers aren't even exposed to the script at the moment,
 to avoid that design pattern.)
 
 
-.. _allowinterrupt:
+.. _drop_priority:
 
 Deliberately reducing your priority in long running triggers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -385,24 +385,44 @@ which means it won't let itself get interrupted by other GUI callbacks.
 Instead those other GUI callbacks will be delayed until count() is done.
 
 If you wish, you can deliberately reduce your current priority level
-back down to "Normal" (10) using the following special built-in function:
+back down to "Normal" (0) using the following special built-in function:
 
-.. function:: ALLOWINTERRUPT()
+.. function:: DROPPRIORITY()
 
-    After this built-in function is executed, your current run priority
-    is dropped back down to "normal" (10) so that you are allowing any
-    triggers to interrupt you again.  It only has meaning when used inside
-    the body of triggers that would normally have prevented other triggers
-    from interrupting them according to the rules mentioned above in 
-    this page.
+    After this built-in function is executed by a trigger's body,
+    the current interrupt priority is dropped back down to whatever the
+    priority of the code you interrupted was.  This is your trigger's
+    way of saying "I don't actually want to block interrupts anymore.
+    Please let me be interrupted just as much as whatever *I*
+    interrupted was allowed to be interrupted."
 
-    Be aware that once you ``ALLOWINTERRUPT()``, you also are making it
+    SO, for example, if Priority 0 code (normal code) got interrupted
+    by priority 10 code (GUI callback code), and the GUI callback
+    code executed ``DROPPRIORITY``, then it would now be running at
+    priority 0 instead of 10, because priority 0 is what got interrupted,
+    and thus allow other GUI code to interrupt it again.
+
+    On the other hand, if GUI callback code (priority 10) got 
+    interrupted by WHEN-THEN code (priority 20), and the WHEN-THEN
+    code had called DROPPRIORITY(), then the priority level of 
+    that pass through the WHEN-THEN would only be dropped down to
+    10, NOT all the way to 0, because it was interrupting priority 10
+    code.
+    
+    The reason it works this way (instead of just dropping it all the
+    way down to normal (0) priority directly) is that, effectively,
+    it means a trigger only has the authority to undo its own
+    priority increase that it caused itself.  It can't force the
+    priority down to something less than the code that got interrupted
+    had to begin with.
+
+    Be aware that once you ``DROPPRIORITY()``, you also are making it
     so that the SAME trigger you are currently inside of could fire off
     again too.  It may be a good idea to protect yourself against that,
     if it is not desired, by setting a flag variable to record the fact
     that you are inside the trigger at the time and should not re-run it.
 
-So in the above GUI example, if you added ``ALLOWINTERRUPT`` as shown
+So in the above GUI example, if you added ``DROPPRIORITY`` as shown
 in the edited version of the example, below, then the other buttons
 like the "beep" button, would work while the count() is happening::
 
@@ -422,7 +442,7 @@ like the "beep" button, would work while the count() is happening::
 
     function count {
 
-      ALLOWINTERRUPT(). // <--- NEW LINE ADDED HERE
+      DROPPRIORITY(). // <--- NEW LINE ADDED HERE
 
       local i is 5.
       until i = 0 {
@@ -432,12 +452,12 @@ like the "beep" button, would work while the count() is happening::
       }
     }
 
-Once you call ``ALLOWINTERRUPT()``, then from then on, you are effectively no
+Once you call ``DROPPRIORITY()``, then from then on, you are effectively no
 longer a trigger, as far as the interruption system is concerned.
 
 BE CAREFUL - if you do this then it is possible for the same trigger or
 callback to interrupt *itself* again.  In the above example where
-ALLOWINTERRUPT() was added, you could press the "count" button twice in
+DROPPRIORITY() was added, you could press the "count" button twice in
 quick succession and one press would interrupt the other.
 
 Wait!!!

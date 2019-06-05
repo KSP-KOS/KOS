@@ -384,12 +384,12 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("allowinterrupt")]
+    [Function("droppriority")]
     public class AllowInterrupt : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
         {
-            shared.Cpu.SetLowerPriority(InterruptPriority.Normal);
+            shared.Cpu.DropBackPriority();
         }
     }
 }

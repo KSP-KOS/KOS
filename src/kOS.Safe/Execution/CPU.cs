@@ -324,6 +324,31 @@ namespace kOS.Safe.Execution
             return returnVal;
         }
 
+        /// <summary>
+        /// Find the closest-to-top subroutine context and return its
+        /// CameFromPriority.  Returns current priority if not in a subroutine.
+        /// </summary>
+        /// <returns></returns>
+        private InterruptPriority CurrentCameFromPriority()
+        {
+            bool done = false;
+            for (int depth = 0; !done; ++depth)
+            {
+                object stackItem = stack.PeekScope(depth);
+                if (stackItem == null)
+                {
+                    done = true;
+                }
+                else
+                {
+                    SubroutineContext context = stackItem as SubroutineContext;
+                    if (context != null)
+                        return context.CameFromPriority;
+                }
+            }
+            return CurrentPriority; // fallback if none found.
+        }
+
         private void PopFirstContext()
         {
             while (contexts.Count > 1)
@@ -604,14 +629,15 @@ namespace kOS.Safe.Execution
         /// <summary>
         /// Allow kOS code to lower the CPU priority (only the CPU is allowed to raise
         /// it via its interrupts system, but code is allowed to lower it if it wants).
-        /// If the new value is higher than the current value, the attempt is silently
-        /// ignored
+        /// The new priority will be equal to whatever the priority was of the code
+        /// that got interrupted to get here.  (If priority 10 code gets interrupted
+        /// by priority 20 code, and that priority 20 code calls PrevPriority(), then
+        /// it will drop to priority 10 because that was the priority of whomever got
+        /// interrupted to get here.)
         /// </summary>
-        /// <param name="newPriority"></param>
-        public void SetLowerPriority(InterruptPriority newPriority)
+        public void DropBackPriority()
         {
-            if (newPriority < CurrentPriority)
-                CurrentPriority = newPriority;
+            CurrentPriority = CurrentCameFromPriority();
         }
 
         /// <summary>
