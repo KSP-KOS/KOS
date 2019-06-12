@@ -171,6 +171,7 @@ namespace kOS.Suffixed.PartModuleField
                 if (range != null)
                 {
                     float val = Convert.ToSingle(convertedVal);
+                    Console.WriteLine(string.Format("eraseme IsLegalValue: Clamping: {0}, {1}, {2}", range.minValue, range.maxValue, range.stepIncrement));
                     val = KOSMath.ClampToIndent(val, range.minValue, range.maxValue, range.stepIncrement);
                     convertedVal = Convert.ToDouble(val);
                 }
@@ -415,6 +416,9 @@ namespace kOS.Suffixed.PartModuleField
             AddSuffix("ALLACTIONNAMES", new Suffix<ListValue>(AllActionNames));
             AddSuffix("HASACTION", new OneArgsSuffix<BooleanValue, StringValue>(HasAction));
             AddSuffix("GETFIELD", new OneArgsSuffix<Structure, StringValue>(GetKSPFieldValue));
+            AddSuffix("GETFIELDMIN", new OneArgsSuffix<Structure, StringValue>(GetKSPFieldMin));
+            AddSuffix("GETFIELDMAX", new OneArgsSuffix<Structure, StringValue>(GetKSPFieldMax));
+            AddSuffix("GETFIELDSTEP", new OneArgsSuffix<Structure, StringValue>(GetKSPFieldStep));
             AddSuffix("SETFIELD", new TwoArgsSuffix<StringValue, Structure>(SetKSPFieldValue));
             AddSuffix("DOEVENT", new OneArgsSuffix<StringValue>(CallKSPEvent));
             AddSuffix("DOACTION", new TwoArgsSuffix<StringValue, BooleanValue>(CallKSPAction));
@@ -432,6 +436,65 @@ namespace kOS.Suffixed.PartModuleField
                 /* evt.externalToEVAOnly) && */ // this flag seems bugged.  It always returns true no matter what.
                 evt.active
                 );
+        }
+
+        protected Structure GetKSPFieldMin(StringValue fieldName)
+        {
+            BaseField field = GetField(fieldName);
+            if (field == null)
+                throw new KOSLookupFailException("FIELD", fieldName, this);
+
+            object min = -99999f;
+            List<UI_Control> controls = GetFieldControls(field);
+            foreach (UI_Control control in controls)
+            {
+                if (control is UI_FloatRange)
+                    min = ((UI_FloatRange)control).minValue;
+                else if (control is UI_Label)
+                    min = "";
+                else if (control is UI_Toggle)
+                    min = false;
+            }
+            Structure obj = FromPrimitiveWithAssert(min);
+            return obj;
+        }
+
+        protected Structure GetKSPFieldMax(StringValue fieldName)
+        {
+            BaseField field = GetField(fieldName);
+            if (field == null)
+                throw new KOSLookupFailException("FIELD", fieldName, this);
+
+            object max = 99999f;
+            List<UI_Control> controls = GetFieldControls(field);
+            foreach (UI_Control control in controls)
+            {
+                if (control is UI_FloatRange)
+                    max = ((UI_FloatRange)control).maxValue;
+                else if (control is UI_Label)
+                    max = "";
+                else if (control is UI_Toggle)
+                    max = false;
+            }
+            Structure obj = FromPrimitiveWithAssert(max);
+            return obj;
+        }
+
+        protected Structure GetKSPFieldStep(StringValue fieldName)
+        {
+            BaseField field = GetField(fieldName);
+            if (field == null)
+                throw new KOSLookupFailException("FIELD", fieldName, this);
+
+            object step = 0f;
+            List<UI_Control> controls = GetFieldControls(field);
+            foreach (UI_Control control in controls)
+            {
+                if (control is UI_FloatRange)
+                    step = ((UI_FloatRange)control).stepIncrement;
+            }
+            Structure obj = FromPrimitiveWithAssert(step);
+            return obj;
         }
 
         /// <summary>

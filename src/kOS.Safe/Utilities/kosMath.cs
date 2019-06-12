@@ -1,4 +1,4 @@
-﻿namespace kOS.Safe.Utilities
+namespace kOS.Safe.Utilities
 {
     public static class KOSMath
     {
@@ -41,6 +41,10 @@
         /// <returns></returns>
         public static double ClampToIndent(double val, double min, double max, double increment)
         {
+            // The algorithm that follows breaks if increment is zero, so use the simpler clamp instead:
+            if (increment == 0f)
+                return Clamp(val, min, max);
+
             // First clamp the value to within min/max:
             double outVal = System.Math.Max(min, System.Math.Min(val, max));
             
@@ -72,6 +76,10 @@
         /// <returns></returns>
         public static float ClampToIndent(float val, float min, float max, float increment)
         {
+            // The algorithm that follows breaks if increment is zero, so use the simpler clamp instead:
+            if (increment == 0f)
+                return Clamp(val, min, max);
+
             // First clamp the value to within min/max:
             float outVal = System.Math.Max(min, System.Math.Min(val, max));
             

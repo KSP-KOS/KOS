@@ -47,6 +47,15 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
         * - :meth:`GETFIELD(name)`
           -
           - Get value of a field by name
+        * - :meth:`GETFIELDMIN(name)`
+          -
+          - The field's minimum legal value, if scalar
+        * - :meth:`GETFIELDMAX(name)`
+          -
+          - The field's maximum legal value, if scalar
+        * - :meth:`GETFIELDSTEP(name)`
+          -
+          - The mandatory "rounding" increment, if scalar
         * - :meth:`SETFIELD(name,value)`
           -
           - Set value of a field by name
@@ -131,6 +140,44 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
     :return: varies
 
     Get the value of one of the fields that this PartModule has placed onto the rightclick menu for the part. Note the Security comments below.
+
+.. method:: PartModule:GETFIELDMIN(name)
+
+    :parameter name: (string) Name of the field
+    :return: varies
+
+    Gets the minimum currently legal settable value for the field with
+    this name on the rightclick menu for the part, **assuming this field
+    is a :ref:`Scalar` slider** value.  (If this field is NOT a
+    :ref:`Scalar` slider, then the meaning of this suffix might be a
+    default bogus placeholder value that does not actually mean anything.)
+
+.. method:: PartModule:GETFIELDMAX(name)
+
+    :parameter name: (string) Name of the field
+    :return: varies
+
+    Gets the maximum currently legal settable value for the field with
+    this name on the rightclick menu for the part, **assuming this field
+    is a :ref:`Scalar` slider** value.  (If this field is NOT a
+    :ref:`Scalar` slider, then the meaning of this suffix might be a
+    default bogus placeholder value that does not actually mean anything.)
+
+.. method:: PartModule:GETFIELDSTEP(name)
+
+    :parameter name: (string) Name of the field
+    :return: varies
+
+    Gets the step increment value for the field with this name on the
+    rightclick menu for the part, **assuming this field is a
+    :ref:`Scalar` slider** value.  (If this field is NOT a
+    :ref:`Scalar` slider, then the meaning of this suffix might be a
+    default bogus placeholder value that does not actually mean anything.)
+
+    The step increment value determines how the scalar value will get rounded
+    when you set it.  For example, if the step increment is 0.5, and you
+    tried to set the value to 7.68, it would get rounded to the nearest 0.5,
+    so it would end up being 7.5 instead of 7.68.
 
 .. method:: PartModule:SETFIELD(name,value)
 
