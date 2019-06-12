@@ -3,7 +3,7 @@ KOS_DOC
 The documents are generated using Sphinx restructured text, with the ReadTheDocs
 theme.
 
-#Getting started on Windows
+# Getting started on Windows
 
 (For this example, the KOS repository is assumed to be located at `C:\KOS`,
 you should adjust your path based on your actual repository location)
@@ -51,14 +51,14 @@ you should adjust your path based on your actual repository location)
 
   At which point you can point your browser to `http://localhost:8000`
 
-#Getting started on Linux
+# Getting started on Linux
 1. As with Windows above, install Python 2.7.  You may use your distribution's
   package manager system, or download from: https://www.python.org/downloads/
 
 2. All other instructions are the same as above for windows, replacing the `\`
   path character with `/` and adapting paths to reference your Linux file system.
 
-#Publishing
+# Publishing
 
 This section pertains only to what has to be done when a new release of
 the documentation is being made public (usually to correspond to a new
