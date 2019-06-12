@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.AddOns.RemoteTech;
@@ -39,6 +39,10 @@ namespace kOS.Suffixed.PartModuleField
             {
                 return scienceExperimentFields;
             }
+
+            var baseServo = mod as Expansions.Serenity.BaseServo;
+            if (baseServo != null)
+                return new BaseServoModuleFields(baseServo, shared);
 
             return new PartModuleFields(mod, shared);
         }

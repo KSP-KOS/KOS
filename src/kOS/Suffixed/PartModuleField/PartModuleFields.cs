@@ -79,7 +79,7 @@ namespace kOS.Suffixed.PartModuleField
         /// </summary>
         /// <param name="field"></param>
         /// <returns></returns>
-        private List<UI_Control> GetFieldControls(BaseField field)
+        virtual protected List<UI_Control> GetFieldControls(BaseField field)
         {
             var attribs = new List<object>();
             attribs.AddRange(field.FieldInfo.GetCustomAttributes(true));
@@ -177,6 +177,7 @@ namespace kOS.Suffixed.PartModuleField
                 if (!isLegal)
                     break;
             }
+
             newVal = FromPrimitiveWithAssert(convertedVal);
             return isLegal;
         }

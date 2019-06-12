@@ -125,6 +125,7 @@
     <Compile Include="Suffixed\CraftTemplate.cs" />
     <Compile Include="Suffixed\KUniverseValue.cs" />
     <Compile Include="Suffixed\LoadDistanceValue.cs" />
+    <Compile Include="Suffixed\PartModuleField\BaseServoModuleFields.cs" />
     <Compile Include="Suffixed\Part\DecouplerValue.cs" />
     <Compile Include="Suffixed\Part\LaunchClampValue.cs" />
     <Compile Include="Suffixed\ResourceTransferValue.cs" />
