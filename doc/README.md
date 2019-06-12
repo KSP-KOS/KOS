@@ -134,3 +134,23 @@ performed on every single documentation edit and every merged PR.
   ```
   C:\KOS-gh-pages>git push KOS_DOC gh-pages
   ```
+
+# Generating Dash Docset
+
+[Dash](https://kapeli.com/dash) is an offline API Documentation Browser and
+Code Snippet Manager for macOS.
+
+1. Install the [doc2dash][doc-2-dash] python package using `pipx` as
+   recommended in the linked instructions.
+2. Follow the instructions in "Getting started on Windows" adapting for macOS
+   as necessary. (Basically the Linux instructions, but no need to install
+   python).
+3. After compiling the RTD docs, use doc2dash to create a docset. From the
+   `doc/` folder run:
+   ```
+   pipx run doc2dash -n kOS -A gh-pages --icon=source/_images/kos_logo_konly.png
+   ```
+4. If this completes successfully and you have Dash installed, the docset will
+   automatically open and be added to your docset library.
+
+[doc-2-dash]: https://doc2dash.readthedocs.io/en/stable/installation.html
