@@ -39,11 +39,9 @@ namespace kOS.Suffixed.PartModuleField
         override protected List<UI_Control> GetFieldControls(BaseField field)
         {
             List<UI_Control> controls = base.GetFieldControls(field);
-            Console.WriteLine("eraseme:   servo.useLimits = true.");
             AxisFieldLimit limitOverride = servo.GetAxisFieldLimit(field.name);
             if (limitOverride != null)
             {
-                Console.WriteLine("eraseme:     limitOverride != null.");
                 // This is the condition in which the DLC servo's KSPField's range values are
                 // utter lies.  (Example: In a case like a Piston who's user interface lets
                 // players pick any "Target Extension" values from 0 meters to 2.4 meters, down to
@@ -63,11 +61,9 @@ namespace kOS.Suffixed.PartModuleField
 
                 for (int idx = 0; idx < controls.Count; ++idx)
                 {
-                    Console.WriteLine("eraseme:      index = " + idx);
                     UI_Control control = controls[idx];
                     if (control.controlEnabled && control is UI_FloatRange || control is UI_FieldFloatRange)
                     {
-                        Console.WriteLine("eraseme:        Doing the override to new limits.");
                         // I do NOT want to overwrite the actual contents of the control that is
                         // returned by the API, because I fear it's a reference to the one that is
                         // really used by the rest of the game, and I don't know what I might break
@@ -84,7 +80,6 @@ namespace kOS.Suffixed.PartModuleField
                         trueRange.stepIncrement = 0f;
                         trueRange.controlEnabled = control.controlEnabled;
                         controls[idx] = trueRange; // overwrite the bogus range info the API hands out by default.
-                        Console.WriteLine(string.Format("eraseme: just overwrote with min={0}, max={1}, step={2}", ((UI_FloatRange)controls[idx]).minValue, ((UI_FloatRange)controls[idx]).maxValue, ((UI_FloatRange)controls[idx]).stepIncrement));
                     }
                 }
             }

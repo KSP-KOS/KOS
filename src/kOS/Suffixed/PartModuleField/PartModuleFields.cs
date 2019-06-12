@@ -171,7 +171,6 @@ namespace kOS.Suffixed.PartModuleField
                 if (range != null)
                 {
                     float val = Convert.ToSingle(convertedVal);
-                    Console.WriteLine(string.Format("eraseme IsLegalValue: Clamping: {0}, {1}, {2}", range.minValue, range.maxValue, range.stepIncrement));
                     val = KOSMath.ClampToIndent(val, range.minValue, range.maxValue, range.stepIncrement);
                     convertedVal = Convert.ToDouble(val);
                 }
