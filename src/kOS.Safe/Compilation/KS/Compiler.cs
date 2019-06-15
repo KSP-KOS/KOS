@@ -282,6 +282,7 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.COMPARATOR:
                 case TokenType.AND:
                 case TokenType.OR:
+                case TokenType.CHOOSE:
                 case TokenType.directive:
                     doChildren = false;
                     break;                
@@ -1149,6 +1150,9 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.expr:
                     VisitExpr(node);
                     break;
+                case TokenType.ternary_expr:
+                    VisitTernary(node);
+                    break;
                 case TokenType.or_expr:
                 case TokenType.and_expr:
                     VisitShortCircuitBoolean(node);
@@ -1350,6 +1354,33 @@ namespace kOS.Safe.Compilation.KS
             {
                 VisitNode(node.Nodes[0]);
             }
+        }
+
+        private void VisitTernary(ParseNode node)
+        {
+            NodeStartHousekeeping(node);
+
+            // Syntax pattern is:
+            // [0] = keyword CHOOSE
+            // [1] = expression returned if true
+            // [2] = keyword IF
+            // [3] = expression with boolean value
+            // [4] = keyword ELSE
+            // [5] = expression returned if false
+
+            VisitNode(node.Nodes[3]); // eval the boolean clause, put on stack.
+
+            Opcode bypassTrue = AddOpcode(new OpcodeBranchIfFalse());
+
+            VisitNode(node.Nodes[1]); // expression if true.
+            Opcode bypassFalse = AddOpcode(new OpcodeBranchJump());
+
+            bypassTrue.DestinationLabel = GetNextLabel(false);
+
+            VisitNode(node.Nodes[5]); // expression if false.
+
+            bypassFalse.DestinationLabel = GetNextLabel(false);
+            addBranchDestination = true;
         }
 
         /// <summary>
