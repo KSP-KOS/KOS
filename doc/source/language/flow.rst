@@ -61,6 +61,32 @@ Checks if the expression supplied returns true. If it does, ``IF`` executes the 
         // syntax error - ELSE without IF.
         IF X > 10 { PRINT "Large". }. ELSE { PRINT "Small". }.
 
+.. index:: CHOOSE
+.. _choose:
+
+CHOOSE (Ternary operator)
+-------------------------
+
+An expression that evalualtes to one of two choices depending on a
+conditional check:
+
+   CHOOSE expression1 IF condition ELSE expression2
+
+Note this is NOT a statement.  This is an expression that can be embedded
+inside other statements, like so:
+
+   SET X TO CHOOSE expression1 IF condition ELSE expression2.
+   PRINT CHOOSE "High" IF altitude > 20000 ELSE "Low".
+
+The reason to use the ``CHOOSE`` operator instead of an
+IF/ELSE statement is that IF/ELSE won't return a value, while
+this does, and thus this can be embedded inside other expressions.
+
+(This is similar to the ``?`` operator in languages like "C" and its
+derivatives, except it puts the "true" choice first, then the
+conditional check, then the "false" choice.)
+
+
 .. index:: LOCK
 .. _lock:
 
