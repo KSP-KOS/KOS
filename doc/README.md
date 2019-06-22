@@ -3,7 +3,7 @@ KOS_DOC
 The documents are generated using Sphinx restructured text, with the ReadTheDocs
 theme.
 
-#Getting started on Windows
+# Getting started on Windows
 
 (For this example, the KOS repository is assumed to be located at `C:\KOS`,
 you should adjust your path based on your actual repository location)
@@ -51,14 +51,14 @@ you should adjust your path based on your actual repository location)
 
   At which point you can point your browser to `http://localhost:8000`
 
-#Getting started on Linux
+# Getting started on Linux
 1. As with Windows above, install Python 2.7.  You may use your distribution's
   package manager system, or download from: https://www.python.org/downloads/
 
 2. All other instructions are the same as above for windows, replacing the `\`
   path character with `/` and adapting paths to reference your Linux file system.
 
-#Publishing
+# Publishing
 
 This section pertains only to what has to be done when a new release of
 the documentation is being made public (usually to correspond to a new
@@ -134,3 +134,23 @@ performed on every single documentation edit and every merged PR.
   ```
   C:\KOS-gh-pages>git push KOS_DOC gh-pages
   ```
+
+# Generating Dash Docset
+
+[Dash](https://kapeli.com/dash) is an offline API Documentation Browser and
+Code Snippet Manager for macOS.
+
+1. Install the [doc2dash][doc-2-dash] python package using `pipx` as
+   recommended in the linked instructions.
+2. Follow the instructions in "Getting started on Windows" adapting for macOS
+   as necessary. (Basically the Linux instructions, but no need to install
+   python).
+3. After compiling the RTD docs, use doc2dash to create a docset. From the
+   `doc/` folder run:
+   ```
+   pipx run doc2dash -n kOS -A gh-pages --icon=source/_images/kos_logo_konly.png
+   ```
+4. If this completes successfully and you have Dash installed, the docset will
+   automatically open and be added to your docset library.
+
+[doc-2-dash]: https://doc2dash.readthedocs.io/en/stable/installation.html
