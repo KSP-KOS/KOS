@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe.Encapsulation;
@@ -149,7 +149,7 @@ namespace kOS.Suffixed
             config.SetValue(key.StringKey, keys[key.StringKey.ToUpper()].Value);
         }
 
-        public override ISuffixResult GetSuffix(string suffixName)
+        public override ISuffixResult GetSuffix(string suffixName, bool failOkay = false)
         {
             ConfigKey key = null;
 
@@ -162,10 +162,18 @@ namespace kOS.Suffixed
                 key = alias[suffixName];
             }
 
-            return key != null ? new SuffixResult(FromPrimitiveWithAssert(key.Value)) : base.GetSuffix(suffixName);
+            return key != null ? new SuffixResult(FromPrimitiveWithAssert(key.Value)) : base.GetSuffix(suffixName, failOkay);
         }
 
-        public override bool SetSuffix(string suffixName, object value)
+        /// <summary>
+        /// same as Structure.SetSuffix, but it has the extra logic to alter the config keys
+        /// that the game auto-saves every so often.
+        /// </summary>
+        /// <param name="suffixName"></param>
+        /// <param name="value"></param>
+        /// <param name="failOkay"></param>
+        /// <returns></returns>
+        public override bool SetSuffix(string suffixName, object value, bool failOkay = false)
         {
             ConfigKey key = null;
 
@@ -178,7 +186,7 @@ namespace kOS.Suffixed
                 key = alias[suffixName];
             }
 
-            if (key == null) return base.SetSuffix(suffixName, value);
+            if (key == null) return base.SetSuffix(suffixName, value, failOkay);
 
             if (value.GetType() == key.ValType)
             {

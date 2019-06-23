@@ -246,10 +246,10 @@ namespace kOS.Suffixed
             return Vector3d.Distance(Shared.Vessel.CoMD, Body.position) - Body.Radius;
         }
 
-        public override ISuffixResult GetSuffix(string suffixName)
+        public override ISuffixResult GetSuffix(string suffixName, bool failOkay)
         {
             if (Target == null) throw new Exception("BODY structure appears to be empty!");
-            return base.GetSuffix(suffixName);
+            return base.GetSuffix(suffixName, failOkay);
         }
 
         public override string ToString()

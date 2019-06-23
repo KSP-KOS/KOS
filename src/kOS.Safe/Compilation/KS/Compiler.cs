@@ -1387,7 +1387,7 @@ namespace kOS.Safe.Compilation.KS
         /// Handles the short-circuit logic of boolean OR and boolean AND
         /// chains.  It is like VisitExpressionChain (see elsewhere) but
         /// in this case it has the special logic to short circuit and skip
-        /// executing the righthand expression if it can.  (The generic VisitExpressionXhain
+        /// executing the righthand expression if it can.  (The generic VisitExpressionChain
         /// always evaluates both the left and right sides of the operator first, then
         /// does the operation).
         /// </summary>

@@ -75,12 +75,12 @@ namespace kOS.Suffixed
             return resLex;
         }
 
-        public override ISuffixResult GetSuffix(string suffixName)
+        public override ISuffixResult GetSuffix(string suffixName, bool failOkay = false)
         {
             string fixedName;
             if (!Utils.IsResource(suffixName, out fixedName))
             {
-                return base.GetSuffix(suffixName);
+                return base.GetSuffix(suffixName, failOkay);
             }
 
             double resourceAmount = GetResourceOfCurrentStage(fixedName);

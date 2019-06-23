@@ -1,5 +1,6 @@
 using kOS.Safe.Exceptions;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using kOS.Safe.Persistence;
 
 namespace kOS.Safe.Compilation.KS

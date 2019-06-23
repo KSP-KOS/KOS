@@ -400,7 +400,7 @@ namespace kOS.Suffixed
             }
         }
 
-        public override ISuffixResult GetSuffix(string suffixName)
+        public override ISuffixResult GetSuffix(string suffixName, bool failOkay = false)
         {
             // Most suffixes are handled by the newer AddSuffix system, except for the
             // resource levels, which have to use this older technique as a fallback because
@@ -413,7 +413,7 @@ namespace kOS.Suffixed
                 return new SuffixResult(ScalarValue.Create(dblValue));
             }
 
-            return base.GetSuffix(suffixName);
+            return base.GetSuffix(suffixName, failOkay);
         }
 
         protected bool Equals(VesselTarget other)

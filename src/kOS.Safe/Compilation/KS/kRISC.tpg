@@ -79,7 +79,12 @@ COLON        -> @":";
 IN           -> @"in\b";
 ARRAYINDEX   -> @"#";
 ALL          -> @"all\b";
-IDENTIFIER   -> @"[_\p{L}]\w*";
+
+// WARNING - IF YOU EDIT THE REGEX FOR IDENTIFIER ON THE NEXT LINE,
+// THEN ALSO EDIT kOS.Safe.Utilities.StringUtil.IsValidIdentifier()
+// TO USE THE SAME REGEX !!!!!
+IDENTIFIER   -> @"[_\p{L}]\w*"; //<---- Important - see above Comment!!!!!
+
 FILEIDENT    -> @"[_\p{L}]\w*(\.[_\p{L}]\w*)*";
 INTEGER      -> @"\d[_\d]*";
 DOUBLE       -> @"(\d+(?:_\d*)*)?\.\d+(?:_\d*)*";
