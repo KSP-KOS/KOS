@@ -58,7 +58,13 @@ namespace kOS.Safe
 
         public static bool IsValidIdentifier(string str)
         {
-            return identifierPattern.IsMatch(str);
+            Match match = identifierPattern.Match(str);
+
+            // Only counts as a valid identifier if the entire string matched without
+            // any leftover characters at the end of it:
+            if (match.Success && match.Length == str.Length)
+                return true;
+            return false;
         }
     }
 }
