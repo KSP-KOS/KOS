@@ -164,7 +164,7 @@ namespace kOS.Function
         {
             string bodyName = PopValueAssert(shared).ToString();
             AssertArgBottomAndConsume(shared);
-            var result = new BodyAtmosphere(VesselUtils.GetBodyByName(bodyName));
+            var result = new BodyAtmosphere(VesselUtils.GetBodyByName(bodyName), shared);
             ReturnValue = result;
         }
     }
