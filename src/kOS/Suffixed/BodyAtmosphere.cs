@@ -21,7 +21,7 @@ namespace kOS.Suffixed
             AddSuffix("SEALEVELPRESSURE", new Suffix<ScalarValue>(()=> celestialBody.atmosphere ? celestialBody.atmospherePressureSeaLevel * ConstantValue.KpaToAtm : 0));
             AddSuffix("HEIGHT", new Suffix<ScalarValue>(()=> celestialBody.atmosphere ? celestialBody.atmosphereDepth : 0));
             AddSuffix("ALTITUDEPRESSURE", new OneArgsSuffix<ScalarValue, ScalarValue>((alt)=> celestialBody.GetPressure(alt) * ConstantValue.KpaToAtm));
-            AddSuffix(new string[] { "MOLECULARMASS", "MOLMASS" }, new Suffix<ScalarValue>(() => celestialBody.atmosphereMolarMass));
+            AddSuffix("MOLARMASS", new Suffix<ScalarValue>(() => celestialBody.atmosphereMolarMass));
             AddSuffix(new string[] { "ADIABATICINDEX", "ADBIDX" }, new Suffix<ScalarValue>(() => celestialBody.atmosphereAdiabaticIndex));
             AddSuffix(new string[] { "ALTITUDETEMPERATURE", "ALTTEMP" }, new OneArgsSuffix<ScalarValue, ScalarValue>((alt) => celestialBody.GetTemperature(alt)));
         }
