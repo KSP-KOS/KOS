@@ -6,6 +6,7 @@ using kOS.Suffixed.PartModuleField;
 using kOS.Utilities;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using kOS.Safe.Compilation.KS;
 using UnityEngine;
 
@@ -65,6 +66,12 @@ namespace kOS.Suffixed.Part
             AddSuffix("MASS", new Suffix<ScalarValue>(() => Part.CalculateCurrentMass(), "The Part's current mass"));
             AddSuffix("WETMASS", new Suffix<ScalarValue>(() => Part.GetWetMass(), "The Part's mass when full"));
             AddSuffix("HASPHYSICS", new Suffix<BooleanValue>(() => Part.HasPhysics(), "Is this a strange 'massless' part"));
+            AddSuffix("BOUNDS", new Suffix<BoundsValue>(GetBoundsValue));
+        }
+
+        public BoundsValue GetBoundsValue()
+        {
+            return new BoundsValue(Part.KosGetPartBounds(), Shared);
         }
 
         public void ThrowIfNotCPUVessel()

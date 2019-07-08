@@ -1,4 +1,5 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
+using UnityEngine;
 using System;
 
 namespace kOS.Utilities
@@ -48,5 +49,48 @@ namespace kOS.Utilities
 
             return mass;
         }
+
+        /// <summary>
+        /// Returns the part's bounds in a bounding box that is oriented
+        /// to align with the part's PART:FACING orientation.
+        /// </summary>
+        /// <param name="part"></param>
+        /// <returns></returns>
+        public static Bounds KosGetPartBounds(this Part part)
+        {
+            // Our normal facings use Z for forward, but parts use Y for forward:
+            Quaternion rotateZToY = Quaternion.FromToRotation(Vector3.forward, Vector3.up);
+            Quaternion newRotation = rotateZToY * part.transform.rotation;
+
+            Bounds unionBounds = new Bounds(part.transform.position, Vector3.zero);
+
+            MeshFilter[] meshes = part.GetComponentsInChildren<MeshFilter>();
+            for (int meshIndex = 0; meshIndex < meshes.Length; ++meshIndex)
+            {
+                MeshFilter mesh = meshes[meshIndex];
+                Bounds bounds = mesh.mesh.bounds;
+
+                // Part meshes could be scaled as well as rotated (the mesh might describe a
+                // part that's 1 meter wide while the real part is 2 meters wide, and has a scale of 2x
+                // encoded into its transform to do this).  Because of this, the only really
+                // reliable way to get the real shape is to let the transform do its work on all 6 corners
+                // of the bounding box, transforming them into the part's transform:
+                Console.WriteLine("eraseme: starting a mesh work.");
+                Vector3 center = bounds.center;
+                
+                for (int signX = -1; signX <= 1; signX += 2) // Two iterations, at -1 and at +1
+                    for (int signY = -1; signY <= 1; signY += 2) // Two iterations, at -1 and at +1
+                        for (int signZ = -1; signZ <= 1; signZ += 2) // Two iterations, at -1 and at +1
+                        {
+                            Vector3 corner = center + new Vector3(signX*bounds.extents.x, signY*bounds.extents.y, signZ*bounds.extents.z);
+                            Console.WriteLine("eraseme:     corner = " + corner);
+                            Vector3 convertedCorner = part.transform.InverseTransformPoint((mesh.transform.TransformPoint(corner)));
+                            Console.WriteLine("eraseme: converted  = " + convertedCorner);
+                            unionBounds.Encapsulate(convertedCorner);
+                        }
+            }
+            return unionBounds;
+        }
+
     }
 }
