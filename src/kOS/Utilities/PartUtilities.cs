@@ -59,7 +59,7 @@ namespace kOS.Utilities
         public static Bounds KosGetPartBounds(this Part part)
         {
             // Our normal facings use Z for forward, but parts use Y for forward:
-            Quaternion rotateZToY = Quaternion.FromToRotation(Vector3.forward, Vector3.up);
+            Quaternion rotateYToZ = Quaternion.FromToRotation(Vector2.up, Vector3.forward);
 
             Bounds unionBounds = new Bounds();
 
@@ -80,15 +80,15 @@ namespace kOS.Utilities
                 Vector3 center = bounds.center;
 
                 // This triple-nested loop visits all 8 corners of the box:
-                for (int signX = -1; signX <= 1; signX += 2)
-                    for (int signY = -1; signY <= 1; signY += 2)
-                        for (int signZ = -1; signZ <= 1; signZ += 2)
+                for (int signX = -1; signX <= 1; signX += 2) // -1, then +1
+                    for (int signY = -1; signY <= 1; signY += 2) // -1, then +1
+                        for (int signZ = -1; signZ <= 1; signZ += 2) // -1, then +1
                         {
                             Vector3 corner = center + new Vector3(signX * bounds.extents.x, signY * bounds.extents.y, signZ * bounds.extents.z);
                             Console.WriteLine("eraseme:     corner = " + corner);
                             Vector3 worldCorner = mesh.transform.TransformPoint(corner);
                             Console.WriteLine("eraseme:worldCorner = " + worldCorner);
-                            Vector3 partCorner = rotateZToY * part.transform.InverseTransformPoint(worldCorner);
+                            Vector3 partCorner = rotateYToZ * part.transform.InverseTransformPoint(worldCorner);
                             Console.WriteLine("eraseme: partCorner = " + partCorner);
 
                             // Stretches the bounds we're making (which started at size zero in all axes),

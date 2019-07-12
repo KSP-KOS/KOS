@@ -71,10 +71,6 @@ namespace kOS.Suffixed.Part
 
         public BoundsValue GetBoundsValue()
         {
-            // Our normal facings use Z for forward, but parts use Y for forward:
-            Quaternion rotateZToY = Quaternion.FromToRotation(Vector3.forward, Vector3.up);
-            Quaternion newRotation = Part.transform.rotation * rotateZToY;
-
             return new BoundsValue(Part.KosGetPartBounds(), Part.boundsCentroidOffset, Shared);
         }
 
