@@ -318,48 +318,5 @@ namespace kOS.Utilities
                     "Can't find or load texture called: {0}.dds or {0}.png", path));
             return result;
         }
-
-        /// <summary>
-        /// Given an array of several Unity bounding boxes, return a single bounding
-        /// box that is the smallest bounding box possible which would fully contain
-        /// all the individual bounding boxes passed in.
-        /// </summary>
-        /// <param name="manyBounds"></param>
-        /// <param name="shared">needed to find ship COM for ship-raw coords</param>
-        /// <returns></returns>
-        public static BoundsValue BoundingBoxUnion(Bounds[] manyBounds, SharedObjects shared)
-        {
-            // No point in using doubles, this is a native Unity object that is only 32-bit:
-            float minX, minY, minZ, maxX, maxY, maxZ;
-
-            // Initialize the bounds to the "most impossible" values, ie.
-            // min is at max and max is at min.  This guarantees the loop below will
-            // definitely override these values with whatever the first bounds in the
-            // array is:
-            minX = minY = minZ = Single.MaxValue;
-            maxX = maxY = maxZ = Single.MinValue;
-
-            Console.WriteLine("eraseme: BoundingBoxUnion()");
-            foreach (Bounds bounds in manyBounds)
-            {
-                Console.WriteLine("  eraseme: min = " + bounds.min.x + ", " + bounds.min.y + ", " + bounds.min.z);
-                Console.WriteLine("  eraseme: max = " + bounds.max.x + ", " + bounds.max.y + ", " + bounds.max.z);
-                minX = Mathf.Min(minX, bounds.min.x);
-                minY = Mathf.Min(minY, bounds.min.y);
-                minZ = Mathf.Min(minZ, bounds.min.z);
-                maxX = Mathf.Max(maxX, bounds.max.x);
-                maxY = Mathf.Max(maxY, bounds.max.y);
-                maxZ = Mathf.Max(maxZ, bounds.max.z);
-            }
-            Vector3 minV = new Vector3(minX, minY, minZ);
-            Vector3 maxV = new Vector3(maxX, maxY, maxZ);
-            Console.WriteLine("eraseme: minV = " + minV.x + ", " + minV.y + ", " + minV.z);
-            Console.WriteLine("eraseme: maxV = " + maxV.x + ", " + maxV.y + ", " + maxV.z);
-            Vector3 center = (minV + maxV) / 2f;
-            Vector3 size = maxV - minV;
-            Console.WriteLine("eraseme: center = " + center.x + ", " + center.y + ", " + center.z);
-            Console.WriteLine("eraseme: size = " + size.x + ", " + size.y + ", " + size.z);
-            return new BoundsValue(new Bounds(center, size), shared);
-        }
     }
 }
