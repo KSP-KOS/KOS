@@ -47,9 +47,9 @@ namespace kOS.Suffixed.Part
             AddSuffix("CID", new Suffix<StringValue>(() => Part.craftID.ToString()));
             AddSuffix("UID", new Suffix<StringValue>(() => Part.flightID.ToString()));
             AddSuffix("ROTATION", new Suffix<Direction>(() => new Direction(Part.transform.rotation)));
-            AddSuffix("POSITION", new Suffix<Vector>(() => new Vector(Part.transform.position - Shared.Vessel.CoMD)));
+            AddSuffix("POSITION", new Suffix<Vector>(() => GetPosition()));
             AddSuffix("TAG", new SetSuffix<StringValue>(GetTagName, SetTagName));
-            AddSuffix("FACING", new Suffix<Direction>(() => GetFacing(Part)));
+            AddSuffix("FACING", new Suffix<Direction>(() => GetFacing()));
             AddSuffix("RESOURCES", new Suffix<ListValue>(() => GatherResources(Part)));
             AddSuffix("TARGETABLE", new Suffix<BooleanValue>(() => Part.Modules.OfType<ITargetable>().Any()));
             AddSuffix("SHIP", new Suffix<VesselTarget>(() => VesselTarget.CreateOrGetExisting(Part.vessel, Shared)));
@@ -71,8 +71,50 @@ namespace kOS.Suffixed.Part
 
         public BoundsValue GetBoundsValue()
         {
-            return new BoundsValue(Part.KosGetPartBounds(), Part.boundsCentroidOffset, Shared);
+            // Our normal facings use Z for forward, but parts use Y for forward:
+            Quaternion rotateYToZ = Quaternion.FromToRotation(Vector2.up, Vector3.forward);
+
+            Bounds unionBounds = new Bounds();
+
+            MeshFilter[] meshes = Part.GetComponentsInChildren<MeshFilter>();
+            for (int meshIndex = 0; meshIndex < meshes.Length; ++meshIndex)
+            {
+                MeshFilter mesh = meshes[meshIndex];
+                Bounds bounds = mesh.mesh.bounds;
+
+                // Part meshes could be scaled as well as rotated (the mesh might describe a
+                // part that's 1 meter wide while the real part is 2 meters wide, and has a scale of 2x
+                // encoded into its transform to do this).  Because of this, the only really
+                // reliable way to get the real shape is to let the transform do its work on all 6 corners
+                // of the bounding box, transforming them with the mesh's transform, then back-calculating
+                // from that world-space result back into the part's own reference frame to get the bounds
+                // relative to the part.
+                Console.WriteLine("eraseme: starting a mesh work.");
+                Vector3 center = bounds.center;
+
+                // This triple-nested loop visits all 8 corners of the box:
+                for (int signX = -1; signX <= 1; signX += 2) // -1, then +1
+                    for (int signY = -1; signY <= 1; signY += 2) // -1, then +1
+                        for (int signZ = -1; signZ <= 1; signZ += 2) // -1, then +1
+                        {
+                            Vector3 corner = center + new Vector3(signX * bounds.extents.x, signY * bounds.extents.y, signZ * bounds.extents.z);
+                            Console.WriteLine("eraseme:     corner = " + corner);
+                            Vector3 worldCorner = mesh.transform.TransformPoint(corner);
+                            Console.WriteLine("eraseme:worldCorner = " + worldCorner);
+                            Vector3 partCorner = rotateYToZ * Part.transform.InverseTransformPoint(worldCorner);
+                            Console.WriteLine("eraseme: partCorner = " + partCorner);
+
+                            // Stretches the bounds we're making (which started at size zero in all axes),
+                            // just big enough to include this corner:
+                            unionBounds.Encapsulate(partCorner);
+                        }
+            }
+            Console.WriteLine("eraseme: unionBounds.min x=" + unionBounds.min.x + " y=" + unionBounds.min.y + " z=" + unionBounds.min.z);
+            Console.WriteLine("eraseme: unionBounds.max x=" + unionBounds.max.x + " y=" + unionBounds.max.y + " z=" + unionBounds.max.z);
+
+            return new BoundsValue(unionBounds, GetPosition() + new Vector(Part.boundsCentroidOffset), GetFacing(), Shared);
         }
+
 
         public void ThrowIfNotCPUVessel()
         {
@@ -139,12 +181,17 @@ namespace kOS.Suffixed.Part
             }
         }
 
-        private Direction GetFacing(global::Part part)
+        private Direction GetFacing()
         {
             // Our normal facings use Z for forward, but parts use Y for forward:
             Quaternion rotateZToY = Quaternion.FromToRotation(Vector3.forward, Vector3.up);
-            Quaternion newRotation = part.transform.rotation * rotateZToY;
+            Quaternion newRotation = Part.transform.rotation * rotateZToY;
             return new Direction(newRotation);
+        }
+
+        private Vector GetPosition()
+        {
+            return new Vector(Part.transform.position - Shared.Vessel.CoMD);
         }
 
         private void ControlFrom()
@@ -215,5 +262,6 @@ namespace kOS.Suffixed.Part
         {
             return !Equals(left, right);
         }
+
     }
 }
