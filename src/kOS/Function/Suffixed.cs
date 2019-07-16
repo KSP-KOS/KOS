@@ -169,6 +169,21 @@ namespace kOS.Function
         }
     }
 
+    [Function("bounds")]
+    public class FunctionBounds : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            Vector relMax = GetVector(PopValueAssert(shared));
+            Vector relMin = GetVector(PopValueAssert(shared));
+            Direction facing = GetDirection(PopValueAssert(shared));
+            Vector absOrigin = GetVector(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
+
+            ReturnValue = new BoundsValue(relMin, relMax, absOrigin, facing, shared);
+        }
+    }
+
     [Function("heading")]
     public class FunctionHeading : FunctionBase
     {

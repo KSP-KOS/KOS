@@ -54,6 +54,9 @@ These are the generic properties every PART has. You can obtain a list of values
         * - :attr:`FACING`
           - :struct:`Direction`
           - the direction that this part is facing
+        * - :attr:`BOUNDS`
+          - :struct:`Bounds`
+          - Bounding-box information about this part's shape
         * - :attr:`RESOURCES`
           - :struct:`List`
           - list of the :struct:`Resource` in this part
@@ -211,7 +214,31 @@ These are the generic properties every PART has. You can obtain a list of values
     :access: Get only
     :type: :struct:`Direction`
 
-    the direction that this part is facing.
+    The direction that this part is facing, which is also the rotation
+    that would transform a vector from a coordinate space where the
+    axes were oriented to match the part, to one where they're
+    oriented to match the world's ship-raw coordinates.
+
+.. attribute:: Part:BOUNDS
+
+    :access: Get only
+    :type: :struct:`Bounds`
+
+    Constructs a "bounding box" structure that can be used to
+    give your script some idea of the extents of the part's shape - how
+    wide, long, and tall it is.
+
+    It can be slightly expensive in terms of CPU time to keep calling
+    this suffix over and over, as kOS has to perform some work to build
+    this structure.  If you need to keep looking at a part's bounds again
+    and again in a loop, and you know that part's shape isn't going to be
+    changing (i.e. you're not going to extend a solar panel or something
+    like that), then it's better for you to call this ``:BOUNDS`` suffix
+    just once at the top, storing the result in a variable that you use in
+    the loop.
+
+    More detailed information is found on the documentation page for
+    :struct:`Bounds`.
 
 .. attribute:: Part:MASS
 

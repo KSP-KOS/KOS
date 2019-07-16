@@ -50,6 +50,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("POSITION", new Suffix<Vector>(() => GetPosition()));
             AddSuffix("TAG", new SetSuffix<StringValue>(GetTagName, SetTagName));
             AddSuffix("FACING", new Suffix<Direction>(() => GetFacing()));
+            AddSuffix("BOUNDS", new Suffix<BoundsValue>(GetBoundsValue));
             AddSuffix("RESOURCES", new Suffix<ListValue>(() => GatherResources(Part)));
             AddSuffix("TARGETABLE", new Suffix<BooleanValue>(() => Part.Modules.OfType<ITargetable>().Any()));
             AddSuffix("SHIP", new Suffix<VesselTarget>(() => VesselTarget.CreateOrGetExisting(Part.vessel, Shared)));
@@ -66,7 +67,6 @@ namespace kOS.Suffixed.Part
             AddSuffix("MASS", new Suffix<ScalarValue>(() => Part.CalculateCurrentMass(), "The Part's current mass"));
             AddSuffix("WETMASS", new Suffix<ScalarValue>(() => Part.GetWetMass(), "The Part's mass when full"));
             AddSuffix("HASPHYSICS", new Suffix<BooleanValue>(() => Part.HasPhysics(), "Is this a strange 'massless' part"));
-            AddSuffix("BOUNDS", new Suffix<BoundsValue>(GetBoundsValue));
         }
 
         public BoundsValue GetBoundsValue()
@@ -112,7 +112,9 @@ namespace kOS.Suffixed.Part
             Console.WriteLine("eraseme: unionBounds.min x=" + unionBounds.min.x + " y=" + unionBounds.min.y + " z=" + unionBounds.min.z);
             Console.WriteLine("eraseme: unionBounds.max x=" + unionBounds.max.x + " y=" + unionBounds.max.y + " z=" + unionBounds.max.z);
 
-            return new BoundsValue(unionBounds, GetPosition() + new Vector(Part.boundsCentroidOffset), GetFacing(), Shared);
+            Vector min = new Vector(unionBounds.min);
+            Vector max = new Vector(unionBounds.max);
+            return new BoundsValue(min, max, delegate { return GetPosition() + new Vector(Part.boundsCentroidOffset); }, delegate { return GetFacing(); }, Shared);
         }
 
 
@@ -181,7 +183,7 @@ namespace kOS.Suffixed.Part
             }
         }
 
-        private Direction GetFacing()
+        public Direction GetFacing()
         {
             // Our normal facings use Z for forward, but parts use Y for forward:
             Quaternion rotateZToY = Quaternion.FromToRotation(Vector3.forward, Vector3.up);
@@ -189,7 +191,7 @@ namespace kOS.Suffixed.Part
             return new Direction(newRotation);
         }
 
-        private Vector GetPosition()
+        public Vector GetPosition()
         {
             return new Vector(Part.transform.position - Shared.Vessel.CoMD);
         }

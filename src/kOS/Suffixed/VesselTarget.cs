@@ -4,6 +4,7 @@ using kOS.Safe;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Execution;
 using kOS.Safe.Serialization;
 using kOS.Safe.Utilities;
 using kOS.Suffixed.Part;
@@ -266,6 +267,7 @@ namespace kOS.Suffixed
             AddSuffix("LATITUDE", new Suffix<ScalarValue>(() => VesselUtils.GetVesselLatitude(Vessel)));
             AddSuffix("LONGITUDE", new Suffix<ScalarValue>(() => VesselUtils.GetVesselLongitude(Vessel)));
             AddSuffix("ALTITUDE", new Suffix<ScalarValue>(() => Vessel.altitude));
+            AddSuffix("BOUNDS", new Suffix<BoundsValue>(() => GetBoundsValue()));
             AddSuffix("CREW", new NoArgsSuffix<ListValue>(GetCrew));
             AddSuffix("CREWCAPACITY", new NoArgsSuffix<ScalarValue>(GetCrewCapacity));
             AddSuffix("CONNECTION", new NoArgsSuffix<VesselConnection>(() => new VesselConnection(Vessel, Shared)));
@@ -301,6 +303,36 @@ namespace kOS.Suffixed
             }
 
             return InterVesselManager.Instance.GetQueue(Shared.Vessel, Shared);
+        }
+
+        public BoundsValue GetBoundsValue()
+        {
+            float xmin = 0, xmax = 0, ymin = 0, ymax = 0, zmin = 0, zmax = 0;
+            Direction myFacing = VesselUtils.GetFacing(Vessel);
+            Quaternion inverseMyFacing = myFacing.Rotation.Inverse();
+            Vector rootOrigin = Parts[0].GetPosition();
+            for (int pNum = 0; pNum < Parts.Count; ++pNum)
+            {
+                PartValue p = Parts[pNum];
+                BoundsValue b = p.GetBoundsValue();
+                Vector3 relMin = inverseMyFacing * ((b.AbsoluteMin - rootOrigin)).ToVector3();
+                Vector3 relMax = inverseMyFacing * ((b.AbsoluteMax - rootOrigin)).ToVector3();
+                Console.WriteLine("eraseme: Vessel.GetBoundsValue, pNum = {0}, absMin = {1}, relMin = {2}, absMin = {3}, relMax = {4}", pNum, b.AbsoluteMin, relMin, b.AbsoluteMax, relMax);
+                xmin = Mathf.Min(relMin.x, xmin);
+                xmax = Mathf.Max(relMax.x, xmax);
+                ymin = Mathf.Min(relMin.y, ymin);
+                ymax = Mathf.Max(relMax.y, ymax);
+                zmin = Mathf.Min(relMin.z, zmin);
+                zmax = Mathf.Max(relMax.z, zmax);
+            }
+
+            Vector min = new Vector(xmin, ymin, zmin);
+            Vector max = new Vector(xmax, ymax, zmax);
+
+            // The above operation is expensive and should force the CPU to do a WAIT 0:
+            Shared.Cpu.YieldProgram(new YieldFinishedNextTick());
+
+            return new BoundsValue(min, max, delegate { return Parts[0].GetPosition(); }, delegate { return VesselUtils.GetFacing(Vessel); }, Shared);
         }
 
         public void ThrowIfNotCPUVessel()

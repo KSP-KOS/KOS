@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Exceptions;
+using kOS.Safe.Exceptions;
 using kOS.Safe.Function;
 using kOS.Suffixed;
 using System;
@@ -23,6 +23,16 @@ namespace kOS.Function
                 return vector;
             }
             throw new KOSCastException(argument.GetType(), typeof(Vector));
+        }
+
+        protected Direction GetDirection(object argument)
+        {
+            var direction = argument as Direction;
+            if (direction != null)
+            {
+                return direction;
+            }
+            throw new KOSCastException(argument.GetType(), typeof(Direction));
         }
 
         protected RgbaColor GetRgba(object argument)

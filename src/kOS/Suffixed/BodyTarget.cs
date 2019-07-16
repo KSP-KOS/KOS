@@ -227,6 +227,25 @@ namespace kOS.Suffixed
         }
 
         /// <summary>
+        /// Interpret the vector given as a 3D position, and return the altitude above terrain unless
+        /// that terrain is below sea level on a world that has a sea, in which case return the sea
+        /// level atitude instead, similar to how radar altitude is displayed to the player.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public ScalarValue RadarAltitudeFromPosition(Vector position)
+        {
+            Vector3d unityWorldPosition = Shared.Vessel.CoMD + position.ToVector3D();
+            GeoCoordinates geo = GeoCoordinatesFromPosition(new Vector(unityWorldPosition));
+            ScalarValue terrainHeight = geo.GetTerrainAltitude();
+            ScalarValue seaAlt = AltitudeFromPosition(position);
+            if (Body.ocean && terrainHeight < 0)
+                return seaAlt;
+            else
+                return seaAlt - terrainHeight;
+        }
+
+        /// <summary>
         /// Annoyingly, KSP returns CelestialBody.angularVelociy in a frame of reference 
         /// relative to the ship facing instead of the universe facing.  This would be
         /// wonderful if that was their philosophy everywhere, but it's not - its just a
