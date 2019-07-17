@@ -238,6 +238,7 @@ namespace kOS.Suffixed
             AddSuffix("MAXTHRUST", new Suffix<ScalarValue>(() => VesselUtils.GetMaxThrust(Vessel)));
             AddSuffix("MAXTHRUSTAT", new OneArgsSuffix<ScalarValue, ScalarValue>(GetMaxThrustAt));
             AddSuffix("FACING", new Suffix<Direction>(() => VesselUtils.GetFacing(Vessel)));
+            AddSuffix("BOUNDS", new Suffix<BoundsValue>(() => GetBoundsValue()));
             AddSuffix("ANGULARMOMENTUM", new Suffix<Vector>(() => new Vector(Vessel.angularMomentum)));
             AddSuffix("ANGULARVEL", new Suffix<Vector>(() => RawAngularVelFromRelative(Vessel.angularVelocity)));
             AddSuffix("MASS", new Suffix<ScalarValue>(() => Vessel.GetTotalMass()));
@@ -267,7 +268,6 @@ namespace kOS.Suffixed
             AddSuffix("LATITUDE", new Suffix<ScalarValue>(() => VesselUtils.GetVesselLatitude(Vessel)));
             AddSuffix("LONGITUDE", new Suffix<ScalarValue>(() => VesselUtils.GetVesselLongitude(Vessel)));
             AddSuffix("ALTITUDE", new Suffix<ScalarValue>(() => Vessel.altitude));
-            AddSuffix("BOUNDS", new Suffix<BoundsValue>(() => GetBoundsValue()));
             AddSuffix("CREW", new NoArgsSuffix<ListValue>(GetCrew));
             AddSuffix("CREWCAPACITY", new NoArgsSuffix<ScalarValue>(GetCrewCapacity));
             AddSuffix("CONNECTION", new NoArgsSuffix<VesselConnection>(() => new VesselConnection(Vessel, Shared)));
