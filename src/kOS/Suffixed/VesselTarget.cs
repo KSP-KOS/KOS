@@ -307,26 +307,33 @@ namespace kOS.Suffixed
 
         public BoundsValue GetBoundsValue()
         {
-            float xmin = 0, xmax = 0, ymin = 0, ymax = 0, zmin = 0, zmax = 0;
             Direction myFacing = VesselUtils.GetFacing(Vessel);
             Quaternion inverseMyFacing = myFacing.Rotation.Inverse();
             Vector rootOrigin = Parts[0].GetPosition();
+            Bounds unionBounds = new Bounds();
             for (int pNum = 0; pNum < Parts.Count; ++pNum)
             {
                 PartValue p = Parts[pNum];
-                BoundsValue b = p.GetBoundsValue();
-                Vector3 relMin = inverseMyFacing * ((b.AbsoluteMin - rootOrigin)).ToVector3();
-                Vector3 relMax = inverseMyFacing * ((b.AbsoluteMax - rootOrigin)).ToVector3();
-                xmin = Mathf.Min(relMin.x, xmin);
-                xmax = Mathf.Max(relMax.x, xmax);
-                ymin = Mathf.Min(relMin.y, ymin);
-                ymax = Mathf.Max(relMax.y, ymax);
-                zmin = Mathf.Min(relMin.z, zmin);
-                zmax = Mathf.Max(relMax.z, zmax);
+                Vector partOriginOffsetInVesselBounds = p.GetPosition() - rootOrigin;
+                Bounds b = p.GetBoundsValue().GetUnityBounds();
+                Vector partCenter = new Vector(b.center);
+
+                // Just like the logic for the part needing all 8 corners of the mesh's bounds,
+                // this needs all 8 corners of the part bounds:
+                for (int signX = -1; signX <= 1; signX += 2)
+                    for (int signY = -1; signY <= 1; signY += 2)
+                        for (int signZ = -1; signZ <= 1; signZ += 2)
+                        {
+                            Vector corner = partCenter + new Vector(signX * b.extents.x, signY * b.extents.y, signZ * b.extents.z);
+                            Vector worldCorner = partOriginOffsetInVesselBounds + p.GetFacing() * corner;
+                            Vector3 vesselCorner = inverseMyFacing * worldCorner.ToVector3();
+
+                            unionBounds.Encapsulate(vesselCorner);
+                        }
             }
 
-            Vector min = new Vector(xmin, ymin, zmin);
-            Vector max = new Vector(xmax, ymax, zmax);
+            Vector min = new Vector(unionBounds.min);
+            Vector max = new Vector(unionBounds.max);
 
             // The above operation is expensive and should force the CPU to do a WAIT 0:
             Shared.Cpu.YieldProgram(new YieldFinishedNextTick());

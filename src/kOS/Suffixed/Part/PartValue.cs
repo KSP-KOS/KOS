@@ -89,7 +89,6 @@ namespace kOS.Suffixed.Part
                 // of the bounding box, transforming them with the mesh's transform, then back-calculating
                 // from that world-space result back into the part's own reference frame to get the bounds
                 // relative to the part.
-                Console.WriteLine("eraseme: starting a mesh work.");
                 Vector3 center = bounds.center;
 
                 // This triple-nested loop visits all 8 corners of the box:
