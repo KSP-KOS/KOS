@@ -766,21 +766,14 @@ on whether item A is touching item B.
 
 To get a rotated box like is needed for kOS's needs, where its tightly
 snug against the object in question, kOS has to go a bit more low-level
-and look at the actual meshes that make up a part, and look at
+and look at the actual meshes that make up the object, and look at
 *their* bounding boxes, which are aligned in the mesh's own locally
 rotated XYZ axes, rather than world axes.  Some ugly transforms
-of the min and max corners of the mesh bounding box Unity knows about are
-needed. This isn't *that* expensive, but it is if you have IPU set to
-1000 and try to do this operation 1000 times per update tick.
-
-The real expense comes when trying to get a vessel's bounding box
-with ``Vessel:BOUNDS``, rather than just one part's bounding box
-with ``Part:BOUNDS``.  To get the Vessel's bounds, it performs
-the work of getting a part's bounds, on each part on the vessel,
-in order to find the union of all those boxes into a bigger box.
-
-Calling ``Part:BOUNDS`` repeatedly in your script isn't really that
-bad.  It's just calling ``Vessel:BOUNDS`` repeatedly that's a bad idea.
+of each of the 8 vertices of the mesh bounding box Unity knows about are
+needed, and there isn't really a good way to do this without running a
+loop across all vertices of the box, which is what kOS does internally.
+For the whole vessel's bounding box, this means doing those 8 vertices
+per part, on every part on the ship.
 
 Why then is it faster to re-use the BOUNDS suffix?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

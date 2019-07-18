@@ -228,14 +228,14 @@ These are the generic properties every PART has. You can obtain a list of values
     give your script some idea of the extents of the part's shape - how
     wide, long, and tall it is.
 
-    kOS has to perform some internal work to build this structure, so it
-    is *slightly* expensive to call it (but not *that* bad).  If you
-    need to keep looking at the same part's bounds again and again in a
-    loop, and you know that part's shape isn't going to be changing
-    (i.e. you're not going to extend a solar panel or something like
-    that), then it's better for you to call this ``:BOUNDS`` suffix
-    just once at the top, storing the result in a variable that you use
-    in the loop.
+    It can be slightly expensive in terms of CPU time to keep calling
+    this suffix over and over, as kOS has to perform some work to build
+    this structure.  If you need to keep looking at a part's bounds again
+    and again in a loop, and you know that part's shape isn't going to be
+    changing (i.e. you're not going to extend a solar panel or something
+    like that), then it's better for you to call this ``:BOUNDS`` suffix
+    just once at the top, storing the result in a variable that you use in
+    the loop.
 
     More detailed information is found on the documentation page for
     :struct:`Bounds`.
