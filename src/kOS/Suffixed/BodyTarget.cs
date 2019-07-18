@@ -103,7 +103,7 @@ namespace kOS.Suffixed
             AddSuffix("RADIUS", new Suffix<ScalarValue>(() => Body.Radius));
             AddSuffix("MU", new Suffix<ScalarValue>(() => Body.gravParameter));
             AddSuffix("ROTATIONPERIOD", new Suffix<ScalarValue>(() => Body.rotationPeriod));
-            AddSuffix("ATM", new Suffix<BodyAtmosphere>(() => new BodyAtmosphere(Body)));
+            AddSuffix("ATM", new Suffix<BodyAtmosphere>(() => new BodyAtmosphere(Body, Shared)));
             AddSuffix("ANGULARVEL", new Suffix<Vector>(() => RawAngularVelFromRelative(Body.angularVelocity)));
             AddSuffix("SOIRADIUS", new Suffix<ScalarValue>(() => Body.sphereOfInfluence));
             AddSuffix("ROTATIONANGLE", new Suffix<ScalarValue>(() => Body.rotationAngle));

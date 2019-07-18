@@ -548,6 +548,10 @@ namespace kOS.Module
                 SafeHouse.Logger.LogError("kOSProcessor: This game installation is badly broken.  It appears to have no planets in it.");
             else
                 ConstantValue.GravConst = anyBody.gravParameter / anyBody.Mass;
+
+            ConstantValue.AvogadroConst = PhysicsGlobals.AvogadroConstant;
+            ConstantValue.BoltzmannConst = PhysicsGlobals.BoltzmannConstant;
+            ConstantValue.IdealGasConst = PhysicsGlobals.IdealGasConstant;
         }
 
         private void InitProcessorTracking()
