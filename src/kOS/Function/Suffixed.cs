@@ -404,6 +404,8 @@ namespace kOS.Function
             int argc = CountRemainingArgs(shared);
 
             // Handle the var args that might be passed in, or give defaults if fewer args:
+            bool   wiping   = (argc >= 9) ? Convert.ToBoolean(PopValueAssert(shared)) : true;
+            bool   pointy   = (argc >= 8) ? Convert.ToBoolean(PopValueAssert(shared)) : true;
             double width    = (argc >= 7) ? GetDouble(PopValueAssert(shared))         : 0.2;
             bool   show     = (argc >= 6) ? Convert.ToBoolean(PopValueAssert(shared)) : false;
             double scale    = (argc >= 5) ? GetDouble(PopValueAssert(shared))         : 1.0;
@@ -425,18 +427,33 @@ namespace kOS.Function
             Vector start   = (startUpdater == null) ? GetVector(argStart) : GetDefaultStart();
 
             AssertArgBottomAndConsume(shared);
-            DoExecuteWork(shared, start, vec, rgba, str, scale, show, width, colorUpdater, vecUpdater, startUpdater);
+            DoExecuteWork(shared, start, vec, rgba, str, scale, show, width, pointy, wiping, colorUpdater, vecUpdater, startUpdater);
         }
         
-        public void DoExecuteWork(SharedObjects shared, Vector start, Vector vec, RgbaColor rgba, string str, double scale, bool show, double width, KOSDelegate colorUpdater, KOSDelegate vecUpdater, KOSDelegate startUpdater)
+        public void DoExecuteWork(
+            SharedObjects shared,
+            Vector start,
+            Vector vec,
+            RgbaColor rgba,
+            string str,
+            double scale,
+            bool show,
+            double width,
+            bool pointy,
+            bool wiping,
+            KOSDelegate colorUpdater,
+            KOSDelegate vecUpdater,
+            KOSDelegate startUpdater)
         {
-            var vRend = new VectorRenderer( shared.UpdateHandler, shared )
+            var vRend = new VectorRenderer(shared.UpdateHandler, shared)
                 {
                     Vector = vec,
                     Start = start,
                     Color = rgba,
                     Scale = scale,
-                    Width = width
+                    Width = width,
+                    Pointy = pointy,
+                    Wiping = wiping
                 };
             vRend.SetLabel( str );
             vRend.SetShow( show );
