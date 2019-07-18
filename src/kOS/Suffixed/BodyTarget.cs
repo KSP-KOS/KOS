@@ -235,8 +235,7 @@ namespace kOS.Suffixed
         /// <returns></returns>
         public ScalarValue RadarAltitudeFromPosition(Vector position)
         {
-            Vector3d unityWorldPosition = Shared.Vessel.CoMD + position.ToVector3D();
-            GeoCoordinates geo = GeoCoordinatesFromPosition(new Vector(unityWorldPosition));
+            GeoCoordinates geo = GeoCoordinatesFromPosition(position);
             ScalarValue terrainHeight = geo.GetTerrainAltitude();
             ScalarValue seaAlt = AltitudeFromPosition(position);
             if (Body.ocean && terrainHeight < 0)

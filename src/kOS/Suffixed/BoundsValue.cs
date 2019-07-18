@@ -190,7 +190,6 @@ namespace kOS.Suffixed
         {
             BodyTarget body = BodyTarget.CreateOrGetExisting(shared.Vessel.mainBody, shared);
             Vector bottomInShipRaw = FurthestCorner(new Vector(-shared.Vessel.upAxis));
-            GeoCoordinates geo = body.GeoCoordinatesFromPosition(bottomInShipRaw);
             return body.RadarAltitudeFromPosition(bottomInShipRaw);
         }
 
