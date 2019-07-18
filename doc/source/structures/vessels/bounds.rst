@@ -22,6 +22,11 @@ more precisely when landing "*what is the altitude of my landing leg's foot
 above the ground?*" instead of "what is the altitude of my ship in general
 above the ground?"
 
+Before you use a Bounds be certain you have read the section
+below on this page about :ref:`why you should re-use bounds
+if you can` (instead of re-getting them again and again with
+the :BOUNDS suffix call.)
+
 Quick start 1 - Radar altitude: the most useful thing
 -----------------------------------------------------
 
@@ -84,6 +89,17 @@ With this one suffix you can answer a lot of the relevant "ship size"
 questions like "Am i getting too close to that ship?, well, lets find
 out which vertex of its bounding box is closest to me...".
 
+Quick Start 3 - A complex visual example drawing the bounds
+-----------------------------------------------------------
+
+There is an example program in the tutorials section that
+brings this all together to show you the bounds boxes
+visually on screen:
+
+:ref:`Display Bounds <display_bounds>`
+
+Trying that first (without necessarily understaand it right away)
+will help give you a visual guide to what is happening here.
 
 A Part:BOUNDS or Vessel:BOUNDS will move and rotate with the object
 -------------------------------------------------------------------
@@ -120,6 +136,8 @@ Bounds, you are explicitly telling it to use your new value
 instead of its usual practice of always re-calculating it from
 the part or vessel it came from.
 
+.. _reuse_bounds:
+
 A Bounds structure is re-usable.  Please do re-use it.
 ------------------------------------------------------
 
@@ -131,10 +149,9 @@ example is MUCH less of a burden on the KSP game than the first one::
     // Please set the ship rotating before doing this, to prove that
     // it is indeed seeing the new rotated positions:
     //
-    local the_part is ship:parts[0].
     print "100 samples of my min/max corners as I rotate:".
     for i in range(0,100) {
-      print i + ": absmin=" + the_part:bounds:absmin + ", absmax=" + the_part:bounds:absmax.
+      print i + ": absmin=" + SHIP:bounds:absmin + ", absmax=" + SHIP:bounds:absmax.
       wait 0.
     }
 
@@ -145,8 +162,7 @@ example is MUCH less of a burden on the KSP game than the first one::
     // Please set the ship rotating before doing this, to prove that
     // it is indeed seeing the new rotated positions:
     //
-    local the_part is ship:parts[0].
-    local B is the_part:bounds. // get the :bounds suffix ONCE.
+    local B is SHIP:bounds. // get the :bounds suffix ONCE.
     print "100 samples of my min/max corners as I rotate:".
     for i in range(0,100) {
       print i + ": absmin=" + B:absmin + ", absmax=" + B:absmax.
@@ -161,10 +177,17 @@ It "remembers" which object's orientation it needs to be using, and
 it keeps re-correcting itself to that objects orientation for you
 every time you use it.
 
+The expense of calling ``Part:BOUNDS`` isn't that bad and calling it
+repeatedly probably won't really make your script suffer noticably.
+But when you do it for the whole vessel, calling ``Vessel:BOUNDS``
+repeatedly, that can definitely result in noticable unnecessary
+computations being done by your computer.
+
 For a more in-depth explanation of why it's expensive to re-call
 the Bounds suffix over and over, if you care, see
 :ref:`The bottom of this page <bounds_expense>`.  For now, it is
 sufficient to say "it's expensive, don't do it".
+
 
 .. _bounds_invalidate:
 
