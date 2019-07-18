@@ -60,9 +60,6 @@ namespace kOS.Suffixed
             this.origin = origin;
             this.shared = shared;
             this.facing = facing;
-            Console.WriteLine("eraseme: Constructing a BoundsValue:");
-            Console.WriteLine("eraseme:   Bounds are: " + unityBounds.ToString());
-            Console.WriteLine("eraseme:   Origin: " + origin);
             RegisterInitializer(InitializeSuffixes);
         }
 

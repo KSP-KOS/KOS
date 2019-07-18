@@ -89,7 +89,6 @@ namespace kOS.Suffixed.Part
                 // opposite diagonal corners of the bounding box, first transforming them with the mesh's
                 // transform, then back-calculating from that world-space result back into the part's own
                 // reference frame to get the bounds relative to the part.
-                Console.WriteLine("eraseme: starting a mesh work.");
                 Vector3 center = bounds.center;
 
                 // Works on just the two diagonally opposite corners of the box, which will guarantee the other 6
@@ -97,19 +96,14 @@ namespace kOS.Suffixed.Part
                 for (int sign = -1; sign <= 1; sign += 2) // -1, then +1
                 {
                     Vector3 corner = center + new Vector3(sign * bounds.extents.x, sign * bounds.extents.y, sign * bounds.extents.z);
-                    Console.WriteLine("eraseme:     corner = " + corner);
                     Vector3 worldCorner = mesh.transform.TransformPoint(corner);
-                    Console.WriteLine("eraseme:worldCorner = " + worldCorner);
                     Vector3 partCorner = rotateYToZ * Part.transform.InverseTransformPoint(worldCorner);
-                    Console.WriteLine("eraseme: partCorner = " + partCorner);
 
                     // Stretches the bounds we're making (which started at size zero in all axes),
                     // just big enough to include this corner:
                     unionBounds.Encapsulate(partCorner);
                 }
             }
-            Console.WriteLine("eraseme: unionBounds.min x=" + unionBounds.min.x + " y=" + unionBounds.min.y + " z=" + unionBounds.min.z);
-            Console.WriteLine("eraseme: unionBounds.max x=" + unionBounds.max.x + " y=" + unionBounds.max.y + " z=" + unionBounds.max.z);
 
             Vector min = new Vector(unionBounds.min);
             Vector max = new Vector(unionBounds.max);

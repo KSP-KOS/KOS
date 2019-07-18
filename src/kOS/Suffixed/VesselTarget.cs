@@ -317,7 +317,6 @@ namespace kOS.Suffixed
                 BoundsValue b = p.GetBoundsValue();
                 Vector3 relMin = inverseMyFacing * ((b.AbsoluteMin - rootOrigin)).ToVector3();
                 Vector3 relMax = inverseMyFacing * ((b.AbsoluteMax - rootOrigin)).ToVector3();
-                Console.WriteLine("eraseme: Vessel.GetBoundsValue, pNum = {0}, absMin = {1}, relMin = {2}, absMin = {3}, relMax = {4}", pNum, b.AbsoluteMin, relMin, b.AbsoluteMax, relMax);
                 xmin = Mathf.Min(relMin.x, xmin);
                 xmax = Mathf.Max(relMax.x, xmax);
                 ymin = Mathf.Min(relMin.y, ymin);
