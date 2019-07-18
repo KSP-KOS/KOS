@@ -163,10 +163,10 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     wide, long, and tall it is.
 
     It is rather expensive in terms of CPU time to call this suffix.
-    (Calling :attr:`Part:BOUNDS` on ONE part on the ship is itself a
-    *little* expensive, and this has to perform that same work on
-    every part on the ship, finding the bounding box that would
-    surround all the parts.) Because of that expense, kOS **forces**
+    (Calling :attr:`Part:BOUNDS` on ONE part on the ship isn't that
+    expensive, but this has to repeat that same work for every part
+    on the ship, finding the bounding box that would surround all
+    the parts.) Because of that expense, kOS **forces**
     your script to give up its remaining instructions this update when
     you call this (It forces the equivalent of doing a ``WAIT 0.``
     right after you call it).  This is to discourage you from
