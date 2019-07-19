@@ -108,6 +108,10 @@ Configuration of kOS
           - :struct:`Boolean`
           - false
           - Unholy debug spam used by the kOS developers
+        * - :attr:`PAUSEONCOMPILE`
+          - :struct:`Boolean`
+          - false
+          - Pause when a program is being compiled
 
 .. attribute:: Config:IPU
 
@@ -325,5 +329,17 @@ Configuration of kOS
     an entry in the KSP log. This is a debugging tool for those who are very
     familiar with the inner workings of kOS and should rarely be used outside
     the kOS dev team.
+
+    This change takes effect immediately.
+
+.. attribute:: Config:PAUSEONCOMPILE
+
+    :access: Get/Set
+    :type: :struct:`Boolean`
+
+    Configures the ``pauseOnCompile`` setting.
+
+    If true, kOS will freeze a game any time it needs to compile a script.
+    Default value is false. 
 
     This change takes effect immediately.

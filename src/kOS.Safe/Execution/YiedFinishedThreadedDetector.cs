@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace kOS.Safe.Execution
@@ -25,16 +22,26 @@ namespace kOS.Safe.Execution
 
             ThreadInitialize(sharedObj);
 
-            childThread = new Thread(DoThread);
-            childThread.IsBackground = true;
-            childThread.Start();
+            if (RunOnCaller())
+            {
+                DoThread();
+            }
+            else
+            {
+                childThread = new Thread(DoThread);
+                childThread.IsBackground = true;
+                childThread.Start();
+            }
         }
 
         public override bool IsFinished()
         {
             if (childThreadEvent.WaitOne(0))
             {
-                childThread.Join();
+                if (childThread != null)
+                {
+                    childThread.Join();
+                }
                 if (childException == null)
                 {
                     try
@@ -103,5 +110,16 @@ namespace kOS.Safe.Execution
         /// the main thread and is not required to be thread safe with respect to KSP.
         /// </summary>
         public abstract void ThreadFinish();
+
+        /// <summary>
+        /// Determines if it must execute DoThread() when Begin() is invoked using caller thread.
+        /// <br/>
+        /// This method method is used by descendants to tell whether they want to freeze a game.
+        /// </summary>
+        /// <returns>false to run in separate thread, true to freeze a game</returns>
+        protected virtual bool RunOnCaller()
+        {
+            return true;
+        }
     }
 }
