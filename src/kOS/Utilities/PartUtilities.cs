@@ -1,4 +1,5 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
+using UnityEngine;
 using System;
 
 namespace kOS.Utilities
@@ -48,5 +49,6 @@ namespace kOS.Utilities
 
             return mass;
         }
+
     }
 }

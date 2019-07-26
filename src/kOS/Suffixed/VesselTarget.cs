@@ -4,6 +4,7 @@ using kOS.Safe;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Execution;
 using kOS.Safe.Serialization;
 using kOS.Safe.Utilities;
 using kOS.Suffixed.Part;
@@ -237,6 +238,7 @@ namespace kOS.Suffixed
             AddSuffix("MAXTHRUST", new Suffix<ScalarValue>(() => VesselUtils.GetMaxThrust(Vessel)));
             AddSuffix("MAXTHRUSTAT", new OneArgsSuffix<ScalarValue, ScalarValue>(GetMaxThrustAt));
             AddSuffix("FACING", new Suffix<Direction>(() => VesselUtils.GetFacing(Vessel)));
+            AddSuffix("BOUNDS", new Suffix<BoundsValue>(() => GetBoundsValue()));
             AddSuffix("ANGULARMOMENTUM", new Suffix<Vector>(() => new Vector(Vessel.angularMomentum)));
             AddSuffix("ANGULARVEL", new Suffix<Vector>(() => RawAngularVelFromRelative(Vessel.angularVelocity)));
             AddSuffix("MASS", new Suffix<ScalarValue>(() => Vessel.GetTotalMass()));
@@ -301,6 +303,42 @@ namespace kOS.Suffixed
             }
 
             return InterVesselManager.Instance.GetQueue(Shared.Vessel, Shared);
+        }
+
+        public BoundsValue GetBoundsValue()
+        {
+            Direction myFacing = VesselUtils.GetFacing(Vessel);
+            Quaternion inverseMyFacing = myFacing.Rotation.Inverse();
+            Vector rootOrigin = Parts[0].GetPosition();
+            Bounds unionBounds = new Bounds();
+            for (int pNum = 0; pNum < Parts.Count; ++pNum)
+            {
+                PartValue p = Parts[pNum];
+                Vector partOriginOffsetInVesselBounds = p.GetPosition() - rootOrigin;
+                Bounds b = p.GetBoundsValue().GetUnityBounds();
+                Vector partCenter = new Vector(b.center);
+
+                // Just like the logic for the part needing all 8 corners of the mesh's bounds,
+                // this needs all 8 corners of the part bounds:
+                for (int signX = -1; signX <= 1; signX += 2)
+                    for (int signY = -1; signY <= 1; signY += 2)
+                        for (int signZ = -1; signZ <= 1; signZ += 2)
+                        {
+                            Vector corner = partCenter + new Vector(signX * b.extents.x, signY * b.extents.y, signZ * b.extents.z);
+                            Vector worldCorner = partOriginOffsetInVesselBounds + p.GetFacing() * corner;
+                            Vector3 vesselCorner = inverseMyFacing * worldCorner.ToVector3();
+
+                            unionBounds.Encapsulate(vesselCorner);
+                        }
+            }
+
+            Vector min = new Vector(unionBounds.min);
+            Vector max = new Vector(unionBounds.max);
+
+            // The above operation is expensive and should force the CPU to do a WAIT 0:
+            Shared.Cpu.YieldProgram(new YieldFinishedNextTick());
+
+            return new BoundsValue(min, max, delegate { return Parts[0].GetPosition(); }, delegate { return VesselUtils.GetFacing(Vessel); }, Shared);
         }
 
         public void ThrowIfNotCPUVessel()

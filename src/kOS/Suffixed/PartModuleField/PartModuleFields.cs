@@ -64,29 +64,6 @@ namespace kOS.Suffixed.PartModuleField
         }
 
         /// <summary>
-        /// Return true if the field in question is editable in the KSP rightclick menu
-        /// as an in-game tweakable right now.
-        /// </summary>
-        /// <param name="field">the BaseField from the KSP API</param>
-        /// <returns>true if this has a GUI edit widget on it, false if it doesn't.</returns>
-        private bool IsEditable(BaseField field)
-        {
-            return GetFieldControls(field).Count > 0;
-        }
-
-        /// <summary>
-        /// Get the UI_Controls on a KSPField which are user editable.
-        /// </summary>
-        /// <param name="field"></param>
-        /// <returns></returns>
-        private List<UI_Control> GetFieldControls(BaseField field)
-        {
-            var attribs = new List<object>();
-            attribs.AddRange(field.FieldInfo.GetCustomAttributes(true));
-            return attribs.OfType<UI_Control>().Where(obj => (obj).controlEnabled).ToList();
-        }
-
-        /// <summary>
         /// Return true if the value given is allowed for the field given.  This uses the hints from the GUI
         /// system to decide what is and isn't allowed.  (For example if a GUI slider goes from 10 to 20 at
         /// increments of 2, then a value of 17 is not something you could achieve in the GUI, being only able
@@ -111,7 +88,19 @@ namespace kOS.Suffixed.PartModuleField
             Type fType = field.FieldInfo.FieldType;
             object convertedVal = newVal;
 
-            if (!IsEditable(field))
+            // Using TryGetFieldUIControl() to obtain the control that goes with this
+            // field is from advice from TriggerAU, of SQUAD, who gave that advice in
+            // a forum post when I described the problems we were having with the servo
+            // parts in Breaking Ground DLC.  (There is some kind of work being done here
+            // that seems to allow one field's ranges to override another's as the servo
+            // parts need to do.  This is work which doesn't seem to happen if you look at
+            // the KSPField's control ranges directly):
+            UI_Control control;
+            if (!partModule.Fields.TryGetFieldUIControl(field.name, out control))
+            {
+                throw new KOSInvalidFieldValueException("Field appears to have no UI control attached so kOS refuses to let a script change it.");
+            }
+            if (!control.controlEnabled)
             {
                 except = new KOSInvalidFieldValueException("Field is read-only");
                 return false;
@@ -133,49 +122,40 @@ namespace kOS.Suffixed.PartModuleField
                     return false;
                 }
             }
-            List<UI_Control> controls = GetFieldControls(field);
 
-            // It's really normal for there to be only one control on a KSPField, but because
-            // it's technically possible to have more than one according to the structure of
-            // the API, this loop is here to check all of "them":
-            foreach (UI_Control control in controls)
+            // Some of these are subclasses of each other, so don't change this to an if/else.
+            // It's a series of if's on purpose so it checks all classes the control is derived from.
+            if (control is UI_Toggle)
             {
-                // Some of these are subclasses of each other, so don't change this to an if/else.
-                // It's a series of if's on purpose so it checks all classes the control is derived from.
-                if (control is UI_Toggle)
+                // Seems there's nothing to check here, but maybe later there will be?
+            }
+            if (control is UI_Label)
+            {
+                except = new KOSInvalidFieldValueException("Labels are read-only objects that can't be changed");
+                isLegal = false;
+            }
+            var vector2 = control as UI_Vector2;
+            if (vector2 != null)
+            {
+                // I have no clue what this actually looks like in the UI?  What is a
+                // user editable 2-D vector widget?  I've never seen this before.
+                if (convertedVal != null)
                 {
-                    // Seems there's nothing to check here, but maybe later there will be?
-                }
-                if (control is UI_Label)
-                {
-                    except = new KOSInvalidFieldValueException("Labels are read-only objects that can't be changed");
-                    isLegal = false;
-                }
-                var vector2 = control as UI_Vector2;
-                if (vector2 != null)
-                {
-                    // I have no clue what this actually looks like in the UI?  What is a
-                    // user editable 2-D vector widget?  I've never seen this before.
-                    if (convertedVal != null)
+                    var vec2 = (Vector2)convertedVal;
+                    if (vec2.x < vector2.minValueX || vec2.x > vector2.maxValueX ||
+                        vec2.y < vector2.minValueY || vec2.y > vector2.maxValueY)
                     {
-                        var vec2 = (Vector2)convertedVal;
-                        if (vec2.x < vector2.minValueX || vec2.x > vector2.maxValueX ||
-                            vec2.y < vector2.minValueY || vec2.y > vector2.maxValueY)
-                        {
-                            except = new KOSInvalidFieldValueException("Vector2 is outside of allowed range of values");
-                            isLegal = false;
-                        }
+                        except = new KOSInvalidFieldValueException("Vector2 is outside of allowed range of values");
+                        isLegal = false;
                     }
                 }
-                var range = control as UI_FloatRange;
-                if (range != null)
-                {
-                    float val = Convert.ToSingle(convertedVal);
-                    val = KOSMath.ClampToIndent(val, range.minValue, range.maxValue, range.stepIncrement);
-                    convertedVal = Convert.ToDouble(val);
-                }
-                if (!isLegal)
-                    break;
+            }
+            var range = control as UI_FloatRange;
+            if (range != null)
+            {
+                float val = Convert.ToSingle(convertedVal);
+                val = KOSMath.ClampToIndent(val, range.minValue, range.maxValue, range.stepIncrement);
+                convertedVal = Convert.ToDouble(val);
             }
             newVal = FromPrimitiveWithAssert(convertedVal);
             return isLegal;
@@ -207,10 +187,14 @@ namespace kOS.Suffixed.PartModuleField
 
             foreach (BaseField field in visibleFields)
             {
-                returnValue.Add(new StringValue(string.Format(formatter,
-                                              IsEditable(field) ? "settable" : "get-only",
-                                              GetFieldName(field).ToLower(),
-                                              Utilities.Utils.KOSType(field.FieldInfo.FieldType))));
+                UI_Control control;
+                if ( partModule.Fields.TryGetFieldUIControl(field.name, out control))
+                {
+                    returnValue.Add(new StringValue(string.Format(formatter,
+                                                  control.controlEnabled ? "settable" : "get-only",
+                                                  GetFieldName(field).ToLower(),
+                                                  Utilities.Utils.KOSType(field.FieldInfo.FieldType))));
+                }
             }
             return returnValue;
         }
