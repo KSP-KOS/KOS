@@ -29,6 +29,8 @@ namespace kOS.Suffixed
         public string TelnetIPAddrString { get { return GetPropValue<string>(PropId.TelnetIPAddrString); } set { SetPropValue(PropId.TelnetIPAddrString, value); } }        
         public int TerminalFontDefaultSize {get { return GetPropValue<int>(PropId.TerminalFontDefaultSize); } set { SetPropValue(PropId.TerminalFontDefaultSize, value); } }
         public string TerminalFontName {get { return GetPropValue<string>(PropId.TerminalFontName); } set { SetPropValue(PropId.TerminalFontName, value); } }
+        public int TerminalDefaultWidth { get { return GetPropValue<int>(PropId.TerminalDefaultWidth); } set { SetPropValue(PropId.TerminalDefaultWidth, value); } }
+        public int TerminalDefaultHeight { get { return GetPropValue<int>(PropId.TerminalDefaultHeight); } set { SetPropValue(PropId.TerminalDefaultHeight, value); } }
         public bool UseBlizzyToolbarOnly { get { return kOSCustomParameters.Instance.useBlizzyToolbarOnly; } set { kOSCustomParameters.Instance.useBlizzyToolbarOnly = value; } }
         public bool DebugEachOpcode { get { return kOSCustomParameters.Instance.debugEachOpcode; } set { kOSCustomParameters.Instance.debugEachOpcode = value; } }
 
@@ -61,6 +63,8 @@ namespace kOS.Suffixed
             AddSuffix("BLIZZY", new SetSuffix<BooleanValue>(() => UseBlizzyToolbarOnly, value => UseBlizzyToolbarOnly = value));
             AddSuffix("BRIGHTNESS", new ClampSetSuffix<ScalarValue>(() => TerminalBrightness, value => TerminalBrightness = value, 0f, 1f, 0.01f));
             AddSuffix("DEFAULTFONTSIZE", new ClampSetSuffix<ScalarValue>(() => TerminalFontDefaultSize, value => TerminalFontDefaultSize = value, 6f, 30f, 1f));
+            AddSuffix("DEFAULTWIDTH", new ClampSetSuffix<ScalarValue>(() => TerminalDefaultWidth, value => TerminalDefaultWidth = value, 15f, 255f, 1f));
+            AddSuffix("DEFAULTHEIGHT", new ClampSetSuffix<ScalarValue>(() => TerminalDefaultHeight, value => TerminalDefaultHeight = value, 3f, 160f, 1f));
         }
 
         private void BuildValuesDictionary()
@@ -71,6 +75,8 @@ namespace kOS.Suffixed
             AddConfigKey(PropId.TerminalFontDefaultSize, new ConfigKey("TerminalFontDefaultSize", "DEFAULTFONTSIZE", "Initial Terminal:CHARHEIGHT when a terminal is first opened", 12, 6, 20, typeof(int)));
             AddConfigKey(PropId.TerminalFontName, new ConfigKey("TerminalFontName", "FONTNAME", "Font Name for terminal window", "_not_chosen_yet_", "n/a", "n/a", typeof(string)));
             AddConfigKey(PropId.TerminalBrightness, new ConfigKey("TerminalBrightness", "BRIGHTNESS", "Initial brightness setting for new terminals", 0.7d, 0d, 1d, typeof(double)));
+            AddConfigKey(PropId.TerminalDefaultWidth, new ConfigKey("TerminalDefaultWidth", "DEFAULTWIDTH", "Initial Terminal:WIDTH when a terminal is first opened", 50, 15, 255, typeof(int)));
+            AddConfigKey(PropId.TerminalDefaultHeight, new ConfigKey("TerminalDefaultHeight", "DEFAULTHEIGHT", "Initial Terminal:HEIGHT when a terminal is first opened", 36, 3, 160, typeof(int)));
         }
 
         private void AddConfigKey(PropId id, ConfigKey key)
@@ -232,7 +238,9 @@ namespace kOS.Suffixed
             DebugEachOpcode = 14,
             TerminalFontDefaultSize = 15,
             TerminalFontName = 16,
-            TerminalBrightness = 17
+            TerminalBrightness = 17,
+            TerminalDefaultWidth = 18,
+            TerminalDefaultHeight = 19
         }
     }
 }
