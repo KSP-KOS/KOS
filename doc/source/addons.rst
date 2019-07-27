@@ -47,6 +47,6 @@ Returns True if mod Infernal Robotics is installed, available to KOS and applica
 Returns True if a compatible version of the mod Trajectories is installed. See more :doc:`here <addons/Trajectories>`.
 
 ``ADDONS:AVAILABLE("Principia")``
---------------------------
+---------------------------------
 
 Returns True if mod Principia is installed, available to KOS and applicable to current craft. See more :doc:`here <addons/Principia>`.
