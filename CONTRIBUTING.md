@@ -163,7 +163,7 @@ Setting Up Your Environment
 		* `UnityEngine.TextRenderingModule`
 		* `UnityEngine.UI`
 		* `UnityEngine.UnityWebRequestWWWModule`
-	1. If you do not have a copy of KSP locally, you may
+	2. If you do not have a copy of KSP locally, you may
 	  download dummy assemblies at https://github.com/KSP-KOS/KSP_LIB
 
 3. If you want building the solution to update the dlls in your KSP
