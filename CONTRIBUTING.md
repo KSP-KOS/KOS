@@ -159,7 +159,7 @@ Setting Up Your Environment
 1. Copy the folder `$KOS/Resources/GameData/kOS` to `$KSP/GameData/`
 
 2. Get the Unity assemblies into your project. There are two options:
-	1. Copy these DLLs from `$KSP/KSP_Data/Managed `into `$KOS/Resources`:
+	1. Copy these DLLs from `$KSP/KSP_Data/Managed `into `$KOS/Resources` (NB: see note below about assemblies/DLLs):
 		* `Assembly-CSharp`
 		* `Assembly-CSharp-firstpass`
 		* `UnityEngine`
@@ -178,3 +178,11 @@ Setting Up Your Environment
 3. If you want building the solution to update the dlls in your KSP
    directory, create a symbolic link called `KSPdirlink` from the root
    of this repository to your KSP installation directory.
+
+**Note**: the list of assemblies above is not necessarily exactly what you will need. The `UnityEngine.ImageConversionModule` assembly for example only exists on the macOS port of KSP.
+
+You can build the list of assemblies yourself by building the kOS solution and looking for the "forwarded to assembly" errors. These errors should look something like this:
+
+> …/KOS/src/kOS/Binding/FlightStats.cs(143,143): Error CS1069: The type name 'Rigidbody' could not be found in the namespace 'UnityEngine'. This type has been forwarded to assembly 'UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null' Consider adding a reference to that assembly. (CS1069) (kOS),
+
+In this case the assembly you are looking for is `UnityEngine.PhysicsModule` which should be provided in the `UnityEngine.PhysicsModule.dll` DLL file.
