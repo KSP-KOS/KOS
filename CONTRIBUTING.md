@@ -150,14 +150,14 @@ Setting Up Your Environment
 1. Copy the folder `$KOS/Resources/GameData/kOS` to `$KSP/GameData/`
 
 2. Get the Unity assemblies into your project. There are two options:
-	1. Copy these DLLs from `$KSP/KSP_Data/Managed`
-	  into `$KOS/Resources`:
+	1. Copy these DLLs from `$KSP/KSP_Data/Managed `into `$KOS/Resources`:
 		* `Assembly-CSharp`
 		* `Assembly-CSharp-firstpass`
 		* `UnityEngine`
 		* `UnityEngine.AnimationModule`
 		* `UnityEngine.AudioModule`
 		* `UnityEngine.CoreModule`
+		* `UnityEngine.ImageConversionModule`
 		* `UnityEngine.IMGUIModule`
 		* `UnityEngine.PhysicsModule`
 		* `UnityEngine.TextRenderingModule`
