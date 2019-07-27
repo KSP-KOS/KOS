@@ -163,6 +163,30 @@ namespace kOS.Safe.Test
             }
         }
 
+        public int TerminalDefaultWidth
+        {
+            get
+            {
+                return 0;
+            }
+
+            set
+            {
+            }
+        }
+
+        public int TerminalDefaultHeight
+        {
+            get
+            {
+                return 0;
+            }
+
+            set
+            {
+            }
+        }
+
         public DateTime TimeStamp
         {
             get

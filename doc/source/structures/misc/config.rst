@@ -104,6 +104,14 @@ Configuration of kOS
           - :struct:`Scalar`
           - 12 (from range [6 .. 20], integers only)
           - Default font size in pixel height for new instances of the in-game terminal
+        * - :attr:`DEFAULTWIDTH`
+          - :struct:`Scalar`
+          - 50 (from range [15 .. 255], integers only)
+          - Default width (in characters, not pixels) for  new instances of the in-game terminal.
+        * - :attr:`DEFAULTHEIGHT`
+          - :struct:`Scalar`
+          - 36 (from range [3 .. 160], integers only)
+          - Default height (in characters, not pixels) for  new instances of the in-game terminal.
         * - :attr:`DEBUGEACHOPCODE`
           - :struct:`Boolean`
           - false
@@ -311,6 +319,34 @@ Configuration of kOS
     The value here must be at least 6 (nearly impossible to read)
     and no greater than 30 (very big).  It will be rounded to the
     nearest integer when setting the value.
+
+.. attribute:: Config:DEFAULTWIDTH
+
+    :access: Get/Set
+    :type: :struct:`Scalar` integer-only. range = [15,255]
+
+    Configures the ``TerminalDefaultWidth`` setting.
+
+    This is the default starting width (in number of character cells,
+    not number of pixels) for all newly created kOS in-game terminals.
+    This is just the default for new terminals.  Individual terminals
+    can have different settings, either by setting the value
+    :attr:`Terminal:WIDTH` in a script, or by manually dragging the
+    resize corner of the terminal with the mouse.
+
+.. attribute:: Config:DEFAULTHEIGHT
+
+    :access: Get/Set
+    :type: :struct:`Scalar` integer-only. range = [3,160]
+
+    Configures the ``TerminalDefaultHeight`` setting.
+
+    This is the default starting height (in number of character cells,
+    not number of pixels) for all newly created kOS in-game terminals.
+    This is just the default for new terminals.  Individual terminals
+    can have different settings, either by setting the value
+    :attr:`Terminal:HEIGHT` in a script, or by manually dragging the
+    resize corner of the terminal with the mouse.
 
 .. attribute:: Config:DEBUGEACHOPCODE
 
