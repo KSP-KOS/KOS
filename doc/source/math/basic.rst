@@ -207,28 +207,27 @@ constants about the universe that you may find handy in your math operations.  P
 
 .. global:: Constant:Avogadro
 
-    Avogadro's Constant
+    Avogadro's Constant.
 
     This value can be used in calculating atmospheric properties for drag purposes,
     which can be a rather advanced topic.
-    :ref:`(Wikipedia Page) <https://en.wikipedia.org/wiki/Avogadro_constant>`_.
+    `(Avogadro's constant Wikipedia Page) <https://en.wikipedia.org/wiki/Avogadro_constant>`_.
 
 .. global:: Constant:Boltzmann
 
-    Boltzmann Constant
+    Boltzmann Constant.
 
     This value can be used in calculating atmospheric properties for drag purposes,
     which can be a rather advanced topic.
-    :ref:`(Wikipedia Page) <https://en.wikipedia.org/wiki/Boltzmann_constant>`_.
+    `(Boltzmann constant Wikipedia Page) <https://en.wikipedia.org/wiki/Boltzmann_constant>`_.
 
 .. global:: Constant:IdealGas
 
-    Ideal Gas Constant
+    Ideal Gas Constant.
 
     This value can be used in calculating atmospheric properties for drag purposes,
     which can be a rather advanced topic.
-    :ref:`(Wikipedia Page) <https://en.wikipedia.org/wiki/Gas_constant>`_.
-
+    `(Ideal Gas Constant Wikipedia Page) <https://en.wikipedia.org/wiki/Gas_constant>`_.
 
 .. _math functions:
 .. index:: Mathematical Functions

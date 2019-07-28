@@ -9,8 +9,8 @@ to tell your script about it is called a "Bounds".
 
 You can obtain a ``Bounds`` one of two ways:
 
-- By calling :attr:`Vessel:Bounds`
-- By calling :attr:`Part:Bounds`
+* By calling :attr:`Vessel:Bounds`
+* By calling :attr:`Part:Bounds`
 
 The bounds for a whole vessel and the bounds for one part work almost
 exactly the same way.  Places where they differ will be explained below
@@ -24,8 +24,8 @@ above the ground?"
 
 Before you use a Bounds be certain you have read the section
 below on this page about :ref:`why you should re-use bounds
-if you can` (instead of re-getting them again and again with
-the :BOUNDS suffix call.)
+if you can <reuse_bounds>` (instead of re-getting them again and again
+with the :BOUNDS suffix call.)
 
 Quick start 1 - Radar altitude: the most useful thing
 -----------------------------------------------------
@@ -35,7 +35,7 @@ The explanation of the "Bounds" structure might get a bit involved below.
 For most players, probably the only thing you really really care deeply
 about is the distance of the landing legs to the ground.
 
-And you get that with the suffix :attr:`BOTTOMALTRADAR`.  Here's an example:
+And you get that with the suffix :attr:`BOTTOMALTRADAR`.  Here's an example::
 
     // How to get the distance of the bottom corner of the vessel's 
     // bounding box to the ground.
@@ -96,7 +96,7 @@ There is an example program in the tutorials section that
 brings this all together to show you the bounds boxes
 visually on screen:
 
-:ref:`Display Bounds <display_bounds>`
+:ref:`Click here for an example program that displays bounds <display_bounds>`
 
 Trying that first (without necessarily understaand it right away)
 will help give you a visual guide to what is happening here.
@@ -213,35 +213,41 @@ events aren't happening:
 
 A list of events that can make a ``Bounds`` become incorrect:
 
-    - A Part Bounds will need to be recalculated if the part shrinks
-      or grows through actions such as these:
-        - Extending or retracting solar panels.
-        - Extending or retracting Landing Gear.
-        - Opening or closing cargo bay doors.
-        - Moving robotic parts from the Breaking Ground DLC.
-        - etc.
-    - A Vessel Bounds will need to be recalculated if any Part Bounds
-      inside the vessel needs to be recalculated (see above list).
-      In addition, the items on the following list will require a
-      Vessel's Bounds (but not individual parts' bounds) to be
-      recaculated:
-        - Anything that adds/removes parts obviously alters the
-          bounding box of the vessel.  These are examples but not an
-          exhuastive list:
-            - Docking and Undocking
-            - Decoupling stages
-            - Explosions
-            - Using the asteroid grabber claw.
-        - Anything that changes the vessel's "control" orientation.
-          (As in anything that makes the navball jump to a new
-          orientation all at once).  That invalidates the old bounding box
-          because it swaps the meaning of which axis of the ship is
-          the "fore" and which is the "starboard" and so on.  These are
-          examples but not an exhaustive list:
-            - Right-clicking a docking port and saying "control from here".
-            - Right-clicking a lander can and choosing a new control orientation.
-            - Entering IVA view (which has the side effect of making the game
-              do a "control from here" on the cockpit part).
+* A Part Bounds will need to be recalculated if the part shrinks
+  or grows through actions such as these:
+
+    * Extending or retracting solar panels.
+    * Extending or retracting Landing Gear.
+    * Opening or closing cargo bay doors.
+    * Moving robotic parts from the Breaking Ground DLC.
+    * etc.
+
+* A Vessel Bounds will need to be recalculated if any Part Bounds
+  inside the vessel needs to be recalculated (see above list).
+  In addition, the items on the following list will require a
+  Vessel's Bounds (but not individual parts' bounds) to be
+  recaculated:
+
+    * Anything that adds/removes parts obviously alters the
+      bounding box of the vessel.  These are examples but not an
+      exhuastive list:
+
+	* Docking and Undocking
+	* Decoupling stages
+	* Explosions
+	* Using the asteroid grabber claw.
+
+    * Anything that changes the vessel's "control" orientation.
+      (As in anything that makes the navball jump to a new
+      orientation all at once).  That invalidates the old bounding box
+      because it swaps the meaning of which axis of the ship is
+      the "fore" and which is the "starboard" and so on.  These are
+      examples but not an exhaustive list:
+
+	* Right-clicking a docking port and saying "control from here".
+	* Right-clicking a lander can and choosing a new control orientation.
+	* Entering IVA view (which has the side effect of making the game
+	  do a "control from here" on the cockpit part).
 
 Also, be aware that getting a new :attr:`Part:BOUNDS` is a LOT
 less expensive than getting a whole new :attr:`Vessel:BOUNDS`,
@@ -265,10 +271,10 @@ your own bounds objects if you feel the need to.
 At minimum to make your own bounds you will need these pieces
 of information:
 
-  - The ABSORIGIN of the bounds.
-  - The FACING of the bounds.
-  - The RELMIN of the bounds.
-  - The RELMAX of the bounds.
+  * The ABSORIGIN of the bounds.
+  * The FACING of the bounds.
+  * The RELMIN of the bounds.
+  * The RELMAX of the bounds.
 
 The following function will let you construct your own Bounds,
 although it's not clear what use this would have yet::
@@ -335,47 +341,47 @@ illustrate what is being talked about:
           - Description
 
         * - :attr:`ABSORIGIN`
-          - :ref:`Vector`
+          - :struct:`Vector`
           - Get/Set
           - origin point of box, in absolute ship-raw coords.
         * - :attr:`FACING`
-          - :ref:`Direction``
+          - :struct:`Direction``
           - Get/Set
           - The orientation of the box's own reference frame.
         * - :attr:`RELMIN`
-          - :ref:`Vector`
+          - :struct:`Vector`
           - Get/Set
           - a corner of the box in box's own reference frame.
         * - :attr:`RELMAX`
-          - :ref:`Vector`
+          - :struct:`Vector`
           - Get/Set
           - opposite corner of the box from RELMIN, in box's own reference frame.
         * - :attr:`ABSMIN`
-          - :ref:`Vector`
+          - :struct:`Vector`
           - Get only
           - a corner of the box in absolute (ship-raw) reference frame.
         * - :attr:`ABSMAX`
-          - :ref:`Vector`
+          - :struct:`Vector`
           - Get only
           - opposite corner of the box from RELMIN, in absolute (ship-raw) reference frame.
         * - :attr:`ABSCENTER`
-          - :ref:`Vector`
+          - :struct:`Vector`
           - Get only
           - center of the box (not its origin), in absolute (ship-raw) frame.
         * - :attr:`RELCENTER`
-          - :ref:`Vector`
+          - :struct:`Vector`
           - Get only
           - center of the box (not its origin), in box's own reference frame.
         * - :attr:`EXTENTS`
-          - :ref:`Vector`
+          - :struct:`Vector`
           - Get/Set
           - A vector from box center to max corner, in box's reference frame.
         * - :attr:`SIZE`
-          - :ref:`Vector`
+          - :struct:`Vector`
           - Get/Set
           - Exactly 2 times EXTENTS - the vector from min corner to max, in box's reference frame.
         * - :meth:`FURTHESTCORNER(Vector ray)`
-          - :ref:`Vector`
+          - :struct:`Vector`
           - Get only
           - Position (in absolute ship-raw coords) of the box corner most "that-a-way".
         * - :attr:`BOTTOMALT`
@@ -393,7 +399,7 @@ illustrate what is being talked about:
 
 .. attribute:: Bounds:ABSORIGIN
 
-    :type: :ref:`Vector`
+    :type: :struct:`Vector`
     :access: Get/Set but read the note below before you SET it.
 
     The position of the origin point of the bounding box, expressed
@@ -442,7 +448,7 @@ illustrate what is being talked about:
 
 .. attribute:: Bounds:FACING
 
-    :type: :ref:`Direction`
+    :type: :struct:`Direction`
     :access: Get/Set but read the note below before you SET it.
 
     This defines the orientation of this bounding box's local
@@ -473,7 +479,7 @@ illustrate what is being talked about:
     
 .. attribute:: Bounds:RELMIN
 
-    :type: :ref:`Vector` **in bounding-box relative reference frame**
+    :type: :struct:`Vector` **in bounding-box relative reference frame**
     :access: Get/Set
 
     A vector expressed in the bounding-box-relative reference frame
@@ -505,7 +511,7 @@ illustrate what is being talked about:
 
 .. attribute:: Bounds:RELMAX
 
-    :type: :ref:`Vector` **in bounding-box relative reference frame**
+    :type: :struct:`Vector` **in bounding-box relative reference frame**
     :access: Get/Set
 
     A vector expressed in the bounding-box-relative reference frame
@@ -537,7 +543,7 @@ illustrate what is being talked about:
 
 .. attribute:: Bounds:ABSMIN
 
-    :type: :ref:`Vector`
+    :type: :struct:`Vector`
     :access: Get
 
     This is the same point as :attr:`Bounds:RELMIN`, except it has
@@ -562,7 +568,7 @@ illustrate what is being talked about:
 
 .. attribute:: Bounds:ABSMAX
 
-    :type: :ref:`Vector`
+    :type: :struct:`Vector`
     :access: Get
 
     This is the same point as :attr:`Bounds:RELMAX`, except it has
@@ -586,7 +592,7 @@ illustrate what is being talked about:
 
 .. attribute:: Bounds:RELCENTER
 
-    :type: :ref:`Vector` **in bounding-box relative reference frame**
+    :type: :struct:`Vector` **in bounding-box relative reference frame**
     :access: Get-only
 
     The center of the bounding box, in its own relative reference frame.
@@ -608,7 +614,7 @@ illustrate what is being talked about:
 
 .. attribute:: Bounds:ABSCENTER
 
-    :type: :ref:`Vector`
+    :type: :struct:`Vector`
     :access: Get-only
 
     This is just the same thing as :attr:`Bounds:RELCENTER`, but
@@ -625,7 +631,7 @@ illustrate what is being talked about:
 
 .. attribute:: Bounds:EXTENTS
 
-    :type: :ref:`Vector` **in bounding-box relative reference frame**
+    :type: :struct:`Vector` **in bounding-box relative reference frame**
     :access: Get-only
 
     A vector (in bounding-box relative reference frame, NOT the
@@ -639,7 +645,7 @@ illustrate what is being talked about:
 
 .. attribute:: Bounds:SIZE
 
-    :type: :ref:`Vector` **in bounding-box relative reference frame**
+    :type: :struct:`Vector` **in bounding-box relative reference frame**
     :access: Get-only
 
     A vector (in bounding-box relative reference frame, NOT the
@@ -651,8 +657,8 @@ illustrate what is being talked about:
 
 .. method:: Bounds:FURTHESTCORNER(ray)
 
-    :parameter ray: The "that-a-way" :ref:`Vector` in absolute (ship-raw) reference frame.
-    :return: :ref:`Vector` in absolute (ship-raw) referece frame.
+    :parameter ray: The "that-a-way" :struct:`Vector` in absolute (ship-raw) reference frame.
+    :return: :struct:`Vector` in absolute (ship-raw) referece frame.
 
     Returns the position (in absolute (ship-raw) reference frame) of
     whichever of the 8 corners of this bounding box is "furthest" in

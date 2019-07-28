@@ -41,6 +41,7 @@ namespace kOS.Screen
 
         public void Awake()
         {
+
             // Transparent - leave the widget inside it to draw background if it wants to.
             style = new GUIStyle(HighLogic.Skin.window);
             style.normal.background = null;
@@ -66,6 +67,10 @@ namespace kOS.Screen
 
             GameEvents.onHideUI.Add (OnHideUI);
 			GameEvents.onShowUI.Add (OnShowUI);
+
+            // Fixes #2568 - Unity IMGUI does its own individual input locking per field that needs it,
+            // so don't use KSP's more high-level control locking:
+            OptOutOfControlLocking = true;
         }
 
         public void OnDestroy()
