@@ -119,7 +119,7 @@ A Structure closely tied to :struct:`Body` A variable of type :struct:`Atmospher
 
     The Molecular Mass of the gas the atmosphere is composed of.
     Units are in kg/mol.
-    :ref:`Wikipedia Explanation <https://en.wikipedia.org/wiki/Molar_mass>`_.
+    `Wikipedia Molar Mass Explanation <https://en.wikipedia.org/wiki/Molar_mass>`_.
 
 .. attribute:: Atmosphere:ADIABATICINDEX
 
@@ -127,7 +127,7 @@ A Structure closely tied to :struct:`Body` A variable of type :struct:`Atmospher
     :access: Get only
 
     The Adiabatic index of the gas the atmosphere is composed of.
-    :ref:`Wikipedia Explanation <https://en.wikipedia.org/wiki/Heat_capacity_ratio>`_.
+    `Wikipedia Adiabatic Index Explanation <https://en.wikipedia.org/wiki/Heat_capacity_ratio>`_.
 
 .. attribute:: Atmosphere:ADBIDX
 
