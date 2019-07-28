@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Basic Math Functions &mdash; kOS 1.1.8.0 documentation</title>
+  <title>Basic Math Functions &mdash; kOS 1.1.9.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.1.8.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.1.9.0 documentation" href="../index.html"/>
         <link rel="up" title="Mathematics and Basic Geometry" href="../math.html"/>
         <link rel="next" title="Scalar" href="scalar.html"/>
         <link rel="prev" title="Mathematics and Basic Geometry" href="../math.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.8.0
+                1.1.9.0
               </div>
             
           
@@ -206,6 +206,15 @@ constants about the universe that you may find handy in your math operations.  P
 <tr class="row-even"><td><code class="xref ks ks-global docutils literal"><span class="pre">RadToDeg</span></code></td>
 <td>Conversion constant: Radians to Degrees.</td>
 </tr>
+<tr class="row-odd"><td><code class="xref ks ks-global docutils literal"><span class="pre">Avogadro</span></code></td>
+<td>Avogadro&#8217;s Constant</td>
+</tr>
+<tr class="row-even"><td><code class="xref ks ks-global docutils literal"><span class="pre">Boltzmann</span></code></td>
+<td>Boltzmann&#8217;s Constant</td>
+</tr>
+<tr class="row-odd"><td><code class="xref ks ks-global docutils literal"><span class="pre">IdealGas</span></code></td>
+<td>The Ideal Gas Constant</td>
+</tr>
 </tbody>
 </table>
 <dl class="global">
@@ -223,7 +232,7 @@ Gravitational Constant, G, isn&#8217;t actually constant at all
 within that game universe, and instead varies from one sphere
 of influence to the next.  Such a universe would be breaking
 some laws of physics by a lot, but it is technically possible
-in the game&#8217;s data model.  Due to this strange misfeature in
+in the game&#8217;s data model.  Due to this strange feature in
 the game&#8217;s data model, it is probably safer to always have
 your scripts use the body&#8217;s Mu in your formulas instead of
 explicitly doing mass*G to derive it.</p>
@@ -251,18 +260,18 @@ calculations.  The rocket equation using ISP
 contains an inherent conversion from mass to weight
 that basically means, &#8220;what would this mass of fuel
 have weighed at g0?&#8221;.  Some kind of official standard
-value of g0 is needed to use ISP to predict truly
-accurately how much fuel will be burned in a scenario.</p>
-<p>In pretty much any other calculation other than using
-ISP in the Rocketry Equation, you should probably
-not use g0 and instead calculate your local gravity
-more precisely based on your actual radius to the body
-center.  Not only because this is more accurate, but
-because the g0 you see here is NOT the g0 you would
-actually have on Kerbin&#8217;s sea level.  It&#8217;s the g0 on
-Earth, which is what the game&#8217;s ISP numbers are using.
-Kerbin&#8217;s sea level g0 is ever so slightly different
-from Earth&#8217;s g0 (but not by much.)</p>
+value of g0 is needed to use ISP properly to predict
+how much fuel will be burned in a scenario.</p>
+<p>In pretty much any other calculation you do in your kOS
+scripts, other than when using ISP in the Rocketry Equation,
+you should probably not use g0 and instead calculate your
+local gravity more precisely based on your actual radius to
+the body center.  Not only because this is more accurate, but
+because the g0 you see here is NOT the g0 you would actually
+have on Kerbin&#8217;s sea level.  It&#8217;s the g0 on Earth, which is
+what the game&#8217;s ISP numbers are using.  Kerbin&#8217;s sea level
+g0 is ever so slightly different from Earth&#8217;s g0 (but not
+by much.)</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;Gravitational parameter of Kerbin is:&quot;</span><span class="p">.</span>
 <span class="k">PRINT</span> <span class="nv">constant</span><span class="p">:</span><span class="nv">G</span> <span class="o">*</span> <span class="nv">Kerbin</span><span class="p">:</span><span class="nv">Mass</span><span class="p">.</span>
 </pre></div>
@@ -369,6 +378,33 @@ at runtime.</p>
 </div>
 </dd></dl>
 
+<dl class="global">
+<dt id="global:CONSTANT:AVOGADRO">
+<code class="descname">Constant:Avogadro</code><a class="headerlink" href="#global:CONSTANT:AVOGADRO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Avogadro&#8217;s Constant.</p>
+<p>This value can be used in calculating atmospheric properties for drag purposes,
+which can be a rather advanced topic.
+<a class="reference external" href="https://en.wikipedia.org/wiki/Avogadro_constant">(Avogadro&#8217;s constant Wikipedia Page)</a>.</p>
+</dd></dl>
+
+<dl class="global">
+<dt id="global:CONSTANT:BOLTZMANN">
+<code class="descname">Constant:Boltzmann</code><a class="headerlink" href="#global:CONSTANT:BOLTZMANN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Boltzmann Constant.</p>
+<p>This value can be used in calculating atmospheric properties for drag purposes,
+which can be a rather advanced topic.
+<a class="reference external" href="https://en.wikipedia.org/wiki/Boltzmann_constant">(Boltzmann constant Wikipedia Page)</a>.</p>
+</dd></dl>
+
+<dl class="global">
+<dt id="global:CONSTANT:IDEALGAS">
+<code class="descname">Constant:IdealGas</code><a class="headerlink" href="#global:CONSTANT:IDEALGAS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ideal Gas Constant.</p>
+<p>This value can be used in calculating atmospheric properties for drag purposes,
+which can be a rather advanced topic.
+<a class="reference external" href="https://en.wikipedia.org/wiki/Gas_constant">(Ideal Gas Constant Wikipedia Page)</a>.</p>
+</dd></dl>
+
 <span class="target" id="math-functions"></span></div>
 <div class="section" id="mathematical-functions">
 <span id="index-1"></span><h2>Mathematical Functions<a class="headerlink" href="#mathematical-functions" title="Permalink to this headline">¶</a></h2>
@@ -402,13 +438,13 @@ at runtime.</p>
 <td>modulus</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#function:MIN" title="MIN function"><code class="xref ks ks-func docutils literal"><span class="pre">MIN(a,b)</span></code></a></td>
-<td>minimum</td>
+<td>return a or b, whichever is lesser.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#function:MAX" title="MAX function"><code class="xref ks ks-func docutils literal"><span class="pre">MAX(a,b)</span></code></a></td>
-<td>maximum</td>
+<td>return a or b, whichever is greater.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#function:RANDOM" title="RANDOM function"><code class="xref ks ks-func docutils literal"><span class="pre">RANDOM()</span></code></a></td>
-<td>random number</td>
+<td>random fractional number between 0 and 1.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#function:ROUND" title="ROUND function"><code class="xref ks ks-func docutils literal"><span class="pre">ROUND(a)</span></code></a></td>
 <td>round to whole number</td>
@@ -504,8 +540,17 @@ Keep in mind that it&#8217;s not a traditional mathematical Euclidean division w
 <dl class="function">
 <dt id="function:RANDOM">
 <code class="descname">RANDOM</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#function:RANDOM" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a random floating point number in the range [0,1]:</p>
+<dd><p>Returns a random floating point number in the range [0..1]:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">RANDOM</span><span class="p">().</span> <span class="c1">//prints a random number</span>
+<span class="k">PRINT</span> <span class="s">&quot;Let&#39;s roll a 6-sided die 10 times:&quot;</span><span class="p">.</span>
+<span class="k">FOR</span> <span class="nv">n</span> <span class="nv">in</span> <span class="nv">range</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">10</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="c1">// To make RANDOM give you an integer in the range [0..n-1], you do this:</span>
+  <span class="c1">// floor(n*RANDOM()).</span>
+
+  <span class="c1">// So for example : a die giving values from 1 to 6 is like this:</span>
+  <span class="k">print</span> <span class="p">(</span><span class="mf">1</span> <span class="o">+</span> <span class="nv">floor</span><span class="p">(</span><span class="mf">6</span><span class="o">*</span><span class="nv">RANDOM</span><span class="p">())).</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -809,7 +854,7 @@ Keep in mind that it&#8217;s not a traditional mathematical Euclidean division w
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.1.8.0',
+            VERSION:'1.1.9.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

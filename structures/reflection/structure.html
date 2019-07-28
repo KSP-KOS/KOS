@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Structure: &mdash; kOS 1.1.8.0 documentation</title>
+  <title>Structure: &mdash; kOS 1.1.9.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.8.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.9.0 documentation" href="../../index.html"/>
         <link rel="up" title="Reflection" href="../reflection.html"/>
         <link rel="next" title="Collections" href="../collections.html"/>
         <link rel="prev" title="Reflection" href="../reflection.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.8.0
+                1.1.9.0
               </div>
             
           
@@ -218,7 +218,7 @@ or <code class="docutils literal"><span class="pre">42</span></code> or <code cl
 <td><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
 <td>The string that gets shown on-screen when doing the PRINT command.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:STRUCTURE:HASSUFFIX" title="STRUCTURE:HASSUFFIX attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HASSUFFIX(name)</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:STRUCTURE:HASSUFFIX" title="STRUCTURE:HASSUFFIX method"><code class="xref ks ks-meth docutils literal"><span class="pre">HASSUFFIX(name)</span></code></a></td>
 <td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>Test whether or not this value has a suffix with the given name.</td>
 </tr>
@@ -265,18 +265,23 @@ This suffix universally lets you get that string version of any item,
 rather than showing it on the screen.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:STRUCTURE:HASSUFFIX">
-Structure:<code class="descname">HASSUFFIX</code><a class="headerlink" href="#attribute:STRUCTURE:HASSUFFIX" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="method:STRUCTURE:HASSUFFIX">
+Structure:<code class="descname">HASSUFFIX</code><span class="sig-paren">(</span>name<span class="sig-paren">)</span><a class="headerlink" href="#method:STRUCTURE:HASSUFFIX" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameter name:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> name of the suffix being tested for</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> &#8211; <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> name of the suffix being tested for</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></p>
+</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body"><p class="first last">Get only</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -294,6 +299,10 @@ suffix for vessels but not for bodies.</p>
 case-insensitive way.  Kerboscript cannot distinguish &#8221;:AAA&#8221;
 and &#8221;:aaa&#8221; as being two different suffixes.  In kerboscript,
 they&#8217;d be the same suffix.</p>
+<p>(Note that because a <a class="reference internal" href="../collections/lexicon.html#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Lexicon</span></code></a> can use a special
+<a class="reference internal" href="../collections/lexicon.html#lexicon-suffix"><span>Lexicon suffix syntax</span></a>, it will also
+return true for suffix-usable keys when you call its
+HASSUFFIX method.)</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -340,6 +349,10 @@ always appear in the list for any type.)</p>
 <span class="p">[</span><span class="mf">13</span><span class="p">]</span> <span class="o">=</span> <span class="nv">Z</span>
 </pre></div>
 </div>
+<p>(Note that because a <a class="reference internal" href="../collections/lexicon.html#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Lexicon</span></code></a> can use a special
+<a class="reference internal" href="../collections/lexicon.html#lexicon-suffix"><span>Lexicon suffix syntax</span></a>, it will also
+include all of its suffix-usable keys when you call its
+SUFFIXNAMES method.)</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -514,7 +527,7 @@ type will return <code class="docutils literal"><span class="pre">True</span></c
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.8.0',
+            VERSION:'1.1.9.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

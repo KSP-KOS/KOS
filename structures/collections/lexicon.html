@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Lexicon &mdash; kOS 1.1.8.0 documentation</title>
+  <title>Lexicon &mdash; kOS 1.1.9.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.8.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.9.0 documentation" href="../../index.html"/>
         <link rel="up" title="Collections" href="../collections.html"/>
         <link rel="next" title="List" href="list.html"/>
         <link rel="prev" title="Iterator" href="iterator.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.8.0
+                1.1.9.0
               </div>
             
           
@@ -242,6 +242,109 @@ the same effect as the previous code fragment:</p>
 <p>The keys and the values of a lexicon can be any type you feel like, and do not
 need to be of a homogeneous type.</p>
 </div>
+<div class="section" id="lexicons-can-use-suffix-syntax">
+<span id="lexicon-suffix"></span><h2>Lexicons can use suffix syntax<a class="headerlink" href="#lexicons-can-use-suffix-syntax" title="Permalink to this headline">¶</a></h2>
+<p>One special thing can be done with a <a class="reference internal" href="#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Lexicon</span></code></a> that cannot be done
+with other types of structures in kOS - a lexicon can use the &#8220;suffix
+syntax&#8221;.</p>
+<p>By &#8220;suffix syntax&#8221;, what is meant is things like the colons in these
+statements:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">.</span>
+<span class="k">print</span> <span class="nv">MUN</span><span class="p">:</span><span class="nv">RADIUS</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>There is a special extra step when looking up a suffix.  Normally
+kOS throws an error if the suffix name refers to a suffix that does
+not exist on the object.  But, if the item on the left side of the
+colon is a <a class="reference internal" href="#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">LEXICON</span></code></a> type, then it also will check to see if
+the suffix matches any of the lexicon&#8217;s keys, and if it does, that
+key&#8217;s value will be retrieved.</p>
+<p>Here is an example:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">mylex</span> <span class="ow">is</span> <span class="nv">lexicon</span><span class="p">(</span>
+  <span class="s">&quot;key1&quot;</span><span class="p">,</span> <span class="s">&quot;value1&quot;</span><span class="p">,</span> <span class="s">&quot;key2&quot;</span><span class="p">,</span> <span class="s">&quot;value2&quot;</span><span class="p">,</span> <span class="s">&quot;key3&quot;</span><span class="p">,</span> <span class="s">&quot;value3&quot;</span><span class="p">).</span>
+<span class="k">print</span> <span class="nv">mylex</span><span class="p">:</span><span class="nv">key1</span><span class="p">.</span> <span class="c1">// prints &quot;value1&quot;.</span>
+<span class="k">print</span> <span class="nv">mylex</span><span class="p">:</span><span class="nv">key2</span><span class="p">.</span> <span class="c1">// prints &quot;value2&quot;.</span>
+<span class="k">print</span> <span class="nv">mylex</span><span class="p">:</span><span class="nv">key3</span><span class="p">.</span> <span class="c1">// prints &quot;value3&quot;.</span>
+</pre></div>
+</div>
+<p>This is added as a convenient shortcut.  It literally means the same
+thing as looking up the key with the square-bracket syntax:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">mylex</span> <span class="ow">is</span> <span class="nv">lexicon</span><span class="p">(</span>
+  <span class="s">&quot;key1&quot;</span><span class="p">,</span> <span class="s">&quot;value1&quot;</span><span class="p">,</span> <span class="s">&quot;key2&quot;</span><span class="p">,</span> <span class="s">&quot;value2&quot;</span><span class="p">,</span> <span class="s">&quot;key3&quot;</span><span class="p">,</span> <span class="s">&quot;value3&quot;</span><span class="p">).</span>
+<span class="c1">// These two lines are exactly the same:</span>
+<span class="k">print</span> <span class="nv">mylex</span><span class="p">[</span><span class="s">&quot;key1&quot;</span><span class="p">].</span>
+<span class="k">print</span> <span class="nv">mylex</span><span class="p">:</span><span class="nv">key1</span><span class="p">.</span>
+</pre></div>
+</div>
+<p><strong>The key must follow the rules for a valid identifier to do this:</strong></p>
+<p>Lexicons can use keys that are not even strings at all, but if you
+want to use this suffix syntax, it will only work with string keys.
+Furthermore, in order to use this shortcut, you must make sure the
+string key you are trying to use is one that makes a valid identifier
+in the kerboscript language.  For example:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">mylex</span> <span class="ow">is</span> <span class="nv">lexicon</span><span class="p">(</span>
+  <span class="s">&quot;key_no_spaces&quot;</span><span class="p">,</span> <span class="mf">100</span><span class="p">,</span> <span class="s">&quot;key with spaces&quot;</span><span class="p">,</span> <span class="mf">200</span><span class="p">).</span>
+<span class="k">print</span> <span class="nv">mylex</span><span class="p">[</span><span class="s">&quot;key_no_spaces&quot;</span><span class="p">].</span>   <span class="c1">// This works fine.</span>
+<span class="k">print</span> <span class="nv">mylex</span><span class="p">[</span><span class="s">&quot;key with spaces&quot;</span><span class="p">].</span> <span class="c1">// This works fine.</span>
+<span class="k">print</span> <span class="nv">mylex</span><span class="p">:</span><span class="nv">key_no_spaces</span><span class="p">.</span>      <span class="c1">// This works fine.</span>
+<span class="k">print</span> <span class="nv">mylex</span><span class="p">:</span><span class="nv">key</span> <span class="nv">with</span> <span class="nv">spaces</span><span class="p">.</span>    <span class="c1">// &lt;-- BUT THIS IS AN ERROR.</span>
+</pre></div>
+</div>
+<p>You cannot use a key as a suffix if that key has any characters in
+it that make it invalid as an identifier, like spaces.  This is
+because the parser has to be able to read the colon suffix syntax
+first before the system can start looking up the key value.</p>
+<p>This suffix syntax for lexicons only works because kerboscript is a
+&#8220;late binding&#8221; language, where it doesn&#8217;t try to find identifier names
+until the moment it encounters them during the program run. Therefore
+it can look up the lexicon names on the spot as it encounters that
+line of code.</p>
+<p>In other words, this will cause an error:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">mylex</span> <span class="ow">is</span> <span class="nv">lexicon</span><span class="p">().</span>
+<span class="k">print</span> <span class="nv">mylex</span><span class="p">:</span><span class="nv">mykey</span><span class="p">.</span> <span class="c1">// &lt;--- Error: no such thing in the lexicon yet.</span>
+<span class="nv">sey</span> <span class="nv">mylex</span><span class="p">[</span><span class="s">&quot;mykey&quot;</span><span class="p">]</span> <span class="ow">to</span> <span class="s">&quot;value&quot;</span><span class="p">.</span> <span class="c1">// here it gets added, but it&#39;s too late.</span>
+</pre></div>
+</div>
+<p>While doing it in this order will work:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">mylex</span> <span class="ow">is</span> <span class="nv">lexicon</span><span class="p">().</span>
+<span class="k">set</span> <span class="nv">mylex</span><span class="p">[</span><span class="s">&quot;mykey&quot;</span><span class="p">]</span> <span class="ow">to</span> <span class="s">&quot;value&quot;</span><span class="p">.</span> <span class="c1">// adding the value first</span>
+<span class="k">print</span> <span class="nv">mylex</span><span class="p">:</span><span class="nv">mykey</span><span class="p">.</span> <span class="c1">// makes this line work.</span>
+</pre></div>
+</div>
+<div class="section" id="clashes-between-built-in-suffixes-versus-lexicon-keys">
+<h3>Clashes between built-in suffixes versus lexicon keys<a class="headerlink" href="#clashes-between-built-in-suffixes-versus-lexicon-keys" title="Permalink to this headline">¶</a></h3>
+<p>kOS will always prefer to use the built-in suffix name first when
+trying to search for a suffix name in a lexicon.  Therefore
+if you make a key who&#8217;s name matches an existing built-in suffix
+term for Lexicons, you will get the built-in value instead of
+your key&#8217;s value.  Here&#8217;s an example:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">mylex</span> <span class="ow">is</span> <span class="nv">lexicon</span><span class="p">().</span>
+<span class="k">set</span> <span class="nv">mylex</span><span class="p">[</span><span class="s">&quot;LENGTH&quot;</span><span class="p">]</span> <span class="ow">to</span> <span class="mf">20</span><span class="p">.</span>
+
+<span class="c1">// prints 1.  LENGTH is already a suffix of Lexicons, so</span>
+<span class="c1">// that&#39;s what this gets you, not the key called &quot;length&quot;:</span>
+<span class="k">print</span> <span class="nv">mylex</span><span class="p">:</span><span class="nv">length</span><span class="p">.</span>
+
+<span class="c1">// This will print 20, as there&#39;s no ambiguity that you were</span>
+<span class="c1">// definitely looking for the key called &quot;length&quot; in this</span>
+<span class="c1">// case, not the built-in suffix called &quot;length&quot;:</span>
+<span class="k">print</span> <span class="nv">mylex</span><span class="p">[</span><span class="s">&quot;length&quot;</span><span class="p">].</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="suffix-keys-also-work-with-hassuffix-and-suffixnames">
+<h3>Suffix keys also work with HASSUFFIX and SUFFIXNAMES<a class="headerlink" href="#suffix-keys-also-work-with-hassuffix-and-suffixnames" title="Permalink to this headline">¶</a></h3>
+<p>All values in kerboscript derive from <a class="reference internal" href="../reflection/structure.html#structure"><span>Structure:</span></a>, and
+all such structures have <code class="xref ks ks-attr docutils literal"><span class="pre">Structure:HASSUFFIX</span></code> and
+<a class="reference internal" href="../reflection/structure.html#attribute:STRUCTURE:SUFFIXNAMES" title="STRUCTURE:SUFFIXNAMES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Structure:SUFFIXNAMES</span></code></a> members.  Because a Lexicon has
+this special ability to use the suffix syntax with keys, kOS
+will add all the keys of a lexicon that are &#8220;suffix-able&#8221; to the
+output of that lexicon&#8217;s <code class="docutils literal"><span class="pre">SUFFIXNAMES</span></code> call.  Also, when you
+test if a suffix exists for a lexicon with <code class="docutils literal"><span class="pre">HASSUFFIX</span></code>, any
+key in that lexicon that could be used as a suffix will also
+return true, in addition to the normal built-in suffixes.</p>
+</div>
+</div>
 <div class="section" id="structure">
 <h2>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
 <dl class="structure">
@@ -308,6 +411,14 @@ need to be of a homogeneous type.</p>
 <tr class="row-odd"><td><a class="reference internal" href="#method:LEXICON:REMOVE" title="LEXICON:REMOVE method"><code class="xref ks ks-meth docutils literal"><span class="pre">REMOVE(keyvalue)</span></code></a></td>
 <td>None</td>
 <td>removes the pair with the given key</td>
+</tr>
+<tr class="row-even"><td><code class="xref ks ks-attr docutils literal"><span class="pre">HASSUFFIX(name)</span></code></td>
+<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+<td>True if the suffix OR a key with the name, exists.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:LEXICON:SUFFIXNAMES" title="LEXICON:SUFFIXNAMES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SUFFIXNAMES</span></code></a></td>
+<td><a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">strings</span></code></a></td>
+<td>Gives both the suffixes AND the keys that work as suffixes</td>
 </tr>
 </tbody>
 </table>
@@ -537,6 +648,52 @@ Lexicon:<code class="descname">VALUES</code><a class="headerlink" href="#attribu
 <p>Returns a List of the values stored in this lexicon.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="method:LEXICON:HASSUFFIX">
+Lexicon:<code class="descname">HASSUFFIX</code><span class="sig-paren">(</span>name<span class="sig-paren">)</span><a class="headerlink" href="#method:LEXICON:HASSUFFIX" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> &#8211; <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> name of the suffix being tested for</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body"><p class="first last">Get only</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This is just like the base method <a class="reference internal" href="../reflection/structure.html#method:STRUCTURE:HASSUFFIX" title="STRUCTURE:HASSUFFIX method"><code class="xref ks ks-meth docutils literal"><span class="pre">Structure:HASSUFFIX(name)</span></code></a> that
+all structures have, but with one slight difference - it will also return
+true if the name you pass in matches one of the keys of this lexicon that
+could be used with the <a class="reference internal" href="#lexicon-suffix"><span>lexicon suffix syntax</span></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:LEXICON:SUFFIXNAMES">
+Lexicon:<code class="descname">SUFFIXNAMES</code><a class="headerlink" href="#attribute:LEXICON:SUFFIXNAMES" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">strings</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>All structures in kerboscript have a <a class="reference internal" href="../reflection/structure.html#attribute:STRUCTURE:SUFFIXNAMES" title="STRUCTURE:SUFFIXNAMES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Structure:SUFFIXNAMES</span></code></a>
+attribute that shows a list of all the suffixes on the structure,
+but for Lexicons the SUFFIXNAMES attribute has been altered so
+that it will additionally include any keys of the suffix that could
+be callled using the <a class="reference internal" href="#lexicon-suffix"><span>lexicon suffix syntax</span></a>.</p>
+</dd></dl>
+
 </div>
 <div class="section" id="access-to-individual-elements">
 <h2>Access to Individual Elements<a class="headerlink" href="#access-to-individual-elements" title="Permalink to this headline">¶</a></h2>
@@ -662,7 +819,7 @@ existing value in-place rather than trying to make a new one.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.8.0',
+            VERSION:'1.1.9.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

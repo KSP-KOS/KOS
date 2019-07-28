@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>The KerboScript Language &mdash; kOS 1.1.8.0 documentation</title>
+  <title>The KerboScript Language &mdash; kOS 1.1.9.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="about.html"/>
         <link rel="copyright" title="Copyright" href="copyright.html"/>
-    <link rel="top" title="kOS 1.1.8.0 documentation" href="index.html"/>
+    <link rel="top" title="kOS 1.1.9.0 documentation" href="index.html"/>
         <link rel="next" title="General Features of the KerboScript Language" href="language/features.html"/>
         <link rel="prev" title="Career Limits" href="general/career_limits.html"/> 
 
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                1.1.8.0
+                1.1.9.0
               </div>
             
           
@@ -176,10 +176,12 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="language/syntax.html">Language Syntax</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="language/syntax.html#general-rules">General Rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/syntax.html#suffixes">Suffixes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/syntax.html#numbers-scalars">Numbers (scalars)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/syntax.html#braces-statement-blocks">Braces (statement blocks)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/syntax.html#functions-built-in">Functions (built-in)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/syntax.html#suffixes-as-functions-methods">Suffixes as Functions (Methods)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/syntax.html#suffixes-as-lexicon-keys">Suffixes as Lexicon keys</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/syntax.html#user-functions">User Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/syntax.html#built-in-special-variable-names">Built-In Special Variable Names</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/syntax.html#what-does-not-exist-yet">What does not exist (yet?)</a></li>
@@ -188,6 +190,7 @@
 <li class="toctree-l1"><a class="reference internal" href="language/flow.html">Flow Control</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="language/flow.html#break"><code class="docutils literal"><span class="pre">BREAK</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/flow.html#if-else"><code class="docutils literal"><span class="pre">IF</span></code> / <code class="docutils literal"><span class="pre">ELSE</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/flow.html#choose-ternary-operator">CHOOSE (Ternary operator)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/flow.html#lock"><code class="docutils literal"><span class="pre">LOCK</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/flow.html#unlock"><code class="docutils literal"><span class="pre">UNLOCK</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/flow.html#until-loop"><code class="docutils literal"><span class="pre">UNTIL</span></code> loop</a></li>
@@ -205,6 +208,7 @@
 <li class="toctree-l2"><a class="reference internal" href="language/variables.html#declare-to-is"><code class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">..</span> <span class="pre">TO/IS</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/variables.html#declare-parameter"><code class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/variables.html#set"><code class="docutils literal"><span class="pre">SET</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/variables.html#unset"><code class="docutils literal"><span class="pre">UNSET</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/variables.html#defined"><code class="docutils literal"><span class="pre">DEFINED</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/variables.html#lock"><code class="docutils literal"><span class="pre">LOCK</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/variables.html#toggle"><code class="docutils literal"><span class="pre">TOGGLE</span></code></a></li>
@@ -296,7 +300,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.1.8.0',
+            VERSION:'1.1.9.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

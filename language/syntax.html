@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>KerboScript Syntax Specification &mdash; kOS 1.1.8.0 documentation</title>
+  <title>KerboScript Syntax Specification &mdash; kOS 1.1.9.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.1.8.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.1.9.0 documentation" href="../index.html"/>
         <link rel="up" title="The KerboScript Language" href="../language.html"/>
         <link rel="next" title="Flow Control" href="flow.html"/>
         <link rel="prev" title="General Features of the KerboScript Language" href="features.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.8.0
+                1.1.9.0
               </div>
             
           
@@ -171,13 +171,15 @@
 <p class="topic-title first">Contents</p>
 <ul class="simple">
 <li><a class="reference internal" href="#general-rules" id="id1">General Rules</a></li>
-<li><a class="reference internal" href="#numbers-scalars" id="id2">Numbers (scalars)</a></li>
-<li><a class="reference internal" href="#braces-statement-blocks" id="id3">Braces (statement blocks)</a></li>
-<li><a class="reference internal" href="#functions-built-in" id="id4">Functions (built-in)</a></li>
-<li><a class="reference internal" href="#suffixes-as-functions-methods" id="id5">Suffixes as Functions (Methods)</a></li>
-<li><a class="reference internal" href="#user-functions" id="id6">User Functions</a></li>
-<li><a class="reference internal" href="#built-in-special-variable-names" id="id7">Built-In Special Variable Names</a></li>
-<li><a class="reference internal" href="#what-does-not-exist-yet" id="id8">What does not exist (yet?)</a></li>
+<li><a class="reference internal" href="#suffixes" id="id2">Suffixes</a></li>
+<li><a class="reference internal" href="#numbers-scalars" id="id3">Numbers (scalars)</a></li>
+<li><a class="reference internal" href="#braces-statement-blocks" id="id4">Braces (statement blocks)</a></li>
+<li><a class="reference internal" href="#functions-built-in" id="id5">Functions (built-in)</a></li>
+<li><a class="reference internal" href="#suffixes-as-functions-methods" id="id6">Suffixes as Functions (Methods)</a></li>
+<li><a class="reference internal" href="#suffixes-as-lexicon-keys" id="id7">Suffixes as Lexicon keys</a></li>
+<li><a class="reference internal" href="#user-functions" id="id8">User Functions</a></li>
+<li><a class="reference internal" href="#built-in-special-variable-names" id="id9">Built-In Special Variable Names</a></li>
+<li><a class="reference internal" href="#what-does-not-exist-yet" id="id10">What does not exist (yet?)</a></li>
 </ul>
 </div>
 <div class="section" id="general-rules">
@@ -261,15 +263,14 @@ the kOS developers cannot test every language and verify if
 this is correct or not.</p>
 </div>
 </div>
-<dl class="docutils">
-<dt><strong>Suffixes</strong></dt>
-<dd><p class="first">Some variable types are structures that contain sub-portions. The separator between the main variable and the item inside it is a colon character (<code class="docutils literal"><span class="pre">:</span></code>). When this symbol is used, the part on the right-hand side of the colon is called the &#8220;suffix&#8221;:</p>
-<div class="last highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">list</span> <span class="nv">parts</span> <span class="nv">in</span> <span class="nv">mylist</span><span class="p">.</span>
+</div>
+<div class="section" id="suffixes">
+<h2><a class="toc-backref" href="#id2">Suffixes</a><a class="headerlink" href="#suffixes" title="Permalink to this headline">¶</a></h2>
+<p>Some variable types are structures that contain sub-portions. The separator between the main variable and the item inside it is a colon character (<code class="docutils literal"><span class="pre">:</span></code>). When this symbol is used, the part on the right-hand side of the colon is called the &#8220;suffix&#8221;:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">list</span> <span class="nv">parts</span> <span class="nv">in</span> <span class="nv">mylist</span><span class="p">.</span>
 <span class="k">print</span> <span class="nv">mylist</span><span class="p">:</span><span class="nv">length</span><span class="p">.</span> <span class="c1">// length is a suffix of mylist</span>
 </pre></div>
 </div>
-</dd>
-</dl>
 <p>Suffixes can be chained together, as in this example:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">velocity</span><span class="p">:</span><span class="nv">orbit</span><span class="p">:</span><span class="nv">x</span><span class="p">.</span>
 </pre></div>
@@ -277,7 +278,7 @@ this is correct or not.</p>
 <p>In the above example you&#8217;d say &#8220;<code class="docutils literal"><span class="pre">velocity</span></code> is a suffix of <code class="docutils literal"><span class="pre">ship</span></code>&#8221;, and &#8220;<code class="docutils literal"><span class="pre">orbit</span></code> is a suffix of <code class="docutils literal"><span class="pre">ship:velocity</span></code>&#8221;, and &#8220;<code class="docutils literal"><span class="pre">x</span></code> is a suffix of <code class="docutils literal"><span class="pre">ship:velocity:orbit</span></code>&#8221;.</p>
 </div>
 <div class="section" id="numbers-scalars">
-<h2><a class="toc-backref" href="#id2">Numbers (scalars)</a><a class="headerlink" href="#numbers-scalars" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id3">Numbers (scalars)</a><a class="headerlink" href="#numbers-scalars" title="Permalink to this headline">¶</a></h2>
 <p>Numbers in kerboscript are referred to as &#8220;scalars&#8221;, to distinguish
 them from the many cases where a values will be represnted
 as a vectors.  You are allowed to use integers, decimal fractional numbers
@@ -302,7 +303,7 @@ an approximation.  &#8220;One third&#8221;, ends up being something like 0.33333
 to hide this detail from the programmer as much as possible.</p>
 </div>
 <div class="section" id="braces-statement-blocks">
-<h2><a class="toc-backref" href="#id3">Braces (statement blocks)</a><a class="headerlink" href="#braces-statement-blocks" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id4">Braces (statement blocks)</a><a class="headerlink" href="#braces-statement-blocks" title="Permalink to this headline">¶</a></h2>
 <p>Anywhere you feel like, you may insert braces around a list of statements
 to get the language to treat them all as a single statement block.</p>
 <p>For example: the IF statement expects one statement as its body, like so:</p>
@@ -352,7 +353,7 @@ In the above example, there are actually 3 <em>different</em>
 variables called &#8216;x&#8217; - each with a different scope.</p>
 </div>
 <div class="section" id="functions-built-in">
-<h2><a class="toc-backref" href="#id4">Functions (built-in)</a><a class="headerlink" href="#functions-built-in" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id5">Functions (built-in)</a><a class="headerlink" href="#functions-built-in" title="Permalink to this headline">¶</a></h2>
 <p>There exist a number of built-in functions you can call using their names. When you do so, you can do it like so:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">functionName</span><span class="p">(</span> <span class="o">*</span><span class="nv">arguments</span> <span class="nv">with</span> <span class="nv">commas</span> <span class="nv">between</span> <span class="nv">them</span><span class="o">*</span> <span class="p">).</span>
 </pre></div>
@@ -373,7 +374,7 @@ variables called &#8216;x&#8217; - each with a different scope.</p>
 </div>
 </div>
 <div class="section" id="suffixes-as-functions-methods">
-<h2><a class="toc-backref" href="#id5">Suffixes as Functions (Methods)</a><a class="headerlink" href="#suffixes-as-functions-methods" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id6">Suffixes as Functions (Methods)</a><a class="headerlink" href="#suffixes-as-functions-methods" title="Permalink to this headline">¶</a></h2>
 <p>Some suffixes are actually functions you can call. When that is the case, these suffixes are called &#8220;method suffixes&#8221;. Here are some examples:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">partsnamed</span><span class="p">(</span><span class="s">&quot;rtg&quot;</span><span class="p">).</span>
 <span class="k">print</span> <span class="nv">x</span><span class="p">:</span><span class="nv">length</span><span class="p">().</span>
@@ -382,8 +383,23 @@ variables called &#8216;x&#8217; - each with a different scope.</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="suffixes-as-lexicon-keys">
+<h2><a class="toc-backref" href="#id7">Suffixes as Lexicon keys</a><a class="headerlink" href="#suffixes-as-lexicon-keys" title="Permalink to this headline">¶</a></h2>
+<p>The special type called a <a class="reference internal" href="../structures/collections/lexicon.html#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Lexicon</span></code></a> can be used with this suffix syntax as
+an alternate way to get the value for a key, as in the example below:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Given this setup...</span>
+<span class="k">set</span> <span class="nv">MyLex</span> <span class="ow">to</span> <span class="nv">Lexicon</span><span class="p">().</span>
+<span class="nv">MyLex</span><span class="p">:</span><span class="k">ADD</span><span class="p">(</span> <span class="s">&quot;key1&quot;</span><span class="p">,</span> <span class="s">&quot;value1&quot;</span><span class="p">).</span>
+<span class="c1">// ...these two lines have the same effect:</span>
+<span class="k">print</span> <span class="nv">MyLex</span><span class="p">[</span><span class="s">&quot;key1&quot;</span><span class="p">].</span> <span class="c1">// key used in the usual way as an &quot;index&quot;.</span>
+<span class="k">print</span> <span class="nv">MyLex</span><span class="p">:</span><span class="nv">key1</span><span class="p">.</span>    <span class="c1">// key used in an alternate way as a &quot;suffix&quot;.</span>
+</pre></div>
+</div>
+<p>There are some limits to using this syntax, as described in more detail
+<a class="reference internal" href="../structures/collections/lexicon.html#lexicon-suffix"><span>in the documentation for the Lexion type</span></a>.</p>
+</div>
 <div class="section" id="user-functions">
-<span id="syntax-functions"></span><h2><a class="toc-backref" href="#id6">User Functions</a><a class="headerlink" href="#user-functions" title="Permalink to this headline">¶</a></h2>
+<span id="syntax-functions"></span><h2><a class="toc-backref" href="#id8">User Functions</a><a class="headerlink" href="#user-functions" title="Permalink to this headline">¶</a></h2>
 <dl class="docutils">
 <dt>Help for the new user - What is a Function?</dt>
 <dd><p class="first">In programming terminology, there is a commonly used feature of
@@ -433,11 +449,11 @@ DECLARE FUNCTION command, which is structured as follows:</p>
 <a class="reference internal" href="user_functions.html#user-functions"><span>separate documentation page, here.</span></a></p>
 </div>
 <div class="section" id="built-in-special-variable-names">
-<h2><a class="toc-backref" href="#id7">Built-In Special Variable Names</a><a class="headerlink" href="#built-in-special-variable-names" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id9">Built-In Special Variable Names</a><a class="headerlink" href="#built-in-special-variable-names" title="Permalink to this headline">¶</a></h2>
 <p>Some variable names have special meaning and will not work as identifiers. Understanding this list is crucial to using kOS effectively, as these special variables are the usual way to query flight state information. <a class="reference internal" href="../bindings.html#bindings"><span>The full list of reserved variable names is on its own page</span></a>.</p>
 </div>
 <div class="section" id="what-does-not-exist-yet">
-<h2><a class="toc-backref" href="#id8">What does not exist (yet?)</a><a class="headerlink" href="#what-does-not-exist-yet" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id10">What does not exist (yet?)</a><a class="headerlink" href="#what-does-not-exist-yet" title="Permalink to this headline">¶</a></h2>
 <p>Concepts that many other languages have, that are missing from <strong>KerboScript</strong>, are listed below. Many of these are things that could be supported some day, but at the moment with the limited amount of developer time available they haven&#8217;t become essential enough to spend the time on supporting them.</p>
 <dl class="docutils">
 <dt><strong>user-made structures or classes</strong></dt>
@@ -487,7 +503,7 @@ DECLARE FUNCTION command, which is structured as follows:</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.1.8.0',
+            VERSION:'1.1.9.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

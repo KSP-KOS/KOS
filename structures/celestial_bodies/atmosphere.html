@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Atmosphere &mdash; kOS 1.1.8.0 documentation</title>
+  <title>Atmosphere &mdash; kOS 1.1.9.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.8.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.9.0 documentation" href="../../index.html"/>
         <link rel="up" title="Celestial Bodies" href="../celestial_bodies.html"/>
         <link rel="next" title="Body" href="body.html"/>
         <link rel="prev" title="Celestial Bodies" href="../celestial_bodies.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.8.0
+                1.1.9.0
               </div>
             
           
@@ -218,6 +218,26 @@
 <td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m)</td>
 <td>advertised atmospheric height</td>
 </tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ATMOSPHERE:MOLARMASS" title="ATMOSPHERE:MOLARMASS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MOLARMASS</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kg/mol)</td>
+<td>The molecular mass of the atmosphere&#8217;s gas</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ATMOSPHERE:ADIABATICINDEX" title="ATMOSPHERE:ADIABATICINDEX attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ADIABATICINDEX</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<td>The Adiabatic index of the atmosphere&#8217;s gas</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ATMOSPHERE:ADBIDX" title="ATMOSPHERE:ADBIDX attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ADBIDX</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<td>Short alias for <a class="reference internal" href="#attribute:ATMOSPHERE:ADIABATICINDEX" title="ATMOSPHERE:ADIABATICINDEX attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ADIABATICINDEX</span></code></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:ATMOSPHERE:ALTITUDETEMPERATURE" title="ATMOSPHERE:ALTITUDETEMPERATURE method"><code class="xref ks ks-meth docutils literal"><span class="pre">ALTITUDETEMPERATURE(altitude)</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<td>Estimate of temperature at the given altitude.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:ATMOSPHERE:ALTTEMP" title="ATMOSPHERE:ALTTEMP method"><code class="xref ks ks-meth docutils literal"><span class="pre">ALTTEMP(altitude)</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<td>Short alias for <code class="xref ks ks-attr docutils literal"><span class="pre">ALTITUDETEMPERATURE</span></code></td>
+</tr>
 </tbody>
 </table>
 </dd></dl>
@@ -339,6 +359,81 @@ Atmosphere:<code class="descname">HEIGHT</code><a class="headerlink" href="#attr
 <p>The altitude at which the atmosphere is &#8220;officially&#8221; advertised as ending. (actual ending value differs, see below).</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="attribute:ATMOSPHERE:MOLARMASS">
+Atmosphere:<code class="descname">MOLARMASS</code><a class="headerlink" href="#attribute:ATMOSPHERE:MOLARMASS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Acces:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The Molecular Mass of the gas the atmosphere is composed of.
+Units are in kg/mol.
+<a class="reference external" href="https://en.wikipedia.org/wiki/Molar_mass">Wikipedia Molar Mass Explanation</a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:ATMOSPHERE:ADIABATICINDEX">
+Atmosphere:<code class="descname">ADIABATICINDEX</code><a class="headerlink" href="#attribute:ATMOSPHERE:ADIABATICINDEX" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The Adiabatic index of the gas the atmosphere is composed of.
+<a class="reference external" href="https://en.wikipedia.org/wiki/Heat_capacity_ratio">Wikipedia Adiabatic Index Explanation</a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:ATMOSPHERE:ADBIDX">
+Atmosphere:<code class="descname">ADBIDX</code><a class="headerlink" href="#attribute:ATMOSPHERE:ADBIDX" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>A shorthand alias for :attr:ADIABATICINDEX.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:ATMOSPHERE:ALTITUDETEMPERATURE">
+Atmosphere:<code class="descname">ALTITUDETEMPERATURE</code><span class="sig-paren">(</span>altitude<span class="sig-paren">)</span><a class="headerlink" href="#method:ATMOSPHERE:ALTITUDETEMPERATURE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameter:</th><td class="field-body">altitude (<a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a>) the altitude to query temperature at.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Returns an approximate atmosphere temperature on this world at the given altitude.
+Note that this is only approximate because the temperature will vary depending
+on the sun position in the sky (i.e. your latitude and what time of day it is).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:ATMOSPHERE:ALTTEMP">
+Atmosphere:<code class="descname">ALTTEMP</code><span class="sig-paren">(</span>altitude<span class="sig-paren">)</span><a class="headerlink" href="#method:ATMOSPHERE:ALTTEMP" title="Permalink to this definition">¶</a></dt>
+<dd><p>A shorthand alias for :meth:ALTITUDETEMPERATURE(altitude).</p>
+</dd></dl>
+
 <div class="section" id="deprecated-suffix">
 <h2>Deprecated Suffix<a class="headerlink" href="#deprecated-suffix" title="Permalink to this headline">¶</a></h2>
 <dl class="attribute">
@@ -407,7 +502,7 @@ Atmosphere:<code class="descname">SCALE</code><a class="headerlink" href="#attri
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.8.0',
+            VERSION:'1.1.9.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

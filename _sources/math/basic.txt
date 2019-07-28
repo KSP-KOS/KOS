@@ -39,6 +39,12 @@ constants about the universe that you may find handy in your math operations.  P
       - Conversion constant: Degrees to Radians.
     * - :global:`RadToDeg`
       - Conversion constant: Radians to Degrees.
+    * - :global:`Avogadro`
+      - Avogadro's Constant
+    * - :global:`Boltzmann`
+      - Boltzmann's Constant
+    * - :global:`IdealGas`
+      - The Ideal Gas Constant
 
 
 .. global:: Constant:G
@@ -56,7 +62,7 @@ constants about the universe that you may find handy in your math operations.  P
     within that game universe, and instead varies from one sphere
     of influence to the next.  Such a universe would be breaking
     some laws of physics by a lot, but it is technically possible
-    in the game's data model.  Due to this strange misfeature in
+    in the game's data model.  Due to this strange feature in
     the game's data model, it is probably safer to always have
     your scripts use the body's Mu in your formulas instead of
     explicitly doing mass*G to derive it.
@@ -85,19 +91,19 @@ constants about the universe that you may find handy in your math operations.  P
     contains an inherent conversion from mass to weight
     that basically means, "what would this mass of fuel
     have weighed at g0?".  Some kind of official standard
-    value of g0 is needed to use ISP to predict truly
-    accurately how much fuel will be burned in a scenario.
+    value of g0 is needed to use ISP properly to predict
+    how much fuel will be burned in a scenario.
 
-    In pretty much any other calculation other than using
-    ISP in the Rocketry Equation, you should probably
-    not use g0 and instead calculate your local gravity
-    more precisely based on your actual radius to the body
-    center.  Not only because this is more accurate, but
-    because the g0 you see here is NOT the g0 you would
-    actually have on Kerbin's sea level.  It's the g0 on
-    Earth, which is what the game's ISP numbers are using.
-    Kerbin's sea level g0 is ever so slightly different
-    from Earth's g0 (but not by much.)
+    In pretty much any other calculation you do in your kOS
+    scripts, other than when using ISP in the Rocketry Equation,
+    you should probably not use g0 and instead calculate your
+    local gravity more precisely based on your actual radius to
+    the body center.  Not only because this is more accurate, but
+    because the g0 you see here is NOT the g0 you would actually
+    have on Kerbin's sea level.  It's the g0 on Earth, which is
+    what the game's ISP numbers are using.  Kerbin's sea level
+    g0 is ever so slightly different from Earth's g0 (but not
+    by much.)
 
     ::
 
@@ -199,6 +205,30 @@ constants about the universe that you may find handy in your math operations.  P
         PRINT "A radian is:".
         PRINT 1 * constant:RadToDeg + " degrees".
 
+.. global:: Constant:Avogadro
+
+    Avogadro's Constant.
+
+    This value can be used in calculating atmospheric properties for drag purposes,
+    which can be a rather advanced topic.
+    `(Avogadro's constant Wikipedia Page) <https://en.wikipedia.org/wiki/Avogadro_constant>`_.
+
+.. global:: Constant:Boltzmann
+
+    Boltzmann Constant.
+
+    This value can be used in calculating atmospheric properties for drag purposes,
+    which can be a rather advanced topic.
+    `(Boltzmann constant Wikipedia Page) <https://en.wikipedia.org/wiki/Boltzmann_constant>`_.
+
+.. global:: Constant:IdealGas
+
+    Ideal Gas Constant.
+
+    This value can be used in calculating atmospheric properties for drag purposes,
+    which can be a rather advanced topic.
+    `(Ideal Gas Constant Wikipedia Page) <https://en.wikipedia.org/wiki/Gas_constant>`_.
+
 .. _math functions:
 .. index:: Mathematical Functions
 
@@ -214,9 +244,9 @@ Mathematical Functions
  :func:`LN(a)`        natural log
  :func:`LOG10(a)`     log base 10
  :func:`MOD(a,b)`     modulus
- :func:`MIN(a,b)`     minimum
- :func:`MAX(a,b)`     maximum
- :func:`RANDOM()`     random number
+ :func:`MIN(a,b)`     return a or b, whichever is lesser.
+ :func:`MAX(a,b)`     return a or b, whichever is greater.
+ :func:`RANDOM()`     random fractional number between 0 and 1.
  :func:`ROUND(a)`     round to whole number
  :func:`ROUND(a,b)`   round to nearest place
  :func:`SQRT(a)`      square root
@@ -276,9 +306,18 @@ Mathematical Functions
 
 .. function:: RANDOM()
 
-    Returns a random floating point number in the range [0,1]::
+    Returns a random floating point number in the range [0..1]::
 
         PRINT RANDOM(). //prints a random number
+        PRINT "Let's roll a 6-sided die 10 times:".
+        FOR n in range(0,10) {
+
+          // To make RANDOM give you an integer in the range [0..n-1], you do this:
+          // floor(n*RANDOM()).
+
+          // So for example : a die giving values from 1 to 6 is like this:
+          print (1 + floor(6*RANDOM())).
+        }
 
 .. function:: ROUND(a)
 

@@ -1,0 +1,456 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Testbounds &mdash; kOS 1.1.9.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../about.html"/>
+        <link rel="copyright" title="Copyright" href="../copyright.html"/>
+    <link rel="top" title="kOS 1.1.9.0 documentation" href="../index.html"/>
+        <link rel="up" title="Tutorials" href="../tutorials.html"/>
+        <link rel="next" title="Creating Reusable GUI Elements" href="gui.html"/>
+        <link rel="prev" title="Execute Node Script" href="exenode.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents.html" class="icon icon-home"> kOS
+          
+
+          
+            
+            <img src="../_static/kos_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.9.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basictutorial.html">Basic Explanation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="designpatterns.html">Design Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pidloops.html">PID Loops</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exenode.html">Execute Node script</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Drawing VecDraws, and showing Bounds Boxes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html">Making a tabbed GUI</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../library.html">Community Example Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../contents.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../contents.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../tutorials.html">Tutorials</a> &raquo;</li>
+      
+    <li>Testbounds</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/tutorials/display_bounds.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="testbounds">
+<span id="display-bounds"></span><h1>Testbounds<a class="headerlink" href="#testbounds" title="Permalink to this headline">¶</a></h1>
+<p>This is a working example that shows how you can use <a class="reference internal" href="../structures/vessels/bounds.html#structure:BOUNDS" title="BOUNDS structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Bounds</span></code></a>
+to see the information about a part or vessel&#8217;s shape.</p>
+<p>To run this example, simply copy and paste the file below into
+a file in your archive folder called <code class="docutils literal"><span class="pre">display_bounds.ks</span></code>.  Then
+put any vessel that has a kOS part on it on the launchpad,
+and just run &#8220;0:/display_bounds.ks&#8221;.  The whole example is contained
+in this one script so you won&#8217;t need any other libraries.</p>
+<p>The best test vessels to try this on will be vessels that have a
+variety of different types of parts.</p>
+<p>Press &#8220;N&#8221; for next part or &#8220;P&#8221; for previous part, and it will go
+through the whole vessel showing you the bounds box for each part.
+(At the start it&#8217;s showing the bounds box for the whole vessel,
+which you may get back to by using &#8220;P&#8221; for &#8220;Previous&#8221; part, all
+the way to the start again.)</p>
+<p>To help show what kind of information a BOUNDS can give you,
+this program prints a lot of the BOUNDS suffixes on the screen
+as you iterate over the parts.</p>
+<p>This is not so much a &#8220;tutorial&#8221; as an &#8220;example&#8221; that shows
+a lot of different kOS topics, such as:</p>
+<ul class="simple">
+<li>Using VecDraw() to draw lines and arrows.</li>
+<li>Using Vector rotations by multiplying a bounds&#8217; <code class="docutils literal"><span class="pre">:FACING</span></code>
+by a position vector, which converts that position vector from
+a part-relative orientation to the absolute ship-raw reference
+frame the rest of kOS uses.</li>
+<li>Using Delegates in the VecDraw() constructor to tell it how
+to continually update its START and VEC properties.</li>
+<li>Using <code class="docutils literal"><span class="pre">TERMINAL:INPUT:GETCHAR()</span></code> to read keyboard input in
+the terminal.</li>
+<li>Using <code class="docutils literal"><span class="pre">Vessel:BOUNDS</span></code> and <code class="docutils literal"><span class="pre">Part:BOUNDS</span></code> to get bounding box
+information about the ship.</li>
+</ul>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="p">@</span><span class="nv">lazyglobal</span> <span class="nb">off</span><span class="p">.</span>
+<span class="c1">//</span>
+<span class="c1">//  display_bounds.ks</span>
+<span class="c1">//  -----------------</span>
+<span class="c1">//</span>
+<span class="c1">// A small example program that will show you how to</span>
+<span class="c1">// read the BOUNDS information of Vessels and Parts,</span>
+<span class="c1">// and will display the box as a set of Vecdraws.</span>
+<span class="c1">// You may iterate over the parts with the N and P</span>
+<span class="c1">// keys. (The &quot;-1 th&quot; part is to show the whole</span>
+<span class="c1">// vessel&#39;s box).</span>
+<span class="c1">//</span>
+
+<span class="c1">// Because this example uses lots of delegates</span>
+<span class="c1">// in its VECDRAWs, it needs the time to keep running</span>
+<span class="c1">// those delegates each update, or else it really</span>
+<span class="c1">// bogs down:</span>
+<span class="k">if</span> <span class="nv">CONFIG</span><span class="p">:</span><span class="nv">IPU</span> <span class="o">&lt;</span> <span class="mf">500</span> <span class="p">{</span>
+  <span class="k">set</span> <span class="nv">CONFIG</span><span class="p">:</span><span class="nv">IPU</span> <span class="ow">to</span> <span class="mf">500</span><span class="p">.</span>
+  <span class="nv">HUDTEXT</span><span class="p">(</span><span class="s">&quot;NOTICE: EXAMPLE SCRIPT INCREASED CONFIG:IPU TO &quot;</span> <span class="o">+</span> <span class="nv">CONFIG</span><span class="p">:</span><span class="nv">IPU</span><span class="p">,</span>
+    <span class="mf">20</span><span class="p">,</span> <span class="mf">2</span><span class="p">,</span> <span class="mf">22</span><span class="p">,</span> <span class="nv">magenta</span><span class="p">,</span> <span class="nb">true</span><span class="p">).</span>
+<span class="p">}</span>
+
+<span class="c1">// =======================================</span>
+<span class="c1">// These are some utility functions for this</span>
+<span class="c1">// example program to help display things:</span>
+<span class="c1">// =======================================</span>
+
+<span class="kd">function</span> <span class="nv">vector_tostring_rounded</span> <span class="p">{</span>
+  <span class="c1">// Same thing that vector:tostring() normally</span>
+  <span class="c1">// does, but with more rounding so the display</span>
+  <span class="c1">// doesn&#39;t get so big:</span>
+  <span class="kd">parameter</span> <span class="nv">vec</span><span class="p">.</span>
+
+  <span class="k">return</span> <span class="s">&quot;V(&quot;</span> <span class="o">+</span>
+    <span class="nv">round</span><span class="p">(</span><span class="nv">vec</span><span class="p">:</span><span class="nv">x</span><span class="p">,</span><span class="mf">2</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;, &quot;</span> <span class="o">+</span>
+    <span class="nv">round</span><span class="p">(</span><span class="nv">vec</span><span class="p">:</span><span class="nv">y</span><span class="p">,</span><span class="mf">2</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;, &quot;</span> <span class="o">+</span>
+    <span class="nv">round</span><span class="p">(</span><span class="nv">vec</span><span class="p">:</span><span class="nv">z</span><span class="p">,</span><span class="mf">2</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;)&quot;</span><span class="p">.</span>
+<span class="p">}</span>
+
+<span class="k">local</span> <span class="nv">arrows</span> <span class="ow">is</span> <span class="k">LIST</span><span class="p">().</span>
+<span class="kd">function</span> <span class="nv">draw_abs_to_box</span> <span class="p">{</span>
+  <span class="c1">// Draws the vectors from origin TO the 2 opposite corners of the box:</span>
+
+  <span class="kd">parameter</span> <span class="nv">B</span><span class="p">.</span>
+
+  <span class="c1">// Wipe any old arrow draws off the screen.</span>
+  <span class="k">for</span> <span class="nv">arrow</span> <span class="nv">in</span> <span class="nv">arrows</span> <span class="p">{</span> <span class="k">set</span> <span class="nv">arrow</span><span class="p">:</span><span class="nv">show</span> <span class="ow">to</span> <span class="nb">false</span><span class="p">.</span> <span class="p">}</span>
+  <span class="k">wait</span> <span class="mf">0</span><span class="p">.</span>
+
+  <span class="nv">arrows</span><span class="p">:</span><span class="nv">CLEAR</span><span class="p">().</span>
+  <span class="nv">arrows</span><span class="p">:</span><span class="k">ADD</span><span class="p">(</span><span class="nv">Vecdraw</span><span class="p">(</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">V</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">).},</span> <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">ABSMIN</span><span class="p">.},</span> <span class="nv">RGB</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">.</span><span class="mf">75</span><span class="p">),</span> <span class="s">&quot;ABSMIN&quot;</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="nb">true</span><span class="p">)).</span>
+  <span class="nv">arrows</span><span class="p">:</span><span class="k">ADD</span><span class="p">(</span><span class="nv">Vecdraw</span><span class="p">(</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">V</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">).},</span> <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">ABSMAX</span><span class="p">.},</span> <span class="nv">RGB</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">.</span><span class="mf">75</span><span class="p">),</span> <span class="s">&quot;ABSMAX&quot;</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="nb">true</span><span class="p">)).</span>
+<span class="p">}</span>
+
+<span class="k">local</span> <span class="nv">edges</span> <span class="ow">is</span> <span class="k">LIST</span><span class="p">().</span>
+<span class="kd">function</span> <span class="nv">draw_box</span> <span class="p">{</span>
+  <span class="c1">// Draws a bounds box as a set of 12 non-pointy</span>
+  <span class="c1">// vecdraws along the box edges:</span>
+  <span class="kd">parameter</span> <span class="nv">B</span><span class="p">.</span>
+
+  <span class="c1">// Wipe any old edge draws off the screen.</span>
+  <span class="k">for</span> <span class="nv">edge</span> <span class="nv">in</span> <span class="nv">edges</span> <span class="p">{</span> <span class="k">set</span> <span class="nv">edge</span><span class="p">:</span><span class="nv">show</span> <span class="ow">to</span> <span class="nb">false</span><span class="p">.</span> <span class="p">}</span>
+  <span class="k">wait</span> <span class="mf">0</span><span class="p">.</span>
+
+  <span class="c1">// These need to calculate using relative coords to find all the box edges:</span>
+  <span class="k">local</span> <span class="nv">rel_x_size</span> <span class="ow">is</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMAX</span><span class="p">:</span><span class="nv">X</span> <span class="o">-</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">X</span><span class="p">.</span>
+  <span class="k">local</span> <span class="nv">rel_y_size</span> <span class="ow">is</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMAX</span><span class="p">:</span><span class="nv">Y</span> <span class="o">-</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">Y</span><span class="p">.</span>
+  <span class="k">local</span> <span class="nv">rel_z_size</span> <span class="ow">is</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMAX</span><span class="p">:</span><span class="nv">Z</span> <span class="o">-</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">Z</span><span class="p">.</span>
+
+  <span class="nv">edges</span><span class="p">:</span><span class="nv">CLEAR</span><span class="p">().</span>
+
+  <span class="c1">// The 4 edges parallel to the relative X axis:</span>
+  <span class="nv">edges</span><span class="p">:</span><span class="k">ADD</span><span class="p">(</span><span class="nv">Vecdraw</span><span class="p">(</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">ABSORIGIN</span> <span class="o">+</span> <span class="nv">B</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">V</span><span class="p">(</span><span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">X</span><span class="p">,</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">Y</span><span class="p">,</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">Z</span><span class="p">).},</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">V</span><span class="p">(</span><span class="nv">rel_x_size</span><span class="p">,</span> <span class="mf">0</span><span class="p">,</span> <span class="mf">0</span><span class="p">).},</span>
+    <span class="nv">RGBA</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">.</span><span class="mf">75</span><span class="p">),</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">02</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">false</span><span class="p">)).</span>
+  <span class="nv">edges</span><span class="p">:</span><span class="k">ADD</span><span class="p">(</span><span class="nv">Vecdraw</span><span class="p">(</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">ABSORIGIN</span> <span class="o">+</span> <span class="nv">B</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">V</span><span class="p">(</span><span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">X</span><span class="p">,</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">Y</span><span class="p">,</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMAX</span><span class="p">:</span><span class="nv">Z</span><span class="p">).},</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">V</span><span class="p">(</span><span class="nv">rel_x_size</span><span class="p">,</span> <span class="mf">0</span><span class="p">,</span> <span class="mf">0</span><span class="p">).},</span>
+    <span class="nv">RGBA</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">.</span><span class="mf">75</span><span class="p">),</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">02</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">false</span><span class="p">)).</span>
+  <span class="nv">edges</span><span class="p">:</span><span class="k">ADD</span><span class="p">(</span><span class="nv">Vecdraw</span><span class="p">(</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">ABSORIGIN</span> <span class="o">+</span> <span class="nv">B</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">V</span><span class="p">(</span><span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">X</span><span class="p">,</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMAX</span><span class="p">:</span><span class="nv">Y</span><span class="p">,</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMAX</span><span class="p">:</span><span class="nv">Z</span><span class="p">).},</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">V</span><span class="p">(</span><span class="nv">rel_x_size</span><span class="p">,</span> <span class="mf">0</span><span class="p">,</span> <span class="mf">0</span><span class="p">).},</span>
+    <span class="nv">RGBA</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">.</span><span class="mf">75</span><span class="p">),</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">02</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">false</span><span class="p">)).</span>
+  <span class="nv">edges</span><span class="p">:</span><span class="k">ADD</span><span class="p">(</span><span class="nv">Vecdraw</span><span class="p">(</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">ABSORIGIN</span> <span class="o">+</span> <span class="nv">B</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">V</span><span class="p">(</span><span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">X</span><span class="p">,</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMAX</span><span class="p">:</span><span class="nv">Y</span><span class="p">,</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">Z</span><span class="p">).},</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">V</span><span class="p">(</span><span class="nv">rel_x_size</span><span class="p">,</span> <span class="mf">0</span><span class="p">,</span> <span class="mf">0</span><span class="p">).},</span>
+    <span class="nv">RGBA</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">.</span><span class="mf">75</span><span class="p">),</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">02</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">false</span><span class="p">)).</span>
+
+  <span class="c1">// The 4 edges parallel to the relative Y axis:</span>
+  <span class="nv">edges</span><span class="p">:</span><span class="k">ADD</span><span class="p">(</span><span class="nv">Vecdraw</span><span class="p">(</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">ABSORIGIN</span> <span class="o">+</span> <span class="nv">B</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">V</span><span class="p">(</span><span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">X</span><span class="p">,</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">Y</span><span class="p">,</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">Z</span><span class="p">).},</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">V</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span> <span class="nv">rel_y_size</span><span class="p">,</span> <span class="mf">0</span><span class="p">).},</span>
+    <span class="nv">RGBA</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">.</span><span class="mf">75</span><span class="p">),</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">02</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">false</span><span class="p">)).</span>
+  <span class="nv">edges</span><span class="p">:</span><span class="k">ADD</span><span class="p">(</span><span class="nv">Vecdraw</span><span class="p">(</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">ABSORIGIN</span> <span class="o">+</span> <span class="nv">B</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">V</span><span class="p">(</span><span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">X</span><span class="p">,</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">Y</span><span class="p">,</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMAX</span><span class="p">:</span><span class="nv">Z</span><span class="p">).},</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">V</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span> <span class="nv">rel_y_size</span><span class="p">,</span> <span class="mf">0</span><span class="p">).},</span>
+    <span class="nv">RGBA</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">.</span><span class="mf">75</span><span class="p">),</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">02</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">false</span><span class="p">)).</span>
+  <span class="nv">edges</span><span class="p">:</span><span class="k">ADD</span><span class="p">(</span><span class="nv">Vecdraw</span><span class="p">(</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">ABSORIGIN</span> <span class="o">+</span> <span class="nv">B</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">V</span><span class="p">(</span><span class="nv">B</span><span class="p">:</span><span class="nv">RELMAX</span><span class="p">:</span><span class="nv">X</span><span class="p">,</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">Y</span><span class="p">,</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMAX</span><span class="p">:</span><span class="nv">Z</span><span class="p">).},</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">V</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span> <span class="nv">rel_y_size</span><span class="p">,</span> <span class="mf">0</span><span class="p">).},</span>
+    <span class="nv">RGBA</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">.</span><span class="mf">75</span><span class="p">),</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">02</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">false</span><span class="p">)).</span>
+  <span class="nv">edges</span><span class="p">:</span><span class="k">ADD</span><span class="p">(</span><span class="nv">Vecdraw</span><span class="p">(</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">ABSORIGIN</span> <span class="o">+</span> <span class="nv">B</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">V</span><span class="p">(</span><span class="nv">B</span><span class="p">:</span><span class="nv">RELMAX</span><span class="p">:</span><span class="nv">X</span><span class="p">,</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">Y</span><span class="p">,</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">Z</span><span class="p">).},</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">V</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span> <span class="nv">rel_y_size</span><span class="p">,</span> <span class="mf">0</span><span class="p">).},</span>
+    <span class="nv">RGBA</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">.</span><span class="mf">75</span><span class="p">),</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">02</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">false</span><span class="p">)).</span>
+
+  <span class="c1">// The 4 edges parallel to the relative Z axis:</span>
+  <span class="nv">edges</span><span class="p">:</span><span class="k">ADD</span><span class="p">(</span><span class="nv">Vecdraw</span><span class="p">(</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">ABSORIGIN</span> <span class="o">+</span> <span class="nv">B</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">V</span><span class="p">(</span><span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">X</span><span class="p">,</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">Y</span><span class="p">,</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">Z</span><span class="p">).},</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">V</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span> <span class="mf">0</span><span class="p">,</span> <span class="nv">rel_z_size</span><span class="p">).},</span>
+    <span class="nv">RGBA</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">.</span><span class="mf">75</span><span class="p">),</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">02</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">false</span><span class="p">)).</span>
+  <span class="nv">edges</span><span class="p">:</span><span class="k">ADD</span><span class="p">(</span><span class="nv">Vecdraw</span><span class="p">(</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">ABSORIGIN</span> <span class="o">+</span> <span class="nv">B</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">V</span><span class="p">(</span><span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">X</span><span class="p">,</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMAX</span><span class="p">:</span><span class="nv">Y</span><span class="p">,</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">Z</span><span class="p">).},</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">V</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span> <span class="mf">0</span><span class="p">,</span> <span class="nv">rel_z_size</span><span class="p">).},</span>
+    <span class="nv">RGBA</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">.</span><span class="mf">75</span><span class="p">),</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">02</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">false</span><span class="p">)).</span>
+  <span class="nv">edges</span><span class="p">:</span><span class="k">ADD</span><span class="p">(</span><span class="nv">Vecdraw</span><span class="p">(</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">ABSORIGIN</span> <span class="o">+</span> <span class="nv">B</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">V</span><span class="p">(</span><span class="nv">B</span><span class="p">:</span><span class="nv">RELMAX</span><span class="p">:</span><span class="nv">X</span><span class="p">,</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMAX</span><span class="p">:</span><span class="nv">Y</span><span class="p">,</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">Z</span><span class="p">).},</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">V</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span> <span class="mf">0</span><span class="p">,</span> <span class="nv">rel_z_size</span><span class="p">).},</span>
+    <span class="nv">RGBA</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">.</span><span class="mf">75</span><span class="p">),</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">02</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">false</span><span class="p">)).</span>
+  <span class="nv">edges</span><span class="p">:</span><span class="k">ADD</span><span class="p">(</span><span class="nv">Vecdraw</span><span class="p">(</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">ABSORIGIN</span> <span class="o">+</span> <span class="nv">B</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">V</span><span class="p">(</span><span class="nv">B</span><span class="p">:</span><span class="nv">RELMAX</span><span class="p">:</span><span class="nv">X</span><span class="p">,</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">Y</span><span class="p">,</span> <span class="nv">B</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">:</span><span class="nv">Z</span><span class="p">).},</span>
+    <span class="p">{</span><span class="k">return</span> <span class="nv">B</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">V</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span> <span class="mf">0</span><span class="p">,</span> <span class="nv">rel_z_size</span><span class="p">).},</span>
+    <span class="nv">RGBA</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">.</span><span class="mf">75</span><span class="p">),</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">02</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">false</span><span class="p">)).</span>
+<span class="p">}</span>
+
+<span class="c1">//</span>
+<span class="c1">// ===============================</span>
+<span class="c1">//        main program</span>
+<span class="c1">// ===============================</span>
+<span class="c1">//</span>
+
+<span class="k">local</span> <span class="nv">pNum</span> <span class="ow">is</span> <span class="o">-</span><span class="mf">1</span><span class="p">.</span>
+<span class="k">local</span> <span class="nv">keyPress</span> <span class="ow">is</span> <span class="s">&quot;&quot;</span><span class="p">.</span>
+
+<span class="k">until</span> <span class="nv">keyPress</span> <span class="o">=</span> <span class="s">&quot;q&quot;</span> <span class="p">{</span>
+
+  <span class="k">local</span> <span class="nv">box</span> <span class="ow">is</span> <span class="mf">0</span><span class="p">.</span> <span class="c1">// will get set to the bounds box in a moment.</span>
+  <span class="k">local</span> <span class="nv">description</span> <span class="ow">is</span> <span class="s">&quot;&quot;</span><span class="p">.</span>
+
+  <span class="k">clearscreen</span><span class="p">.</span>
+
+  <span class="k">if</span> <span class="nv">pNum</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1</span> <span class="p">{</span>
+    <span class="c1">// PART NUMBER -1 will be a special flag this</span>
+    <span class="c1">// example program uses to mean &quot;entire vessel&quot;.</span>
+    <span class="k">set</span> <span class="nv">box</span> <span class="ow">to</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">bounds</span><span class="p">.</span>
+    <span class="k">set</span> <span class="nv">description</span> <span class="ow">to</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">TOSTRING</span><span class="p">().</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">local</span> <span class="nv">p</span> <span class="ow">is</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">parts</span><span class="p">[</span><span class="nv">pNum</span><span class="p">].</span>
+    <span class="k">set</span> <span class="nv">box</span> <span class="ow">to</span> <span class="nv">p</span><span class="p">:</span><span class="nv">bounds</span><span class="p">.</span>
+    <span class="k">set</span> <span class="nv">description</span> <span class="ow">to</span> <span class="s">&quot;Part[&quot;</span> <span class="o">+</span> <span class="nv">pNum</span> <span class="o">+</span> <span class="s">&quot;]:&quot;</span> <span class="o">+</span> <span class="nv">p</span><span class="p">:</span><span class="nv">TOSTRING</span><span class="p">().</span>
+  <span class="p">}</span>
+
+  <span class="c1">// These two functions do the actual drawing, and are defined</span>
+  <span class="c1">// below in this file.  When trying to learn how this works,</span>
+  <span class="c1">// look at draw_abs_to_box() first - it&#39;s the simpler one to</span>
+  <span class="c1">// understand that just uses absolute coordinates.  The other</span>
+  <span class="c1">// one, draw_box(), is more complex as it has to use the</span>
+  <span class="c1">// relative coords to get all the other corners of the box:</span>
+  <span class="nv">draw_abs_to_box</span><span class="p">(</span><span class="nv">box</span><span class="p">).</span>
+  <span class="nv">draw_box</span><span class="p">(</span><span class="nv">box</span><span class="p">).</span>
+
+  <span class="k">print</span> <span class="s">&quot;Showing bounds of: &quot;</span> <span class="o">+</span> <span class="nv">description</span><span class="p">.</span>
+  <span class="k">print</span> <span class="s">&quot;-----------------------------------------------------------&quot;</span><span class="p">.</span>
+  <span class="k">print</span> <span class="s">&quot;        ABSMIN: &quot;</span> <span class="o">+</span> <span class="nv">vector_tostring_rounded</span><span class="p">(</span><span class="nv">box</span><span class="p">:</span><span class="nv">ABSMIN</span><span class="p">).</span>
+  <span class="k">print</span> <span class="s">&quot;        ABSMAX: &quot;</span> <span class="o">+</span> <span class="nv">vector_tostring_rounded</span><span class="p">(</span><span class="nv">box</span><span class="p">:</span><span class="nv">ABSMAX</span><span class="p">).</span>
+  <span class="k">print</span> <span class="s">&quot;     ABSORIGIN: &quot;</span> <span class="o">+</span> <span class="nv">vector_tostring_rounded</span><span class="p">(</span><span class="nv">box</span><span class="p">:</span><span class="nv">ABSORIGIN</span><span class="p">).</span>
+  <span class="k">print</span> <span class="s">&quot;     ABSCENTER: &quot;</span> <span class="o">+</span> <span class="nv">vector_tostring_rounded</span><span class="p">(</span><span class="nv">box</span><span class="p">:</span><span class="nv">ABSCENTER</span><span class="p">).</span>
+  <span class="k">print</span> <span class="s">&quot;        RELMIN: &quot;</span> <span class="o">+</span> <span class="nv">vector_tostring_rounded</span><span class="p">(</span><span class="nv">box</span><span class="p">:</span><span class="nv">RELMIN</span><span class="p">).</span>
+  <span class="k">print</span> <span class="s">&quot;        RELMAX: &quot;</span> <span class="o">+</span> <span class="nv">vector_tostring_rounded</span><span class="p">(</span><span class="nv">box</span><span class="p">:</span><span class="nv">RELMAX</span><span class="p">).</span>
+  <span class="k">print</span> <span class="s">&quot;       EXTENTS: &quot;</span> <span class="o">+</span> <span class="nv">vector_tostring_rounded</span><span class="p">(</span><span class="nv">box</span><span class="p">:</span><span class="nv">EXTENTS</span><span class="p">).</span>
+  <span class="k">print</span> <span class="s">&quot;          SIZE: &quot;</span> <span class="o">+</span> <span class="nv">vector_tostring_rounded</span><span class="p">(</span><span class="nv">box</span><span class="p">:</span><span class="nv">SIZE</span><span class="p">).</span>
+  <span class="k">print</span> <span class="s">&quot;     RELCENTER: &quot;</span> <span class="o">+</span> <span class="nv">vector_tostring_rounded</span><span class="p">(</span><span class="nv">box</span><span class="p">:</span><span class="nv">RELCENTER</span><span class="p">).</span>
+  <span class="k">print</span> <span class="s">&quot;     BOTTOMALT: &quot;</span> <span class="o">+</span> <span class="nv">round</span><span class="p">(</span><span class="nv">box</span><span class="p">:</span><span class="nv">BOTTOMALT</span><span class="p">,</span><span class="mf">2</span><span class="p">).</span>
+  <span class="k">print</span> <span class="s">&quot;BOTTOMALTRADAR: &quot;</span> <span class="o">+</span> <span class="nv">round</span><span class="p">(</span><span class="nv">box</span><span class="p">:</span><span class="nv">BOTTOMALTRADAR</span><span class="p">,</span><span class="mf">2</span><span class="p">).</span>
+  <span class="k">print</span> <span class="s">&quot;-----------------------------------------------------------&quot;</span><span class="p">.</span>
+  <span class="k">print</span> <span class="s">&quot;Press N for next, P for previous, Q for quit.&quot;</span><span class="p">.</span>
+  <span class="k">set</span> <span class="nv">keyPress</span> <span class="ow">to</span> <span class="nv">terminal</span><span class="p">:</span><span class="nv">input</span><span class="p">:</span><span class="nv">getchar</span><span class="p">().</span>
+  <span class="k">if</span> <span class="nv">keyPress</span> <span class="o">=</span> <span class="s">&quot;n&quot;</span> <span class="k">set</span> <span class="nv">pNum</span> <span class="ow">to</span> <span class="nv">min</span><span class="p">(</span><span class="nv">ship</span><span class="p">:</span><span class="nv">parts</span><span class="p">:</span><span class="nv">length</span><span class="o">-</span><span class="mf">1</span><span class="p">,</span> <span class="nv">pNum</span> <span class="o">+</span> <span class="mf">1</span><span class="p">).</span>
+  <span class="k">if</span> <span class="nv">keyPress</span> <span class="o">=</span> <span class="s">&quot;p&quot;</span> <span class="k">set</span> <span class="nv">pNum</span> <span class="ow">to</span> <span class="nv">max</span><span class="p">(</span><span class="o">-</span><span class="mf">1</span><span class="p">,</span> <span class="nv">pNum</span> <span class="o">-</span> <span class="mf">1</span><span class="p">).</span>
+
+  <span class="nv">clearvecdraws</span><span class="p">().</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gui.html" class="btn btn-neutral float-right" title="Creating Reusable GUI Elements" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="exenode.html" class="btn btn-neutral" title="Execute Node Script" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2017, Developed and maintained by kOS Team, Originally By Nivekk.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.1.9.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

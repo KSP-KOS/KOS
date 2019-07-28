@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>The kOS CPU hardware &mdash; kOS 1.1.8.0 documentation</title>
+  <title>The kOS CPU hardware &mdash; kOS 1.1.9.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.1.8.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.1.9.0 documentation" href="../index.html"/>
         <link rel="up" title="General Topics" href="../general.html"/>
         <link rel="next" title="KOS Processor PartModule Configuration Fields" href="kospartmodule.html"/>
         <link rel="prev" title="CPU Vessel (SHIP)" href="cpu_vessel.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.8.0
+                1.1.9.0
               </div>
             
           
@@ -186,18 +186,22 @@ more advanced scripts. This page contains that type of information.</p>
 <li><a class="reference internal" href="#triggers" id="id5">Triggers</a><ul>
 <li><a class="reference internal" href="#triggers-for-cooked-steering" id="id6">Triggers for Cooked Steering</a></li>
 <li><a class="reference internal" href="#triggers-for-when-and-on-statements" id="id7">Triggers for WHEN and ON statements</a></li>
-<li><a class="reference internal" href="#wait-in-a-trigger" id="id8">Wait in a Trigger</a></li>
-<li><a class="reference internal" href="#do-not-loop-a-long-time-in-a-trigger-body" id="id9">Do Not Loop a Long Time in a Trigger Body!</a></li>
-<li><a class="reference internal" href="#but-i-want-a-loop" id="id10">But I Want a Loop!!</a></li>
+<li><a class="reference internal" href="#triggers-for-gui-callbacks" id="id8">Triggers for GUI callbacks</a></li>
+<li><a class="reference internal" href="#wait-in-a-trigger" id="id9">Wait in a Trigger</a></li>
+<li><a class="reference internal" href="#do-not-loop-a-long-time-in-a-trigger-body" id="id10">Do Not Loop a Long Time in a Trigger Body!</a></li>
+<li><a class="reference internal" href="#but-i-want-a-loop" id="id11">But I Want a Loop!!</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#trigger-interrupt-priority" id="id11">Trigger Interrupt Priority</a></li>
-<li><a class="reference internal" href="#wait" id="id12">Wait!!!</a></li>
-<li><a class="reference internal" href="#cpu-update-loop" id="id13">CPU Update Loop</a><ul>
-<li><a class="reference internal" href="#how-an-interrupt-works" id="id14">How an interrupt works</a></li>
+<li><a class="reference internal" href="#trigger-interrupt-priority" id="id12">Trigger Interrupt Priority</a><ul>
+<li><a class="reference internal" href="#deliberately-reducing-your-priority-in-long-running-triggers" id="id13">Deliberately reducing your priority in long running triggers</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#the-frozen-universe" id="id15">The Frozen Universe</a></li>
+<li><a class="reference internal" href="#wait" id="id14">Wait!!!</a></li>
+<li><a class="reference internal" href="#cpu-update-loop" id="id15">CPU Update Loop</a><ul>
+<li><a class="reference internal" href="#how-an-interrupt-works" id="id16">How an interrupt works</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#the-frozen-universe" id="id17">The Frozen Universe</a></li>
 </ul>
 </div>
 <div class="section" id="update-ticks-and-physics-ticks">
@@ -372,15 +376,35 @@ short and fast to execute.  If it consists of multiple clauses, try
 to take advantage of</em> <a class="reference internal" href="../language/features.html#short-circuit"><span>short circuit boolean</span></a>
 <em>logic by putting the fastest part of the check first.</em></p>
 </div>
+<div class="section" id="triggers-for-gui-callbacks">
+<h3><a class="toc-backref" href="#id8">Triggers for GUI callbacks</a><a class="headerlink" href="#triggers-for-gui-callbacks" title="Permalink to this headline">¶</a></h3>
+<p>Another type of trigger is the callback delegates that you can
+write for the <a class="reference internal" href="../structures/gui.html#gui"><span>GUI system</span></a> when using the
+<a class="reference internal" href="../structures/gui.html#gui-callback-technique"><span>Callback technique</span></a>.  (For example,
+using <a class="reference internal" href="../structures/gui_widgets/button.html#attribute:BUTTON:ONCLICK" title="BUTTON:ONCLICK attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Button:ONCLICK</span></code></a>, <a class="reference internal" href="../structures/gui_widgets/slider.html#attribute:SLIDER:ONCHANGE" title="SLIDER:ONCHANGE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Slider:ONCHANGE</span></code></a>, and so on.)</p>
+<p>When you give a GUI a callback hook to call, the CPU will implement
+that as a trigger as well.  When you click the button or move the
+slider, etc, then kOS will interrupt your program at the next available
+opportunity (usually the start of the next IPU&#8217;s worth of instructions),
+to call your callback delegate.</p>
+</div>
 <div class="section" id="wait-in-a-trigger">
-<span id="wait-in-trigger"></span><h3><a class="toc-backref" href="#id8">Wait in a Trigger</a><a class="headerlink" href="#wait-in-a-trigger" title="Permalink to this headline">¶</a></h3>
+<span id="wait-in-trigger"></span><h3><a class="toc-backref" href="#id9">Wait in a Trigger</a><a class="headerlink" href="#wait-in-a-trigger" title="Permalink to this headline">¶</a></h3>
 <p>While <code class="docutils literal"><span class="pre">WAIT</span></code> is possible from inside a trigger and it won&#8217;t crash
 the script to use it, it&#8217;s probably not a good design choice to use
 <code class="docutils literal"><span class="pre">WAIT</span></code> inside a trigger.  Triggers should be designed to execute
 all the way through to the end in one fast pass, if possible.</p>
+<p>Exception: If you are careful, there is a built-in function you
+can call that will have your trigger willingly relinquish its priority
+increase, reducing it back down to whatever the priority was before
+it rudely interrupted things. Doing that can allow other triggers of
+equal priority to itself to interrupt it again.  To see how this works,
+look at <a class="reference internal" href="#function:DROPPRIORITY" title="DROPPRIORITY function"><code class="xref ks ks-func docutils literal"><span class="pre">DROPPRIORITY()</span></code></a>, explained below on this page.  In general,
+however, it&#8217;s a better idea not to use this unless you fully understand
+how the prioriy system here works.</p>
 </div>
 <div class="section" id="do-not-loop-a-long-time-in-a-trigger-body">
-<h3><a class="toc-backref" href="#id9">Do Not Loop a Long Time in a Trigger Body!</a><a class="headerlink" href="#do-not-loop-a-long-time-in-a-trigger-body" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id10">Do Not Loop a Long Time in a Trigger Body!</a><a class="headerlink" href="#do-not-loop-a-long-time-in-a-trigger-body" title="Permalink to this headline">¶</a></h3>
 <p>For similar reasons to the explanation above about the <code class="docutils literal"><span class="pre">WAIT</span></code> command
 used inside triggers, it&#8217;s not really a good idea for a trigger to
 have a long loop inside it that just keeps going and going.</p>
@@ -395,9 +419,17 @@ would run in the background while the rest of the program continues on.</p>
 executed, and other triggers of equal or lesser priority aren&#8217;t being
 executed.  A trigger that performs a long-running loop will starve the
 rest of the code in your kerboscript program from being allowed to run.</p>
+<p>Exception: If you are careful, there is a built-in function you
+can call that will have your trigger willingly relinquish its priority
+increase, reducing it back down to whatever the priority was before
+it rudely interrupted things. Doing that can allow other triggers of
+equal priority to itself to interrupt it again.  To see how this works,
+look at <a class="reference internal" href="#function:DROPPRIORITY" title="DROPPRIORITY function"><code class="xref ks ks-func docutils literal"><span class="pre">DROPPRIORITY()</span></code></a>, explained below on this page.  In general,
+however, it&#8217;s a better idea not to use this unless you fully understand
+how the prioriy system here works.</p>
 </div>
 <div class="section" id="but-i-want-a-loop">
-<h3><a class="toc-backref" href="#id10">But I Want a Loop!!</a><a class="headerlink" href="#but-i-want-a-loop" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id11">But I Want a Loop!!</a><a class="headerlink" href="#but-i-want-a-loop" title="Permalink to this headline">¶</a></h3>
 <p>If you want a trigger body that is meant to loop a long time, the only
 workable way to do it is to design it to execute just once, but
 then make it return true (or use the <code class="docutils literal"><span class="pre">preserve</span></code> keyword, which is
@@ -407,7 +439,7 @@ executes one iteration per <strong>physics tick</strong>.</p>
 </div>
 </div>
 <div class="section" id="trigger-interrupt-priority">
-<span id="interrupt-priority"></span><h2><a class="toc-backref" href="#id11">Trigger Interrupt Priority</a><a class="headerlink" href="#trigger-interrupt-priority" title="Permalink to this headline">¶</a></h2>
+<span id="interrupt-priority"></span><h2><a class="toc-backref" href="#id12">Trigger Interrupt Priority</a><a class="headerlink" href="#trigger-interrupt-priority" title="Permalink to this headline">¶</a></h2>
 <div class="versionadded">
 <p><span class="versionmodified">New in version 1.1.6.0: </span>The multiple priorities of interruption described below (GUI callbacks
 being lower priority than recurring callbacks) were introduced in
@@ -419,8 +451,9 @@ is allowed to interrupt the program flow depending on what the program
 is doing right now.  This is accomplished by having a few priority
 levels, shown in this list:</p>
 <ul class="simple">
-<li>Priority 20: <a class="reference internal" href="#recurring-trigger"><span>Recurring Interrupts</span></a></li>
-<li>Priority 10: <a class="reference internal" href="#callback-once-trigger"><span>Callback-Once Interrupts</span></a></li>
+<li>Priority 30: <a class="reference internal" href="#trigger-steering"><span>Cooked control Interrupts</span></a> (i.e. LOCK STEERING)</li>
+<li>Priority 20: <a class="reference internal" href="#recurring-trigger"><span>Recurring Interrupts</span></a> (i.e. WHEN or ON)</li>
+<li>Priority 10: <a class="reference internal" href="#callback-once-trigger"><span>Callback-Once Interrupts</span></a> (i.e. GUI callbacks)</li>
 <li>Priority 0: Normal (non-interrupting) code.</li>
 </ul>
 <p><strong>A Trigger will only interrupt something of lower priority than itself</strong>.</p>
@@ -436,7 +469,7 @@ highest priority because they&#8217;re often time sensitive and need
 to happen again and again with speed, while the callback-once
 interrupts are probably not as time-sensitive since they respond
 to one-shot events like user clicks.</p>
-<p><strong>A trigger cannot interrupt *itself* if it&#8217;s still running</strong>.</p>
+<p><strong>most triggers cannot interrupt *themselves* if they&#8217;re still running</strong>.</p>
 <p>When you have recurring triggers that keep re-running themselves
 again and again, the way they work is that they wait till the previous
 instance of themselves has finished running before a new instance will
@@ -452,9 +485,150 @@ fine-grained if that becomes necessary later.  Never write code that
 is too dependant on the priorities being exactly this way.  (This is
 why these numbers aren&#8217;t even exposed to the script at the moment,
 to avoid that design pattern.)</p>
+<div class="section" id="deliberately-reducing-your-priority-in-long-running-triggers">
+<span id="drop-priority"></span><h3><a class="toc-backref" href="#id13">Deliberately reducing your priority in long running triggers</a><a class="headerlink" href="#deliberately-reducing-your-priority-in-long-running-triggers" title="Permalink to this headline">¶</a></h3>
+<p>Normally if you did something like this:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">done</span> <span class="ow">is</span> <span class="nb">false</span><span class="p">.</span>
+
+<span class="k">set</span> <span class="nv">Gwin</span> <span class="ow">to</span> <span class="nv">GUI</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span>
+<span class="k">set</span> <span class="nv">b1</span> <span class="ow">to</span> <span class="nv">Gwin</span><span class="p">:</span><span class="nv">addbutton</span><span class="p">(</span><span class="s">&quot;beep&quot;</span><span class="p">).</span>
+<span class="k">set</span> <span class="nv">b1</span><span class="p">:</span><span class="nv">onclick</span> <span class="ow">to</span> <span class="p">{</span> <span class="nv">getvoice</span><span class="p">(</span><span class="mf">0</span><span class="p">):</span><span class="nv">play</span><span class="p">(</span><span class="nv">note</span><span class="p">(</span><span class="mf">300</span><span class="p">,</span><span class="mf">0</span><span class="p">.</span><span class="mf">2</span><span class="p">)).</span> <span class="p">}.</span>
+<span class="k">set</span> <span class="nv">b2</span> <span class="ow">to</span> <span class="nv">GWin</span><span class="p">:</span><span class="nv">addbutton</span><span class="p">(</span><span class="s">&quot;count&quot;</span><span class="p">).</span>
+<span class="k">set</span> <span class="nv">b2</span><span class="p">:</span><span class="nv">onclick</span> <span class="ow">to</span> <span class="nv">count</span><span class="p">@.</span>
+<span class="k">set</span> <span class="nv">b3</span> <span class="ow">to</span> <span class="nv">Gwin</span><span class="p">:</span><span class="nv">addbutton</span><span class="p">(</span><span class="s">&quot;quit&quot;</span><span class="p">).</span>
+<span class="k">set</span> <span class="nv">b3</span><span class="p">:</span><span class="nv">onclick</span> <span class="ow">to</span> <span class="p">{</span> <span class="k">set</span> <span class="nv">done</span> <span class="ow">to</span> <span class="nb">true</span><span class="p">.</span> <span class="p">}.</span>
+
+<span class="nv">GWin</span><span class="p">:</span><span class="nv">show</span><span class="p">().</span>
+<span class="k">wait</span> <span class="k">until</span> <span class="nv">done</span><span class="p">.</span>
+<span class="nv">GWin</span><span class="p">:</span><span class="nv">Dispose</span><span class="p">().</span>
+
+<span class="kd">function</span> <span class="nv">count</span> <span class="p">{</span>
+  <span class="k">local</span> <span class="nv">i</span> <span class="ow">is</span> <span class="mf">5</span><span class="p">.</span>
+  <span class="k">until</span> <span class="nv">i</span> <span class="o">=</span> <span class="mf">0</span> <span class="p">{</span>
+    <span class="k">print</span> <span class="s">&quot;Counting.. &quot;</span> <span class="o">+</span> <span class="nv">i</span><span class="p">.</span>
+    <span class="k">set</span> <span class="nv">i</span> <span class="ow">to</span> <span class="nv">i</span> <span class="o">-</span> <span class="mf">1</span><span class="p">.</span>
+    <span class="k">wait</span> <span class="mf">1</span><span class="p">.</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>It would mean that while you press the &#8220;count&#8221; button, and it prints the
+countdown from 5 to 1, the other buttons, including &#8220;beep&#8221; and &#8220;quit&#8221;
+would have no effect until the countdown is done.  Because <code class="docutils literal"><span class="pre">count()</span></code>
+is the callback for a GUI button, it runs at a higher than normal priority,
+which means it won&#8217;t let itself get interrupted by other GUI callbacks.
+Instead those other GUI callbacks will be delayed until count() is done.</p>
+<p>If you wish, you can cause your trigger, or callback, to deliberately
+relinquish its hold on other interrupts, allowing them to interrupt it
+despite the fact that it is itself in the middle of an interrupt.
+You do this by  deliberately reducing your current priority level
+back down a step to whatever it was prior to being incresed by the
+interrrupt, which is what this special built-in function does:</p>
+<dl class="function">
+<dt id="function:DROPPRIORITY">
+<code class="descname">DROPPRIORITY</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#function:DROPPRIORITY" title="Permalink to this definition">¶</a></dt>
+<dd><p>After this built-in function is executed by a trigger&#8217;s body,
+the current interrupt priority is dropped back down to whatever the
+priority of the code you interrupted was.  This is your trigger&#8217;s
+way of saying &#8220;I don&#8217;t actually want to block interrupts anymore.
+Please let me be interrupted just as much as whatever <em>I</em>
+interrupted was allowed to be interrupted.&#8221;</p>
+<p>SO, for example, if Priority 0 code (normal code) got interrupted
+by priority 10 code (GUI callback code), and the GUI callback
+code executed <code class="docutils literal"><span class="pre">DROPPRIORITY</span></code>, then it would now be running at
+priority 0 instead of 10, because priority 0 is what got interrupted,
+and thus allow other GUI code to interrupt it again.</p>
+<p>On the other hand, if GUI callback code (priority 10) got
+interrupted by WHEN-THEN code (priority 20), and the WHEN-THEN
+code had called DROPPRIORITY(), then the priority level of
+that pass through the WHEN-THEN would only be dropped down to
+10, NOT all the way to 0, because it was interrupting priority 10
+code.</p>
+<p>The reason it works this way (instead of just dropping it all the
+way down to normal (0) priority directly) is that, effectively,
+it means a trigger only has the authority to undo its own
+priority increase that it caused itself.  It can&#8217;t force the
+priority down to something less than the code that got interrupted
+had to begin with.  Had it been allowed to do that, it could have
+been a back-door to circumventing the priority of the thing
+that it interrupted.</p>
+<p>Be aware that once you <code class="docutils literal"><span class="pre">DROPPRIORITY()</span></code>, you also are making it
+so that the SAME trigger you are currently inside of could fire off
+again too.  It may be a good idea to protect yourself against that,
+if it is not desired, by setting a flag variable to record the fact
+that you are inside the trigger at the time and should not re-run it,
+and then test this flag variable at the top of your trigger code,
+skipping the body if it&#8217;s set.</p>
+</dd></dl>
+
+<p>So in the above GUI example, if you added <code class="docutils literal"><span class="pre">DROPPRIORITY</span></code> as shown
+in the edited version of the example, below, then the other buttons
+like the &#8220;beep&#8221; button, would work while the count() is happening:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">done</span> <span class="ow">is</span> <span class="nb">false</span><span class="p">.</span>
+
+<span class="k">set</span> <span class="nv">Gwin</span> <span class="ow">to</span> <span class="nv">GUI</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span>
+<span class="k">set</span> <span class="nv">b1</span> <span class="ow">to</span> <span class="nv">Gwin</span><span class="p">:</span><span class="nv">addbutton</span><span class="p">(</span><span class="s">&quot;beep&quot;</span><span class="p">).</span>
+<span class="k">set</span> <span class="nv">b1</span><span class="p">:</span><span class="nv">onclick</span> <span class="ow">to</span> <span class="p">{</span> <span class="nv">getvoice</span><span class="p">(</span><span class="mf">0</span><span class="p">):</span><span class="nv">play</span><span class="p">(</span><span class="nv">note</span><span class="p">(</span><span class="mf">300</span><span class="p">,</span><span class="mf">0</span><span class="p">.</span><span class="mf">2</span><span class="p">)).</span> <span class="p">}.</span>
+<span class="k">set</span> <span class="nv">b2</span> <span class="ow">to</span> <span class="nv">GWin</span><span class="p">:</span><span class="nv">addbutton</span><span class="p">(</span><span class="s">&quot;count&quot;</span><span class="p">).</span>
+<span class="k">set</span> <span class="nv">b2</span><span class="p">:</span><span class="nv">onclick</span> <span class="ow">to</span> <span class="nv">count</span><span class="p">@.</span>
+<span class="k">set</span> <span class="nv">b3</span> <span class="ow">to</span> <span class="nv">Gwin</span><span class="p">:</span><span class="nv">addbutton</span><span class="p">(</span><span class="s">&quot;quit&quot;</span><span class="p">).</span>
+<span class="k">set</span> <span class="nv">b3</span><span class="p">:</span><span class="nv">onclick</span> <span class="ow">to</span> <span class="p">{</span> <span class="k">set</span> <span class="nv">done</span> <span class="ow">to</span> <span class="nb">true</span><span class="p">.</span> <span class="p">}.</span>
+
+<span class="nv">GWin</span><span class="p">:</span><span class="nv">show</span><span class="p">().</span>
+<span class="k">wait</span> <span class="k">until</span> <span class="nv">done</span><span class="p">.</span>
+<span class="nv">GWin</span><span class="p">:</span><span class="nv">Dispose</span><span class="p">().</span>
+
+<span class="kd">function</span> <span class="nv">count</span> <span class="p">{</span>
+
+  <span class="nv">DROPPRIORITY</span><span class="p">().</span> <span class="c1">// &lt;--- NEW LINE ADDED HERE</span>
+
+  <span class="k">local</span> <span class="nv">i</span> <span class="ow">is</span> <span class="mf">5</span><span class="p">.</span>
+  <span class="k">until</span> <span class="nv">i</span> <span class="o">=</span> <span class="mf">0</span> <span class="p">{</span>
+    <span class="k">print</span> <span class="s">&quot;Counting.. &quot;</span> <span class="o">+</span> <span class="nv">i</span><span class="p">.</span>
+    <span class="k">set</span> <span class="nv">i</span> <span class="ow">to</span> <span class="nv">i</span> <span class="o">-</span> <span class="mf">1</span><span class="p">.</span>
+    <span class="k">wait</span> <span class="mf">1</span><span class="p">.</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Once you call <code class="docutils literal"><span class="pre">DROPPRIORITY()</span></code>, then from then on, you are effectively no
+longer a trigger, as far as the interruption system is concerned.</p>
+<p>BE CAREFUL - if you do this then it is possible for the same trigger or
+callback to interrupt <em>itself</em> again.  In the above example where
+DROPPRIORITY() was added, you could press the &#8220;count&#8221; button twice in
+quick succession and one press would interrupt the other.  It&#8217;s up to you,
+if you use <code class="docutils literal"><span class="pre">DROPPRIORITY()</span></code> to deal with this problem and stop it from
+happening if it&#8217;s a bad thing for your program.  You can do this by
+setting a flag that checks if your trigger is already running and if so,
+skips it, like so:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">count_is_running</span> <span class="ow">is</span> <span class="nb">false</span><span class="p">.</span>
+<span class="kd">function</span> <span class="nv">count</span> <span class="p">{</span>
+
+  <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="nv">count_is_running</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">set</span> <span class="nv">count_is_running</span> <span class="ow">to</span> <span class="nb">true</span><span class="p">.</span>
+    <span class="nv">DROPPRIORITY</span><span class="p">().</span>
+
+    <span class="k">local</span> <span class="nv">i</span> <span class="ow">is</span> <span class="mf">5</span><span class="p">.</span>
+    <span class="k">until</span> <span class="nv">i</span> <span class="o">=</span> <span class="mf">0</span> <span class="p">{</span>
+      <span class="k">print</span> <span class="s">&quot;Counting.. &quot;</span> <span class="o">+</span> <span class="nv">i</span><span class="p">.</span>
+      <span class="k">set</span> <span class="nv">i</span> <span class="ow">to</span> <span class="nv">i</span> <span class="o">-</span> <span class="mf">1</span><span class="p">.</span>
+      <span class="k">wait</span> <span class="mf">1</span><span class="p">.</span>
+    <span class="p">}</span>
+    <span class="k">set</span> <span class="nv">count_is_running</span> <span class="ow">to</span> <span class="nb">false</span><span class="p">.</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Again, using <code class="docutils literal"><span class="pre">DROPPRIORITY()</span></code> is an advanced topic that should be avoided
+until after you understand what you&#8217;ve read here.  Even then, it&#8217;s usually
+simpler and better to just avoid using it and instead design your script in
+such a way that it&#8217;s unnecessary to use it.  (It&#8217;s only necessary to use it
+if you have interrupt triggers that run a long time instead of finishing
+quickly like they should.)</p>
+</div>
 </div>
 <div class="section" id="wait">
-<h2><a class="toc-backref" href="#id12">Wait!!!</a><a class="headerlink" href="#wait" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id14">Wait!!!</a><a class="headerlink" href="#wait" title="Permalink to this headline">¶</a></h2>
 <p>Any WAIT statement causes the kerboscript program to immediately stop executing the main program where it is, even if far fewer than <a class="reference internal" href="../structures/misc/config.html#attribute:CONFIG:IPU" title="CONFIG:IPU attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Config:IPU</span></code></a> instructions have been executed in this <strong>physics tick</strong>. It will not continue the execution until at least the next <strong>physics tick</strong>, when it will check to see if the WAIT condition is satisfied and it&#8217;s time to wake up and continue.</p>
 <p>Therefore ANY WAIT of any kind will guarantee that your program will allow at least one <strong>physics tick</strong> to have happened before continuing. If you attempt to:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">WAIT</span> <span class="mf">0</span><span class="p">.</span><span class="mf">001</span><span class="p">.</span>
@@ -477,7 +651,7 @@ full <strong>physics tick</strong>.</p>
 <p>Then even though the condition is immediately true, it will still wait one physics tick to discover this fact and continue.</p>
 </div>
 <div class="section" id="cpu-update-loop">
-<span id="id2"></span><h2><a class="toc-backref" href="#id13">CPU Update Loop</a><a class="headerlink" href="#cpu-update-loop" title="Permalink to this headline">¶</a></h2>
+<span id="id2"></span><h2><a class="toc-backref" href="#id15">CPU Update Loop</a><a class="headerlink" href="#cpu-update-loop" title="Permalink to this headline">¶</a></h2>
 <div class="versionadded">
 <p><span class="versionmodified">New in version 1.1.6.0: </span>As of version 1.1.6.0, the entire layout of the CPU update loop
 was re-written to handle the new trigger priority system.</p>
@@ -528,7 +702,7 @@ the &#8220;active&#8221; queue so it will get executed next time on step 3.3 abo
 </li>
 </ul>
 <div class="section" id="how-an-interrupt-works">
-<h3><a class="toc-backref" href="#id14">How an interrupt works</a><a class="headerlink" href="#how-an-interrupt-works" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id16">How an interrupt works</a><a class="headerlink" href="#how-an-interrupt-works" title="Permalink to this headline">¶</a></h3>
 <p>Whenever the CPU decides to cause an interrupt in step 3.3 above, it does
 so by simulating how a subroutine call normally works in the system.  It
 does the following:</p>
@@ -571,7 +745,7 @@ main code can continue.</p>
 </div>
 </div>
 <div class="section" id="the-frozen-universe">
-<span id="frozen"></span><h2><a class="toc-backref" href="#id15">The Frozen Universe</a><a class="headerlink" href="#the-frozen-universe" title="Permalink to this headline">¶</a></h2>
+<span id="frozen"></span><h2><a class="toc-backref" href="#id17">The Frozen Universe</a><a class="headerlink" href="#the-frozen-universe" title="Permalink to this headline">¶</a></h2>
 <p>Each <strong>physics</strong> <em>tick</em>, the kOS mod wakes up and runs through all the currently loaded CPU parts that are in &#8220;physics range&#8221; (i.e. 2.5 km), and executes a batch of instructions from your script code that&#8217;s on them. It is important to note that during the running of this batch of instructions, because no <strong>physics ticks</strong> are happening during it, none of the values that you might query from the KSP system will change. The clock time returned from the TIME variable will keep the same value throughout. The amount of fuel left will remain fixed throughout. The position and velocity of the vessel will remaining fixed throughout. It&#8217;s not until the next physics tick occurs that those values will change to new numbers. It&#8217;s typical that several lines of your kerboscript code will run during a single physics tick.</p>
 <p>Effectively, as far as the <em>simulated</em> universe can tell, it&#8217;s as if your script runs several instructions in literally zero amount of time, and then pauses for a fraction of a second, and then runs more instructions in literally zero amount of time, then pauses for a fraction of a second, and so on, rather than running the program in a smoothed out continuous way.</p>
 <p>This is a vital difference between how a kOS CPU behaves versus how a real world computer behaves. In a real world computer, you would know for certain that time will pass, even if it&#8217;s just a few picoseconds, between the execution of one statement and the next.</p>
@@ -619,7 +793,7 @@ main code can continue.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.1.8.0',
+            VERSION:'1.1.9.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -184,17 +184,18 @@ Like all ``LOCK`` expressions, the steering and throttle continually update on t
     LOCK WHEELSTEERING.  See the note in the next section below.
 
 
-Don't 'WAIT' during cooked control calculation
-----------------------------------------------
+Don't 'WAIT' or run slow script code during cooked control calculation
+----------------------------------------------------------------------
 
 Be aware that because LOCK THROTTLE, LOCK STEERING, LOCK
-WHEELTHROTTLE, and LOCK WHEELSTEERING are actually
-:ref:`triggers <triggers>` that cause your expression
-to be calculated every single physics update tick behind
-the scenes, you should not execute a ``WAIT`` command
-in the code that performs the evaluation of the value
-used in them, as that will effectively cheat the entire
-script out of the full execution speed it deserves.
+WHEELTHROTTLE, and LOCK WHEELSTEERING are actually the
+highest priority types of :ref:`triggers <triggers>` that
+exist in kOS, they cause your expression to be calculated
+every single physics update tick behind the scenes.  So you
+should not execute a ``WAIT`` command in the code that
+performs the evaluation of the value used in them, as that
+will effectively cheat the entire script out of the full
+execution speed it deserves.
 
 For example, if you attempt this::
 
@@ -215,6 +216,13 @@ hits the wait inside the throttle expression, it will stop
 there, not resuming until the next update, effectively meaning
 it doesn't get around to running any of your main-line code
 until the next tick.)
+
+Again, note that the cooked steering LOCKS mentioned here are
+the *highest* priority triggers there are in kOS.  That means they
+can even interrupt other triggers like WHEN/THEN or GUI callbacks.
+Do not make them call complex functions that take a lot of instructions
+to return a value, or else you might find that there's not enough
+instructions per update left to run the rest of your program effectively.
 
 Normally when you use a LOCK command, the expression is only evaluated
 when it needs to be by some other part of the script that is trying

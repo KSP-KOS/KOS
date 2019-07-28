@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Ship Systems &mdash; kOS 1.1.8.0 documentation</title>
+  <title>Ship Systems &mdash; kOS 1.1.9.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.8.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.9.0 documentation" href="../../index.html"/>
         <link rel="up" title="Flight Control" href="../flight.html"/>
         <link rel="next" title="Predictions of Flight Path" href="../prediction.html"/>
         <link rel="prev" title="Pilot Input" href="pilot.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.8.0
+                1.1.9.0
               </div>
             
           
@@ -256,7 +256,7 @@ For further information see the
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">SASMODE</span> <span class="ow">TO</span> <span class="nv">value</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>It is the equivalent to clicking on the buttons next to the nav ball while manually piloting the craft, and will respect the current mode of the nav ball (orbital, surface, or target velocity - use NAVMODE to read or set it).  Valid strings for <code class="docutils literal"><span class="pre">value</span></code> are <code class="docutils literal"><span class="pre">&quot;PROGRADE&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;RETROGRADE&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;NORMAL&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;ANTINORMAL&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;RADIALOUT&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;RADIALIN&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;TARGET&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;ANTITARGET&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;MANEUVER&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;STABILITYASSIST&quot;</span></code>, and <code class="docutils literal"><span class="pre">&quot;STABILITY&quot;</span></code>.  A null or empty string will default to stability assist mode, however any other invalid string will throw an exception.  This feature will respect career mode limitations, and will throw an exception if the current vessel is not able to use the mode passed to the command.  An exception is also thrown if <code class="docutils literal"><span class="pre">&quot;TARGET&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;ANTITARGET&quot;</span></code> are used, but no target is selected.</p>
+<p>It is the equivalent to clicking on the buttons next to the nav ball while manually piloting the craft, and will respect the current mode of the nav ball (orbital, surface, or target velocity - use NAVMODE to read or set it).  Valid strings for <code class="docutils literal"><span class="pre">value</span></code> are <code class="docutils literal"><span class="pre">&quot;PROGRADE&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;RETROGRADE&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;NORMAL&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;ANTINORMAL&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;RADIALOUT&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;RADIALIN&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;TARGET&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;ANTITARGET&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;MANEUVER&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;STABILITYASSIST&quot;</span></code>, and <code class="docutils literal"><span class="pre">&quot;STABILITY&quot;</span></code>.  A null or empty string will default to stability assist mode, however any other invalid string will throw an exception.  This feature will respect career mode limitations, and will throw an exception if the current vessel is not able to use the mode passed to the command.  An exception is also thrown if <code class="docutils literal"><span class="pre">&quot;TARGET&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;ANTITARGET&quot;</span></code> are used when no target is set.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">SAS mode is reset to stability assist when toggling SAS on, however it doesn&#8217;t happen immediately.
@@ -762,6 +762,14 @@ description for details.</p>
 </pre></div>
 </div>
 <p>For more information see <a class="reference internal" href="../../bindings.html#bindings"><span>Catalog of Bound Variable Names</span></a>.</p>
+<p>NOTE, the way to de-select the target is to set it to an empty
+string like this:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">TARGET</span> <span class="ow">TO</span> <span class="s">&quot;&quot;</span><span class="p">.</span> <span class="c1">// de-selects the target, setting it to nothing.</span>
+</pre></div>
+</div>
+<p>(Trying to use <a class="reference internal" href="../../language/variables.html#unset"><span>UNSET TARGET.</span></a> will have no effect because
+<code class="docutils literal"><span class="pre">UNSET</span></code> means &#8220;get rid of the variable itself&#8221; which you&#8217;re not
+allowed to do with built-in bound variables like <code class="docutils literal"><span class="pre">TARGET</span></code>.)</p>
 </dd></dl>
 
 <p>Note that the above options also can refer to a different vessel besides the current ship, for example, <code class="docutils literal"><span class="pre">TARGET:THROTTLE</span></code> to read the target&#8217;s throttle. But not all &#8220;set&#8221; or &#8220;lock&#8221; options will work with a different vessel other than the current one, because there&#8217;s no authority to control a craft the current program is not attached to.</p>
@@ -809,7 +817,7 @@ description for details.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.8.0',
+            VERSION:'1.1.9.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

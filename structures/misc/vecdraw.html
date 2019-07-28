@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Drawing Vectors on the Screen &mdash; kOS 1.1.8.0 documentation</title>
+  <title>Drawing Vectors on the Screen &mdash; kOS 1.1.9.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.8.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.9.0 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Voice" href="voice.html"/>
         <link rel="prev" title="WARP" href="timewarp.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.8.0
+                1.1.9.0
               </div>
             
           
@@ -195,12 +195,12 @@ to a new location, make it appear or disappear, change its color,
 and label.  This page describes how to do that.</div></blockquote>
 <dl class="function">
 <dt id="function:VECDRAW">
-<code class="descname">VECDRAW</code><span class="sig-paren">(</span>start, vec, color, label, scale, show, width<span class="sig-paren">)</span><a class="headerlink" href="#function:VECDRAW" title="Permalink to this definition">¶</a></dt>
+<code class="descname">VECDRAW</code><span class="sig-paren">(</span>start, vec, color, label, scale, show, width, pointy<span class="sig-paren">)</span><a class="headerlink" href="#function:VECDRAW" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="function:VECDRAWARGS">
-<code class="descname">VECDRAWARGS</code><span class="sig-paren">(</span>start, vec, color, label, scale, show, width<span class="sig-paren">)</span><a class="headerlink" href="#function:VECDRAWARGS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">VECDRAWARGS</code><span class="sig-paren">(</span>start, vec, color, label, scale, show, width, pointy<span class="sig-paren">)</span><a class="headerlink" href="#function:VECDRAWARGS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Both these two function names do the same thing.  For historical
 reasons both names exist, but now they both do the same thing.
 They create a new <code class="docutils literal"><span class="pre">vecdraw</span></code> object that you can then manipulate
@@ -212,7 +212,9 @@ to show things on the screen:</p>
       <span class="s">&quot;See the arrow?&quot;</span><span class="p">,</span>
       <span class="mf">1</span><span class="p">.</span><span class="mf">0</span><span class="p">,</span>
       <span class="nb">TRUE</span><span class="p">,</span>
-      <span class="mf">0</span><span class="p">.</span><span class="mf">2</span>
+      <span class="mf">0</span><span class="p">.</span><span class="mf">2</span><span class="p">,</span>
+      <span class="nb">TRUE</span><span class="p">,</span>
+      <span class="nb">TRUE</span>
     <span class="p">).</span>
 
 <span class="k">SET</span> <span class="nv">anArrow</span> <span class="ow">TO</span> <span class="nv">VECDRAWARGS</span><span class="p">(</span>
@@ -222,7 +224,9 @@ to show things on the screen:</p>
       <span class="s">&quot;See the arrow?&quot;</span><span class="p">,</span>
       <span class="mf">1</span><span class="p">.</span><span class="mf">0</span><span class="p">,</span>
       <span class="nb">TRUE</span><span class="p">,</span>
-      <span class="mf">0</span><span class="p">.</span><span class="mf">2</span>
+      <span class="mf">0</span><span class="p">.</span><span class="mf">2</span><span class="p">,</span>
+      <span class="nb">TRUE</span><span class="p">,</span>
+      <span class="nb">TRUE</span>
     <span class="p">).</span>
 </pre></div>
 </div>
@@ -241,7 +245,9 @@ for you as it draws the arrow:</p>
   <span class="s">&quot;Jumping arrow!&quot;</span><span class="p">,</span>
   <span class="mf">1</span><span class="p">.</span><span class="mf">0</span><span class="p">,</span>
   <span class="nb">TRUE</span><span class="p">,</span>
-  <span class="mf">0</span><span class="p">.</span><span class="mf">2</span>
+  <span class="mf">0</span><span class="p">.</span><span class="mf">2</span><span class="p">,</span>
+  <span class="nb">TRUE</span><span class="p">,</span>
+  <span class="nb">TRUE</span>
 <span class="p">).</span>
 <span class="k">wait</span> <span class="mf">20</span><span class="p">.</span> <span class="c1">// Give user time to see it in motion.</span>
 <span class="k">set</span> <span class="nv">anArrow</span><span class="p">:</span><span class="nv">show</span> <span class="ow">to</span> <span class="nb">false</span><span class="p">.</span> <span class="c1">// Make it stop drawing.</span>
@@ -294,6 +300,12 @@ will be given a default:</p>
 <tr class="row-even"><td><code class="xref ks ks-attr docutils literal"><span class="pre">WIDTH</span></code></td>
 <td>0.2</td>
 </tr>
+<tr class="row-odd"><td><code class="xref ks ks-attr docutils literal"><span class="pre">POINTY</span></code></td>
+<td>true</td>
+</tr>
+<tr class="row-even"><td><code class="xref ks ks-attr docutils literal"><span class="pre">WIPING</span></code></td>
+<td>true</td>
+</tr>
 </tbody>
 </table>
 <p>Examples:</p>
@@ -303,7 +315,7 @@ will be given a default:</p>
 <span class="k">SET</span> <span class="nv">vd</span> <span class="ow">TO</span> <span class="nv">VECDRAW</span><span class="p">(</span><span class="nv">V</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">),</span> <span class="mf">5</span><span class="o">*</span><span class="nv">north</span><span class="p">:</span><span class="nv">vector</span><span class="p">,</span> <span class="nv">red</span><span class="p">).</span>
 </pre></div>
 </div>
-<p>To make a <a class="reference internal" href="#structure:VECDRAW" title="VECDRAW structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VecDraw</span></code></a> disappear, you can either set its <a class="reference internal" href="#attribute:VECDRAW:SHOW" title="VECDRAW:SHOW attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VecDraw:SHOW</span></code></a> to false or just UNSET the variable, or re-assign it. An example using <a class="reference internal" href="#structure:VECDRAW" title="VECDRAW structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VecDraw</span></code></a> can be seen in the documentation for <a class="reference internal" href="../../commands/prediction.html#function:POSITIONAT" title="POSITIONAT function"><code class="xref ks ks-func docutils literal"><span class="pre">POSITIONAT()</span></code></a>.</p>
+<p>To make a <a class="reference internal" href="#structure:VECDRAW" title="VECDRAW structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VecDraw</span></code></a> disappear, you can either set its <a class="reference internal" href="#attribute:VECDRAW:SHOW" title="VECDRAW:SHOW attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VecDraw:SHOW</span></code></a> to false or just <a class="reference internal" href="../../language/variables.html#unset"><span>UNSET</span></a> the variable, or re-assign it. An example using <a class="reference internal" href="#structure:VECDRAW" title="VECDRAW structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VecDraw</span></code></a> can be seen in the documentation for <a class="reference internal" href="../../commands/prediction.html#function:POSITIONAT" title="POSITIONAT function"><code class="xref ks ks-func docutils literal"><span class="pre">POSITIONAT()</span></code></a>.</p>
 </dd></dl>
 
 <span class="target" id="clearvecdraws"></span><dl class="function">
@@ -372,23 +384,27 @@ entire system.</p>
 <td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 <td>width of vector, default is 0.2</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VECDRAW:STARTUPDATER" title="VECDRAW:STARTUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">STARTUPDATER</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VECDRAW:POINTY" title="VECDRAW:POINTY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">POINTY</span></code></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<td>Will the pointy hat be drawn</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VECDRAW:STARTUPDATER" title="VECDRAW:STARTUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">STARTUPDATER</span></code></a></td>
 <td><a class="reference internal" href="kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KosDelegate</span></code></a></td>
 <td>assigns a delegate to auto-update the START attribute.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VECDRAW:VECUPDATER" title="VECDRAW:VECUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VECUPDATER</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VECDRAW:VECUPDATER" title="VECDRAW:VECUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VECUPDATER</span></code></a></td>
 <td><a class="reference internal" href="kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KosDelegate</span></code></a></td>
 <td>assigns a delegate to auto-update the VEC attribute.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VECDRAW:VECTORUPDATER" title="VECDRAW:VECTORUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VECTORUPDATER</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VECDRAW:VECTORUPDATER" title="VECDRAW:VECTORUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VECTORUPDATER</span></code></a></td>
 <td>&nbsp;</td>
 <td>Same as <a class="reference internal" href="#attribute:VECDRAW:VECUPDATER" title="VECDRAW:VECUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VECUPDATER</span></code></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VECDRAW:COLORUPDATER" title="VECDRAW:COLORUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">COLORUPDATER</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VECDRAW:COLORUPDATER" title="VECDRAW:COLORUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">COLORUPDATER</span></code></a></td>
 <td><a class="reference internal" href="kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KosDelegate</span></code></a></td>
 <td>assigns a delegate to auto-update the COLOR attribute.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VECDRAW:COLOURUPDATER" title="VECDRAW:COLOURUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">COLOURUPDATER</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VECDRAW:COLOURUPDATER" title="VECDRAW:COLOURUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">COLOURUPDATER</span></code></a></td>
 <td>&nbsp;</td>
 <td>Same as <a class="reference internal" href="#attribute:VECDRAW:COLORUPDATER" title="VECDRAW:COLORUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">COLORUPDATER</span></code></a></td>
 </tr>
@@ -441,7 +457,12 @@ VecDraw:<code class="descname">COLOR</code><a class="headerlink" href="#attribut
 </tr>
 </tbody>
 </table>
-<p>Optional, defaults to white. This is the color to draw the vector. There is a hard-coded fade effect where the tail is a bit more transparent than the head.</p>
+<p>Optional, defaults to white. This is the color to draw the vector.
+If you leave the <a class="reference internal" href="#attribute:VECDRAW:WIPING" title="VECDRAW:WIPING attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VecDraw:WIPING</span></code></a> suffix at its default value
+of True, then there will be a wipe effect such that the line will
+fade-in as it goes, only becoming this color at the endpoint tip.</p>
+<p>(You can pass in an RGBA with an alpha value less than 1.0 if you
+would like the line to never be fully opaque even at the tip.)</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -527,6 +548,51 @@ VecDraw:<code class="descname">WIDTH</code><a class="headerlink" href="#attribut
 <p>Define the width of the drawn line, in meters.  The deafult is 0.2 if
 left off.  Note, this also causes the font of the label to be enlarged
 to match if set to a value larger than 0.2.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:VECDRAW:POINTY">
+VecDraw:<code class="descname">POINTY</code><a class="headerlink" href="#attribute:VECDRAW:POINTY" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+</tr>
+</tbody>
+</table>
+<p>(Defaults to True if left off.) Will this line be drawn with
+a pointy arrowhead &#8220;hat&#8221; on the tip to show which end is the
+start point and which is the end point? If this is false,
+then Vecdraw draws just a thick line, instead of an arrow.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:VECDRAW:WIPING">
+VecDraw:<code class="descname">WIPING</code><a class="headerlink" href="#attribute:VECDRAW:WIPING" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+</tr>
+</tbody>
+</table>
+<p>(Defaults to True if left off.) If true, this line will be drawn
+with a &#8220;wipe&#8221; effect that varies how transparent it is.  At the
+start point it will be a more transparent version of the color
+you specified in <a class="reference internal" href="#attribute:VECDRAW:COLOR" title="VECDRAW:COLOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VecDraw:COLOR</span></code></a>.  It will only become the
+full opacity you requested when it reaches the endpoint of the line.
+This effect is to help show the direction the arrow is going as it
+&#8220;fades in&#8221; to full opacity as it goes along.</p>
+<p>If false, then the opacity of the line will not vary.  It will draw
+the whole line at the exact color you specified in the in the
+<a class="reference internal" href="#attribute:VECDRAW:COLOR" title="VECDRAW:COLOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VecDraw:COLOR</span></code></a> SUFFIX. (Which can still be transparent if
+you use an RGBA() and provide the alpha value.)</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -705,7 +771,7 @@ VecDraw:<code class="descname">COLOURUPDATER</code><a class="headerlink" href="#
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.8.0',
+            VERSION:'1.1.9.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Configuration of kOS &mdash; kOS 1.1.8.0 documentation</title>
+  <title>Configuration of kOS &mdash; kOS 1.1.9.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.8.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.9.0 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Part Highlighting" href="highlight.html"/>
         <link rel="prev" title="Colors" href="colors.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.8.0
+                1.1.9.0
               </div>
             
           
@@ -187,7 +187,7 @@
            <div itemprop="articleBody">
             
   <div class="section" id="configuration-of-kos">
-<h1>Configuration of kOS<a class="headerlink" href="#configuration-of-kos" title="Permalink to this headline">¶</a></h1>
+<span id="config"></span><h1>Configuration of kOS<a class="headerlink" href="#configuration-of-kos" title="Permalink to this headline">¶</a></h1>
 <dl class="structure">
 <dt id="structure:CONFIG">
 <em class="property">structure </em><code class="descname">Config</code><a class="headerlink" href="#structure:CONFIG" title="Permalink to this definition">¶</a></dt>
@@ -308,6 +308,16 @@ to be local to the current save file.</p>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>12 (from range [6 .. 20], integers only)</td>
 <td>Default font size in pixel height for new instances of the in-game terminal</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:DEFAULTWIDTH" title="CONFIG:DEFAULTWIDTH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DEFAULTWIDTH</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
+<td>50 (from range [15 .. 255], integers only)</td>
+<td>Default width (in characters, not pixels) for  new instances of the in-game terminal.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:DEFAULTHEIGHT" title="CONFIG:DEFAULTHEIGHT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DEFAULTHEIGHT</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
+<td>36 (from range [3 .. 160], integers only)</td>
+<td>Default height (in characters, not pixels) for  new instances of the in-game terminal.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:DEBUGEACHOPCODE" title="CONFIG:DEBUGEACHOPCODE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DEBUGEACHOPCODE</span></code></a></td>
 <td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
@@ -618,6 +628,50 @@ nearest integer when setting the value.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="attribute:CONFIG:DEFAULTWIDTH">
+Config:<code class="descname">DEFAULTWIDTH</code><a class="headerlink" href="#attribute:CONFIG:DEFAULTWIDTH" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> integer-only. range = [15,255]</td>
+</tr>
+</tbody>
+</table>
+<p>Configures the <code class="docutils literal"><span class="pre">TerminalDefaultWidth</span></code> setting.</p>
+<p>This is the default starting width (in number of character cells,
+not number of pixels) for all newly created kOS in-game terminals.
+This is just the default for new terminals.  Individual terminals
+can have different settings, either by setting the value
+<a class="reference internal" href="terminal.html#attribute:TERMINAL:WIDTH" title="TERMINAL:WIDTH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Terminal:WIDTH</span></code></a> in a script, or by manually dragging the
+resize corner of the terminal with the mouse.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:CONFIG:DEFAULTHEIGHT">
+Config:<code class="descname">DEFAULTHEIGHT</code><a class="headerlink" href="#attribute:CONFIG:DEFAULTHEIGHT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> integer-only. range = [3,160]</td>
+</tr>
+</tbody>
+</table>
+<p>Configures the <code class="docutils literal"><span class="pre">TerminalDefaultHeight</span></code> setting.</p>
+<p>This is the default starting height (in number of character cells,
+not number of pixels) for all newly created kOS in-game terminals.
+This is just the default for new terminals.  Individual terminals
+can have different settings, either by setting the value
+<a class="reference internal" href="terminal.html#attribute:TERMINAL:HEIGHT" title="TERMINAL:HEIGHT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Terminal:HEIGHT</span></code></a> in a script, or by manually dragging the
+resize corner of the terminal with the mouse.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="attribute:CONFIG:DEBUGEACHOPCODE">
 Config:<code class="descname">DEBUGEACHOPCODE</code><a class="headerlink" href="#attribute:CONFIG:DEBUGEACHOPCODE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
@@ -682,7 +736,7 @@ the kOS dev team.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.8.0',
+            VERSION:'1.1.9.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
