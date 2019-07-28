@@ -62,6 +62,10 @@ This update is a mix of new features, mostly
   the real values.  For these sliders, the real limit values come from
   another field, requiring a more indirect method call to get the information.
   [pull request](https://github.com/KSP-KOS/KOS/pull/2554).
+- GUI windows no longer use the KSP control lock system to emulate
+  keyboard focus, instead relying on the built-in Unity IMGUI
+  focus rules for widgets, thus they won't 'steal focus' as much.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2577).
 
 # v1.1.8.0 Engines and KSP 1.7 compatibility
 
