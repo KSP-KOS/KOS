@@ -1,6 +1,68 @@
 kOS Mod Changelog
 =================
 
+# v1.1.9.0 Breaking Bounds
+
+This update is a mix of new features, mostly
+
+### BREAKING CHANGES
+
+### NEW FEATURES
+
+- Bounding box information for parts and for the vessel as
+  a whole is now exposed for scripts to read.
+  [pull request 1](https://github.com/KSP-KOS/KOS/pull/2563).
+  [pull request 2](https://github.com/KSP-KOS/KOS/pull/2564).
+- Lexicons can now use the suffix syntax.  i.e. where you 
+  say ``mylex["key1"]`` you can now say ``mylex:key1``,
+  provided the key is something that works as a valid identifier
+  string (no spaces, etc).
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2553).
+- Can now set the default terminal Width and Height for all
+  newly spawned terminals.
+  [pull request 1](https://github.com/KSP-KOS/KOS/pull/2573).
+- A ternary conditional operator exists in kerboscript now,
+  using the syntax ``CHOOSE expr1 IF bool_expr ELSE expr2``.
+  If *bool_expr* is true, it returns expr1.  If it's false,
+  it returns expr2.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2549).
+- Added support for reading Principia's flight planning nodes,
+  from contributor RCrockford.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2544).
+- Added support to read more atmospheric values from KSP.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2557).
+
+### BUG FIXES
+
+- Fix cooked control triggers not working during a WHEN/ON trigger.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2534).
+- Fix mangled state if kOS is out of electricity when scenes switch
+  or the game is saved.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2521).
+- Obsolete list command documentation removed.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2520).
+- Allow part modules'd fields to work even when no GUI name is defined.
+  It seems that the main game allows the GUI name to be left out and if
+  so it inherits from the base name under tne hood.  Now kOS follows
+  this behaviour.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2519).
+- Prevent using UNSET on built-in variable names like SHIP, ALTITUDE,
+  and so on.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2510).
+- RP-1 used a different technique to lock out controls due to
+  insufficient avionics that kOS didn't know about.  kOS bypassed
+  this lockout and still controlled the vessel anyway.  This is no
+  longer the case.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2546).
+- PartModule:SETFIELD now works properly with the new type of slider
+  widget that robotic parts use in KSP 1.7.x.  KSP introduced a new
+  type of slider widget that presents false information when kOS tried
+  to obey its min, max, and detent values, those being only dummy
+  placeholders for these types of sliders, not actually populated with
+  the real values.  For these sliders, the real limit values come from
+  another field, requiring a more indirect method call to get the information.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2554).
+
 # v1.1.8.0 Engines and KSP 1.7 compatibility
 
 Mostly this was motivated by a need to get an officially

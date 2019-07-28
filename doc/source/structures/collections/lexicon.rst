@@ -143,13 +143,34 @@ In other words, this will cause an error::
 
     local mylex is lexicon().
     print mylex:mykey. // <--- Error: no such thing in the lexicon yet.
-    sey mylex:key to "value". // here it gets added, but it's too late.
+    sey mylex["mykey"] to "value". // here it gets added, but it's too late.
 
 While doing it in this order will work::
 
     local mylex is lexicon().
-    sey mylex:key to "value". // adding the value first
+    set mylex["mykey"] to "value". // adding the value first
     print mylex:mykey. // makes this line work.
+
+Clashes between built-in suffixes versus lexicon keys
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+kOS will always prefer to use the built-in suffix name first when
+trying to search for a suffix name in a lexicon.  Therefore
+if you make a key who's name matches an existing built-in suffix
+term for Lexicons, you will get the built-in value instead of
+your key's value.  Here's an example::
+
+    local mylex is lexicon().
+    set mylex["LENGTH"] to 20.
+
+    // prints 1.  LENGTH is already a suffix of Lexicons, so
+    // that's what this gets you, not the key called "length":
+    print mylex:length.
+
+    // This will print 20, as there's no ambiguity that you were
+    // definitely looking for the key called "length" in this
+    // case, not the built-in suffix called "length":
+    print mylex["length"].
 
 Suffix keys also work with HASSUFFIX and SUFFIXNAMES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
