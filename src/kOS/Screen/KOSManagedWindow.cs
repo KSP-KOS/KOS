@@ -54,7 +54,7 @@ namespace kOS.Screen
         public bool OptOutOfControlLocking
         {
             get { return optOutOfControlLocking; }
-            set { optOutOfControlLocking = value; if (value) InputLockManager.RemoveControlLock(lockIdName); }
+            set { if (value) InputLockManager.RemoveControlLock(lockIdName); optOutOfControlLocking = value; }
         }
 
         protected KOSManagedWindow(string lockIdName = "")
