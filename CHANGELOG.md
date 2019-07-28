@@ -13,6 +13,9 @@ This update is a mix of new features, mostly
   a whole is now exposed for scripts to read.
   [pull request 1](https://github.com/KSP-KOS/KOS/pull/2563).
   [pull request 2](https://github.com/KSP-KOS/KOS/pull/2564).
+- The above bounding box feature also came with some new suffixes 
+  for Vecdraw so you can now draw plain lines (suppress the
+  arrowhead, suppress the opacity fade) with them.
 - Lexicons can now use the suffix syntax.  i.e. where you 
   say ``mylex["key1"]`` you can now say ``mylex:key1``,
   provided the key is something that works as a valid identifier

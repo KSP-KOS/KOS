@@ -1,4 +1,4 @@
-.. config:
+.. _config:
 
 Configuration of kOS
 ====================
