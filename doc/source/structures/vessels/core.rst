@@ -52,7 +52,7 @@ Core represents your ability to identify and interact directly with the running 
 
 .. attribute:: CORE:VERSION
 
-    :type: `VersionInfo`
+    :type: :struct:`VersionInfo`
     :access: Get only
 
     The kOS version currently running.
