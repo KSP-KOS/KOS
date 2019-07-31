@@ -43,18 +43,27 @@ Pull Requests
 
 ####Nobody merges their own PR
 
+NOTE THIS RULE IS SUSPENDED.
+
+THIS RULE IS SUSPENDED BECAUSE THE DEV TEAM SHRUNK TO JUST ONE
+PERSON, MAKING IT IMPOSSIBLE TO GET ANY PR MERGED IF THIS RULE
+WAS STILL BEING FOLLOWED.  (If the dev team grows again to more
+people, this rule may be re-instated, as it is very good practice,
+WHEN there's actually more than one person on the team who has the
+time.)
+
 (Rules for priviledged members of the team who have permission to
 write directly to the main repository.)
 
-1. As a general policy, even experienced developers on the team should not
+1. (SUSPENDED - SEE ABOVE) As a general policy, even experienced developers on the team should not
    merge their own pull requests into the upstream `develop`.  Instead they
    should get another developer to merge it for them.
-2. As such, even if you have permission to do so, never directly push a
+2. (SUSPENDED - SEE ABOVE) As such, even if you have permission to do so, never directly push a
    change to `upstream develop` except in cases where you are doing so as
    part of the process of merging somebody *else's* pull request other than
    your own, or during some of the final steps of the release checklist
    that require it.
-3. When merging somebody else's pull request, do not "rubber stamp" it.  Actually
+3. (SUSPENDED - SEE ABOVE) When merging somebody else's pull request, do not "rubber stamp" it.  Actually
    try to read and understand what it does and how, and raise questions with
    the author using the github "line note" system.
 
@@ -146,12 +155,25 @@ Setting Up Your Environment
   pull request to KSP-KOS/KOS `develop` for review to be included.
 
 ####Setting Up The Solution Dependencies
+
 1. Copy the folder `$KOS/Resources/GameData/kOS` to `$KSP/GameData/`
 
-2. Copy `Assembly-CSharp.dll`, `Assembly-CSharp-firstpass.dll`,
-  `UnityEngine.dll` and `UnityEngine.UI.dll` from `$KSP/KSP_Data/Managed`
-  into `$KOS/Resources`.  If you do not have a copy of KSP locally, you may
-  download dummy assemblies at https://github.com/KSP-KOS/KSP_LIB
+2. Get the Unity assemblies into your project. There are two options:
+	1. Copy these DLLs from `$KSP/KSP_Data/Managed `into `$KOS/Resources`:
+		* `Assembly-CSharp`
+		* `Assembly-CSharp-firstpass`
+		* `UnityEngine`
+		* `UnityEngine.AnimationModule`
+		* `UnityEngine.AudioModule`
+		* `UnityEngine.CoreModule`
+		* `UnityEngine.ImageConversionModule`
+		* `UnityEngine.IMGUIModule`
+		* `UnityEngine.PhysicsModule`
+		* `UnityEngine.TextRenderingModule`
+		* `UnityEngine.UI`
+		* `UnityEngine.UnityWebRequestWWWModule`
+	2. If you do not have a copy of KSP locally, you may
+	  download dummy assemblies at https://github.com/KSP-KOS/KSP_LIB
 
 3. If you want building the solution to update the dlls in your KSP
    directory, create a symbolic link called `KSPdirlink` from the root

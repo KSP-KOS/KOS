@@ -103,7 +103,7 @@ namespace kOS.Suffixed
             AddSuffix("RADIUS", new Suffix<ScalarValue>(() => Body.Radius));
             AddSuffix("MU", new Suffix<ScalarValue>(() => Body.gravParameter));
             AddSuffix("ROTATIONPERIOD", new Suffix<ScalarValue>(() => Body.rotationPeriod));
-            AddSuffix("ATM", new Suffix<BodyAtmosphere>(() => new BodyAtmosphere(Body)));
+            AddSuffix("ATM", new Suffix<BodyAtmosphere>(() => new BodyAtmosphere(Body, Shared)));
             AddSuffix("ANGULARVEL", new Suffix<Vector>(() => RawAngularVelFromRelative(Body.angularVelocity)));
             AddSuffix("SOIRADIUS", new Suffix<ScalarValue>(() => Body.sphereOfInfluence));
             AddSuffix("ROTATIONANGLE", new Suffix<ScalarValue>(() => Body.rotationAngle));
@@ -227,6 +227,24 @@ namespace kOS.Suffixed
         }
 
         /// <summary>
+        /// Interpret the vector given as a 3D position, and return the altitude above terrain unless
+        /// that terrain is below sea level on a world that has a sea, in which case return the sea
+        /// level atitude instead, similar to how radar altitude is displayed to the player.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public ScalarValue RadarAltitudeFromPosition(Vector position)
+        {
+            GeoCoordinates geo = GeoCoordinatesFromPosition(position);
+            ScalarValue terrainHeight = geo.GetTerrainAltitude();
+            ScalarValue seaAlt = AltitudeFromPosition(position);
+            if (Body.ocean && terrainHeight < 0)
+                return seaAlt;
+            else
+                return seaAlt - terrainHeight;
+        }
+
+        /// <summary>
         /// Annoyingly, KSP returns CelestialBody.angularVelociy in a frame of reference 
         /// relative to the ship facing instead of the universe facing.  This would be
         /// wonderful if that was their philosophy everywhere, but it's not - its just a
@@ -246,10 +264,10 @@ namespace kOS.Suffixed
             return Vector3d.Distance(Shared.Vessel.CoMD, Body.position) - Body.Radius;
         }
 
-        public override ISuffixResult GetSuffix(string suffixName)
+        public override ISuffixResult GetSuffix(string suffixName, bool failOkay)
         {
             if (Target == null) throw new Exception("BODY structure appears to be empty!");
-            return base.GetSuffix(suffixName);
+            return base.GetSuffix(suffixName, failOkay);
         }
 
         public override string ToString()

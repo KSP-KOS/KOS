@@ -268,6 +268,32 @@ This follows the :ref:`scoping rules explained below <scope>`.  If the
 variable can be found in the current local scope, or any scope higher
 up, then it won't be created and instead the existing one will be used.
 
+.. _unset:
+
+``UNSET``
+---------
+
+Removes a user-defined variable, if one exists with the given name.
+
+    UNSET X.
+    UNSET myvariable.
+
+If there are two variables with the same name, one that is "more local"
+and one that is "more global", it will choose the "more local" one to
+be removed, according to the usual
+:ref:`scoping rules explained below <scope>`.
+
+After this is executed, the variable becomes undefined.
+
+``UNSET`` cannot be used on a kOS built-in bound variable name, for
+example "TARGET", "GEAR", "THROTTLE", "STEERING", etc.  It only works
+variables that your script created.
+
+If ``UNSET`` does not find a variable to remove, or it fails to remove
+the variable because it is a built-in name as explained above, then
+it will NOT generate an error.  It will simply quietly move on to the
+next statement, doing nothing.
+
 .. _defined:
 
 ``DEFINED``

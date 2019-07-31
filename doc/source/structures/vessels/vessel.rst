@@ -34,6 +34,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :attr:`AVAILABLETHRUST`                  :struct:`scalar`                Sum of active limited maximum thrusts
     :meth:`AVAILABLETHRUSTAT(pressure)`      :struct:`scalar`                Sum of active limited maximum thrusts at the given atmospheric pressure
     :attr:`FACING`                           :struct:`Direction`             The way the vessel is pointed
+    :attr:`BOUNDS`                           :struct:`Bounds`                Construct bounding box information about the vessel
     :attr:`MASS`                             :struct:`scalar` (metric tons)  Mass of the ship
     :attr:`WETMASS`                          :struct:`scalar` (metric tons)  Mass of the ship fully fuelled
     :attr:`DRYMASS`                          :struct:`scalar` (metric tons)  Mass of the ship with no resources
@@ -144,7 +145,42 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :type: :struct:`Direction`
     :access: Get only
 
-    The way the vessel is pointed.
+    The way the vessel is pointed, which is also the rotation
+    that would transform a vector from a coordinate space where the
+    axes were oriented to match the vessel's orientation, to one
+    where they're oriented to match the world's ship-raw coordinates.
+    
+    i.e. ``SHIP:FACING * V(0,0,1)`` gives the direction the
+    ship is pointed (it's Z-axis) in absolute ship-raw coordinates
+
+.. attribute:: Vessel:BOUNDS
+
+    :type: :struct:`Bounds`
+    :access: Get only
+
+    Constructs a "bounding box" structure that can be used to
+    give your script some idea of the extents of the vessel's shape - how
+    wide, long, and tall it is.
+
+    It is rather expensive in terms of CPU time to call this suffix.
+    (Calling :attr:`Part:BOUNDS` on ONE part on the ship is itself a
+    *little* expensive, and this has to perform that same work on
+    every part on the ship, finding the bounding box that would
+    surround all the parts.) Because of that expense, kOS **forces**
+    your script to give up its remaining instructions this update when
+    you call this (It forces the equivalent of doing a ``WAIT 0.``
+    right after you call it).  This is to discourage you from
+    calling this suffix again and again in a fast loop.  The proper
+    way to use this suffix is to call it once, storing the result in
+    a variable, and then use that variable repeatedly, rather than
+    using the suffix itself repeatedly.  Only call the suffix again
+    when you have reason to expect the bounding box to change or
+    become invalid, such as docking, staging, changing facing to a
+    new control-from part, and so on.
+
+    More detailed information about how to read the bounds box, and 
+    what circumstances call for getting a re-generated copy of the
+    bounds box, is found on the documentation page for :struct:`Bounds`.
 
 .. attribute:: Vessel:MASS
 

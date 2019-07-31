@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 
@@ -8,10 +8,12 @@ namespace kOS.Suffixed
     public class BodyAtmosphere : Structure
     {
         private readonly CelestialBody celestialBody;
+        private readonly SharedObjects shared;
 
-        public BodyAtmosphere(CelestialBody celestialBody)
+        public BodyAtmosphere(CelestialBody celestialBody, SharedObjects shared)
         {
             this.celestialBody = celestialBody;
+            this.shared = shared;
 
             AddSuffix("BODY", new Suffix<StringValue>(()=> celestialBody.bodyName));
             AddSuffix("EXISTS", new Suffix<BooleanValue>(()=> celestialBody.atmosphere));
@@ -19,8 +21,9 @@ namespace kOS.Suffixed
             AddSuffix("SEALEVELPRESSURE", new Suffix<ScalarValue>(()=> celestialBody.atmosphere ? celestialBody.atmospherePressureSeaLevel * ConstantValue.KpaToAtm : 0));
             AddSuffix("HEIGHT", new Suffix<ScalarValue>(()=> celestialBody.atmosphere ? celestialBody.atmosphereDepth : 0));
             AddSuffix("ALTITUDEPRESSURE", new OneArgsSuffix<ScalarValue, ScalarValue>((alt)=> celestialBody.GetPressure(alt) * ConstantValue.KpaToAtm));
-
-            AddSuffix("SCALE", new Suffix<ScalarValue>(() => { throw new KOSAtmosphereObsoletionException("0.17.2","SCALE","<None>",string.Empty); }));
+            AddSuffix("MOLARMASS", new Suffix<ScalarValue>(() => celestialBody.atmosphereMolarMass));
+            AddSuffix(new string[] { "ADIABATICINDEX", "ADBIDX" }, new Suffix<ScalarValue>(() => celestialBody.atmosphereAdiabaticIndex));
+            AddSuffix(new string[] { "ALTITUDETEMPERATURE", "ALTTEMP" }, new OneArgsSuffix<ScalarValue, ScalarValue>((alt) => celestialBody.GetTemperature(alt)));
         }
 
         public override string ToString()

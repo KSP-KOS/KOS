@@ -31,6 +31,15 @@ call whenever you notice this particular thing has happened."  For example::
 will interrupt whatever else you are doing and call a function you wrote
 called ``myClickFunction`` whenever that button is clicked.
 
+Note that gui callbacks that are triggered by user activity (rather than
+by your program changing a value) are a type of trigger, and thus run at a
+"higher priority" than normal code.  You don't need to think too hard about
+this right now, but the effect of it is that by default one gui callback
+cannot trigger while another one is running.  There are ways to change this
+but they require a more in-depth discusion of how the kOS CPU works with
+triggers, and are thus :ref:`described elsewhere on the
+general CPU hardware description page<drop_priority>`.
+
 .. _gui_polling_technique:
 
 The **polling technique** is when you actively keep checking the widget

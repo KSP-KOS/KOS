@@ -226,6 +226,20 @@ short and fast to execute.  If it consists of multiple clauses, try
 to take advantage of* :ref:`short circuit boolean <short_circuit>`
 *logic by putting the fastest part of the check first.*
 
+Triggers for GUI callbacks
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Another type of trigger is the callback delegates that you can
+write for the :ref:`GUI system <gui>` when using the
+:ref:`Callback technique <gui_callback_technique>`.  (For example,
+using :attr:`Button:ONCLICK`, :attr:`Slider:ONCHANGE`, and so on.)
+
+When you give a GUI a callback hook to call, the CPU will implement
+that as a trigger as well.  When you click the button or move the
+slider, etc, then kOS will interrupt your program at the next available
+opportunity (usually the start of the next IPU's worth of instructions),
+to call your callback delegate.
+
 .. _wait_in_trigger:
 
 Wait in a Trigger
@@ -235,6 +249,15 @@ While ``WAIT`` is possible from inside a trigger and it won't crash
 the script to use it, it's probably not a good design choice to use
 ``WAIT`` inside a trigger.  Triggers should be designed to execute
 all the way through to the end in one fast pass, if possible.
+
+Exception: If you are careful, there is a built-in function you
+can call that will have your trigger willingly relinquish its priority
+increase, reducing it back down to whatever the priority was before
+it rudely interrupted things. Doing that can allow other triggers of
+equal priority to itself to interrupt it again.  To see how this works,
+look at :func:`DROPPRIORITY()`, explained below on this page.  In general,
+however, it's a better idea not to use this unless you fully understand
+how the prioriy system here works.
 
 Do Not Loop a Long Time in a Trigger Body!
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -255,6 +278,15 @@ This is because while you are in a trigger, main-line code isn't being
 executed, and other triggers of equal or lesser priority aren't being
 executed.  A trigger that performs a long-running loop will starve the
 rest of the code in your kerboscript program from being allowed to run.
+
+Exception: If you are careful, there is a built-in function you
+can call that will have your trigger willingly relinquish its priority
+increase, reducing it back down to whatever the priority was before
+it rudely interrupted things. Doing that can allow other triggers of
+equal priority to itself to interrupt it again.  To see how this works,
+look at :func:`DROPPRIORITY()`, explained below on this page.  In general,
+however, it's a better idea not to use this unless you fully understand
+how the prioriy system here works.
 
 But I Want a Loop!!
 ~~~~~~~~~~~~~~~~~~~
@@ -282,8 +314,9 @@ is allowed to interrupt the program flow depending on what the program
 is doing right now.  This is accomplished by having a few priority
 levels, shown in this list:
 
-* Priority 20: :ref:`Recurring Interrupts <recurring_trigger>`
-* Priority 10: :ref:`Callback-Once Interrupts <callback_once_trigger>`
+* Priority 30: :ref:`Cooked control Interrupts <trigger_steering>` (i.e. LOCK STEERING)
+* Priority 20: :ref:`Recurring Interrupts <recurring_trigger>` (i.e. WHEN or ON)
+* Priority 10: :ref:`Callback-Once Interrupts <callback_once_trigger>` (i.e. GUI callbacks)
 * Priority 0: Normal (non-interrupting) code.
 
 **A Trigger will only interrupt something of lower priority than itself**.
@@ -302,7 +335,7 @@ to happen again and again with speed, while the callback-once
 interrupts are probably not as time-sensitive since they respond
 to one-shot events like user clicks.
 
-**A trigger cannot interrupt *itself* if it's still running**.
+**most triggers cannot interrupt *themselves* if they're still running**.
 
 When you have recurring triggers that keep re-running themselves
 again and again, the way they work is that they wait till the previous
@@ -320,6 +353,156 @@ fine-grained if that becomes necessary later.  Never write code that
 is too dependant on the priorities being exactly this way.  (This is
 why these numbers aren't even exposed to the script at the moment,
 to avoid that design pattern.)
+
+
+.. _drop_priority:
+
+Deliberately reducing your priority in long running triggers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Normally if you did something like this::
+
+    local done is false.
+
+    set Gwin to GUI(200).
+    set b1 to Gwin:addbutton("beep").
+    set b1:onclick to { getvoice(0):play(note(300,0.2)). }.
+    set b2 to GWin:addbutton("count").
+    set b2:onclick to count@.
+    set b3 to Gwin:addbutton("quit").
+    set b3:onclick to { set done to true. }.
+
+    GWin:show().
+    wait until done.
+    GWin:Dispose().
+
+    function count {
+      local i is 5.
+      until i = 0 {
+        print "Counting.. " + i.
+        set i to i - 1.
+        wait 1.
+      }
+    }
+
+It would mean that while you press the "count" button, and it prints the
+countdown from 5 to 1, the other buttons, including "beep" and "quit"
+would have no effect until the countdown is done.  Because ``count()``
+is the callback for a GUI button, it runs at a higher than normal priority,
+which means it won't let itself get interrupted by other GUI callbacks.
+Instead those other GUI callbacks will be delayed until count() is done.
+
+If you wish, you can cause your trigger, or callback, to deliberately
+relinquish its hold on other interrupts, allowing them to interrupt it
+despite the fact that it is itself in the middle of an interrupt.
+You do this by  deliberately reducing your current priority level
+back down a step to whatever it was prior to being incresed by the
+interrrupt, which is what this special built-in function does:
+
+.. function:: DROPPRIORITY()
+
+    After this built-in function is executed by a trigger's body,
+    the current interrupt priority is dropped back down to whatever the
+    priority of the code you interrupted was.  This is your trigger's
+    way of saying "I don't actually want to block interrupts anymore.
+    Please let me be interrupted just as much as whatever *I*
+    interrupted was allowed to be interrupted."
+
+    SO, for example, if Priority 0 code (normal code) got interrupted
+    by priority 10 code (GUI callback code), and the GUI callback
+    code executed ``DROPPRIORITY``, then it would now be running at
+    priority 0 instead of 10, because priority 0 is what got interrupted,
+    and thus allow other GUI code to interrupt it again.
+
+    On the other hand, if GUI callback code (priority 10) got 
+    interrupted by WHEN-THEN code (priority 20), and the WHEN-THEN
+    code had called DROPPRIORITY(), then the priority level of 
+    that pass through the WHEN-THEN would only be dropped down to
+    10, NOT all the way to 0, because it was interrupting priority 10
+    code.
+    
+    The reason it works this way (instead of just dropping it all the
+    way down to normal (0) priority directly) is that, effectively,
+    it means a trigger only has the authority to undo its own
+    priority increase that it caused itself.  It can't force the
+    priority down to something less than the code that got interrupted
+    had to begin with.  Had it been allowed to do that, it could have
+    been a back-door to circumventing the priority of the thing
+    that it interrupted.
+
+    Be aware that once you ``DROPPRIORITY()``, you also are making it
+    so that the SAME trigger you are currently inside of could fire off
+    again too.  It may be a good idea to protect yourself against that,
+    if it is not desired, by setting a flag variable to record the fact
+    that you are inside the trigger at the time and should not re-run it,
+    and then test this flag variable at the top of your trigger code,
+    skipping the body if it's set.
+
+So in the above GUI example, if you added ``DROPPRIORITY`` as shown
+in the edited version of the example, below, then the other buttons
+like the "beep" button, would work while the count() is happening::
+
+    local done is false.
+
+    set Gwin to GUI(200).
+    set b1 to Gwin:addbutton("beep").
+    set b1:onclick to { getvoice(0):play(note(300,0.2)). }.
+    set b2 to GWin:addbutton("count").
+    set b2:onclick to count@.
+    set b3 to Gwin:addbutton("quit").
+    set b3:onclick to { set done to true. }.
+
+    GWin:show().
+    wait until done.
+    GWin:Dispose().
+
+    function count {
+
+      DROPPRIORITY(). // <--- NEW LINE ADDED HERE
+
+      local i is 5.
+      until i = 0 {
+        print "Counting.. " + i.
+        set i to i - 1.
+        wait 1.
+      }
+    }
+
+Once you call ``DROPPRIORITY()``, then from then on, you are effectively no
+longer a trigger, as far as the interruption system is concerned.
+
+BE CAREFUL - if you do this then it is possible for the same trigger or
+callback to interrupt *itself* again.  In the above example where
+DROPPRIORITY() was added, you could press the "count" button twice in
+quick succession and one press would interrupt the other.  It's up to you,
+if you use ``DROPPRIORITY()`` to deal with this problem and stop it from
+happening if it's a bad thing for your program.  You can do this by
+setting a flag that checks if your trigger is already running and if so,
+skips it, like so::
+
+    local count_is_running is false.
+    function count {
+
+      if not(count_is_running) {
+        set count_is_running to true.
+        DROPPRIORITY().
+
+        local i is 5.
+        until i = 0 {
+          print "Counting.. " + i.
+          set i to i - 1.
+          wait 1.
+        }
+        set count_is_running to false.
+      }
+    }
+
+Again, using ``DROPPRIORITY()`` is an advanced topic that should be avoided
+until after you understand what you've read here.  Even then, it's usually
+simpler and better to just avoid using it and instead design your script in
+such a way that it's unnecessary to use it.  (It's only necessary to use it
+if you have interrupt triggers that run a long time instead of finishing
+quickly like they should.)
 
 Wait!!!
 -------

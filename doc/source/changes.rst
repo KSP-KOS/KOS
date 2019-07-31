@@ -24,6 +24,76 @@ release.
 
 ****
 
+Changes in 1.1.9.0
+------------------
+
+BOUNDING BOX
+::::::::::::
+
+Added the new :struct:`BOUNDS` structure for bounding box
+information, and made an :ref:`example using it <display_bounds>`
+on the tutorials page.
+
+TERNARY OPERATOR "CHOOSE"
+:::::::::::::::::::::::::
+
+A new expression ternary operator exists in kerboscript, called
+:ref:`CHOOSE <choose>`.  (Similar to C's "?" operator, but with
+different syntax.)
+
+New suffixes for Vecdraw
+::::::::::::::::::::::::
+
+New suffixes giving you more control over the appearance of
+vecdraws: :attr:`Vecdraw:POINTY` :attr:`Vecdraw:WIPING`
+
+Lexicon Suffixes
+::::::::::::::::
+
+:ref:`Describe using suffixes with lexicons. <lexicon_suffix>`
+
+Terminal default size
+:::::::::::::::::::::
+
+Two new config settings for a default terminal size for
+new terminals:
+
+:struct:`Config:DEFAULTWIDTH`, :struct:`Config:DEFAULTHEIGHT`
+
+Additional Atmospheric information
+:::::::::::::::::::::::::::::::::::
+
+Added some more information to the :struct:`atmosphere` structure,
+(mostly for people trying to perform drag calculations: 
+MOLARMASS, ADIABATICINDEX, ALTITUDETEMPERATURE).
+
+Also added the ability to read some more of the values the
+game uses for :ref:`mathematical constants <constants>`, to 
+work with this information: Avogadro, Boltzmann, and IdealGas.
+
+UNSET documentation
+:::::::::::::::::::
+
+Explicitly mention the :ref:`unset command <unset>`, which has existed
+for a long time but apparently wasn't in the documentation.
+
+LIST command
+::::::::::::
+
+Removed obsolete documentation about a no-longer-existing "FROM"
+variant of the LIST command that went like this:
+LIST *things* FROM *vessel* IN *variable*.
+
+DROPPRIORITY()
+::::::::::::::
+
+Described the new :func:`DROPPRIORITY()` built-in function that you
+can use when you want to write a long-lasting trigger body without
+it preventing other triggers from interrupting like it normally would.
+
+
+
+
 Changes in 1.1.8.0
 ------------------
 

@@ -75,6 +75,16 @@ Using a TimeSpan
         TIME:SECOND         // 26
         TIME:SECONDS        // Total Seconds since campaign began
 
+    Note that the notion of "how many hours in a day" and "how many days in a year"
+    depends on the gameworld, not our real world.  Kerbin has a shorter day, and
+    a longer year in days as a result, than Earth.  But there is an option in
+    KSP's main settings screen that can toggle this notion, and kOS will use
+    whatever option you set it to.
+
+    Also note that the mods that alter the calendar for other solar systems,
+    if they inject changes into KSP's main game, will cause these values to
+    change too.
+
 .. highlight:: kerboscript
 
 Using TIME or TIME() to detect when the physics have been updated 'one tick'

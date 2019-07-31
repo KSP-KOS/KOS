@@ -394,6 +394,11 @@ namespace kOS.Module
         /// <param name="c"></param>
         private void UpdateAutopilot(FlightCtrlState c)
         {
+            // Lock out controls if insufficient avionics in RP-0.
+            ControlTypes RP0Lock = InputLockManager.GetControlLock("RP0ControlLocker");
+            if (RP0Lock != 0)
+                return;
+
             if (Vessel != null)
             {
                 if (childParts.Count > 0)

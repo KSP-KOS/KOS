@@ -1050,6 +1050,7 @@ namespace kOS.Screen
             shared.Screen.Brightness = SafeHouse.Config.TerminalBrightness;
             formerCharPixelWidth = shared.Screen.CharacterPixelWidth;
             formerCharPixelHeight = shared.Screen.CharacterPixelHeight;
+            shared.Screen.SetSize(SafeHouse.Config.TerminalDefaultHeight, SafeHouse.Config.TerminalDefaultWidth);
 
             NotifyOfScreenResize(shared.Screen);
             shared.Screen.AddResizeNotifier(NotifyOfScreenResize);

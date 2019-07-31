@@ -1,4 +1,5 @@
-﻿using System;
+using kOS.Safe.Binding;
+using System;
 using System.Collections.Generic;
 
 namespace kOS.Safe.Execution
@@ -97,19 +98,46 @@ namespace kOS.Safe.Execution
         /// Remove this variable from this local scope OR whichever
         /// VariableScope it is found in first when doing a scope walk
         /// up the parent chain to find the first hit.
+        /// <param name="name"/>identifier to remove</param>
+        /// <param name="removeBound">if true, allow bound variables to be removed, else do not.</param>
         /// </summary>
-        public Variable RemoveNested(string name)
+        private Variable RemoveNested(string name, bool removeBound)
         {
             Variable res = null;
 
             if (!Variables.TryGetValue(name, out res))
             {
-                return ParentScope.RemoveNested(name);
+                return ParentScope.RemoveNested(name, removeBound);
             }
+            if (res is BoundVariable && !removeBound)
+                return null; // If not allowed to remove this bound variable, pretend it wasn't found.
+
             Variables.Remove(name);
 
             return res;
         }
+
+        /// <summary>
+        /// Remove this variable from whichever scope it is "most locally"
+        /// found in, walking all the way up to the global scope.  It will
+        /// only remove USER-made variables, refusing to remove bound
+        /// variables.  It will act like it wasn't found if it finds
+        /// a bound variable.
+        /// </summary>
+        /// <param name="name">identifier of the variable to remove</param>
+        /// <returns>the variable that was removed, or null if not found (or a bound var found that doesn't count)</returns>
+        public Variable RemoveNestedUserVar(string name)
+        {
+            return RemoveNested(name, false);
+        }
+
+        // HINT: If there ever is a need for it, this is how we'd have an API to allow
+        // removing a bound variable.  This isn't enabled because it would currently
+        // be un-used and therefore un-tested.
+        // public Variable RemoveNestedAnyVar(string name)
+        // {
+        //     return RemoveNested(name, true);
+        // }
 
         /// <summary>
         /// True only if this variable name exists in THIS local scope.

@@ -35,6 +35,7 @@ namespace kOS.Safe.Execution
         string DumpStack();
         void RemoveVariable(string identifier);
         int InstructionPointer { get; set; }
+        void DropBackPriority();
         double SessionTime { get; }
         List<string> ProfileResult { get; }
         int NextTriggerInstanceId {get; }
