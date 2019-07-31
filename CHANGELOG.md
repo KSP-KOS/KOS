@@ -34,6 +34,10 @@ This update is a mix of new features, mostly
 
 ### BUG FIXES
 
+- TimeSpan now peeks at the KSP game to learn its notion of
+  how long a day is, and how long a year is, rather than hardcoding
+  the values.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2582).
 - Fix cooked control triggers not working during a WHEN/ON trigger.
   [pull request](https://github.com/KSP-KOS/KOS/pull/2534).
 - Fix mangled state if kOS is out of electricity when scenes switch

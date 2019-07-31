@@ -13,20 +13,11 @@ namespace kOS.Suffixed
         public const string DumpSpan = "span";
 
         double span;
-        private const int DAYS_IN_YEAR = 365;
 
-        public const int HOURS_IN_EARTH_DAY = 24;
-        public const int HOURS_IN_KERBIN_DAY = 6;
-        
-        private const int MINUTE_IN_HOUR = 60;
-        private const int SECONDS_IN_MINUTE = 60;
-
-        private const int SECONDS_IN_KERBIN_HOUR = MINUTE_IN_HOUR * SECONDS_IN_MINUTE;
-        private const int SECONDS_IN_KERBIN_DAY = SECONDS_IN_KERBIN_HOUR * HOURS_IN_KERBIN_DAY;
-        private const int SECONDS_IN_KERBIN_YEAR = SECONDS_IN_KERBIN_DAY * DAYS_IN_YEAR;
-        private const int SECONDS_IN_EARTH_HOUR = MINUTE_IN_HOUR * SECONDS_IN_MINUTE;
-        private const int SECONDS_IN_EARTH_DAY = SECONDS_IN_EARTH_HOUR * HOURS_IN_EARTH_DAY;
-        private const int SECONDS_IN_EARTH_YEAR = SECONDS_IN_EARTH_DAY * DAYS_IN_YEAR;
+        private int SecondsPerDay { get { return KSPUtil.dateTimeFormatter.Day; } }
+        private int SecondsPerHour { get { return KSPUtil.dateTimeFormatter.Hour; } }
+        private int SecondsPerYear { get { return KSPUtil.dateTimeFormatter.Year; } }
+        private int SecondsPerMinute { get { return KSPUtil.dateTimeFormatter.Minute; } }
 
         // Only used by CreateFromDump() and the other constructors.
         // Don't make it public because it leaves fields
@@ -63,20 +54,12 @@ namespace kOS.Suffixed
 
         private ScalarValue CalculateYear()
         {
-            if (GameSettings.KERBIN_TIME)
-            {
-                return (int)Math.Floor(span / SECONDS_IN_KERBIN_YEAR) + 1;
-            }
-            return (int)Math.Floor(span / SECONDS_IN_EARTH_YEAR) + 1;
+            return (int)Math.Floor(span / SecondsPerYear) + 1;
         }
-
-        private int SecondsPerDay { get { return GameSettings.KERBIN_TIME ? SECONDS_IN_KERBIN_DAY : SECONDS_IN_EARTH_DAY; } }
-        private int SecondsPerHour { get { return GameSettings.KERBIN_TIME ? SECONDS_IN_KERBIN_HOUR : SECONDS_IN_EARTH_HOUR; } }
-        private int SecongsPerYear { get { return GameSettings.KERBIN_TIME ? SECONDS_IN_KERBIN_YEAR : SECONDS_IN_EARTH_YEAR; } }
 
         private ScalarValue CalculateDay()
         {
-            return (int)Math.Floor(span % SecongsPerYear / SecondsPerDay) + 1;
+            return (int)Math.Floor(span % SecondsPerYear / SecondsPerDay) + 1;
         }
 
         private ScalarValue CalculateHour()
@@ -86,12 +69,12 @@ namespace kOS.Suffixed
 
         private ScalarValue CalculateMinute()
         {
-            return (int)Math.Floor(span % SecondsPerHour / SECONDS_IN_MINUTE);
+            return (int)Math.Floor(span % SecondsPerHour / SecondsPerMinute);
         }
 
         private ScalarValue CalculateSecond()
         {
-            return (int)Math.Floor(span % SECONDS_IN_MINUTE);
+            return (int)Math.Floor(span % SecondsPerMinute);
         }
 
         public double ToUnixStyleTime()

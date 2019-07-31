@@ -146,7 +146,7 @@ namespace kOS.Suffixed
 
         public ScalarValue GetHoursPerDay()
         {
-            return GameSettings.KERBIN_TIME ? TimeSpan.HOURS_IN_KERBIN_DAY : TimeSpan.HOURS_IN_EARTH_DAY;
+            return KSPUtil.dateTimeFormatter.Day / KSPUtil.dateTimeFormatter.Hour;
         }
 
         public void DebugLog(StringValue message)
