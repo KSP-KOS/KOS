@@ -130,6 +130,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="timewarp.html">WARP</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vecdraw.html">Drawing Vectors on the Screen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="versioninfo.html">Structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="voice.html">Voice</a></li>
 </ul>
 </li>
@@ -280,6 +281,14 @@ playing Kerbal Space Program.)  It is the same thing as calling
 <span class="nv">TIME</span><span class="p">:</span><span class="nv">SECONDS</span>        <span class="c1">// Total Seconds since campaign began</span>
 </pre></div>
 </div>
+<p>Note that the notion of &#8220;how many hours in a day&#8221; and &#8220;how many days in a year&#8221;
+depends on the gameworld, not our real world.  Kerbin has a shorter day, and
+a longer year in days as a result, than Earth.  But there is an option in
+KSP&#8217;s main settings screen that can toggle this notion, and kOS will use
+whatever option you set it to.</p>
+<p>Also note that the mods that alter the calendar for other solar systems,
+if they inject changes into KSP&#8217;s main game, will cause these values to
+change too.</p>
 </div></blockquote>
 <div class="section" id="using-time-or-time-to-detect-when-the-physics-have-been-updated-one-tick">
 <h3>Using TIME or TIME() to detect when the physics have been updated &#8216;one tick&#8217;<a class="headerlink" href="#using-time-or-time-to-detect-when-the-physics-have-been-updated-one-tick" title="Permalink to this headline">¶</a></h3>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Resource Transfer &mdash; kOS 1.1.9.0 documentation</title>
+  <title>Structure &mdash; kOS 1.1.9.0 documentation</title>
   
 
   
@@ -37,8 +37,8 @@
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
     <link rel="top" title="kOS 1.1.9.0 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
-        <link rel="next" title="SteeringManager" href="steeringmanager.html"/>
-        <link rel="prev" title="PIDLoop" href="pidloop.html"/> 
+        <link rel="next" title="Voice" href="voice.html"/>
+        <link rel="prev" title="Drawing Vectors on the Screen" href="vecdraw.html"/> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
@@ -120,9 +120,7 @@
 <li class="toctree-l3"><a class="reference internal" href="loaddistance.html#situation-load-distance">Situation Load Distance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="note.html">Note</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pidloop.html">PIDLoop</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Resource Transfer</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="resource_transfer.html">Resource Transfer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="steeringmanager.html">SteeringManager</a></li>
 <li class="toctree-l3"><a class="reference internal" href="string.html">String</a></li>
 <li class="toctree-l3"><a class="reference internal" href="terminal.html">Terminal</a></li>
@@ -130,7 +128,7 @@
 <li class="toctree-l3"><a class="reference internal" href="time.html">Time Span</a></li>
 <li class="toctree-l3"><a class="reference internal" href="timewarp.html">WARP</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vecdraw.html">Drawing Vectors on the Screen</a></li>
-<li class="toctree-l3"><a class="reference internal" href="versioninfo.html">Structure</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">Structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="voice.html">Voice</a></li>
 </ul>
 </li>
@@ -175,11 +173,11 @@
       
           <li><a href="../misc.html">Configurations and Miscellany</a> &raquo;</li>
       
-    <li>Resource Transfer</li>
+    <li>Structure</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../_sources/structures/misc/resource_transfer.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/structures/misc/versioninfo.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -189,197 +187,123 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="resource-transfer">
-<span id="id1"></span><h1>Resource Transfer<a class="headerlink" href="#resource-transfer" title="Permalink to this headline">¶</a></h1>
-<p>Usage is covered elsewhere &lt;../commands/resource_transfer.html&gt;`__</p>
+  <p id="versioninfo">A <code class="docutils literal"><span class="pre">VersionInfo</span></code> is a structure that breaks the version string for
+kOS down into its component fields as numbers (rather than as
+a string) so you can look at them one at a time.</p>
+<p>You obtain a <a class="reference internal" href="#structure:VERSIONINFO" title="VERSIONINFO structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VersionInfo</span></code></a> by calling <a class="reference internal" href="../vessels/core.html#attribute:CORE:VERSION" title="CORE:VERSION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CORE:VERSION</span></code></a>.</p>
 <div class="section" id="structure">
-<h2>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
+<h1>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h1>
 <dl class="structure">
-<dt id="structure:RESOURCETRANSFER">
-<em class="property">structure </em><code class="descname">ResourceTransfer</code><a class="headerlink" href="#structure:RESOURCETRANSFER" title="Permalink to this definition">¶</a></dt>
-<dd><table border="1" class="docutils" id="id2">
-<caption><span class="caption-text">Members</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<dt id="structure:VERSIONINFO">
+<em class="property">structure </em><code class="descname">VersionInfo</code><a class="headerlink" href="#structure:VERSIONINFO" title="Permalink to this definition">¶</a></dt>
+<dd><table border="1" class="docutils" id="id1">
+<caption><span class="caption-text">Members</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
-<col width="40%" />
+<col width="25%" />
+<col width="13%" />
+<col width="13%" />
+<col width="50%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type (units)</th>
-<th class="head">Access</th>
+<th class="head">Type</th>
+<th class="head">Get/Set</th>
 <th class="head">Description</th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RESOURCETRANSFER:STATUS" title="RESOURCETRANSFER:STATUS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">STATUS</span></code></a></td>
-<td><a class="reference internal" href="string.html#string"><span>string</span></a></td>
-<td>Get only</td>
-<td>The <a class="reference internal" href="string.html#string"><span>string</span></a> status of the transfer (eg &#8220;Inactive&#8221;, &#8220;Transferring&#8221;, &#8220;Failed&#8221;, &#8220;Finished&#8221;)</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VERSIONINFO:MAJOR" title="VERSIONINFO:MAJOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MAJOR</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
+<td>get only</td>
+<td>The &#8220;NN&#8221; in the version string <code class="docutils literal"><span class="pre">vNN.xx.xx.xx</span></code>.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:RESOURCETRANSFER:MESSAGE" title="RESOURCETRANSFER:MESSAGE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MESSAGE</span></code></a></td>
-<td><a class="reference internal" href="string.html#string"><span>string</span></a></td>
-<td>Get only</td>
-<td>A message about the current status</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VERSIONINFO:MINOR" title="VERSIONINFO:MINOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MINOR</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
+<td>get only</td>
+<td>The &#8220;NN&#8221; in the version string <code class="docutils literal"><span class="pre">vxx.NN.xx.xx</span></code>.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RESOURCETRANSFER:GOAL" title="RESOURCETRANSFER:GOAL attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">GOAL</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-<td>Get only</td>
-<td>This is how much of the resource will be transferred.</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VERSIONINFO:PATCH" title="VERSIONINFO:PATCH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PATCH</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
+<td>get only</td>
+<td>The &#8220;NN&#8221; in the version string <code class="docutils literal"><span class="pre">vxx.xx.NN.xx</span></code>.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:RESOURCETRANSFER:TRANSFERRED" title="RESOURCETRANSFER:TRANSFERRED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TRANSFERRED</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-<td>Get only</td>
-<td>This is how much of the resource has been transferred.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RESOURCETRANSFER:RESOURCE" title="RESOURCETRANSFER:RESOURCE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RESOURCE</span></code></a></td>
-<td><a class="reference internal" href="string.html#string"><span>string</span></a></td>
-<td>Get only</td>
-<td>The name of the resource (eg oxidizer, liquidfuel)</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:RESOURCETRANSFER:ACTIVE" title="RESOURCETRANSFER:ACTIVE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ACTIVE</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
-<td>Get / Set</td>
-<td>Setting this value will either start, pause or restart a transfer. Default is false.</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VERSIONINFO:BUILD" title="VERSIONINFO:BUILD attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">BUILD</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
+<td>get only</td>
+<td>The &#8220;NN&#8221; in the version string <code class="docutils literal"><span class="pre">vxx.xx.xx.NN</span></code>.</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="attribute:RESOURCETRANSFER:STATUS">
-RESOURCETRANSFER:<code class="descname">STATUS</code><a class="headerlink" href="#attribute:RESOURCETRANSFER:STATUS" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:VERSIONINFO:MAJOR">
+VersionInfo:<code class="descname">MAJOR</code><a class="headerlink" href="#attribute:VERSIONINFO:MAJOR" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="string.html#string"><span>string</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a>.</td>
 </tr>
 </tbody>
 </table>
-<p>This enumerated type shows the status of the transfer. the possible values are:</p>
-<ul>
-<li><dl class="first docutils">
-<dt>Inactive (default)</dt>
-<dd><ul class="first last simple">
-<li>Transfer is stopped</li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt>Finished</dt>
-<dd><ul class="first last simple">
-<li>Transfer has reached its goal</li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt>Failed</dt>
-<dd><ul class="first last simple">
-<li>There was an error in the transfer, see <code class="xref ks ks-attr docutils literal"><span class="pre">MESSAGE</span></code> for details</li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt>Transferring</dt>
-<dd><ul class="first last simple">
-<li>The transfer is in progress.</li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
+<p>The first number in the version string.  i.e. the
+&#8220;NN&#8221; in the version string <code class="docutils literal"><span class="pre">vNN.xx.xx.xx</span></code>.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="attribute:RESOURCETRANSFER:MESSAGE">
-RESOURCETRANSFER:<code class="descname">MESSAGE</code><a class="headerlink" href="#attribute:RESOURCETRANSFER:MESSAGE" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:VERSIONINFO:MINOR">
+VersionInfo:<code class="descname">MINOR</code><a class="headerlink" href="#attribute:VERSIONINFO:MINOR" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="string.html#string"><span>string</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a>.</td>
 </tr>
 </tbody>
 </table>
-<p>This shows the detail related to <code class="xref ks ks-attr docutils literal"><span class="pre">STATUS</span></code></p>
+<p>The second number in the version string.  i.e. the
+&#8220;NN&#8221; in the version string <code class="docutils literal"><span class="pre">vxx.NN.xx.xx</span></code>.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="attribute:RESOURCETRANSFER:GOAL">
-RESOURCETRANSFER:<code class="descname">GOAL</code><a class="headerlink" href="#attribute:RESOURCETRANSFER:GOAL" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:VERSIONINFO:PATCH">
+VersionInfo:<code class="descname">PATCH</code><a class="headerlink" href="#attribute:VERSIONINFO:PATCH" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a>.</td>
 </tr>
 </tbody>
 </table>
-<p>If you specified an amount to transfer in your transfer request, it will be shown here.
-If you did not, this will return the sentinel value -1.</p>
+<p>The third number in the version string.  i.e. the
+&#8220;NN&#8221; in the version string <code class="docutils literal"><span class="pre">vxx.xx.NN.xx</span></code>.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="attribute:RESOURCETRANSFER:TRANSFERRED">
-RESOURCETRANSFER:<code class="descname">TRANSFERRED</code><a class="headerlink" href="#attribute:RESOURCETRANSFER:TRANSFERRED" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:VERSIONINFO:BUILD">
+VersionInfo:<code class="descname">BUILD</code><a class="headerlink" href="#attribute:VERSIONINFO:BUILD" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a>.</td>
 </tr>
 </tbody>
 </table>
-<p>Returns the amount of the specified resource that has been transferred by this resource transfer.</p>
+<p>The fourth number in the version string.  i.e. the
+&#8220;NN&#8221; in the version string <code class="docutils literal"><span class="pre">vxx.xx.xx.NN</span></code>.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:RESOURCETRANSFER:RESOURCE">
-RESOURCETRANSFER:<code class="descname">RESOURCE</code><a class="headerlink" href="#attribute:RESOURCETRANSFER:RESOURCE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="string.html#string"><span>string</span></a></td>
-</tr>
-</tbody>
-</table>
-<p>The name of the resource that will be transferred. (eg, oxidizer, liquidfuel)</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="attribute:RESOURCETRANSFER:ACTIVE">
-RESOURCETRANSFER:<code class="descname">ACTIVE</code><a class="headerlink" href="#attribute:RESOURCETRANSFER:ACTIVE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get / Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
-</tr>
-</tbody>
-</table>
-<p>When getting, this suffix is simply a shortcut to tell you if <code class="xref ks ks-attr docutils literal"><span class="pre">STATUS</span></code> is Transferring.
-Setting true will change the status of the transfer to Transferring, setting false will change status to inactive.</p>
-</dd></dl>
-
-</div>
 </div>
 
 
@@ -389,10 +313,10 @@ Setting true will change the status of the transfer to Transferring, setting fal
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="steeringmanager.html" class="btn btn-neutral float-right" title="SteeringManager" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="voice.html" class="btn btn-neutral float-right" title="Voice" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="pidloop.html" class="btn btn-neutral" title="PIDLoop" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="vecdraw.html" class="btn btn-neutral" title="Drawing Vectors on the Screen" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
