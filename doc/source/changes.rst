@@ -60,13 +60,6 @@ new terminals:
 
 :struct:`Config:DEFAULTWIDTH`, :struct:`Config:DEFAULTHEIGHT`
 
-Reading Principia flight plan
-:::::::::::::::::::::::::::::
-
-Addon support for :ref:`Principia <principia>`, that lets you read
-the Principia mod's flight planning nodes, which use a different
-system than KSP's stock manauever nodes.
-
 Additional Atmospheric information
 :::::::::::::::::::::::::::::::::::
 

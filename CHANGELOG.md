@@ -29,9 +29,6 @@ This update is a mix of new features, mostly
   If *bool_expr* is true, it returns expr1.  If it's false,
   it returns expr2.
   [pull request](https://github.com/KSP-KOS/KOS/pull/2549).
-- Added support for reading Principia's flight planning nodes,
-  from contributor RCrockford.
-  [pull request](https://github.com/KSP-KOS/KOS/pull/2544).
 - Added support to read more atmospheric values from KSP.
   [pull request](https://github.com/KSP-KOS/KOS/pull/2557).
 
