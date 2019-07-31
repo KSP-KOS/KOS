@@ -42,7 +42,7 @@ Structure
 
 .. attribute:: VersionInfo:MAJOR
 
-    :access: Get/Set
+    :access: Get only
     :type: :struct:`Scalar`.
 
     The first number in the version string.  i.e. the
@@ -50,7 +50,7 @@ Structure
 
 .. attribute:: VersionInfo:MINOR
 
-    :access: Get/Set
+    :access: Get only
     :type: :struct:`Scalar`.
 
     The second number in the version string.  i.e. the
@@ -58,7 +58,7 @@ Structure
 
 .. attribute:: VersionInfo:PATCH
 
-    :access: Get/Set
+    :access: Get only
     :type: :struct:`Scalar`.
 
     The third number in the version string.  i.e. the
@@ -66,7 +66,7 @@ Structure
 
 .. attribute:: VersionInfo:BUILD
 
-    :access: Get/Set
+    :access: Get only
     :type: :struct:`Scalar`.
 
     The fourth number in the version string.  i.e. the
