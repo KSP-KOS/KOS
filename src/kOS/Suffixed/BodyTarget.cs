@@ -88,7 +88,11 @@ namespace kOS.Suffixed
 
         public static BodyTarget CreateOrGetExisting(string bodyName, SharedObjects shared)
         {
-            return CreateOrGetExisting(VesselUtils.GetBodyByName(bodyName), shared);
+            var bod = VesselUtils.GetBodyByName(bodyName);
+            if (bod == null)
+                throw new KOSInvalidArgumentException("BODY() constructor", bodyName, "Body not found in this solar system");
+
+            return CreateOrGetExisting(bod, shared);
         }
 
         private void BodyInitializeSuffixes()

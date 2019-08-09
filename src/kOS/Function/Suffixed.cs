@@ -164,7 +164,10 @@ namespace kOS.Function
         {
             string bodyName = PopValueAssert(shared).ToString();
             AssertArgBottomAndConsume(shared);
-            var result = new BodyAtmosphere(VesselUtils.GetBodyByName(bodyName), shared);
+            var bod = VesselUtils.GetBodyByName(bodyName);
+            if (bod == null)
+                throw new KOSInvalidArgumentException(GetFuncName(), bodyName, "Body not found in this solar system");
+            var result = new BodyAtmosphere(bod, shared);
             ReturnValue = result;
         }
     }
@@ -591,7 +594,11 @@ namespace kOS.Function
             // But for now, this is the only place it's done:
 
             foreach (Waypoint point in points)
-                returnList.Add(new WaypointValue(point, shared));
+            {
+                WaypointValue wp = WaypointValue.CreateWaypointValueWithCheck(point, shared, true);
+                if (wp != null)
+                    returnList.Add(wp);
+            }
             ReturnValue = returnList;
         }
     }
@@ -639,7 +646,7 @@ namespace kOS.Function
             if (point == null)
                 throw new KOSInvalidArgumentException("waypoint", "\""+pointName+"\"", "no such waypoint");
 
-            ReturnValue = new WaypointValue(point, shared);
+        ReturnValue = WaypointValue.CreateWaypointValueWithCheck(point, shared, false);
         }
     }
 

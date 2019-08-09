@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using kOS.Utilities;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Exceptions;
 using FinePrint; // This is part of KSP's own DLL now.  The Waypoint info is in here.
 
 namespace kOS.Suffixed
@@ -15,11 +16,27 @@ namespace kOS.Suffixed
         protected SharedObjects Shared { get; set; }
         private static Dictionary<string,int> greekMap;
         
-        public WaypointValue(Waypoint wayPoint, SharedObjects shared)
+        private WaypointValue(Waypoint wayPoint, SharedObjects shared)
         {
             WrappedWaypoint = wayPoint;
             Shared = shared;
             InitializeSuffixes();
+        }
+
+        public static WaypointValue CreateWaypointValueWithCheck(Waypoint wayPoint, SharedObjects shared, bool failOkay)
+        {
+            string bodyName = wayPoint.celestialName;
+            CelestialBody bod = VesselUtils.GetBodyByName(bodyName);
+            if (bod == null)
+            {
+                if (failOkay)
+                    return null;
+                else
+                    throw new KOSInvalidArgumentException("WAYPOINT constructor", bodyName, "Body not found in this solar system");
+            }
+            WaypointValue wp = new WaypointValue(wayPoint, shared);
+            wp.CachedBody = bod;
+            return wp;
         }
 
         private void InitializeSuffixes()
