@@ -149,6 +149,14 @@ namespace kOS.Safe.Test
             }
         }
 
+        public bool CursorVisible
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         public bool ReverseScreen
         {
             get

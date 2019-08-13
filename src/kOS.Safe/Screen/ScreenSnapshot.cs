@@ -14,6 +14,7 @@ namespace kOS.Safe.Screen
         public int TopRow {get; private set;}
         public int CursorColumn {get; private set;}
         public int CursorRow {get; private set;}
+        public bool CursorVisible { get; private set; }
         public int RowCount {get; private set;}
 
         // Tweakable setting:
@@ -40,6 +41,7 @@ namespace kOS.Safe.Screen
             TopRow = fromScreen.TopRow;
             CursorColumn = fromScreen.CursorColumnShow;
             CursorRow = fromScreen.CursorRowShow;
+            CursorVisible = fromScreen.CursorVisible;
             RowCount = fromScreen.RowCount;
         }
         
@@ -60,6 +62,7 @@ namespace kOS.Safe.Screen
             newThing.CursorColumn = fromScreen.CursorColumnShow;
             newThing.CursorRow = fromScreen.CursorRowShow;
             newThing.RowCount = fromScreen.RowCount;
+            newThing.CursorVisible = fromScreen.CursorVisible;
             newThing.Buffer = new List<IScreenBufferLine>();
             for (int i = 0; i < newThing.RowCount ; ++i)
                 newThing.Buffer.Add(new ScreenBufferLine(fromScreen.ColumnCount));
@@ -106,6 +109,13 @@ namespace kOS.Safe.Screen
             int verticalScroll = TopRow - older.TopRow;
             int trackCursorColumn = older.CursorColumn; // track the movements that will occur as the outputs happen.
             int trackCursorRow = older.CursorRow; // track the movements that will occur as the outputs happen.
+
+            //invalidate the cursor tracking because the last send cursor position will not actually be there (see below)
+            if(!older.CursorVisible)
+            {
+                trackCursorColumn = -100;
+                trackCursorRow = -100;
+            }
 
             // First, output the command to make the terminal scroll to match:
             if (verticalScroll > 0) // scrolling text up (eyeballs panning down)
@@ -203,7 +213,7 @@ namespace kOS.Safe.Screen
                 }
                     
             }
-                    
+
             // Now set the cursor back to the right spot one more time, unless it's already there:
             if (trackCursorRow != CursorRow || trackCursorColumn != CursorColumn)
             {
@@ -212,6 +222,20 @@ namespace kOS.Safe.Screen
                                             (char)CursorColumn,
                                             (char)CursorRow));
             }
+
+            //Do cursor (un)hiding
+            if (CursorVisible != older.CursorVisible)
+            {
+                if(CursorVisible)
+                {
+                    output.Append((char)UnicodeCommand.SHOWCURSOR);
+                }
+                else
+                {
+                    output.Append((char)UnicodeCommand.HIDECURSOR);
+                }
+            }
+
             return output.ToString();
         }
         

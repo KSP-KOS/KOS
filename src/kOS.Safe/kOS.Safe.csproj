@@ -213,6 +213,7 @@
     <Compile Include="Screen\IScreenBufferLine.cs" />
     <Compile Include="Screen\IScreenSnapshot.cs" />
     <Compile Include="Screen\ITermWindow.cs" />
+    <Compile Include="Screen\PrintingBuffer.cs" />
     <Compile Include="Screen\ScreenBuffer.cs" />
     <Compile Include="Screen\ScreenBufferLine.cs" />
     <Compile Include="Screen\ScreenSnapshot.cs" />

@@ -18,6 +18,8 @@ Terminal and game environment
         PRINT 4+1.
         PRINT "4 times 8 is: " + (4*8).
 
+    This is an alias for TERMINAL:PUTLN, see :ref:`terminal struct <terminal>`.
+
 .. global:: SET TERMINAL:WIDTH. GET TERMINAL:WIDTH
 
      Gets or sets the terminal's width in characters.
@@ -33,7 +35,10 @@ Terminal and game environment
     :parameter col: (integer) column starting with zero (left)
     :parameter line: (integer) line starting with zero (top)
 
-    Used in combination with :global:`PRINT`. Prints the selected text to the screen at specified location. Can print strings, or the result of an expression::
+    Used in combination with :global:`PRINT`. Prints the selected text to the screen at specified location. 
+    This does **not** move the terminal cursor, as opposed to PRINT and most :ref:`terminal <terminal>` output methods.
+    This is an alias for TERMINAL:PUTAT, see :ref:`terminal struct <terminal>`.
+    Can print strings, or the result of an expression::
 
         PRINT "Hello" AT(0,10).
         PRINT 4+1 AT(0,10).
