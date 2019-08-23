@@ -78,6 +78,7 @@ namespace kOS.Screen
         private bool alreadyAwake;
         private bool firstTime = true;
         private bool isOpen;
+        private bool wasOpenLastPaint;
         private kOS.Screen.ListPickerDialog fontPicker;
         private kOS.Screen.ListPickerDialog ipAddrPicker;
 
@@ -427,7 +428,16 @@ namespace kOS.Screen
             horizontalSectionCount = 0;
             verticalSectionCount = 0;
 
-            if (!isOpen) return;
+            if (!isOpen)
+            {
+                wasOpenLastPaint = false;
+                return;
+            }
+
+            // Sorting the list is expensive.  Only do it when the window is first re-opened, not on every single repaint:
+            if (!wasOpenLastPaint)
+                kOSProcessor.SortAllInstances();
+            wasOpenLastPaint = true;
 
             if (uiGloballyHidden && kOS.Safe.Utilities.SafeHouse.Config.ObeyHideUI) return;
 

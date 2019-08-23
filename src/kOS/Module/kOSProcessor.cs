@@ -560,22 +560,39 @@ namespace kOS.Module
             if (!allMyInstances.Contains(this))
             {
                 allMyInstances.Add(this);
-                allMyInstances.Sort(delegate(kOSProcessor a, kOSProcessor b)
-                {
-                    // sort "nulls" first:
-                    if (a.part == null || a.part.vessel == null)
-                        return -1;
-                    if (b.part == null || b.part.vessel == null)
-                        return 1;
-                    // If on different vessels, sort by vessel name next:
-                    int compare = string.Compare(a.part.vessel.vesselName, b.part.vessel.vesselName,
-                        StringComparison.CurrentCultureIgnoreCase);
-                    // If on same vessel, sort by part UID last:
-                    if (compare != 0)
-                        return compare;
-                    return (a.part.uid() < b.part.uid()) ? -1 : (a.part.uid() > b.part.uid()) ? 1 : 0;
-                });
+                SortAllInstances();
             }
+        }
+
+        public static void SortAllInstances()
+        {
+            allMyInstances.Sort(delegate (kOSProcessor a, kOSProcessor b)
+            {
+                // sort "nulls" to be last:
+                if (a.part == null || a.part.vessel == null)
+                    return 1;
+                if (b.part == null || b.part.vessel == null)
+                    return -1;
+
+                // If on diffrent vessels, sort by distance of vessel from active vessel - nearest vessels first:
+                if (a.part.vessel != b.part.vessel)
+                {
+                    Vector3d activePos = FlightGlobals.ActiveVessel.GetWorldPos3D();
+                    // May as well use square magnitude - it's faster and sorts things in the same order:
+                    double aSquareDistance = (activePos - a.part.vessel.GetWorldPos3D()).sqrMagnitude;
+                    double bSquareDistance = (activePos - b.part.vessel.GetWorldPos3D()).sqrMagnitude;
+                    return (aSquareDistance < bSquareDistance) ? -1 : 1;
+                }
+                // If it gets to here, they're on the same vessel.
+                // So sort by number of parent links to walk to get to root part (closest to root goes first).
+                int aCountParts = 0;
+                int bCountParts = 0;
+                for (Part p = a.part; p != null; p = p.parent)
+                    ++aCountParts;
+                for (Part p = b.part; p != null; p = p.parent)
+                    ++bCountParts;
+                return (aCountParts < bCountParts) ? -1 : 1;
+            });
         }
 
         public void OnDestroy()
@@ -583,6 +600,7 @@ namespace kOS.Module
             SafeHouse.Logger.SuperVerbose("kOSProcessor.OnDestroy()!");
 
             allMyInstances.RemoveAll(m => m == this);
+            SortAllInstances();
 
             if (shared != null)
             {

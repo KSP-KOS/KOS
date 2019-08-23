@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Collections.Generic;
 using System.Text;
@@ -168,6 +168,10 @@ namespace kOS.UserIO
         {
             localMenuBuffer.Remove(0,localMenuBuffer.Length); // Any time the menu is reprinted, clear out any previous buffer text.
             telnetServer.ReadAll(); // Consume and throw away any readahead typing that preceeded the printing of this menu.
+
+            kOSProcessor.SortAllInstances();
+            CPUListChanged();
+
 
             forceMenuReprint = false;
 
