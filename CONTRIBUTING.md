@@ -1,4 +1,4 @@
-####INDEX
+#### INDEX
 * [Pull Requests](#pull-requests)
   * [Nobody merges their own PR](#nobody-merges-their-own-pr)
 * [Setting Up Your Environment](#setting-up-your-environment)
@@ -41,7 +41,7 @@ Pull Requests
      communicate the same thing, and edit the title to remove it later when
      it is ready.
 
-####Nobody merges their own PR
+#### Nobody merges their own PR
 
 NOTE THIS RULE IS SUSPENDED.
 
@@ -76,7 +76,7 @@ one other developer on the team with a bit of familiarity with it.
 
 Setting Up Your Environment
 ===========================
-####Assumptions
+#### Assumptions
 * `$KSP` is the full path to your Kerbal Space Program installation directory.
   (i.e. `"C:\Program Files (x86)\Steam\SteamApps\common\Kerbal Space Program"`)
 * `$KOS` is the full path to your KOS git repository.
@@ -86,7 +86,7 @@ Setting Up Your Environment
 * You already have a C# IDE and are familiar with how to use it to build a
   .sln solution.
 
-####Setting Up Your repository
+#### Setting Up Your repository
 1. Use the github web interface to create a fork of KSP-KOS/KOS
 
 2. Your fork should have a web address like `https://github.com/[username]/KOS`
@@ -154,7 +154,7 @@ Setting Up Your Environment
 8. You may push your branch with edits to your `origin` on github, and submit a
   pull request to KSP-KOS/KOS `develop` for review to be included.
 
-####Setting Up The Solution Dependencies
+#### Setting Up The Solution Dependencies
 
 1. Copy the folder `$KOS/Resources/GameData/kOS` to `$KSP/GameData/`
 
