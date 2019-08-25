@@ -568,6 +568,13 @@ namespace kOS.Module
         {
             allMyInstances.Sort(delegate (kOSProcessor a, kOSProcessor b)
             {
+                // THIS SORT IS EXPENSIVE BECAUSE IT KEEPS RECALCULATING THE CRITERIA
+                // (DISTANCE BETWEEN VESSELS, HOPS TO ROOT PART) ON EACH PAIRWISE
+                // COMPARISON OF TWO ITEMS DURING THE SORT, RATHER THAN REMEMBERING A
+                // PART'S SCORE AND RE-USING THAT ON SUBSEQUENT PAIRWISE COMPARISONS WITH THAT PART.
+                // I DON'T THINK OPTOMIZING IT IS WORTH IT WHEN THIS SORT WON"T BE DONE SUPER FREQUENTLY,
+                // MAYBE ONCE EVERY 1 or 2 SECONDS AT MOST.
+
                 // sort "nulls" to be last:
                 if (a.part == null || a.part.vessel == null)
                     return 1;
@@ -583,6 +590,7 @@ namespace kOS.Module
                     double bSquareDistance = (activePos - b.part.vessel.GetWorldPos3D()).sqrMagnitude;
                     return (aSquareDistance < bSquareDistance) ? -1 : 1;
                 }
+
                 // If it gets to here, they're on the same vessel.
                 // So sort by number of parent links to walk to get to root part (closest to root goes first).
                 int aCountParts = 0;
@@ -591,7 +599,19 @@ namespace kOS.Module
                     ++aCountParts;
                 for (Part p = b.part; p != null; p = p.parent)
                     ++bCountParts;
-                return (aCountParts < bCountParts) ? -1 : 1;
+                if (aCountParts != bCountParts)
+                    return aCountParts - bCountParts;
+
+                // If it gets to here it's a tie so far - two parts were an equal number of parts away from root,
+                // which can easily happen if the kOS CPUs were attached with symmetry in the VAB/SPH.
+
+                // We CANNOT have a tie.  We need a deterministic order because differences in the list is
+                // how we discover the CPU list has chnaged.  So make one final arbitrary thing to break the
+                // tie with:
+                uint aUID = a.part.uid();
+                uint bUID = b.part.uid();
+                return (aUID < bUID ? -1 : 1);
+
             });
         }
 
