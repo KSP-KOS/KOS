@@ -271,8 +271,11 @@ namespace kOS.Safe.Screen
                         if ((mergeRow + rowsToMerge) > RowCount) rowsToMerge = (RowCount - mergeRow);
                         List<IScreenBufferLine> bufferRange = subBuffer.Buffer.GetRange(startRow, rowsToMerge);
 
-                        // remove the replaced rows
-                        mergedBuffer.RemoveRange(mergeRow, rowsToMerge);
+                        // Remove the replaced rows, but protect against the case where they didn't exist in
+                        // the first place because sizes just got changed in a window drag during the GUI pass:
+                        int mergeRowClamped = Math.Min(Math.Max(mergeRow, 0), mergedBuffer.Count - 1);
+                        int rowsToMergeClamped = Math.Min(Math.Max(rowsToMerge, 0), (mergedBuffer.Count - mergeRowClamped));
+                        mergedBuffer.RemoveRange(mergeRowClamped, rowsToMergeClamped);
                         // Replace them:
                         mergedBuffer.InsertRange(mergeRow, bufferRange);
                     }

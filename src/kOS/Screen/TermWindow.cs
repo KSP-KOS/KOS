@@ -919,7 +919,7 @@ namespace kOS.Screen
                 // Sometimes the buffer is shorter than the terminal height if the resize JUST happened in the last Update():
                 int rowsToPaint = Math.Min(screen.RowCount, buffer.Count);
 
-                for (int row = 0; row < rowsToPaint; row++)
+                for (int row = 0; row < rowsToPaint; ++row)
                 {
                     // At first the screen is filled with null chars.  So if you do something like
                     // PRINT "AAA" AT (4,0) you can get a row of the screen like so "\0\0\0\0AAA".
@@ -932,15 +932,25 @@ namespace kOS.Screen
                     GUI.Label(new Rect(0, (row * charHeight), WindowRect.width - 10, charHeight), lineString, terminalLetterSkin.label);
                 }
 
-                bool blinkOn = cursorBlinkTime < 0.5f &&
-                               screen.CursorRowShow < screen.RowCount &&
-                               IsPowered &&
-                               ShowCursor;
+                int cursorRow = screen.CursorRowShow;
+                int cursorCol = screen.CursorColumnShow;
 
-                if (blinkOn)
+                bool drawCursorThisTime =
+                    // Only if the cursor is in the "on" phase of its blink right now:
+                    cursorBlinkTime < 0.5f &&
+                    // Only if the cursor is within terminal bounds, to avoid throwing array bounds exceptions.
+                    // (Cursor can be temporarily out of bounds if the up-arrow recalled a long cmdline, or if
+                    // the terminal just got resized.)
+                    cursorRow < screen.RowCount && cursorRow < buffer.Count &&  cursorCol < buffer[cursorRow].Length &&
+                    // Only when the CPU has power
+                    IsPowered &&
+                    // Only when expecting input
+                    ShowCursor;
+
+                if (drawCursorThisTime)
                 {
-                    char ch = buffer[screen.CursorRowShow][screen.CursorColumnShow];
-                    DrawCursorAt(ch, screen.CursorColumnShow, screen.CursorRowShow, reversingScreen,
+                    char ch = buffer[cursorRow][cursorCol];
+                    DrawCursorAt(ch, cursorCol, cursorRow, reversingScreen,
                                          charWidth, charHeight, screen.Brightness);
                 }
             }
