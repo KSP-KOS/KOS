@@ -55,6 +55,12 @@ Such part can also be retrieved from :global:`TARGET`, if docking port is select
         * - :meth:`UNDOCK`
           -
           - callable to release the dock
+        * - :attr:`PARTNER`
+          - :struct:`DockingPort`
+          - the docking port this docking port is attached to
+        * - :attr:`HASPARTNER`
+          - boolean
+          - whether or not this docking port is attached to another docking port
         * - :attr:`TARGETABLE`
           - boolean
           - check if this port can be targeted
@@ -164,6 +170,20 @@ Such part can also be retrieved from :global:`TARGET`, if docking port is select
 .. method:: DockingPort:UNDOCK
 
     Call this to cause the docking port to detach.
+
+.. attribute:: DockingPort:PARTNER
+
+    :type: :struct:`DockingPort`
+    :access: Get only
+
+    The docking port this docking port is attached to.
+
+.. attribute:: DockingPort:HASPARTNER
+
+    :type: :ref:`Boolean <boolean>`
+    :access: Get only
+
+    Whether or not this docking port is attached to another docking port.
 
 .. attribute:: DockingPort:TARGETABLE
 
