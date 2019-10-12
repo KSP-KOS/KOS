@@ -192,6 +192,8 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
+            int argCount = CountRemainingArgs(shared);
+            double roll = (argCount >= 3) ? GetDouble(PopValueAssert(shared)) : double.NaN;
             double pitchAboveHorizon = GetDouble(PopValueAssert(shared));
             double degreesFromNorth = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
@@ -199,6 +201,8 @@ namespace kOS.Function
             Vessel currentVessel = shared.Vessel;
             var q = UnityEngine.Quaternion.LookRotation(VesselUtils.GetNorthVector(currentVessel), currentVessel.upAxis);
             q *= UnityEngine.Quaternion.Euler(new UnityEngine.Vector3((float)-pitchAboveHorizon, (float)degreesFromNorth, 0));
+            if (!double.IsNaN(roll))
+                q *= UnityEngine.Quaternion.Euler(0, 0, (float)roll);
 
             var result = new Direction(q);
             ReturnValue = result;
