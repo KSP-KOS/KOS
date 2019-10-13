@@ -77,6 +77,36 @@ namespace kOS.Function
         }
     }
 
+    [Function("o")]
+    public class FunctionOrbit : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            CelestialBody body;
+            var bodyArg = PopValueAssert(shared);
+            if (bodyArg is BodyTarget bodyTarget)
+            {
+                body = bodyTarget.Body;
+            } else
+            {
+                var bodyName = bodyArg.ToString();
+                body = VesselUtils.GetBodyByName(bodyName);
+                if (body == null)
+                    throw new KOSInvalidArgumentException("O() constructor", bodyName, "Body not found in this solar system");
+            }
+            double t = GetDouble(PopValueAssert(shared));
+            double mEp = GetDouble(PopValueAssert(shared));
+            double argPe = GetDouble(PopValueAssert(shared));
+            double lan = GetDouble(PopValueAssert(shared));
+            double sma = GetDouble(PopValueAssert(shared));
+            double e = GetDouble(PopValueAssert(shared));
+            double inc = GetDouble(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
+
+            ReturnValue = new OrbitInfo(new Orbit(inc, e, sma, lan, argPe, mEp, t, body), shared);
+        }
+    }
+
     [Function("rotatefromto")]
     public class FunctionRotateFromTo : FunctionBase
     {
