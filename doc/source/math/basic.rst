@@ -240,7 +240,9 @@ Mathematical Functions
 ==================== ===================================================
  :func:`ABS(a)`       absolute value
  :func:`CEILING(a)`   round up
+ :func:`CEILING(a,b)` round up to nearest place
  :func:`FLOOR(a)`     round down
+ :func:`CEILING(a,b)` round down to nearest place
  :func:`LN(a)`        natural log
  :func:`LOG10(a)`     log base 10
  :func:`MOD(a,b)`     modulus
@@ -266,11 +268,23 @@ Mathematical Functions
 
         PRINT CEILING(1.887). // prints 2
 
+.. function:: CEILING(a,b)
+
+    Rounds up to the nearest place value::
+
+        PRINT CEILING(1.887,2). // prints 1.89
+
 .. function:: FLOOR(a)
 
     Rounds down to the nearest whole number::
 
         PRINT FLOOR(1.887). // prints 1
+
+.. function:: FLOOR(a,b)
+
+    Rounds down to the nearest place value::
+
+        PRINT CEILING(1.887,2). // prints 1.88
 
 .. function:: LN(a)
 
