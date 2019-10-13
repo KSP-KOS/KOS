@@ -157,6 +157,17 @@ namespace kOS.Function
         }
     }
 
+    [Function("bodyexists")]
+    public class FunctionBodyExists : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string bodyName = PopValueAssert(shared).ToString();
+            AssertArgBottomAndConsume(shared);
+            ReturnValue = VesselUtils.GetBodyByName(bodyName) != null;
+        }
+    }
+
     [Function("bodyatmosphere")]
     public class FunctionBodyAtmosphere : FunctionBase
     {

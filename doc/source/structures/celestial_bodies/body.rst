@@ -15,6 +15,10 @@ Bodies' names are added to the kerboscript language as variable names as well.
 This means you can use the variable ``Mun`` to mean the same thing as ``BODY("Mun")``,
 and the variable ``Kerbin`` to mean the same thing as ``BODY("Kerbin")``, and so on.
 
+To check whether a Body exists, you can do this::
+
+    SET MUN_EXISTS TO BODYEXISTS("Mun").
+
 .. note::
     Exception: If you are using a mod that replaces the stock game's planets
     and moons with new bodies with new names, then there is a chance a body's
