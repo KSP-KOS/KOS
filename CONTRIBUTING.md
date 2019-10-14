@@ -159,22 +159,26 @@ Setting Up Your Environment
 1. Copy the folder `$KOS/Resources/GameData/kOS` to `$KSP/GameData/`
 
 2. Get the Unity assemblies into your project. There are two options:
-	1. Copy these DLLs from `$KSP/KSP_Data/Managed `into `$KOS/Resources`:
+	1. Copy these DLLs from `$KSP/KSP_x64_Data/Managed `into `$KOS/Resources`:
 		* `Assembly-CSharp`
 		* `Assembly-CSharp-firstpass`
-		* `UnityEngine`
-		* `UnityEngine.AnimationModule`
-		* `UnityEngine.AudioModule`
-		* `UnityEngine.CoreModule`
-		* `UnityEngine.ImageConversionModule`
-		* `UnityEngine.IMGUIModule`
-		* `UnityEngine.PhysicsModule`
-		* `UnityEngine.TextRenderingModule`
-		* `UnityEngine.UI`
-		* `UnityEngine.UnityWebRequestWWWModule`
+		* `UnityEngine*` // (Please notice the wildcard asterisk here. Copy all DLLs that begin with the word "UnityEngine".)
 	2. If you do not have a copy of KSP locally, you may
 	  download dummy assemblies at https://github.com/KSP-KOS/KSP_LIB
 
-3. If you want building the solution to update the dlls in your KSP
+3. Make sure you are targeting this version of .Net:  ".Net 3.5 Framework".
+It is *sometimes* possible to make DLLs work for newer versions of .Net,
+but only on some user's computers.  To ensure that you remain compatible
+with all the target platforms (which are using an older version of Mono),
+you must limit yourself to .net 3.5 only.  If you use a newer feature that
+did not exist yet in .Net 3.5, it may result in a DLL that works fine on
+your computer, but not all the KSP target platforms.
+
+4. Tell "NuGet" to pull the packages defined in the kOS solution.  (In Visual
+Studio, this is accomplished by right clicking the kOS Solution and picking
+"Restore NuGet Packages".  In other dev environments it may be a different
+place on the menus.)
+
+5. If you want building the solution to update the dlls in your KSP
    directory, create a symbolic link called `KSPdirlink` from the root
    of this repository to your KSP installation directory.
