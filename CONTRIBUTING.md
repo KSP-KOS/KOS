@@ -188,6 +188,8 @@ Setting Up Your Environment
                * Resources/UnityEngine.InputLegacyModule
                * Resources/UnityEngine.TextRenderingModule
                * Resources/UnityEngine.UI
+               * Resources/UnityEngine.UnityWebRequestAudioModule
+               * Resources/UnityEngine.UnityWebRequestModule
                * Resources/UnityEngine.UnityWebRequestWWWModule
            If you get any compile errors that look like the following line
            when you do a full rebuild, it might mean there is one of these

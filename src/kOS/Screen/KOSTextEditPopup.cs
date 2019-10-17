@@ -394,7 +394,7 @@ namespace kOS.Screen
         protected void CheckResizeDrag()
         {
             Event e = Event.current;
-            if (e.type == EventType.mouseDown && e.button == 0)
+            if (e.type == EventType.MouseDown && e.button == 0)
             {
                 // Remember the fact that this mouseDown started on the resize button:
                 if (resizeButtonCoords.Contains(MouseButtonDownPosRelative))
@@ -404,7 +404,7 @@ namespace kOS.Screen
                     Event.current.Use();
                 }
             }
-            if (e.type == EventType.mouseUp && e.button == 0) // mouse button went from Down to Up just now.
+            if (e.type == EventType.MouseUp && e.button == 0) // mouse button went from Down to Up just now.
             {
                 if (resizeMouseDown)
                 {

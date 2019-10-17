@@ -30,7 +30,13 @@ namespace kOS.Suffixed
         private GameObject lineObj;
         private GameObject hatObj;
         private GameObject labelObj;
+        // Deliberately not fixing the following deprecation warning for using GUIText, because I want this
+        // codebase to be back-portable to older KSP versions for RO/RP-1 without too much hassle.  Eventually
+        // it might not work and we may be forced to change this, but the KSP1 lifecycle may be done
+        // by then, so I don't want to make the effort prematurely.
+#pragma warning disable CS0618 // ^^^ see above comment about why this is disabled.
         private GUIText label;
+#pragma warning restore CS0618
         private string labelStr = "";
         private Vector3 labelLocation;
 
@@ -347,7 +353,13 @@ namespace kOS.Suffixed
 
                     line = lineObj.AddComponent<LineRenderer>();
                     hat = hatObj.AddComponent<LineRenderer>();
+                    // Deliberately not fixing the following deprecation warning for using GUIText, because I want this
+                    // codebase to be back-portable to older KSP versions for RO/RP-1 without too much hassle.  Eventually
+                    // it might not work and we may be forced to change this, but the KSP1 lifecycle may be done
+                    // by then, so I don't want to make the effort prematurely.
+#pragma warning disable CS0618 // ^^^ see above comment about why this is disabled.
                     label = labelObj.GetComponent<GUIText>();
+#pragma warning restore CS0618
 
                     line.useWorldSpace = false;
                     hat.useWorldSpace = false;
@@ -357,8 +369,16 @@ namespace kOS.Suffixed
                     // Note the Shader name string below comes from Kerbal's packaged shaders the
                     // game ships with - there's many to choose from but they're not documented what
                     // they are.  This was settled upon via trial and error:
-                    line.material = new Material(Shader.Find("Particles/Alpha Blended"));
-                    hat.material = new Material(Shader.Find("Particles/Alpha Blended"));
+                    // Additionally, Note that in KSP 1.8 because of the Unity update, some of these
+                    // shaders Unity previously supplied were removed from Unity's DLLs.  SQUAD packaged them
+                    // inside its own DLLs in 1.8 for modders who had been using them.  But because of that,
+                    // mods have to use this different path to get to them:
+                    Shader vecShader = Shader.Find("Particles/Alpha Blended"); // for when KSP version is < 1.8
+                    if (vecShader == null)
+                        vecShader = Shader.Find("Legacy Shaders/Particles/Alpha Blended"); // for when KSP version is >= 1.8
+
+                    line.material = new Material(vecShader);
+                    hat.material = new Material(vecShader);
 
                     // This is how font loading would work if other fonts were available in KSP:
                     // Font lblFont = (Font)Resources.Load( "Arial", typeof(Font) );
