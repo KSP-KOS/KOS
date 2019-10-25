@@ -63,7 +63,7 @@ Creation
 
         SET myDir TO HEADING(degreesFromNorth, pitchAboveHorizon).
 
-    The third parameter, *roll*, is optional.
+    The third parameter, *roll*, is optional. Roll indicates rotation about the longitudinal axis.
 
 .. function:: LOOKDIRUP(lookAt,lookUp)
 

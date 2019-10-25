@@ -16,7 +16,7 @@ Whenever you get the :struct:`Orbit` of a :struct:`Vessel`, be aware that its ju
 Creation
 --------
 
-.. function:: O(inc, e, sma, lan, argPe, mEp, t, body)
+.. function:: CREATEORBIT(inc, e, sma, lan, argPe, mEp, t, body)
 
     :parameter inc: (scalar) inclination
     :parameter e: (scalar) eccentricity
@@ -30,7 +30,7 @@ Creation
 
     This creates a new orbit around the Mun::
 
-        SET myOrbit TO O(0, 0, 270000, 0, 0, 0, 0, Mun).
+        SET myOrbit TO CREATEORBIT(0, 0, 270000, 0, 0, 0, 0, Mun).
 
 .. warning::
 

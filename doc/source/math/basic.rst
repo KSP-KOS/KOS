@@ -242,7 +242,7 @@ Mathematical Functions
  :func:`CEILING(a)`   round up
  :func:`CEILING(a,b)` round up to nearest place
  :func:`FLOOR(a)`     round down
- :func:`CEILING(a,b)` round down to nearest place
+ :func:`FLOOR(a,b)` round down to nearest place
  :func:`LN(a)`        natural log
  :func:`LOG10(a)`     log base 10
  :func:`MOD(a,b)`     modulus

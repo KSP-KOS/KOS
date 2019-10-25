@@ -77,8 +77,8 @@ namespace kOS.Function
         }
     }
 
-    [Function("o")]
-    public class FunctionOrbit : FunctionBase
+    [Function("createOrbit")]
+    public class FunctionCreateOrbit : FunctionBase
     {
         public override void Execute(SharedObjects shared)
         {
@@ -92,7 +92,7 @@ namespace kOS.Function
                 var bodyName = bodyArg.ToString();
                 body = VesselUtils.GetBodyByName(bodyName);
                 if (body == null)
-                    throw new KOSInvalidArgumentException("O() constructor", bodyName, "Body not found in this solar system");
+                    throw new KOSInvalidArgumentException("CREATEORBIT() constructor", bodyName, "Body not found in this solar system");
             }
             double t = GetDouble(PopValueAssert(shared));
             double mEp = GetDouble(PopValueAssert(shared));
