@@ -25,7 +25,7 @@ echo %cd%\%buildPath%
 echo .
 echo %cd%\%gameDataDir%\%projName%\
 
-xcopy %cd%\%buildPath% %cd%\%gameDataDir%%pluginPath%\
+xcopy %cd%\%buildPath% %cd%\%gameDataDir%%pluginPath%\ /Y
 
 echo .
 echo /
