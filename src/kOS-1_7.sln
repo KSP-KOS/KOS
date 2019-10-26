@@ -1,0 +1,82 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29411.108
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kOS-1_7", "kOS\kOS-1_7.csproj", "{465EC87D-723D-4A6C-B116-9777AC641DE3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kOS.Safe.Test-1_7", "kOS.Safe.Test\kOS.Safe.Test-1_7.csproj", "{C9A42A44-DDC8-4D6C-8A16-D7F30F494B46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kOS.Safe-1_7", "kOS.Safe\kOS.Safe-1_7.csproj", "{590FFDA8-7B44-4BC3-A12A-5FFE2BB7D8FD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Shell|Any CPU = Shell|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{465EC87D-723D-4A6C-B116-9777AC641DE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{465EC87D-723D-4A6C-B116-9777AC641DE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{465EC87D-723D-4A6C-B116-9777AC641DE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{465EC87D-723D-4A6C-B116-9777AC641DE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{465EC87D-723D-4A6C-B116-9777AC641DE3}.Shell|Any CPU.ActiveCfg = Release|Any CPU
+		{465EC87D-723D-4A6C-B116-9777AC641DE3}.Shell|Any CPU.Build.0 = Release|Any CPU
+		{C9A42A44-DDC8-4D6C-8A16-D7F30F494B46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9A42A44-DDC8-4D6C-8A16-D7F30F494B46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9A42A44-DDC8-4D6C-8A16-D7F30F494B46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9A42A44-DDC8-4D6C-8A16-D7F30F494B46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9A42A44-DDC8-4D6C-8A16-D7F30F494B46}.Shell|Any CPU.ActiveCfg = Release|Any CPU
+		{C9A42A44-DDC8-4D6C-8A16-D7F30F494B46}.Shell|Any CPU.Build.0 = Release|Any CPU
+		{590FFDA8-7B44-4BC3-A12A-5FFE2BB7D8FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{590FFDA8-7B44-4BC3-A12A-5FFE2BB7D8FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{590FFDA8-7B44-4BC3-A12A-5FFE2BB7D8FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{590FFDA8-7B44-4BC3-A12A-5FFE2BB7D8FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{590FFDA8-7B44-4BC3-A12A-5FFE2BB7D8FD}.Shell|Any CPU.ActiveCfg = Shell|Any CPU
+		{590FFDA8-7B44-4BC3-A12A-5FFE2BB7D8FD}.Shell|Any CPU.Build.0 = Shell|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F232A2BF-DF0E-4CEE-88DD-CC581F7A64E8}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.TextStylePolicy = $1
+		$1.FileWidth = 120
+		$1.inheritsSet = VisualStudio
+		$1.inheritsScope = text/plain
+		$1.scope = text/x-csharp
+		$0.CSharpFormattingPolicy = $2
+		$2.AnonymousMethodBraceStyle = DoNotChange
+		$2.PropertyBraceStyle = DoNotChange
+		$2.PropertyGetBraceStyle = DoNotChange
+		$2.PropertySetBraceStyle = DoNotChange
+		$2.EventBraceStyle = DoNotChange
+		$2.EventAddBraceStyle = DoNotChange
+		$2.EventRemoveBraceStyle = DoNotChange
+		$2.StatementBraceStyle = NextLine
+		$2.IndentSwitchBody = True
+		$2.ElseNewLinePlacement = DoNotCare
+		$2.ElseIfNewLinePlacement = DoNotCare
+		$2.CatchNewLinePlacement = DoNotCare
+		$2.FinallyNewLinePlacement = DoNotCare
+		$2.WhileNewLinePlacement = DoNotCare
+		$2.BeforeMethodDeclarationParentheses = False
+		$2.BeforeMethodCallParentheses = False
+		$2.BeforeConstructorDeclarationParentheses = False
+		$2.EmbeddedStatementPlacement = DoNotCare
+		$2.BeforeIndexerDeclarationBracket = False
+		$2.BeforeDelegateDeclarationParentheses = False
+		$2.AfterDelegateDeclarationParameterComma = True
+		$2.NewParentheses = False
+		$2.SpacesBeforeBrackets = False
+		$2.inheritsSet = Mono
+		$2.inheritsScope = text/x-csharp
+		$2.scope = text/x-csharp
+		$0.DotNetNamingPolicy = $3
+		$3.DirectoryNamespaceAssociation = None
+		$3.ResourceNamePolicy = FileFormatDefault
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,289 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{465EC87D-723D-4A6C-B116-9777AC641DE3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>kOS</RootNamespace>
+    <AssemblyName>kOS</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>..\..\Resources\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\..\Resources\GameData\kOS\Plugins\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\Resources\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\Resources\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\Resources\UnityEngine.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AddOns\ActionGroupsExtended\ActionGroupsExtendedAPI.cs" />
+    <Compile Include="AddOns\ActionGroupsExtended\ActionGroupsExtendedBinding.cs" />
+    <Compile Include="AddOns\kOSAddonAttribute.cs" />
+    <Compile Include="AddOns\AddonManager.cs" />
+    <Compile Include="AddOns\InfernalRobotics\IRControlGroup.cs" />
+    <Compile Include="AddOns\InfernalRobotics\IRHandler.cs" />
+    <Compile Include="AddOns\InfernalRobotics\IRServoWrapper.cs" />
+    <Compile Include="AddOns\InfernalRobotics\IRWrapper.cs" />
+    <Compile Include="AddOns\RemoteTech\IRemoteTechAPIv1.cs" />
+    <Compile Include="AddOns\RemoteTech\RemoteTechAPI.cs" />
+    <Compile Include="AddOns\RemoteTech\RemoteTechHook.cs" />
+    <Compile Include="AddOns\Trajectories\Addon.cs" />
+    <Compile Include="AddOns\Trajectories\TRWrapper.cs" />
+    <Compile Include="Binding\ActionGroups.cs" />
+    <Compile Include="Binding\Binding.cs" />
+    <Compile Include="Binding\BindingConfig.cs" />
+    <Compile Include="Binding\BindingManager.cs" />
+    <Compile Include="Binding\ColorBinding.cs" />
+    <Compile Include="Binding\DoNothingBinding.cs" />
+    <Compile Include="Binding\FlightControlManager.cs" />
+    <Compile Include="Binding\FlightStats.cs" />
+    <Compile Include="Binding\MissionSettings.cs" />
+    <Compile Include="Binding\RoverStats.cs" />
+    <Compile Include="Callback\GameEventDispatcher.cs" />
+    <Compile Include="Callback\KOSGameEventDispatcher.cs" />
+    <Compile Include="Communication\CommNetConnectivityManager.cs" />
+    <Compile Include="Communication\ConnectivityManager.cs" />
+    <Compile Include="Communication\ControlConnection.cs" />
+    <Compile Include="Communication\HomeConnection.cs" />
+    <Compile Include="Communication\kOSConnectivityParameters.cs" />
+    <Compile Include="Control\SteeringManager.cs" />
+    <Compile Include="Binding\TerminalSettings.cs" />
+    <Compile Include="Binding\BindingsUniverse.cs" />
+    <Compile Include="Control\IFlightControlParameter.cs" />
+    <Compile Include="Control\ThrottleManager.cs" />
+    <Compile Include="Control\WheelSteeringManager.cs" />
+    <Compile Include="Control\WheelThrottleManager.cs" />
+    <Compile Include="Function\BuildList.cs" />
+    <Compile Include="Function\HighlightStructure.cs" />
+    <Compile Include="Function\Math.cs" />
+    <Compile Include="Function\Misc.cs" />
+    <Compile Include="Function\Persistence.cs" />
+    <Compile Include="Function\Suffixed.cs" />
+    <Compile Include="KSPLogger.cs" />
+    <Compile Include="Module\Bootstrapper.cs" />
+    <Compile Include="Module\kOSCustomParameters.cs" />
+    <Compile Include="Module\kOSLightModule.cs" />
+    <Compile Include="Module\KOSNameTag.cs" />
+    <Compile Include="Module\kOSSettingsChecker.cs" />
+    <Compile Include="Module\kOSVesselModule.cs" />
+    <Compile Include="Module\SceneChangeCleaner.cs" />
+    <Compile Include="Persistence\PersistenceExtensions.cs" />
+    <Compile Include="Persistence\ConnectivityVolumeManager.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Screen\GUIWindow.cs" />
+    <Compile Include="Sound\NoiseSoundWave.cs" />
+    <Compile Include="Sound\NoteValue.cs" />
+    <Compile Include="Sound\ProceduralSoundWave.cs" />
+    <Compile Include="Sound\SquareSoundWave.cs" />
+    <Compile Include="Sound\SawtoothSoundWave.cs" />
+    <Compile Include="Sound\SineSoundWave.cs" />
+    <Compile Include="Screen\ConnectivityInterpreter.cs" />
+    <Compile Include="Sound\SoundMaker.cs" />
+    <Compile Include="Sound\TriangleSoundWave.cs" />
+    <Compile Include="Sound\Voice.cs" />
+    <Compile Include="Sound\VoiceValue.cs" />
+    <Compile Include="Suffixed\BoundsValue.cs" />
+    <Compile Include="Suffixed\CraftTemplate.cs" />
+    <Compile Include="Suffixed\KUniverseValue.cs" />
+    <Compile Include="Suffixed\LoadDistanceValue.cs" />
+    <Compile Include="Suffixed\Part\DecouplerValue.cs" />
+    <Compile Include="Suffixed\Part\LaunchClampValue.cs" />
+    <Compile Include="Suffixed\ResourceTransferValue.cs" />
+    <Compile Include="Screen\DelegateDialog.cs" />
+    <Compile Include="Screen\KOSManagedWindow.cs" />
+    <Compile Include="Screen\KOSNameTagWindow.cs" />
+    <Compile Include="Screen\KOSTextEditPopup.cs" />
+    <Compile Include="Screen\KOSToolbarWindow.cs" />
+    <Compile Include="Screen\ToolbarWrapper.cs" />
+    <Compile Include="Suffixed\ActiveResourceValue.cs" />
+    <Compile Include="Suffixed\BodyAtmosphere.cs" />
+    <Compile Include="Suffixed\BodyTarget.cs" />
+    <Compile Include="Suffixed\Career.cs" />
+    <Compile Include="Suffixed\Orbitable.cs" />
+    <Compile Include="Suffixed\PartModuleField\PartModuleFields.cs" />
+    <Compile Include="Suffixed\PartModuleField\PartModuleFieldsFactory.cs" />
+    <Compile Include="Suffixed\PartModuleField\GimbalFields.cs" />
+    <Compile Include="Suffixed\Part\PartValueFactory.cs" />
+    <Compile Include="Suffixed\RgbaColor.cs" />
+    <Compile Include="Suffixed\Config.cs" />
+    <Compile Include="Function\PrintList.cs" />
+    <Compile Include="Core.cs" />
+    <Compile Include="Suffixed\ElementValue.cs" />
+    <Compile Include="Suffixed\FlightControl.cs" />
+    <Compile Include="Suffixed\GeoCoordinates.cs" />
+    <Compile Include="Screen\Interpreter.cs" />
+    <Compile Include="Module\kOSProcessor.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="Suffixed\IKOSTargetable.cs" />
+    <Compile Include="Suffixed\Node.cs" />
+    <Compile Include="Suffixed\OrbitInfo.cs" />
+    <Compile Include="SharedObjects.cs" />
+    <Compile Include="Suffixed\Part\DockingPortValue.cs" />
+    <Compile Include="Suffixed\Part\EngineValue.cs" />
+    <Compile Include="Suffixed\Part\PartValue.cs" />
+    <Compile Include="Suffixed\Part\SensorValue.cs" />
+    <Compile Include="Suffixed\AggregateResourceValue.cs" />
+    <Compile Include="Suffixed\SingleResourceValue.cs" />
+    <Compile Include="Suffixed\StageValues.cs" />
+    <Compile Include="Suffixed\TimeWarpValue.cs" />
+    <Compile Include="Suffixed\VectorRenderer.cs" />
+    <Compile Include="Suffixed\VesselAlt.cs" />
+    <Compile Include="Suffixed\VesselEta.cs" />
+    <Compile Include="Suffixed\VesselTarget.Hooks.cs" />
+    <Compile Include="Suffixed\VesselTarget.Parts.cs" />
+    <Compile Include="Suffixed\WaypointValue.cs" />
+    <Compile Include="Execution\TransferManager.cs" />
+    <Compile Include="Suffixed\Widget\TipDisplay.cs" />
+    <Compile Include="Suffixed\Widget\Slider.cs" />
+    <Compile Include="Suffixed\Widget\Spacing.cs" />
+    <Compile Include="Suffixed\Widget\Label.cs" />
+    <Compile Include="Suffixed\Widget\TextField.cs" />
+    <Compile Include="Suffixed\Widget\Button.cs" />
+    <Compile Include="Suffixed\Widget\PopupMenu.cs" />
+    <Compile Include="Suffixed\Widget\Box.cs" />
+    <Compile Include="Suffixed\Widget\ScrollBox.cs" />
+    <Compile Include="Suffixed\Widget\GUIWidgets.cs" />
+    <Compile Include="Suffixed\Widget\WidgetSkin.cs" />
+    <Compile Include="Suffixed\Widget\WidgetStyleState.cs" />
+    <Compile Include="Suffixed\Widget\WidgetStyleRectOffset.cs" />
+    <Compile Include="Suffixed\Widget\WidgetStyle.cs" />
+    <Compile Include="Suffixed\Widget\Widget.cs" />
+    <Compile Include="UserIO\TelnetMainServer.cs" />
+    <Compile Include="UserIO\TelnetSingletonServer.cs" />
+    <Compile Include="UserIO\TelnetWelcomeMenu.cs" />
+    <Compile Include="UserIO\TerminalAnsiMapper.cs" />
+    <Compile Include="UserIO\TerminalUnicodeMapper.cs" />
+    <Compile Include="UserIO\TerminalVT100Mapper.cs" />
+    <Compile Include="UserIO\TerminalXtermMapper.cs" />
+    <Compile Include="Utilities\BetaShim.cs" />
+    <Compile Include="Utilities\PartUtilities.cs" />
+    <Compile Include="Screen\TermWindow.cs" />
+    <Compile Include="Suffixed\Timespan.cs" />
+    <Compile Include="Utilities\Utils.cs" />
+    <Compile Include="Suffixed\Vector.cs" />
+    <Compile Include="Suffixed\Direction.cs" />
+    <Compile Include="Function\FunctionBase.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Suffixed\VesselSensors.cs" />
+    <Compile Include="Suffixed\VesselTarget.cs" />
+    <Compile Include="Utilities\VesselUtils.cs" />
+    <Compile Include="Suffixed\OrbitableVelocity.cs" />
+    <Compile Include="AddOns\KerbalAlarmClock\KACWrapper.cs" />
+    <Compile Include="AddOns\KerbalAlarmClock\KACAlarmWrapper.cs" />
+    <Compile Include="AddOns\KerbalAlarmClock\KACFunctions.cs" />
+    <Compile Include="AddOns\KerbalAlarmClock\KACEventHandler.cs" />
+    <Compile Include="Suffixed\AddonList.cs" />
+    <Compile Include="Suffixed\Addon.cs" />
+    <Compile Include="AddOns\RemoteTech\Addon.cs" />
+    <Compile Include="AddOns\KerbalAlarmClock\Addon.cs" />
+    <Compile Include="AddOns\ActionGroupsExtended\Addon.cs" />
+    <Compile Include="AddOns\InfernalRobotics\Addon.cs" />
+    <Compile Include="Screen\RectExtensions.cs" />
+    <Compile Include="AddOns\RemoteTech\RemoteTechAntennaModuleFields.cs" />
+    <Compile Include="Suffixed\CrewMember.cs" />
+    <Compile Include="Suffixed\PartModuleField\kOSProcessorFields.cs" />
+    <Compile Include="Communication\ProcessorManager.cs" />
+    <Compile Include="Communication\InterVesselManager.cs" />
+    <Compile Include="Serialization\ConfigNodeFormatter.cs" />
+    <Compile Include="Communication\IConnectivityManager.cs" />
+    <Compile Include="Communication\PermitAllConnectivityManager.cs" />
+    <Compile Include="AddOns\RemoteTech\RemoteTechConnectivityManager.cs" />
+    <Compile Include="Serialization\SerializationMgr.cs" />
+    <Compile Include="Suffixed\ScienceDataValue.cs" />
+    <Compile Include="Suffixed\PartModuleField\ScienceExperimentFieldsFactory.cs" />
+    <Compile Include="AddOns\OrbitalScience\DMModuleScienceAnimateFields.cs" />
+    <Compile Include="AddOns\OrbitalScience\DMOrbitalScienceFieldsFactory.cs" />
+    <Compile Include="AddOns\OrbitalScience\DMBathymetryFields.cs" />
+    <Compile Include="Suffixed\PartModuleField\StockScienceExperimentFields.cs" />
+    <Compile Include="Suffixed\PartModuleField\ScienceExperimentFields.cs" />
+    <Compile Include="AddOns\OrbitalScience\DMScienceExperimentFields.cs" />
+    <Compile Include="Communication\MessageQueueStructure.cs" />
+    <Compile Include="Communication\InterProcCommand.cs" />
+    <Compile Include="Communication\RunCommand.cs" />
+    <Compile Include="Communication\MessageStructure.cs" />
+    <Compile Include="Communication\VesselConnection.cs" />
+    <Compile Include="Communication\ProcessorConnection.cs" />
+    <Compile Include="Communication\PlanetariumTimeProvider.cs" />
+    <Compile Include="Communication\Message.cs" />
+    <Compile Include="Communication\MessageQueue.cs" />
+    <Compile Include="Module\AssetManager.cs" />
+    <Compile Include="Screen\ListPickerDialog.cs" />
+    <Compile Include="Suffixed\HsvaColor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">
+      <Project>{590FFDA8-7B44-4BC3-A12A-5FFE2BB7D8FD}</Project>
+      <Name>kOS.Safe</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
+      cp "$(TargetPath)" "$(SolutionDir)/../Resources/GameData/kOS/Plugins"
+      (test -h "$(SolutionDir)/../KSPdirlink" &amp;&amp; cp "$(TargetPath)" "$(SolutionDir)/../KSPdirlink/GameData/kOS/Plugins") || true
+    </PostBuildEvent>
+    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
+      xcopy "$(TargetPath)" "$(SolutionDir)\..\Resources\GameData\kOS\Plugins" /y
+      IF EXIST "$(SolutionDir)\..\KSPdirlink\" xcopy "$(TargetPath)" "$(SolutionDir)\..\KSPdirlink\GameData\kOS\Plugins" /y || exit /B 0
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>
