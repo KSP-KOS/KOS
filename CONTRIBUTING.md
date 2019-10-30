@@ -41,7 +41,7 @@ Pull Requests
      communicate the same thing, and edit the title to remove it later when
      it is ready.
 
-####Nobody merges their own PR
+## Nobody merges their own PR
 
 NOTE THIS RULE IS SUSPENDED.
 
@@ -76,7 +76,8 @@ one other developer on the team with a bit of familiarity with it.
 
 Setting Up Your Environment
 ===========================
-####Assumptions
+
+## Assumptions
 * `$KSP` is the full path to your Kerbal Space Program installation directory.
   (i.e. `"C:\Program Files (x86)\Steam\SteamApps\common\Kerbal Space Program"`)
 * `$KOS` is the full path to your KOS git repository.
@@ -86,7 +87,7 @@ Setting Up Your Environment
 * You already have a C# IDE and are familiar with how to use it to build a
   .sln solution.
 
-####Setting Up Your repository
+## Setting Up Your repository
 1. Use the github web interface to create a fork of KSP-KOS/KOS
 
 2. Your fork should have a web address like `https://github.com/[username]/KOS`
@@ -154,15 +155,18 @@ Setting Up Your Environment
 8. You may push your branch with edits to your `origin` on github, and submit a
   pull request to KSP-KOS/KOS `develop` for review to be included.
 
-####Setting Up The Solution Dependencies
+## Setting Up The Solution Dependencies
 
 1. Copy the folder `$KOS/Resources/GameData/kOS` to `$KSP/GameData/`
 
 2. Get the Unity assemblies into your project. There are two options:
+
 	1. Copy these DLLs from `$KSP/KSP_x64_Data/Managed `into `$KOS/Resources`:
+
 		* `Assembly-CSharp`
 		* `Assembly-CSharp-firstpass`
 		* `UnityEngine*.dll`
+
                     * ^ (Please notice the wildcard asterisk in the above point.
                       As of KSP 1.8, The version of Unity being used has split much
                       of its functionality into many different dlls when it used to
@@ -172,11 +176,13 @@ Setting Up Your Environment
                       Resources folder.  Some may be unnecessary, but it's
                       better to have unneeded ones than to be missing one you
                       ended up needing.)
+
         2. Add these files as "References" to your kOS project, if they aren't already.
            Again, these are needed because Unity split itself into separate DLLS
            in the newer version that KSP 1.8 is using.
            (Hypothetically they should already be there in the .proj file, but check
            to make sure):
+
                * Resources/Assembly-CSharp
                * Resources/Assembly-CSharp-firstpas
                * Resources/UnityEngine
@@ -191,9 +197,11 @@ Setting Up Your Environment
                * Resources/UnityEngine.UnityWebRequestAudioModule
                * Resources/UnityEngine.UnityWebRequestModule
                * Resources/UnityEngine.UnityWebRequestWWWModule
+
            If you get any compile errors that look like the following line
            when you do a full rebuild, it might mean there is one of these
            DLLs missing from the Resources:
+
                * "The type or namespace name [name here] could not be found (are you missing a using directive or an assembly reference?)"
            If you get one of these errors and don't know which DLL to use to fix it,
            here is how you find out:
@@ -202,6 +210,7 @@ Setting Up Your Environment
                * Type the [name here] from the error message in that search box and hit enter
                * Click on the resulting link to go to that class's documentation page.
                * The Unity documentation for that class will start with some faint grey text at the top of the page that says, "Implemented in:", which tells you which DLL you need to reference to get code using that class to compile properly.
+
 	3. If you do not have a copy of KSP locally, you may
 	  download dummy assemblies at https://github.com/KSP-KOS/KSP_LIB
 
