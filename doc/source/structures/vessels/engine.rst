@@ -195,7 +195,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
     :type: :ref:`scalar <scalar>` (kN)
 
-    Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and velocity, but at a different atmospheric pressure you pass into it.  The pressure is measured in ATM's, meaning 0.0 is a vacuum, 1.0 is seal level at Kerbin.  Note that this will read zero if the engine is currently disabled.
+    Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and velocity, but at a different atmospheric pressure you pass into it.  The pressure is measured in ATM's, meaning 0.0 is a vacuum, 1.0 is sea level at Kerbin.  Note that this will read zero if the engine is currently disabled.
     (Pressure must be greater than or equal to zero.  If you pass in a
     negative value, it will be treated as if you had given a zero instead.)
 
@@ -215,7 +215,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
     :type: :ref:`scalar <scalar>` (kN)
 
-    Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and velocity, but at a different atmospheric pressure you pass into it.  The pressure is measured in ATM's, meaning 0.0 is a vacuum, 1.0 is seal level at Kerbin.  This will give the correct value even if the engine is currently disabled.
+    Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and velocity, but at a different atmospheric pressure you pass into it.  The pressure is measured in ATM's, meaning 0.0 is a vacuum, 1.0 is sea level at Kerbin.  This will give the correct value even if the engine is currently disabled.
     (Pressure must be greater than or equal to zero.  If you pass in a
     negative value, it will be treated as if you had given a zero instead.)
     
