@@ -77,6 +77,36 @@ namespace kOS.Function
         }
     }
 
+    [Function("createOrbit")]
+    public class FunctionCreateOrbit : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            CelestialBody body;
+            var bodyArg = PopValueAssert(shared);
+            if (bodyArg is BodyTarget bodyTarget)
+            {
+                body = bodyTarget.Body;
+            } else
+            {
+                var bodyName = bodyArg.ToString();
+                body = VesselUtils.GetBodyByName(bodyName);
+                if (body == null)
+                    throw new KOSInvalidArgumentException("CREATEORBIT() constructor", bodyName, "Body not found in this solar system");
+            }
+            double t = GetDouble(PopValueAssert(shared));
+            double mEp = GetDouble(PopValueAssert(shared));
+            double argPe = GetDouble(PopValueAssert(shared));
+            double lan = GetDouble(PopValueAssert(shared));
+            double sma = GetDouble(PopValueAssert(shared));
+            double e = GetDouble(PopValueAssert(shared));
+            double inc = GetDouble(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
+
+            ReturnValue = new OrbitInfo(new Orbit(inc, e, sma, lan, argPe, mEp, t, body), shared);
+        }
+    }
+
     [Function("rotatefromto")]
     public class FunctionRotateFromTo : FunctionBase
     {
@@ -157,6 +187,17 @@ namespace kOS.Function
         }
     }
 
+    [Function("bodyexists")]
+    public class FunctionBodyExists : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string bodyName = PopValueAssert(shared).ToString();
+            AssertArgBottomAndConsume(shared);
+            ReturnValue = VesselUtils.GetBodyByName(bodyName) != null;
+        }
+    }
+
     [Function("bodyatmosphere")]
     public class FunctionBodyAtmosphere : FunctionBase
     {
@@ -192,6 +233,8 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
+            int argCount = CountRemainingArgs(shared);
+            double roll = (argCount >= 3) ? GetDouble(PopValueAssert(shared)) : double.NaN;
             double pitchAboveHorizon = GetDouble(PopValueAssert(shared));
             double degreesFromNorth = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
@@ -199,6 +242,8 @@ namespace kOS.Function
             Vessel currentVessel = shared.Vessel;
             var q = UnityEngine.Quaternion.LookRotation(VesselUtils.GetNorthVector(currentVessel), currentVessel.upAxis);
             q *= UnityEngine.Quaternion.Euler(new UnityEngine.Vector3((float)-pitchAboveHorizon, (float)degreesFromNorth, 0));
+            if (!double.IsNaN(roll))
+                q *= UnityEngine.Quaternion.Euler(0, 0, (float)roll);
 
             var result = new Direction(q);
             ReturnValue = result;

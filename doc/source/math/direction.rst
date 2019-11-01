@@ -25,7 +25,7 @@ Creation
 =============================================== ===================================
  :func:`R(pitch,yaw,roll)`                       Euler rotation
  :func:`Q(x,y,z,rot)`                            Quaternion
- :func:`HEADING(dir,pitch)`                      Compass heading
+ :func:`HEADING(dir,pitch,roll)`                 Compass heading
  :func:`LOOKDIRUP(lookAt,lookUp)`                Looking along vector *lookAt*, rolled so that *lookUp* is upward.
  :func:`ANGLEAXIS(degrees,axisVector)`           A rotation that would rotate the universe around an axis
  :func:`ROTATEFROMTO(fromVec,toVec)`             A rotation that would go from vectors fromVec to toVec
@@ -57,11 +57,13 @@ Creation
         SET myDir TO Q( x, y, z, w ).
 
 .. _heading:
-.. function:: HEADING(dir,pitch)
+.. function:: HEADING(dir,pitch,roll)
 
     A :struct:`Direction` can be created out of a :func:`HEADING()` function. The first parameter is the compass heading, and the second parameter is the pitch above the horizon::
 
         SET myDir TO HEADING(degreesFromNorth, pitchAboveHorizon).
+
+    The third parameter, *roll*, is optional. Roll indicates rotation about the longitudinal axis.
 
 .. function:: LOOKDIRUP(lookAt,lookUp)
 

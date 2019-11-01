@@ -35,6 +35,7 @@ Style
     :attr:`FOCUSED_ON`                    :struct:`StyleState`            Properties for when the widget has keyboard focus and is "on".
     :attr:`BG`                            :struct:`string`                The same as NORMAL:BG. Name of a "9-slice" image file.
     :attr:`TEXTCOLOR`                     :ref:`Color <colors>`           The same as NORMAL:TEXTCOLOR. The color of the text on the label.
+    :attr:`WORDWRAP`                      :struct:`Boolean`               Can labels be broken into multiple lines on word boundaries?
     ===================================== =============================== =============
 
     .. attribute:: HSTRETCH
@@ -216,4 +217,9 @@ Style
         
         The same as NORMAL:TEXTCOLOR. The color of the text on the label.
 
+    .. attribute:: WORDWRAP
 
+        :type: :struct:`Boolean`
+        :access: Get/Set
+
+        Can labels be broken into multiple lines on word boundaries?
