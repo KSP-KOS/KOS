@@ -57,7 +57,7 @@ Such part can also be retrieved from :global:`TARGET`, if docking port is select
           - callable to release the dock
         * - :attr:`PARTNER`
           - :struct:`DockingPort`
-          - the docking port this docking port is attached to
+          - the docking port this docking port is attached to, or "None" if no such port
         * - :attr:`HASPARTNER`
           - boolean
           - whether or not this docking port is attached to another docking port
@@ -173,10 +173,15 @@ Such part can also be retrieved from :global:`TARGET`, if docking port is select
 
 .. attribute:: DockingPort:PARTNER
 
-    :type: :struct:`DockingPort`
+    :type: :struct:`DockingPort`, or the :struct:`String` "None" if no such port.
     :access: Get only
 
     The docking port this docking port is attached to.
+    If this docking port is not actually attached to another port, attempting
+    to call this will return a String instead of a DockingPort, and that String
+    will have the value "None".  (Alternatively, you can test if this
+    docking port has a partner port attached by calling
+    :meth:`DockingPort:HASPARTER`.)
 
 .. attribute:: DockingPort:HASPARTNER
 

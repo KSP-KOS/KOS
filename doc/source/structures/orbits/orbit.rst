@@ -16,6 +16,20 @@ Whenever you get the :struct:`Orbit` of a :struct:`Vessel`, be aware that its ju
 Creation
 --------
 
+It is possible to make an :struct`Orbit` object without it coming from
+either a :struct:`Vessel` or a :struct:`Body`.  This could be useful when
+you want to be able to get information about a hypothetical orbit that
+an object may someday end up in, even when its not in that orbit now.  One
+case where this may be useful is when trying to place a satellite into a
+desired final orbit (say to fufill a contract).  You may wish to see some
+information about that destination orbit even though no particular objects
+are in that orbit at the moment.  To do this you can create an :struct`Orbit`
+object using the ``CREATEORBIT()`` function described below.  You pass in
+the Keplerian parameters that define the orbit (which are typically the
+values you will see on a contract parameter for putting satellites into
+desired orbits), and the orbit object you make can then be queried for things
+like its apoapsis, periapsis, etc.
+
 .. function:: CREATEORBIT(inc, e, sma, lan, argPe, mEp, t, body)
 
     :parameter inc: (scalar) inclination
