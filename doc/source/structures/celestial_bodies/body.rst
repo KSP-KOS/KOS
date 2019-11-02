@@ -3,6 +3,9 @@
 Body
 ====
 
+:func:`BODY(name)`
+.. function:: BODY(name)
+
 This is any sort of planet or moon. To get a variable referring to a Body, you can do this::
 
     // "name" is the name of the body,
@@ -14,10 +17,6 @@ Bodies are also :ref:`Orbitable<orbitable>`, and as such have all the associated
 Bodies' names are added to the kerboscript language as variable names as well.
 This means you can use the variable ``Mun`` to mean the same thing as ``BODY("Mun")``,
 and the variable ``Kerbin`` to mean the same thing as ``BODY("Kerbin")``, and so on.
-
-To check whether a Body exists, you can do this::
-
-    SET MUN_EXISTS TO BODYEXISTS("Mun").
 
 .. note::
     Exception: If you are using a mod that replaces the stock game's planets
@@ -32,6 +31,16 @@ To check whether a Body exists, you can do this::
         This behavior was only added in kOS 1.0.2.
         Using a version of kOS prior to 1.0.2 will cause a name clash and
         broken behavior if a planet or moon exists that overrides a keyword name.
+
+:func:`BODYEXISTS(name)`
+.. function:: BODYEXISTS(name)
+
+To check whether a Body exists, you can use this boolean function::
+
+    SET MUN_EXISTS TO BODYEXISTS("Mun").
+    IF MUN_EXISTS PRINT "Mun Exists." ELSE PRINT "Mun does not exist.".
+
+
 
 Predefined Celestial Bodies
 ---------------------------

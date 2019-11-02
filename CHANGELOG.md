@@ -1,6 +1,106 @@
 kOS Mod Changelog
 =================
 
+# v1.2 Unity Update
+
+This update is mostly to make kOS compatible with KSP 1.8.x, which
+started using a newer version of Unity, and a newer version of .Net,
+which have some consequent changes in the code and build process.
+
+### BREAKING CHANGES
+
+None that are known about, other than the usual reminder that
+KSM files need a recompile after every version update of kOS.
+
+### NEW FEATURES
+
+* Now forces both the toolbar window and the telnet welcome menu
+  to list the kOS CPUs in a consistent unchanging sort order.
+  Previously, it was pretty much random what order you would
+  see kOS CPU's listed in the menu, which made it hard for
+  JonnyOThan's Twitch-Plays-KSP chatbot to know which CPU it
+  was attaching to when it sent commands to kOS.  This has been
+  changed to a predictable sort order as follows: (1) Sort by
+  which vessel the CPU is on, starting from the active vessel,
+  and then for other vessels, sorting by distance from the active
+  vessel, closest first. (2) When the same vessel has more than
+  one CPU, break that tie by number of "hops" from the root part,
+  such that CPU's attached closer to the root come first.  This
+  is by "number of parts to walk through to reach root" rather
+  than by actual physical distance, since using physical distance
+  might have led to inconsistent sort order given that some ship
+  parts can hinge and extend, changing that distance.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2601)
+* New suffixes ``Dockingport:PARTNER`` and ``Dockingport:HASPARTER``
+  will tell you which docking port this docking port is docked with.
+  [issue](https://github.com/KSP-KOS/KOS/issues/2613)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2629)
+* HEADING() Now allows optional 3rd argument, "roll".
+  [issue](https://github.com/KSP-KOS/KOS/issues/2609)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2629)
+* Let user-made GUIs toggle IMGUI's wordwrap flag with a 
+  new suffix: ``Style:WORDWRAP``.  This should let you fix
+  that annoying problem where a GUI Label would insist on
+  wrapping even when it could have fit by making the window
+  wide enough.  Setting wordwrap to false will force the
+  GUI layout engine to keep the label's area wide enough
+  to not wrap the text.
+  [issue](https://github.com/KSP-KOS/KOS/issues/2599)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2629)
+* Add BODYEXISTS test
+  [issue](https://github.com/KSP-KOS/KOS/issues/2587)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2629)
+* Allow FLOOR() and CEILING() to specify a decimal place other
+  than the one's place, like ROUND() can do.
+  [issue](https://github.com/KSP-KOS/KOS/issues/2556)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2629)
+* Add a constructor, ``CREATEORBIT()`` that will make a new
+  ``Orbit`` object for any hypothetical orbit given Keplerian
+  parameters, without it coming from a vessel or a body that
+  already exists.
+  [issue](https://github.com/KSP-KOS/KOS/issues/2530)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2629)
+* Added new suffix to waypoint: ``:ISSELECTED``, which will
+  tell you if the waypoint is the one the user has selected
+  for their navball.
+  [issue](https://github.com/KSP-KOS/KOS/issues/2565)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2630)
+
+
+### BUG FIXES
+
+* Bound variables like SHIP, UP, VELOCITY, etc stopped existing
+  in the KSP 1.8.x update.  This was because kOS makes use of 
+  reflection techniques to store information about C# Attributes
+  that help it find the bound variables in its code, and .Net 4.x
+  changed the meaning of Attribute.Equals() in such a way that it
+  broke what kOS was doing to store this reflection information.
+  A Dictionary that kOS was using to track bound variables by Attributes
+  started having key clashes because of that change to what it means
+  for an Attribute to be Equal to another Attribute.
+  ((No link to a github issue because this was part of the general
+  KSP 1.8 update PR and didn't have an issue.))
+* Prevent waypoints with bogus body names.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2593)
+* Fix a problem that made the GUI terminal sometimes get stuck
+  refusing to repaint when resized to a size too small to
+  hold all the text it previously had showing.
+  [issue](https://github.com/KSP-KOS/KOS/issues/2611)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2612)
+* Several minor doc typos
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2628)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2638)
+* The startup message about default font and "if you want the old look" was
+  quite obsolete by now and needed to be removed.
+  [issue](https://github.com/KSP-KOS/KOS/issues/2606)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2629)
+* Changed the technique used to load DDS icons used in the
+  kOS GUI terminal and the kOS toolbars, to bypass KSP's
+  strange API and go directly to Unity.  This may or may
+  not help people who had the purple square icon problem.
+  ((No issue - SlimJimDodger contributed PR out of the blue.))
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2637)
+
 # v1.1.9.0 Breaking Bounds
 
 This update is a mix of new features, mostly
