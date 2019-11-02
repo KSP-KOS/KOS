@@ -314,7 +314,7 @@ namespace kOS.Utilities
        public static Texture2D GetTextureWithErrorMsg(string path, bool asNormalMap)
         {
             // this whole thing may not be necessary, but it will work if the file exists
-            string myPath = Path.Combine(Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(Core).Assembly.Location), "..\\..\\")), path + ".dds");
+            string myPath = Path.Combine(Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(Core).Assembly.Location), "../../")), path + ".dds");
 
 
             // Texture2D result = GameDatabase.Instance.GetTexture(path, asNormalMap);
