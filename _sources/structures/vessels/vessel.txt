@@ -74,7 +74,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :meth:`MODULESNAMED(name)`               :struct:`List`                  :struct:`PartModules <PartModule>` by :attr:`NAME <PartModule:NAME>`
     :meth:`PARTSINGROUP(group)`              :struct:`List`                  :struct:`Parts <Part>` by action group
     :meth:`MODULESINGROUP(group)`            :struct:`List`                  :struct:`PartModules <PartModule>` by action group
-    :meth:`ALLPARTSTAGGED()`                 :struct:`List`                  :struct:`Parts <Part>` that have non-blank nametags
+    :meth:`ALLTAGGEDPARTS()`                 :struct:`List`                  :struct:`Parts <Part>` that have non-blank nametags
     :attr:`CREWCAPACITY`                     :struct:`scalar`                Crew capacity of this vessel
     :meth:`CREW()`                           :struct:`List`                  all :struct:`CrewMembers <CrewMember>`
     :attr:`CONNECTION`                       :struct:`Connection`            Returns your connection to this vessel
@@ -520,7 +520,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
     have at least one action triggered by the given action group. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
 
-.. method:: Vessel:ALLPARTSTAGGED()
+.. method:: Vessel:ALLTAGGEDPARTS()
 
     :return: :struct:`List` of :struct:`Part` objects
 

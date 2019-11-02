@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>DockingPort &mdash; kOS 1.1.9.0 documentation</title>
+  <title>DockingPort &mdash; kOS 1.2.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.9.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.2.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="Element" href="element.html"/>
         <link rel="prev" title="Decoupler" href="decoupler.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.9.0
+                1.2.0.0
               </div>
             
           
@@ -260,6 +260,14 @@ Such part can also be retrieved from <a class="reference internal" href="../../c
 <tr class="row-even"><td><a class="reference internal" href="#method:DOCKINGPORT:UNDOCK" title="DOCKINGPORT:UNDOCK method"><code class="xref ks ks-meth docutils literal"><span class="pre">UNDOCK</span></code></a></td>
 <td>&nbsp;</td>
 <td>callable to release the dock</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:DOCKINGPORT:PARTNER" title="DOCKINGPORT:PARTNER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PARTNER</span></code></a></td>
+<td><a class="reference internal" href="#structure:DOCKINGPORT" title="DOCKINGPORT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></code></a></td>
+<td>the docking port this docking port is attached to, or &#8220;None&#8221; if no such port</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:DOCKINGPORT:HASPARTNER" title="DOCKINGPORT:HASPARTNER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HASPARTNER</span></code></a></td>
+<td>boolean</td>
+<td>whether or not this docking port is attached to another docking port</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:DOCKINGPORT:TARGETABLE" title="DOCKINGPORT:TARGETABLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TARGETABLE</span></code></a></td>
 <td>boolean</td>
@@ -459,6 +467,43 @@ DockingPort:<code class="descname">UNDOCK</code><span class="sig-paren">(</span>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="attribute:DOCKINGPORT:PARTNER">
+DockingPort:<code class="descname">PARTNER</code><a class="headerlink" href="#attribute:DOCKINGPORT:PARTNER" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#structure:DOCKINGPORT" title="DOCKINGPORT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></code></a>, or the <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> &#8220;None&#8221; if no such port.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The docking port this docking port is attached to.
+If this docking port is not actually attached to another port, attempting
+to call this will return a String instead of a DockingPort, and that String
+will have the value &#8220;None&#8221;.  (Alternatively, you can test if this
+docking port has a partner port attached by calling
+<code class="xref ks ks-meth docutils literal"><span class="pre">DockingPort:HASPARTER</span></code>.)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:DOCKINGPORT:HASPARTNER">
+DockingPort:<code class="descname">HASPARTNER</code><a class="headerlink" href="#attribute:DOCKINGPORT:HASPARTNER" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Whether or not this docking port is attached to another docking port.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="attribute:DOCKINGPORT:TARGETABLE">
 DockingPort:<code class="descname">TARGETABLE</code><a class="headerlink" href="#attribute:DOCKINGPORT:TARGETABLE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
@@ -517,7 +562,7 @@ DockingPort:<code class="descname">TARGETABLE</code><a class="headerlink" href="
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.9.0',
+            VERSION:'1.2.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

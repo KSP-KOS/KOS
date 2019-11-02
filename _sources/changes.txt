@@ -24,6 +24,48 @@ release.
 
 ****
 
+Changes in 1.2
+--------------
+
+FLOOR and CEILING by decimal place
+::::::::::::::::::::::::::::::::::
+
+:func:`FLOOR(a,b)` and :func:`CEILING(a,b)` now allow you to chose
+the decimal place where the cutoff happens.
+
+Added ROLL to HEADING()
+:::::::::::::::::::::::
+
+:func:`HEADING(dir,pitch,roll)` Now has a third parameter for roll.
+The new roll parameter is optional, so scripts using just the first
+two parameters should still work.
+
+Bodyexists
+::::::::::
+
+New Function, :func:`BODYEXISTS(name)`
+
+Wordwrap on Labels
+::::::::::::::::::
+
+You can set wordrap off for labels by the new suffx, :attr:`Style:WORDWRAP`.
+
+CreateOrbit
+:::::::::::
+
+:func:`CREATEORBIT(inc, e, sma, lan, argPe, mEp, t, body)` added.
+
+Docking port partner query
+::::::::::::::::::::::::::
+
+Two new suffixes:  :attr:`DockingPort:PARTNER` and 
+:attr:`DockingPort:HASPARTNER``.
+
+Waypoint ISSELECTED
+:::::::::::::::::::
+
+:attr:`WayPoint:ISSELECTED`
+
 Changes in 1.1.9.0
 ------------------
 

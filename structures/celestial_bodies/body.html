@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Body &mdash; kOS 1.1.9.0 documentation</title>
+  <title>Body &mdash; kOS 1.2.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.9.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.2.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="Celestial Bodies" href="../celestial_bodies.html"/>
         <link rel="next" title="Creating GUIs" href="../gui.html"/>
         <link rel="prev" title="Atmosphere" href="atmosphere.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.9.0
+                1.2.0.0
               </div>
             
           
@@ -173,6 +173,11 @@
             
   <div class="section" id="body">
 <span id="id1"></span><h1>Body<a class="headerlink" href="#body" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="function:BODY">
+<code class="descname">BODY</code><span class="sig-paren">(</span>name<span class="sig-paren">)</span><a class="headerlink" href="#function:BODY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <p>This is any sort of planet or moon. To get a variable referring to a Body, you can do this:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// &quot;name&quot; is the name of the body,</span>
 <span class="c1">// like &quot;Mun&quot; for example.</span>
@@ -197,6 +202,16 @@ a planet called &#8220;Eta&#8221; which has the same name as the bound variable 
 Using a version of kOS prior to 1.0.2 will cause a name clash and
 broken behavior if a planet or moon exists that overrides a keyword name.</p>
 </div>
+</div>
+<dl class="function">
+<dt id="function:BODYEXISTS">
+<code class="descname">BODYEXISTS</code><span class="sig-paren">(</span>name<span class="sig-paren">)</span><a class="headerlink" href="#function:BODYEXISTS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>To check whether a Body exists, you can use this boolean function:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">MUN_EXISTS</span> <span class="ow">TO</span> <span class="nv">BODYEXISTS</span><span class="p">(</span><span class="s">&quot;Mun&quot;</span><span class="p">).</span>
+<span class="k">IF</span> <span class="nv">MUN_EXISTS</span> <span class="k">PRINT</span> <span class="s">&quot;Mun Exists.&quot;</span> <span class="k">ELSE</span> <span class="k">PRINT</span> <span class="s">&quot;Mun does not exist.&quot;</span><span class="p">.</span>
+</pre></div>
 </div>
 <div class="section" id="predefined-celestial-bodies">
 <h2>Predefined Celestial Bodies<a class="headerlink" href="#predefined-celestial-bodies" title="Permalink to this headline">¶</a></h2>
@@ -529,7 +544,7 @@ around through a full 360 degrees.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.9.0',
+            VERSION:'1.2.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

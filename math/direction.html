@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Directions &mdash; kOS 1.1.9.0 documentation</title>
+  <title>Directions &mdash; kOS 1.2.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.1.9.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.2.0.0 documentation" href="../index.html"/>
         <link rel="up" title="Mathematics and Basic Geometry" href="../math.html"/>
         <link rel="next" title="Geographic Coordinates" href="geocoordinates.html"/>
         <link rel="prev" title="Vectors" href="vector.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.9.0
+                1.2.0.0
               </div>
             
           
@@ -200,7 +200,7 @@ direction is positive when calculating angles.</p>
 <tr class="row-odd"><td><a class="reference internal" href="#function:Q" title="Q function"><code class="xref ks ks-func docutils literal"><span class="pre">Q(x,y,z,rot)</span></code></a></td>
 <td>Quaternion</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#function:HEADING" title="HEADING function"><code class="xref ks ks-func docutils literal"><span class="pre">HEADING(dir,pitch)</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#function:HEADING" title="HEADING function"><code class="xref ks ks-func docutils literal"><span class="pre">HEADING(dir,pitch,roll)</span></code></a></td>
 <td>Compass heading</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#function:LOOKDIRUP" title="LOOKDIRUP function"><code class="xref ks ks-func docutils literal"><span class="pre">LOOKDIRUP(lookAt,lookUp)</span></code></a></td>
@@ -250,11 +250,12 @@ you already understand.</p>
 
 <span class="target" id="heading"></span><dl class="function">
 <dt id="function:HEADING">
-<code class="descname">HEADING</code><span class="sig-paren">(</span>dir,pitch<span class="sig-paren">)</span><a class="headerlink" href="#function:HEADING" title="Permalink to this definition">¶</a></dt>
+<code class="descname">HEADING</code><span class="sig-paren">(</span>dir,pitch,roll<span class="sig-paren">)</span><a class="headerlink" href="#function:HEADING" title="Permalink to this definition">¶</a></dt>
 <dd><p>A <a class="reference internal" href="#structure:DIRECTION" title="DIRECTION structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></code></a> can be created out of a <a class="reference internal" href="#function:HEADING" title="HEADING function"><code class="xref ks ks-func docutils literal"><span class="pre">HEADING()</span></code></a> function. The first parameter is the compass heading, and the second parameter is the pitch above the horizon:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">myDir</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="nv">degreesFromNorth</span><span class="p">,</span> <span class="nv">pitchAboveHorizon</span><span class="p">).</span>
 </pre></div>
 </div>
+<p>The third parameter, <em>roll</em>, is optional. Roll indicates rotation about the longitudinal axis.</p>
 </dd></dl>
 
 <dl class="function">
@@ -617,7 +618,7 @@ Direction:<code class="descname">INVERSE</code><a class="headerlink" href="#attr
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.1.9.0',
+            VERSION:'1.2.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

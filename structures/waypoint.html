@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Waypoints &mdash; kOS 1.1.9.0 documentation</title>
+  <title>Waypoints &mdash; kOS 1.2.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.1.9.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.2.0.0 documentation" href="../index.html"/>
         <link rel="up" title="Structure Reference" href="../structures.html"/>
         <link rel="next" title="Addon Reference" href="../addons.html"/>
         <link rel="prev" title="Voice" href="misc/voice.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.9.0
+                1.2.0.0
               </div>
             
           
@@ -247,6 +247,9 @@
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:WAYPOINT:CLUSTERED" title="WAYPOINT:CLUSTERED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CLUSTERED</span></code></a></td>
 <td><a class="reference internal" href="misc/boolean.html#boolean"><span>boolean</span></a></td>
 </tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:WAYPOINT:ISSELECTED" title="WAYPOINT:ISSELECTED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ISSELECTED</span></code></a></td>
+<td><a class="reference internal" href="misc/boolean.html#boolean"><span>boolean</span></a></td>
+</tr>
 </tbody>
 </table>
 </dd></dl>
@@ -411,6 +414,22 @@ Waypoint:<code class="descname">CLUSTERED</code><a class="headerlink" href="#att
 <p>True if this waypoint is part of a set of clustered waypoints with greek letter names appended (Alpha, Beta, Gamma, etc).  If true, there should be a one-to-one correspondence with the greek letter name and the :INDEX suffix. (0 = Alpha, 1 = Beta, 2 = Gamma, etc).</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="attribute:WAYPOINT:ISSELECTED">
+Waypoint:<code class="descname">ISSELECTED</code><a class="headerlink" href="#attribute:WAYPOINT:ISSELECTED" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="misc/boolean.html#boolean"><span>boolean</span></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>True if navigation has been activated on this waypoint.</p>
+</dd></dl>
+
 </div>
 
 
@@ -454,7 +473,7 @@ Waypoint:<code class="descname">CLUSTERED</code><a class="headerlink" href="#att
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.1.9.0',
+            VERSION:'1.2.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
