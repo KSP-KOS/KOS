@@ -1,6 +1,18 @@
 kOS Mod Changelog
 =================
 
+# v1.2.1 Pathsep fix
+
+v1.2'S DDS fix had a backslash path separator that broke it on UNIX
+platoforms.  This quick fix does nothing more than switch it to a
+normal slash, as that will work on all platforms.  Apparently the .Net
+file libraries convert the path names one way but not the other.
+(They will map things so Windows can work with the "wrong" separator,
+but not do a similar mapping to make UNIX work with the "wrong"
+separator, so UNIX separators are the only cross-platform path
+separator to use.)
+
+
 # v1.2 Unity Update
 
 This update is mostly to make kOS compatible with KSP 1.8.x, which
