@@ -64,7 +64,7 @@ Two new suffixes:  :attr:`DockingPort:PARTNER` and
 Waypoint ISSELECTED
 :::::::::::::::::::
 
-:attr:`WayPoint::ISSELECTED`
+:attr:`WayPoint:ISSELECTED`
 
 Changes in 1.1.9.0
 ------------------

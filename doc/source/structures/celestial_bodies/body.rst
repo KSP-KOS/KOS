@@ -3,7 +3,6 @@
 Body
 ====
 
-:func:`BODY(name)`
 .. function:: BODY(name)
 
 This is any sort of planet or moon. To get a variable referring to a Body, you can do this::
@@ -32,7 +31,6 @@ and the variable ``Kerbin`` to mean the same thing as ``BODY("Kerbin")``, and so
         Using a version of kOS prior to 1.0.2 will cause a name clash and
         broken behavior if a planet or moon exists that overrides a keyword name.
 
-:func:`BODYEXISTS(name)`
 .. function:: BODYEXISTS(name)
 
 To check whether a Body exists, you can use this boolean function::
