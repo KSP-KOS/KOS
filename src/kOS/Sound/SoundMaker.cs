@@ -1,6 +1,8 @@
-﻿using System;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 using kOS.Safe.Sound;
 
 namespace kOS.Sound
@@ -65,17 +67,23 @@ namespace kOS.Sound
         }
 
         /// <summary>
-        /// Load a fixed sound effect from a file.
+        /// Load a fixed sound effect from a WAV file (file must be WAV format).
         /// </summary>
         /// <param name="name"></param>
         /// <param name="url"></param>
         public void LoadFileSound(string name, string url)
         {
+            // Deliberately not fixing the following deprecation warning for using WWW, because I want this
+            // codebase to be back-portable to older KSP versions for RO/RP-1 without too much hassle.  Eventually
+            // it might not work and we may be forced to change this, but the KSP1 lifecycle may be done
+            // by then, so I don't want to make the effort prematurely.  Fixing this requires a very ugly
+            // coroutine mess to load URLs the new way Unity wants you to do it.
+#pragma warning disable CS0618 // ^^^ see above comment about why this is disabled.
             WWW fileGetter = new WWW(url);
+#pragma warning restore CS0618
             AudioClip clip = fileGetter.GetAudioClip();
             AudioSource source = gameObject.AddComponent<AudioSource>();
             source.clip = clip;
-
             sounds[name] = source;
         }
 

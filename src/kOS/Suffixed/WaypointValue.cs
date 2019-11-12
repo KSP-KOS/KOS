@@ -52,6 +52,7 @@ namespace kOS.Suffixed
             AddSuffix("GROUNDED", new NoArgsSuffix<BooleanValue>(() => WrappedWaypoint.landLocked, "True if waypoint is actually glued to the ground.")); 
             AddSuffix("INDEX", new NoArgsSuffix<ScalarValue>(() => WrappedWaypoint.index, "Number of this waypoint if this is a grouped waypoint (i.e. alpha/beta/gamma..")); 
             AddSuffix("CLUSTERED", new NoArgsSuffix<BooleanValue>(() => WrappedWaypoint.isClustered, "True if this is a member of a cluster of waypoints (i.e. alpha/beta/gamma.."));
+            AddSuffix("ISSELECTED", new NoArgsSuffix<BooleanValue>(() => Shared.Vessel.navigationWaypoint == WrappedWaypoint, "True if navigation has been activated on this waypoint."));
         }
 
         private static void InitializeGreekMap()

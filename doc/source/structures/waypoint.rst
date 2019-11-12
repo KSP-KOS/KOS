@@ -55,6 +55,8 @@ Waypoints are the location markers you can see on the map view showing you where
           - :ref:`scalar <scalar>`
         * - :attr:`CLUSTERED`
           - :ref:`boolean <boolean>`
+        * - :attr:`ISSELECTED`
+          - :ref:`boolean <boolean>`
 
 
 .. attribute:: Waypoint:NAME
@@ -130,4 +132,11 @@ Waypoints are the location markers you can see on the map view showing you where
     :access: Get only
 
     True if this waypoint is part of a set of clustered waypoints with greek letter names appended (Alpha, Beta, Gamma, etc).  If true, there should be a one-to-one correspondence with the greek letter name and the :INDEX suffix. (0 = Alpha, 1 = Beta, 2 = Gamma, etc).
+
+.. attribute:: Waypoint:ISSELECTED
+
+    :type: :ref:`boolean <boolean>`
+    :access: Get only
+
+    True if navigation has been activated on this waypoint.
 

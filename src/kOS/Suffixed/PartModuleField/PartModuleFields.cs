@@ -89,7 +89,7 @@ namespace kOS.Suffixed.PartModuleField
             object convertedVal = newVal;
 
             // Using TryGetFieldUIControl() to obtain the control that goes with this
-            // field is from advice from TriggerAU, of SQUAD, who gave that advice in
+            // field is from advice from TriggerAU, who gave that advice in
             // a forum post when I described the problems we were having with the servo
             // parts in Breaking Ground DLC.  (There is some kind of work being done here
             // that seems to allow one field's ranges to override another's as the servo

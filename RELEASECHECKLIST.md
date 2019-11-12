@@ -21,8 +21,8 @@ note where it says "(*backport*)" below if you are doing a backport.
 - [ ] Build kOS solution in release mode
 - [ ] Run all unit tests
 - [ ] Ensure that all required resources are in place (module manager) (*backport* : Note if this is a backport you may need to use an older modulemanager DLL here.)
-- [ ] Create zip file with a root starting in the `\Resources\` directory
-- [ ] The zip file should have the GameData folder in the root
+- [ ] Create a ZIP file that has only the `GameData` folder of the `\Resources\` directory in it.  Make sure the ZIP's folder structure starts with `GameData`.
+  - In other words, filenames like this: `GameData\kOS\kOS.version`, NOT this `\kOS\kOS.version`.)
 - [ ] Name the zip file with the following pattern `kOS-v<major>.<minor>.<patch>.<build>.zip` (eg kOS-v1.1.3.0.zip )
 - [ ] Build the documentation (unless this is a *backport*) with:
   - (if Linux or Mac: `cd docs ; make clean ; make html`)
