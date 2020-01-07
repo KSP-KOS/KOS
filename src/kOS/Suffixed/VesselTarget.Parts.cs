@@ -123,6 +123,12 @@ namespace kOS.Suffixed
                     self = new EngineValue(Shared, part, parent, decoupler);
                     break;
                 }
+                var rcs = module as ModuleRCS;
+                if (rcs != null)
+                {
+                    self = new RCSValue(Shared, part, parent, decoupler, rcs);
+                    break;
+                }
                 if (module is IStageSeparator)
                 {
                     var dock = module as ModuleDockingNode;

@@ -159,11 +159,13 @@
     <Compile Include="Sound\VoiceValue.cs" />
     <Compile Include="Suffixed\BoundsValue.cs" />
     <Compile Include="Suffixed\ConsumedResourceValue.cs" />
+    <Compile Include="Suffixed\ConsumedResourceValueRCS.cs" />
     <Compile Include="Suffixed\CraftTemplate.cs" />
     <Compile Include="Suffixed\KUniverseValue.cs" />
     <Compile Include="Suffixed\LoadDistanceValue.cs" />
     <Compile Include="Suffixed\Part\DecouplerValue.cs" />
     <Compile Include="Suffixed\Part\LaunchClampValue.cs" />
+    <Compile Include="Suffixed\Part\RCSValue.cs" />
     <Compile Include="Suffixed\ResourceTransferValue.cs" />
     <Compile Include="Screen\DelegateDialog.cs" />
     <Compile Include="Screen\KOSManagedWindow.cs" />

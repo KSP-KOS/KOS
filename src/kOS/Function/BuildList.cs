@@ -35,6 +35,7 @@ namespace kOS.Function
                 case "resources":
                 case "parts":
                 case "engines":
+                case "rcs":
                 case "sensors":
                 case "elements":
                 case "dockingports":
