@@ -13,6 +13,13 @@ Each :struct:`Orbitable` item such as a :struct:`Vessel` or celestial :struct:`B
 
 Whenever you get the :struct:`Orbit` of a :struct:`Vessel`, be aware that its just the current :struct:`Orbit` patch that doesn't take into account any planetary encounters (slingshots) or maneuver nodes that may occur. For example, your vessel might never reach ``SHIP:ORBIT:APOAPSIS`` if you're going to intersect the Mun and be flung by it into a new orbit.
 
+.. warning::
+
+    **Radians vs Degrees**
+
+    Some of the parameters listed below come directly from KSP's API and there is a bit of inconsistency with whether it uses radians or degrees for angles. As much as possible we have tried to present everything in kOS as degrees for consistency, but some of these may have slipped through. If you see any of these being reported in radians, please make a bug report.
+
+
 Creation
 --------
 
@@ -46,15 +53,11 @@ like its apoapsis, periapsis, etc.
 
         SET myOrbit TO CREATEORBIT(0, 0, 270000, 0, 0, 0, 0, Mun).
 
-.. warning::
-
-    Some of the parameters listed here come directly from KSP's API and there is a bit of inconsistency with whether it uses radians or degrees for angles. As much as possible we have tried to present everything in kOS as degrees for consistency, but some of these may have slipped through. If you see any of these being reported in radians, please make a bug report.
-
 It is also possible to create an orbit from a position and a velocity using the ``CREATEORBIT()`` function described below:
 
 .. function:: CREATEORBIT(pos, vel, body, ut)
 
-    :parameter pos: (:struct:`Vector`) position (relative to center of body)
+    :parameter pos: (:struct:`Vector`) position (relative to center of body, NOT the usual relative to current ship most positions in kOS use.  Remember to offset a kOS position from the body's position when calculating what to pass in here.)
     :parameter vel: (:struct:`Vector`) velocity
     :parameter body: (:struct:`Body`) body to orbit around
     :parameter ut: (scalar) time (universal)
