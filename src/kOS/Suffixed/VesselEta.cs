@@ -22,7 +22,7 @@ namespace kOS.Suffixed
         public ScalarValue GetApoapsis()
         {
             var timeToAp = shared.Vessel.orbit.timeToAp;
-            return double.IsInfinity(timeToAp) ? 0 : timeToAp;
+            return double.IsInfinity(timeToAp) ? float.MaxValue : timeToAp;
         }
         
         public ScalarValue GetPeriapsis()
