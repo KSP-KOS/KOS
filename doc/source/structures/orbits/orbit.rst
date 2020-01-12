@@ -50,6 +50,20 @@ like its apoapsis, periapsis, etc.
 
     Some of the parameters listed here come directly from KSP's API and there is a bit of inconsistency with whether it uses radians or degrees for angles. As much as possible we have tried to present everything in kOS as degrees for consistency, but some of these may have slipped through. If you see any of these being reported in radians, please make a bug report.
 
+It is also possible to create an orbit from a position and a velocity using the ``CREATEORBIT()`` function described below:
+
+.. function:: CREATEORBIT(pos, vel, body, ut)
+
+    :parameter pos: (:struct:`Vector`) position (relative to center of body)
+    :parameter vel: (:struct:`Vector`) velocity
+    :parameter body: (:struct:`Body`) body to orbit around
+    :parameter ut: (scalar) time (universal)
+    :return: :struct:`Orbit`
+
+    This creates a new orbit around Kerbin::
+
+        SET myOrbit TO CREATEORBIT(V(2295.5, 0, 0), V(0, 0, 70000 + Kerbin:RADIUS), Kerbin, 0).
+
 Structure
 ---------
 
