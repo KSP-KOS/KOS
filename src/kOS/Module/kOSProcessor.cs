@@ -267,8 +267,12 @@ namespace kOS.Module
 
         private void UpdateCostAndMass()
         {
-            // Clamp this to prevent negative cost and mass.
+            // Clamp this to prevent negative cost and mass.  Antimatter
+            // parts can explode the ship since their response to forces
+            // is all backward.  (That problem only happens if people
+            // edit the part.cfg numbers, but people do sometimes do that.)
             float spaceDelta = Mathf.Max(diskSpace - baseDiskSpace, 0.0f);
+
             additionalCost = (float)System.Math.Round(spaceDelta * diskSpaceCostFactor, 0);
             AdditionalMass = spaceDelta * diskSpaceMassFactor;
             additionalMassGui = AdditionalMass * 1000;
