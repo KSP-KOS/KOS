@@ -1,4 +1,4 @@
-####INDEX
+#### INDEX
 * [Pull Requests](#pull-requests)
   * [Nobody merges their own PR](#nobody-merges-their-own-pr)
 * [Setting Up Your Environment](#setting-up-your-environment)
@@ -78,6 +78,7 @@ Setting Up Your Environment
 ===========================
 
 ## Assumptions
+
 * `$KSP` is the full path to your Kerbal Space Program installation directory.
   (i.e. `"C:\Program Files (x86)\Steam\SteamApps\common\Kerbal Space Program"`)
 * `$KOS` is the full path to your KOS git repository.
@@ -88,6 +89,7 @@ Setting Up Your Environment
   .sln solution.
 
 ## Setting Up Your repository
+
 1. Use the github web interface to create a fork of KSP-KOS/KOS
 
 2. Your fork should have a web address like `https://github.com/[username]/KOS`
