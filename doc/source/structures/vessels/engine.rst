@@ -420,7 +420,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :type: :ref:`scalar <scalar>`
     
     If RealFuels is installed, returns the fuel stability of this engine as a value between 0 and 1 (where 1 is fullly stable), otherwise returns 1.
-    Engines that don't require ullage will always return 1, unelss they are pressure fed and the feed pressure is too low.
+    Engines that don't require ullage will always return 1, unless they are pressure fed and the feed pressure is too low.
 
 .. attribute:: Engine:PRESSUREFED`
 
