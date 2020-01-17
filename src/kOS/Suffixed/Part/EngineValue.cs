@@ -338,8 +338,6 @@ namespace kOS.Suffixed.Part
 
         public BooleanValue GetUllage()
         {
-            bool ullage = false;
-
             if (HasRealFuels)
             {
                 foreach (ModuleEngines e in FilteredEngineList)
@@ -347,12 +345,14 @@ namespace kOS.Suffixed.Part
                     var ullageField = e.GetType().GetField("ullage");
                     if (ullageField != null)
                     {
-                        ullage |= (bool)ullageField.GetValue(e);
+                        // Return immediately if the module has ullage.
+                        if ((bool)ullageField.GetValue(e))
+                            return true;
                     }
                 }
             }
 
-            return ullage;
+            return false;
         }
 
         public ScalarValue GetFuelStability()
@@ -397,8 +397,6 @@ namespace kOS.Suffixed.Part
 
         public BooleanValue GetPressureFed()
         {
-            bool pressureFed = false;
-
             if (HasRealFuels)
             {
                 foreach (ModuleEngines e in FilteredEngineList)
@@ -406,12 +404,14 @@ namespace kOS.Suffixed.Part
                     var pressureFedField = e.GetType().GetField("pressureFed");
                     if (pressureFedField != null)
                     {
-                        pressureFed |= (bool)pressureFedField.GetValue(e);
+                        // Return immediately if the module is pressure fed.
+                        if ((bool)pressureFedField.GetValue(e))
+                            return true;
                     }
                 }
             }
 
-            return pressureFed;
+            return false;
         }
 
         public ScalarValue GetIgnitions()

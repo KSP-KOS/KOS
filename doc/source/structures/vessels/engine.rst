@@ -411,14 +411,16 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :access: Get only
     :type: :ref:`Boolean <boolean>`
     
-    If RealFuels is installed, returns true if this engine needs ullage, otherwise returns false.
+    If RealFuels is installed, returns true if this engine is a type of engine that requires ullage, otherwise returns false.
+    Note: this is a static property of the engine, for current fuel status, check `FUELSTABILITY`.
 
 .. attribute:: Engine:FUELSTABILITY`
 
     :access: Get only
     :type: :ref:`scalar <scalar>`
     
-    If RealFuels is installed, returns the fuel stability of this engines as a value between 0 and 1 (where 1 is fullly stable), otherwsie returns 1.
+    If RealFuels is installed, returns the fuel stability of this engine as a value between 0 and 1 (where 1 is fullly stable), otherwise returns 1.
+    Engines that don't require ullage will always return 1, unelss they are pressure fed and the feed pressure is too low.
 
 .. attribute:: Engine:PRESSUREFED`
 
