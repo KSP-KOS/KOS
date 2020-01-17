@@ -6,6 +6,7 @@ using kOS.Safe.Utilities;
 using kOS.Suffixed.PartModuleField;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 namespace kOS.Suffixed.Part
@@ -19,6 +20,10 @@ namespace kOS.Suffixed.Part
         private List<ModuleEngines> RawEngineList { get; set; }
         public MultiModeEngine Multi { get; private set; }
         public GimbalFields Gimbal { get; private set; }
+        // +For RealFuels
+        private readonly bool HasRealFuels;
+        private readonly PartModule EngineConfig;
+        // -For RealFuels
         /// <summary>Only those Engine Modules that the part's current engine mode allows to work.
         /// (i.e. if an engine has a wet mode and a dry mode, then you should see either the wet module
         /// or the dry module in this list, but not both at once.)</summary>
@@ -59,6 +64,22 @@ namespace kOS.Suffixed.Part
                 {
                     RawEngineList.Add(e);
                 }
+
+                if (e != null)
+                {
+                    HasRealFuels = false;
+                    for (System.Type t = module.GetType(); t != null; t = t.BaseType)
+                    {
+                        if (t.Name.Contains("ModuleEnginesRF"))
+                        {
+                            HasRealFuels = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (module.GetType().Name.Contains("ModuleEngineConfigs"))
+                    EngineConfig = module;
             }
             if (RawEngineList.Count < 1)
                 throw new KOSException("Attempted to build an Engine from part with no ModuleEngines on {0}: {1}", part.name, part.partInfo.title);
@@ -101,7 +122,10 @@ namespace kOS.Suffixed.Part
                                                           "thrust limit percentage for this engine"));
             AddSuffix("MAXTHRUST", new Suffix<ScalarValue>(() => FilteredEngineList.Sum(e => e.GetThrust())));
             AddSuffix("THRUST", new Suffix<ScalarValue>(() => FilteredEngineList.Sum(e => e.finalThrust)));
-            AddSuffix("FUELFLOW", new Suffix<ScalarValue>(() => FilteredEngineList.Sum(e => e.fuelFlowGui)));
+            AddSuffix("FUELFLOW", new Suffix<ScalarValue>(GetFuelFlow));
+            AddSuffix("MAXFUELFLOW", new Suffix<ScalarValue>(GetMaxFuelFlow));
+            AddSuffix("MASSFLOW", new Suffix<ScalarValue>(GetMassFlow));
+            AddSuffix("MAXMASSFLOW", new Suffix<ScalarValue>(() => FilteredEngineList.Sum(e => e.maxFuelFlow)));
             AddSuffix("ISP", new Suffix<ScalarValue>(GetIsp));
             AddSuffix(new[] { "VISP", "VACUUMISP" }, new Suffix<ScalarValue>(GetVacuumIsp));
             AddSuffix(new[] { "SLISP", "SEALEVELISP" }, new Suffix<ScalarValue>(GetSeaLevelIsp));
@@ -118,6 +142,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("POSSIBLETHRUSTAT", new OneArgsSuffix<ScalarValue, ScalarValue>(GetPossibleThrustAtAtm));
             AddSuffix("MAXPOSSIBLETHRUST", new Suffix<ScalarValue>(() => FilteredEngineList.Sum(e => e.GetThrust(operational: false))));
             AddSuffix("MAXPOSSIBLETHRUSTAT", new OneArgsSuffix<ScalarValue, ScalarValue>(atm => FilteredEngineList.Sum(e => e.GetThrust(atm, operational: false))));
+            AddSuffix("CONSUMEDRESOURCES", new Suffix<Lexicon>(GetConsumedResources, "A List of all resources consumed by this engine"));
             //MultiMode features
             AddSuffix("MULTIMODE", new Suffix<BooleanValue>(() => MultiMode));
             AddSuffix("MODES", new Suffix<ListValue>(GetAllModes, "A List of all modes of this engine"));
@@ -128,6 +153,14 @@ namespace kOS.Suffixed.Part
             //gimbal interface
             AddSuffix("HASGIMBAL", new Suffix<BooleanValue>(() => HasGimbal));
             AddSuffix("GIMBAL", new Suffix<GimbalFields>(GetGimbal));
+
+            // RealFuels stuff
+            AddSuffix("ULLAGE", new Suffix<BooleanValue>(GetUllage));
+            AddSuffix("FUELSTABILITY", new Suffix<ScalarValue>(GetFuelStability));
+            AddSuffix("PRESSUREFED", new Suffix<BooleanValue>(GetPressureFed));
+            AddSuffix("IGNITIONS", new Suffix<ScalarValue>(GetIgnitions));
+            AddSuffix("MINTHROTTLE", new Suffix<ScalarValue>(GetMinThrottle));
+            AddSuffix("CONFIG", new Suffix<StringValue>(GetEngineConfig));
         }
 
         public static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects sharedObj)
@@ -211,6 +244,215 @@ namespace kOS.Suffixed.Part
         public ScalarValue GetPossibleThrustAtAtm(ScalarValue atmPressure)
         {
             return FilteredEngineList.Sum(e => e.GetThrust(atmPressure, useThrustLimit: true, operational: false));
+        }
+
+        public Lexicon GetConsumedResources()
+        {
+            var resources = new Lexicon();
+
+            foreach (ModuleEngines e in FilteredEngineList)
+            {
+                foreach (Propellant p in e.propellants)
+                {
+                    resources.Add(new StringValue(p.displayName), new ConsumedResourceValue(e, p, Shared));
+                }
+            }
+
+            return resources;
+        }
+
+        public StringValue GetEngineConfig()
+        {
+            if (EngineConfig != null)
+            {
+                var configField = EngineConfig.GetType().GetField("configuration");
+                if (configField != null)
+                    return (string)configField.GetValue(EngineConfig);
+            }
+
+            return Part.partInfo.title;
+        }
+
+        public ScalarValue GetFuelFlow()
+        {
+            // fuelFlowGui is overidden by RealFuels to display massflow, so work around it.
+            if (HasRealFuels)
+            {
+                double fuelFlow = 0;
+
+                foreach (ModuleEngines e in FilteredEngineList)
+                {
+                    // currentAmount does not update when there is no fuel flow, so only update when fuel is flowing.
+                    if (e.fuelFlowGui > 0.0f)
+                    {
+                        foreach (Propellant p in e.propellants)
+                        {
+                            fuelFlow += p.currentAmount / Time.fixedDeltaTime;
+                        }
+                    }
+                }
+
+                return fuelFlow;
+            }
+            else
+            {
+                // Stock just shows flow.
+                return FilteredEngineList.Sum(e => e.fuelFlowGui);
+            }
+        }
+
+        // Unfortunately mixtureDensity is unreliable so there isn't a quick way to get this.
+        public ScalarValue GetMaxFuelFlow()
+        {
+            double maxFuelFlow = 0;
+
+            foreach (ModuleEngines e in FilteredEngineList)
+            {
+                foreach (Propellant p in e.propellants)
+                {
+                    maxFuelFlow += e.getMaxFuelFlow(p);
+                }
+            }
+
+            return maxFuelFlow;
+        }
+
+        public ScalarValue GetMassFlow()
+        {
+            double massFlow = 0;
+
+            foreach (ModuleEngines e in FilteredEngineList)
+            {
+                // currentAmount does not update when there is no fuel flow, so only update when fuel is flowing.
+                if (e.fuelFlowGui > 0.0f)
+                {
+                    foreach (Propellant p in e.propellants)
+                    {
+                        massFlow += p.currentAmount * p.resourceDef.density / Time.fixedDeltaTime;
+                    }
+                }
+            }
+
+            return massFlow;
+        }
+
+        public BooleanValue GetUllage()
+        {
+            if (HasRealFuels)
+            {
+                foreach (ModuleEngines e in FilteredEngineList)
+                {
+                    var ullageField = e.GetType().GetField("ullage");
+                    if (ullageField != null)
+                    {
+                        // Return immediately if the module has ullage.
+                        if ((bool)ullageField.GetValue(e))
+                            return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public ScalarValue GetFuelStability()
+        {
+            // Default to full stability
+            float stability = 1.0f;
+
+            if (HasRealFuels)
+            {
+                foreach (ModuleEngines e in FilteredEngineList)
+                {
+                    var ullageField = e.GetType().GetField("ullage");
+                    var pressureFedField = e.GetType().GetField("pressureFed");
+                    var ullageSetField = e.GetType().GetField("ullageSet");
+
+                    if (ullageField != null && pressureFedField != null && ullageSetField != null)
+                    {
+                        bool pressureOK = !(bool)pressureFedField.GetValue(e);
+                        if (!pressureOK)
+                        {
+                            var pressureOKMethod = ullageSetField.GetType().GetMethod("PressureOK", BindingFlags.Public | BindingFlags.Instance);
+                            pressureOK = pressureOKMethod != null ? (bool)pressureOKMethod.Invoke(ullageSetField.GetValue(e), new object[] { }) : true;
+                        }
+
+                        if (!pressureOK)
+                        {
+                            // No feed pressure
+                            stability = 0;
+                        }
+                        else if ((bool)ullageField.GetValue(e))
+                        {
+                            // Use minimum value if multiple engines
+                            var ullageStabilityMethod = ullageSetField.GetType().GetMethod("GetUllageStability", BindingFlags.Public | BindingFlags.Instance);
+                            stability = Mathf.Min(stability, ullageStabilityMethod != null ? (float)ullageStabilityMethod.Invoke(ullageSetField.GetValue(e), new object[] { }) : 1.0f);
+                        }
+                    }
+                }
+            }
+
+            return stability;
+        }
+
+        public BooleanValue GetPressureFed()
+        {
+            if (HasRealFuels)
+            {
+                foreach (ModuleEngines e in FilteredEngineList)
+                {
+                    var pressureFedField = e.GetType().GetField("pressureFed");
+                    if (pressureFedField != null)
+                    {
+                        // Return immediately if the module is pressure fed.
+                        if ((bool)pressureFedField.GetValue(e))
+                            return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public ScalarValue GetIgnitions()
+        {
+            int ignitions = -1;
+
+            if (HasRealFuels)
+            {
+                foreach (ModuleEngines e in FilteredEngineList)
+                {
+                    var ignitionsField = e.GetType().GetField("ignitions");
+                    if (ignitionsField != null)
+                    {
+                        int engIngitions = (int)ignitionsField.GetValue(e);
+                        if (engIngitions >= 0)
+                        {
+                            if (ignitions < 0)
+                                ignitions = engIngitions;
+                            else
+                                ignitions = Mathf.Min(ignitions, engIngitions);
+                        }
+                    }
+                }
+            }
+
+            return ignitions;
+        }
+
+        public ScalarValue GetMinThrottle()
+        {
+            float minThrottle = 0;
+
+            if (HasRealFuels)
+            {
+                foreach (ModuleEngines e in FilteredEngineList)
+                {
+                    minThrottle = Mathf.Max(minThrottle, e.minFuelFlow / e.maxFuelFlow);
+                }
+            }
+
+            return minThrottle;
         }
 
         public ListValue GetAllModes()

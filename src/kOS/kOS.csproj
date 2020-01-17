@@ -158,6 +158,7 @@
     <Compile Include="Sound\Voice.cs" />
     <Compile Include="Sound\VoiceValue.cs" />
     <Compile Include="Suffixed\BoundsValue.cs" />
+    <Compile Include="Suffixed\ConsumedResourceValue.cs" />
     <Compile Include="Suffixed\CraftTemplate.cs" />
     <Compile Include="Suffixed\KUniverseValue.cs" />
     <Compile Include="Suffixed\LoadDistanceValue.cs" />
