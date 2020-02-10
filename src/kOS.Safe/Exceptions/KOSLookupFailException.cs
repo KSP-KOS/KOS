@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace kOS.Safe.Exceptions
 {
@@ -30,7 +30,7 @@ namespace kOS.Safe.Exceptions
         /// <param name="exist">True if the reason for the message is that the thing exists at
         ///   other times, but is just not available at the moment.</param>
         public KOSLookupFailException(string category, string lookupName, object obj, bool exist = false) :
-            base(String.Format( (exist ? TERSE_NOT_EXIST_MSG_FMT : TERSE_NOT_EXIST_MSG_FMT), category, lookupName.ToUpper(), obj.ToString()) )
+            base(String.Format( (exist ? TERSE_DOES_EXIST_MSG_FMT : TERSE_NOT_EXIST_MSG_FMT), category, lookupName.ToUpper(), obj.ToString()) )
         {
             this.category = category;
             this.lookupName = lookupName;
