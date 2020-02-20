@@ -2016,7 +2016,7 @@ namespace kOS.Safe.Compilation.KS
             bool shouldEscape = true;
             if (value[0] == '@')
             {
-                value = value.substring(1);
+                value = value.Substring(1);
                 shouldEscape = false;
             }
             
