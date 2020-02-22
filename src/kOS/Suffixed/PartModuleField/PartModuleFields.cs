@@ -239,8 +239,8 @@ namespace kOS.Suffixed.PartModuleField
             // with the given GUI name.  But Issue #2666 forced kOS to change it to a list of hits
             // because KSP started naming two fields with the same gui name, only one of which is visible
             // at a time:
-            IEnumerable<BaseField> allMatches = partModule.Fields.Cast<BaseField>().
-                Where(field => string.Equals(GetFieldName(field), cookedGuiName, StringComparison.CurrentCultureIgnoreCase));
+            BaseField[] allMatches = partModule.Fields.Cast<BaseField>().
+                Where(field => string.Equals(GetFieldName(field), cookedGuiName, StringComparison.CurrentCultureIgnoreCase)).ToArray<BaseField>();
             // When KSP is *not* doing the weird thing of two fields with the same name, there's just one hit and it's simple:
             if (allMatches.Count() == 1)
                 return allMatches.First();
