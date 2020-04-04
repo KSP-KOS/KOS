@@ -204,7 +204,7 @@
     <Compile Include="Suffixed\TimeWarpValue.cs" />
     <Compile Include="Suffixed\VectorRenderer.cs" />
     <Compile Include="Suffixed\VesselAlt.cs" />
-    <Compile Include="Suffixed\VesselEta.cs" />
+    <Compile Include="Suffixed\OrbitEta.cs" />
     <Compile Include="Suffixed\VesselTarget.Hooks.cs" />
     <Compile Include="Suffixed\VesselTarget.Parts.cs" />
     <Compile Include="Suffixed\WaypointValue.cs" />
