@@ -235,12 +235,13 @@ namespace kOS.Suffixed.PartModuleField
         /// <returns>a BaseField - a KSP type that can be used to get the value, or its GUI name or its reflection info.</returns>
         protected BaseField GetField(string cookedGuiName)
         {
-            // Conceptually this should be a FirstOrDefault(), because there should only be one Field
-            // with the given GUI name.  But Issue #2666 forced kOS to change it to a list of hits
+            // Conceptually this should be a single hit using FirstOrDefault(), because there should only
+            // be one Field with the given GUI name.  But Issue #2666 forced kOS to change it to an array of hits
             // because KSP started naming two fields with the same gui name, only one of which is visible
             // at a time:
             BaseField[] allMatches = partModule.Fields.Cast<BaseField>().
-                Where(field => string.Equals(GetFieldName(field), cookedGuiName, StringComparison.CurrentCultureIgnoreCase)).ToArray<BaseField>();
+                Where(field => string.Equals(GetFieldName(field), cookedGuiName, StringComparison.CurrentCultureIgnoreCase)).
+                ToArray<BaseField>();
             // When KSP is *not* doing the weird thing of two fields with the same name, there's just one hit and it's simple:
             if (allMatches.Count() == 1)
                 return allMatches.First();
