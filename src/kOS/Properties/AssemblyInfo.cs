@@ -34,3 +34,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("1.2.1.0")]
 [assembly: AssemblyVersion("1.2.1.0")]
 [assembly: KSPAssembly("kOS", 1, 7)]
+[assembly: KSPAssemblyDependency("ClickThroughBlocker", 1, 0)]

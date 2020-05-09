@@ -14,6 +14,7 @@ using kOS.Suffixed.Widget;
 using kOS.Utilities;
 using kOS.Communication;
 using kOS.Safe;
+using ClickThroughFix; // Needs ClickThroughBlocker DLL to be in the Reference directory.
 
 namespace kOS.Screen
 {
@@ -116,7 +117,7 @@ namespace kOS.Screen
 
             GUI.skin = HighLogic.Skin;
 
-            WindowRect = GUILayout.Window(UniqueId, WindowRect, WidgetGui, TitleText, style);
+            WindowRect = ClickThruBlocker.GUILayoutWindow(UniqueId, WindowRect, WidgetGui, TitleText, style);
 
             if (currentPopup != null) {
                 var r = RectExtensions.EnsureCompletelyVisible(currentPopup.popupRect);
@@ -124,7 +125,7 @@ namespace kOS.Screen
                     currentPopup.PopDown();
                 } else {
                     GUI.BringWindowToFront(UniqueId + 1);
-                    currentPopup.popupRect = GUILayout.Window(UniqueId + 1, r, PopupGui, "", style);
+                    currentPopup.popupRect = ClickThruBlocker.GUILayoutWindow(UniqueId + 1, r, PopupGui, "", style);
                 }
             }
         }

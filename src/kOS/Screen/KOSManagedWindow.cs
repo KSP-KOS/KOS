@@ -1,14 +1,23 @@
 using System.Collections.Generic;
 using UnityEngine;
+using ClickThroughFix; // Needs ClickThroughBlocker DLL to be in the Reference directory.
 
 namespace kOS.Screen
 {
     /// <summary>
     /// kOSManagedWindow is for any Unity Monobehavior that you'd like to
-    /// have contain a GUI.Window, and you need kOS to keep track of the
+    /// have contain an IMGUI Window, and you need kOS to keep track of the
     /// window stacking for which click is on top of which other click.
     /// Unity's built in systems for this don't work well at all, so
     /// we had to make up our own.
+    /// 
+    /// Issue #2697 - In addition to KOS's own system to handle this,
+    /// This also is now layered on top of Linuxgurugamer's ClickThroughBlocker
+    /// mod, so it uses its wrappers around GUI.Window.  That was needed because
+    /// if SOME mods use ClickThruBlocker windows, then those windows will get first
+    /// dibs on events before kOS gets to, making kOS helpless to intercept events it's
+    /// trying to protect other windows from seeing.  ClickThruBlocker is a mod that
+    /// once some mods use it, then all the other mods have to as well.
     /// </summary>
     public abstract class KOSManagedWindow : MonoBehaviour
     {

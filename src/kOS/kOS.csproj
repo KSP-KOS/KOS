@@ -37,6 +37,9 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\..\Resources\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
+    <Reference Include="ClickThroughBlocker">
+      <HintPath>..\..\Resources\ClickThroughBlocker.dll</HintPath>
+    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\..\Resources\GameData\kOS\Plugins\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>

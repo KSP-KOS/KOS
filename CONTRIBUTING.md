@@ -213,7 +213,14 @@ Setting Up Your Environment
                * Click on the resulting link to go to that class's documentation page.
                * The Unity documentation for that class will start with some faint grey text at the top of the page that says, "Implemented in:", which tells you which DLL you need to reference to get code using that class to compile properly.
 
-	3. If you do not have a copy of KSP locally, you may
+        3. Make sure your installation of KSP has LinuxGuruGamer's ClivkThroughBlocker
+           mod installed.  kOS now needs it in order to compile.  After it is
+           installed, create a reference for it in your kOS project's References
+           like so:
+
+               * $KSP_INSTALL_DIR/GameData/00_ClickThroughBlocker/Plugins/ClickThroughBlocker.dll
+
+	4. If you do not have a copy of KSP locally, you may
 	  download dummy assemblies at https://github.com/KSP-KOS/KSP_LIB
 
 3. Make sure you are targeting this version of .Net:  ".Net 4.0 Framework".
