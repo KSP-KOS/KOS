@@ -218,7 +218,7 @@ Setting Up Your Environment
            installed, create a reference for it in your kOS project's References
            like so:
 
-               * $KSP_INSTALL_DIR/GameData/00_ClickThroughBlocker/Plugins/ClickThroughBlocker.dll
+               * $KSP/GameData/00_ClickThroughBlocker/Plugins/ClickThroughBlocker.dll
 
 	4. If you do not have a copy of KSP locally, you may
 	  download dummy assemblies at https://github.com/KSP-KOS/KSP_LIB
