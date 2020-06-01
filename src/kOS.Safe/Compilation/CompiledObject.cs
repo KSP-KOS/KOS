@@ -170,7 +170,9 @@ namespace kOS.Safe.Compilation
         /// </summary>
         private static Dictionary<object,int> argumentPackFinder;
         
-        private static string previousLabel = "######"; // bogus value that is ensured to differ from any real value the first time through.
+        private const string LABEL_INIT = "######"; // bogus value that is ensured to differ from any real value the first time through.
+
+        private static string previousLabel = LABEL_INIT;
 
         /// <summary>
         /// Returns the compiled program's opcodes packed into a tight form, that is a direct
@@ -187,7 +189,7 @@ namespace kOS.Safe.Compilation
             argumentPackLogicalLength = 0; // nothing in the argumentPack yet.
             argumentPackFinder = new Dictionary<object,int>();
             lineMap = new DebugLineMap();
-            previousLabel = "######"; // bogus value that is ensured to differ from any real value the first time through.
+            previousLabel = LABEL_INIT;
 
             for (int index = 0 ; index < program.Count ; ++index)  // --.    This can be replaced with a
             {                                                      //   |--- foreach.  I do it this way so I
@@ -200,7 +202,7 @@ namespace kOS.Safe.Compilation
             // Now that we've seen every argument, we know how many bytes are needed
             // to store the argumentPack, and thus the largest possible index into it.
             // This will be how many bytes our indeces will be in this packed ML file.
-            int numArgIndexBytes = FewestBytesToHold(argumentPackLogicalLength);
+            int numArgIndexBytes = FewestBytesToHold(argumentPackFinder.Count);
             headBuff.Add((byte)'%');
             headBuff.Add((byte)'A');
             headBuff.Add(((byte)numArgIndexBytes));
@@ -210,6 +212,7 @@ namespace kOS.Safe.Compilation
 
             headBuff.AddRange(truncatedArgumentPack);
 
+            previousLabel = LABEL_INIT;
             for (int index = 0 ; index < program.Count ; ++index)  // --.    This can be replaced with a
             {                                                      //   |--- foreach.  I do it this way so I
                 CodePart codePart = program[index];                // --'    can print the index in debugging.
@@ -353,8 +356,6 @@ namespace kOS.Safe.Compilation
         /// <returns>byte index of where it starts in the argument pack.</returns>
         private static int PackedArgumentLocation(object argument)
         {
-            const int LABEL_OFFSET = 3; // Account for the %An at the front of the argument pack.
-            
             object arg = argument ?? new PseudoNull();
             
             int returnValue; // bogus starting value before it's calculated.
@@ -367,8 +368,8 @@ namespace kOS.Safe.Compilation
             
             // When it gets added, it's going to be tacked on right at the end.
             // We already know that, se let's get that populated now:
-            argumentPackFinder.Add(arg, LABEL_OFFSET + argumentPackLogicalLength);
-            returnValue = LABEL_OFFSET + argumentPackLogicalLength;
+            returnValue = argumentPackFinder.Count;
+            argumentPackFinder.Add(arg, returnValue);
             
             // Borrow C#'s Binary IO writer to pack the object into the byte form,
             // rather than writing our own for each type:
@@ -515,8 +516,8 @@ namespace kOS.Safe.Compilation
             int argIndexSize;
             Dictionary<int,object> arguments = ReadArgumentPack(reader, out argIndexSize);
             lineMap = new DebugLineMap();
-            
-            previousLabel = "######"; // bogus value that is ensured to differ from any real value the first time through.
+
+            previousLabel = LABEL_INIT;
 
             int codeStart = 0;
             
@@ -583,14 +584,13 @@ namespace kOS.Safe.Compilation
             bool sectionEnded = false;
             while (reader.BaseStream.Position < reader.BaseStream.Length && !(sectionEnded))
             {
-                int offsetLocation = (int)(reader.BaseStream.Position) - startPos;
                 
                 byte argTypeId = reader.ReadByte();
                 Type argCSharpType;
                 if (typeFromId.TryGetValue(argTypeId, out argCSharpType))
                 {
                     object arg = ReadSomeBinaryPrimitive(reader, argCSharpType);
-                    returnArgs.Add(offsetLocation,arg);
+                    returnArgs.Add(returnArgs.Count,arg);
                 }
                 else
                 {
