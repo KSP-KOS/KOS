@@ -1,6 +1,6 @@
 .. _contents:
 
-Documentation Table of Contents 
+Documentation Table of Contents
 ===============================
 
 .. toctree::
@@ -20,6 +20,7 @@ Documentation Table of Contents
     Structures <structures>
     Addons <addons>
     Contribute <contribute>
+    Getting Help <getting_help>
     Changes <changes>
     About <about>
 
