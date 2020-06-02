@@ -165,7 +165,7 @@ Special handling of files in the "boot" directory
 For users requiring even more automation, the feature of custom boot scripts
 was introduced. If you have at least 1 file in the :code:`boot` directory on
 your Archive volume, you will be presented with the option to choose one of
-those files as a boot script for your kOS CPU.
+those files as a boot script for your kOS CPU. The file extension has to be ``.ks``.
 
 
 .. image:: http://i.imgur.com/05kp7Sy.jpg
