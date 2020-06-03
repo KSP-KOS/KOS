@@ -6,7 +6,7 @@ Although we do our best to be as clear as possible in the documentation, it is i
 
 Discord
 -------
-The `Discord server <https://discord.com/invite/ZVVPEct>`_ is open for all questions and discussion.
+The `Discord server <https://discord.gg/7A5Rhe7>`_ is open for all questions and discussion.
 
 Subreddit
 ---------
