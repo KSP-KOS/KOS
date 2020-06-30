@@ -102,7 +102,6 @@ namespace kOS.Screen
         private Texture2D networkZigZagImage;
         private Texture2D brightnessButtonImage;
         private Texture2D fontHeightButtonImage;
-        private AudioSource beepSource;
         private int guiTerminalBeepsPending;
 
         private SharedObjects shared;
@@ -164,8 +163,6 @@ namespace kOS.Screen
             terminalFrameStyle = Create9SliceStyle(terminalFrameImage);
             terminalFrameActiveStyle = Create9SliceStyle(terminalFrameActiveImage);
 
-            LoadAudio();
-            
             tinyToggleStyle = new GUIStyle(HighLogic.Skin.toggle)
             {
                 fontSize = 10
@@ -216,21 +213,6 @@ namespace kOS.Screen
         public kOS.Safe.Sound.ISoundMaker GetSoundMaker()
         {
             return soundMaker;
-        }
-
-        private void LoadAudio()
-        {
-            // Deliberately not fixing the following deprecation warning for using WWW, because I want this
-            // codebase to be back-portable to older KSP versions for RO/RP-1 without too much hassle.  Eventually
-            // it might not work and we may be forced to change this, but the KSP1 lifecycle may be done
-            // by then, so I don't want to make the effort prematurely.  Fixing this requires a very ugly
-            // coroutine mess to load URLs the new way Unity wants you to do it.
-#pragma warning disable CS0618 // ^^^ see above comment about why this is disabled.
-            WWW beepURL = new WWW("file://" + root + "GameData/kOS/GFX/terminal-beep.wav");
-#pragma warning enable CS0618
-            AudioClip beepClip = beepURL.GetAudioClip();
-            beepSource = gameObject.AddComponent<AudioSource>();
-            beepSource.clip = beepClip;
         }
 
         public void OpenPopupEditor(Volume v, GlobalPath path)

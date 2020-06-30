@@ -84,6 +84,8 @@ namespace kOS.Sound
             AudioClip clip = fileGetter.GetAudioClip();
             AudioSource source = gameObject.AddComponent<AudioSource>();
             source.clip = clip;
+            Console.Out.WriteLine("eraseme: PROOF I AM NEW!.  LOADFILESOUND!!");
+            source.spatialBlend = 0; // Makes it ignore spatial position for calculating sound.
             sounds[name] = source;
         }
 
