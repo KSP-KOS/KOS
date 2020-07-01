@@ -334,7 +334,7 @@ namespace kOS.Function
 
             VoiceValue val;
 
-            if (shared.AllVoiceValues.TryGetValue(voiceNum, out val))
+            if (shared.AllVoiceValues.TryGetValue(voiceNum,out val))
                 ReturnValue = val;
             else
             {
