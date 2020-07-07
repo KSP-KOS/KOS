@@ -82,6 +82,10 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
+            bool cartesian = CountRemainingArgs(shared) == 4;
+
+            double ut = cartesian ? GetDouble(PopValueAssert(shared)) : double.NaN;
+
             CelestialBody body;
             var bodyArg = PopValueAssert(shared);
             if (bodyArg is BodyTarget bodyTarget)
@@ -94,16 +98,27 @@ namespace kOS.Function
                 if (body == null)
                     throw new KOSInvalidArgumentException("CREATEORBIT() constructor", bodyName, "Body not found in this solar system");
             }
-            double t = GetDouble(PopValueAssert(shared));
-            double mEp = GetDouble(PopValueAssert(shared));
-            double argPe = GetDouble(PopValueAssert(shared));
-            double lan = GetDouble(PopValueAssert(shared));
-            double sma = GetDouble(PopValueAssert(shared));
-            double e = GetDouble(PopValueAssert(shared));
-            double inc = GetDouble(PopValueAssert(shared));
-            AssertArgBottomAndConsume(shared);
 
-            ReturnValue = new OrbitInfo(new Orbit(inc, e, sma, lan, argPe, mEp, t, body), shared);
+            if (cartesian)
+            {
+                var velocity = GetVector(PopValueAssert(shared));
+                var position = GetVector(PopValueAssert(shared));
+                AssertArgBottomAndConsume(shared);
+                var ret = new Orbit();
+                ret.UpdateFromStateVectors(position, velocity, body, ut);
+                ReturnValue = new OrbitInfo(ret, shared);
+            } else 
+            {
+                double t = GetDouble(PopValueAssert(shared));
+                double mEp = GetDouble(PopValueAssert(shared));
+                double argPe = GetDouble(PopValueAssert(shared));
+                double lan = GetDouble(PopValueAssert(shared));
+                double sma = GetDouble(PopValueAssert(shared));
+                double e = GetDouble(PopValueAssert(shared));
+                double inc = GetDouble(PopValueAssert(shared));
+                AssertArgBottomAndConsume(shared);
+                ReturnValue = new OrbitInfo(new Orbit(inc, e, sma, lan, argPe, mEp, t, body), shared);
+            }
         }
     }
 

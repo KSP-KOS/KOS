@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Suffixed
@@ -21,7 +21,8 @@ namespace kOS.Suffixed
         }
         public ScalarValue GetApoapsis()
         {
-            return shared.Vessel.orbit.timeToAp;            
+            var timeToAp = shared.Vessel.orbit.timeToAp;
+            return double.IsInfinity(timeToAp) ? float.MaxValue : timeToAp;
         }
         
         public ScalarValue GetPeriapsis()

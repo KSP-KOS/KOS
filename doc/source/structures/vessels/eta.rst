@@ -7,7 +7,6 @@ ETA is a special object that exists just to help you get the
 times from now to certain events in a vessel's future.  It 
 always presumes you're operating on the current SHIP vessel:
 
-
 .. structure:: ETA
 
     .. list-table::
@@ -35,9 +34,26 @@ always presumes you're operating on the current SHIP vessel:
     :type: :ref:`scalar <scalar>`, seconds
     :access: Get only
 
-    Seconds until SHIP hits its apoapsis.  If the ship is on an escape
-    trajectory (hyperbolic orbit) such that you will never reach apoapsis,
-    it will return zero.
+    Seconds until SHIP hits its apoapsis.
+    
+    If the ship is on an escape trajectory (hyperbolic orbit) such that
+    you will never reach apoapsis, it will return the Very Big Number
+    ``3.402823E+38``.  (Largest non-infinity number that can be
+    represented in a single precision float value, if you care why it's
+    that number.) A reasonable script test could simply be
+    ``if eta:apoapsis > 100000000000000`` you can assume it's actually
+    infinite, as that's much bigger than any real elliptical orbit in
+    the game would give you.  (But a much better test for hyperbolic
+    orbits is to look for the Apoapsis height being negative.)
+
+    Also be aware that in the stock KSP game (things may be different
+    if you install a mod like Principia that changes the orbital
+    calculation model) ``ETA:APOAPSIS`` can be decieving when looking at
+    some large orbits.  kOS will only return the fake bignum
+    ``3.402823E+38`` for those orbits that are mathematically *actual*
+    hyperbolic escape tragectories, not the orbits that are elliptical
+    but the game still lets them escape anyway because of the limits of the
+    Sphere of Influence model.
 
 .. attribute:: ETA:PERIAPSIS
 
