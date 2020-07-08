@@ -79,10 +79,10 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :meth:`CREW()`                           :struct:`List`                  all :struct:`CrewMembers <CrewMember>`
     :attr:`CONNECTION`                       :struct:`Connection`            Returns your connection to this vessel
     :attr:`MESSAGES`                         :struct:`MessageQueue`          This vessel's message queue
-    :attr:`DELTAV`                           :struct:`scalar`                The total delta-v of this vessel in its current situation
-    :attr:`DELTAVASL`                        :struct:`scalar`                The total delta-v of this vessel if it were at sea level
-    :attr:`DELTAVVACUUM`                     :struct:`scalar`                The total delta-v of this vessel if it were in a vacuum
-    :attr:`BURNTIME`                         :struct:`scalar`                The total burn time, in seconds, of this vessel (or 5 if the vessel has 0 delta/v).
+    :attr:`DELTAV`                           :struct:`scalar` (m/s)          The total delta-v of this vessel in its current situation
+    :attr:`DELTAVASL`                        :struct:`scalar` (m/s)          The total delta-v of this vessel if it were at sea level
+    :attr:`DELTAVVACUUM`                     :struct:`scalar` (m/s)          The total delta-v of this vessel if it were in a vacuum
+    :attr:`BURNTIME`                         :struct:`scalar` (s)            The total burn time of this vessel (or 5 if the vessel has 0 delta/v).
     ======================================== =============================== =============
 
 .. note::
