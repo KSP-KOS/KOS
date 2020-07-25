@@ -25,23 +25,23 @@ operator symbols:
 
 **Arithmetic Operators**::
 
-    +  -  *  /  ^  e  (  )
+    +  -  *  /  ^  e
 
 **Logic Operators**::
 
     not  and  or  true  false  <>  >=  <=  =  >  <
 
-**Instructions and keywords**::
+**Instructions and Keywords**::
 
-    add all at batch break clearscreen compile copy declare delete
-    deploy do do edit else file for from from function global if
-    in list local lock log off on once parameter preserve print reboot
-    remove rename run set shutdown stage step switch then to toggle
-    unlock unset until volume wait when
+    add all at break choose clearscreen compile copy declare defined
+    delete do edit else file for from function global if in is list
+    local lock log off on once parameter preserve print reboot remove
+    rename return run runoncepath runpath set shutdown stage step
+    switch then to toggle unlock unset until volume wait when
 
-**Other symbols**::
+**Other Symbols**::
 
-    {  }  [  ]  ,  :  //
+    ( )  {  }  [  ]  ,  :  #  @  //
 
 .. highlight:: kerboscript
 
