@@ -32,7 +32,7 @@ namespace kOS.AddOns.TrajectoriesAddon
         }
 
 
-        private static void init()
+        private static void Init()
         {
             SafeHouse.Logger.Log("Attempting to Grab Trajectories Assembly...");
             trajectoriesAPIType = GetType("Trajectories.API");
@@ -51,6 +51,7 @@ namespace kOS.AddOns.TrajectoriesAddon
                     GetVersion = "";
                     IsVerTwo = false;
                     IsVerTwoTwo = false;
+                    IsVerTwoFour = false;
                     SafeHouse.Logger.Log("Checking Trajectories version: API.HasTarget method is null. Assuming version is pre 2.0.0");
                 }
                 else // assume v2.0.0 and v2.1.0 (API is identical in these versions)
@@ -58,14 +59,21 @@ namespace kOS.AddOns.TrajectoriesAddon
                     GetVersion = "2.0.0";
                     IsVerTwo = true;
                     IsVerTwoTwo = false;
+                    IsVerTwoFour = false;
                     SafeHouse.Logger.Log("Checking Trajectories version: API.GetVersion method is null. Assuming version is pre 2.2.0");
                 }
             }
             else // assume v2.2.0 and above (New API)
             {
                 GetVersion = (string)trajectoriesAPIType.GetProperty("GetVersion").GetValue(null, null);
+                Version version = new Version(GetVersion);
                 IsVerTwo = true;
                 IsVerTwoTwo = true;
+                // check for major versions above v2
+                if (version.Major > 2)
+                    IsVerTwoFour = true;
+                else
+                    IsVerTwoFour = (version.Major == 2 && version.Minor >= 4);
                 SafeHouse.Logger.Log("Checking Trajectories version: API.GetVersion returned version: v" + GetVersion);
             }
 
@@ -162,6 +170,7 @@ namespace kOS.AddOns.TrajectoriesAddon
         public static string GetVersion { get; private set; }
         public static bool IsVerTwo { get; private set; }
         public static bool IsVerTwoTwo { get; private set; }
+        public static bool IsVerTwoFour { get; private set; }
 
         // Standard methods
         public static Vector3? ImpactVector() => (Vector3?)trGetImpactPosition.Invoke(null, new object[] { });
@@ -226,7 +235,7 @@ namespace kOS.AddOns.TrajectoriesAddon
             }
             else //if wrapped == null
             {
-                init();
+                Init();
                 return wrapped;
             }
         }

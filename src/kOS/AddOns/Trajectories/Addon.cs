@@ -18,6 +18,7 @@ namespace kOS.AddOns.TrajectoriesAddon
             AddSuffix("GETVERSION", new Suffix<StringValue>(GetVersion, "Get version string (Major.Minor.Patch)."));
             AddSuffix("ISVERTWO", new Suffix<BooleanValue>(IsVerTwo, "Check whether Trajectories is v2.0.0 and above."));
             AddSuffix("ISVERTWOTWO", new Suffix<BooleanValue>(IsVerTwoTwo, "Check whether Trajectories is v2.2.0 and above."));
+            AddSuffix("ISVERTWOFOUR", new Suffix<BooleanValue>(IsVerTwoFour, "Check whether Trajectories is v2.4.0 and above."));
             AddSuffix("IMPACTPOS", new Suffix<GeoCoordinates>(ImpactPos, "Get impact position coordinates."));
             AddSuffix("HASIMPACT", new Suffix<BooleanValue>(HasImpact, "Check whether Trajectories has predicted an impact position for the current vessel."));
             AddSuffix(new string[] { "CORRECTEDVEC", "CORRECTEDVECTOR" }, new Suffix<Vector>(CorrectedVector, "Offset plus PlannedVect, somewhat corrected to glide ship towards target."));
@@ -49,6 +50,13 @@ namespace kOS.AddOns.TrajectoriesAddon
             if (Available())
                 return TRWrapper.IsVerTwoTwo;
             throw new KOSUnavailableAddonException("ISVERTWOTWO", "Trajectories");
+        }
+
+        private BooleanValue IsVerTwoFour()
+        {
+            if (Available())
+                return TRWrapper.IsVerTwoFour;
+            throw new KOSUnavailableAddonException("ISVERTWOFOUR", "Trajectories");
         }
 
         // Older suffixes.
