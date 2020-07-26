@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Suffixed;
@@ -9,12 +9,9 @@ namespace kOS.AddOns.TrajectoriesAddon
 {
     [kOSAddon("TR")]
     [Safe.Utilities.KOSNomenclature("TRAddon")]
-    public class Addon: Suffixed.Addon
+    public class Addon : Suffixed.Addon
     {
-        public Addon(SharedObjects shared) : base(shared)
-        {
-            InitializeSuffixes();
-        }
+        public Addon(SharedObjects shared) : base(shared) => InitializeSuffixes();
 
         private void InitializeSuffixes()
         {
@@ -65,9 +62,9 @@ namespace kOS.AddOns.TrajectoriesAddon
                 Vector3? impactVect = TRWrapper.ImpactVector();
                 if (impactVect != null)
                 {
-                    var worldImpactPos = (Vector3d)impactVect + body.position;
-                    var lat = body.GetLatitude(worldImpactPos);
-                    var lng = Utils.DegreeFix(body.GetLongitude(worldImpactPos), -180);
+                    Vector3d worldImpactPos = (Vector3d)impactVect + body.position;
+                    double lat = body.GetLatitude(worldImpactPos);
+                    double lng = Utils.DegreeFix(body.GetLongitude(worldImpactPos), -180);
                     return new GeoCoordinates(shared, lat, lng);
                 }
                 throw new KOSException("Impact position is not available. Remember to check addons:tr:HasImpact");
@@ -224,9 +221,6 @@ namespace kOS.AddOns.TrajectoriesAddon
         }
 
 
-        public override BooleanValue Available()
-        {
-            return TRWrapper.Wrapped();
-        }
+        public override BooleanValue Available() => TRWrapper.Wrapped();
     }
 }

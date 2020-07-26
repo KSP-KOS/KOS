@@ -1,7 +1,7 @@
-﻿using kOS.Safe.Encapsulation;
-using kOS.Safe.Utilities;
 using System;
 using System.Reflection;
+using kOS.Safe.Encapsulation;
+using kOS.Safe.Utilities;
 using UnityEngine;
 
 namespace kOS.AddOns.TrajectoriesAddon
@@ -43,7 +43,7 @@ namespace kOS.AddOns.TrajectoriesAddon
                 return;
             }
 
-            // Trajectories v2.2.0 API Has version properties. Checking versions here.
+            // Trajectories v2.2.0+ API Has version properties. Checking versions here.
             if (trajectoriesAPIType.GetProperty("GetVersion") == null)
             {
                 if (trajectoriesAPIType.GetMethod("HasTarget") == null) // assume pre v2.0.0 (Old API)
@@ -159,33 +159,18 @@ namespace kOS.AddOns.TrajectoriesAddon
         }
 
         // Version checking properties
-        public static string getVersion = "";
-        public static string GetVersion { get { return getVersion; } private set {getVersion = value;} }
-        public static bool isVerTwo = false;
-        public static bool IsVerTwo { get { return isVerTwo; } private set { isVerTwo = value; } }
-        public static bool isVerTwoTwo = false;
-        public static bool IsVerTwoTwo { get { return isVerTwoTwo; }  private set { isVerTwoTwo = value; } }
+        public static string GetVersion { get; private set; }
+        public static bool IsVerTwo { get; private set; }
+        public static bool IsVerTwoTwo { get; private set; }
 
         // Standard methods
-        public static Vector3? ImpactVector()
-        {
-            return (Vector3?)trGetImpactPosition.Invoke(null, new object[] { });
-        }
+        public static Vector3? ImpactVector() => (Vector3?)trGetImpactPosition.Invoke(null, new object[] { });
 
-        public static Vector3? CorrectedDirection()
-        {
-            return (Vector3?)trCorrectedDirection.Invoke(null, new object[] { });
-        }
+        public static Vector3? CorrectedDirection() => (Vector3?)trCorrectedDirection.Invoke(null, new object[] { });
 
-        public static Vector3? PlannedDirection()
-        {
-            return (Vector3?)trPlannedDirection.Invoke(null, new object[] { });
-        }
+        public static Vector3? PlannedDirection() => (Vector3?)trPlannedDirection.Invoke(null, new object[] { });
 
-        public static void SetTarget(double lat, double lon, double alt)
-        {
-            trSetTarget.Invoke(null, new object[] { lat, lon, alt });
-        }
+        public static void SetTarget(double lat, double lon, double alt) => trSetTarget.Invoke(null, new object[] { lat, lon, alt });
 
         // Trajectories v2.0.0 HasTarget method
         public static bool? HasTarget()
