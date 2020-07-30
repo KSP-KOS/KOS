@@ -1,4 +1,4 @@
-﻿using kOS.Screen;
+using kOS.Screen;
 using kOS.Suffixed;
 using UnityEngine;
 
@@ -6,17 +6,23 @@ namespace kOS.Module
 {
     public class KOSNameTag : PartModule
     {
+        private const string PAWGroup = "kOS";
+		
         private KOSNameTagWindow typingWindow;
 
         [KSPField(isPersistant = true,
                   guiActive = true,
                   guiActiveEditor = true,
-                  guiName = "name tag")]
+                  guiName = "name tag",
+                  groupName = PAWGroup,
+                  groupDisplayName = PAWGroup)]
         public string nameTag = "";
 
         [KSPEvent(guiActive = true,
                   guiActiveEditor = true,
-                  guiName = "Change Name Tag")]
+                  guiName = "Change Name Tag",
+                  groupName = PAWGroup,
+                  groupDisplayName = PAWGroup)]
         public void PopupNameTagChanger()
         {
             if (typingWindow != null)
