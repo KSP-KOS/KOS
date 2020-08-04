@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Utilities;
@@ -16,9 +17,15 @@ namespace kOS.AddOns.TrajectoriesAddon
         private static MethodInfo trPlannedDirection = null;
         private static MethodInfo trHasTarget = null;
         private static MethodInfo trSetTarget = null;
+        private static MethodInfo trGetTarget = null;
+        private static MethodInfo trClearTarget = null;
+        private static MethodInfo trResetDescentProfile = null;
         private static PropertyInfo trAlwaysUpdate = null;
         private static PropertyInfo trProgradeEntry = null;
         private static PropertyInfo trRetrogradeEntry = null;
+        private static PropertyInfo trDescentProfileAngles = null;
+        private static PropertyInfo trDescentProfileModes = null;
+        private static PropertyInfo trDescentProfileGrades = null;
 
         private static Type GetType(string name)
         {
@@ -114,6 +121,7 @@ namespace kOS.AddOns.TrajectoriesAddon
             trAlwaysUpdate = trajectoriesAPIType.GetProperty("AlwaysUpdate") ?? trajectoriesAPIType.GetProperty("alwaysUpdate");
             if (trAlwaysUpdate == null)
             {
+                SafeHouse.Logger.Log("Trajectories.API.AlwaysUpdate property is null.");
                 wrapped = false;
                 return;
             }
@@ -128,7 +136,6 @@ namespace kOS.AddOns.TrajectoriesAddon
             // Trajectories v2.0.0 HasTarget method
             if (IsVerTwo)
             {
-                // HasTarget is avalable in Trajectories v2.0.0 and above
                 trHasTarget = trajectoriesAPIType.GetMethod("HasTarget");
                 if (trHasTarget == null)
                 {
@@ -141,7 +148,6 @@ namespace kOS.AddOns.TrajectoriesAddon
             // Trajectories v2.2.0 and above methods and properties
             if (IsVerTwoTwo)
             {
-                // GetTimeTillImpact is avalable in Trajectories v2.2.0 and above
                 trGetTimeTillImpact = trajectoriesAPIType.GetMethod("GetTimeTillImpact");
                 if (trGetTimeTillImpact == null)
                 {
@@ -152,12 +158,61 @@ namespace kOS.AddOns.TrajectoriesAddon
                 trProgradeEntry = trajectoriesAPIType.GetProperty("ProgradeEntry");
                 if (trProgradeEntry == null)
                 {
+                    SafeHouse.Logger.Log("Trajectories.API.ProgradeEntry property is null");
                     wrapped = false;
                     return;
                 }
                 trRetrogradeEntry = trajectoriesAPIType.GetProperty("RetrogradeEntry");
                 if (trRetrogradeEntry == null)
                 {
+                    SafeHouse.Logger.Log("Trajectories.API.RetrogradeEntry property is null");
+                    wrapped = false;
+                    return;
+                }
+            }
+
+            // Trajectories v2.4.0 and above methods and properties
+            if (IsVerTwoFour)
+            {
+                trGetTarget = trajectoriesAPIType.GetMethod("GetTarget");
+                if (trGetTarget == null)
+                {
+                    SafeHouse.Logger.Log("Trajectories.API.GetTarget method is null");
+                    wrapped = false;
+                    return;
+                }
+                trClearTarget = trajectoriesAPIType.GetMethod("ClearTarget");
+                if (trClearTarget == null)
+                {
+                    SafeHouse.Logger.Log("Trajectories.API.ClearTarget method is null");
+                    wrapped = false;
+                    return;
+                }
+                trResetDescentProfile = trajectoriesAPIType.GetMethod("ResetDescentProfile");
+                if (trResetDescentProfile == null)
+                {
+                    SafeHouse.Logger.Log("Trajectories.API.ResetDescentProfile method is null");
+                    wrapped = false;
+                    return;
+                }
+                trDescentProfileAngles = trajectoriesAPIType.GetProperty("DescentProfileAngles");
+                if (trDescentProfileAngles == null)
+                {
+                    SafeHouse.Logger.Log("Trajectories.API.DescentProfileAngles property is null");
+                    wrapped = false;
+                    return;
+                }
+                trDescentProfileModes = trajectoriesAPIType.GetProperty("DescentProfileModes");
+                if (trDescentProfileModes == null)
+                {
+                    SafeHouse.Logger.Log("Trajectories.API.DescentProfileModes property is null");
+                    wrapped = false;
+                    return;
+                }
+                trDescentProfileGrades = trajectoriesAPIType.GetProperty("DescentProfileGrades");
+                if (trDescentProfileGrades == null)
+                {
+                    SafeHouse.Logger.Log("Trajectories.API.DescentProfileGrades property is null");
                     wrapped = false;
                     return;
                 }
@@ -224,6 +279,73 @@ namespace kOS.AddOns.TrajectoriesAddon
             {
                 if (trRetrogradeEntry != null) // will be null if TR version too low.
                     trRetrogradeEntry.SetValue(null, true, null);
+            }
+        }
+
+        // Trajectories v2.4.0 and above methods and properties
+        public static Vector3d? GetTarget()
+        {
+            if (trGetTarget == null)
+                return null;
+            return (Vector3d?)trGetTarget.Invoke(null, new object[] { });
+        }
+
+        public static void ClearTarget()
+        {
+            if (trClearTarget == null)
+                return;
+            trClearTarget.Invoke(null, new object[] { });
+        }
+
+        public static void ResetDescentProfile(double AoA)
+        {
+            if (trResetDescentProfile == null)
+                return;
+            trResetDescentProfile.Invoke(null, new object[] { AoA });
+        }
+
+        public static List<double> DescentProfileAngles
+        {
+            get
+            {
+                if (trDescentProfileAngles == null)
+                    return null;
+                return (List<double>)trDescentProfileAngles.GetValue(null, null);
+            }
+            set
+            {
+                if (trDescentProfileAngles != null)
+                    trDescentProfileAngles.SetValue(null, value, null);
+            }
+        }
+
+        public static List<bool> DescentProfileModes
+        {
+            get
+            {
+                if (trDescentProfileModes == null)
+                    return null;
+                return (List<bool>)trDescentProfileModes.GetValue(null, null);
+            }
+            set
+            {
+                if (trDescentProfileModes != null)
+                    trDescentProfileModes.SetValue(null, value, null);
+            }
+        }
+
+        public static List<bool> DescentProfileGrades
+        {
+            get
+            {
+                if (trDescentProfileGrades == null)
+                    return null;
+                return (List<bool>)trDescentProfileGrades.GetValue(null, null);
+            }
+            set
+            {
+                if (trDescentProfileGrades != null)
+                    trDescentProfileGrades.SetValue(null, value, null);
             }
         }
 
