@@ -215,10 +215,19 @@ Setting Up Your Environment
 
         3. Make sure your installation of KSP has LinuxGuruGamer's ClivkThroughBlocker
            mod installed.  kOS now needs it in order to compile.  After it is
-           installed, create a reference for it in your kOS project's References
-           like so:
+           installed, copy its DLL file into Resources/ from your GameData folder.
+
+           Copy This file:
 
                * $KSP/GameData/00_ClickThroughBlocker/Plugins/ClickThroughBlocker.dll
+
+           To here:
+
+               * Resources/
+
+           Then *make a Reference to Resoruces/ClickThroughBlocker.dll in your kOS project
+           file*.  This is needed for it to let you compile parts of kOS that use classes
+           from ClickThroughBlocker.
 
 	4. If you do not have a copy of KSP locally, you may
 	  download dummy assemblies at https://github.com/KSP-KOS/KSP_LIB
