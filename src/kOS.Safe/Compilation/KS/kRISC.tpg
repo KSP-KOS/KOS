@@ -2,6 +2,10 @@
 
 // Terminals
 // ===================================================
+
+// When these change, please also update the list of keywords and
+// operators in the documentation: doc/source/language/syntax.rst
+
 //Math
 PLUSMINUS    -> @"(\+|-)";
 MULT         -> @"\*";
