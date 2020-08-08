@@ -10,6 +10,8 @@ using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using ClickThroughFix; // Needs ClickThroughBlocker DLL to be in the Reference directory.
+
 
 namespace kOS.Screen
 {
@@ -443,7 +445,7 @@ namespace kOS.Screen
 
             GUI.skin = HighLogic.Skin;
 
-            windowRect = GUILayout.Window(UNIQUE_ID, windowRect, DrawWindow, "kOS " + versionString);
+            windowRect = ClickThruBlocker.GUILayoutWindow(UNIQUE_ID, windowRect, DrawWindow, "kOS " + versionString);
             windowRect = RectExtensions.ClampToRectAngle(windowRect, rectToFit);
         }
 

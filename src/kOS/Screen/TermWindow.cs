@@ -10,6 +10,7 @@ using kOS.UserIO;
 using kOS.Safe.UserIO;
 using KSP.UI.Dialogs;
 using kOS.Safe.Utilities;
+using ClickThroughFix; // Needs ClickThroughBlocker DLL to be in the Reference directory.
 
 namespace kOS.Screen
 {
@@ -360,7 +361,7 @@ namespace kOS.Screen
             // Should probably make "gui screen name for my CPU part" into some sort of utility method:
             ChangeTitle(CalcualteTitle());
 
-            WindowRect = GUI.Window(UniqueId, WindowRect, TerminalGui, TitleText);
+            WindowRect = ClickThruBlocker.GUIWindow(UniqueId, WindowRect, TerminalGui, TitleText);
             
             if (consumeEvent)
             {

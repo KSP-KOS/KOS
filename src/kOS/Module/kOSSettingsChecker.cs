@@ -22,6 +22,7 @@ namespace kOS.Module
             SafeHouse.Logger.SuperVerbose("kOSSettingsChecker.CheckSettings()");
             HighLogic.CurrentGame.Parameters.CustomParams<kOSCustomParameters>().CheckMigrateSettings();
             HighLogic.CurrentGame.Parameters.CustomParams<kOSConnectivityParameters>().CheckNewManagers();
+            HighLogic.CurrentGame.Parameters.CustomParams<kOSCustomParameters>().CheckClickThroughBlockerExists();
         }
 
         // Because rapidly showing dialogs can prevent some from being shown, we can just queue up

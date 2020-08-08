@@ -1,14 +1,23 @@
 using System.Collections.Generic;
 using UnityEngine;
+using ClickThroughFix; // Needs ClickThroughBlocker DLL to be in the Reference directory.
 
 namespace kOS.Screen
 {
     /// <summary>
     /// kOSManagedWindow is for any Unity Monobehavior that you'd like to
-    /// have contain a GUI.Window, and you need kOS to keep track of the
+    /// have contain an IMGUI Window, and you need kOS to keep track of the
     /// window stacking for which click is on top of which other click.
     /// Unity's built in systems for this don't work well at all, so
     /// we had to make up our own.
+    /// 
+    /// Issue #2697 - In addition to KOS's own system to handle this,
+    /// This also is now layered on top of Linuxgurugamer's ClickThroughBlocker
+    /// mod, so it uses its wrappers around GUI.Window.  That was needed because
+    /// if SOME mods use ClickThruBlocker windows, then those windows will get first
+    /// dibs on events before kOS gets to, making kOS helpless to intercept events it's
+    /// trying to protect other windows from seeing.  ClickThruBlocker is a mod that
+    /// once some mods use it, then all the other mods have to as well.
     /// </summary>
     public abstract class KOSManagedWindow : MonoBehaviour
     {
@@ -222,14 +231,13 @@ namespace kOS.Screen
         }
         
         /// <summary>
-        /// Pass in the absolute GUI screen location of a mouse click to decide whether
-        /// or not this widget gets keyboard focus because of that click.
-        /// (Clicking outside the window takes focus away.  Clicking inside
-        /// the window gives focus to the window and brings it to the front.)
-        /// </summary>
+        /// Pass in the absolute GUI screen location of the mouse to decide whether
+        /// or not this window gets keyboard focus because of that position.
+        /// (If you want focus-follows-mouse logic, call this every Update().  If you
+        /// want click-to-focus logic, only call this in Update()s where a click just happened.)
         /// <param name="absMousePos">Absolute position of mouse on whole screen</param>
         /// <returns>True if the window got focused, false if it didn't.</returns>
-        public bool FocusClickLocationCheck(Vector2 absMousePos)
+        public bool FocusMouseLocationCheck(Vector2 absMousePos)
         {
             bool wasInside = false;
             if (IsInsideMyExposedPortion(absMousePos))
@@ -286,18 +294,17 @@ namespace kOS.Screen
 
         /// <summary>
         /// When you subclass KOSManagedWindow, make sure that you call this
-        /// from inside your Update.  It does not use OnGUI because of the fact
-        /// that the OnGUI event handler is broken - it only sends MouseDown 
-        /// and MouseUp events when the mouse is OUTSIDE the window, which is
-        /// utterly backward, and it's hard to work out how to fix this,
-        /// given how badly documented the Unity GUI API is.  If anyone who
-        /// actually understands the Unity GUI system wants to fix this,
-        /// please feel free to do so.
+        /// from inside your Update() to check for focus change on the window.
+        /// Calling this will maybe call GetFocus() or LoseFocus() depending on
+        /// what the mouse is doing.
+        /// Note, you call this during *Update()*, NOT the OnGUI() call.
+        /// It does not use OnGUI() because the raw mousebutton state it
+        /// needs to see can get consumed and wiped by Unity's IMGUI widgets
+        /// before application code like this can see it.
         /// </summary>
-        /// <returns>True if there was a mouseclick within this window.</returns>
-        public bool UpdateLogic()
+        public void UpdateLogic()
         {
-            if (!IsOpen) return false;
+            if (!IsOpen) return;
 
             // Input.mousePosition, unlike Event.current.MousePosition, puts the origin at the
             // lower-left instead of upper-left of the screen, thus the subtraction in the y coord below:
@@ -305,23 +312,37 @@ namespace kOS.Screen
     
             // Mouse coord within the window, rather than within the screen.
             mousePosRelative = new Vector2( mousePosAbsolute.x - windowRect.xMin, mousePosAbsolute.y - windowRect.yMin);
-    
-            bool clickUp = false;
+
+            // Could maybe cache the CustomParams call once up front to get a reference to the CTB instance, then only
+            // repeat the ".focusFollowsclick" part each update.  The reason that's not being done here is that I
+            // noticed ClickThroughBlocker's OWN code always does it like this, and for all I know there might be
+            // an important reason.  It always gets this value by using the fully qualified long chain you see
+            // here, starting from HighLogic, each update. :
+            bool clickToFocus = HighLogic.CurrentGame.Parameters.CustomParams<ClickThroughFix.CTB>().focusFollowsclick;
+
             if (Input.GetMouseButtonDown(0))
             {
                 mouseButtonDownPosAbsolute = mousePosAbsolute;
                 mouseButtonDownPosRelative = mousePosRelative;
             }
-    
-            if (Input.GetMouseButtonUp(0))
+
+            bool mousePositionCanSetFocus = !(clickToFocus); // Always true in focus-follows-mouse mode
+
+            if (clickToFocus)
             {
-                clickUp = true;
-                if (Vector2.Distance(mousePosAbsolute,mouseButtonDownPosAbsolute) <= dragTolerance)
+                if (Input.GetMouseButtonUp(0))
                 {
-                    FocusClickLocationCheck(mousePosAbsolute);
+                    if (Vector2.Distance(mousePosAbsolute, mouseButtonDownPosAbsolute) <= dragTolerance)
+                    {
+                        mousePositionCanSetFocus = true;
+                    }
                 }
             }
-            return IsInsideMyExposedPortion(mousePosAbsolute) && clickUp;
+
+            if (mousePositionCanSetFocus)
+            {
+                FocusMouseLocationCheck(mousePosAbsolute);
+            }
         }
     }
 }

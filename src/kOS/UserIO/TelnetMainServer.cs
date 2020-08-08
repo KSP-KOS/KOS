@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Collections.Generic;
@@ -8,6 +8,8 @@ using KSP.IO;
 using kOS.Suffixed;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
+using ClickThroughFix; // Needs ClickThroughBlocker DLL to be in the Reference directory.
+
 
 namespace kOS.UserIO
 {
@@ -371,10 +373,10 @@ namespace kOS.UserIO
         void OnGUI()
         {
             if (activeOptInDialog)
-                optInRect = GUILayout.Window(401123, // any made up number unlikely to clash is okay here
+                optInRect = ClickThruBlocker.GUILayoutWindow(401123, // any made up number unlikely to clash is okay here
                                              optInRect, OptInOnGui, "kOS Telnet Opt-In Permisssion");
             if (activeRealIPDialog)
-                realIPRect = GUILayout.Window(401124, // any made up number unlikely to clash is okay here
+                realIPRect = ClickThruBlocker.GUILayoutWindow(401124, // any made up number unlikely to clash is okay here
                                               realIPRect, RealIPOnGui, "kOS Telnet Non-Loopback Permisssion");
             if (activeBgSimDialog)
                 bgSimRect = GUILayout.Window(401125, // any made up number unlikely to clash is okay here
