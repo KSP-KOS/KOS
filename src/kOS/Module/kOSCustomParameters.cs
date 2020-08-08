@@ -1,6 +1,7 @@
 using KSP.IO;
 using System;
 using System.Reflection;
+using System.Linq;
 
 namespace kOS.Module
 {
@@ -45,6 +46,9 @@ namespace kOS.Module
 
         [GameParameters.CustomIntParameterUI("")]
         public int version = 0;
+
+        [GameParameters.CustomParameterUI("")]
+        public bool passedClickThroughCheck = false;
 
         // these values constrain and back the InstructionsPerUpdate property so that it is clamped both in the
         // user interface and when set from within a script.
@@ -200,6 +204,95 @@ namespace kOS.Module
                     migrated = true;
                 }
             }
+        }
+
+        public void CheckClickThroughBlockerExists()
+        {
+            if (passedClickThroughCheck)
+                return;
+            bool clickThroughExists = false;
+
+            var loadedCTBAssembly = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.dllName.Equals("ClickThroughBlocker"));
+            if (loadedCTBAssembly != null)
+            {
+                // Must be at least version 0.10 of ClickThroughBlocker:
+                if (loadedCTBAssembly.versionMajor > 0 || loadedCTBAssembly.versionMinor >= 10)
+                {
+                    Type ctbType = loadedCTBAssembly.assembly.GetType("ClickThroughFix.CTB", false);
+                    if (ctbType != null)
+                    {
+                        if (ctbType.GetField("focusFollowsclick") != null)
+                        {
+                            clickThroughExists = true;
+                        }
+                    }
+                }
+            }
+
+            string popupText =
+                "=======================================\n" +
+                "<b><color=#ffffff>kOS is Checking for ClickThroughBlocker</color></b>\n" +
+                "=======================================\n\n" +
+                "Starting with kOS v1.3, kOS has become dependent on the existence of the ClickThroughBlocker mod. " +
+                "(And it must be at least version 0.10 of ClickThroughBlocker.)\n\n";
+
+            if (clickThroughExists)
+            {
+                popupText +=
+                    "     <b><color=#ddffdd><<<< CHECK SUCCEEDED >>>>></color></b>\n\n" +
+                    "kOS has found ClickThroughBlocker installed, and it appears to be a version that will work with kOS.\n" +
+                    "\n" +
+                    "Please note that while in the past the kOS terminal has always been click-to-focus, from now " +
+                    "on it will behave however ClickThroughBlocker is set to act, which may be focus-follows-mouse.\n" +
+                    "You can use ClickThroughBlocker's settings to change this behvior like this:\n\n" +
+                    "[Hit Escape] Settings ->\n" +
+                    "  Difficulty Options ->\n" +
+                    "    ClickThroughBlocker ->\n" +
+                    "      [x] Focus Follows Click\n\n";
+            }
+            else
+            {
+                popupText +=
+                    "     <b><color=#ffff88>!!! CHECK FAILED !!!</color></b>\n\n" +
+                    "kOS couldn't find a version of ClickThroughBlocker that works with kOS. This could be " +
+                    "because ClickThroughBlocker is not installed at all, or it could be because its version is too old " +
+                    "(or too new, if ClickThroughBlocker ever renames some things that kOS is using).\n" +
+                    "\n\n" +
+                    "To use kOS v1.3 or higher you'll need to quit Kerbal Space Program and install a version of ClickThroughBlocker that it supports.\n";
+            }
+
+            string buttonText;
+            global::Callback clickThroughAck;
+            if (clickThroughExists)
+            {
+                clickThroughAck = AcceptClickThrough;
+                buttonText = "Acknowledged.";
+            }
+            else
+            {
+                clickThroughAck = FailedClickThrough;
+                buttonText = "Acknowledged. I'll have to quit and change my mods.";
+            }
+
+            kOSSettingsChecker.QueueDialog(
+                0.75f, 0.6f,
+                new MultiOptionDialog(
+                    "ClickThroughBlockerCheck",
+                    popupText,
+                    "kOS ClickThroughBlocker Check",
+                    HighLogic.UISkin,
+                    new DialogGUIButton(buttonText, clickThroughAck, true)
+                    ));
+        }
+
+        public void AcceptClickThrough()
+        {
+            passedClickThroughCheck = true;
+        }
+
+        public void FailedClickThrough()
+        {
+            passedClickThroughCheck = false;
         }
 
         public void MigrateSettingsNormal()
