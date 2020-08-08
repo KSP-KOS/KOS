@@ -270,6 +270,8 @@ namespace kOS.Module
         private void UpdateCostAndMass()
         {
             // Clamp this to prevent negative cost and mass.
+            // (Can happen when people edit part.cfg data or
+            // use ModuleManager.)
             float spaceDelta = Mathf.Max(diskSpace - baseDiskSpace, 0.0f);
             additionalCost = (float)System.Math.Round(spaceDelta * diskSpaceCostFactor, 0);
             AdditionalMass = spaceDelta * diskSpaceMassFactor;
