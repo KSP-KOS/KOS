@@ -140,6 +140,9 @@ Structure
         * - :attr:`NEXTPATCHETA`
           - :struct:`Scalar`
           - ETA to next :struct:`Orbit`
+        * - :attr:`ETA`
+          - :struct:`ORBITETA`
+          - ETA object showing time to Pe, Ap, and transition.
         * - :attr:`HASNEXTPATCH`
           - :struct:`Boolean`
           - Has a next :struct:`Orbit`
@@ -369,6 +372,15 @@ Structure
     to the patch following the current orbit, but rather may be chained to
     multiple patch transitions.  The number of patches depends on your conic
     patches setting in your **Kerbal Space Program** Settings.cfg file.
+
+.. attribute:: Orbit:ETA
+
+    :type: :struct:`OrbitEta`
+    :access: Get only
+
+    Returns the :struct:`OrbitEta` object that lets you access the number of
+    seconds to important events in this orbit (periapsis, apoapsis, and transition
+    to next orbit).
 
 .. attribute:: Orbit:HASNEXTPATCH
 
