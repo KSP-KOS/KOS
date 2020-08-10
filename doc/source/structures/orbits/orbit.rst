@@ -39,12 +39,12 @@ like its apoapsis, periapsis, etc.
 
 .. function:: CREATEORBIT(inc, e, sma, lan, argPe, mEp, t, body)
 
-    :parameter inc: (scalar) inclination
+    :parameter inc: (scalar) inclination, in degrees.
     :parameter e: (scalar) eccentricity
     :parameter sma: (scalar) semi-major axis
-    :parameter lan: (scalar) longitude of ascending node
+    :parameter lan: (scalar) longitude of ascending node, in degrees.
     :parameter argPe: (scalar) argument of periapsis
-    :parameter mEp: (scalar) mean anomaly at epoch
+    :parameter mEp: (scalar) mean anomaly at epoch, in degrees.
     :parameter t: (scalar) epoch
     :parameter body: (:struct:`Body`) body to orbit around
     :return: :struct:`Orbit`
