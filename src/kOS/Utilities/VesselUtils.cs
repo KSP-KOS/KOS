@@ -82,6 +82,10 @@ namespace kOS.Utilities
                     list = EngineValue.PartsToList(partList, sharedObj);
                     break;
 
+                case "RCS":
+                    list = RCSValue.PartsToList(partList, sharedObj);
+                    break;
+
                 case "SENSORS":
                     list = SensorValue.PartsToList(partList, sharedObj);
                     break;

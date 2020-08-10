@@ -62,6 +62,10 @@ namespace kOS.Function
                     list = GetEngineList(shared);
                     break;
 
+                case "rcs":
+                    list = GetRCSList(shared);
+                    break;
+
                 case "sensors":
                     list = GetSensorList(shared);
                     break;
@@ -262,6 +266,27 @@ namespace kOS.Function
             {
                 var part = (PartValue) structure;
                 list.AddItem(part.Part.uid(), part.Part.inverseStage, part.Part.partInfo.name);
+            }
+
+            return list;
+        }
+
+        private kList GetRCSList(SharedObjects shared)
+        {
+            var list = new kList();
+            list.AddColumn("ID", 12, ColumnAlignment.Left);
+            list.AddColumn("Name", 28, ColumnAlignment.Left);
+
+            foreach (Part part in shared.Vessel.Parts)
+            {
+                foreach (PartModule module in part.Modules)
+                {
+                    var rcs = module as ModuleRCS;
+                    if (rcs != null)
+                    {
+                        list.AddItem(part.ConstructID(), part.partInfo.name);
+                    }
+                }
             }
 
             return list;

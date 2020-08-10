@@ -61,6 +61,8 @@ These generate :struct:`lists <List>` of items on the :struct:`Vessel`:
     :struct:`List` of :struct:`Parts <Part>`
 ``Engines``
     :struct:`List` of :struct:`Engines <Engine>`
+``RCS``
+    :struct:`List` of :struct:`RCS <RCS>`
 ``Sensors``
     :struct:`List` of :struct:`Sensors <Sensor>`
 ``Elements``
