@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Sound;
+using kOS.Safe.Sound;
 using UnityEngine;
 
 namespace kOS.Sound
@@ -76,6 +76,7 @@ namespace kOS.Sound
         {
             source = gameObject.AddComponent<AudioSource>();
             source.loop = true;
+            source.spatialBlend = 0; // Makes it ignore spatial position for calculating sound.
 
             // Dummy test stupid values:
             Attack = 0f;
