@@ -47,6 +47,9 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :attr:`SHIPNAME`                         :struct:`string`                The name of the vessel
     :attr:`NAME`                             :struct:`string`                Synonym for SHIPNAME
     :attr:`STATUS`                           :struct:`string`                Current ship status
+    :attr:`DELTAV`                           :struct:`DeltaV`                Summed Delta-V info about the ship
+    :meth:`STAGEDELTAV(num)`                 :struct:`DeltaV`                One stage's Delta-V info
+    :attr:`STAGENUM`                         :struct:`Scalar`                Which stage number is current
     :attr:`TYPE`                             :struct:`string`                Ship type
     :meth:`STARTTRACKING`                    None                            Start tracking the "vessel" via the tracking statin
     :attr:`ANGULARMOMENTUM`                  :struct:`Vector`                In :ref:`SHIP_RAW <ship-raw>`
@@ -273,6 +276,40 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :access: get only
 
     The current status of the vessel possible results are: `LANDED`, `SPLASHED`, `PRELAUNCH`, `FLYING`, `SUB_ORBITAL`, `ORBITING`, `ESCAPING` and `DOCKED`.
+
+.. attribute:: Vessel:DELTAV
+
+    :type: :struct:`DeltaV`
+    :access: get only
+
+    Summed Delta-V info about the vessel.
+
+.. method:: Vessel:STAGEDELTAV(num)
+
+    :parameter num: :struct:`Scalar` the stage number to query for
+    :return: :struct:`DeltaV`
+    
+    One stage's Delta-V info.  Pass in the stage number for which stage.  The
+    curent stage can be found with ``:STAGENUM``, and they count down from
+    there to stage 0 at the "top" of the staging list.
+
+    If you pass in a number that is less than zero, it will return the info about
+    stage 0.  If you pass in a number that is greater than the current stage, it
+    will return the info about the current stage.  In other words, if there are
+    currently stages 5, 4, 3, 2, 1, and 0, then passing in -99 gives you stage 0,
+    and passing in stage 9999 gets you stage 5.
+
+.. attribute:: STAGENUM
+
+    :type: :struct:`Scalar`
+    :access: get only
+    
+    Tells you which stage number is current.  Stage numbers always count down, which
+    is backward from how you might usually refer to stages in most space lingo, but
+    in KSP, it's how it's done. (Stage 5 on bottom, Stage 0 on top, for example).
+
+    e.g. if STAGENUM is 4, that tells you the vessel has 5 total stages remaining,
+    numbered 4, 3, 2, 1, and 0.
 
 .. attribute:: Vessel:TYPE
 
@@ -559,25 +596,33 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
     :return: :struct:`scalar`
 
-    The total delta-v of this vessel in its current situation.
+    The total delta-v of this vessel in its current situation, using the stock
+    calulations the KSP game shows in the staging list.  Note that this is only
+    as accurate as the stock KSP game's numbers are.
 
 .. attribute:: Vessel:`DELTAVASL`
 
     :return: :struct:`scalar`
 
-    The total delta-v of this vessel if it were at sea level.
+    The total delta-v of this vessel if it were at sea level, using the stock
+    calulations the KSP game shows in the staging list.  Note that this is only
+    as accurate as the stock KSP game's numbers are.
 
 .. attribute:: Vessel:`DELTAVVACUUM`
 
     :return: :struct:`scalar`
 
-    The total delta-v of this vessel if it were at sea vacuum.
+    The total delta-v of this vessel if it were at sea vacuum, using the stock
+    calulations the KSP game shows in the staging list.  Note that this is only
+    as accurate as the stock KSP game's numbers are.
 
 .. attribute:: Vessel:`BURNTIME`
 
     :return: :struct:`scalar`
 
-    The total burn time, in seconds, of this vessel (or 5 if the vessel has 0 delta/v). Burn time is not affected by atmosphere.
+    The total burn time, in seconds, of this vessel (or 5 if the vessel has 0 delta/v). Burn time is not affected by atmosphere.  This is using the stock
+    calulations the KSP game shows in the staging list.  Note that this is only
+    as accurate as the stock KSP game's numbers are.
 
 
 Deprecated Suffix
@@ -588,7 +633,9 @@ Deprecated Suffix
     :type: :ref:`scalar <scalar>` (m/s)
     :access: Get only
 
-    terminal velocity of the vessel in freefall through atmosphere, based on the vessel's current altitude above sea level, and its drag properties. Warning, can cause values of Infinity if used in a vacuum, and kOS sometimes does not let you store Infinity in a variable.
+    (Deprecated with KSP 1.0 atmospheric model)
+    
+    Terminal velocity of the vessel in freefall through atmosphere, based on the vessel's current altitude above sea level, and its drag properties. Warning, can cause values of Infinity if used in a vacuum, and kOS sometimes does not let you store Infinity in a variable.
 
     .. note::
 

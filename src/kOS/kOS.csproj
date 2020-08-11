@@ -165,6 +165,7 @@
     <Compile Include="Suffixed\ConsumedResourceValue.cs" />
     <Compile Include="Suffixed\ConsumedResourceValueRCS.cs" />
     <Compile Include="Suffixed\CraftTemplate.cs" />
+    <Compile Include="Suffixed\DeltaVCalc.cs" />
     <Compile Include="Suffixed\KUniverseValue.cs" />
     <Compile Include="Suffixed\LoadDistanceValue.cs" />
     <Compile Include="Suffixed\Part\DecouplerValue.cs" />

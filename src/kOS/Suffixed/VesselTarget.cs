@@ -262,10 +262,9 @@ namespace kOS.Suffixed
             AddSuffix("ISDEAD", new NoArgsSuffix<BooleanValue>(() => (Vessel == null || Vessel.state == Vessel.State.DEAD)));
             AddSuffix("STATUS", new Suffix<StringValue>(() => Vessel.situation.ToString()));
 
-            AddSuffix("DELTAV", new Suffix<ScalarValue>(() => Vessel.VesselDeltaV.TotalDeltaVActual));
-            AddSuffix("DELTAVASL", new Suffix<ScalarValue>(() => Vessel.VesselDeltaV.TotalDeltaVASL));
-            AddSuffix("DELTAVVACUUM", new Suffix<ScalarValue>(() => Vessel.VesselDeltaV.TotalDeltaVVac));
-            AddSuffix("BURNTIME", new Suffix<ScalarValue>(() => Vessel.VesselDeltaV.TotalBurnTime));
+            AddSuffix("DELTAV", new Suffix<DeltaVCalc>(() => new DeltaVCalc(Shared, Vessel.VesselDeltaV)));
+            AddSuffix("STAGEDELTAV", new OneArgsSuffix<DeltaVCalc, ScalarValue>(GetStageDV));
+            AddSuffix("STAGENUM", new Suffix<ScalarValue>(() => Vessel.currentStage));
 
             //// Although there is an implementation of lat/long/alt in Orbitible,
             //// it's better to use the methods for vessels that are faster if they're
@@ -362,6 +361,13 @@ namespace kOS.Suffixed
         public ScalarValue GetAvailableThrustAt(ScalarValue atmPressure)
         {
             return VesselUtils.GetAvailableThrust(Vessel, atmPressure);
+        }
+
+        public DeltaVCalc GetStageDV(ScalarValue stageNum)
+        {
+            int clampedStageNum = Math.Min(Vessel.currentStage, Math.Max(0, (int)stageNum.ToPrimitive()));
+
+            return new DeltaVCalc(Shared, Vessel.VesselDeltaV.GetStage(clampedStageNum));
         }
 
         public ScalarValue GetMaxThrustAt(ScalarValue atmPressure)
