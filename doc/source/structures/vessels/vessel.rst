@@ -79,6 +79,10 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :meth:`CREW()`                           :struct:`List`                  all :struct:`CrewMembers <CrewMember>`
     :attr:`CONNECTION`                       :struct:`Connection`            Returns your connection to this vessel
     :attr:`MESSAGES`                         :struct:`MessageQueue`          This vessel's message queue
+    :attr:`DELTAV`                           :struct:`scalar` (m/s)          The total delta-v of this vessel in its current situation
+    :attr:`DELTAVASL`                        :struct:`scalar` (m/s)          The total delta-v of this vessel if it were at sea level
+    :attr:`DELTAVVACUUM`                     :struct:`scalar` (m/s)          The total delta-v of this vessel if it were in a vacuum
+    :attr:`BURNTIME`                         :struct:`scalar` (s)            The total burn time of this vessel (or 5 if the vessel has 0 delta/v).
     ======================================== =============================== =============
 
 .. note::
@@ -550,6 +554,30 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :return: :struct:`MessageQueue`
 
     Returns this vessel's message queue. You can only access this attribute for your current vessel (using for example `SHIP:MESSAGES`).
+
+.. attribute:: Vessel:`DELTAV`
+
+    :return: :struct:`scalar`
+
+    The total delta-v of this vessel in its current situation.
+
+.. attribute:: Vessel:`DELTAVASL`
+
+    :return: :struct:`scalar`
+
+    The total delta-v of this vessel if it were at sea level.
+
+.. attribute:: Vessel:`DELTAVVACUUM`
+
+    :return: :struct:`scalar`
+
+    The total delta-v of this vessel if it were at sea vacuum.
+
+.. attribute:: Vessel:`BURNTIME`
+
+    :return: :struct:`scalar`
+
+    The total burn time, in seconds, of this vessel (or 5 if the vessel has 0 delta/v). Burn time is not affected by atmosphere.
 
 
 Deprecated Suffix

@@ -262,6 +262,11 @@ namespace kOS.Suffixed
             AddSuffix("ISDEAD", new NoArgsSuffix<BooleanValue>(() => (Vessel == null || Vessel.state == Vessel.State.DEAD)));
             AddSuffix("STATUS", new Suffix<StringValue>(() => Vessel.situation.ToString()));
 
+            AddSuffix("DELTAV", new Suffix<ScalarValue>(() => Vessel.VesselDeltaV.TotalDeltaVActual));
+            AddSuffix("DELTAVASL", new Suffix<ScalarValue>(() => Vessel.VesselDeltaV.TotalDeltaVASL));
+            AddSuffix("DELTAVVACUUM", new Suffix<ScalarValue>(() => Vessel.VesselDeltaV.TotalDeltaVVac));
+            AddSuffix("BURNTIME", new Suffix<ScalarValue>(() => Vessel.VesselDeltaV.TotalBurnTime));
+
             //// Although there is an implementation of lat/long/alt in Orbitible,
             //// it's better to use the methods for vessels that are faster if they're
             //// available:
