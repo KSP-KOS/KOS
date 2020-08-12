@@ -2,6 +2,7 @@ using KSP.IO;
 using System;
 using System.Reflection;
 using System.Linq;
+using UnityEngine;
 
 namespace kOS.Module
 {
@@ -275,12 +276,13 @@ namespace kOS.Module
             }
 
             kOSSettingsChecker.QueueDialog(
-                0.75f, 0.6f,
+                0.0f, 0.0f, // left edge of screen, a little down from the center.
                 new MultiOptionDialog(
                     "ClickThroughBlockerCheck",
                     popupText,
                     "kOS ClickThroughBlocker Check",
                     HighLogic.UISkin,
+                    new Rect(0.0f, 0.5f, 600.0f, 0.0f),
                     new DialogGUIButton(buttonText, clickThroughAck, true)
                     ));
         }
