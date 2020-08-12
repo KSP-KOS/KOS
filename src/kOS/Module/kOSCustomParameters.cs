@@ -276,7 +276,7 @@ namespace kOS.Module
             }
 
             kOSSettingsChecker.QueueDialog(
-                0.0f, 0.0f, // left edge of screen, a little down from the center.
+                0.0f, 0.5f, // left edge of screen, a little down from the center.
                 new MultiOptionDialog(
                     "ClickThroughBlockerCheck",
                     popupText,
