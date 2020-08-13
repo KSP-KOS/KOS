@@ -274,6 +274,8 @@ namespace kOS.Suffixed
             AddSuffix("MESSAGES", new NoArgsSuffix<MessageQueueStructure>(() => GetMessages()));
 
             AddSuffix("STARTTRACKING", new NoArgsVoidSuffix(StartTracking));
+            AddSuffix("STOPTRACKING", new NoArgsVoidSuffix(StopTracking));
+            AddSuffix("SIZECLASS", new Suffix<StringValue>(GetSizeClass));
 
             AddSuffix("SOICHANGEWATCHERS", new NoArgsSuffix<UniqueSetValue<UserDelegate>>(() => Shared.DispatchManager.CurrentDispatcher.GetSOIChangeNotifyees(Vessel)));
         }
@@ -435,6 +437,36 @@ namespace kOS.Suffixed
                 {
                     KSP.UI.Screens.SpaceTracking.StartTrackingObject(Vessel);
                 }
+            }
+        }
+
+        private void StopTracking()
+        {
+            if (Vessel != null)
+            {
+                if (Vessel.DiscoveryInfo.HaveKnowledgeAbout(DiscoveryLevels.Appearance))
+                {
+                    KSP.UI.Screens.SpaceTracking.StopTrackingObject(Vessel);
+                }
+            }
+        }
+
+        private StringValue GetSizeClass()
+        {
+            if (Vessel.vesselType == VesselType.SpaceObject)
+            {
+                if (Vessel.DiscoveryInfo.HaveKnowledgeAbout(DiscoveryLevels.Presence))
+                {
+                    return Vessel.DiscoveryInfo.objectSize.ToString();
+                }
+                else
+                {
+                    return "UNKNOWN";
+                }
+            }
+            else
+            {
+                return Vessel.vesselType.ToString();
             }
         }
 
