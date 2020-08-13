@@ -263,7 +263,7 @@ namespace kOS.AddOns.TrajectoriesAddon
             set
             {
                 if (trProgradeEntry != null) // will be null if TR version too low.
-                    trProgradeEntry.SetValue(null, true, null);
+                    trProgradeEntry.SetValue(null, value, null);
             }
         }
 
@@ -278,7 +278,7 @@ namespace kOS.AddOns.TrajectoriesAddon
             set
             {
                 if (trRetrogradeEntry != null) // will be null if TR version too low.
-                    trRetrogradeEntry.SetValue(null, true, null);
+                    trRetrogradeEntry.SetValue(null, value, null);
             }
         }
 

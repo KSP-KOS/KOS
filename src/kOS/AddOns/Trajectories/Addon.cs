@@ -310,6 +310,7 @@ namespace kOS.AddOns.TrajectoriesAddon
                         aoa[2],    // low altitude node
                         aoa[3]     // final approach node
                     };
+                    return;
                 }
                 throw new KOSException("DescentProfileAngles was passed an invalid list, make sure to have at least 4 values in the list.");
             }
@@ -354,6 +355,7 @@ namespace kOS.AddOns.TrajectoriesAddon
                         modes[2],    // low altitude node
                         modes[3]     // final approach node
                     };
+                    return;
                 }
                 throw new KOSException("DescentProfileModes was passed an invalid list, make sure to have at least 4 values in the list.");
             }
@@ -398,6 +400,7 @@ namespace kOS.AddOns.TrajectoriesAddon
                         grades[2],    // low altitude node
                         grades[3]     // final approach node
                     };
+                    return;
                 }
                 throw new KOSException("DescentProfileGrades was passed an invalid list, make sure to have at least 4 values in the list.");
             }
