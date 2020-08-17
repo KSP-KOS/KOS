@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace kOS.AddOns.TrajectoriesAddon
 {
-    public class TRWrapper
+    public static class TRWrapper
     {
         private static bool? wrapped = null;
         private static Type trajectoriesAPIType = null;
@@ -37,7 +37,6 @@ namespace kOS.AddOns.TrajectoriesAddon
             });
             return type;
         }
-
 
         private static void Init()
         {
