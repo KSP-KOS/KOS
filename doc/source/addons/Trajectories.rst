@@ -4,7 +4,7 @@ Trajectories
 ==================
 
 - Download: https://github.com/neuoy/KSPTrajectories/releases
-- Forum thread: https://forum.kerbalspaceprogram.com/index.php?/topic/162324-131-110x-trajectories-v234-2020-07-13-atmospheric-predictions/
+- Forum thread: https://forum.kerbalspaceprogram.com/index.php?/topic/162324-131-110/
 
 Trajectories is a mod that displays trajectory predictions, accounting for atmospheric drag, lift, etc.. See the forum thread for more details.
 
@@ -64,9 +64,9 @@ Access structure TRAddon via ``ADDONS:TR``.
      :attr:`IMPACTPOS`                    :struct:`GeoCoordinates` (readonly)   Returns a :struct:`GeoCoordinates` with the predicted impact position.
      :attr:`TIMETILLIMPACT`               :struct:`ScalarValue` (readonly)      **(only TR 2.2.0 and up)** Seconds until impact.
      :meth:`RESETDESCENTPROFILE(AoA)`     None                                  **(only TR 2.4.0 and up)** Reset all the Descent profile nodes.
-     :attr:`DESCENTPROFILEANGLES`         :struct:`List<ScalarValue>`           **(only TR 2.4.0 and up)** Descent profile angles.
-     :attr:`DESCENTPROFILEGRADES`         :struct:`List<Boolean>`               **(only TR 2.4.0 and up)** Descent profile grades (Retro or Pro).
-     :attr:`DESCENTPROFILEMODES`          :struct:`List<Boolean>`               **(only TR 2.4.0 and up)** Descent profile modes (AoA or Horizon).
+     :attr:`DESCENTANGLES`                :struct:`List<ScalarValue>`           **(only TR 2.4.0 and up)** Descent profile angles.
+     :attr:`DESCENTGRADES`                :struct:`List<Boolean>`               **(only TR 2.4.0 and up)** Descent profile grades (Retro or Pro).
+     :attr:`DESCENTMODES`                 :struct:`List<Boolean>`               **(only TR 2.4.0 and up)** Descent profile modes (AoA or Horizon).
      :attr:`PROGRADE`                     :struct:`Boolean`                     **(only TR 2.2.0 and up** Descent profile all prograde.
      :attr:`RETROGRADE`                   :struct:`Boolean`                     **(only TR 2.2.0 and up** Descent profile all retrograde.
      :attr:`PLANNEDVEC`                   :struct:`Vector` (readonly)           Vector at which to point to follow predicted trajectory.
@@ -173,7 +173,7 @@ Access structure TRAddon via ``ADDONS:TR``.
     Resets all the Trajectories descent profile nodes to the passed AoA value (in Radians),
     also sets Retrograde if AoA value is greater than ±90° (±PI/2) otherwise sets to Prograde.
 
-.. attribute:: TRAddon:DESCENTPROFILEANGLES
+.. attribute:: TRAddon:DESCENTANGLES
 
     :type: :struct:`List<Scalar>`
     :access: Get/Set
@@ -185,12 +185,12 @@ Access structure TRAddon via ``ADDONS:TR``.
 
     Returns or sets all the Trajectories descent profile AoA values (in Radians),
     also sets a node to Retrograde if it's passed AoA is greater than ±90° (±PI/2)
-    Note. also use with :attr:`TRAddons:DESCENTPROFILEGRADES` to set a nodes grade
+    Note. also use with :attr:`TRAddons:DESCENTGRADES` to set a nodes grade
     if needed and passing AoA values as displayed in the gui with max ±90° (±PI/2).
 
     List<Scalar>(atmospheric entry, high altitude, low altitude, final approach).
 
-.. attribute:: TRAddon:DESCENTPROFILEGRADES
+.. attribute:: TRAddon:DESCENTGRADES
 
     :type: :struct:`List<Boolean>`
     :access: Get/Set
@@ -205,7 +205,7 @@ Access structure TRAddon via ``ADDONS:TR``.
 
     List<Boolean>(atmospheric entry, high altitude, low altitude, final approach).
 
-.. attribute:: TRAddon:DESCENTPROFILEMODES
+.. attribute:: TRAddon:DESCENTMODES
 
     :type: :struct:`List<Boolean>`
     :access: Get/Set
