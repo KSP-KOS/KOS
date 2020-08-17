@@ -32,9 +32,9 @@ namespace kOS.AddOns.TrajectoriesAddon
             AddSuffix("GETTARGET", new Suffix<GeoCoordinates>(GetTarget, "Get the currently set target position coordinates."));
             AddSuffix("CLEARTARGET", new NoArgsVoidSuffix(ClearTarget, "Clear the current target."));
             AddSuffix("RESETDESCENTPROFILE", new OneArgsSuffix<ScalarValue>(ResetDescentProfile, "Reset the descent profile to the passed AoA value in radians."));
-            AddSuffix("DESCENTPROFILEANGLES", new SetSuffix<ListValue<ScalarValue>>(GetProfileAngles, SetProfileAngles, "Descent profile angles in radians, also sets Retrograde if any values are greater than ±90°, List(entry, high altitude, low altitude, final approach)."));
-            AddSuffix("DESCENTPROFILEMODES", new SetSuffix<ListValue<BooleanValue>>(GetProfileModes, SetProfileModes, "Descent profile modes, true = AoA, false = Horizon, List(entry, high altitude, low altitude, final approach)."));
-            AddSuffix("DESCENTPROFILEGRADES", new SetSuffix<ListValue<BooleanValue>>(GetProfileGrades, SetProfileGrades, "Descent profile grades, true = Retrograde, false = Prograde, List(entry, high altitude, low altitude, final approach)."));
+            AddSuffix("DESCENTANGLES", new SetSuffix<ListValue>(GetProfileAngles, SetProfileAngles, "Descent profile angles in radians, also sets Retrograde if any values are greater than ±90°, List(entry, high altitude, low altitude, final approach)."));
+            AddSuffix("DESCENTMODES", new SetSuffix<ListValue>(GetProfileModes, SetProfileModes, "Descent profile modes, true = AoA, false = Horizon, List(entry, high altitude, low altitude, final approach)."));
+            AddSuffix("DESCENTGRADES", new SetSuffix<ListValue>(GetProfileGrades, SetProfileGrades, "Descent profile grades, true = Retrograde, false = Prograde, List(entry, high altitude, low altitude, final approach)."));
         }
 
         // Version checking suffixes.
@@ -272,139 +272,160 @@ namespace kOS.AddOns.TrajectoriesAddon
             throw new KOSUnavailableAddonException("RESETDESCENTPROFILE", "Trajectories");
         }
 
-        private ListValue<ScalarValue> GetProfileAngles()
+        private ListValue GetProfileAngles()
         {
             if (shared.Vessel != FlightGlobals.ActiveVessel)
-                throw new KOSException("You may only call addons:TR:DescentProfileAngles from the active vessel.");
+                throw new KOSException("You may only call addons:tr:DESCENTANGLES from the active vessel.");
             if (Available())
             {
                 List<double> result = TRWrapper.DescentProfileAngles;
                 if (result != null && result.Count > 3)
                 {
-                    return new ListValue<ScalarValue>
+                    return new ListValue
                     {
-                        result[0],    // atmospheric entry node
-                        result[1],    // high altitude node
-                        result[2],    // low altitude node
-                        result[3]     // final approach node
+                        (ScalarValue)result[0],    // atmospheric entry node
+                        (ScalarValue)result[1],    // high altitude node
+                        (ScalarValue)result[2],    // low altitude node
+                        (ScalarValue)result[3]     // final approach node
                     };
                 }
-                throw new KOSException("DescentProfileAngles is not available. It was added in Trajectories v2.4.0. and your version might be older." +
-                    " Check addons:tr:IsVerTwoFour or addons:tr:GetVersion");
+                throw new KOSException("DESCENTANGLES is not available. It was added in Trajectories v2.4.0. and your version might be older." +
+                    " Check addons:tr:ISVERTWOFOUR or addons:tr:GETVERSION");
             }
-            throw new KOSUnavailableAddonException("DESCENTPROFILEANGLES", "Trajectories");
+            throw new KOSUnavailableAddonException("DESCENTANGLES", "Trajectories");
         }
 
-        private void SetProfileAngles(ListValue<ScalarValue> aoa)
+        private void SetProfileAngles(ListValue aoa)
         {
             if (shared.Vessel != FlightGlobals.ActiveVessel)
-                throw new KOSException("You may only call addons:TR:DescentProfileAngles from the active vessel.");
+                throw new KOSException("You may only call addons:tr:DESCENTANGLES from the active vessel.");
             if (Available())
             {
                 if (aoa != null && aoa.Count > 3)
                 {
+                    // check for correct types
+                    foreach (Structure item in aoa)
+                    {
+                        if (!(item.GetType() == typeof(ScalarIntValue) || item.GetType() == typeof(ScalarDoubleValue)))
+                            throw new KOSException("DESCENTANGLES was passed an invalid type in its list, it requires a list of ScalarValues.");
+                    }
+
                     TRWrapper.DescentProfileAngles = new List<double>
                     {
-                        aoa[0],    // atmospheric entry node
-                        aoa[1],    // high altitude node
-                        aoa[2],    // low altitude node
-                        aoa[3]     // final approach node
+                        (ScalarValue)aoa[0],    // atmospheric entry node
+                        (ScalarValue)aoa[1],    // high altitude node
+                        (ScalarValue)aoa[2],    // low altitude node
+                        (ScalarValue)aoa[3]     // final approach node
                     };
                     return;
                 }
-                throw new KOSException("DescentProfileAngles was passed an invalid list, make sure to have at least 4 values in the list.");
+                throw new KOSException("DESCENTANGLES was passed an invalid list, make sure to have at least 4 items in the list.");
             }
-            throw new KOSUnavailableAddonException("DESCENTPROFILEANGLES", "Trajectories");
+            throw new KOSUnavailableAddonException("DESCENTANGLES", "Trajectories");
         }
 
-        private ListValue<BooleanValue> GetProfileModes()
+        private ListValue GetProfileModes()
         {
             if (shared.Vessel != FlightGlobals.ActiveVessel)
-                throw new KOSException("You may only call addons:TR:DescentProfileModes from the active vessel.");
+                throw new KOSException("You may only call addons:tr:DESCENTMODES from the active vessel.");
             if (Available())
             {
                 List<bool> result = TRWrapper.DescentProfileModes;
                 if (result != null && result.Count > 3)
                 {
-                    return new ListValue<BooleanValue>
+                    return new ListValue
                     {
-                        result[0],    // atmospheric entry node
-                        result[1],    // high altitude node
-                        result[2],    // low altitude node
-                        result[3]     // final approach node
+                        (BooleanValue)result[0],    // atmospheric entry node
+                        (BooleanValue)result[1],    // high altitude node
+                        (BooleanValue)result[2],    // low altitude node
+                        (BooleanValue)result[3]     // final approach node
                     };
                 }
-                throw new KOSException("DescentProfileModes is not available. It was added in Trajectories v2.4.0. and your version might be older." +
-                    " Check addons:tr:IsVerTwoFour or addons:tr:GetVersion");
+                throw new KOSException("DESCENTMODES is not available. It was added in Trajectories v2.4.0. and your version might be older." +
+                    " Check addons:tr:IsVerTwoFour or addons:tr:GETVERSION");
             }
-            throw new KOSUnavailableAddonException("DESCENTPROFILEMODES", "Trajectories");
+            throw new KOSUnavailableAddonException("DESCENTMODES", "Trajectories");
         }
 
-        private void SetProfileModes(ListValue<BooleanValue> modes)
+        private void SetProfileModes(ListValue modes)
         {
             if (shared.Vessel != FlightGlobals.ActiveVessel)
-                throw new KOSException("You may only call addons:TR:DescentProfileModes from the active vessel.");
+                throw new KOSException("You may only call addons:tr:DESCENTMODES from the active vessel.");
             if (Available())
             {
                 if (modes != null && modes.Count > 3)
                 {
+                    // check for correct types
+                    foreach (Structure item in modes)
+                    {
+                        if (item.GetType() != typeof(BooleanValue))
+                            throw new KOSException("DESCENTMODES was passed an invalid type in its list, it requires a list of BooleanValues.");
+                    }
+
                     TRWrapper.DescentProfileModes = new List<bool>
                     {
-                        modes[0],    // atmospheric entry node
-                        modes[1],    // high altitude node
-                        modes[2],    // low altitude node
-                        modes[3]     // final approach node
+                        (BooleanValue)modes[0],    // atmospheric entry node
+                        (BooleanValue)modes[1],    // high altitude node
+                        (BooleanValue)modes[2],    // low altitude node
+                        (BooleanValue)modes[3]     // final approach node
                     };
                     return;
                 }
-                throw new KOSException("DescentProfileModes was passed an invalid list, make sure to have at least 4 values in the list.");
+                throw new KOSException("DESCENTMODES was passed an invalid list, make sure to have at least 4 items in the list.");
             }
-            throw new KOSUnavailableAddonException("DESCENTPROFILEMODES", "Trajectories");
+            throw new KOSUnavailableAddonException("DESCENTMODES", "Trajectories");
         }
 
-        private ListValue<BooleanValue> GetProfileGrades()
+        private ListValue GetProfileGrades()
         {
             if (shared.Vessel != FlightGlobals.ActiveVessel)
-                throw new KOSException("You may only call addons:TR:DescentProfileGrades from the active vessel.");
+                throw new KOSException("You may only call addons:tr:DESCENTGRADES from the active vessel.");
             if (Available())
             {
                 List<bool> result = TRWrapper.DescentProfileGrades;
                 if (result != null && result.Count > 3)
                 {
-                    return new ListValue<BooleanValue>
+                    return new ListValue
                     {
-                        result[0],    // atmospheric entry node
-                        result[1],    // high altitude node
-                        result[2],    // low altitude node
-                        result[3]     // final approach node
+                        (BooleanValue)result[0],    // atmospheric entry node
+                        (BooleanValue)result[1],    // high altitude node
+                        (BooleanValue)result[2],    // low altitude node
+                        (BooleanValue)result[3]     // final approach node
                     };
                 }
-                throw new KOSException("DescentProfileGrades is not available. It was added in Trajectories v2.4.0. and your version might be older." +
-                    " Check addons:tr:IsVerTwoFour or addons:tr:GetVersion");
+                throw new KOSException("DESCENTGRADES is not available. It was added in Trajectories v2.4.0. and your version might be older." +
+                    " Check addons:tr:ISVERTWOFOUR or addons:tr:GETVERSION");
             }
-            throw new KOSUnavailableAddonException("DESCENTPROFILEGRADES", "Trajectories");
+            throw new KOSUnavailableAddonException("DESCENTGRADES", "Trajectories");
         }
 
-        private void SetProfileGrades(ListValue<BooleanValue> grades)
+        private void SetProfileGrades(ListValue grades)
         {
             if (shared.Vessel != FlightGlobals.ActiveVessel)
-                throw new KOSException("You may only call addons:TR:DescentProfileGrades from the active vessel.");
+                throw new KOSException("You may only call addons:tr:DESCENTGRADES from the active vessel.");
             if (Available())
             {
                 if (grades != null && grades.Count > 3)
                 {
+                    // check for correct types
+                    foreach (Structure item in grades)
+                    {
+                        if (item.GetType() != typeof(BooleanValue))
+                            throw new KOSException("DESCENTGRADES was passed an invalid type in its list, it requires a list of BooleanValues.");
+                    }
+
                     TRWrapper.DescentProfileGrades = new List<bool>
                     {
-                        grades[0],    // atmospheric entry node
-                        grades[1],    // high altitude node
-                        grades[2],    // low altitude node
-                        grades[3]     // final approach node
+                        (BooleanValue)grades[0],    // atmospheric entry node
+                        (BooleanValue)grades[1],    // high altitude node
+                        (BooleanValue)grades[2],    // low altitude node
+                        (BooleanValue)grades[3]     // final approach node
                     };
                     return;
                 }
-                throw new KOSException("DescentProfileGrades was passed an invalid list, make sure to have at least 4 values in the list.");
+                throw new KOSException("DESCENTGRADES was passed an invalid list, make sure to have at least 4 items in the list.");
             }
-            throw new KOSUnavailableAddonException("DESCENTPROFILEGRADES", "Trajectories");
+            throw new KOSUnavailableAddonException("DESCENTGRADES", "Trajectories");
         }
 
         public override BooleanValue Available() => TRWrapper.Wrapped();
