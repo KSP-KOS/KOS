@@ -230,7 +230,7 @@ Access structure TRAddon via ``ADDONS:TR``.
     *If :attr:`TRAddons:ISVERTWOFOUR` is false, using this suffix will cause
     a runtime error.*
 
-    Resets all the Trajectories descent profile nodes to the passed AoA value (in Radians),
+    Resets all the Trajectories descent profile nodes to the passed AoA value (in Degrees),
     also sets Retrograde if AoA value is greater than ±90° (±PI/2) otherwise sets to Prograde.
 
 .. attribute:: TRAddon:DESCENTANGLES
@@ -243,7 +243,7 @@ Access structure TRAddon via ``ADDONS:TR``.
     *If :attr:`TRAddons:ISVERTWOFOUR` is false, using this suffix will cause
     a runtime error.*
 
-    Returns or sets all the Trajectories descent profile AoA values (in Radians),
+    Returns or sets all the Trajectories descent profile AoA values (in Degrees),
     also sets a node to Retrograde if it's passed AoA is greater than ±90° (±PI/2)
     Note. also use with :attr:`TRAddons:DESCENTGRADES` to set a nodes grade
     if needed and passing AoA values as displayed in the gui with max ±90° (±PI/2).

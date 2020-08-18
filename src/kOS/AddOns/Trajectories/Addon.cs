@@ -34,8 +34,8 @@ namespace kOS.AddOns.TrajectoriesAddon
             AddSuffix("PROGRADE", new SetSuffix<BooleanValue>(IsPrograde, SetPrograde, "Check all the descent profile nodes are Prograde or Reset all the descent profile nodes to Prograde."));
             AddSuffix("GETTARGET", new Suffix<GeoCoordinates>(GetTarget, "Get the currently set target position coordinates."));
             AddSuffix("CLEARTARGET", new NoArgsVoidSuffix(ClearTarget, "Clear the current target."));
-            AddSuffix("RESETDESCENTPROFILE", new OneArgsSuffix<ScalarValue>(ResetDescentProfile, "Reset the descent profile to the passed AoA value in radians."));
-            AddSuffix("DESCENTANGLES", new SetSuffix<ListValue>(GetProfileAngles, SetProfileAngles, "Descent profile angles in radians, also sets Retrograde if any values are greater than ±90°, List(entry, high altitude, low altitude, final approach)."));
+            AddSuffix("RESETDESCENTPROFILE", new OneArgsSuffix<ScalarValue>(ResetDescentProfile, "Reset the descent profile to the passed AoA value in degrees."));
+            AddSuffix("DESCENTANGLES", new SetSuffix<ListValue>(GetProfileAngles, SetProfileAngles, "Descent profile angles in degrees, also sets Retrograde if any values are greater than ±90°, List(entry, high altitude, low altitude, final approach)."));
             AddSuffix("DESCENTMODES", new SetSuffix<ListValue>(GetProfileModes, SetProfileModes, "Descent profile modes, true = AoA, false = Horizon, List(entry, high altitude, low altitude, final approach)."));
             AddSuffix("DESCENTGRADES", new SetSuffix<ListValue>(GetProfileGrades, SetProfileGrades, "Descent profile grades, true = Retrograde, false = Prograde, List(entry, high altitude, low altitude, final approach)."));
         }
@@ -290,7 +290,7 @@ namespace kOS.AddOns.TrajectoriesAddon
                 throw new KOSException("You may only call addons:tr:RESETDESCENTPROFILE from the active vessel.");
             if (Available())
             {
-                TRWrapper.ResetDescentProfile(aoa);
+                TRWrapper.ResetDescentProfile(aoa * Mathf.Deg2Rad);
                 return;
             }
             throw new KOSUnavailableAddonException("RESETDESCENTPROFILE", "Trajectories");
@@ -307,10 +307,10 @@ namespace kOS.AddOns.TrajectoriesAddon
                 {
                     return new ListValue
                     {
-                        (ScalarValue)result[0],    // atmospheric entry node
-                        (ScalarValue)result[1],    // high altitude node
-                        (ScalarValue)result[2],    // low altitude node
-                        (ScalarValue)result[3]     // final approach node
+                        (ScalarValue)result[0] * Mathf.Rad2Deg,    // atmospheric entry node
+                        (ScalarValue)result[1] * Mathf.Rad2Deg,    // high altitude node
+                        (ScalarValue)result[2] * Mathf.Rad2Deg,    // low altitude node
+                        (ScalarValue)result[3] * Mathf.Rad2Deg     // final approach node
                     };
                 }
                 throw new KOSException("DESCENTANGLES is not available. It was added in Trajectories v2.4.0. and your version might be older." +
@@ -336,10 +336,10 @@ namespace kOS.AddOns.TrajectoriesAddon
 
                     TRWrapper.DescentProfileAngles = new List<double>
                     {
-                        (ScalarValue)aoa[0],    // atmospheric entry node
-                        (ScalarValue)aoa[1],    // high altitude node
-                        (ScalarValue)aoa[2],    // low altitude node
-                        (ScalarValue)aoa[3]     // final approach node
+                        ((ScalarValue)aoa[0]) * Mathf.Deg2Rad,    // atmospheric entry node
+                        ((ScalarValue)aoa[1]) * Mathf.Deg2Rad,    // high altitude node
+                        ((ScalarValue)aoa[2]) * Mathf.Deg2Rad,    // low altitude node
+                        ((ScalarValue)aoa[3]) * Mathf.Deg2Rad     // final approach node
                     };
                     return;
                 }
