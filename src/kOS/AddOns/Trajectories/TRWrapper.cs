@@ -55,6 +55,9 @@ namespace kOS.AddOns.TrajectoriesAddon
                 if (trajectoriesAPIType.GetMethod("HasTarget") == null) // assume pre v2.0.0 (Old API)
                 {
                     GetVersion = "";
+                    GetVersionMajor = 0;
+                    GetVersionMinor = 0;
+                    GetVersionPatch = 0;
                     IsVerTwo = false;
                     IsVerTwoTwo = false;
                     IsVerTwoFour = false;
@@ -63,6 +66,9 @@ namespace kOS.AddOns.TrajectoriesAddon
                 else // assume v2.0.0 and v2.1.0 (API is identical in these versions)
                 {
                     GetVersion = "2.0.0";
+                    GetVersionMajor = 2;
+                    GetVersionMinor = 0;
+                    GetVersionPatch = 0;
                     IsVerTwo = true;
                     IsVerTwoTwo = false;
                     IsVerTwoFour = false;
@@ -73,6 +79,9 @@ namespace kOS.AddOns.TrajectoriesAddon
             {
                 GetVersion = (string)trajectoriesAPIType.GetProperty("GetVersion").GetValue(null, null);
                 Version version = new Version(GetVersion);
+                GetVersionMajor = version.Major;
+                GetVersionMinor = version.Minor;
+                GetVersionPatch = version.Build;
                 IsVerTwo = true;
                 IsVerTwoTwo = true;
                 // check for major versions above v2
@@ -222,6 +231,9 @@ namespace kOS.AddOns.TrajectoriesAddon
 
         // Version checking properties
         public static string GetVersion { get; private set; }
+        public static int GetVersionMajor { get; private set; }
+        public static int GetVersionMinor { get; private set; }
+        public static int GetVersionPatch { get; private set; }
         public static bool IsVerTwo { get; private set; }
         public static bool IsVerTwoTwo { get; private set; }
         public static bool IsVerTwoFour { get; private set; }

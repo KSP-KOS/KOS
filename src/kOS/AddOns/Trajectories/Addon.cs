@@ -17,6 +17,9 @@ namespace kOS.AddOns.TrajectoriesAddon
         private void InitializeSuffixes()
         {
             AddSuffix("GETVERSION", new Suffix<StringValue>(GetVersion, "Get version string (Major.Minor.Patch)."));
+            AddSuffix("GETVERSIONMAJOR", new Suffix<ScalarValue>(GetVersionMajor, "Get version Major."));
+            AddSuffix("GETVERSIONMINOR", new Suffix<ScalarValue>(GetVersionMinor, "Get version Minor."));
+            AddSuffix("GETVERSIONPATCH", new Suffix<ScalarValue>(GetVersionPatch, "Get version Patch."));
             AddSuffix("ISVERTWO", new Suffix<BooleanValue>(IsVerTwo, "Check whether Trajectories is v2.0.0 and above."));
             AddSuffix("ISVERTWOTWO", new Suffix<BooleanValue>(IsVerTwoTwo, "Check whether Trajectories is v2.2.0 and above."));
             AddSuffix("ISVERTWOFOUR", new Suffix<BooleanValue>(IsVerTwoFour, "Check whether Trajectories is v2.4.0 and above."));
@@ -43,6 +46,27 @@ namespace kOS.AddOns.TrajectoriesAddon
             if (Available())
                 return TRWrapper.GetVersion;
             throw new KOSUnavailableAddonException("GETVERSION", "Trajectories");
+        }
+
+        private ScalarValue GetVersionMajor()
+        {
+            if (Available())
+                return TRWrapper.GetVersionMajor;
+            throw new KOSUnavailableAddonException("GETVERSIONMAJOR", "Trajectories");
+        }
+
+        private ScalarValue GetVersionMinor()
+        {
+            if (Available())
+                return TRWrapper.GetVersionMinor;
+            throw new KOSUnavailableAddonException("GETVERSIONMINOR", "Trajectories");
+        }
+
+        private ScalarValue GetVersionPatch()
+        {
+            if (Available())
+                return TRWrapper.GetVersionPatch;
+            throw new KOSUnavailableAddonException("GETVERSIONPATCH", "Trajectories");
         }
 
         private BooleanValue IsVerTwo()

@@ -56,7 +56,10 @@ Access structure TRAddon via ``ADDONS:TR``.
      Suffix                               Type                                  Description
     ==================================== ===================================== =============
      :attr:`AVAILABLE`                    :struct:`Boolean` (readonly)          True if a compatible Trajectories version is installed.
-     :attr:`GETVERSION`                   :struct:`String` (readonly)           **(only TR 2.2.0 and up)** Trajectories version string.
+     :attr:`GETVERSION`                   :struct:`String` (readonly)           Trajectories version string.
+     :attr:`GETVERSIONMAJOR`              :struct:`ScalarValue` (readonly)      Trajectories version Major.
+     :attr:`GETVERSIONMINOR`              :struct:`ScalarValue` (readonly)      Trajectories version Minor.
+     :attr:`GETVERSIONPATCH`              :struct:`ScalarValue` (readonly)      Trajectories version Patch.
      :attr:`ISVERTWO`                     :struct:`Boolean` (readonly)          True if Trajectories version is 2.0.0 or above.
      :attr:`ISVERTWOTWO`                  :struct:`Boolean` (readonly)          True if Trajectories version is 2.2.0 or above.
      :attr:`ISVERTWOFOUR`                 :struct:`Boolean` (readonly)          True if Trajectories version is 2.4.0 or above.
@@ -110,7 +113,64 @@ Access structure TRAddon via ``ADDONS:TR``.
     For cases where you need to check for a known minimum Trajectories
     version, it is probably better to use the specific boolean suffix
     for that version (for example, :attr:`TRAddon:ISVERTWO`, or
-    :attr:`TRAddon:ISVERTWOTWO`.)
+    :attr:`TRAddon:ISVERTWOTWO` etc.)
+
+.. attribute:: TRAddon:GETVERSIONMAJOR
+
+    :type: :struct:`Scalar`
+    :access: Get
+
+    **Only gives the correct answer for Trajectries version >= 2.0.0**
+
+    *For earlier versions, it gives a hardcoded fixed answer, as follows:*
+
+    - For any Trajectories version earlier than 2.0.0,
+      this returns "0".
+    - If your Trajectories version is at least 2.0.0 or above,
+      this returns the specific version major value correctly.
+
+    For cases where you need to check for a known minimum Trajectories
+    version, it is probably better to use the specific boolean suffix
+    for that version (for example, :attr:`TRAddon:ISVERTWO`, or
+    :attr:`TRAddon:ISVERTWOTWO` etc.)
+
+.. attribute:: TRAddon:GETVERSIONMINOR
+
+    :type: :struct:`Scalar`
+    :access: Get
+
+    **Only gives the correct answer for Trajectries version >= 2.2.0**
+
+    *For earlier versions, it gives a hardcoded fixed answer, as follows:*
+
+    - For any Trajectories version below 2.2.0, this returns
+      "0" regardless of the precise version number within that range.
+    - If your Trajectories version is at least 2.2.0 or above,
+      this returns the specific version minor value correctly.
+
+    For cases where you need to check for a known minimum Trajectories
+    version, it is probably better to use the specific boolean suffix
+    for that version (for example, :attr:`TRAddon:ISVERTWO`, or
+    :attr:`TRAddon:ISVERTWOTWO` etc.)
+
+.. attribute:: TRAddon:GETVERSIONPATCH
+
+    :type: :struct:`Scalar`
+    :access: Get
+
+    **Only gives the correct answer for Trajectries version >= 2.2.0**
+
+    *For earlier versions, it gives a hardcoded fixed answer, as follows:*
+
+    - For any Trajectories version below 2.2.0, this returns
+      "0" regardless of the precise version number within that range.
+    - If your Trajectories version is at least 2.2.0 or above,
+      this returns the specific version patch value correctly.
+
+    For cases where you need to check for a known minimum Trajectories
+    version, it is probably better to use the specific boolean suffix
+    for that version (for example, :attr:`TRAddon:ISVERTWO`, or
+    :attr:`TRAddon:ISVERTWOTWO` etc.)
 
 .. attribute:: TRAddon:ISVERTWO
 
