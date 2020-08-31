@@ -123,7 +123,7 @@ namespace kOS.Module
         public float ECPerInstruction = 0.000004F;
 
         // This represents how much EC to consume per Byte of the current volume, per second.
-        // This would be the "continuous" compoenent of the processor's power (though it varies
+        // This would be the "continuous" component of the processor's power (though it varies
         // when you change to another volume).
         // IMPORTANT: The value defaults to zero and must be overriden in the module
         // definition for any given part (within the part.cfg file).
