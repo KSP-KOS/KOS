@@ -51,7 +51,9 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :meth:`STAGEDELTAV(num)`                 :struct:`DeltaV`                One stage's Delta-V info
     :attr:`STAGENUM`                         :struct:`Scalar`                Which stage number is current
     :attr:`TYPE`                             :struct:`string`                Ship type
-    :meth:`STARTTRACKING`                    None                            Start tracking the "vessel" via the tracking statin
+    :meth:`STARTTRACKING`                    None                            Start tracking the asteroid "vessel" via the tracking station
+    :meth:`STOPTRACKING`                     None                            Stop tracking the asteroid "vessel" via the tracking station
+    :attr:`SIZECLASS`                        :struct:`String`                Return the size class for an asteroid-like object
     :attr:`ANGULARMOMENTUM`                  :struct:`Vector`                In :ref:`SHIP_RAW <ship-raw>`
     :attr:`ANGULARVEL`                       :struct:`Vector`                In :ref:`SHIP_RAW <ship-raw>`
     :attr:`SENSORS`                          :struct:`VesselSensors`         Sensor data
@@ -334,6 +336,31 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
         internally manages the "discovery information" for vessels, including
         assteroids, in a different system. As a result, the value kOS reads for
         ``TYPE`` may be different from that displayed on the map.
+
+.. method:: Vessel:STOPTRACKING
+
+    :return: None
+
+    Call this method to stop tracking an asteroid or asteroid-like object.
+    This is functionally the same as using the Tracking Station interface
+    to tell KSP to forget the asteroid.  Doing so also tells the Tracking
+    Station that it's okay to de-spawn the object if it feels the need
+    to clean it up to avoid clutter.
+
+.. attribute:: Vessel:SIZECLASS
+
+    :type: :struct:`String`
+    :access: Get only
+
+    Returns the size class for an asteroid or asteroid-like object (which
+    is modeled in the game as a vessel).  (i.e. class A, B, C, D, or E
+    for varying size ranges of asteroid.) For objects that the tracking
+    station is tracking but you have not yet rendezvous'ed with, sometimes
+    all the game lets you know is the general class and not the specific
+    dimensions or mass.
+
+    If you are not tracking the object yet, the returned string can come
+    back as "UNKNOWN" rather than one of the known class sizes.
 
 .. attribute:: Vessel:ANGULARMOMENTUM
 
