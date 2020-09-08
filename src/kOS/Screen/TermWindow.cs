@@ -325,8 +325,6 @@ namespace kOS.Screen
 
             GetFontIfChanged(true);
 
-            ProcessUnconsumedInput();
-
             if (isLocked) ProcessKeyEvents();
             if (FlightResultsDialog.isDisplaying) return;
             if (uiGloballyHidden)
@@ -362,6 +360,7 @@ namespace kOS.Screen
             GetNewestBuffer();
             TelnetOutputUpdate();
             ProcessTelnetInput(); // want to do this even when the terminal isn't actually displaying.
+            ProcessUnconsumedInput(); // Moved here from OnGUI because it needs to run even when the GUI terminal is closed.
             if (telnetsGotRepainted)
             {
                 // Move the beeps from the screenbuffer "queue" to my own local terminal "queue".
