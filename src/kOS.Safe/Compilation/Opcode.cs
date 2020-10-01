@@ -1253,7 +1253,7 @@ namespace kOS.Safe.Compilation
 
     /// <summary>
     /// <para>
-    /// Consumes 2 values from the stack, pushing back a boolean of if the second is not equal to the first.
+    /// Consumes 2 values from the stack, pushing back a boolean of if the second is equal to the first.
     /// </para>
     /// <para></para>
     /// <para>eq</para>
