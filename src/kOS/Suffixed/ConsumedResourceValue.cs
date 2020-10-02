@@ -16,7 +16,7 @@ namespace kOS.Suffixed
         public ConsumedResourceValue(ModuleEngines engine, Propellant prop, SharedObjects shared)
         {
             this.shared = shared;
-            name = prop.displayName;
+            name = prop.name;
             density = prop.resourceDef.density;
             this.engine = engine;
             propellant = prop;
