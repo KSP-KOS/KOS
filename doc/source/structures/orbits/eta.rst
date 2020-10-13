@@ -40,6 +40,10 @@ on an Orbit, and can be obtained one of two ways:
           - :ref:`scalar <scalar>`, seconds
           - Seconds from now until periapsis.
 
+        * - :attr:`NEXTNODE`
+          - :ref:`scalar <scalar>`, seconds
+          - Seconds from now until the next maneuver node.
+
         * - :attr:`TRANSITION`
           - :ref:`scalar <scalar>`, seconds
           - Seconds from now until the next orbit patch starts.
@@ -92,6 +96,23 @@ on an Orbit, and can be obtained one of two ways:
     to represent infinity, it will instead count time "backward" and show
     you a negative number, for how many seconds it's been since periapsis.
 
+.. attribute:: ETA:NEXTNODE
+
+    :type: :ref:`scalar <scalar>`, seconds
+    :access: Get only
+
+    Seconds until the next manuever node's timestamp.  NOTE this is the
+    time shown on the navball for the maneuver node, and does not
+    take into account the lead time shown on the navball.
+    
+    This should give the exact same value as ``NEXTNODE:ETA`` with one
+    important difference:  ``NEXTNODE:ETA`` will throw an error if
+    there is no next node, while this (``ETA:NEXTNODE``) will simply
+    return a **very big number** representing the biggest floating
+    point value (32-bit).  (For various reasons, kOS does not allow
+    the value "Infinity" in its Scalars, so "a really big number"
+    is used in its place.)
+
 .. attribute:: ETA:TRANSITION
 
     :type: :ref:`scalar <scalar>`, seconds
@@ -101,4 +122,11 @@ on an Orbit, and can be obtained one of two ways:
     This ignores the effect of any intervening manuever nodes it might
     hit before it gets there. (This will be the path you would follow
     if you never execute any of those manuever nodes.)
+
+    If there *is* no next transition (you are on a closed loop that
+    will not exit the current sphere of influence), this will
+    return a **very big number** representing the biggest floating
+    point value (32-bit).  (For various reasons, kOS does not allow
+    the value "Infinity" in its Scalars, so "a really big number"
+    is used in its place.)
 

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Utilities;
@@ -23,6 +24,7 @@ namespace kOS.Suffixed
             AddSuffix("APOAPSIS", new NoArgsSuffix<ScalarValue>(GetApoapsis));
             AddSuffix("PERIAPSIS", new NoArgsSuffix<ScalarValue>(GetPeriapsis));
             AddSuffix("TRANSITION", new NoArgsSuffix<ScalarValue>(GetEndTransition));
+            AddSuffix("NEXTNODE", new NoArgsSuffix<ScalarValue>(GetNextNode));
         }
 
         public ScalarValue GetApoapsis()
@@ -34,6 +36,16 @@ namespace kOS.Suffixed
         public ScalarValue GetPeriapsis()
         {
             return ObTToETA(0, Planetarium.GetUniversalTime());
+        }
+
+        public ScalarValue GetNextNode()
+        {
+            var vessel = shared.Vessel;
+            if (vessel.patchedConicSolver == null || vessel.patchedConicSolver.maneuverNodes.Count == 0)
+                return float.MaxValue;
+            if (vessel.patchedConicSolver.maneuverNodes.Count == 0)
+                return float.MaxValue;
+            return vessel.patchedConicSolver.maneuverNodes[0].UT - Planetarium.GetUniversalTime();
         }
 
         private BooleanValue IsClosedOrbit()
