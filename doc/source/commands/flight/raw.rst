@@ -94,13 +94,13 @@ These "Raw" controls allow you the direct control of flight parameters while the
 
     * - :ref:`YAWTRIM <SHIP CONTROL YAWTRIM>`
       - :ref:`scalar <scalar>` [-1,1]
-      - ``ALT+D``, ``ALT+A``
+      - (No real effect, see below) ``ALT+D``, ``ALT+A``
     * - :ref:`PITCHTRIM <SHIP CONTROL PITCHTRIM>`
       - :ref:`scalar <scalar>` [-1,1]
-      - ``ALT+W``, ``ALT+S``
+      - (No real effect, see below) ``ALT+W``, ``ALT+S``
     * - :ref:`ROLLTRIM <SHIP CONTROL ROLLTRIM>`
       - :ref:`scalar <scalar>` [-1,1]
-      - ``ALT+Q``, ``ALT+E``
+      - (No real effect, see below) ``ALT+Q``, ``ALT+E``
 
     * - :ref:`FORE <SHIP CONTROL FORE>`
       - :ref:`scalar <scalar>` [-1,1]
@@ -124,10 +124,10 @@ These "Raw" controls allow you the direct control of flight parameters while the
 
     * - :ref:`WHEELSTEERTRIM <SHIP CONTROL WHEELSTEERTRIM>`
       - :ref:`scalar <scalar>` [-1,1]
-      - ``ALT+A``, ``ALT+D``
+      - (No real effect, see below) ``ALT+A``, ``ALT+D``
     * - :ref:`WHEELTHROTTLETRIM <SHIP CONTROL WHEELTHROTTLETRIM>`
       - :ref:`scalar <scalar>` [-1,1]
-      - ``ALT+W``, ``ALT+S``
+      - (No real effect, see below) ``ALT+W``, ``ALT+S``
 
     * - :ref:`NEUTRAL <SHIP CONTROL NEUTRAL>`
       - :ref:`Boolean <boolean>`
@@ -169,20 +169,38 @@ These "Raw" controls allow you the direct control of flight parameters while the
 .. _SHIP CONTROL YAWTRIM:
 .. object:: SHIP:CONTROL:YAWTRIM
 
-    Controls the ``YAW`` of the rotational trim.
+    *This has no real effect and is just here for completeness.*
+
+    IF you *really* want to control TRIM, use ``SHIP:CONTROL:PILOTYAWTRIM``
+    from the suffixes in the :ref:`Pilot control section <pilot>` instead.
+
+    The reason why this trim does nothing and you have to use the pilot
+    trim instead is because KSP only looks at the trim when its part of
+    the *pilot's* own control structure, not an autpilot's control structure.
 
 .. _SHIP CONTROL PITCHTRIM:
 .. object:: SHIP:CONTROL:PITCHTRIM
 
-    Controls the ``PITCH`` of the rotational trim.
+    *This has no real effect and is just here for completeness.*
+
+    IF you *really* want to control TRIM, use ``SHIP:CONTROL:PILOTPITCHTRIM``
+    from the suffixes in the :ref:`Pilot control section <pilot>` instead.
+
+    The reason why this trim does nothing and you have to use the pilot
+    trim instead is because KSP only looks at the trim when its part of
+    the *pilot's* own control structure, not an autpilot's control structure.
 
 .. _SHIP CONTROL ROLLTRIM:
 .. object:: SHIP:CONTROL:ROLLTRIM
 
-    Controls the ``ROLL`` of the rotational trim.
+    *This has no real effect and is just here for completeness.*
 
+    IF you *really* want to control TRIM, use ``SHIP:CONTROL:PILOTROLLTRIM``
+    from the suffixes in the :ref:`Pilot control section <pilot>` instead.
 
-
+    The reason why this trim does nothing here is because KSP only looks at the
+    trim when its part of the *pilot's* own control structure, not an
+    autpilot's control structure.
 
 .. _SHIP CONTROL FORE:
 .. object:: SHIP:CONTROL:FORE
@@ -226,12 +244,26 @@ These "Raw" controls allow you the direct control of flight parameters while the
 .. _SHIP CONTROL WHEELSTEERTRIM:
 .. object:: SHIP:CONTROL:WHEELSTEERTRIM
 
-    Controls the trim of the wheel steering.
+    *This has no real effect and is just here for completeness.*
+
+    IF you *really* want to control TRIM, use ``SHIP:CONTROL:PILOTYAWTRIM``
+    from the suffixes in the :ref:`Pilot control section <pilot>` instead.
+
+    The reason why this trim does nothing here is because KSP only looks at the
+    trim when its part of the *pilot's* own control structure, not an
+    autpilot's control structure.
 
 .. _SHIP CONTROL WHEELTHROTTLETRIM:
 .. object:: SHIP:CONTROL:WHEELTHROTTLETRIM
 
-    Controls the trim of the wheel throttle.
+    *This has no real effect and is just here for completeness.*
+
+    IF you *really* want to control TRIM, use ``SHIP:CONTROL:PILOTYAWTRIM``
+    from the suffixes in the :ref:`Pilot control section <pilot>` instead.
+
+    The reason why this trim does nothing here is because KSP only looks at the
+    trim when its part of the *pilot's* own control structure, not an
+    autpilot's control structure.
 
 .. _SHIP CONTROL NEUTRAL:
 .. object:: SHIP:CONTROL:NEUTRAL
