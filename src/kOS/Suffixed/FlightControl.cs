@@ -99,20 +99,26 @@ namespace kOS.Suffixed
         private void InitializePilotSuffixes()
         {
             AddSuffix(new[] { "PILOTYAW" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.yaw)));
-            AddSuffix(new[] { "PILOTYAWTRIM" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.yawTrim)));
+            AddSuffix(new[] { "PILOTYAWTRIM" }, new SetSuffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.yawTrim),
+                v => WritePilot(ref FlightInputHandler.state.yawTrim, v)));
             AddSuffix(new[] { "PILOTROLL" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.roll)));
-            AddSuffix(new[] { "PILOTROLLTRIM" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.rollTrim)));
+            AddSuffix(new[] { "PILOTROLLTRIM" }, new SetSuffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.rollTrim),
+                                v => WritePilot(ref FlightInputHandler.state.rollTrim, v)));
             AddSuffix(new[] { "PILOTPITCH" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.pitch)));
-            AddSuffix(new[] { "PILOTPITCHTRIM" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.pitchTrim)));
+            AddSuffix(new[] { "PILOTPITCHTRIM" }, new SetSuffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.pitchTrim),
+                                v => WritePilot(ref FlightInputHandler.state.pitchTrim, v)));
 
             AddSuffix(new[] { "PILOTFORE" }, new Suffix<ScalarValue>(() => Invert(ReadPilot(ref FlightInputHandler.state.Z))));
             AddSuffix(new[] { "PILOTSTARBOARD" }, new Suffix<ScalarValue>(() => Invert(ReadPilot(ref FlightInputHandler.state.X))));
-            
             AddSuffix(new[] { "PILOTTOP" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.Y)));
-            AddSuffix(new[] { "PILOTWHEELTHROTTLE" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.wheelThrottle)));
-            AddSuffix(new[] { "PILOTWHEELTHROTTLETRIM" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.wheelThrottleTrim)));
+
+            AddSuffix(new[] { "PILOTWHEELTHROTTLE" }, new SetSuffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.wheelThrottle),
+                                                                v => WritePilot(ref FlightInputHandler.state.wheelThrottle, v)));
+            AddSuffix(new[] { "PILOTWHEELTHROTTLETRIM" }, new SetSuffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.wheelThrottleTrim),
+                                v => WritePilot(ref FlightInputHandler.state.wheelThrottleTrim, v)));
             AddSuffix(new[] { "PILOTWHEELSTEER" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.wheelSteer)));
-            AddSuffix(new[] { "PILOTWHEELSTEERTRIM" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.wheelSteerTrim)));
+            AddSuffix(new[] { "PILOTWHEELSTEERTRIM" }, new SetSuffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.wheelSteerTrim),
+                                v => WritePilot(ref FlightInputHandler.state.wheelSteerTrim, v)));
             AddSuffix(new[] { "PILOTNEUTRAL" }, new Suffix<BooleanValue>(() => Vessel == FlightGlobals.ActiveVessel && FlightInputHandler.state.isNeutral));
 
             AddSuffix(new[] { "PILOTROTATION" }, new Suffix<Vector>(GetPilotRotation));
@@ -131,6 +137,12 @@ namespace kOS.Suffixed
         private float ReadPilot(ref float flightInputValue)
         {
             return Vessel == FlightGlobals.ActiveVessel ? flightInputValue : 0f;
+        }
+
+        private void WritePilot(ref float flightInputValue, float newVal)
+        {
+            if (FlightGlobals.ActiveVessel)
+                flightInputValue = newVal;
         }
 
         private void InitializeSuffixes()
@@ -279,9 +291,9 @@ namespace kOS.Suffixed
             return false;
         }
 
-        private bool CheckNeutral(string suffix, object value)
+        private bool CheckNeutral(string suffixName, object value)
         {
-            if (suffix.Equals("NEUTRALIZE", StringComparison.OrdinalIgnoreCase))
+            if (suffixName.Equals("NEUTRALIZE", StringComparison.OrdinalIgnoreCase))
             {
                 ResetControls();
                 neutral.Value = bool.Parse(value.ToString());
