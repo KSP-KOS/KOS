@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using kOS.AddOns.RemoteTech;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
 using kOS.Utilities;
 using Math = System.Math;
@@ -31,18 +32,14 @@ namespace kOS.Suffixed
         private float wheelThrottle;
         private float wheelThrottleTrim;
         private float mainThrottle;
-        private readonly Flushable<bool> neutral;
-        private readonly Flushable<bool> killRotation;
-        private readonly Flushable<bool> resetTrim;
         private bool bound;
+        private Flushable<bool> neutral;
         private readonly List<string> floatSuffixes;
         private readonly List<string> vectorSuffixes;
 
         public FlightControl(Vessel vessel)
         {
             neutral = new Flushable<bool>(); 
-            killRotation = new Flushable<bool>(); 
-            resetTrim = new Flushable<bool>(); 
             bound = false;
             Vessel = vessel;
 
@@ -58,21 +55,6 @@ namespace kOS.Suffixed
         {
             float floatValue = 0;
             Vector vectorValue = null;
-
-            if (CheckNeutral(suffixName, value))
-            {
-                return true;
-            }
-
-            if (CheckKillRotation(suffixName, value))
-            {
-                return true;
-            }
-
-            if (CheckResetTrim(suffixName, value))
-            {
-                return true;
-            }
 
             if (floatSuffixes.Contains(suffixName))
             {
@@ -174,8 +156,7 @@ namespace kOS.Suffixed
 
             //OTHER
             AddSuffix(new[] { "BOUND" }, new SetSuffix<BooleanValue>(() => bound, value => bound = value));
-            AddSuffix(new[] { "NEUTRAL" }, new Suffix<BooleanValue>(() => neutral.Value));
-
+            AddSuffix(new[] { "NEUTRAL", "NEUTRALIZE" }, new SetSuffix<BooleanValue>(IsNeutral, v => {if (v) Neutralize();}));
         }
 
         private Vector GetPilotTranslation()
@@ -270,49 +251,36 @@ namespace kOS.Suffixed
             return true;
         }
 
-        private bool CheckKillRotation(string suffixName, object value)
+        private void Neutralize()
         {
-            if (suffixName.Equals("KILLROTATION", StringComparison.OrdinalIgnoreCase))
-            {
-                killRotation.Value = bool.Parse(value.ToString());
-                return true;
-            }
-            killRotation.Value = false;
-            return false;
-        }
-        private bool CheckResetTrim(string suffixName, object value)
-        {
-            if (suffixName.Equals("RESETTRIM", StringComparison.OrdinalIgnoreCase))
-            {
-                resetTrim.Value = bool.Parse(value.ToString());
-                return true;
-            }
-            resetTrim.Value = false;
-            return false;
-        }
-
-        private bool CheckNeutral(string suffixName, object value)
-        {
-            if (suffixName.Equals("NEUTRALIZE", StringComparison.OrdinalIgnoreCase))
-            {
-                ResetControls();
-                neutral.Value = bool.Parse(value.ToString());
-                return true;
-            }
-            neutral.Value = false;
-            return false;
+            ResetControls();
         }
 
         private void ResetControls()
         {
             yaw = default(float);
+            yawTrim = default(float);
             pitch = default(float);
+            pitchTrim = default(float);
             roll = default(float);
+            rollTrim = default(float);
             fore = default(float);
             starboard = default(float);
             top = default(float);
             wheelSteer = default(float);
+            wheelSteerTrim = default(float);
             wheelThrottle = default(float);
+            wheelThrottleTrim = default(float);
+            neutral.Value = true;
+            neutral.SetStale();
+        }
+
+        private BooleanValue IsNeutral()
+        {
+            return (yaw == yawTrim && pitch == pitchTrim && roll == rollTrim &&
+                fore == 0 && starboard == 0 && top == 0 &&
+                wheelSteer == wheelSteerTrim && wheelThrottle == wheelSteerTrim);
+
         }
 
         private void OnFlyByWire(FlightCtrlState st)
@@ -322,14 +290,7 @@ namespace kOS.Suffixed
                 if (neutral.FlushValue)
                 {
                     st.Neutralize();
-                }
-            }
-
-            if (resetTrim.IsStale)
-            {
-                if (resetTrim.FlushValue)
-                {
-                    st.ResetTrim();
+                    neutral.Value = false;
                 }
             }
 
@@ -363,7 +324,7 @@ namespace kOS.Suffixed
         {
             get
             {
-                return !neutral.Value;
+                return !IsNeutral();
             }
         }
 
@@ -417,14 +378,12 @@ namespace kOS.Suffixed
 
         void IFlightControlParameter.DisableControl(SharedObjects shared)
         {
-            // We'll just neutralize here
-            neutral.Value = true;
+            Neutralize();
         }
 
         void IFlightControlParameter.DisableControl()
         {
-            // We'll just neutralize here
-            neutral.Value = true;
+            Neutralize();
         }
 
         void IFlightControlParameter.CopyFrom(IFlightControlParameter origin)

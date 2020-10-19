@@ -131,7 +131,8 @@ These "Raw" controls allow you the direct control of flight parameters while the
 
     * - :ref:`NEUTRAL <SHIP CONTROL NEUTRAL>`
       - :ref:`Boolean <boolean>`
-      - Is **kOS** Controlling?
+      - True if ship:control is doing nothing.
+
     * - :ref:`NEUTRALIZE <SHIP CONTROL NEUTRALIZE>`
       - :ref:`Boolean <boolean>`
       - Releases Control
@@ -178,6 +179,11 @@ These "Raw" controls allow you the direct control of flight parameters while the
     trim instead is because KSP only looks at the trim when its part of
     the *pilot's* own control structure, not an autpilot's control structure.
 
+    *Warning*:
+    Setting this value can cause :ref:`:NEUTRAL <SHIP CONTROL NEUTRAL>` to
+    return false negatives by confusing the system about where the "at
+    rest" point of the controls are.
+
 .. _SHIP CONTROL PITCHTRIM:
 .. object:: SHIP:CONTROL:PITCHTRIM
 
@@ -190,6 +196,11 @@ These "Raw" controls allow you the direct control of flight parameters while the
     trim instead is because KSP only looks at the trim when its part of
     the *pilot's* own control structure, not an autpilot's control structure.
 
+    *Warning*:
+    Setting this value can cause :ref:`NEUTRAL <SHIP CONTROL NEUTRAL>` to
+    return false negatives by confusing the system about where the "at
+    rest" point of the controls are.
+
 .. _SHIP CONTROL ROLLTRIM:
 .. object:: SHIP:CONTROL:ROLLTRIM
 
@@ -201,6 +212,11 @@ These "Raw" controls allow you the direct control of flight parameters while the
     The reason why this trim does nothing here is because KSP only looks at the
     trim when its part of the *pilot's* own control structure, not an
     autpilot's control structure.
+
+    *Warning*:
+    Setting this value can cause :ref:`NEUTRAL <SHIP CONTROL NEUTRAL>` to
+    return false negatives by confusing the system about where the "at
+    rest" point of the controls are.
 
 .. _SHIP CONTROL FORE:
 .. object:: SHIP:CONTROL:FORE
@@ -253,6 +269,11 @@ These "Raw" controls allow you the direct control of flight parameters while the
     trim when its part of the *pilot's* own control structure, not an
     autpilot's control structure.
 
+    *Warning*:
+    Setting this value can cause :ref:`NEUTRAL <SHIP CONTROL NEUTRAL>` to
+    return false negatives by confusing the system about where the "at
+    rest" point of the controls are.
+
 .. _SHIP CONTROL WHEELTHROTTLETRIM:
 .. object:: SHIP:CONTROL:WHEELTHROTTLETRIM
 
@@ -265,15 +286,40 @@ These "Raw" controls allow you the direct control of flight parameters while the
     trim when its part of the *pilot's* own control structure, not an
     autpilot's control structure.
 
+    *Warning*:
+    Setting this value can cause :ref:`NEUTRAL <SHIP CONTROL NEUTRAL>` to
+    return false negatives by confusing the system about where the "at
+    rest" point of the controls are.
+
 .. _SHIP CONTROL NEUTRAL:
-.. object:: SHIP:CONTROL:NEUTRAL
-
-    Returns true or false depending if **kOS** has any set controls. *This is not settable.*
-
 .. _SHIP CONTROL NEUTRALIZE:
+.. object:: SHIP:CONTROL:NEUTRAL
 .. object:: SHIP:CONTROL:NEUTRALIZE
 
-    This causes manual control to let go. When set to true, **kOS** lets go of the controls and allows the player to manually control them again. *This is not gettable.*
+    These used to be two suffixes but they are now synonyms who's meaning
+    changes depending on if you set or get them.
+
+    *Getting*:
+
+    ``if (SHIP:CONTROL:NEUTRAL)`` is true when the raw controls are at rest.
+
+    *Setting*:
+
+    ``set SHIP:CONTROL:NEUTRALIZE TO TRUE.`` causes the raw controls to let go.
+    Setting it to false has no effect.
+
+    *Warnings*:
+
+    Although it has no effect, setting a raw control TRIM value CAN cause
+    ``NEUTRAL`` to return false when the control is at rest.  For example,
+    if you do ``SET SHIP:CONTROL:YAWTRIM to 0.1.` then when the controls
+    are at rest, ``SHIP:CONTROL:NEUTRAL`` will return false because the yaw
+    position of 0 is differing from its trim position of 0.1.
+
+    The two terms ``NEUTRAL`` and ``NEUTRALIZE`` are synonyms.  (They used to
+    be two separate suffixes, one for getting and one for setting, but
+    that made no sense so they were combined but both spellings were
+    retained for backward compantiblity with old scripts.)
 
 
 Unlocking controls
