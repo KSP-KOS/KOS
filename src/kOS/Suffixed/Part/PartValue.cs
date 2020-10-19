@@ -67,6 +67,10 @@ namespace kOS.Suffixed.Part
             AddSuffix("MASS", new Suffix<ScalarValue>(() => Part.CalculateCurrentMass(), "The Part's current mass"));
             AddSuffix("WETMASS", new Suffix<ScalarValue>(() => Part.GetWetMass(), "The Part's mass when full"));
             AddSuffix("HASPHYSICS", new Suffix<BooleanValue>(() => Part.HasPhysics(), "Is this a strange 'massless' part"));
+            AddSuffix("SYMMETRYCOUNT", new Suffix<ScalarIntValue>(() => Part.symmetryCounterparts.Count + 1));
+            AddSuffix("SYMMETRYTYPE", new Suffix<ScalarIntValue>(() => (int)Part.symMethod));
+            AddSuffix("REMOVESYMMETRY", new NoArgsVoidSuffix(Part.RemoveFromSymmetry));
+            AddSuffix("SYMMETRYPARTNER", new OneArgsSuffix<PartValue, ScalarValue>(GetSymmetryPartner));
         }
 
         public BoundsValue GetBoundsValue()
@@ -219,6 +223,14 @@ namespace kOS.Suffixed.Part
                 resources.Add(new SingleResourceValue(part.Resources[i]));
             }
             return resources;
+        }
+
+        private PartValue GetSymmetryPartner(ScalarValue index)
+        {
+            global::Part p = Part.getSymmetryCounterPart(index);
+            if (p == null)
+                return this; // all parts are "self" partnered in the way we're using this suffix
+            return PartValueFactory.Construct(p, Shared);
         }
 
         private ListValue GetAllModules()

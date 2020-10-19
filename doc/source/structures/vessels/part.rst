@@ -105,8 +105,15 @@ These are the generic properties every PART has. You can obtain a list of values
         * - :attr:`CHILDREN`
           - :struct:`List`
           - List of attached :struct:`Parts <Part>`
-
-
+        * - :attr:`SYMMETRYCOUNT`
+          - :struct:`Scalar`
+          - How many parts in this part's symmetry set
+        * - :meth:`REMOVESYMMETRY`
+          - none
+          - Like the "Remove From Symmetry" button.
+        * - :meth:`SYMMETRYPARTNER(index)`
+          - :struct:`part`
+          - Return one of the other parts symmetrical to this one.
 
 
 .. attribute:: Part:NAME
@@ -387,3 +394,89 @@ These are the generic properties every PART has. You can obtain a list of values
     :type: :struct:`List` of :struct:`Parts <Part>`
 
     When walking the :ref:`tree of parts <parts and partmodules>`, this is all the parts that are attached as children of this part. It returns a list of zero length when this part is a "leaf" of the parts tree.
+
+.. attribute:: Part:SYMMETRYCOUNT
+
+    :access: Get only
+    :type: :struct:`Scalar`
+
+    Returns how many parts are in the same symmetry set as this part.
+
+    Note that all parts should at least return a minimum value of 1, since
+    even a part placed without symmetry is technically in a group of 1 part,
+    itself.
+
+.. attribute:: Part:SYMMETRYTYPE
+
+    :access: Get only
+    :type: :struct:`Scalar`
+
+    Tells you the type of symmetry this part has by returning a number
+    as follows:
+
+    0 = This part has radial symmetry
+
+    1 = This part has mirror symmetry
+
+    It's unclear if this means anything when the part's symmetry is 1x.
+
+.. method:: Part:REMOVESYMMETRY
+
+    :access: method
+    :returns: nothing
+
+    Call this method to remove this part from its symmetry group, reverting
+    it back to a symmetry group of 1x (just itself).  This has the same
+    effect as pressing the "Remove From Symmetry" button in the part's
+    action window.
+
+    Note that just like when you press the "Remove from Symmetry" button,
+    once a part has been removed from symmetry you don't have a way to
+    put it back into the symmetry group again.
+
+.. method:: Part:SYMMETRYPARTNER(index)
+
+    :access: method
+    :parameter name: (:struct:`Scalar`) Index of which part in the symmetry group
+    :returns: :struct:`Part`
+
+    When a set of parts has been placed with symmetry in the Vehicle
+    Assembly Building or Space Plane Hangar, this method can be used
+    to find all the parts that are in the same symmetrical group.
+
+    The index is numbered from zero to :attr:``SYMMETRYCOUNT`` minus one.
+
+    The zero-th symmetry partner is this part itself.  Even parts placed
+    without symmetry still are technically in a symmetry group of 1 part.
+
+    The index also wraps around in a cycle, such that if there are 4 parts in
+    symmetry, then ``SYMMETRYPARTNER(0)`` and ``SYMMETRYPARTNER(4)`` and
+    ``SYMMETRYPARTNER(8)`` would all actually be the same part.
+
+    Example::
+
+        // Print the symmetry group a part is inside:
+        function print_sym {
+          parameter a_part.
+
+          print a_part + " is in a " + a_part:SYMMETRYCOUNT + "x symmetry set.".
+
+          if a_part:SYMMETRAYCOUNT = 1 {
+            return. // no point in printing the list when its not in a group.
+          }
+
+          if a_part:SYMMETRYTYPE = 0 {
+            print "  The symmetry is radial.".
+          } else if a_part:SYMMETRYTYPE = 1 {
+            print "  The symmetry is mirror.".
+          } else {
+            print "  The symmetry is some other weird kind that".
+            print "  didn't exist back when this example was written.".
+          }
+
+          print "    The Symmetry Group is: ".
+          for i in range (0, a_part:SYMMETRYCOUNT) {
+            print "      [" + i + "] " + a_part:SYMMETRYPARTNER(i).
+          }
+        }
+
