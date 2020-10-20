@@ -9,6 +9,14 @@ They are similar to the suffixes on the :ref:`Raw control<raw>` page, except
 that these suffixes refer to the player's actual input controls, rather
 than kOS's own controls that are layered on top of them, overriding them.
 
+Please note that the *Breaking Ground DLC* parts that can be configured
+to respond to the throttle, such as electric motors and propellor pitches
+will only respond to the settings described here on this page, and NOT
+the settings described in the :ref:`raw control <raw>` page, or the
+settings in ``lock throttle`` or ``lock steering``.  SQUAD designed
+these to only pay attention to the player's controls, not autopilot
+controls.
+
 Most are read-only
 ------------------
 

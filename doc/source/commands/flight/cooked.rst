@@ -29,7 +29,6 @@ The special LOCK variables for cooked steering
 
     This sets the main throttle of the ship to *expression*. Where *expression* is a floating point number between 0.0 and 1.0. A value of 0.0 means the throttle is idle, and a value of 1.0 means the throttle is at maximum. A value of 0.5 means the throttle is at the halfway point, and so on.
 
-
     The expression used in this statement can be any formula and can
     call your own user functions.  Just make sure it returns a value
     in the range [0..1].
@@ -43,6 +42,18 @@ The special LOCK variables for cooked steering
 
     It's a very bad idea to``WAIT`` during the execution of the expression in a
     LOCK THROTTLE.  See the note in the next section below.
+
+.. warning::
+
+    IF you have the *Breaking Ground DLC* for Kerbal Space Program, please
+    be aware that even though you can set up control groups to make parts
+    such as propellors and engines react to the throttle, they will not
+    react to ``lock throttle``.  This is because the DLC ignores the
+    autopilot API in using this feature.  It only pays attention to the
+    actual pilot controls, not the autopilot controls overriding them.
+    To affect a part that is defined to react to the throttle axis, you
+    will have to use ``set ship:control:pilotmainthrottle`` as described
+    by the :ref:`section on pilot controls<pilot>`.
 
 .. _LOCK STEERING:
 .. object:: LOCK STEERING TO expression.

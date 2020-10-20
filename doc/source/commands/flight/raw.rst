@@ -37,19 +37,24 @@ This will start pushing the ship to rotate a bit faster to the right, like pushi
 
 One can use :ref:`SHIP:CONTROL:ROTATION <SHIP CONTROL ROTATION>` and :ref:`SHIP:CONTROL:TRANSLATION <SHIP CONTROL TRANSLATION>` to see the ship's current situation.
 
+Breaking Ground DLC
+-------------------
+
+Please note that the *Breaking Ground DLC* parts that can be configured
+to respond to the control axes, such as electric motors and propellor
+pitches, will only respond to the settings described on the 
+:ref:`pilot controls page <pilot>` and NOT the settings described
+here on this :ref:`raw control <raw>` page, nor will it respond to
+the settings in ``lock throttle`` or ``lock steering``.  SQUAD designed
+the *Breaking Ground* DLC parts to only pay attention to the player's
+controls, not autopilot controls.
+
 .. _raw null zone:
 
 5% null zone
 ------------
 
 .. warning::
-   The stock raw controls enforce a null zone that kOS can't seem to override
-   (We've tried).  Be aware that if you set a translation raw control to a
-   value between -0.05 and +0.05, the stock game seems to ignore it and treat
-   it as zero.  (While this may seem to be related to the null zones on the
-   game's controls setttings page, which also default ot 5%, in reality this
-   seems to happen regardless of what you change those settings to).
-
 
 Raw Flight Controls Reference
 -----------------------------
