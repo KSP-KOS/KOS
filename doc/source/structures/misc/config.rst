@@ -217,6 +217,8 @@ Configuration of kOS
     :access: Get/Set
     :type: :struct:`Boolean`
 
+    *This is settable by use of the "Toggle Autopilot" Action Group too.*
+
     When this is set to True, it suppresses all of kOS's attempts to
     override the steering, throttle, or translation controls, leaving
     them entirely under manual control.  It is intended to be a way
@@ -224,6 +226,11 @@ Configuration of kOS
     the toolbar window where this setting appears) without having to
     quit the running program or figure out which terminal window has
     the program causing the control lock.
+
+    You can also bind this setting to an action group for a kOS core part
+    in the VAB or SPH.  The action is called "Toggle Autopilot".
+    (Or "Suppress Autopilot" and "Allow Autopilot" for one-way action
+    groups that don't toggle.)
 
     While it does suppress steering, throttle, and translation, it cannot
     suppress action groups or staging.
