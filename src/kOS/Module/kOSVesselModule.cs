@@ -403,6 +403,7 @@ namespace kOS.Module
 
             // Default it to false until it gets turned on below:
             Screen.KOSToolbarWindow.ShowSuppressMessage = false;
+            Screen.KOSToolbarWindow.ShowSasMessage = false;
 
             if (Vessel != null)
             {
@@ -429,6 +430,9 @@ namespace kOS.Module
                             else
                             {
                                 parameter.UpdateAutopilot(c);
+
+                                if (parameter.FightsWithSas && vessel.ActionGroups[KSPActionGroup.SAS])
+                                    Screen.KOSToolbarWindow.ShowSasMessage = true;
                             }
                         }
                     }

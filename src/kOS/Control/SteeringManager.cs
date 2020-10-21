@@ -42,6 +42,8 @@ namespace kOS.Control
             destination.YawTorqueFactor = origin.YawTorqueFactor;
         }
 
+        public bool FightsWithSas { get { return true; } }
+
         private Vessel internalVessel;
 
         public Vessel Vessel

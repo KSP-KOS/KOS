@@ -51,6 +51,8 @@ namespace kOS.Suffixed
 
         public Vessel Vessel { get; private set; }
 
+        public bool FightsWithSas { get { return false; } }
+
         public override bool SetSuffix(string suffixName, object value, bool failOkay = false)
         {
             float floatValue = 0;

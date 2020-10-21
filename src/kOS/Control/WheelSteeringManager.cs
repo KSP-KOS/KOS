@@ -17,6 +17,8 @@ namespace kOS.Control
         public bool Enabled { get; private set; }
         public float Value { get; set; }
 
+        public bool FightsWithSas { get { return false; } }
+
         public WheelSteeringManager(Vessel vessel)
         {
             Enabled = false;

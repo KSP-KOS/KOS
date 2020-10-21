@@ -14,6 +14,8 @@ namespace kOS.Control
         public bool Enabled { get; private set; }
         public double Value { get; set; }
 
+        public bool FightsWithSas { get { return false; } }
+
         public ThrottleManager(Vessel vessel)
         {
             Enabled = false;
