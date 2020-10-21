@@ -399,6 +399,11 @@ namespace kOS.Module
             if (RP0Lock != 0)
                 return;
 
+            bool isSuppressing = SafeHouse.Config.SuppressAutopilot;
+
+            // Default it to false until it gets turned on below:
+            Screen.KOSToolbarWindow.ShowSuppressMessage = false;
+
             if (Vessel != null)
             {
                 if (childParts.Count > 0)
@@ -416,7 +421,15 @@ namespace kOS.Module
                                     parameter.GetShared().Vessel.id, Vessel.id));
                                 foundWrongVesselAutopilot = true;
                             }
-                            parameter.UpdateAutopilot(c);
+                            if (isSuppressing)
+                            {
+                                if (parameter.SuppressAutopilot(c))
+                                    Screen.KOSToolbarWindow.ShowSuppressMessage = true;
+                            }
+                            else
+                            {
+                                parameter.UpdateAutopilot(c);
+                            }
                         }
                     }
                 }

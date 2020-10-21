@@ -90,6 +90,13 @@ namespace kOS.Screen
 
         private bool uiGloballyHidden = false;
 
+        /// <summary>Timestamp (using Unity3d's Time.time) for when the suppression message cooldown is over and a new message should be emitted.</summary>
+        private static float suppressMessageCooldownEnd = 0;
+        private static string suppressMessageText = "kOS's config setting is preventing kOS control.";
+        private static ScreenMessage suppressMessage;
+        /// <summary>If true then the 'suppressing autopilot' message should be getting repeated to the screen right now.</summary>
+        public static bool ShowSuppressMessage { get; set; }
+
         /// <summary>
         /// Unity hates it when a MonoBehaviour has a constructor,
         /// so all the construction work is here instead:
@@ -134,8 +141,34 @@ namespace kOS.Screen
             // Prevent multiple calls of this:
             if (alreadyAwake) return;
             alreadyAwake = true;
+            ShowSuppressMessage = false;
 
             SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] Start succesful");
+        }
+
+        public void Update()
+        {
+            // Handle the message and timeout of the message
+            if (ShowSuppressMessage)
+            {
+                if (Time.time > suppressMessageCooldownEnd)
+                {
+                    suppressMessageCooldownEnd = Time.time + 5f;
+                    suppressMessage = ScreenMessages.PostScreenMessage(
+                        string.Format("<color=white><size=20>{0}</size></color>", suppressMessageText),
+                        4, ScreenMessageStyle.UPPER_CENTER);
+                }
+            }
+            else
+            {
+                suppressMessageCooldownEnd = 0f;
+                if (suppressMessage != null)
+                {
+                    // Get it to stop right away even if the timer isn't over:
+                    suppressMessage.duration = 0;
+                }
+            }
+
         }
 
         public void AddButton()
@@ -458,7 +491,7 @@ namespace kOS.Screen
 
             DrawActiveCPUsOnPanel();
 
-            CountBeginVertical("", 150);
+            CountBeginVertical("", 155);
             GUILayout.Label("CONFIG VALUES", headingLabelStyle);
             GUILayout.Label("To access other settings, see the kOS section in KSP's difficulty settings.", smallLabelStyle);
             GUILayout.Label("Global VALUES", headingLabelStyle);

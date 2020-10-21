@@ -371,6 +371,11 @@ namespace kOS.Suffixed
             OnFlyByWire(c);
         }
 
+        bool IFlightControlParameter.SuppressAutopilot(FlightCtrlState c)
+        {
+            return !(IsNeutral());
+        }
+
         void IFlightControlParameter.EnableControl(SharedObjects shared)
         {
             // No need to enable control, it will automatically enable based on setting values

@@ -33,6 +33,7 @@ namespace kOS.Suffixed
         public int TerminalDefaultHeight { get { return GetPropValue<int>(PropId.TerminalDefaultHeight); } set { SetPropValue(PropId.TerminalDefaultHeight, value); } }
         public bool UseBlizzyToolbarOnly { get { return kOSCustomParameters.Instance.useBlizzyToolbarOnly; } set { kOSCustomParameters.Instance.useBlizzyToolbarOnly = value; } }
         public bool DebugEachOpcode { get { return kOSCustomParameters.Instance.debugEachOpcode; } set { kOSCustomParameters.Instance.debugEachOpcode = value; } }
+        public bool SuppressAutopilot { get { return GetPropValue<bool>(PropId.SuppressAutopilot); } set { SetPropValue(PropId.SuppressAutopilot, value); } }
 
         // NOTE TO FUTURE MAINTAINERS:  If it looks like overkill to use a double instead of a float for this next field, you're right.
         // But KSP seems to have a bug where single-precision floats don't get saved in the config XML file.  Doubles seem to work, though.
@@ -65,6 +66,7 @@ namespace kOS.Suffixed
             AddSuffix("DEFAULTFONTSIZE", new ClampSetSuffix<ScalarValue>(() => TerminalFontDefaultSize, value => TerminalFontDefaultSize = value, 6f, 30f, 1f));
             AddSuffix("DEFAULTWIDTH", new ClampSetSuffix<ScalarValue>(() => TerminalDefaultWidth, value => TerminalDefaultWidth = value, 15f, 255f, 1f));
             AddSuffix("DEFAULTHEIGHT", new ClampSetSuffix<ScalarValue>(() => TerminalDefaultHeight, value => TerminalDefaultHeight = value, 3f, 160f, 1f));
+            AddSuffix("SUPPRESSAUTOPILOT", new SetSuffix<BooleanValue>(() => SuppressAutopilot, value => SuppressAutopilot = value));
         }
 
         private void BuildValuesDictionary()
@@ -77,6 +79,7 @@ namespace kOS.Suffixed
             AddConfigKey(PropId.TerminalBrightness, new ConfigKey("TerminalBrightness", "BRIGHTNESS", "Initial brightness setting for new terminals", 0.7d, 0d, 1d, typeof(double)));
             AddConfigKey(PropId.TerminalDefaultWidth, new ConfigKey("TerminalDefaultWidth", "DEFAULTWIDTH", "Initial Terminal:WIDTH when a terminal is first opened", 50, 15, 255, typeof(int)));
             AddConfigKey(PropId.TerminalDefaultHeight, new ConfigKey("TerminalDefaultHeight", "DEFAULTHEIGHT", "Initial Terminal:HEIGHT when a terminal is first opened", 36, 3, 160, typeof(int)));
+            AddConfigKey(PropId.SuppressAutopilot, new ConfigKey("SuppressAutopilot", "SUPPRESSAUTOPILOT", "Suppress all kOS autopiloting for emergency manual control", false, false, true, typeof(bool)));
         }
 
         private void AddConfigKey(PropId id, ConfigKey key)
@@ -240,7 +243,8 @@ namespace kOS.Suffixed
             TerminalFontName = 16,
             TerminalBrightness = 17,
             TerminalDefaultWidth = 18,
-            TerminalDefaultHeight = 19
+            TerminalDefaultHeight = 19,
+            SuppressAutopilot = 20
         }
     }
 }

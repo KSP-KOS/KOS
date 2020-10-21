@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
 using kOS.Suffixed;
@@ -109,6 +109,11 @@ namespace kOS.Control
             {
                 c.wheelSteer = -Mathf.Clamp(Value / -10, -1, 1);
             }
+        }
+
+        bool IFlightControlParameter.SuppressAutopilot(FlightCtrlState c)
+        {
+            return Enabled;
         }
 
         void IFlightControlParameter.UpdateValue(object value, SharedObjects shared)

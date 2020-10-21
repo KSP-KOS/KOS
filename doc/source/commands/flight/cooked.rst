@@ -21,6 +21,15 @@ For more information, check out the documentation for the :struct:`SteeringManag
 
 In this style of controlling the craft, you do not steer the craft directly, but instead select a goal direction and let kOS pick the way to steer toward that goal. This method of controlling the craft consists primarily of the following two commands:
 
+CONFIG:SUPPRESSAUTOPILOT
+------------------------
+
+If :attr:`Config:SUPPRESSAUTOPILOT` is true, then none of the controls
+on this page will have an effect.  That setting is there to provide
+the player with an emergency way to quickly click a toggle on the
+toolbar window to force kOS to stop taking control, letting the player
+move the controls manually.
+
 The special LOCK variables for cooked steering
 ----------------------------------------------
 

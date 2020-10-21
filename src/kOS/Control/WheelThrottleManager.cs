@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
 using System;
@@ -94,7 +94,15 @@ namespace kOS.Control
 
         void IFlightControlParameter.UpdateAutopilot(FlightCtrlState c)
         {
-            c.wheelThrottle = (float)KOSMath.Clamp(Value, -1, 1);
+            if (Enabled)
+            {
+                c.wheelThrottle = (float)KOSMath.Clamp(Value, -1, 1);
+            }
+        }
+
+        bool IFlightControlParameter.SuppressAutopilot(FlightCtrlState c)
+        {
+            return Enabled;
         }
 
         void IFlightControlParameter.UpdateValue(object value, SharedObjects shared)
