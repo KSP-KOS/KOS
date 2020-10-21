@@ -1325,6 +1325,23 @@ namespace kOS.Control
             this.OnFlyByWire(c);
         }
 
+        bool IFlightControlParameter.SuppressAutopilot(FlightCtrlState c)
+        {
+            if (!Enabled || Value == null)
+            {
+                return false;
+            }
+            else
+            {
+                pitchPI.ResetI();
+                yawPI.ResetI();
+                rollPI.ResetI();
+                pitchRatePI.ResetI();
+                yawRatePI.ResetI();
+                rollRatePI.ResetI();
+                return true;
+            }
+        }
 
         void IFlightControlParameter.EnableControl(SharedObjects shared)
         {

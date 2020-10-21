@@ -37,6 +37,15 @@ This will start pushing the ship to rotate a bit faster to the right, like pushi
 
 One can use :ref:`SHIP:CONTROL:ROTATION <SHIP CONTROL ROTATION>` and :ref:`SHIP:CONTROL:TRANSLATION <SHIP CONTROL TRANSLATION>` to see the ship's current situation.
 
+CONFIG:SUPPRESSAUTOPILOT
+------------------------
+
+If :attr:`Config:SUPPRESSAUTOPILOT` is true, then none of the controls
+on this page will have an effect.  That setting is there to provide
+the player with an emergency way to quickly click a toggle on the
+toolbar window to force kOS to stop taking control, letting the player
+move the controls manually.
+
 Breaking Ground DLC
 -------------------
 
