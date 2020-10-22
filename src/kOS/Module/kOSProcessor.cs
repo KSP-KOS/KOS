@@ -198,21 +198,21 @@ namespace kOS.Module
             TogglePower();
         }
 
-        [KSPAction("Start Suppressing Autopilot", actionGroup = KSPActionGroup.None)]
+        [KSPAction("Suppress On", actionGroup = KSPActionGroup.None)]
         public void StartSuppressAutopilot(KSPActionParam param)
         {
             SafeHouse.Logger.Log("Start Suppress Autopilot from ActionGroup");
             SafeHouse.Config.SuppressAutopilot = true;
         }
 
-        [KSPAction("Stop Suppressing Autopilot", actionGroup = KSPActionGroup.None)]
+        [KSPAction("Suppress Off", actionGroup = KSPActionGroup.None)]
         public void StopSuppressAutopilot(KSPActionParam param)
         {
             SafeHouse.Logger.Log("Stop Suppress Autopilot from ActionGroup");
             SafeHouse.Config.SuppressAutopilot = false;
         }
 
-        [KSPAction("Toggle Suppress Autopilot", actionGroup = KSPActionGroup.None)]
+        [KSPAction("Toggle Suppression", actionGroup = KSPActionGroup.None)]
         public void ToggleSuppressAutopilot(KSPActionParam param)
         {
             SafeHouse.Logger.Log("Toggle Suppress Autopilot from ActionGroup");

@@ -228,9 +228,9 @@ Configuration of kOS
     the program causing the control lock.
 
     You can also bind this setting to an action group for a kOS core part
-    in the VAB or SPH.  The action is called "Toggle Autopilot".
-    (Or "Suppress Autopilot" and "Allow Autopilot" for one-way action
-    groups that don't toggle.)
+    in the VAB or SPH.  The action is called "Toggle Suppress".
+    (Or "Suppress On" and "Suppress Off" for one-way action groups
+    that don't toggle.)
 
     While it does suppress steering, throttle, and translation, it cannot
     suppress action groups or staging.
