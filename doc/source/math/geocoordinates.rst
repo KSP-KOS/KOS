@@ -101,6 +101,10 @@ Structure
 
     The :ref:`Celestial Body <body>` this position is attached to.
 
+.. attribute:: GeoCoordinates:LAT
+
+    The latitude of this position on the surface.
+
 .. attribute:: GeoCoordinates:LNG
 
     The longitude of this position on the surface.

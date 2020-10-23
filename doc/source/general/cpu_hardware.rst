@@ -37,9 +37,16 @@ complex mods.
 
 If the KSP game is unable to execute *physics ticks* fast enough to
 keep up the 50-per-second rate, that's when you see the time display
-in the upper-left of the Kerbal Space Program screen turn yellow or
-red as a warning that simulation is getting coarse-grain and might
-start getting error-prone because of it.
+in the upper-left of the Kerbal Space Program screen turn red as a
+warning that simulation is getting coarse-grain and might start
+getting error-prone because of it.
+
+Note that the game may also resort to slowing down the presentation
+of the simulated world in order to make the simulated time still
+be fine-grained at 0.02 seconds per physics tick even though the
+computer can't keep up with it.  In this state it is showing
+the game in slow motion.  This is what it means when the clock in
+the upper-left corner of the screen is yellow.
 
 The relevant take-away from that is this: When calculating physics
 formulas, never assume elapsed time moves in constant amounts.  It
