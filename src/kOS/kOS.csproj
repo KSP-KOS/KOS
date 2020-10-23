@@ -136,6 +136,7 @@
     <Compile Include="Function\Suffixed.cs" />
     <Compile Include="KSPLogger.cs" />
     <Compile Include="Module\Bootstrapper.cs" />
+    <Compile Include="Module\AutopilotMsgManager.cs" />
     <Compile Include="Module\kOSCustomParameters.cs" />
     <Compile Include="Module\kOSLightModule.cs" />
     <Compile Include="Module\KOSNameTag.cs" />

@@ -312,6 +312,8 @@ namespace kOS.Module
                 TimingManager.FixedUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, resetControllable);
                 workAroundEventsEnabled = false;
             }
+            AutopilotMsgManager.Instance.TurnOffSuppressMessage(this);
+            AutopilotMsgManager.Instance.TurnOffSasMessage(this);
         }
 
         #region Hack to fix "Require Signal for Control"
@@ -394,6 +396,7 @@ namespace kOS.Module
         /// <param name="c"></param>
         private void UpdateAutopilot(FlightCtrlState c)
         {
+            Console.WriteLine("eraseme: kOSVesselModule.Update() is Calling UpdateAutopilot()");
             // Lock out controls if insufficient avionics in RP-0.
             ControlTypes RP0Lock = InputLockManager.GetControlLock("RP0ControlLocker");
             if (RP0Lock != 0)
@@ -401,9 +404,8 @@ namespace kOS.Module
 
             bool isSuppressing = SafeHouse.Config.SuppressAutopilot;
 
-            // Default it to false until it gets turned on below:
-            Screen.KOSToolbarWindow.ShowSuppressMessage = false;
-            Screen.KOSToolbarWindow.ShowSasMessage = false;
+            AutopilotMsgManager.Instance.TurnOffSuppressMessage(this);
+            AutopilotMsgManager.Instance.TurnOffSasMessage(this);
 
             if (Vessel != null)
             {
@@ -425,14 +427,17 @@ namespace kOS.Module
                             if (isSuppressing)
                             {
                                 if (parameter.SuppressAutopilot(c))
-                                    Screen.KOSToolbarWindow.ShowSuppressMessage = true;
+                                    AutopilotMsgManager.Instance.TurnOnSuppressMessage(this);
                             }
                             else
                             {
                                 parameter.UpdateAutopilot(c);
 
                                 if (parameter.FightsWithSas && vessel.ActionGroups[KSPActionGroup.SAS])
-                                    Screen.KOSToolbarWindow.ShowSasMessage = true;
+                                {
+                                    AutopilotMsgManager.Instance.TurnOnSasMessage(this);
+                                    Console.WriteLine("eraseme: kOSVesselModule.Update() setting ShowSasMessage true.");
+                                }
                             }
                         }
                     }
