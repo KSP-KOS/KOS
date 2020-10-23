@@ -396,7 +396,6 @@ namespace kOS.Module
         /// <param name="c"></param>
         private void UpdateAutopilot(FlightCtrlState c)
         {
-            Console.WriteLine("eraseme: kOSVesselModule.Update() is Calling UpdateAutopilot()");
             // Lock out controls if insufficient avionics in RP-0.
             ControlTypes RP0Lock = InputLockManager.GetControlLock("RP0ControlLocker");
             if (RP0Lock != 0)
@@ -434,10 +433,7 @@ namespace kOS.Module
                                 parameter.UpdateAutopilot(c);
 
                                 if (parameter.FightsWithSas && vessel.ActionGroups[KSPActionGroup.SAS])
-                                {
                                     AutopilotMsgManager.Instance.TurnOnSasMessage(this);
-                                    Console.WriteLine("eraseme: kOSVesselModule.Update() setting ShowSasMessage true.");
-                                }
                             }
                         }
                     }
