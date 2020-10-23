@@ -48,6 +48,10 @@ Structure
 	  - Args
           - Description
 
+        * - :attr:`BODY`
+          - :ref:`body <body>` (m)
+	  - none
+          - The celestial body this geocoordinates is on.
         * - :attr:`LAT`
           - :ref:`scalar <scalar>` (deg)
 	  - none
@@ -93,9 +97,9 @@ Structure
 
     This type is serializable.
 
-.. attribute:: GeoCoordinates:LAT
+.. attribute:: GeoCoordinates:BODY
 
-    The latitude of this position on the surface.
+    The :ref:`Celestial Body <body>` this position is attached to.
 
 .. attribute:: GeoCoordinates:LNG
 

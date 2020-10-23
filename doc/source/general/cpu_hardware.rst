@@ -26,49 +26,63 @@ Kerbal Space Program simulates the universe by running the universe in
 small incremental time intervals that for the purpose of this
 document, we will call "**physics ticks**". The exact length of time
 for a physics tick varies as the program runs. One physics tick might
-take 0.09 seconds while the next one might take 0.085 seconds. (The
-default setting for the rate of physics ticks is 25 ticks per second,
-just to give a ballpark figure, but you **must not** write any scripts
-that depend on this assumption because it's a setting the user can
-change, and it can also vary a bit during play depending on system
-load. The setting is a target goal for the game to try to achieve, not
-a guarantee. If it's a fast computer with a speedy animation frame
-rate, it will try to run physics ticks less often than it runs
-animation frame updates, to try to make the physics tick rate match
-this setting. On the other hand, If it's a slow computer, it will try
-to sacrifice animation frame rate to archive this number (meaning
-physics get calculated faster than you can see the effects.)
+take 0.02 seconds while the next one might take 0.021 seconds and maybe
+the next one takes 0.019 seconds.
 
-When calculating physics formulas, you need to actually measure
-elapsed time in the TIME:SECONDS variable in your scripts.
+The game *tries* to simulate the universe using 50 physics ticks per
+second (0.02 seconds per tick), but there is no guarantee it succeeds
+at this.  There is a lot of variation depending on how fast your
+computer is, and how heavily you are loading it with large rockets or
+complex mods.
+
+If the KSP game is unable to execute *physics ticks* fast enough to
+keep up the 50-per-second rate, that's when you see the time display
+in the upper-left of the Kerbal Space Program screen turn yellow or
+red as a warning that simulation is getting coarse-grain and might
+start getting error-prone because of it.
+
+The relevant take-away from that is this: When calculating physics
+formulas, never assume elapsed time moves in constant amounts.  It
+is *typically* about 0.02 seconds per physics tick, but not reliably
+so.  You need to actually measure elapsed time in the TIME:SECONDS
+variable in any formulas that depend on delta time.
 
 The entire simulated universe is utterly frozen during the duration of
 a physics tick. For example, if one physics tick occurs at timestamp
-10.51 seconds, and the next physics tick occurs 0.08 seconds later at
-timestamp 10.59 seconds, then during the entire intervening time, at
-timestamp 10.52 seconds, 10.53 seconds, and so on, nothing moves. The
-clock is frozen at 10.51 seconds, and the fuel isn't being consumed,
-and the vessel is at the same position. On the next physics tick at
-10.59 seconds, then all the numbers are updated.  The full details of
-the physics ticks system are more complex than that, but that quick
-description is enough to describe what you need to know about how
-kOS's CPU works.
+10.50 seconds, and the next physics tick occurs 0.02 seconds later at
+timestamp 10.52 seconds, then during all the intervening times, such
+as at timestamp 10.505 seconds, 10.51 seconds, and 10.515 seconds
+nothing has moved. ``TIME:SECONDS`` will claim the time is still 10.50
+seconds during that whole time, and the fuel isn't being consumed, and
+the vessel is at the same position. On the next physics tick at 10.52
+seconds, then all the numbers are updated.  The full details of the
+physics ticks system are more complex than that, but that quick
+description is enough to describe what you need to know about how kOS's
+CPU works.
 
+**Physics ticks are NOT your FPS:**
 There is another kind of time tick called an **Update tick**. It is
 similar to, but different from, a **physics tick**. *Update ticks*
 often occur a bit more often than *physics ticks*. Update ticks are
 exactly the same thing as your game's Frame Rate. Each time your game
-renders another animation frame, it performs another Update tick. On a
-good gaming computer with fast speed and a good graphics card, It is
-typical to have about 2 or even 3 *Update ticks* happen within the
-time it takes to have one *physics tick* happen. On a slower computer,
-it is also possible to go the other way and have *Update ticks*
-happening *less* frequently than *physics tics*. Basically, look at
-your frame rate. Is it higher than 25 fps? If so, then your *update
-ticks* happen faster than your *physics ticks*, otherwise its the
-other way around.
+renders another animation frame, it performs another Update tick. 
+Essentially, *physics ticks* get the first dibs on execution time,
+while *update ticks* use up whatever time is leftover after that.
+If your computer is super fast so there's a lot of leftover time
+after *physics ticks* are satisfied, it just uses that time to make
+more *update ticks*, not to make more *physics ticks*.  A fast
+computer might have 2 or 3 *update ticks* per *physics tick*.  A slow
+computer might only be able to manage 1 *update tick* per *physics
+tick*, or in extreme cases, less than 1 so animation is in fact
+painting the picture at a slower frame rate than the frame rate that
+the physical world is actually being simulated under the hood.
 
-It is important to note that versions of kOS prior to 0.17 executed program code during update ticks.  After that point, program code was executed during the physics ticks.
+It is important to note that versions of kOS prior to v0.17 executed
+program code during these *update ticks* so they were tied to your 
+animation FPS.  But versions more recent than that started executing
+code on *physics ticks*, as is more proper for the simulation, and
+to make script behvaior more consistent across different computers with
+different frame rates.
 
 .. _electricdrain:
 
