@@ -3,6 +3,42 @@
 PIDLoop
 =======
 
+A PID loop is a standard control mechanism taught in many control
+theory textbooks.  It's a simple way to deal with a scenario where
+you want a program to move a control lever of some sort in order
+to cause a measured phenomenon to settle on a target value.  That
+base description actually covers many scenarios:
+
+  * A car's cruise control moving the accelerator
+    pedal to seek a target speed.
+  * A ship at sea moving the rudder to seek a target
+    compass heading.
+  * An electric oven changing the amount of current to
+    the heating element to seek a target temperature.
+  * .. etc ..
+
+It should be clear why such a thing would come up a lot in kOS,
+which is all about having a computer move the controls to seek
+some kind of target result.
+
+PID stands for "Proportional, Integral, Derivative".  It tracks
+the thing you are measuring and how it changes over time, and
+uses that to decide how you should set the control.
+
+The kOS documenation has a 
+:ref:`tutorial about what PID loops are <pidloops>` that goes over the
+general principles and shows code examples of how to create your
+own PID loop with your own script code.
+
+But, you don't actually need to do that (make your own PID loop code)
+because kOS comes with a built-in PID loop type you can use, which is
+what this page describes.  However, to make sense out of what these
+terms mean and what they are for, it's still recommended that you
+read the :ref:`tutorial about what PID loops are <pidloops>` first.
+
+Constructors
+------------
+
 The `PIDLoop` has multiple constructors available.  Valid syntax can be seen here: ::
 
     // Create a loop with default parameters
@@ -29,6 +65,87 @@ The `PIDLoop` has multiple constructors available.  Valid syntax can be seen her
     SET OUT TO PID:OUTPUT.
 
 Please see the bottom of this page for information on the derivation of the loop's output.
+
+.. _basic_pidloop_example:
+
+Basic PIDloop Example
+---------------------
+
+Here is a simple example that would move a throttle on a hovering
+rocket to get it to settle in at an ``alt:radar`` of 100 meters::
+
+    // Example PIDLoop usage to hover a rocket at 100 meters off the ground:
+    // Please use it with a rocket that has lots of fuel to test it,
+    // and a TWR between about 1.75 and 2.0.
+
+    lock steering to up.
+
+    print "Setting up PID structure:".
+    set hoverPID to PIDLoop(0.02, 0.0015, 0.02, 0, 1).
+    set hoverPID:SETPOINT to 100.
+
+    set wanted_throttle to 0. // for now.
+    lock throttle to wanted_throttle.
+
+    print "Now starting loop:".
+    print "Make sure you stage until the engine is active.".
+    print "You will have to kill it with CTRL-C".
+    until false {
+      set wanted_throttle to hoverPID:UPDATE(time:seconds, alt:radar).
+      print "Radar Alt " + round(alt:radar,1) + "m, PID wants throttle=" + round(wanted_throttle,3).
+      wait 0.
+    }
+
+
+.. _please_use_setpoint:
+
+Using SETPOINT is better than using Zero
+----------------------------------------
+
+The :struct:`PIDloop` type has a :attr:`SETPOINT` suffix, which tells the
+loop what the desired target value is that the loop should be seeking.
+In most cases the result of using :attr:`SETPOINT` would be the
+same as just adjusting the value yourself to center it around zero,
+and you'd think the following two would product identical results,
+but they don't:
+
+Version (A)::
+
+  // assume `wanted` is a variable with the desired target value:
+  // when initializing, do:
+  set myPid to PIDLOOP(1, 0.2, 0.02, -1, 1).
+
+  // later, when updating in a loop, do:
+  set ctrl to myPid:UPDATE(time:seconds, measurement - wanted).
+
+Version (B)::
+
+  // assume `wanted` is a variable with the desired target value:
+  // when initializing, do:
+  set myPid to PIDLOOP(1, 0.2, 0.02, -1, 1).
+  set myPid:SETPOINT to wanted.
+
+  // Later, when updating in a loop, do:
+  set ctrl to myPid:UPDATE(time:seconds, measurement).
+
+Actually, with kOS's PIDLoop, the second version, Version(B), works a bit better
+and should be preferred.  The reason is that when calcualting the D term,
+:struct:`PIDLoop` uses the change in the raw measure, not the error of the
+the measure, to calculate the rate of change of the value.  This becomes
+relevant when your script suddenly changes its mind what the target value is
+supposed to be.  If you change your mind when using Version(B) above, by
+saying ``Set MyPid:SETPOINT to newValue.``, then the PIDLoop is aware that
+the D value didn't actually suddenly change to an enormously large number,
+because it measures the change in raw value not the change in error.  If
+using Version(A), the PIDLoop would think there has been a huge sudden
+large change all at once, and thus the D term calculation would take
+that to mean it needs to violently counteract that change.  Using Version(B)
+with kOS's PIDLoop allows it to respond to the change less violently
+because it knows the actual raw value didn't suddenly jump - just the 
+desired target value did.
+
+Structure
+---------
 
 .. structure:: PIDLoop
 
@@ -80,7 +197,7 @@ Please see the bottom of this page for information on the derivation of the loop
     :type: :struct:`scalar`
     :access: Get/Set
 
-    The derivative gain factor
+    The derivative gain factor.
 
 .. attribute:: PIDLoop:INPUT
 
@@ -95,6 +212,10 @@ Please see the bottom of this page for information on the derivation of the loop
     :access: Get/Set
 
     The current setpoint.  This is the value to which input is compared when :meth:`UPDATE` is called.  It may not be synced with the last sample.
+
+    It is desirable to use :attr:`SETPOINT` for the
+    :ref:`reasons described above <please_use_setpoint>`.
+
 
 .. attribute:: PIDLoop:ERROR
 
