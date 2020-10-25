@@ -1,4 +1,4 @@
-﻿namespace kOS.Safe.Encapsulation
+namespace kOS.Safe.Encapsulation
 {
     [kOS.Safe.Utilities.KOSNomenclature("Scalar", KOSToCSharp = false)]
     public class ScalarDoubleValue : ScalarValue
