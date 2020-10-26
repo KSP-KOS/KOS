@@ -5,6 +5,7 @@ using kOS.Safe.Persistence;
 using UnityEngine;
 using UnityEngine.Networking;
 using kOS.Safe.Screen;
+using kOS.Safe.Encapsulation;
 using kOS.Module;
 using kOS.UserIO;
 using kOS.Safe.UserIO;
@@ -937,9 +938,9 @@ namespace kOS.Screen
             GUI.Label(fontHeightLabelRect,charHeight+"px", customSkin.label);
             postponedCharPixelHeight = -1; // -1 means "font size buttons weren't clicked on this pass".
             if (GUI.Button(fontHeightLessButtonRect, "-", customSkin.button))
-                postponedCharPixelHeight = Math.Max(4, charHeight - 2);
+                postponedCharPixelHeight = Math.Max(TerminalStruct.MINCHARPIXELS, charHeight - 2);
             if (GUI.Button(fontHeightMoreButtonRect, "+", customSkin.button))
-                postponedCharPixelHeight = Math.Min(24, charHeight + 2);
+                postponedCharPixelHeight = Math.Min(TerminalStruct.MAXCHARPIXELS, charHeight + 2);
 
             fontGotResized = false;
             if (formerCharPixelWidth != screen.CharacterPixelWidth || formerCharPixelHeight != screen.CharacterPixelHeight)

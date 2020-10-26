@@ -63,7 +63,7 @@ namespace kOS.Suffixed
             AddSuffix("DEBUGEACHOPCODE", new SetSuffix<BooleanValue>(() => DebugEachOpcode, value => DebugEachOpcode = value));
             AddSuffix("BLIZZY", new SetSuffix<BooleanValue>(() => UseBlizzyToolbarOnly, value => UseBlizzyToolbarOnly = value));
             AddSuffix("BRIGHTNESS", new ClampSetSuffix<ScalarValue>(() => TerminalBrightness, value => TerminalBrightness = value, 0f, 1f, 0.01f));
-            AddSuffix("DEFAULTFONTSIZE", new ClampSetSuffix<ScalarValue>(() => TerminalFontDefaultSize, value => TerminalFontDefaultSize = value, 6f, 30f, 1f));
+            AddSuffix("DEFAULTFONTSIZE", new ClampSetSuffix<ScalarValue>(() => TerminalFontDefaultSize, value => TerminalFontDefaultSize = value, TerminalStruct.MINCHARPIXELS, TerminalStruct.MAXCHARPIXELS, 1f));
             AddSuffix("DEFAULTWIDTH", new ClampSetSuffix<ScalarValue>(() => TerminalDefaultWidth, value => TerminalDefaultWidth = value, 15f, 255f, 1f));
             AddSuffix("DEFAULTHEIGHT", new ClampSetSuffix<ScalarValue>(() => TerminalDefaultHeight, value => TerminalDefaultHeight = value, 3f, 160f, 1f));
             AddSuffix("SUPPRESSAUTOPILOT", new SetSuffix<BooleanValue>(() => SuppressAutopilot, value => SuppressAutopilot = value));
@@ -71,15 +71,25 @@ namespace kOS.Suffixed
 
         private void BuildValuesDictionary()
         {
-            AddConfigKey(PropId.EnableTelnet, new ConfigKey("EnableTelnet", "TELNET", "Enable Telnet server", false, false, true, typeof(bool)));
-            AddConfigKey(PropId.TelnetPort, new ConfigKey("TelnetPort", "TPORT", "Telnet port number (must restart telnet to take effect)", 5410, 1024, 65535, typeof(int)));
-            AddConfigKey(PropId.TelnetIPAddrString, new ConfigKey("TelnetIPAddrString", "IPADDRESS", "Telnet IP address string (must restart telnet to take effect)", "127.0.0.1", "n/a", "n/a", typeof(string)));
-            AddConfigKey(PropId.TerminalFontDefaultSize, new ConfigKey("TerminalFontDefaultSize", "DEFAULTFONTSIZE", "Initial Terminal:CHARHEIGHT when a terminal is first opened", 12, 6, 20, typeof(int)));
-            AddConfigKey(PropId.TerminalFontName, new ConfigKey("TerminalFontName", "FONTNAME", "Font Name for terminal window", "_not_chosen_yet_", "n/a", "n/a", typeof(string)));
-            AddConfigKey(PropId.TerminalBrightness, new ConfigKey("TerminalBrightness", "BRIGHTNESS", "Initial brightness setting for new terminals", 0.7d, 0d, 1d, typeof(double)));
-            AddConfigKey(PropId.TerminalDefaultWidth, new ConfigKey("TerminalDefaultWidth", "DEFAULTWIDTH", "Initial Terminal:WIDTH when a terminal is first opened", 50, 15, 255, typeof(int)));
-            AddConfigKey(PropId.TerminalDefaultHeight, new ConfigKey("TerminalDefaultHeight", "DEFAULTHEIGHT", "Initial Terminal:HEIGHT when a terminal is first opened", 36, 3, 160, typeof(int)));
-            AddConfigKey(PropId.SuppressAutopilot, new ConfigKey("SuppressAutopilot", "SUPPRESSAUTOPILOT", "Suppress all kOS autopiloting for emergency manual control", false, false, true, typeof(bool)));
+            AddConfigKey(PropId.EnableTelnet,
+                new ConfigKey("EnableTelnet", "TELNET", "Enable Telnet server", false, false, true, typeof(bool)));
+            AddConfigKey(PropId.TelnetPort,
+                new ConfigKey("TelnetPort", "TPORT", "Telnet port number (must restart telnet to take effect)", 5410, 1024, 65535, typeof(int)));
+            AddConfigKey(PropId.TelnetIPAddrString,
+                new ConfigKey("TelnetIPAddrString", "IPADDRESS", "Telnet IP address string (must restart telnet to take effect)", "127.0.0.1", "n/a", "n/a", typeof(string)));
+            AddConfigKey(PropId.TerminalFontDefaultSize,
+                new ConfigKey("TerminalFontDefaultSize", "DEFAULTFONTSIZE", "Initial Terminal:CHARHEIGHT when a terminal is first opened",
+                        12, TerminalStruct.MINCHARPIXELS, TerminalStruct.MAXCHARPIXELS, typeof(int)));
+            AddConfigKey(PropId.TerminalFontName,
+                new ConfigKey("TerminalFontName", "FONTNAME", "Font Name for terminal window", "_not_chosen_yet_", "n/a", "n/a", typeof(string)));
+            AddConfigKey(PropId.TerminalBrightness,
+                new ConfigKey("TerminalBrightness", "BRIGHTNESS", "Initial brightness setting for new terminals", 0.7d, 0d, 1d, typeof(double)));
+            AddConfigKey(PropId.TerminalDefaultWidth,
+                new ConfigKey("TerminalDefaultWidth", "DEFAULTWIDTH", "Initial Terminal:WIDTH when a terminal is first opened", 50, 15, 255, typeof(int)));
+            AddConfigKey(PropId.TerminalDefaultHeight,
+                new ConfigKey("TerminalDefaultHeight", "DEFAULTHEIGHT", "Initial Terminal:HEIGHT when a terminal is first opened", 36, 3, 160, typeof(int)));
+            AddConfigKey(PropId.SuppressAutopilot,
+                new ConfigKey("SuppressAutopilot", "SUPPRESSAUTOPILOT", "Suppress all kOS autopiloting for emergency manual control", false, false, true, typeof(bool)));
         }
 
         private void AddConfigKey(PropId id, ConfigKey key)
