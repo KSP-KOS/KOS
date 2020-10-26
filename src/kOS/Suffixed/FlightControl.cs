@@ -308,7 +308,6 @@ namespace kOS.Suffixed
             if(Math.Abs(yawTrim) > SETTING_EPILSON) st.yawTrim = yawTrim;
             if(Math.Abs(pitchTrim) > SETTING_EPILSON) st.pitchTrim = pitchTrim;
             if(Math.Abs(rollTrim) > SETTING_EPILSON) st.rollTrim = rollTrim;
-
             if(Math.Abs(starboard) > SETTING_EPILSON) st.X = Invert(starboard);
             if(Math.Abs(top) > SETTING_EPILSON) st.Y = top;
             if(Math.Abs(fore) > SETTING_EPILSON) st.Z = Invert(fore);
