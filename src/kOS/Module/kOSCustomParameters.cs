@@ -167,7 +167,7 @@ namespace kOS.Module
 
         public override bool Enabled(MemberInfo member, GameParameters parameters)
         {
-            if (member.Name == "migrated" || member.Name == "version")
+            if (member.Name == "migrated" || member.Name == "version" || member.Name == "passedClickThroughCheck")
             {
                 return false;
             }
