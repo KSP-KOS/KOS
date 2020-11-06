@@ -79,7 +79,7 @@ operator symbols:
       the ``[ ]`` square bracket operator, but exists for backward
       compatibility.
     * ``,`` -> Separates arguments when calling a function, or parameters
-      when defiing a function.
+      when defining a function.
     * ``:`` -> The suffix operator.  Indicates a suffix of an object is
       coming next.  Similar to the dot operator in other languages for
       denoting a member of an object.
