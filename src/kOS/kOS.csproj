@@ -80,6 +80,9 @@
     <Reference Include="UnityEngine">
       <HintPath>..\..\Resources\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>..\..\Resources\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UnityWebRequestAudioModule">
       <HintPath>..\..\Resources\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
     </Reference>
