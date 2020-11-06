@@ -35,7 +35,6 @@ namespace kOS.Suffixed
         private Text label;
         private string labelStr = "";
         private Vector3 labelLocation;
-        private float labelScale;
 
         // These could probably be moved somewhere where they are updated
         // more globally just once per Update() rather than once per
@@ -52,7 +51,6 @@ namespace kOS.Suffixed
         private Vector3 prevCamLookVec;
         private Quaternion camRot;
         private Quaternion prevCamRot;
-        private Vector3 prevCamLookUp;
         private bool isOnMap; // true = Map view, false = Flight view.
         private bool prevIsOnMap;
         private const int MAP_LAYER  =10; // found through trial-and-error
@@ -296,7 +294,6 @@ namespace kOS.Suffixed
             prevIsOnMap = isOnMap;
             prevCamLookVec = camLookVec;
             prevCamRot = camRot;
-            prevCamLookUp = camLookUp;
 
             isOnMap = MapView.MapIsEnabled;
 
