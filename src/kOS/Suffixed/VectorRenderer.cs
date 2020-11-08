@@ -568,7 +568,12 @@ namespace kOS.Suffixed
             */
             labelTransform.localPosition = labelLocation;
             labelTransform.localRotation = camRot;
-            float distanceFromCamera = (camPos - labelLocation).magnitude;
+
+            // This seemed to fix it for flying near the ground but break it for map view:
+            // TODO - Revisit this tomorrow - still not quite right:
+            Vector3 labelScaledPos = (isOnMap ? (Vector3)ScaledSpace.LocalToScaledSpace(labelTransform.position) : labelTransform.position);
+            float distanceFromCamera = (camPos - labelScaledPos).magnitude;
+
             labelTransform.localScale = new Vector3(0.0015f, 0.0015f, 0.0015f) * distanceFromCamera * (float)Scale;
             label.enabled = true;
         }
