@@ -355,7 +355,7 @@ namespace kOS.Function
     }
 
     [Function("time")]
-    public class Time : FunctionBase
+    public class FunctionTime : FunctionBase
     {
         // Note: "TIME" is both a bound variable AND a built-in function now.
         // If it gets called with parentheses(), the script calls this built-in function.
@@ -379,6 +379,23 @@ namespace kOS.Function
             AssertArgBottomAndConsume(shared);
 
             ReturnValue = new kOS.Suffixed.TimeSpan(ut);
+        }
+    }
+
+    [Function("timespan")]
+    public class FunctionTimespan : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            // This version gives a timespan from filling all the values: year, day, hour, minute, month, zeroMode
+            bool zeroMode = Convert.ToBoolean(PopValueAssert(shared));
+            double sec = GetDouble(PopValueAssert(shared));
+            double min = GetDouble(PopValueAssert(shared));
+            double hour = GetDouble(PopValueAssert(shared));
+            double day = GetDouble(PopValueAssert(shared));
+            double year = GetDouble(PopValueAssert(shared));
+
+            ReturnValue = new kOS.Suffixed.TimeSpan(year, day, hour, min, sec, zeroMode);
         }
     }
 

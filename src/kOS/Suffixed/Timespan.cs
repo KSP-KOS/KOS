@@ -11,6 +11,7 @@ namespace kOS.Suffixed
     public class TimeSpan : SerializableStructure, IComparable<TimeSpan>
     {
         public const string DumpSpan = "span";
+        public const string DumpZeroMode = "zeroMode";
 
         double span;
 
@@ -18,6 +19,9 @@ namespace kOS.Suffixed
         private int SecondsPerHour { get { return KSPUtil.dateTimeFormatter.Hour; } }
         private int SecondsPerYear { get { return KSPUtil.dateTimeFormatter.Year; } }
         private int SecondsPerMinute { get { return KSPUtil.dateTimeFormatter.Minute; } }
+        /// <summary>True if years and days should start counting from zero.
+        /// (The default is to call the first year '1" and the first day "1" if this is false.)</summary>
+        public bool ZeroMode { get; set; }
 
         // Only used by CreateFromDump() and the other constructors.
         // Don't make it public because it leaves fields
@@ -32,6 +36,16 @@ namespace kOS.Suffixed
             span = unixStyleTime;
         }
 
+        public TimeSpan(double year, double day, double hour, double minute, double second, bool zeroMode) : this()
+        {
+            ZeroMode = zeroMode;
+            SetYear(year);
+            SetDay(day);
+            SetHour(hour);
+            SetMinute(minute);
+            SetSecond(second);
+        }
+
         // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
         public static TimeSpan CreateFromDump(SafeSharedObjects shared, Dump d)
         {
@@ -42,24 +56,43 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("YEAR", new Suffix<ScalarValue>(CalculateYear));
-            AddSuffix("DAY", new Suffix<ScalarValue>(CalculateDay));
-            AddSuffix("HOUR", new Suffix<ScalarValue>(CalculateHour));
-            AddSuffix("MINUTE", new Suffix<ScalarValue>(CalculateMinute));
-            AddSuffix("SECOND", new Suffix<ScalarValue>(CalculateSecond));
-            AddSuffix("SECONDS", new Suffix<ScalarValue>(() => span));
+            AddSuffix("YEAR", new SetSuffix<ScalarValue>(CalculateYear, SetYear));
+            AddSuffix("DAY", new SetSuffix<ScalarValue>(CalculateDay, SetDay));
+            AddSuffix("HOUR", new SetSuffix<ScalarValue>(CalculateHour, SetHour));
+            AddSuffix("MINUTE", new SetSuffix<ScalarValue>(CalculateMinute, SetMinute));
+            AddSuffix("SECOND", new SetSuffix<ScalarValue>(CalculateSecond, SetSecond));
+            AddSuffix("SECONDS", new SetSuffix<ScalarValue>(() => span, value => span = value));
             AddSuffix("CLOCK", new Suffix<StringValue>(() => string.Format("{0:00}:{1:00}:{2:00}", (int)CalculateHour(), (int)CalculateMinute(), (int)CalculateSecond())));
             AddSuffix("CALENDAR", new Suffix<StringValue>(() => "Year " + CalculateYear() + ", day " + CalculateDay()));
+            AddSuffix("ZEROMODE", new SetSuffix<BooleanValue>(() => ZeroMode, value => ZeroMode = value));
         }
 
         private ScalarValue CalculateYear()
         {
-            return (int)Math.Floor(span / SecondsPerYear) + 1;
+            return (int)Math.Floor(span / SecondsPerYear) + (ZeroMode ? 0 : 1);
+        }
+
+        private void SetYear(ScalarValue newYear)
+        {
+            // First remove the year and leave just the remainder:
+            span -= (CalculateYear() - (ZeroMode ? 0 : 1));
+
+            // Then add the new year value back in:
+            span += (ZeroMode ? newYear : newYear - 1) * SecondsPerYear;
         }
 
         private ScalarValue CalculateDay()
         {
-            return (int)Math.Floor(span % SecondsPerYear / SecondsPerDay) + 1;
+            return (int)Math.Floor(span % SecondsPerYear / SecondsPerDay) + (ZeroMode ? 0 : 1);
+        }
+
+        private void SetDay(ScalarValue newDay)
+        {
+            // First remove the day part:
+            span -= (CalculateDay() - (ZeroMode ? 0 : 1)) * SecondsPerDay;
+
+            // Then add the new day value back in:
+            span += (ZeroMode ? newDay : newDay - 1) * SecondsPerDay;
         }
 
         private ScalarValue CalculateHour()
@@ -67,14 +100,41 @@ namespace kOS.Suffixed
             return (int)Math.Floor(span % SecondsPerDay / SecondsPerHour);
         }
 
+        private void SetHour(ScalarValue newHour)
+        {
+            // First remove the Hour part:
+            span -= CalculateHour() * SecondsPerHour;
+
+            // Then add the new Hour value back in:
+            span += newHour * SecondsPerHour;
+        }
+
         private ScalarValue CalculateMinute()
         {
             return (int)Math.Floor(span % SecondsPerHour / SecondsPerMinute);
         }
 
+        private void SetMinute(ScalarValue newMinute)
+        {
+            // First remove the Minute part:
+            span -= CalculateMinute() * SecondsPerMinute;
+
+            // Then add the new Minute value back in:
+            span += newMinute * SecondsPerMinute;
+        }
+
         private ScalarValue CalculateSecond()
         {
             return (int)Math.Floor(span % SecondsPerMinute);
+        }
+
+        private void SetSecond(ScalarValue newSecond)
+        {
+            // First remove the Seconds part:
+            span -= CalculateSecond();
+
+            // Then add the new Seconds value back in:
+            span += newSecond;
         }
 
         public double ToUnixStyleTime()
@@ -164,7 +224,8 @@ namespace kOS.Suffixed
         {
             var dump = new Dump
             {
-                {DumpSpan, span}
+                {DumpSpan, span},
+                {DumpZeroMode, ZeroMode}
             };
 
             return dump;
@@ -173,6 +234,7 @@ namespace kOS.Suffixed
         public override void LoadDump(Dump dump)
         {
             span = Convert.ToDouble(dump[DumpSpan]);
+            ZeroMode = Convert.ToBoolean(dump[DumpZeroMode]);
         }
             
         public int CompareTo(TimeSpan other)

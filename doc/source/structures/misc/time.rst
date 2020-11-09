@@ -25,6 +25,26 @@ the following points illustrate:
 
 This allows you to use a :struct:`TimeSpan` such as is returned by the :global:`TIME` special variable to make correct physics calculations.
 
+TimeSpan has two modes: "one" mode and "zero" mode
+--------------------------------------------------
+
+By default, a :struct:`TimeSpan` will use a convention where the
+year starts at 1, and the day starts at 1, such there there is
+no such thing as Year 0, and Day 0.  This is how the Kerbal game
+itself shows times, and it matches how our Gregorian Calendar works
+(which was invented when Europe hadn't adapted the number zero yet).
+
+However, if you would prefer it to calculate times starting at
+year 0, and day 0, which is often mathematically cleaner, you
+can do so by setting its boolean suffix :attr:`zeroMode` to true.
+
+The exact same timespan will print out the clock time differently
+depending on how this flag is set, and it will change the meaning
+of how you set it when setting its :attr:`year` and :attr:`day`
+suffixes.  The :attr:`hour`, :attr:`minute`, and :attr:`second`
+suffixes are unaffected by the flag, as they always start from
+zero anyway, even in the stock game.
+
 Built-in function TIME
 ----------------------
 
@@ -44,6 +64,42 @@ Built-in function TIME
     and just call ``TIME()``, then you end up getting
     the current time, which is the same thing that :global:`TIME`
     gives you (without the parentheses).
+
+Built-in function TIMESPAN
+--------------------------
+
+.. function:: TIMESPAN(year, day, hour, minute, second, zeroMode)
+
+    :parameter year: the year portion of the time.  *Meaning changes
+    depending on zeroMode*
+    :parameter day: the day portion of the time.  *Meaning changes
+    depending on zeroMode*
+    :parameter hour: the hour portion of the time.
+    :parameter minute: the minute portion of the time.
+    :parameter second: the second portion of the time.
+    :parameter zeroMode: boolean flag - true if you want this to use
+    zero-based time.
+    :return: A new :struct:`TimeSpan` of the time represented by the
+    values passed in.
+    :rtype: :struct:`TimeSpan`
+
+    This is a way to create a :struct:`TimeSpan` by passing in all the
+    values individually for year, day, hour, minute, second.
+
+    **Important** The meaning of the ``year`` and ``day`` parameters is
+    *different* depending on what you pass in for the ``zeroMode`` boolean
+    value.  If you pass in ``zeroMode`` set to ``false``, then the timespan
+    created will assume you are giving it the year and the day both 
+    in a notation that starts counting at 1.  If you pass in ``zeroMode`` set
+    to ``true``, then the timespan will assume you are giving it the year
+    and the day both in a notation that starts counting at 0.  In other
+    words, ``TIMESPAN(5,4,0,0,0,false)``, which starts counting years and
+    days at 1, is equal to ``TIMESPAN(4,3,0,0,0,true)``, which starts counting
+    years and days at zero.  If you print out their :attr:``seconds``
+    values to see their true time, you'll see they're the same thing.
+
+    The other three parameters, ``hour``, ``minute``, and ``second``, always
+    count from zero and are unaffected by the ``zeroMode`` flag.
 
 Special variable TIME
 ---------------------
@@ -65,16 +121,6 @@ Using a TimeSpan
 
     Note that Kerbals do not have the concept of "months"::
 
-        TIME                // Gets the current universal time
-        TIME:CLOCK          // Universal time in H:M:S format(1:50:26)
-        TIME:CALENDAR       // Year 1, day 134
-        TIME:YEAR           // 1
-        TIME:DAY            // 134 : changes depending on KUNIVERSE:HOURSPERDAY
-        TIME:HOUR           // 1
-        TIME:MINUTE         // 50
-        TIME:SECOND         // 26
-        TIME:SECONDS        // Total Seconds since campaign began
-
     Note that the notion of "how many hours in a day" and "how many days in a year"
     depends on the gameworld, not our real world.  Kerbin has a shorter day, and
     a longer year in days as a result, than Earth.  But there is an option in
@@ -84,6 +130,7 @@ Using a TimeSpan
     Also note that the mods that alter the calendar for other solar systems,
     if they inject changes into KSP's main game, will cause these values to
     change too.
+
 
 .. highlight:: kerboscript
 
@@ -122,37 +169,50 @@ You can use the time reported by :global:`TIME` to detect whether or not a real 
 
     .. list-table::
         :header-rows: 1
-        :widths: 1 1 4
+        :widths: 1 1 1 4
 
         * - Suffix
           - Type
+          - Access
           - Description
 
 
         * - :attr:`CLOCK`
           - :struct:`String`
-          - "HH:MM:SS"
+          - Get Only
+          - A string formatted like so: "HH:MM:SS"
         * - :attr:`CALENDAR`
           - :struct:`String`
-          - "Year YYYY, day DDD"
+          - Get Only
+          - A string formatted like so: "Year Y, day D"
         * - :attr:`SECOND`
           - :struct:`Scalar` (0-59)
+          - Get/Set
           - Second-hand number
         * - :attr:`MINUTE`
           - :struct:`Scalar` (0-59)
+          - Get/Set
           - Minute-hand number
         * - :attr:`HOUR`
           - :struct:`Scalar` (0-5)
+          - Get/Set
           - Hour-hand number
         * - :attr:`DAY`
-          - :struct:`Scalar` (1-426)
-          - Day-hand number
+          - :struct:`Scalar`
+          - Get/Set
+          - Day number - affected by :attr:`zeroMode`
         * - :attr:`YEAR`
           - :struct:`Scalar`
-          - Year-hand number
+          - Get/Set
+          - Year number - affected by :attr:`zeroMode`
         * - :attr:`SECONDS`
           - :struct:`Scalar` (fractional)
+          - Get/Set
           - Total Seconds since Epoch (includes fractional partial seconds)
+        * - :attr:`ZEROMODE`
+          - :struct:`Boolean`
+          - Get/Set
+          - Set True to make :attr:`YEAR` and :attr:`DAY` count from 0, not 1.
 
 
 .. note::
@@ -172,35 +232,80 @@ You can use the time reported by :global:`TIME` to detect whether or not a real 
     :access: Get only
     :type: :struct:`String`
 
-    Day in "Year YYYY, day DDD" format. (Kerbals don't have 'months'.)
+    Day in "Year Y, day D" format. (Kerbals don't have 'months'.)
+    Note that the meaning of this is *different depending on how
+    you set :attr:`zeroMode`.*
 
 .. attribute:: TimeSpan:SECOND
 
-    :access: Get only
+    :access: Get/Set
     :type: :struct:`Scalar` (0-59)
 
-    Second-hand number.
+    Second-hand number. If you SET this, it is like you are affecting
+    ONLY the second-hand of the time, leaving the year, day, hour,
+    and minute as they are.  (In reality the :struct:`TimeSpan` only
+    really remembers times as a single timestamp in seconds since
+    the game started, but what setting this will do is perform the
+    arithmentic behind the scenes to behave as if you only moved
+    the second hand.)
+
+    Unaffected by :attr:`zeroMode`. It always counts from zero no
+    matter what.
 
 .. attribute:: TimeSpan:MINUTE
 
-    :access: Get only
+    :access: Get/Set
     :type: :struct:`Scalar` (0-59)
 
-    Minute-hand number
+    Minute-hand number. If you SET this, it is like you are affecting
+    ONLY the minute-hand of the time, leaving the year, day, hour,
+    and second as they are.  (In reality the :struct:`TimeSpan` only
+    really remembers times as a single timestamp in seconds since
+    the game started, but what setting this will do is perform the
+    arithmentic behind the scenes to behave as if you only moved
+    the minute hand.)
+
+    Unaffected by :attr:`zeroMode`. It always counts from zero no
+    matter what.
 
 .. attribute:: TimeSpan:HOUR
 
-    :access: Get only
+    :access: Get/Set
     :type: :struct:`Scalar` (0-5) or (0-23)
 
-    Hour-hand number. Kerbin has six hours in its day.
+    Hour-hand number. Kerbin has six hours in its day, but
+    you may be using a 24-hour clock anyway if your game
+    settings are set that way.
+
+    If you set this, it is like you are affecting
+    ONLY the hour-hand of the time, leaving the year, day, minute
+    and second as they are.  (In reality the :struct:`TimeSpan` only
+    really remembers times as a single timestamp in seconds since
+    the game started, but what setting this will do is perform the
+    arithmentic behind the scenes to behave as if you only moved
+    the hour hand.)
+
+    Unaffected by :attr:`zeroMode`. It always counts from zero no
+    matter what.
 
 .. attribute:: TimeSpan:DAY
 
-    :access: Get only
+    :access: Get/Set
     :type: :struct:`Scalar` (1-426) or (1-356)
 
     Day-hand number. Kerbin has 426 days in its year.
+
+    *Affected by :attr:`zeroMode`.*  If :attr:`zeroMode` is true,
+    then this uses a reckoning where the day starts at zero,
+    otherwise it starts at one.
+
+    If you set this, You are affecting ONLY the day, leaving
+    the year, hour, minute, and second as they are.
+    (In reality the :struct:`TimeSpan` only
+    really remembers times as a single timestamp in seconds since
+    the game started, but what setting this will do is perform the
+    arithmentic behind the scenes to behave as if you only moved
+    the day of the year, leaving the rest as it is.)
 
 .. attribute:: TimeSpan:YEAR
 
@@ -209,11 +314,77 @@ You can use the time reported by :global:`TIME` to detect whether or not a real 
 
     Year-hand number
 
+    *Affected by :attr:`zeroMode`.*  If :attr:`zeroMode` is true,
+    then this uses a reckoning where the year starts at zero,
+    otherwise it starts at one.  (In reality the :struct:`TimeSpan` only
+    really remembers times as a single timestamp in seconds since
+    the game started, but what setting this will do is perform the
+    arithmentic behind the scenes to behave as if you only shifted
+    the year, to the same day, hour, minute, and second in a diferent
+    year.)
+
 .. attribute:: TimeSpan:SECONDS
 
-    :access: Get only
+    :access: Get/Set
     :type: :struct:`Scalar` (float)
 
     Total Seconds since Epoch.  Epoch is defined as the moment your
     current saved game's universe began (the point where you started
     your campaign).  Can be very precise.
+
+    Not affected by :attr:`zeroMode`.
+
+.. attribute:: TimeSpan:ZEROMODE
+
+    :access: Get/Set
+    :type: :struct:`Boolean`
+
+    *Changes the meaning of the :attr:`Year` and :attr:`Day` suffixes,
+    and changes the string returned by :attr:`Clock` and :attr:`Calendar`
+    too.*
+
+    In Kerbal Space Program, as in the human world, the people in
+    ancient history who invented the calendar in use today didn't
+    use a numbering system that had a concept of "zero".  Therefore
+    the calandar starts with "year 1" and "day 1", even though
+    that's mathematically icky.  You can see this in the game when
+    you start a brand new career and the space center shows a time
+    of "year 1, day 1, 00:00:00" on the game screen, rather than
+    the somewhat more mathematically clean "year 0, day 0, 00:00:00".
+
+    The kOS :struct:`TimeSpan` type uses that same start-at-one
+    convention by default, in order to match what the game shows.
+
+    But you may prefer to see the year and the day starting at zero,
+    just like the hour, minute, and second do.  If you set this
+    suffix on a :struct:`TimeSpan` to true, you cause that
+    :struct:`TimeSpan` to switch to a zero-based convention for
+    year and day.
+
+    This means the following two are actually the exact
+    same timespan, just with different conventions::
+
+      set t1 to time(0).
+      set t1:zeroMode to false. // year and day start with 1.
+      set t1:year to 5.
+      set t1:day to 10.
+      set t1:hour to 3.
+      set t1:minute to 0.
+      set t1:second to 0.
+      print "t1's calendar date, counting from 1 is: " + t1:calendar.
+      print "t1's seconds since epoch is: " + t1:seconds.
+
+      set t2 to time(0).
+      set t2:zeroMode to true. // year and day start with 0.
+      set t2:year to 4.
+      set t2:day to 9.
+      set t2:hour to 3.
+      set t2:minute to 0.
+      set t2:second to 0.
+      print "t2's calendar date, counting from 0 is: " + t2:calendar.
+      print "t2's seconds since epoch is " + t2:seconds.
+
+      print "Note that t1 and t2 are really the same time,".
+      print "Which becomes apparent when you look at their".
+      print "Seconds timestamps.".
+    
