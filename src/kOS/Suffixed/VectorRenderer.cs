@@ -16,6 +16,7 @@ namespace kOS.Suffixed
     {
         public Vector3d Vector { get; set; }
         public RgbaColor Color { get; set; }
+        private RgbaColor prevColor;
         public Vector3d Start { get; set; }
         public double Scale { get; set; }
         public double Width { get; set; }
@@ -569,12 +570,11 @@ namespace kOS.Suffixed
             labelTransform.localPosition = labelLocation;
             labelTransform.localRotation = camRot;
 
-            // This seemed to fix it for flying near the ground but break it for map view:
-            // TODO - Revisit this tomorrow - still not quite right:
-            Vector3 labelScaledPos = (isOnMap ? (Vector3)ScaledSpace.LocalToScaledSpace(labelTransform.position) : labelTransform.position);
-            float distanceFromCamera = (camPos - labelScaledPos).magnitude;
-
-            labelTransform.localScale = new Vector3(0.0015f, 0.0015f, 0.0015f) * distanceFromCamera * (float)Scale;
+            Vector3 scaledLabelLocaton = (isOnMap ? (Vector3)ScaledSpace.LocalToScaledSpace(labelTransform.position) : labelTransform.position);
+            float distanceFromCamera = (camPos - scaledLabelLocaton).magnitude;
+            if (isOnMap)
+                distanceFromCamera *= ScaledSpace.ScaleFactor;
+            labelTransform.localScale = new Vector3(0.006f, 0.006f, 0.006f) * distanceFromCamera * (float)Width;
             label.enabled = true;
         }
 
