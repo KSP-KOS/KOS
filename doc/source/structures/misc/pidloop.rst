@@ -162,6 +162,8 @@ Structure
     :attr:`OUTPUT`                        :struct:`scalar`          The most recent output value
     :attr:`MAXOUTPUT`                     :struct:`scalar`          The maximum output value
     :attr:`MINOUTPUT`                     :struct:`scalar`          The maximum output value
+    :attr:`EPSILON`                       :struct:`scalar`          The "don't care" tolerance of error
+    :attr:`IGNOREERROR`                   :struct:`scalar`          Alias for :attr:`EPSILON`.
     :attr:`ERRORSUM`                      :struct:`scalar`          The time weighted sum of error
     :attr:`PTERM`                         :struct:`scalar`          The proportional component of output
     :attr:`ITERM`                         :struct:`scalar`          The integral component of output
@@ -244,6 +246,55 @@ Structure
     :access: Get/Set
 
     The current minimum output value.  This value also helps with regulating integral wind up mitigation.
+
+
+.. attribute:: PIDLoop:EPSILON
+
+    :type: :struct:`scalar`
+    :access: Get/Set
+
+    Default = 0.
+
+    The size of the "don't care" tolerance window of the error measurement.
+
+    When the error measurement (difference between input and setpoint) is smaller
+    than this number, then this PID loop will simply *pretend* the error is
+    actually zero and react accordingly (it won't output any control deflection
+    to bother correcting the error until after it's bigger than epsilon.)
+    This can be handy when you want a null zone in the input measure.  (This is
+    different from having a null zone in the output, as in having a lever
+    that can't do anything unless it's moved far enough.  This is more of a
+    null zone on the input measurement.)
+
+    (In the PIDLoops that are contained internally within the
+    :struct:`SteeringManager` that ``lock steering`` uses, they use this
+    epsilon to try to reduce the use of RCS propellant that comes from
+    wiggling the controls unnecessarily.)
+
+    Because the PIDloop will pretend any error smaller than epsilon is zero,
+    it also will not incur any "integral windup" for that error.
+
+.. attribute:: PIDLoop:IGNOREERROR
+
+    :type: :struct:`scalar`
+    :access: Get/Set
+
+    This is just an alias that is the same thing as :attr:`EPSILON`.
+
+.. attribute:: PIDLoop:EPSILON
+
+    :type: :struct:`scalar`
+    :access: Get/Set
+
+    Default = 0.
+
+    The size of the "don't care" tolerance window of the error measurement.
+
+    When the error measurement (difference between input and setpoint) is smaller
+    than this number, then the PID loop will simply *pretend* the error is
+    actually zero and react accordingly (it won't bother trying to do anything with
+    the controls to fix the error.)  This can be handy when you want a null zone.
+
 
 .. attribute:: PIDLoop:ERRORSUM
 

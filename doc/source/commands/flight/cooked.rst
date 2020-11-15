@@ -288,6 +288,18 @@ If you don't want to understand the intricate details of the cooked
 steering system, here's some quick suggestions for changes to the
 settings that might help solve some problems, in the list below:
 
+- **problem**: When rotating toward the target direction, ``lock steering``
+  is wiggling the controls back and forth trying to keep the exact
+  rotation rate even though it doesn't matter.  This is wasting RCS
+  fuel.
+
+  - **solution**: Increase :attr:`STEERINGMANAGER:ROTATIONEPSILONMAX` to make
+    it "not care" about the exact rotation rate until it gets closer to
+    the target orientation.
+    Increasing :attr:`STEERINGMANAGER:ROTATIONEPSILONMIN` can help also, but
+    making it too high could prevent the steering from holding the nose on
+    target once it does reach the desired direction.
+
 - **problem**: A large vessel with low torque doesn't seem to be even trying to
   rotate very quickly.  The controls may be fluctuating around the zero point,
   but it doesn't seem to want to even try to turn faster.

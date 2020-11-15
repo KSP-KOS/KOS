@@ -142,7 +142,8 @@ namespace kOS.Control
 
         public const double RadToDeg = 180d / Math.PI;
 
-        private const double EPSILON = 1e-16;
+        private const double CONTROLEPSILON = 1e-16;
+        private const double TORQUEPIDEPSILON = 1e-3;
 
         private double sessionTime = double.MaxValue;
         private double lastSessionTime = double.MaxValue;
@@ -157,13 +158,15 @@ namespace kOS.Control
             }
             set
             {
-                rollControlAngleRange = Math.Max(EPSILON, Math.Min(180, value));
+                rollControlAngleRange = Math.Max(CONTROLEPSILON, Math.Min(180, value));
             }
         }
 
         private double accPitch = 0;
         private double accYaw = 0;
         private double accRoll = 0;
+        private double rotationEpsilonMin = 0d; // really being precise here, but users can make this bigger to make it use less RCS.
+        private double rotationEpsilonMax = 1d; // when it's totally off, as long as it's within 1 degree per second of the right rate, good enough.
 
         private double phi;
         private double phiPitch;
@@ -340,6 +343,8 @@ namespace kOS.Control
             AddSuffix("PITCHTS", new SetSuffix<ScalarValue>(() => pitchPI.Ts, value => pitchPI.Ts = value));
             AddSuffix("YAWTS", new SetSuffix<ScalarValue>(() => yawPI.Ts, value => yawPI.Ts = value));
             AddSuffix("ROLLTS", new SetSuffix<ScalarValue>(() => rollPI.Ts, value => rollPI.Ts = value));
+            AddSuffix("ROTATIONEPSILONMIN", new SetSuffix<ScalarValue>(() => rotationEpsilonMin, SetRotationEpsilonMin));
+            AddSuffix("ROTATIONEPSILONMAX", new SetSuffix<ScalarValue>(() => rotationEpsilonMax, SetRotationEpsilonMax));
             AddSuffix("MAXSTOPPINGTIME", new SetSuffix<ScalarValue>(() => MaxStoppingTime, value => MaxStoppingTime = value));
             AddSuffix("ANGLEERROR", new Suffix<ScalarValue>(() => phi * RadToDeg));
             AddSuffix("PITCHERROR", new Suffix<ScalarValue>(() => phiPitch * RadToDeg));
@@ -426,6 +431,22 @@ namespace kOS.Control
         }
 
         private readonly System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+
+        // Prevent setting Max val smaller than Min val:
+        private void SetRotationEpsilonMin(ScalarValue newVal)
+        {
+            rotationEpsilonMin = newVal;
+            if (newVal > rotationEpsilonMax)
+                rotationEpsilonMax = rotationEpsilonMin;
+        }
+
+        // Prevent setting Max val smaller than Min val:
+        private void SetRotationEpsilonMax(ScalarValue newVal)
+        {
+            rotationEpsilonMax = newVal;
+            if (newVal < rotationEpsilonMin)
+                rotationEpsilonMin = rotationEpsilonMax;
+        }
 
         private void Update(FlightCtrlState c)
         {
@@ -552,19 +573,19 @@ namespace kOS.Control
 
             if (sessionTime > lastSessionTime && EnableTorqueAdjust)
             {
-                if (Math.Abs(accPitch) > EPSILON)
+                if (Math.Abs(accPitch) > CONTROLEPSILON)
                 {
                     adjustTorque.x = Math.Min(Math.Abs(pitchTorqueCalc.Update(measuredTorque.x / accPitch)) - rawTorque.x, 0);
                     //adjustTorque.x = Math.Abs(pitchTorqueCalc.Update(measuredTorque.x / accPitch) / rawTorque.x);
                 }
                 else adjustTorque.x = Math.Abs(pitchTorqueCalc.Update(pitchTorqueCalc.Mean));
-                if (Math.Abs(accYaw) > EPSILON)
+                if (Math.Abs(accYaw) > CONTROLEPSILON)
                 {
                     adjustTorque.z = Math.Min(Math.Abs(yawTorqueCalc.Update(measuredTorque.z / accYaw)) - rawTorque.z, 0);
                     //adjustTorque.z = Math.Abs(yawTorqueCalc.Update(measuredTorque.z / accYaw) / rawTorque.z);
                 }
                 else adjustTorque.z = Math.Abs(yawTorqueCalc.Update(yawTorqueCalc.Mean));
-                if (Math.Abs(accRoll) > EPSILON)
+                if (Math.Abs(accRoll) > CONTROLEPSILON)
                 {
                     adjustTorque.y = Math.Min(Math.Abs(rollTorqueCalc.Update(measuredTorque.y / accRoll)) - rawTorque.y, 0);
                     //adjustTorque.y = Math.Abs(rollTorqueCalc.Update(measuredTorque.y / accRoll) / rawTorque.y);
@@ -625,7 +646,7 @@ namespace kOS.Control
             //controlTorque = Vector3d.Scale(rawTorque, adjustTorque);
             //controlTorque = rawTorque;
 
-            double minTorque = EPSILON;
+            double minTorque = CONTROLEPSILON;
             if (controlTorque.x < minTorque) controlTorque.x = minTorque;
             if (controlTorque.y < minTorque) controlTorque.y = minTorque;
             if (controlTorque.z < minTorque) controlTorque.z = minTorque;
@@ -699,6 +720,7 @@ namespace kOS.Control
         {
             // calculate phi and pitch, yaw, roll components of phi (angular error)
             phi = Vector3d.Angle(vesselForward, targetForward) / RadToDeg;
+
             if (Vector3d.Angle(vesselTop, targetForward) > 90)
                 phi *= -1;
             phiPitch = Vector3d.Angle(vesselForward, Vector3d.Exclude(vesselStarboard, targetForward)) / RadToDeg;
@@ -711,6 +733,15 @@ namespace kOS.Control
             if (Vector3d.Angle(vesselStarboard, Vector3d.Exclude(vesselForward, targetTop)) > 90)
                 phiRoll *= -1;
 
+            // It's a waste of RCS propellant to make it seek an exactly precise rotational
+            // velocity when it's not close to the target direction yet.  This Lerps the
+            // epsilon tolerance so it only starts getting picky about it when it's getting
+            // near the correct orientation:
+            double pitchEpsilon = rotationEpsilonMin + (Math.Abs(phiPitch) / 180) * (rotationEpsilonMax - rotationEpsilonMin);
+            double yawEpsilon = rotationEpsilonMin + (Math.Abs(phiYaw) / 180) * (rotationEpsilonMax - rotationEpsilonMin);
+            double rollEpsilon = rotationEpsilonMin + (Math.Abs(phiRoll) / 180) * (rotationEpsilonMax - rotationEpsilonMin);
+            Console.WriteLine(string.Format("eraseme: pitch, yaw, roll Epsilons: {0}, {1}, {2}", pitchEpsilon, yawEpsilon, rollEpsilon));
+
             // Calculate the maximum allowable angular velocity and apply the limit, something we can stop in a reasonable amount of time
             maxPitchOmega = controlTorque.x * MaxStoppingTime / momentOfInertia.x;
             maxYawOmega = controlTorque.z * MaxStoppingTime / momentOfInertia.z;
@@ -718,8 +749,10 @@ namespace kOS.Control
 
             double sampletime = shared.UpdateHandler.CurrentFixedTime;
             // Because the value of phi is already error, we say the input is -error and the setpoint is 0 so the PID has the correct sign
-            tgtPitchOmega = pitchRatePI.Update(sampletime, -phiPitch, 0, maxPitchOmega);
-            tgtYawOmega = yawRatePI.Update(sampletime, -phiYaw, 0, maxYawOmega);
+            Console.WriteLine(string.Format("eraseme: starting pitchpid update"));
+            tgtPitchOmega = pitchRatePI.Update(sampletime, -phiPitch, 0, maxPitchOmega, pitchEpsilon);
+            Console.WriteLine(string.Format("eraseme: starting yawpid update"));
+            tgtYawOmega = yawRatePI.Update(sampletime, -phiYaw, 0, maxYawOmega, yawEpsilon);
             if (Math.Abs(phi) > RollControlAngleRange * Math.PI / 180d)
             {
                 tgtRollOmega = 0;
@@ -727,13 +760,14 @@ namespace kOS.Control
             }
             else
             {
-                tgtRollOmega = rollRatePI.Update(sampletime, -phiRoll, 0, maxRollOmega);
+                Console.WriteLine(string.Format("eraseme: starting rollpid update"));
+                tgtRollOmega = rollRatePI.Update(sampletime, -phiRoll, 0, maxRollOmega, rollEpsilon);
             }
 
             // Calculate target torque based on PID
-            tgtPitchTorque = pitchPI.Update(sampletime, omega.x, tgtPitchOmega, momentOfInertia.x, controlTorque.x);
-            tgtYawTorque = yawPI.Update(sampletime, omega.y, tgtYawOmega, momentOfInertia.z, controlTorque.z);
-            tgtRollTorque = rollPI.Update(sampletime, omega.z, tgtRollOmega, momentOfInertia.y, controlTorque.y);
+            tgtPitchTorque = pitchPI.Update(sampletime, omega.x, tgtPitchOmega, momentOfInertia.x, controlTorque.x, TORQUEPIDEPSILON);
+            tgtYawTorque = yawPI.Update(sampletime, omega.y, tgtYawOmega, momentOfInertia.z, controlTorque.z, TORQUEPIDEPSILON);
+            tgtRollTorque = rollPI.Update(sampletime, omega.z, tgtRollOmega, momentOfInertia.y, controlTorque.y, TORQUEPIDEPSILON);
 
             //tgtPitchTorque = pitchPI.Update(sampletime, pitchRate.Update(omega.x), tgtPitchOmega, momentOfInertia.x, controlTorque.x);
             //tgtYawTorque = yawPI.Update(sampletime, yawRate.Update(omega.y), tgtYawOmega, momentOfInertia.z, controlTorque.z);
@@ -758,19 +792,19 @@ namespace kOS.Control
                 //TODO: include adjustment for static torque (due to engines)
                 double clampAccPitch = Math.Max(Math.Abs(accPitch), 0.005) * 2;
                 accPitch = tgtPitchTorque / controlTorque.x;
-                if (Math.Abs(accPitch) < EPSILON)
+                if (Math.Abs(accPitch) < CONTROLEPSILON)
                     accPitch = 0;
                 accPitch = Math.Max(Math.Min(accPitch, clampAccPitch), -clampAccPitch);
                 c.pitch = (float)accPitch;
                 double clampAccYaw = Math.Max(Math.Abs(accYaw), 0.005) * 2;
                 accYaw = tgtYawTorque / controlTorque.z;
-                if (Math.Abs(accYaw) < EPSILON)
+                if (Math.Abs(accYaw) < CONTROLEPSILON)
                     accYaw = 0;
                 accYaw = Math.Max(Math.Min(accYaw, clampAccYaw), -clampAccYaw);
                 c.yaw = (float)accYaw;
                 double clampAccRoll = Math.Max(Math.Abs(accRoll), 0.005) * 2;
                 accRoll = tgtRollTorque / controlTorque.y;
-                if (Math.Abs(accRoll) < EPSILON)
+                if (Math.Abs(accRoll) < CONTROLEPSILON)
                     accRoll = 0;
                 accRoll = Math.Max(Math.Min(accRoll, clampAccRoll), -clampAccRoll);
                 c.roll = (float)accRoll;
@@ -1258,13 +1292,13 @@ namespace kOS.Control
                 TorqueAdjust = new MovingAverage();
             }
 
-            public double Update(double sampleTime, double input, double setpoint, double momentOfInertia, double maxOutput)
+            public double Update(double sampleTime, double input, double setpoint, double momentOfInertia, double maxOutput, double epsilon)
             {
                 I = momentOfInertia;
 
                 Loop.Ki = momentOfInertia * Math.Pow(4.0 / ts, 2);
                 Loop.Kp = 2 * Math.Pow(momentOfInertia * Loop.Ki, 0.5);
-                return Loop.Update(sampleTime, input, setpoint, maxOutput);
+                return Loop.Update(sampleTime, input, setpoint, maxOutput, epsilon);
             }
 
             public void ResetI()

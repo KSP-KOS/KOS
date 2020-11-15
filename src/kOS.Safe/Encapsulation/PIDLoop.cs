@@ -95,6 +95,8 @@ namespace kOS.Safe.Encapsulation
 
         public double MaxOutput { get; set; }
 
+        public double Epsilon { get; set; }
+
         public double ErrorSum { get; set; }
 
         public double PTerm { get; set; }
@@ -114,7 +116,7 @@ namespace kOS.Safe.Encapsulation
         {
         }
 
-        public PIDLoop(double kp, double ki, double kd, double maxoutput = double.MaxValue, double minoutput = double.MinValue, bool extraUnwind = false)
+        public PIDLoop(double kp, double ki, double kd, double maxoutput = double.MaxValue, double minoutput = double.MinValue, double nullzone = 0, bool extraUnwind = false)
         {
             LastSampleTime = double.MaxValue;
             Kp = kp;
@@ -126,6 +128,7 @@ namespace kOS.Safe.Encapsulation
             Output = 0;
             MaxOutput = maxoutput;
             MinOutput = minoutput;
+            Epsilon = nullzone;
             ErrorSum = 0;
             PTerm = 0;
             ITerm = 0;
@@ -146,6 +149,7 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("OUTPUT", new Suffix<ScalarValue>(() => Output));
             AddSuffix("MAXOUTPUT", new SetSuffix<ScalarValue>(() => MaxOutput, value => MaxOutput = value));
             AddSuffix("MINOUTPUT", new SetSuffix<ScalarValue>(() => MinOutput, value => MinOutput = value));
+            AddSuffix(new string[] { "IGNOREERROR", "EPSILON" }, new SetSuffix<ScalarValue>(() => Epsilon, value => Epsilon = value));
             AddSuffix("ERRORSUM", new Suffix<ScalarValue>(() => ErrorSum));
             AddSuffix("PTERM", new Suffix<ScalarValue>(() => PTerm));
             AddSuffix("ITERM", new Suffix<ScalarValue>(() => ITerm));
@@ -155,22 +159,30 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("UPDATE", new TwoArgsSuffix<ScalarValue, ScalarValue, ScalarValue>(Update));
         }
 
-        public double Update(double sampleTime, double input, double setpoint, double minOutput, double maxOutput)
+        public double Update(double sampleTime, double input, double setpoint, double minOutput, double maxOutput, double epsilon)
         {
             MaxOutput = maxOutput;
             MinOutput = minOutput;
+            Epsilon = epsilon;
             Setpoint = setpoint;
             return Update(sampleTime, input);
         }
 
-        public double Update(double sampleTime, double input, double setpoint, double maxOutput)
+        public double Update(double sampleTime, double input, double setpoint, double maxOutput, double epsilon)
         {
-            return Update(sampleTime, input, setpoint, -maxOutput, maxOutput);
+            return Update(sampleTime, input, setpoint, -maxOutput, maxOutput, epsilon);
         }
 
         public ScalarValue Update(ScalarValue sampleTime, ScalarValue input)
         {
             double error = Setpoint - input;
+            Console.WriteLine(string.Format("eraseme: PID Update before: {0}, {1}, {2}, {3}", Setpoint, input, error, Epsilon));
+            if (error > -Epsilon && error < Epsilon)
+            {
+                error = 0;
+                input = Setpoint; // some calculations below use input directly instead of error, so we need this too to fake them out.
+            }
+            Console.WriteLine(string.Format("eraseme: PID Update after: {0}, {1}, {2}, {3}", Setpoint, input, error, Epsilon));
             double pTerm = error * Kp;
             double iTerm = 0;
             double dTerm = 0;
