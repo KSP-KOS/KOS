@@ -39,31 +39,77 @@ read the :ref:`tutorial about what PID loops are <pidloops>` first.
 Constructors
 ------------
 
-The `PIDLoop` has multiple constructors available.  Valid syntax can be seen here: ::
+The `PIDLoop` constructor function has a number of parametres, and
+they can be left off, leaving optional defaults.
 
-    // Create a loop with default parameters
+The full version is this::
+
+  SET MYPID TO PIDLOOP(Kp, Ki, Kd, min_output, max_output, epsilon).
+
+With these defaults:
+
+  .. list-table::
+    :header-rows: 1
+    :widths: 1 2 3
+
+    * - Parameter
+      - Default if left off
+      - Meaning
+    
+    * - Kp
+      - 1.0
+      - Proportional gain
+    * - Ki
+      - 0.0
+      - Integral gain
+    * - Kd
+      - 0.0
+      - Derivative gain
+    * - min_output
+      - Very Big negative number. about -1.7e308
+      - The minimum value this PIDLoop will output.
+    * - max_output
+      - Very Big positive number. about -1.7e308
+      - The maximum value this PIDLoop will output.
+    * - epsilon
+      - 0.0
+      - The PIDLoop will ignore any input error smaller than this.
+
+Examples
+~~~~~~~~
+::
+    // With zero parameters, the PIDLoop has default parameters:
     // kp = 1, ki = 0, kd = 0
     // maxoutput = maximum number value
     // minoutput = minimum number value
     SET PID TO PIDLOOP().
 
-    // Other constructors include:
-    SET PID TO PIDLOOP(KP).
-    SET PID TO PIDLOOP(KP, KI, KD).
-    // you must specify both minimum and maximum output directly.
-    SET PID TO PIDLOOP(KP, KI, KD, MINOUTPUT, MAXOUTPUT).
+    // Create a PIDLoop with a few stated paremeters:
+    SET PID TO PIDLOOP(2.5).
+    SET PID TO PIDLOOP(2.0, 0.05, 0.1).
+    SET PID TO PIDLOOP(2.0, 0.05, 0.1, -1, 1).
 
-    // remember to update both minimum and maximum output if the value changes symmetrically
-    SET LIMIT TO 0.5.
-    SET PID:MAXOUTPUT TO LIMIT.
-    SET PID:MINOUTPUT TO -LIMIT.
+Example of using it:
+~~~~~~~~~~~~~~~~~~~~
 
-    // call the update suffix to get the output
-    SET OUT TO PID:UPDATE(TIME:SECONDS, IN).
-
-    // you can also get the output value later from the PIDLoop object
-    SET OUT TO PID:OUTPUT.
-
+    // Throttle up when below target altitude, throttle down when above
+    // target altitude, trying to hover:
+    local target_alt is 100.
+    set HOVERPID to PIDLOOP(
+        50,  // adjust throttle 0.1 per 5m in error from desired altitude.
+        0.1, // adjust throttle 0.1 per second spent at 1m error in altitude.
+        30,  // adjust throttle 0.1 per 3 m/s speed toward desired altitude.
+        0,   // min possible throttle is zero.
+        1    // max possible throttle is one.
+      ).
+    set HOVERPID:SETPOINT to target_alt.
+    set mythrot to 0.
+    lock throttle to mythrot.
+    until false {
+      set mythrot to HOVERPID:UPDATE(TIME:SECONDS, alt:radar).
+      wait 0.
+    }
+    
 Please see the bottom of this page for information on the derivation of the loop's output.
 
 .. _basic_pidloop_example:

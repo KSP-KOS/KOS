@@ -166,7 +166,7 @@ namespace kOS.Control
         private double accYaw = 0;
         private double accRoll = 0;
         private double rotationEpsilonMin = 0d; // really being precise here, but users can make this bigger to make it use less RCS.
-        private double rotationEpsilonMax = 1d; // when it's totally off, as long as it's within 1 degree per second of the right rate, good enough.
+        private double rotationEpsilonMax = 0.5d; // when it's totally off, as long as it's within this many degrees per second of the right rate, good enough.
 
         private double phi;
         private double phiPitch;
@@ -740,7 +740,6 @@ namespace kOS.Control
             double pitchEpsilon = rotationEpsilonMin + (Math.Abs(phiPitch) / 180) * (rotationEpsilonMax - rotationEpsilonMin);
             double yawEpsilon = rotationEpsilonMin + (Math.Abs(phiYaw) / 180) * (rotationEpsilonMax - rotationEpsilonMin);
             double rollEpsilon = rotationEpsilonMin + (Math.Abs(phiRoll) / 180) * (rotationEpsilonMax - rotationEpsilonMin);
-            Console.WriteLine(string.Format("eraseme: pitch, yaw, roll Epsilons: {0}, {1}, {2}", pitchEpsilon, yawEpsilon, rollEpsilon));
 
             // Calculate the maximum allowable angular velocity and apply the limit, something we can stop in a reasonable amount of time
             maxPitchOmega = controlTorque.x * MaxStoppingTime / momentOfInertia.x;
@@ -749,9 +748,7 @@ namespace kOS.Control
 
             double sampletime = shared.UpdateHandler.CurrentFixedTime;
             // Because the value of phi is already error, we say the input is -error and the setpoint is 0 so the PID has the correct sign
-            Console.WriteLine(string.Format("eraseme: starting pitchpid update"));
             tgtPitchOmega = pitchRatePI.Update(sampletime, -phiPitch, 0, maxPitchOmega, pitchEpsilon);
-            Console.WriteLine(string.Format("eraseme: starting yawpid update"));
             tgtYawOmega = yawRatePI.Update(sampletime, -phiYaw, 0, maxYawOmega, yawEpsilon);
             if (Math.Abs(phi) > RollControlAngleRange * Math.PI / 180d)
             {
@@ -760,7 +757,6 @@ namespace kOS.Control
             }
             else
             {
-                Console.WriteLine(string.Format("eraseme: starting rollpid update"));
                 tgtRollOmega = rollRatePI.Update(sampletime, -phiRoll, 0, maxRollOmega, rollEpsilon);
             }
 

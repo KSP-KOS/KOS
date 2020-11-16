@@ -20,6 +20,7 @@ namespace kOS.Safe.Encapsulation
                 double kp;
                 double minoutput;
                 double maxoutput;
+                double epsilon;
                 switch (args)
                 {
                     case 0:
@@ -42,6 +43,15 @@ namespace kOS.Safe.Encapsulation
                         ki = GetDouble(PopValueAssert(shared));
                         kp = GetDouble(PopValueAssert(shared));
                         this.ReturnValue = new PIDLoop(kp, ki, kd, maxoutput, minoutput);
+                        break;
+                    case 6:
+                        epsilon = GetDouble(PopValueAssert(shared));
+                        maxoutput = GetDouble(PopValueAssert(shared));
+                        minoutput = GetDouble(PopValueAssert(shared));
+                        kd = GetDouble(PopValueAssert(shared));
+                        ki = GetDouble(PopValueAssert(shared));
+                        kp = GetDouble(PopValueAssert(shared));
+                        this.ReturnValue = new PIDLoop(kp, ki, kd, maxoutput, minoutput, epsilon);
                         break;
                     default:
                         throw new KOSArgumentMismatchException(new[] { 0, 1, 3, 5 }, args);
@@ -176,13 +186,11 @@ namespace kOS.Safe.Encapsulation
         public ScalarValue Update(ScalarValue sampleTime, ScalarValue input)
         {
             double error = Setpoint - input;
-            Console.WriteLine(string.Format("eraseme: PID Update before: {0}, {1}, {2}, {3}", Setpoint, input, error, Epsilon));
             if (error > -Epsilon && error < Epsilon)
             {
                 error = 0;
                 input = Setpoint; // some calculations below use input directly instead of error, so we need this too to fake them out.
             }
-            Console.WriteLine(string.Format("eraseme: PID Update after: {0}, {1}, {2}, {3}", Setpoint, input, error, Epsilon));
             double pTerm = error * Kp;
             double iTerm = 0;
             double dTerm = 0;
