@@ -114,65 +114,76 @@ namespace kOS.Suffixed
             if (part.State == PartStates.DEAD || part.transform == null)
                 return;
 
-            PartValue self = null;
+            // Modules can be in any order, so to enforce some sort of priority for parts which are multiple types,
+            // gather all potential modules and then select from those valid.
+            IEngineStatus engine = null;
+            ModuleRCS rcs = null;
+            PartValue separator = null;
+            ModuleEnviroSensor sensor = null;
+
             foreach (var module in part.Modules)
             {
-                var engine = module as IEngineStatus;
-                if (engine != null)
+                if (module is IEngineStatus)
                 {
-                    self = new EngineValue(Shared, part, parent, decoupler);
-                    break;
+                    engine = module as IEngineStatus;
                 }
-                var rcs = module as ModuleRCS;
-                if (rcs != null)
+                else if (module is ModuleRCS)
                 {
-                    self = new RCSValue(Shared, part, parent, decoupler, rcs);
-                    break;
+                    rcs = module as ModuleRCS;
                 }
-                if (module is IStageSeparator)
+                else if (module is IStageSeparator)
                 {
                     var dock = module as ModuleDockingNode;
                     if (dock != null)
                     {
                         var port = new DockingPortValue(Shared, part, parent, decoupler, dock);
-                        self = port;
+                        separator = port;
                         dockingPorts.Add(port);
                         if (!module.StagingEnabled())
-                            break;
+                            continue;
                         decoupler = port;
                         decouplers.Add(decoupler);
                     }
+                    // ignore anything with staging disabled and continue the search
+                    // this can e.g. be heat shield or some sensor with integrated decoupler
                     else
                     {
-                        // ignore anything with staging disabled and continue the search
-                        // this can e.g. be heat shield or some sensor with integrated decoupler
                         if (!module.StagingEnabled())
                             continue;
                         if (module is LaunchClamp)
-                            self = decoupler = new LaunchClampValue(Shared, part, parent, decoupler);
+                            separator = decoupler = new LaunchClampValue(Shared, part, parent, decoupler);
                         else if (module is ModuleDecouple || module is ModuleAnchoredDecoupler)
-                            self = decoupler = new DecouplerValue(Shared, part, parent, decoupler);
+                            separator = decoupler = new DecouplerValue(Shared, part, parent, decoupler);
                         else // ModuleServiceModule ?
                             continue; // rather continue the search
                         decouplers.Add(decoupler);
                     }
                     // ignore leftover decouplers
                     if (decoupler == null || decoupler.Part.inverseStage >= StageManager.CurrentStage)
-                        break;
+                        continue;
                     // check if we just created closer decoupler (see StageValues.CreatePartSet)
                     if (nextDecoupler == null || decoupler.Part.inverseStage > nextDecoupler.Part.inverseStage)
                         nextDecoupler = decoupler;
-                    break;
                 }
-                var sensor = module as ModuleEnviroSensor;
-                if (sensor != null)
+                else if (module is ModuleEnviroSensor)
                 {
-                    self = new SensorValue(Shared, part, parent, decoupler, sensor);
-                    break;
+                    sensor = module as ModuleEnviroSensor;
                 }
             }
-            if (self == null)
+
+            // Select part value in priority order
+            PartValue self;
+            if (engine != null)
+                self = new EngineValue(Shared, part, parent, decoupler);
+            else if (rcs != null)
+                self = new RCSValue(Shared, part, parent, decoupler, rcs);
+            else if (separator != null)
+                self = separator;
+            else if (sensor != null)
+                self = new SensorValue(Shared, part, parent, decoupler, sensor);
+            else
                 self = new PartValue(Shared, part, parent, decoupler);
+
             if (rootPart == null)
                 rootPart = self;
             partCache[part] = self;
