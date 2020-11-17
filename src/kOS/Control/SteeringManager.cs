@@ -165,7 +165,7 @@ namespace kOS.Control
         private double accPitch = 0;
         private double accYaw = 0;
         private double accRoll = 0;
-        private double rotationEpsilonMin = 0d; // really being precise here, but users can make this bigger to make it use less RCS.
+        private double rotationEpsilonMin = 0.01d; // really being precise here, but users can make this bigger to make it use less RCS.
         private double rotationEpsilonMax = 0.5d; // when it's totally off, as long as it's within this many degrees per second of the right rate, good enough.
 
         private double phi;
