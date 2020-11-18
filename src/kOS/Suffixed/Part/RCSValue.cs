@@ -6,6 +6,7 @@ using kOS.Safe.Utilities;
 using kOS.Suffixed.PartModuleField;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 namespace kOS.Suffixed.Part
@@ -14,6 +15,7 @@ namespace kOS.Suffixed.Part
     public class RCSValue : PartValue
     {
         private readonly ModuleRCS module;
+        private static FieldInfo deadbandField = typeof(ModuleRCS).GetField("EPSILON", BindingFlags.Instance | BindingFlags.NonPublic);
 
         /// <summary>
         /// Do not call! VesselTarget.ConstructPart uses this, would use `friend VesselTarget` if this was C++!
@@ -37,6 +39,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("FOREBYTHROTTLE", new SetSuffix<BooleanValue>(() => module.useThrottle, value => module.useThrottle = value));
             AddSuffix("FULLTHRUST", new SetSuffix<BooleanValue>(() => module.fullThrust, value => module.fullThrust = value));
             AddSuffix("THRUSTLIMIT", new ClampSetSuffix<ScalarValue>(() => module.thrustPercentage, value => module.thrustPercentage = value, 0f, 100f, 0f, "thrust limit percentage for this rcs thruster"));
+            AddSuffix("DEADBAND", new ClampSetSuffix<ScalarValue>(() => (float)deadbandField.GetValue(module), value => deadbandField.SetValue(module, (float)value), 0f, 1f, 0f, "deadband for this rcs thruster"));
             // Performance metrics
             AddSuffix("AVAILABLETHRUST", new Suffix<ScalarValue>(() => module.GetThrust(useThrustLimit: true)));
             AddSuffix("AVAILABLETHRUSTAT",  new OneArgsSuffix<ScalarValue, ScalarValue>((ScalarValue atmPressure) => module.GetThrust(atmPressure, useThrustLimit: true)));
