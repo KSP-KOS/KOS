@@ -327,21 +327,6 @@ Structure
 
     This is just an alias that is the same thing as :attr:`EPSILON`.
 
-.. attribute:: PIDLoop:EPSILON
-
-    :type: :struct:`scalar`
-    :access: Get/Set
-
-    Default = 0.
-
-    The size of the "don't care" tolerance window of the error measurement.
-
-    When the error measurement (difference between input and setpoint) is smaller
-    than this number, then the PID loop will simply *pretend* the error is
-    actually zero and react accordingly (it won't bother trying to do anything with
-    the controls to fix the error.)  This can be handy when you want a null zone.
-
-
 .. attribute:: PIDLoop:ERRORSUM
 
     :type: :struct:`scalar`
@@ -396,10 +381,14 @@ PIDLoop Update Derivation
 
 The internal update method of the :struct:`PIDLoop` structure is the equivalent of the following in kerboscript ::
 
-    // assume that the terms LastInput, LastSampleTime, ErrorSum, Kp, Ki, Kd, Setpoint, MinOutput, and MaxOutput are previously defined
+    // assume that the terms LastInput, LastSampleTime, ErrorSum, Kp, Ki, Kd, Setpoint, MinOutput, MaxOutput, and Epsilon are previously defined
     declare function Update {
         declare parameter sampleTime, input.
         set Error to Setpoint - input.
+        if Error > -Epsilon and Error < Epsilon {
+          set Error to 0. // pretend there is no error.
+          set input to Setpoint. // pretend there is no error.
+        }
         set PTerm to error * Kp.
         set ITerm to 0.
         set DTerm to 0.
