@@ -55,6 +55,9 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type R
         * - :attr:`THRUSTLIMIT`
           - :ref:`scalar <scalar>` (%)
           - Tweaked thrust limit.
+        * - :attr:`DEADBAND`
+          - :ref:`scalar <scalar>`
+          - The game's built-in RCS input null zone for this RCS thruster.
         * - :attr:`MAXTHRUST`
           - :ref:`scalar <scalar>` (kN)
           - Untweaked thrust limit.
@@ -191,6 +194,71 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type R
     act of just looking at the menu will cause it to become 10.5 instead
     of 10.5123.  There isn't much that kOS can do to change this.  It's a
     user interface decision baked into the stock game.
+
+.. attribute:: RCS:DEADBAND
+
+    :access: Get/Set (but Note the Warning on SET below)
+    :type: :ref:`scalar <scalar>`
+
+    Default: 0.05.
+
+    **Please note the warning below before you try to SET this.**
+
+    The stock game imposes a large dead zone on RCS thrusters.  By
+    default they will not respond to any inputs less than this value.
+    For example, at the default value of 0.05, the RCS thruster
+    will ignore this statement::
+    
+        set ship:control:yaw to 0.049.
+
+    but it will respond to this statement::
+
+        set ship:control:yaw to 0.051.
+
+    The reason this limit exists is apparently (this is speculation,
+    warning) that it's how the stock game prevents SAS from spending
+    a lot of monopropellant when it wiggles the controls small amounts.
+    When control inputs are smaller than this value, then the RCS
+    thrusters ignore them and only the reaction wheels and engine
+    gimbals respond.  Despite the fact that this is really only a
+    problem with SAS, the game appears to have solved the problem by
+    imposing this null zone physically on the RCS parts themselves so
+    the limit affects everything that uses them, including kOS
+    autopiloting and user manual control.
+
+    The best way to deal with this, if you have a script that wants
+    the RCS thrusters to operate at a value less than this, is
+    to pulse the input intermittently on and off at 0.05 to achieve
+    amounts smaller than 0.05, rather than trying to solve it by
+    setting this value.  (Remember that in the real world, thrusters
+    have a minimum thrust they can't go below so it's not entirely
+    unrealistic for this deadband to exist in the game.)
+
+.. warning::
+
+    **BEWARE if you want to Set this:**
+    Although this can be set and changing it works okay in the current
+    version of KSP as of this writing (KSP 1.10.1), it is exactly the
+    sort of thing that seems could break in future versions of KSP.
+
+    Be aware of that when deciding to change it. (If you are a programmer,
+    you might understand the next sentence and get a clear picture of
+    why this warning is here:  The value in the KSP class that this
+    affects is marked ``private`` and kOS is using "Reflection" to bypass
+    that access rule.)
+
+    If you are tempted to change this value, please first consider
+    coming up with a solution where your script pulses the input
+    on and off between 0.05 and 0 to simulate inputs less than 0.05.
+
+.. warning::
+
+    **BEWARE if you want to Set this:**
+    Setting this value too small on your RCS thrusters will cause the
+    stock SAS to wastefully spend RCS propellant wiggling the controls
+    when it tries to hold position.  (If you ever played KSP back in
+    its alpha pre-release days you might remember SAS behaving like 
+    this in the old days.)
 
 .. _rcs_MAXTHRUST:
 

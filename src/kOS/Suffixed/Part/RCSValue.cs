@@ -15,7 +15,24 @@ namespace kOS.Suffixed.Part
     public class RCSValue : PartValue
     {
         private readonly ModuleRCS module;
+
         private static FieldInfo deadbandField = typeof(ModuleRCS).GetField("EPSILON", BindingFlags.Instance | BindingFlags.NonPublic);
+
+        /// <summary>
+        /// Accesses the private KSPField inside stock ModuleRCS that causes it to have a 5% deadband.  This
+        /// appears to exist for the purpose of making stock SAS not waste monoprop maintaining
+        /// direction.
+        /// <para />
+        /// Because it is private, changing it is at the users' own risk.
+        /// <para />
+        /// We will protect all access to it through checks to see if it's null (it will be null if the
+        /// field stops existing in a future KSP release.)
+        /// </summary>
+        private float Deadband
+        {
+            get { return (float)(deadbandField == null ? 0.05f : deadbandField.GetValue(module)); }
+            set { if (deadbandField != null) deadbandField.SetValue(module, value); }
+        }
 
         /// <summary>
         /// Do not call! VesselTarget.ConstructPart uses this, would use `friend VesselTarget` if this was C++!
@@ -39,7 +56,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("FOREBYTHROTTLE", new SetSuffix<BooleanValue>(() => module.useThrottle, value => module.useThrottle = value));
             AddSuffix("FULLTHRUST", new SetSuffix<BooleanValue>(() => module.fullThrust, value => module.fullThrust = value));
             AddSuffix("THRUSTLIMIT", new ClampSetSuffix<ScalarValue>(() => module.thrustPercentage, value => module.thrustPercentage = value, 0f, 100f, 0f, "thrust limit percentage for this rcs thruster"));
-            AddSuffix("DEADBAND", new ClampSetSuffix<ScalarValue>(() => (float)deadbandField.GetValue(module), value => deadbandField.SetValue(module, (float)value), 0f, 1f, 0f, "deadband for this rcs thruster"));
+            AddSuffix("DEADBAND", new ClampSetSuffix<ScalarValue>(() => (float)Deadband, value => Deadband = value, 0f, 1f, 0f, "deadband for this rcs thruster"));
             // Performance metrics
             AddSuffix("AVAILABLETHRUST", new Suffix<ScalarValue>(() => module.GetThrust(useThrustLimit: true)));
             AddSuffix("AVAILABLETHRUSTAT",  new OneArgsSuffix<ScalarValue, ScalarValue>((ScalarValue atmPressure) => module.GetThrust(atmPressure, useThrustLimit: true)));
