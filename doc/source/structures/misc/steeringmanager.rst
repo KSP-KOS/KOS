@@ -169,7 +169,7 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     :type: :ref:`scalar <scalar>`
     :access: Get/Set
 
-    DEFAULT VALUE: TODO.
+    DEFAULT VALUE: 0.01
 
     Tweaking this value can help make the controls stop wiggling so fast.
 
@@ -189,7 +189,7 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     :type: :ref:`scalar <scalar>`
     :access: Get/Set
 
-    DEFAULT VALUE: TODO.
+    DEFAULT VALUE: 0.5
 
     Tweaking this value can help make the controls stop wiggling so fast.
     If you have problems wasting too much RCS propellant because kOS
@@ -224,6 +224,24 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
 
     If you desire a constant epsilon, set both the min and max values to the
     same value.
+
+.. _rotationepsilonmax_math:
+
+    ** MIN VESSEL CAPABILITY: **
+
+    Warning: Setting :attr:`SteeringManager:ROTATIONEPSILONMAX` too large can
+    make the SteeringManager fail to try turning the craft at all.  Use this
+    formula to decide what is probably the maximum safe value you can set
+    it to without it causing this problem:
+
+    Let :math:`\omega = \text{rotational acceleration the vessel is
+    capable of, expressed in} \frac{\text{degrees}}{\text{second}^2}`
+
+    Then :math:`\epsilon`, the maximum safe ``RotationEpsilonMax``
+    to pick, is:
+
+    :math:`\epsilon = \omega \cdot {MAXSTOPPINGTIME}`
+    Where MAXSTOPPINGTIME is :attr:`SteeringManager:MAXSTOPPINGTIME`
 
 .. attribute:: SteeringManager:MAXSTOPPINGTIME
 

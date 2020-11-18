@@ -291,7 +291,10 @@ settings that might help solve some problems, in the list below:
 - **problem**: When rotating toward the target direction, ``lock steering``
   is wiggling the controls back and forth trying to keep the exact
   rotation rate even though it doesn't matter.  This is wasting RCS
-  fuel.
+  fuel.  (NOTE: This problem is different from the problem where it
+  wiggles the controls *after* it arrives at the destination orientation.
+  This is specifically for when it wiggles the controls *during* its
+  rotation to the destination orientation.)
 
   - **solution**: Increase :attr:`STEERINGMANAGER:ROTATIONEPSILONMAX` to make
     it "not care" about the exact rotation rate until it gets closer to
@@ -300,9 +303,30 @@ settings that might help solve some problems, in the list below:
     making it too high could prevent the steering from holding the nose on
     target once it does reach the desired direction.
 
+- **problem**: On a vessel with very very slow rotational acceleration
+  capabilities, kOS appears to be making no attempt at all to rotate
+  the vessel.  (Note, not just slowly, but literally never moving the
+  controls at all).
+
+  - **solution**: You might have to either decrease
+    :attr:`STEERINGMANAGER:ROTATIONEPSILONMAX` or increase
+    :attr:`STEERINGMANAGER:MAXSTOPPINGTIME`.
+
+  - **explanation**: The problem may be that your vessel is so slow at
+    rotating that the rotation rate the SteeringManager is attempting
+    to achieve falls within its epsilon (null zone) that it ignores.
+    Refer to :ref:`this formula <rotationepsilonmax_math>` to see if
+    this is the problem.  kOS's has default values that attempt to be
+    good enough for most designs, but it's impossible to guess every
+    design that every player might try.  If you design a vessel that
+    takes quite a few minutes to rotate around, it might fall outside
+    the range of possibilities the default settings were made for.
+
 - **problem**: A large vessel with low torque doesn't seem to be even trying to
-  rotate very quickly.  The controls may be fluctuating around the zero point,
-  but it doesn't seem to want to even try to turn faster.
+  rotate very quickly.  It *does* turn, but very slowly.  Once it starts
+  turning, the controls may be fluctuating around the zero point, letting it
+  rotate slowly with momentum without trying to push its rotation any
+  faster.
 
   - **solution**: Increase `STEERINGMANAGER:MAXSTOPPINGTIME` to about 5 or
     10 seconds or so.  Also, slightly increase `STEERINGMANAGER:PITCHPID:KD`
@@ -310,24 +334,56 @@ settings that might help solve some problems, in the list below:
 
   - **explanation**: Once the steering manager gets such a ship rotating at
     a tiny rate, it stops trying to make it rotate any faster than that
-    because it's "afraid" of allowing it to obtain a larger momentum than it
-    thinks it could quickly stop.  It needs to be told that in this case
-    it's okay to build up more "seconds worth" of rotational velocity.  The
-    reason for increasing the Kd term as well is to tell it to anticipate
-    the need to starting slowing down rotation sooner than it normally
-    would.
+    because it's designed to optimize for less expended thrust rather than
+    for faster turning.  Every bit of angular momentum it builds up it's
+    just going to have to stop again later.  The setting it uses to
+    make this decision is :attr:`STEERINGMANAGER:MAXSTOPPINGTIME`.  It
+    tries not to build up an angular velocity that would take it more than
+    ``MAXSTOPPINGTIME`` seconds to stop again later.  Increasing this
+    setting tells it you'd rather err on the side of faster rotations
+    rather than err on the side of less expenditure of torque/RCS fuel.
+    The reason for increasing the Kd terms as well is to help it deal
+    with the need to be more proactive about the slowing down at the end
+    of the turn.
 
 - **problem**: A vessel seems to reasonably come to the desired direction
   sensibly, but once it's there the ship vibrates back and forth by about 1
   degree or less excessively around the setpoint.
 
-  - **solution**: Increase `STEERINGMANAGER:PITCHTS` and
+  - **solution 1**: Increase `STEERINGMANAGER:PITCHTS` and
     `STEERINGMANAGER:YAWTS` to several seconds.
+
+  - **solution 2**: If you don't care about the exact precision to
+    point the correct direction to tiny fractions of a degree, then
+    increase :attr:`SteeringManager:ROTATIONEPSILONMIN` by a little bit.
 
   - **explanation**: Once it's
     at the desired orientation and it has mostly zeroed the rotational
     velocity, it's trying to hold it there with microadjustments to the
     controls, and those microadjustments are "too tight".
+
+- **problem**: The vessel is having a hard time holding on to its
+  ``lock steering`` direction during a burn when you have physics
+  warp on.  It keeps veering off and having to correct the steering
+  back again.  It may even show the rocket bending.
+
+  - **solution:** If this is happening specifically under physics warp,
+    and specifically during burns, chances are this is KSP's fault, not
+    kOS, and it can be fixed by turning on KSP's "Advanced Tweakables" and
+    autostrutting a few parts on the ship to root.
+    
+  - **explanation:** This happens because your
+    vessel has some of those springy joints in it that go haywire under
+    physics warp.  (You know the kind, where when you thrust the vessel
+    visibly compresses like a spring?) When you have a springy joint on
+    the ship, not only does it compress and stretch but it also flexes
+    side to side.  This flexing side to side can cause kOS to get false
+    information about which way the vessel is pointed. Because the
+    vessel's official orientation is the orientation of the 'control from
+    here' part, which is getting wiggled around by the physics warp,
+    the official orientation information is always a few degrees off.
+    kOS is believing that false information about which way the vessel
+    is pointed and trying to "correct" it.)
 
 - **problem**: The vessel's nose seems to be waving slowly back and forth
   across the set direction, taking too long to center on it, and you notice
