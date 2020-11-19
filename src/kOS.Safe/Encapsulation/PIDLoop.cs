@@ -188,8 +188,12 @@ namespace kOS.Safe.Encapsulation
             double error = Setpoint - input;
             if (error > -Epsilon && error < Epsilon)
             {
+                // Pretend there is no error (get everything to zero out)
+                // because the error is within the epsilon:
                 error = 0;
-                input = Setpoint; // some calculations below use input directly instead of error, so we need this too to fake them out.
+                input = Setpoint;
+                Input = input;
+                Error = error;
             }
             double pTerm = error * Kp;
             double iTerm = 0;
