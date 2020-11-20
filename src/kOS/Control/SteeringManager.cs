@@ -325,8 +325,8 @@ namespace kOS.Control
             MaxStoppingTime = 2;
             RollControlAngleRange = 5;
 
-            torquePIDEpsilonMin = 0.002d;
-            torquePIDEpsilonMax = 0.01d;
+            torquePIDEpsilonMin = 0.0002d;
+            torquePIDEpsilonMax = 0.001d;
 
             PitchTorqueAdjust = 0;
             YawTorqueAdjust = 0;

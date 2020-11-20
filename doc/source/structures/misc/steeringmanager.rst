@@ -169,7 +169,7 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     :type: :ref:`scalar <scalar>`
     :access: Get/Set
 
-    DEFAULT VALUE: 0.002
+    DEFAULT VALUE: 0.0002
 
     Tweaking this value can help make the controls stop wiggling so fast.
 
@@ -189,7 +189,7 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     :type: :ref:`scalar <scalar>`
     :access: Get/Set
 
-    DEFAULT VALUE: 0.01
+    DEFAULT VALUE: 0.001
 
     Tweaking this value can help make the controls stop wiggling so fast.
     If you have problems wasting too much RCS propellant because kOS
