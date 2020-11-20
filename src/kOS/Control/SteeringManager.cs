@@ -706,8 +706,9 @@ namespace kOS.Control
                     Vector3 rotateEnables = new Vector3(rcs.enablePitch ? 1 : 0, rcs.enableRoll ? 1 : 0, rcs.enableYaw ? 1 : 0);
                     Vector3 translateEnables = new Vector3(rcs.enableX ? 1 : 0, rcs.enableZ ? 1 : 0, rcs.enableY ? 1 : 0);
 
-                    Vector3 sum = new Vector3(0f, 0f, 0f);
-                    for (int i = rcs.thrusterTransforms.Count-1; i >- 0; --i)
+                    pos = new Vector3(0f, 0f, 0f);
+                    neg = new Vector3(0f, 0f, 0f);
+                    for (int i = rcs.thrusterTransforms.Count-1; i >= 0; --i)
                     {
                         Transform rcsTransform = rcs.thrusterTransforms[i];
                         Vector3 rcsPosFromCoM = rcsTransform.position - Vessel.CurrentCoM;
@@ -717,10 +718,10 @@ namespace kOS.Control
                         // but kOS doesn't obey that.
                         Vector3 thrust = powerFactor * rcsThrustDir;
                         Vector3 torque = Vector3d.Cross(rcsPosFromCoM, thrust);
-                        sum += Vector3.Scale(Vessel.ReferenceTransform.InverseTransformDirection(torque), rotateEnables);
+                        Vector3 transformedTorque = Vector3.Scale(Vessel.ReferenceTransform.InverseTransformDirection(torque), rotateEnables);
+                        pos += Vector3.Max(transformedTorque, Vector3.zero);
+                        neg += Vector3.Min(transformedTorque, Vector3.zero);
                     }
-                    pos = sum;
-                    neg = -1 * sum;
                 }
             }
             else if (tp is ModuleReactionWheel)
