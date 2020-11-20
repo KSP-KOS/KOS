@@ -654,7 +654,7 @@ namespace kOS.Control
             foreach (var pm in torqueProviders.Keys)
             {
                 var tp = torqueProviders[pm];
-                tp.GetPotentialTorque(out pos, out neg);
+                CorrectedGetPotentialTorque(tp, out pos, out neg);
                 // It is possible for the torque returned to be negative.  It's also possible
                 // for the positive and negative actuation to differ.  Below averages the value
                 // for positive and negative actuation in an attempt to compensate for some issues
@@ -676,6 +676,57 @@ namespace kOS.Control
             if (controlTorque.x < minTorque) controlTorque.x = minTorque;
             if (controlTorque.y < minTorque) controlTorque.y = minTorque;
             if (controlTorque.z < minTorque) controlTorque.z = minTorque;
+        }
+
+        /// <summary>
+        /// See https://github.com/KSP-KOS/KOS/issues/2814 for why this wrapper around KSP's API call exists.
+        /// <para />
+        /// </summary>
+        void CorrectedGetPotentialTorque(ITorqueProvider tp, out Vector3 pos, out Vector3 neg)
+        {
+            if (tp is ModuleRCS)
+            {
+                // The stock call GetPotentialTorque is completely broken in the case of ModuleRCS.  So
+                // this replaces it entirely until KSP ever fixes the bug that's been in their
+                // bug list forever (probably won't get fixed).
+                ModuleRCS rcs = tp as ModuleRCS;
+                Part p = rcs.part;
+                if (p.ShieldedFromAirstream || !rcs.rcsEnabled || !rcs.isEnabled || rcs.isJustForShow)
+                {
+                    // RCS module shouldn't work in this case - so report zero:
+                    pos = new Vector3(0f, 0f, 0f);
+                    neg = new Vector3(0f, 0f, 0f);
+                }
+                else
+                {
+                    // The algorithm here is adapted from code in the MandatoryRCS mod
+                    // that had to solve this same problem:
+
+                    // Note the swapping of Y and Z axes to align with "part space":
+                    Vector3 rotateEnables = new Vector3(rcs.enablePitch ? 1 : 0, rcs.enableRoll ? 1 : 0, rcs.enableYaw ? 1 : 0);
+                    Vector3 translateEnables = new Vector3(rcs.enableX ? 1 : 0, rcs.enableZ ? 1 : 0, rcs.enableY ? 1 : 0);
+
+                    Vector3 sum = new Vector3(0f, 0f, 0f);
+                    for (int i = rcs.thrusterTransforms.Count-1; i >- 0; --i)
+                    {
+                        Transform rcsTransform = rcs.thrusterTransforms[i];
+                        Vector3 rcsPosFromCoM = rcsTransform.position - Vessel.CurrentCoM;
+                        Vector3 rcsThrustDir = rcs.useZaxis ? -rcsTransform.forward : rcsTransform.up;
+                        float powerFactor = rcs.thrusterPower * rcs.thrustPercentage * 0.01f;
+                        // Normally you'd check for precision mode to nerf powerFactor here,
+                        // but kOS doesn't obey that.
+                        Vector3 thrust = powerFactor * rcsThrustDir;
+                        Vector3 torque = Vector3d.Cross(rcsPosFromCoM, thrust);
+                        sum += Vector3.Scale(Vessel.ReferenceTransform.InverseTransformDirection(torque), rotateEnables);
+                    }
+                    pos = sum;
+                    neg = -1 * sum;
+                }
+            }
+            else
+            {
+                tp.GetPotentialTorque(out pos, out neg);
+            }
         }
 
         #region TEMPORARY MOI CALCULATION
@@ -808,7 +859,6 @@ namespace kOS.Control
         /// <returns></returns>
         private static double LerpEpsilon(double omega, double maxOmega, double epsilonMin, double epsilonMax)
         {
-            Console.WriteLine("eraseme: LerpEpsilon({0}, {1}, {2}, {3}", omega, maxOmega, epsilonMin, epsilonMax);
             // How close is angular velocity to max, with some protection from div by zero:
             double ratio = (maxOmega == 0 ? 1.0 : Math.Abs(omega / maxOmega));
 
@@ -830,8 +880,9 @@ namespace kOS.Control
             }
             else
             {
-                //TODO: include adjustment for static torque (due to engines)
-                Console.WriteLine("eraseme: accPitch A = {0}", accPitch);
+                //TODO: include adjustment for static torque (due to engines mounted offcenter?
+                //   Not sure what hvacengi meant by this comment - dunbaratu)
+                //
                 // The purpose of clampAccPitch, clampYawPitch, and clampRollPitch:
                 //    The purpose of these values appears to be to prevent the controls
                 //    from moving too far in a single update.  If the PIDs instructed
@@ -842,25 +893,16 @@ namespace kOS.Control
                 //    - No, I have no idea why that is being done.  I'm just documenting
                 //      it for anyone trying to understand this code - dunbaratu.
                 double clampAccPitch = Math.Max(Math.Abs(accPitch), 0.005) * 2;
-                Console.WriteLine("eraseme: accPitch B  = {0}", accPitch);
                 accPitch = tgtPitchTorque / controlTorque.x;
-                Console.WriteLine("eraseme: accPitch C = {0}", accPitch);
                 if (Math.Abs(accPitch) < CONTROLEPSILON)
                     accPitch = 0;
-                Console.WriteLine("eraseme: accPitch D = {0}", accPitch);
                 accPitch = Math.Max(Math.Min(accPitch, clampAccPitch), -clampAccPitch);
-                Console.WriteLine("eraseme: accPitch E = {0}", accPitch);
                 c.pitch = (float)accPitch;
-                Console.WriteLine("eraseme: accYaw A = {0}", accYaw);
                 double clampAccYaw = Math.Max(Math.Abs(accYaw), 0.005) * 2;
-                Console.WriteLine("eraseme: accYaw B = {0}", accYaw);
                 accYaw = tgtYawTorque / controlTorque.z;
-                Console.WriteLine("eraseme: accYaw C = {0}", accYaw);
                 if (Math.Abs(accYaw) < CONTROLEPSILON)
                     accYaw = 0;
-                Console.WriteLine("eraseme: accYaw D = {0}", accYaw);
                 accYaw = Math.Max(Math.Min(accYaw, clampAccYaw), -clampAccYaw);
-                Console.WriteLine("eraseme: accYaw E = {0}", accYaw);
                 c.yaw = (float)accYaw;
                 double clampAccRoll = Math.Max(Math.Abs(accRoll), 0.005) * 2;
                 accRoll = tgtRollTorque / controlTorque.y;
