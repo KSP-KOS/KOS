@@ -723,6 +723,22 @@ namespace kOS.Control
                     neg = -1 * sum;
                 }
             }
+            else if (tp is ModuleReactionWheel)
+            {
+                // Although ModuleReactionWheel *mostly* works, the stock version ignores
+                // the authority limiter slider.  It would have been possible to just take
+                // the result it gives and multiply it by the slider, but that relies on
+                // stock KSP never fixing it themselves and thus kOS would end up double-
+                // applying that multiplitation.  To avoid that, it seems better to just
+                // make the entire thing homemade from scratch for now so if KSP ever fixes it
+                // on their end that doesn't break it on kOS's end:
+                tp.GetPotentialTorque(out pos, out neg);
+
+                ModuleReactionWheel wheel = tp as ModuleReactionWheel;
+                float nerf = wheel.authorityLimiter / 100f;
+                pos = new Vector3( nerf * wheel.PitchTorque, nerf * wheel.RollTorque, nerf * wheel.YawTorque);
+                neg = -1 * pos;
+            }
             else
             {
                 tp.GetPotentialTorque(out pos, out neg);
