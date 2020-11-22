@@ -733,12 +733,19 @@ namespace kOS.Control
                 // applying that multiplitation.  To avoid that, it seems better to just
                 // make the entire thing homemade from scratch for now so if KSP ever fixes it
                 // on their end that doesn't break it on kOS's end:
-                tp.GetPotentialTorque(out pos, out neg);
-
                 ModuleReactionWheel wheel = tp as ModuleReactionWheel;
-                float nerf = wheel.authorityLimiter / 100f;
-                pos = new Vector3( nerf * wheel.PitchTorque, nerf * wheel.RollTorque, nerf * wheel.YawTorque);
-                neg = -1 * pos;
+
+                if (!wheel.moduleIsEnabled || wheel.wheelState != ModuleReactionWheel.WheelState.Active || wheel.actuatorModeCycle == 2)
+                {
+                    pos = new Vector3(0f, 0f, 0f);
+                    neg = new Vector3(0f, 0f, 0f);
+                }
+                else
+                {
+                    float nerf = wheel.authorityLimiter / 100f;
+                    pos = new Vector3(nerf * wheel.PitchTorque, nerf * wheel.RollTorque, nerf * wheel.YawTorque);
+                    neg = -1 * pos;
+                }
             }
             else
             {
