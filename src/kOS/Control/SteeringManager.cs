@@ -691,7 +691,7 @@ namespace kOS.Control
                 // bug list forever (probably won't get fixed).
                 ModuleRCS rcs = tp as ModuleRCS;
                 Part p = rcs.part;
-                if (p.ShieldedFromAirstream || !rcs.rcsEnabled || !rcs.isEnabled || rcs.isJustForShow)
+                if (p.ShieldedFromAirstream || !rcs.rcsEnabled || !rcs.isEnabled || rcs.isJustForShow || rcs.flameout)
                 {
                     // RCS module shouldn't work in this case - so report zero:
                     pos = new Vector3(0f, 0f, 0f);
