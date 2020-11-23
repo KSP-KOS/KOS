@@ -691,9 +691,15 @@ namespace kOS.Control
                 // bug list forever (probably won't get fixed).
                 ModuleRCS rcs = tp as ModuleRCS;
                 Part p = rcs.part;
-                if (p.ShieldedFromAirstream || !rcs.rcsEnabled || !rcs.isEnabled || rcs.isJustForShow || rcs.flameout)
+
+                // This is the list of various reasons this RCS module might 
+                // be suppressed right now.  It would be nice if all this
+                // stuff flipped one common flag during Update for all the
+                // rest of the code to check, but sadly that doesn't seem to
+                // be the case and you have to check these things individually:
+                if (p.ShieldedFromAirstream || !rcs.rcsEnabled || !rcs.isEnabled ||
+                    rcs.isJustForShow || rcs.flameout || !rcs.rcs_active)
                 {
-                    // RCS module shouldn't work in this case - so report zero:
                     pos = new Vector3(0f, 0f, 0f);
                     neg = new Vector3(0f, 0f, 0f);
                 }
