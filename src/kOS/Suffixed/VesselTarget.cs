@@ -33,8 +33,30 @@ namespace kOS.Suffixed
         }
         public override Vector GetPosition()
         {
-            return new Vector(Vessel.CoMD - CurrentVessel.CoMD);
+            return new Vector(GetPositionInternal());
         }
+
+        private Vector3d GetPositionInternal()
+        {
+            Vector3d position = Vessel.CoMD - CurrentVessel.CoMD;
+
+            // Workaround to fix a KSP bug:
+            // When the target vessel is packed KSP returns the position where it's going to be
+            // in the next simulation frame instead of the position where it is now.
+            // To work around this issue the velocity of the target vessel is integrated over one frame
+            // to calculate the corrent position in the current simulation frame.
+            if (Vessel.packed)
+            {
+                // If the body is in inverse rotation mode (i.e. the world axis are fixed to the body surface) the surface velocity is used
+                // because the position reported by KSP is accounting for the frame of reference rotation
+                Vector3d velocity = CurrentVessel.mainBody.inverseRotation ? Vessel.srf_velocity : Vessel.obt_velocity;
+                // Calculate the current position by integrating the velocity vector over one frame and subtracting that from the reported position
+                position -= velocity * 0.02;
+            }
+
+            return position;
+        }
+
         public override OrbitableVelocity GetVelocities()
         {
             return new OrbitableVelocity(Vessel);
@@ -189,7 +211,7 @@ namespace kOS.Suffixed
         // in order to implement the orbit solver later.
         public ScalarValue GetDistance()
         {
-            return Vector3d.Distance(CurrentVessel.CoMD, Vessel.CoMD);
+            return GetPositionInternal().magnitude;
         }
 
         public static string[] ShortCuttableShipSuffixes { get; private set; }
