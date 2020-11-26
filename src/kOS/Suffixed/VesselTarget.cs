@@ -45,13 +45,17 @@ namespace kOS.Suffixed
             // in the next simulation frame instead of the position where it is now.
             // To work around this issue the velocity of the target vessel is integrated over one frame
             // to calculate the corrent position in the current simulation frame.
-            if (Vessel.packed)
+
+            // normal time or physics warp
+            bool usingPhysics = TimeWarp.CurrentRate == 1f || TimeWarp.WarpMode == TimeWarp.Modes.LOW;
+
+            if (Vessel.loaded && Vessel.packed && usingPhysics && CurrentVessel.isActiveVessel)
             {
                 // If the body is in inverse rotation mode (i.e. the world axis are fixed to the body surface) the surface velocity is used
                 // because the position reported by KSP is accounting for the frame of reference rotation
                 Vector3d velocity = CurrentVessel.mainBody.inverseRotation ? Vessel.srf_velocity : Vessel.obt_velocity;
                 // Calculate the current position by integrating the velocity vector over one frame and subtracting that from the reported position
-                position -= velocity * 0.02;
+                position -= velocity * TimeWarp.fixedDeltaTime;
             }
 
             return position;
