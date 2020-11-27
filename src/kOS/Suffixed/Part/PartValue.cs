@@ -191,7 +191,8 @@ namespace kOS.Suffixed.Part
 
         public Vector GetPosition()
         {
-            return new Vector(Part.transform.position - Shared.Vessel.CoMD);
+            Vector3d positionError = VesselTarget.CreateOrGetExisting(Part.vessel, Shared).GetPositionError();
+            return new Vector(Part.transform.position - Shared.Vessel.CoMD + positionError);
         }
 
         private void ControlFrom()

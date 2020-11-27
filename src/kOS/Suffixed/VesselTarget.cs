@@ -38,8 +38,12 @@ namespace kOS.Suffixed
 
         private Vector3d GetPositionInternal()
         {
-            Vector3d position = Vessel.CoMD - CurrentVessel.CoMD;
+            return Vessel.CoMD - CurrentVessel.CoMD + GetPositionError();
+        }
 
+        public Vector3d GetPositionError()
+        {
+            Vector3d positionError = Vector3d.zero;
             // Workaround to fix a KSP bug:
             // When the target vessel is packed KSP returns the position where it's going to be
             // in the next simulation frame instead of the position where it is now.
@@ -55,10 +59,10 @@ namespace kOS.Suffixed
                 // because the position reported by KSP is accounting for the frame of reference rotation
                 Vector3d velocity = CurrentVessel.mainBody.inverseRotation ? Vessel.srf_velocity : Vessel.obt_velocity;
                 // Calculate the current position by integrating the velocity vector over one frame and subtracting that from the reported position
-                position -= velocity * TimeWarp.fixedDeltaTime;
+                positionError = -velocity * TimeWarp.fixedDeltaTime;
             }
 
-            return position;
+            return positionError;
         }
 
         public override OrbitableVelocity GetVelocities()
@@ -308,6 +312,10 @@ namespace kOS.Suffixed
             AddSuffix("SIZECLASS", new Suffix<StringValue>(GetSizeClass));
 
             AddSuffix("SOICHANGEWATCHERS", new NoArgsSuffix<UniqueSetValue<UserDelegate>>(() => Shared.DispatchManager.CurrentDispatcher.GetSOIChangeNotifyees(Vessel)));
+
+#if DEBUG
+            AddSuffix("POSITIONERROR", new Suffix<Vector>(() => new Vector(GetPositionError())));
+#endif
         }
 
         public ScalarValue GetCrewCapacity()
