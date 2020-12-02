@@ -215,7 +215,7 @@ Structure
     :attr:`ITERM`                         :struct:`scalar`          The integral component of output
     :attr:`DTERM`                         :struct:`scalar`          The derivative component of output
     :attr:`CHANGERATE`                    :struct:`scalar` (/s)     The most recent input rate of change
-    :meth:`RESET`                         none                      Reset the integral component
+    :meth:`RESET`                         none                      Reset the integral and derivative components
     :meth:`UPDATE(time, input)`           :struct:`scalar`          Returns output based on time and input
     ===================================== ========================= =============
 
@@ -366,7 +366,7 @@ Structure
 
     :return: none
 
-    Call this method to clear the :attr:`ERRORSUM` and :attr:`ITERM` components of the PID calculation.
+    Call this method to clear the :attr:`ERRORSUM`, :attr:`ITERM`, and :attr:`LASTSAMPLETIME` components of the PID calculation.
 
 .. method:: PIDLoop:UPDATE(time, input)
 
