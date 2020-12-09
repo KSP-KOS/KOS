@@ -114,6 +114,36 @@ These are the generic properties every PART has. You can obtain a list of values
         * - :meth:`SYMMETRYPARTNER(index)`
           - :struct:`part`
           - Return one of the other parts symmetrical to this one.
+        * - :meth:`PARTSNAMED(name)`
+          - :struct:`List` (of :struct:`Part`)
+          - Search the branch from here down based on name.
+        * - :meth:`PARTSNAMEDPATTERN(pattern)`
+          - :struct:`List` (of :struct:`Part`)
+          - Regex search the branch from here down based on name.
+        * - :meth:`PARTSTITLED(name)`
+          - :struct:`List` (of :struct:`Part`)
+          - Search the branch from here down for parts titled this.
+        * - :meth:`PARTSTITLEDPATTERN(pattern)`
+          - :struct:`List` (of :struct:`Part`)
+          - Regex Search the branch from here down for parts titled this.
+        * - :meth:`PARTSTAGGED(tag)`
+          - :struct:`List` (of :struct:`Part`)
+          - Search the branch from here down for parts tagged this.
+        * - :meth:`PARTSTAGGEDPATTERN(pattern)`
+          - :struct:`List` (of :struct:`Part`)
+          - Regex Search the branch from here down for parts tagged this.
+        * - :meth:`PARTSDUBBED(name)`
+          - :struct:`List` (of :struct:`Part`)
+          - Search the branch from here down for parts named, titled, or tagged this.
+        * - :meth:`PARTSDUBBEDPATTERN(name)`
+          - :struct:`List` (of :struct:`Part`)
+          - Regex Search the branch from here down for parts named, titled, or tagged this.
+        * - :meth:`MODULESNAMED(name)`
+          - :struct:`List` (of :struct:`PartModule`)
+          - Search the branch from here down for modules named, titled, or tagged this.
+        * - :meth:`ALLTAGGEDPARTS`
+          - :struct:`List` (of :struct:`Part`)
+          - Search the branch from here down for all parts with a non-blank tag name.
 
 
 .. attribute:: Part:NAME
@@ -479,4 +509,102 @@ These are the generic properties every PART has. You can obtain a list of values
             print "      [" + i + "] " + a_part:SYMMETRYPARTNER(i).
           }
         }
+
+.. method:: Parts:PARTSNAMED(name)
+
+    :parameter name: (:ref:`string <string>`) Name of the parts
+    :return: :struct:`List` of :struct:`Part` objects
+
+    Same as :meth:`Vessel:PARTSNAMED(name)` except that this version
+    doesn't search the entire vessel tree and instead it only searches the
+    branch of the vessel's part tree from the current part down through
+    its children and its children's children and so on.
+
+.. method:: Part:PARTSNAMEDPATTERN(namePattern)
+
+    :parameter namePattern: (:ref:`string <string>`) Pattern of the name of the parts
+    :return: :struct:`List` of :struct:`Part` objects
+
+    Same as :meth:`Vessel:PARTSNAMEDPATTERN(namePattern)` except that this version
+    doesn't search the entire vessel tree and instead it only searches the
+    branch of the vessel's part tree from the current part down through
+    its children and its children's children and so on.
+
+.. method:: Part:PARTSTITLED(title)
+
+    :parameter title: (:ref:`string <string>`) Title of the parts
+    :return: :struct:`List` of :struct:`Part` objects
+
+    Same as :meth:`Vessel:PARTSTITLED(title)` except that this version
+    doesn't search the entire vessel tree and instead it only searches the
+    branch of the vessel's part tree from the current part down through
+    its children and its children's children and so on.
+
+.. method:: Part:PARTSTITLEDPATTERN(titlePattern)
+
+    :parameter titlePattern: (:ref:`string <string>`) Patern of the title of the parts
+    :return: :struct:`List` of :struct:`Part` objects
+
+    Same as :meth:`Vessel:PARTSTITLEDPATTERN(titlePattern)` except that this version
+    doesn't search the entire vessel tree and instead it only searches the
+    branch of the vessel's part tree from the current part down through
+    its children and its children's children and so on.
+
+.. method:: Part:PARTSTAGGED(tag)
+
+    :parameter tag: (:ref:`string <string>`) Tag of the parts
+    :return: :struct:`List` of :struct:`Part` objects
+
+    Same as :meth:`Vessel:PARTSTAGGED(tag)` except that this version
+    doesn't search the entire vessel tree and instead it only searches the
+    branch of the vessel's part tree from the current part down through
+    its children and its children's children and so on.
+
+.. method:: Part:PARTSTAGGEDPATTERN(tagPattern)
+
+    :parameter tagPattern: (:ref:`string <string>`) Pattern of the tag of the parts
+    :return: :struct:`List` of :struct:`Part` objects
+
+    Same as :meth:`Vessel:PARTSTAGGEDPATTERN(tagPattern)` except that this version
+    doesn't search the entire vessel tree and instead it only searches the
+    branch of the vessel's part tree from the current part down through
+    its children and its children's children and so on.
+
+.. method:: Part:PARTSDUBBED(name)
+
+    :parameter name: (:ref:`string <string>`) name, title or tag of the parts
+    :return: :struct:`List` of :struct:`Part` objects
+
+    Same as :meth:`Vessel:PARTSDUBBED(name)` except that this version
+    doesn't search the entire vessel tree and instead it only searches the
+    branch of the vessel's part tree from the current part down through
+    its children and its children's children and so on.
+
+.. method:: Part:PARTSDUBBEDPATTERN(namePattern)
+
+    :parameter namePattern: (:ref:`string <string>`) Pattern of the name, title or tag of the parts
+    :return: :struct:`List` of :struct:`Part` objects
+
+    Same as :meth:`Vessel:PARTSDUBBEDPATERN(namePattern)` except that this version
+    doesn't search the entire vessel tree and instead it only searches the
+    branch of the vessel's part tree from the current part down through
+    its children and its children's children and so on.
+
+.. method:: Part:MODULESNAMED(name)
+
+    :parameter name: (:ref:`string <string>`) Name of the part modules
+    :return: :struct:`List` of :struct:`PartModule` objects
+
+    Same as :meth:`Vessel:MODULESNAMED(name)` except that this version
+    doesn't search the entire vessel tree and instead it only searches the
+    branch of the vessel's part tree from the current part down through
+    its children and its children's children and so on.
+
+.. method:: Part:ALLTAGGEDPARTS()
+
+    :return: :struct:`List` of :struct:`Part` objects
+    Same as :meth:`Vessel:ALLTAGGEDPARTS()` except that this version
+    doesn't search the entire vessel tree and instead it only searches the
+    branch of the vessel's part tree from the current part down through
+    its children and its children's children and so on.
 

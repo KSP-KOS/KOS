@@ -195,106 +195,42 @@ namespace kOS.Suffixed
 
         private ListValue GetPartsDubbed(StringValue searchTerm)
         {
-            // Get the list of all the parts where the part's API name OR its GUI title or its tag name matches.
-            List<global::Part> kspParts = new List<global::Part>();
-            kspParts.AddRange(GetRawPartsNamed(searchTerm));
-            kspParts.AddRange(GetRawPartsTitled(searchTerm));
-            kspParts.AddRange(GetRawPartsTagged(searchTerm));
-
-            // The "Distinct" operation is there because it's possible for someone to use a tag name that matches the part name.
-            return PartValueFactory.Construct(kspParts.Distinct(), Shared);
+            return PartValueFactory.Construct(Vessel.rootPart, Shared).GetPartsDubbed(searchTerm);
         }
 
         private ListValue GetPartsDubbedPattern(StringValue searchPattern)
         {
-            // Prepare case-insensivie regex.
-            Regex r = new Regex(searchPattern, RegexOptions.IgnoreCase);
-            // Get the list of all the parts where the part's API name OR its GUI title or its tag name matches the pattern.
-            List<global::Part> kspParts = new List<global::Part>();
-            kspParts.AddRange(GetRawPartsNamedPattern(r));
-            kspParts.AddRange(GetRawPartsTitledPattern(r));
-            kspParts.AddRange(GetRawPartsTaggedPattern(r));
-
-            // The "Distinct" operation is there because it's possible for someone to use a tag name that matches the part name.
-            return PartValueFactory.Construct(kspParts.Distinct(), Shared);
+            return PartValueFactory.Construct(Vessel.rootPart, Shared).GetPartsDubbedPattern(searchPattern);
         }
 
         private ListValue GetPartsNamed(StringValue partName)
         {
-            return PartValueFactory.Construct(GetRawPartsNamed(partName), Shared);
-        }
-
-        private IEnumerable<global::Part> GetRawPartsNamed(string partName)
-        {
-            // Get the list of all the parts where the part's KSP API title matches:
-            return Vessel.parts.FindAll(
-                part => String.Equals(part.name, partName, StringComparison.CurrentCultureIgnoreCase));
+            return PartValueFactory.Construct(Vessel.rootPart, Shared).GetPartsNamed(partName);
         }
 
         private ListValue GetPartsNamedPattern(StringValue partNamePattern)
         {
-            // Prepare case-insensivie regex.
-            Regex r = new Regex(partNamePattern, RegexOptions.IgnoreCase);
-            return PartValueFactory.Construct(GetRawPartsNamedPattern(r), Shared);
-        }
-
-        private IEnumerable<global::Part> GetRawPartsNamedPattern(Regex partNamePattern)
-        {
-            // Get the list of all the parts where the part's KSP API title matches the pattern:
-            return Vessel.parts.FindAll(
-                part => partNamePattern.IsMatch(part.name));
+            return PartValueFactory.Construct(Vessel.rootPart, Shared).GetPartsNamedPattern(partNamePattern);
         }
 
         private ListValue GetPartsTitled(StringValue partTitle)
         {
-            return PartValueFactory.Construct(GetRawPartsTitled(partTitle), Shared);
-        }
-
-        private IEnumerable<global::Part> GetRawPartsTitled(string partTitle)
-        {
-            // Get the list of all the parts where the part's GUI title matches:
-            return Vessel.parts.FindAll(
-                part => String.Equals(part.partInfo.title, partTitle, StringComparison.CurrentCultureIgnoreCase));
+            return PartValueFactory.Construct(Vessel.rootPart, Shared).GetPartsTitled(partTitle);
         }
 
         private ListValue GetPartsTitledPattern(StringValue partTitlePattern)
         {
-            // Prepare case-insensivie regex.
-            Regex r = new Regex(partTitlePattern, RegexOptions.IgnoreCase);
-            return PartValueFactory.Construct(GetRawPartsTitledPattern(r), Shared);
-        }
-
-        private IEnumerable<global::Part> GetRawPartsTitledPattern(Regex partTitlePattern)
-        {
-            // Get the list of all the parts where the part's GUI title matches the pattern:
-            return Vessel.parts.FindAll(
-                part => partTitlePattern.IsMatch(part.partInfo.title));
+            return PartValueFactory.Construct(Vessel.rootPart, Shared).GetPartsTitledPattern(partTitlePattern);
         }
 
         private ListValue GetPartsTagged(StringValue tagName)
         {
-            return PartValueFactory.Construct(GetRawPartsTagged(tagName), Shared);
-        }
-
-        private IEnumerable<global::Part> GetRawPartsTagged(string tagName)
-        {
-            return Vessel.parts
-                .Where(p => p.Modules.OfType<KOSNameTag>()
-                .Any(tag => String.Equals(tag.nameTag, tagName, StringComparison.CurrentCultureIgnoreCase)));
+            return PartValueFactory.Construct(Vessel.rootPart, Shared).GetPartsTagged(tagName);
         }
 
         private ListValue GetPartsTaggedPattern(StringValue tagPattern)
         {
-            // Prepare case-insensivie regex.
-            Regex r = new Regex(tagPattern, RegexOptions.IgnoreCase);
-            return PartValueFactory.Construct(GetRawPartsTaggedPattern(r), Shared);
-        }
-
-        private IEnumerable<global::Part> GetRawPartsTaggedPattern(Regex tagPattern)
-        {
-            return Vessel.parts
-                .Where(p => p.Modules.OfType<KOSNameTag>()
-                .Any(tag => tagPattern.IsMatch(tag.nameTag)));
+            return PartValueFactory.Construct(Vessel.rootPart, Shared).GetPartsTaggedPattern(tagPattern);
         }
 
         /// <summary>
@@ -303,22 +239,12 @@ namespace kOS.Suffixed
         /// <returns></returns>
         private ListValue GetAllTaggedParts()
         {
-            IEnumerable<global::Part> partsWithName = Vessel.parts
-                .Where(p => p.Modules.OfType<KOSNameTag>()
-                .Any(tag => !String.Equals(tag.nameTag, "", StringComparison.CurrentCultureIgnoreCase)));
-
-            return PartValueFactory.Construct(partsWithName, Shared);
+            return PartValueFactory.Construct(Vessel.rootPart, Shared).GetAllTaggedParts();
         }
 
         private ListValue GetModulesNamed(StringValue modName)
         {
-            // This is slow - maybe there should be a faster lookup string hash, but
-            // KSP's data model seems to have not implemented it:
-            IEnumerable<PartModule> modules = Vessel.parts
-                .SelectMany(p => p.Modules.Cast<PartModule>()
-                .Where(pMod => String.Equals(pMod.moduleName, modName, StringComparison.CurrentCultureIgnoreCase)));
-
-            return PartModuleFieldsFactory.Construct(modules, Shared);
+            return PartValueFactory.Construct(Vessel.rootPart, Shared).GetModulesNamed(modName);
         }
 
         private ListValue GetPartsInGroup(StringValue groupName)
