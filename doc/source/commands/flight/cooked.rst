@@ -296,10 +296,10 @@ settings that might help solve some problems, in the list below:
   This is specifically for when it wiggles the controls *during* its
   rotation to the destination orientation.)
 
-  - **solution**: Increase :attr:`STEERINGMANAGER:ROTATIONEPSILONMAX` to make
+  - **solution**: Increase :attr:`STEERINGMANAGER:TORQUEPSILONMAX` to make
     it "not care" about the exact rotation rate until it gets closer to
     the target orientation.
-    Increasing :attr:`STEERINGMANAGER:ROTATIONEPSILONMIN` can help also, but
+    Increasing :attr:`STEERINGMANAGER:TORQUEPSILONMIN` can help also, but
     making it too high could prevent the steering from holding the nose on
     target once it does reach the desired direction.
 
@@ -309,7 +309,7 @@ settings that might help solve some problems, in the list below:
   controls at all).
 
   - **solution**: You might have to either decrease
-    :attr:`STEERINGMANAGER:ROTATIONEPSILONMAX` or increase
+    :attr:`STEERINGMANAGER:TORQUEEPSILONMAX` or increase
     :attr:`STEERINGMANAGER:MAXSTOPPINGTIME`.
 
   - **explanation**: The problem may be that your vessel is so slow at
@@ -355,7 +355,7 @@ settings that might help solve some problems, in the list below:
 
   - **solution 2**: If you don't care about the exact precision to
     point the correct direction to tiny fractions of a degree, then
-    increase :attr:`SteeringManager:ROTATIONEPSILONMIN` by a little bit.
+    increase :attr:`SteeringManager:TORQUEEPSILONMIN` by a little bit.
 
   - **explanation**: Once it's
     at the desired orientation and it has mostly zeroed the rotational
