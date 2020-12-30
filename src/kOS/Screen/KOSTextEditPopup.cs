@@ -6,7 +6,6 @@ using UnityEngine;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
 using kOS.Module;
-using ClickThroughFix; // Needs ClickThroughBlocker DLL to be in the Reference directory.
 
 namespace kOS.Screen
 {
@@ -171,7 +170,7 @@ namespace kOS.Screen
             CalcOuterCoords(); // force windowRect to lock to bottom edge of the parents
             CalcInnerCoords();
 
-            WindowRect = ClickThruBlocker.GUIWindow(UniqueId, WindowRect, ProcessWindow, "");
+            WindowRect = GUI.Window(UniqueId, WindowRect, ProcessWindow, "");
             // Some mouse global state data used by several of the checks:
 
             if (consumeEvent)

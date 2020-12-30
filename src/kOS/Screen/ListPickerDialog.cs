@@ -1,7 +1,5 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using ClickThroughFix; // Needs ClickThroughBlocker DLL to be in the Reference directory.
-
 
 namespace kOS.Screen
 {
@@ -112,7 +110,7 @@ namespace kOS.Screen
 
             // Make sure it shifts enough to the left to fit the biggest string:
             outerWindowRect.x = Mathf.Min(outerWindowRect.x, UnityEngine.Screen.width - outerWindowRect.width - 60);
-            outerWindowRect = ClickThruBlocker.GUILayoutWindow(
+            outerWindowRect = GUILayout.Window(
                 title.GetHashCode(),
                 outerWindowRect,
                 DrawInnards,

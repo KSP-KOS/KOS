@@ -1,7 +1,6 @@
-using kOS.Utilities;
+﻿using kOS.Utilities;
 using UnityEngine;
 using kOS.Module;
-using ClickThroughFix; // Needs ClickThroughBlocker DLL to be in the Reference directory.
 using System;
 
 namespace kOS.Screen
@@ -125,7 +124,7 @@ namespace kOS.Screen
                 EditorLogic.fetch.Lock(false, false, false, "KOSNameTagLock");
 
             GUI.skin = HighLogic.Skin;
-            ClickThruBlocker.GUILayoutWindow(myWindowId, windowRect, DrawWindow,"KOS nametag");
+            GUILayout.Window(myWindowId, windowRect, DrawWindow,"KOS nametag");
             
             // Ensure that the first time the window is made, it gets keybaord focus,
             // but allow the focus to leave the window after that:

@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using ClickThroughFix; // Needs ClickThroughBlocker DLL to be in the Reference directory.
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace kOS.Screen
@@ -39,7 +38,7 @@ namespace kOS.Screen
             if (invoked)
             {
                 float guessWidth = GUI.skin.label.CalcSize( new GUIContent(message) ).x;
-                ClickThruBlocker.GUILayoutWindow( parent.GetUniqueId()+1, new Rect( parent.GetRect().xMin+200,
+                GUILayout.Window( parent.GetUniqueId()+1, new Rect( parent.GetRect().xMin+200,
                                                  parent.GetRect().yMin+10,
                                                  guessWidth,
                                                  0) , DrawConfirm, "Confirm", GUILayout.ExpandWidth(true) );
