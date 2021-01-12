@@ -7,6 +7,7 @@ using kOS.Utilities;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace kOS.Suffixed
 {
@@ -15,6 +16,7 @@ namespace kOS.Suffixed
     {
         public Vector3d Vector { get; set; }
         public RgbaColor Color { get; set; }
+        private RgbaColor prevColor;
         public Vector3d Start { get; set; }
         public double Scale { get; set; }
         public double Width { get; set; }
@@ -29,14 +31,9 @@ namespace kOS.Suffixed
         private readonly SharedObjects shared;
         private GameObject lineObj;
         private GameObject hatObj;
-        private GameObject labelObj;
-        // Deliberately not fixing the following deprecation warning for using GUIText, because I want this
-        // codebase to be back-portable to older KSP versions for RO/RP-1 without too much hassle.  Eventually
-        // it might not work and we may be forced to change this, but the KSP1 lifecycle may be done
-        // by then, so I don't want to make the effort prematurely.
-#pragma warning disable CS0618 // ^^^ see above comment about why this is disabled.
-        private GUIText label;
-#pragma warning restore CS0618
+        private GameObject labelCanvasObj;
+        private RectTransform labelTransform;
+        private Text label;
         private string labelStr = "";
         private Vector3 labelLocation;
 
@@ -51,12 +48,13 @@ namespace kOS.Suffixed
 
         private Vector3 camPos;         // camera coordinates.
         private Vector3 camLookVec;     // vector from camera to ship position.
+        private Vector3 camLookUp;      // vector upward along camera's top direction.
         private Vector3 prevCamLookVec;
         private Quaternion camRot;
         private Quaternion prevCamRot;
         private bool isOnMap; // true = Map view, false = Flight view.
         private bool prevIsOnMap;
-        private const int MAP_LAYER = 10; // found through trial-and-error
+        private const int MAP_LAYER  =10; // found through trial-and-error
         private const int FLIGHT_LAYER = 15; // Supposedly the layer for UI effects in flight camera.
         
         private TriggerInfo StartTrigger = null;
@@ -301,29 +299,15 @@ namespace kOS.Suffixed
             isOnMap = MapView.MapIsEnabled;
 
             var cam = Utils.GetCurrentCamera();
-            camPos = cam.transform.localPosition;
+            camPos = (isOnMap ?  (Vector3)ScaledSpace.LocalToScaledSpace(cam.transform.position) : cam.transform.position);
 
             // the Distance coming from MapView.MapCamera.Distance
             // doesn't seem to work - calculating it myself below:
             // _camdist = pc.Distance();
             // camRot = cam.GetCameraTransform().rotation;
             camRot = cam.transform.rotation;
-
             camLookVec = camPos - shipCenterCoords;
-        }
-
-        /// <summary>
-        /// Get the position in screen coordinates that the 3d world coordinates
-        /// project onto, abstracting the two different ways KSP has to access
-        /// the camera depending on view mode.
-        /// Returned coords are in a system where the screen viewport goes from
-        /// (0,0) to (1,1) and the Z coord is how far from the screen it is
-        /// (-Z means behind you).
-        /// </summary>
-        private Vector3 GetViewportPosFor(Vector3 v)
-        {
-            var cam = Utils.GetCurrentCamera();
-            return cam.WorldToViewportPoint(v);
+            camLookUp = cam.transform.up;
         }
 
         /// <summary>
@@ -345,21 +329,13 @@ namespace kOS.Suffixed
         {
             if (newShowVal)
             {
-                if (line == null || hat == null)
+                if (line == null || hat == null || labelCanvasObj == null)
                 {
                     lineObj = new GameObject("vecdrawLine");
                     hatObj = new GameObject("vecdrawHat");
-                    labelObj = new GameObject("vecdrawLabel", typeof(GUIText));
 
                     line = lineObj.AddComponent<LineRenderer>();
                     hat = hatObj.AddComponent<LineRenderer>();
-                    // Deliberately not fixing the following deprecation warning for using GUIText, because I want this
-                    // codebase to be back-portable to older KSP versions for RO/RP-1 without too much hassle.  Eventually
-                    // it might not work and we may be forced to change this, but the KSP1 lifecycle may be done
-                    // by then, so I don't want to make the effort prematurely.
-#pragma warning disable CS0618 // ^^^ see above comment about why this is disabled.
-                    label = labelObj.GetComponent<GUIText>();
-#pragma warning restore CS0618
 
                     line.useWorldSpace = false;
                     hat.useWorldSpace = false;
@@ -384,9 +360,10 @@ namespace kOS.Suffixed
                     // Font lblFont = (Font)Resources.Load( "Arial", typeof(Font) );
                     // SafeHouse.Logger.Log( "lblFont is " + (lblFont == null ? "null" : "not null") );
                     // _label.font = lblFont;
+                    CreateLabelHolder();
 
                     label.text = labelStr;
-                    label.anchor = TextAnchor.MiddleCenter;
+                    label.alignment = TextAnchor.MiddleCenter;
 
                     PutAtShipRelativeCoords();
                     RenderValues();
@@ -414,7 +391,7 @@ namespace kOS.Suffixed
                     line.enabled = false;
                     line = null;
                 }
-                labelObj = null;
+                labelCanvasObj = null;
                 hatObj = null;
                 lineObj = null;
             }
@@ -422,11 +399,27 @@ namespace kOS.Suffixed
             enable = newShowVal;
         }
 
+        /// <summary>
+        /// This replaces the use of GUIText with UI.Text, which takes a lot more work to
+        /// set up, as Unity normally assumes you'll be creating code in the Unity Editor,
+        /// which sets this up for you, rather than doing it by hand in your own C# code:
+        /// </summary>
+        private void CreateLabelHolder()
+        {
+            labelCanvasObj = new GameObject("labelCanvasObject", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
+            labelCanvasObj.AddComponent<CanvasRenderer>();
+            labelTransform = labelCanvasObj.transform as RectTransform;
+            labelTransform.SetParent(line.transform, false);
+            label = labelCanvasObj.AddComponent<Text>();
+            label.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+            label.fontSize = 14;
+        }
+
         public void SetLayer(int newVal)
         {
             if (lineObj != null) lineObj.layer = newVal;
             if (hatObj != null) hatObj.layer = newVal;
-            if (labelObj != null) labelObj.layer = newVal;
+            if (labelCanvasObj != null) labelCanvasObj.layer = newVal;
         }
 
         public void SetLabel(StringValue newVal)
@@ -452,16 +445,12 @@ namespace kOS.Suffixed
         /// </summary>
         public void RenderPointCoords()
         {
-            if (line != null && hat != null)
+            if (line != null && hat != null && labelCanvasObj != null)
             {
-                double mapLengthMult = 1.0; // for scaling when on map view.
-                double mapWidthMult = 1.0; // for scaling when on map view.
-                float useWidth;
-
+                float mapLengthMult = 1.0f;
                 if (isOnMap)
                 {
                     mapLengthMult = ScaledSpace.InverseScaleFactor;
-                    mapWidthMult = Math.Max(camLookVec.magnitude, 100.0f) / 100.0f;
                 }
 
                 // From point1 to point3 is the vector.
@@ -471,9 +460,10 @@ namespace kOS.Suffixed
                 Vector3d point2 = mapLengthMult * (Start + (Scale * 0.95 * Vector));
                 Vector3d point3 = mapLengthMult * (Start + (Scale * Vector));
 
-                label.fontSize = (int)(12.0 * (Width / 0.2) * Scale);
+                float distToLine = DistanceFromPointToLineSegment((camPos - shared.Vessel.CoM), point1, point3);
+                float mapWidthMult = 0.05f * distToLine;
 
-                useWidth = (float)(Width * Scale * mapWidthMult);
+                float useWidth = (float)(Width * Scale) * mapWidthMult;
 
                 // Position the arrow line:
                 line.positionCount = 2;
@@ -521,25 +511,71 @@ namespace kOS.Suffixed
         }
 
         /// <summary>
+        /// Calculate the closest distance between a point and a line segment.  This could be made
+        /// into a generic utility if any other classes end up needing to use it too.
+        /// Note, this is different from finding the closest distance between a point and a LINE.
+        /// This is explicitly about a line SEGMENT, meaning if the closest distance to the line
+        /// is outside the endpoints of the segment, it will measure from the nearest endpoint of
+        /// the line segment rather than to the spot on the line that is outside the segment.
+        /// </summary>
+        /// <param name="point">the point to measure from</param>
+        /// <param name="end1">endpoint 1 of the line segment</param>
+        /// <param name="end2">endpoint 2 of the line segment</param>
+        /// <returns>distance from point to the line (or the nearest endpoint of the segment)</returns>
+        static private float DistanceFromPointToLineSegment(Vector3 point, Vector3 end1, Vector3 end2)
+        {
+            // theta = angle you get when you draw from end2 to end1 to point:
+            float thetaDegrees = Vector3.Angle(end2 - end1, point - end1);
+            // phi = angle you get when you draw from end1 to end2 to point:
+            float phiDegrees = Vector3.Angle(end1 - end2, point - end2);
+
+            // These are the degenerate cases where you have to pick an endpoint
+            // because the closest point to the line is outside the line segment:
+            if (thetaDegrees >= 90)
+                return (point - end1).magnitude;
+            if (phiDegrees >= 90)
+                return (point - end2).magnitude;
+
+            // If it got here, then the closest spot on the line is within the endpoints.
+            // If we call that spot "s", then the triangle formed by end1->s->point
+            // must be a right triangle with the corner at "s" being the corner with
+            // the right angle.  So the length of the line s->point can come from trig:
+            float hypotenuse = (point - end1).magnitude;
+            return hypotenuse * Mathf.Sin(thetaDegrees * Mathf.Deg2Rad);
+        }
+
+        /// <summary>
         /// Place the 2D label at the correct projected spot on
         /// the screen from its location in 3D space:
         /// </summary>
         private void LabelPlacement()
         {
-            Vector3 screenPos = GetViewportPosFor(shipCenterCoords + labelLocation);
+            /*
+            Vector3 screenPos = GetScreenPosfor( shipCenterCoords + labelLocation);
 
             // If the projected location is on-screen:
-            if (screenPos.z > 0
-                 && screenPos.x >= 0 && screenPos.x <= 1
-                 && screenPos.y >= 0 && screenPos.y <= 1)
+            if (screenPos.z >= 0
+                 && screenPos.x >= 0 && screenPos.x <= Utils.GetCurrentCamera().pixelWidth
+                 && screenPos.y >= 0 && screenPos.y <= Utils.GetCurrentCamera().pixelHeight)
             {
                 label.enabled = true;
-                label.transform.position = screenPos;
+                // was: labelCanvasObj.transform.position = screenPos;
+                labelCanvasObj.transform.position = screenPos;
             }
             else
             {
                 label.enabled = false;
             }
+            */
+            labelTransform.localPosition = labelLocation;
+            labelTransform.localRotation = camRot;
+
+            Vector3 scaledLabelLocaton = (isOnMap ? (Vector3)ScaledSpace.LocalToScaledSpace(labelTransform.position) : labelTransform.position);
+            float distanceFromCamera = (camPos - scaledLabelLocaton).magnitude;
+            if (isOnMap)
+                distanceFromCamera *= ScaledSpace.ScaleFactor;
+            labelTransform.localScale = new Vector3(0.006f, 0.006f, 0.006f) * distanceFromCamera * (float)Width;
+            label.enabled = true;
         }
 
         public override string ToString()

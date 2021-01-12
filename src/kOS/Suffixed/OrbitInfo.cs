@@ -12,6 +12,7 @@ namespace kOS.Suffixed
         private Orbit orbit;
         public SharedObjects Shared { get; set; }
         private string name;
+        private OrbitEta eta;
  
         public OrbitInfo()
         {
@@ -62,12 +63,27 @@ namespace kOS.Suffixed
             AddSuffix("VELOCITY", new Suffix<OrbitableVelocity>(() => GetVelocityAtUT( new TimeSpan(Planetarium.GetUniversalTime() ) )));
             AddSuffix("NEXTPATCH", new Suffix<OrbitInfo>(GetNextPatch));
             AddSuffix("HASNEXTPATCH", new Suffix<BooleanValue>(GetHasNextPatch));
-            AddSuffix("NEXTPATCHETA", new Suffix<ScalarValue>(GetNextPatchETA));
+            AddSuffix("NEXTPATCHETA", new Suffix<ScalarValue>(() => GetETA().GetEndTransition()));  // deprecated alias for :ETA:TRANSITION
+            AddSuffix("ETA", new Suffix<OrbitEta>(GetETA));
 
             //TODO: Determine if these vectors are different than POSITION and VELOCITY
             AddSuffix("VSTATEVECTOR", new Suffix<Vector>(() => new Vector(orbit.vel)));
             AddSuffix("RSTATEVECTOR", new Suffix<Vector>(() => new Vector(orbit.pos)));
 
+        }
+
+        /// <summary>
+        /// Returns the OrbitEta structure associated with this orbit, creating it if needed.
+        /// </summary>
+        /// <returns>an OrbitEta structure.</returns>
+        private OrbitEta GetETA()
+        {
+            // Cache the OrbitEta structure to hopefully avoid a little bit of unnecessary GC
+            // if multiple ETAs are queried for the same orbit.
+            if (this.eta == null) {
+                this.eta = new OrbitEta(orbit, Shared);
+            }
+            return this.eta;
         }
 
         /// <summary>
@@ -111,7 +127,7 @@ namespace kOS.Suffixed
         /// <summary>
         /// Return the next OrbitInfo after this one (i.e. transitional encounter)
         /// </summary>
-        /// <returns>an OrbitInfo, or a null if there isn't any.</returns>
+        /// <returns>an OrbitInfo representing the next orbit patch.</returns>
         private OrbitInfo GetNextPatch()
         {
             if (GetHasNextPatch())
@@ -119,19 +135,6 @@ namespace kOS.Suffixed
                 return new OrbitInfo(orbit.nextPatch, Shared);
             }
             throw new KOSSituationallyInvalidException("Cannot get next patch when no additional patches exist.  Try checking the HASNEXTPATCH suffix.");
-        }
-
-        /// <summary>
-        /// Returns the ETA of when the nextpatch will happen
-        /// </summary>
-        /// <returns>A double representing the ETA in seconds, or a zero if there isn't any.</returns>
-        private ScalarValue GetNextPatchETA()
-        {
-            if (GetHasNextPatch())
-            {
-                return orbit.EndUT - Planetarium.GetUniversalTime();
-            }
-            throw new KOSSituationallyInvalidException("Cannot get eta to next patch when no additional patches exist.  Try checking the HASNEXTPATCH suffix.");
         }
 
         /// <summary>

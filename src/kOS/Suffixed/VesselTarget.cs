@@ -33,8 +33,38 @@ namespace kOS.Suffixed
         }
         public override Vector GetPosition()
         {
-            return new Vector(Vessel.CoMD - CurrentVessel.CoMD);
+            return new Vector(GetPositionInternal());
         }
+
+        private Vector3d GetPositionInternal()
+        {
+            return Vessel.CoMD - CurrentVessel.CoMD + GetPositionError();
+        }
+
+        public Vector3d GetPositionError()
+        {
+            Vector3d positionError = Vector3d.zero;
+            // Workaround to fix a KSP bug:
+            // When the target vessel is packed KSP returns the position where it's going to be
+            // in the next simulation frame instead of the position where it is now.
+            // To work around this issue the velocity of the target vessel is integrated over one frame
+            // to calculate the corrent position in the current simulation frame.
+
+            // normal time or physics warp
+            bool usingPhysics = TimeWarp.CurrentRate == 1f || TimeWarp.WarpMode == TimeWarp.Modes.LOW;
+
+            if (Vessel.loaded && Vessel.packed && usingPhysics && CurrentVessel.isActiveVessel)
+            {
+                // If the body is in inverse rotation mode (i.e. the world axis are fixed to the body surface) the surface velocity is used
+                // because the position reported by KSP is accounting for the frame of reference rotation
+                Vector3d velocity = CurrentVessel.mainBody.inverseRotation ? Vessel.srf_velocity : Vessel.obt_velocity;
+                // Calculate the current position by integrating the velocity vector over one frame and subtracting that from the reported position
+                positionError = -velocity * TimeWarp.fixedDeltaTime;
+            }
+
+            return positionError;
+        }
+
         public override OrbitableVelocity GetVelocities()
         {
             return new OrbitableVelocity(Vessel);
@@ -189,7 +219,7 @@ namespace kOS.Suffixed
         // in order to implement the orbit solver later.
         public ScalarValue GetDistance()
         {
-            return Vector3d.Distance(CurrentVessel.CoMD, Vessel.CoMD);
+            return GetPositionInternal().magnitude;
         }
 
         public static string[] ShortCuttableShipSuffixes { get; private set; }
@@ -262,6 +292,10 @@ namespace kOS.Suffixed
             AddSuffix("ISDEAD", new NoArgsSuffix<BooleanValue>(() => (Vessel == null || Vessel.state == Vessel.State.DEAD)));
             AddSuffix("STATUS", new Suffix<StringValue>(() => Vessel.situation.ToString()));
 
+            AddSuffix("DELTAV", new Suffix<DeltaVCalc>(() => new DeltaVCalc(Shared, Vessel.VesselDeltaV)));
+            AddSuffix("STAGEDELTAV", new OneArgsSuffix<DeltaVCalc, ScalarValue>(GetStageDV));
+            AddSuffix("STAGENUM", new Suffix<ScalarValue>(() => Vessel.currentStage));
+
             //// Although there is an implementation of lat/long/alt in Orbitible,
             //// it's better to use the methods for vessels that are faster if they're
             //// available:
@@ -274,8 +308,14 @@ namespace kOS.Suffixed
             AddSuffix("MESSAGES", new NoArgsSuffix<MessageQueueStructure>(() => GetMessages()));
 
             AddSuffix("STARTTRACKING", new NoArgsVoidSuffix(StartTracking));
+            AddSuffix("STOPTRACKING", new NoArgsVoidSuffix(StopTracking));
+            AddSuffix("SIZECLASS", new Suffix<StringValue>(GetSizeClass));
 
             AddSuffix("SOICHANGEWATCHERS", new NoArgsSuffix<UniqueSetValue<UserDelegate>>(() => Shared.DispatchManager.CurrentDispatcher.GetSOIChangeNotifyees(Vessel)));
+
+#if DEBUG
+            AddSuffix("POSITIONERROR", new Suffix<Vector>(() => new Vector(GetPositionError())));
+#endif
         }
 
         public ScalarValue GetCrewCapacity()
@@ -359,6 +399,13 @@ namespace kOS.Suffixed
             return VesselUtils.GetAvailableThrust(Vessel, atmPressure);
         }
 
+        public DeltaVCalc GetStageDV(ScalarValue stageNum)
+        {
+            int clampedStageNum = Math.Min(Vessel.currentStage, Math.Max(0, (int)stageNum.ToPrimitive()));
+
+            return new DeltaVCalc(Shared, Vessel.VesselDeltaV.GetStage(clampedStageNum));
+        }
+
         public ScalarValue GetMaxThrustAt(ScalarValue atmPressure)
         {
             return VesselUtils.GetMaxThrust(Vessel, atmPressure);
@@ -435,6 +482,36 @@ namespace kOS.Suffixed
                 {
                     KSP.UI.Screens.SpaceTracking.StartTrackingObject(Vessel);
                 }
+            }
+        }
+
+        private void StopTracking()
+        {
+            if (Vessel != null)
+            {
+                if (Vessel.DiscoveryInfo.HaveKnowledgeAbout(DiscoveryLevels.Appearance))
+                {
+                    KSP.UI.Screens.SpaceTracking.StopTrackingObject(Vessel);
+                }
+            }
+        }
+
+        private StringValue GetSizeClass()
+        {
+            if (Vessel.vesselType == VesselType.SpaceObject)
+            {
+                if (Vessel.DiscoveryInfo.HaveKnowledgeAbout(DiscoveryLevels.Presence))
+                {
+                    return Vessel.DiscoveryInfo.objectSize.ToString();
+                }
+                else
+                {
+                    return "UNKNOWN";
+                }
+            }
+            else
+            {
+                return Vessel.vesselType.ToString();
             }
         }
 

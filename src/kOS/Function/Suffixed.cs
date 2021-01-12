@@ -110,7 +110,7 @@ namespace kOS.Function
             } else 
             {
                 double t = GetDouble(PopValueAssert(shared));
-                double mEp = GetDouble(PopValueAssert(shared));
+                double mEp = DegreesToRadians(GetDouble(PopValueAssert(shared)));
                 double argPe = GetDouble(PopValueAssert(shared));
                 double lan = GetDouble(PopValueAssert(shared));
                 double sma = GetDouble(PopValueAssert(shared));
@@ -334,7 +334,7 @@ namespace kOS.Function
 
             VoiceValue val;
 
-            if (shared.AllVoiceValues.TryGetValue(voiceNum, out val))
+            if (shared.AllVoiceValues.TryGetValue(voiceNum,out val))
                 ReturnValue = val;
             else
             {

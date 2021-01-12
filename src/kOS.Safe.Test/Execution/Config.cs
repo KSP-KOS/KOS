@@ -187,6 +187,17 @@ namespace kOS.Safe.Test
             }
         }
 
+        public bool SuppressAutopilot
+        {
+            get
+            {
+                return true;
+            }
+
+            set
+            {
+            }
+        }
         public DateTime TimeStamp
         {
             get

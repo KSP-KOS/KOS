@@ -37,19 +37,33 @@ This will start pushing the ship to rotate a bit faster to the right, like pushi
 
 One can use :ref:`SHIP:CONTROL:ROTATION <SHIP CONTROL ROTATION>` and :ref:`SHIP:CONTROL:TRANSLATION <SHIP CONTROL TRANSLATION>` to see the ship's current situation.
 
+CONFIG:SUPPRESSAUTOPILOT
+------------------------
+
+If :attr:`Config:SUPPRESSAUTOPILOT` is true, then none of the controls
+on this page will have an effect.  That setting is there to provide
+the player with an emergency way to quickly click a toggle on the
+toolbar window to force kOS to stop taking control, letting the player
+move the controls manually.
+
+Breaking Ground DLC
+-------------------
+
+Please note that the *Breaking Ground DLC* parts that can be configured
+to respond to the control axes, such as electric motors and propellor
+pitches, will only respond to the settings described on the 
+:ref:`pilot controls page <pilot>` and NOT the settings described
+here on this :ref:`raw control <raw>` page, nor will it respond to
+the settings in ``lock throttle`` or ``lock steering``.  SQUAD designed
+the *Breaking Ground* DLC parts to only pay attention to the player's
+controls, not autopilot controls.
+
 .. _raw null zone:
 
 5% null zone
 ------------
 
 .. warning::
-   The stock raw controls enforce a null zone that kOS can't seem to override
-   (We've tried).  Be aware that if you set a translation raw control to a
-   value between -0.05 and +0.05, the stock game seems to ignore it and treat
-   it as zero.  (While this may seem to be related to the null zones on the
-   game's controls setttings page, which also default ot 5%, in reality this
-   seems to happen regardless of what you change those settings to).
-
 
 Raw Flight Controls Reference
 -----------------------------
@@ -94,13 +108,13 @@ These "Raw" controls allow you the direct control of flight parameters while the
 
     * - :ref:`YAWTRIM <SHIP CONTROL YAWTRIM>`
       - :ref:`scalar <scalar>` [-1,1]
-      - ``ALT+D``, ``ALT+A``
+      - (No real effect, see below) ``ALT+D``, ``ALT+A``
     * - :ref:`PITCHTRIM <SHIP CONTROL PITCHTRIM>`
       - :ref:`scalar <scalar>` [-1,1]
-      - ``ALT+W``, ``ALT+S``
+      - (No real effect, see below) ``ALT+W``, ``ALT+S``
     * - :ref:`ROLLTRIM <SHIP CONTROL ROLLTRIM>`
       - :ref:`scalar <scalar>` [-1,1]
-      - ``ALT+Q``, ``ALT+E``
+      - (No real effect, see below) ``ALT+Q``, ``ALT+E``
 
     * - :ref:`FORE <SHIP CONTROL FORE>`
       - :ref:`scalar <scalar>` [-1,1]
@@ -124,14 +138,15 @@ These "Raw" controls allow you the direct control of flight parameters while the
 
     * - :ref:`WHEELSTEERTRIM <SHIP CONTROL WHEELSTEERTRIM>`
       - :ref:`scalar <scalar>` [-1,1]
-      - ``ALT+A``, ``ALT+D``
+      - (No real effect, see below) ``ALT+A``, ``ALT+D``
     * - :ref:`WHEELTHROTTLETRIM <SHIP CONTROL WHEELTHROTTLETRIM>`
       - :ref:`scalar <scalar>` [-1,1]
-      - ``ALT+W``, ``ALT+S``
+      - (No real effect, see below) ``ALT+W``, ``ALT+S``
 
     * - :ref:`NEUTRAL <SHIP CONTROL NEUTRAL>`
       - :ref:`Boolean <boolean>`
-      - Is **kOS** Controlling?
+      - True if ship:control is doing nothing.
+
     * - :ref:`NEUTRALIZE <SHIP CONTROL NEUTRALIZE>`
       - :ref:`Boolean <boolean>`
       - Releases Control
@@ -169,20 +184,53 @@ These "Raw" controls allow you the direct control of flight parameters while the
 .. _SHIP CONTROL YAWTRIM:
 .. object:: SHIP:CONTROL:YAWTRIM
 
-    Controls the ``YAW`` of the rotational trim.
+    *This has no real effect and is just here for completeness.*
+
+    IF you *really* want to control TRIM, use ``SHIP:CONTROL:PILOTYAWTRIM``
+    from the suffixes in the :ref:`Pilot control section <pilot>` instead.
+
+    The reason why this trim does nothing and you have to use the pilot
+    trim instead is because KSP only looks at the trim when its part of
+    the *pilot's* own control structure, not an autpilot's control structure.
+
+    *Warning*:
+    Setting this value can cause :ref:`:NEUTRAL <SHIP CONTROL NEUTRAL>` to
+    return false negatives by confusing the system about where the "at
+    rest" point of the controls are.
 
 .. _SHIP CONTROL PITCHTRIM:
 .. object:: SHIP:CONTROL:PITCHTRIM
 
-    Controls the ``PITCH`` of the rotational trim.
+    *This has no real effect and is just here for completeness.*
+
+    IF you *really* want to control TRIM, use ``SHIP:CONTROL:PILOTPITCHTRIM``
+    from the suffixes in the :ref:`Pilot control section <pilot>` instead.
+
+    The reason why this trim does nothing and you have to use the pilot
+    trim instead is because KSP only looks at the trim when its part of
+    the *pilot's* own control structure, not an autpilot's control structure.
+
+    *Warning*:
+    Setting this value can cause :ref:`NEUTRAL <SHIP CONTROL NEUTRAL>` to
+    return false negatives by confusing the system about where the "at
+    rest" point of the controls are.
 
 .. _SHIP CONTROL ROLLTRIM:
 .. object:: SHIP:CONTROL:ROLLTRIM
 
-    Controls the ``ROLL`` of the rotational trim.
+    *This has no real effect and is just here for completeness.*
 
+    IF you *really* want to control TRIM, use ``SHIP:CONTROL:PILOTROLLTRIM``
+    from the suffixes in the :ref:`Pilot control section <pilot>` instead.
 
+    The reason why this trim does nothing here is because KSP only looks at the
+    trim when its part of the *pilot's* own control structure, not an
+    autpilot's control structure.
 
+    *Warning*:
+    Setting this value can cause :ref:`NEUTRAL <SHIP CONTROL NEUTRAL>` to
+    return false negatives by confusing the system about where the "at
+    rest" point of the controls are.
 
 .. _SHIP CONTROL FORE:
 .. object:: SHIP:CONTROL:FORE
@@ -226,22 +274,66 @@ These "Raw" controls allow you the direct control of flight parameters while the
 .. _SHIP CONTROL WHEELSTEERTRIM:
 .. object:: SHIP:CONTROL:WHEELSTEERTRIM
 
-    Controls the trim of the wheel steering.
+    *This has no real effect and is just here for completeness.*
+
+    IF you *really* want to control TRIM, use ``SHIP:CONTROL:PILOTYAWTRIM``
+    from the suffixes in the :ref:`Pilot control section <pilot>` instead.
+
+    The reason why this trim does nothing here is because KSP only looks at the
+    trim when its part of the *pilot's* own control structure, not an
+    autpilot's control structure.
+
+    *Warning*:
+    Setting this value can cause :ref:`NEUTRAL <SHIP CONTROL NEUTRAL>` to
+    return false negatives by confusing the system about where the "at
+    rest" point of the controls are.
 
 .. _SHIP CONTROL WHEELTHROTTLETRIM:
 .. object:: SHIP:CONTROL:WHEELTHROTTLETRIM
 
-    Controls the trim of the wheel throttle.
+    *This has no real effect and is just here for completeness.*
+
+    IF you *really* want to control TRIM, use ``SHIP:CONTROL:PILOTYAWTRIM``
+    from the suffixes in the :ref:`Pilot control section <pilot>` instead.
+
+    The reason why this trim does nothing here is because KSP only looks at the
+    trim when its part of the *pilot's* own control structure, not an
+    autpilot's control structure.
+
+    *Warning*:
+    Setting this value can cause :ref:`NEUTRAL <SHIP CONTROL NEUTRAL>` to
+    return false negatives by confusing the system about where the "at
+    rest" point of the controls are.
 
 .. _SHIP CONTROL NEUTRAL:
-.. object:: SHIP:CONTROL:NEUTRAL
-
-    Returns true or false depending if **kOS** has any set controls. *This is not settable.*
-
 .. _SHIP CONTROL NEUTRALIZE:
+.. object:: SHIP:CONTROL:NEUTRAL
 .. object:: SHIP:CONTROL:NEUTRALIZE
 
-    This causes manual control to let go. When set to true, **kOS** lets go of the controls and allows the player to manually control them again. *This is not gettable.*
+    These used to be two suffixes but they are now synonyms who's meaning
+    changes depending on if you set or get them.
+
+    *Getting*:
+
+    ``if (SHIP:CONTROL:NEUTRAL)`` is true when the raw controls are at rest.
+
+    *Setting*:
+
+    ``set SHIP:CONTROL:NEUTRALIZE TO TRUE.`` causes the raw controls to let go.
+    Setting it to false has no effect.
+
+    *Warnings*:
+
+    Although it has no effect, setting a raw control TRIM value CAN cause
+    ``NEUTRAL`` to return false when the control is at rest.  For example,
+    if you do ``SET SHIP:CONTROL:YAWTRIM to 0.1.` then when the controls
+    are at rest, ``SHIP:CONTROL:NEUTRAL`` will return false because the yaw
+    position of 0 is differing from its trim position of 0.1.
+
+    The two terms ``NEUTRAL`` and ``NEUTRALIZE`` are synonyms.  (They used to
+    be two separate suffixes, one for getting and one for setting, but
+    that made no sense so they were combined but both spellings were
+    retained for backward compantiblity with old scripts.)
 
 
 Unlocking controls

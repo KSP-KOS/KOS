@@ -2,11 +2,12 @@ using System;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Function;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Serialization;
 
 namespace kOS.Safe.Encapsulation
 {
     [kOS.Safe.Utilities.KOSNomenclature("PIDLoop")]
-    public class PIDLoop : Structure
+    public class PIDLoop : SerializableStructure
     {
         [Function("pidloop")]
         public class PIDLoopConstructor : SafeFunctionBase
@@ -17,8 +18,9 @@ namespace kOS.Safe.Encapsulation
                 double kd;
                 double ki;
                 double kp;
-                double maxoutput;
                 double minoutput;
+                double maxoutput;
+                double epsilon;
                 switch (args)
                 {
                     case 0:
@@ -42,6 +44,15 @@ namespace kOS.Safe.Encapsulation
                         kp = GetDouble(PopValueAssert(shared));
                         this.ReturnValue = new PIDLoop(kp, ki, kd, maxoutput, minoutput);
                         break;
+                    case 6:
+                        epsilon = GetDouble(PopValueAssert(shared));
+                        maxoutput = GetDouble(PopValueAssert(shared));
+                        minoutput = GetDouble(PopValueAssert(shared));
+                        kd = GetDouble(PopValueAssert(shared));
+                        ki = GetDouble(PopValueAssert(shared));
+                        kp = GetDouble(PopValueAssert(shared));
+                        this.ReturnValue = new PIDLoop(kp, ki, kd, maxoutput, minoutput, epsilon);
+                        break;
                     default:
                         throw new KOSArgumentMismatchException(new[] { 0, 1, 3, 5 }, args);
                 }
@@ -61,6 +72,7 @@ namespace kOS.Safe.Encapsulation
                 Setpoint = source.Setpoint,
                 Error = source.Error,
                 Output = source.Output,
+                MinOutput = source.MinOutput,
                 MaxOutput = source.MaxOutput,
                 ErrorSum = source.ErrorSum,
                 PTerm = source.PTerm,
@@ -89,9 +101,11 @@ namespace kOS.Safe.Encapsulation
 
         public double Output { get; set; }
 
+        public double MinOutput { get; set; }
+
         public double MaxOutput { get; set; }
 
-        public double MinOutput { get; set; }
+        public double Epsilon { get; set; }
 
         public double ErrorSum { get; set; }
 
@@ -112,7 +126,7 @@ namespace kOS.Safe.Encapsulation
         {
         }
 
-        public PIDLoop(double kp, double ki, double kd, double maxoutput = double.MaxValue, double minoutput = double.MinValue, bool extraUnwind = false)
+        public PIDLoop(double kp, double ki, double kd, double maxoutput = double.MaxValue, double minoutput = double.MinValue, double nullzone = 0, bool extraUnwind = false)
         {
             LastSampleTime = double.MaxValue;
             Kp = kp;
@@ -124,6 +138,7 @@ namespace kOS.Safe.Encapsulation
             Output = 0;
             MaxOutput = maxoutput;
             MinOutput = minoutput;
+            Epsilon = nullzone;
             ErrorSum = 0;
             PTerm = 0;
             ITerm = 0;
@@ -144,6 +159,7 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("OUTPUT", new Suffix<ScalarValue>(() => Output));
             AddSuffix("MAXOUTPUT", new SetSuffix<ScalarValue>(() => MaxOutput, value => MaxOutput = value));
             AddSuffix("MINOUTPUT", new SetSuffix<ScalarValue>(() => MinOutput, value => MinOutput = value));
+            AddSuffix(new string[] { "IGNOREERROR", "EPSILON" }, new SetSuffix<ScalarValue>(() => Epsilon, value => Epsilon = value));
             AddSuffix("ERRORSUM", new Suffix<ScalarValue>(() => ErrorSum));
             AddSuffix("PTERM", new Suffix<ScalarValue>(() => PTerm));
             AddSuffix("ITERM", new Suffix<ScalarValue>(() => ITerm));
@@ -153,22 +169,32 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("UPDATE", new TwoArgsSuffix<ScalarValue, ScalarValue, ScalarValue>(Update));
         }
 
-        public double Update(double sampleTime, double input, double setpoint, double minOutput, double maxOutput)
+        public double Update(double sampleTime, double input, double setpoint, double minOutput, double maxOutput, double epsilon)
         {
             MaxOutput = maxOutput;
             MinOutput = minOutput;
+            Epsilon = epsilon;
             Setpoint = setpoint;
             return Update(sampleTime, input);
         }
 
-        public double Update(double sampleTime, double input, double setpoint, double maxOutput)
+        public double Update(double sampleTime, double input, double setpoint, double maxOutput, double epsilon)
         {
-            return Update(sampleTime, input, setpoint, -maxOutput, maxOutput);
+            return Update(sampleTime, input, setpoint, -maxOutput, maxOutput, epsilon);
         }
 
         public ScalarValue Update(ScalarValue sampleTime, ScalarValue input)
         {
             double error = Setpoint - input;
+            if (error > -Epsilon && error < Epsilon)
+            {
+                // Pretend there is no error (get everything to zero out)
+                // because the error is within the epsilon:
+                error = 0;
+                input = Setpoint;
+                Input = input;
+                Error = error;
+            }
             double pTerm = error * Kp;
             double iTerm = 0;
             double dTerm = 0;
@@ -243,19 +269,52 @@ namespace kOS.Safe.Encapsulation
 
         public override string ToString()
         {
-            return string.Format("PIDLoop(Kp:{0}, Ki:{1}, Kd:{2}, Setpoint:{3}, Error:{4}, Output:{5})",
-                Kp, Ki, Kd, Setpoint, Error, Output);
+            return string.Format("PIDLoop(Kp:{0}, Ki:{1}, Kd:{2}, Min:{3}, Max:{4}, Setpoint:{5}, Error:{6}, Output:{7})",
+                Kp, Ki, Kd, MinOutput, MaxOutput, Setpoint, Error, Output);
         }
 
         public string ToCSVString()
         {
-            return string.Format("{0},{1},{2},{3},{4},{5},{6},{7}",
-                LastSampleTime, Error, ErrorSum, Output, Kp, Ki, Kd, MaxOutput);
+            return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8}",
+                LastSampleTime, Error, ErrorSum, Output, Kp, Ki, Kd, MinOutput, MaxOutput);
         }
 
         public string ConstrutorString()
         {
             return string.Format("pidloop({0}, {1}, {2}, {3}, {4})", Ki, Kp, Kd, MaxOutput, ExtraUnwind);
+        }
+
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static PIDLoop CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new PIDLoop();
+            newObj.LoadDump(d);
+            return newObj;
+        }
+
+        public override Dump Dump()
+        {
+            var result = new DumpWithHeader { Header = "PIDLoop" };
+            result.Add("Kp", Kp);
+            result.Add("Ki", Ki);
+            result.Add("Kd", Kd);
+            result.Add("Setpoint", Setpoint);
+            result.Add("MaxOutput", MaxOutput);
+            result.Add("MinOutput", MinOutput);
+            result.Add("ExtraUnwind", ExtraUnwind);
+
+            return result;
+    }
+
+    public override void LoadDump(Dump dump)
+        {
+            Kp = Convert.ToDouble(dump["Kp"]);
+            Ki = Convert.ToDouble(dump["Ki"]);
+            Kd = Convert.ToDouble(dump["Kd"]);
+            Setpoint = Convert.ToDouble(dump["Setpoint"]);
+            MinOutput = Convert.ToDouble(dump["MinOutput"]);
+            MaxOutput = Convert.ToDouble(dump["MaxOutput"]);
+            ExtraUnwind = Convert.ToBoolean(dump["ExtraUnwind"]);
         }
     }
 }

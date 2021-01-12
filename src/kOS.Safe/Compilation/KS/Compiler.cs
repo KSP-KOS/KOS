@@ -2012,7 +2012,23 @@ namespace kOS.Safe.Compilation.KS
         private void VisitString(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            AddOpcode(new OpcodePush(new StringValue(node.Token.Text.Trim('"'))));
+            string value = node.Token.Text;
+            bool shouldEscape = true;
+            if (value[0] == '@')
+            {
+                value = value.Substring(1);
+                shouldEscape = false;
+            }
+            // Can't use Trim('"') because that cuts ALL trailing and leading quotes,
+            // while we want to only cut the first and last quote char:
+            if (value.EndsWith("\""))
+                value = value.Substring(0, value.Length - 1);
+            if (value.StartsWith("\""))
+                value = value.Substring(1);
+            if (shouldEscape)
+                value = value.Replace("\"\"", "\"");
+            
+            AddOpcode(new OpcodePush(new StringValue(value)));
         }
 
         /// <summary>

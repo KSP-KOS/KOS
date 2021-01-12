@@ -60,10 +60,6 @@ Configuration of kOS
           - :struct:`Boolean`
           - False
           - Print statistics to screen
-        * - :attr:`RT`
-          - :struct:`Boolean`
-          - False
-          - Enable RemoteTech2 integration
         * - :attr:`ARCH`
           - :struct:`Boolean`
           - False
@@ -84,6 +80,10 @@ Configuration of kOS
           - :struct:`Boolean`
           - False
           - Enable verbose exceptions
+        * - :attr:`SUPPRESSAUTOPILOT`
+          - :struct:`Boolean`
+          - False
+          - If true, kOS's controls do nothing.
         * - :attr:`TELNET`
           - :struct:`Boolean`
           - False
@@ -150,18 +150,6 @@ Configuration of kOS
     :ref:`ProfileResult() <profileresult>` function available, for
     deep analysis of your program run, if you are so inclined.
 
-.. attribute:: Config:RT
-
-    :access: Get/Set
-    :type: :struct:`Boolean`
-
-    Configures the ``enableRTIntegration`` setting.
-
-    If true, then the kOS mod will attempt to interact with the Remote Tech 2 mod, letting RT2 make decisions about whether or not a vessel is within communications range rather than having kOS use its own more primitive algorithm for it.
-
-    Due to a long stall in the development of the RT2 mod, this setting should still be considered experimental at this point.
-
-
 .. attribute:: Config:ARCH
 
     :access: Get/Set
@@ -223,6 +211,29 @@ Configuration of kOS
     Configures the ``verboseExceptions`` setting.
 
     If true, then it enables a mode in which errors coming from kOS are very long and verbose, trying to explain every detail of the problem.
+
+.. attribute:: Config:SUPPRESSAUTOPILOT
+
+    :access: Get/Set
+    :type: :struct:`Boolean`
+
+    *This is settable by use of the "Toggle Autopilot" Action Group too.*
+
+    When this is set to True, it suppresses all of kOS's attempts to
+    override the steering, throttle, or translation controls, leaving
+    them entirely under manual control.  It is intended to be a way
+    to let you take manual control in an emergency quickly (through
+    the toolbar window where this setting appears) without having to
+    quit the running program or figure out which terminal window has
+    the program causing the control lock.
+
+    You can also bind this setting to an action group for a kOS core part
+    in the VAB or SPH.  The action is called "Toggle Suppress".
+    (Or "Suppress On" and "Suppress Off" for one-way action groups
+    that don't toggle.)
+
+    While it does suppress steering, throttle, and translation, it cannot
+    suppress action groups or staging.
 
 .. attribute:: Config:TELNET
 

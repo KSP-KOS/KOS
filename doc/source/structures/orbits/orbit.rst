@@ -39,12 +39,12 @@ like its apoapsis, periapsis, etc.
 
 .. function:: CREATEORBIT(inc, e, sma, lan, argPe, mEp, t, body)
 
-    :parameter inc: (scalar) inclination
+    :parameter inc: (scalar) inclination, in degrees.
     :parameter e: (scalar) eccentricity
     :parameter sma: (scalar) semi-major axis
-    :parameter lan: (scalar) longitude of ascending node
+    :parameter lan: (scalar) longitude of ascending node, in degrees.
     :parameter argPe: (scalar) argument of periapsis
-    :parameter mEp: (scalar) mean anomaly at epoch
+    :parameter mEp: (scalar) mean anomaly at epoch, in degrees.
     :parameter t: (scalar) epoch
     :parameter body: (:struct:`Body`) body to orbit around
     :return: :struct:`Orbit`
@@ -136,13 +136,16 @@ Structure
           - The current velocity
         * - :attr:`NEXTPATCH`
           - :struct:`Orbit`
-          - Next :struct:`Orbit`
+          - Next :struct:`Orbit` (building upgrade needed)
         * - :attr:`NEXTPATCHETA`
           - :struct:`Scalar`
-          - ETA to next :struct:`Orbit`
+          - ETA to next :struct:`Orbit` (building upgrade needed)
+        * - :attr:`ETA`
+          - :struct:`ORBITETA`
+          - ETA object showing time to Pe, Ap, and transition. (building upgrade needed)
         * - :attr:`HASNEXTPATCH`
           - :struct:`Boolean`
-          - Has a next :struct:`Orbit`
+          - Has a next :struct:`Orbit` (building upgrade needed)
 
 .. attribute:: Orbit:NAME
 
@@ -356,12 +359,20 @@ Structure
     :type: :struct:`Orbit`
     :access: Get only
 
+    *In career this requires a building upgrade* - In career mode where
+    buildings are not upgraded at the start, this suffix won't be allowed
+    until your tracking station is upgraded a level.
+
     When this orbit has a transition to another orbit coming up, this suffix returns the next Orbit patch after this one. For example, when escaping from a Mun orbit into a Kerbin orbit from which you will escape and hit a Solar orbit, then the current orbit's :attr:`:NEXTPATCH <Orbit:NEXTPATCH>` will show the Kerbin orbit, and ``:NEXTPATCH:NEXTPATCH`` will show the solar orbit. The number of patches into the future that you can peek depends on your conic patches setting in your **Kerbal Space Program** Settings.cfg file.
 
 .. attribute:: Orbit:NEXTPATCHETA
 
     :type: :struct:`Scalar`
     :access: Get only
+
+    *In career this requires a building upgrade* - In career mode where
+    buildings are not upgraded at the start, this suffix won't be allowed
+    until your tracking station is upgraded a level.
 
     When this orbit has a transition to another orbit coming up, this suffix
     returns the eta to that transition.  This is different from the value
@@ -370,10 +381,23 @@ Structure
     multiple patch transitions.  The number of patches depends on your conic
     patches setting in your **Kerbal Space Program** Settings.cfg file.
 
+.. attribute:: Orbit:ETA
+
+    :type: :struct:`OrbitEta`
+    :access: Get only
+
+    Returns the :struct:`OrbitEta` object that lets you access the number of
+    seconds to important events in this orbit (periapsis, apoapsis, and transition
+    to next orbit).
+
 .. attribute:: Orbit:HASNEXTPATCH
 
     :type: :struct:`Boolean`
     :access: Get only
+
+    *In career this requires a building upgrade* - In career mode where
+    buildings are not upgraded at the start, this suffix won't be allowed
+    until your tracking station is upgraded a level.
 
     If :attr:`:NEXTPATCH <Orbit:NEXTPATCH>` will return a valid patch, this is true. If :attr:`:NEXTPATCH <Orbit:NEXTPATCH>` will not return a valid patch because there are no transitions occurring in the future, then :attr:`HASNEXTPATCH <Orbit:HASNEXTPATCH` will be false.
 

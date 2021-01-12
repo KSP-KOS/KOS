@@ -220,16 +220,18 @@ Further details are found on the `ALT page <structures/vessels/alt.html>`__ .
 ETA ALIAS
 ---------
 
-The special variable `ETA <structures/vessels/eta.html>`__ gives you
+The special variable :ref:`ETA <eta>` gives you
 access to a few time predictions:
 
 ETA:APOAPSIS
 
 ETA:PERIAPSIS
 
+ETA:NEXTNODE
+
 ETA:TRANSITION
 
-Further details are found on the `ETA page <structures/vessels/eta.html>`__ .
+Further details are found on the :ref:`ETA page <eta>`.
 
 ENCOUNTER
 ---------

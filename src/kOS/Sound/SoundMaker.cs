@@ -19,6 +19,12 @@ namespace kOS.Sound
         private SharedObjects shared;
 
         /// <summary>
+        /// This top-level game object holds the AudioSources the kOS PartModule will use.
+        /// See the initialization comment in SoundMaker.Awake() for why.
+        /// </summary>
+        private GameObject soundObject;
+
+        /// <summary>
         /// Our pretend hardware limit on a "SKID" chip's number of voices
         /// </summary>
         private int hardwareMaxVoices = 10;
@@ -32,6 +38,18 @@ namespace kOS.Sound
         void Awake()
         {
             kspDirectory = KSPUtil.ApplicationRootPath.Replace("\\", "/");
+
+            // To get AudioMufflerRedux to stop quashing kOS sound effects, we had
+            // to put the AudioSource components into a GameObject that was NOT part of the
+            // kOS PartModule.  As long as it was in the kOS PartModule, AudioMufflerRedux would
+            // mistake the sounds for 3D sound effects coming from the part that need silencing
+            // in a vacuum.  (It seems to ignore AudioSource.spatialBlend being set to zero, which
+            // is supposed to tell Unity3d the sound is explicitly NOT coming from a position in 3D
+            // space.  AudioMufflerRedux muffles it anyway.)  The only fix that seems to work
+            // is to remove the sound from the PartModule's GameObject and make a global GameObject
+            // to hold it instead:
+            soundObject = new GameObject();
+            soundObject.name = "kOS.SoundMaker sound library";
 
             sounds = new Dictionary<string, AudioSource>();
             waveGenerators = new Dictionary<string, ProceduralSoundWave>();
@@ -64,6 +82,7 @@ namespace kOS.Sound
                 shared.AllVoiceValues.Clear();
                 shared = null;
             }
+            soundObject.DestroyGameObject();
         }
 
         /// <summary>
@@ -82,8 +101,9 @@ namespace kOS.Sound
             WWW fileGetter = new WWW(url);
 #pragma warning restore CS0618
             AudioClip clip = fileGetter.GetAudioClip();
-            AudioSource source = gameObject.AddComponent<AudioSource>();
+            AudioSource source = soundObject.AddComponent<AudioSource>();
             source.clip = clip;
+            source.spatialBlend = 0; // Makes it ignore spatial position for calculating sound.
             sounds[name] = source;
         }
 
@@ -144,7 +164,7 @@ namespace kOS.Sound
             voices = new Voice[howMany];
             for (int i = 0; i < howMany ; ++i)
             {
-                Voice voice = gameObject.AddComponent<Voice>();
+                Voice voice = soundObject.AddComponent<Voice>();
                 voices[i] = voice;
             }
         }
