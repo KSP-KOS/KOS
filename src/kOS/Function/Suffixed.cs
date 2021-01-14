@@ -353,9 +353,8 @@ namespace kOS.Function
             shared.SoundMaker.StopAllVoices();
         }
     }
-
-    [Function("time")]
-    public class Time : FunctionBase
+    [Function("timestamp", "time")]
+    public class FunctionTimeStamp : FunctionBase
     {
         // Note: "TIME" is both a bound variable AND a built-in function now.
         // If it gets called with parentheses(), the script calls this built-in function.
@@ -373,12 +372,99 @@ namespace kOS.Function
             // If zero args, then the default is to assume you want to
             // make a Timespan of "now":
             if (argCount == 0)
-                ut = Planetarium.GetUniversalTime();
-            else
+            {
+                ReturnValue = new kOS.Suffixed.TimeStamp(Planetarium.GetUniversalTime());
+            }
+            // If one arg, then assume its in UT timestamp seconds:
+            else if (argCount == 1)
+            {
                 ut = GetDouble(PopValueAssert(shared));
+                ReturnValue = new kOS.Suffixed.TimeStamp(ut);
+            }
+            // If more args, assume they are year, day, hour, minute, second, with optional
+            // args at the end (eg. if there's only 3 args, it's year, day, hour with no minutes or seconds).
+            else if (argCount == 2)
+            {
+                double day = GetDouble(PopValueAssert(shared));
+                double year = GetDouble(PopValueAssert(shared));
+                ReturnValue = new kOS.Suffixed.TimeStamp(year, day, 0.0, 0.0, 0.0);
+            }
+            else if (argCount == 3)
+            {
+                double hour = GetDouble(PopValueAssert(shared));
+                double day = GetDouble(PopValueAssert(shared));
+                double year = GetDouble(PopValueAssert(shared));
+                ReturnValue = new kOS.Suffixed.TimeStamp(year, day, hour, 0.0, 0.0);
+            }
+            else if (argCount == 4)
+            {
+                double minute = GetDouble(PopValueAssert(shared));
+                double hour = GetDouble(PopValueAssert(shared));
+                double day = GetDouble(PopValueAssert(shared));
+                double year = GetDouble(PopValueAssert(shared));
+                ReturnValue = new kOS.Suffixed.TimeStamp(year, day, hour, minute, 0.0);
+            }
+            else if (argCount == 5)
+            {
+                double second = GetDouble(PopValueAssert(shared));
+                double minute = GetDouble(PopValueAssert(shared));
+                double hour = GetDouble(PopValueAssert(shared));
+                double day = GetDouble(PopValueAssert(shared));
+                double year = GetDouble(PopValueAssert(shared));
+                ReturnValue = new kOS.Suffixed.TimeStamp(year, day, hour, minute, second);
+            }
             AssertArgBottomAndConsume(shared);
+        }
+    }
 
-            ReturnValue = new kOS.Suffixed.TimeSpan(ut);
+    [Function("timespan")]
+    public class FunctionTimeSpan : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            double ut;
+            // Accepts zero or one arg:
+            int argCount = CountRemainingArgs(shared);
+
+            // If one arg, then assume its seconds:
+            if (argCount == 1)
+            {
+                ut = GetDouble(PopValueAssert(shared));
+                ReturnValue = new kOS.Suffixed.TimeSpan(ut);
+            }
+            // If more args, assume they are year, day, hour, minute, second, with optional
+            // args at the end (eg. if there's only 3 args, it's year, day, hour with no minutes or seconds).
+            else if (argCount == 2)
+            {
+                double day = GetDouble(PopValueAssert(shared));
+                double year = GetDouble(PopValueAssert(shared));
+                ReturnValue = new kOS.Suffixed.TimeSpan(year, day, 0.0, 0.0, 0.0);
+            }
+            else if (argCount == 3)
+            {
+                double hour = GetDouble(PopValueAssert(shared));
+                double day = GetDouble(PopValueAssert(shared));
+                double year = GetDouble(PopValueAssert(shared));
+                ReturnValue = new kOS.Suffixed.TimeSpan(year, day, hour, 0.0, 0.0);
+            }
+            else if (argCount == 4)
+            {
+                double minute = GetDouble(PopValueAssert(shared));
+                double hour = GetDouble(PopValueAssert(shared));
+                double day = GetDouble(PopValueAssert(shared));
+                double year = GetDouble(PopValueAssert(shared));
+                ReturnValue = new kOS.Suffixed.TimeSpan(year, day, hour, minute, 0.0);
+            }
+            else if (argCount == 5)
+            {
+                double second = GetDouble(PopValueAssert(shared));
+                double minute = GetDouble(PopValueAssert(shared));
+                double hour = GetDouble(PopValueAssert(shared));
+                double day = GetDouble(PopValueAssert(shared));
+                double year = GetDouble(PopValueAssert(shared));
+                ReturnValue = new kOS.Suffixed.TimeSpan(year, day, hour, minute, second);
+            }
+            AssertArgBottomAndConsume(shared);
         }
     }
 
