@@ -168,26 +168,20 @@ Special variable TIME
 Kerbal Calendar Differs From Earth's
 ------------------------------------
 
-    Note that the notion of "how many hours in a day" and "how many days in a year"
-    depends on the gameworld, not our real world.  Kerbin has a shorter day, and
-    a longer year in days as a result, than Earth.  But there is an option in
-    KSP's main settings screen that can toggle whether the game counts Kerbin
-    days (6 hours per day) or Earth days (24 hours per day) this notion, and
-    kOS will use whatever option you set it to alter the meaning of the Day
-    suffix of a :struct:`TIMESTAMP` and a :struct:`TIMESPAN`.
+    Note that the notion of "how many hours in a day" and "how many days in
+    a year" depends on the gameworld, not our real world.  Kerbin has a
+    shorter day (6 hours) than Earth, and 426 of these days make up a Kerbin
+    year. But there is an option in KSP's main settings screen
+    that can toggle whether the game counts with Kerbin days (6 hours per day)
+    or Earth days (24 hours per day). kOS will use whatever
+    option you set it to alter the meaning of the Day suffix of a
+    :struct:`TIMESTAMP` and a :struct:`TIMESPAN`.  You can see what
+    the length of a day in the calendar is set to by reading
+    :attr:`Kuniverse:HOURSPERDAY`.
 
     Also note that the mods that alter the calendar for other solar systems,
-    if they inject changes into KSP's main game, will cause these values to
+    if they inject changes into KSP's main game, can cause these values to
     change too.
-
-.. warning::
-
-    Please be aware that the kind of calendar :struct:`TimeStamp`'s use will depend on your KSP settings. The main KSP game supports both Kerbin time and Earth time and changing that setting will affect how :struct:`TimeStamp` works in kOS.
-
-    The difference is whether 1 day = 6 hours or 1 day = 24 hours.
-
-    You can access this setting from your script by using
-    :attr:`Kuniverse:HOURSPERDAY`.
 
 .. highlight:: kerboscript
 
@@ -243,10 +237,10 @@ TimeStamp Structure
           - :struct:`Scalar`
           - Year-hand number
         * - :attr:`DAY`
-          - :struct:`Scalar` (1-426)
+          - :struct:`Scalar` (range varies by universe)
           - Day-hand number
         * - :attr:`HOUR`
-          - :struct:`Scalar` (0-5)
+          - :struct:`Scalar` (0-5) or (0-23) depending
           - Hour-hand number
         * - :attr:`MINUTE`
           - :struct:`Scalar` (0-59)
@@ -300,11 +294,16 @@ TimeStamp Structure
 .. attribute:: TimeStamp:DAY
 
     :access: Get only
-    :type: :struct:`Scalar` (1-426) or (1-356)
+    :type: :struct:`Scalar` (range varies by universe)
 
     Day-hand number. Kerbin has 426 days in its year if using Kerbin's
-    6 hour day (less if :attr:`Kuniverse:HOURSPERDAY` is 24 meaning
-    the game is configured to show Earthlike days not Kerbin days.
+    6 hour day (one fourth of that if :attr:`Kuniverse:HOURSPERDAY` is
+    24 meaning the game is configured to show Earthlike days not Kerbin
+    days.)
+
+    Also note that with mods installed you might not be looking at
+    the stock universe, which could change the range this field could
+    be if it changes how long a year is in your solar system.
 
     Note that the first day of the year is actually day 1, not day 0.
 
@@ -465,31 +464,31 @@ TimeSpan Structure
           - Whole number of years in the span.
         * - :attr:`YEARS`
           - :struct:`Scalar`
-          - TOTAL time in the span expressed in years.
+          - *TOTAL* time in the span expressed in years.
         * - :attr:`DAY`
-          - :struct:`Scalar` (1-426)
+          - :struct:`Scalar` (range vaires by universe)
           - Whole number of days after the last whole year in the span.
         * - :attr:`DAYS`
-          - :struct:`Scalar` (1-426)
-          - TOTAL time in the span expressed in days.
+          - :struct:`Scalar` 
+          - *TOTAL* time in the span expressed in days.
         * - :attr:`HOUR`
-          - :struct:`Scalar` (0-5)
+          - :struct:`Scalar` (0-5) or (0-23)
           - Whole number of hours after the last whole day in the span.
         * - :attr:`HOURS`
-          - :struct:`Scalar` (0-5)
-          - TOTAL time in the span expressed in hours.
+          - :struct:`Scalar`
+          - *TOTAL* time in the span expressed in hours.
         * - :attr:`MINUTE`
           - :struct:`Scalar` (0-59)
           - Whole number of minutes after the last whole hour in the span.
         * - :attr:`MINUTES`
-          - :struct:`Scalar` (0-59)
-          - TOTAL time in the span expressed in minutes.
+          - :struct:`Scalar`
+          - *TOTAL* time in the span expressed in minutes.
         * - :attr:`SECOND`
           - :struct:`Scalar` (0-59)
           - Whole number of seconds after the last whole minute in the span.
         * - :attr:`SECONDS`
           - :struct:`Scalar` (fractional)
-          - Total Seconds since Epoch (includes fractional partial seconds)
+          - *TOTAL* Seconds since Epoch (includes fractional partial seconds)
 
 
 .. note::
@@ -546,7 +545,7 @@ TimeSpan Structure
     :access: Get only
     :type: :struct:`Scalar`
 
-    TOTAL time in the span, expressed in units of years.  This is not
+    *TOTAL* time in the span, expressed in units of years.  This is not
     the same as :attr:`TimeSpan:YEAR` because it includes a fractional
     part and is the *entire* span, not just the whole number of years.
     Example: If there are 426 days in a Year, and the Timespan is
@@ -557,12 +556,17 @@ TimeSpan Structure
 .. attribute:: TimeSpan:DAY
 
     :access: Get only
-    :type: :struct:`Scalar` (1-426) or (1-356)
+    :type: :struct:`Scalar` (range varies by universe)
 
     Whole number of days remaining after the lst full year within the span.
     Kerbin has 426 days in a year if using Kerbin's
-    6 hour day (less if :attr:`Kuniverse:HOURSPERDAY` is 24 meaning
-    the game is configured to show Earthlike days not Kerbin days.
+    6 hour day (one fourth as much if if :attr:`Kuniverse:HOURSPERDAY`
+    is 24 meaning the game is configured to show Earthlike days not
+    Kerbin days.
+
+    The range of possible values could be different if you have mods
+    installed that replace the stock solar system with a different
+    solar system and thus alter how long your homeworld's year is.
 
     Note that for spans the first day of the year is the zero-th
     day, not the 1-th day.  This is a difference from how it
@@ -573,7 +577,7 @@ TimeSpan Structure
     :access: Get only
     :type: :struct:`Scalar`
 
-    TOTAL time in the span, expressed in units of days.  This is not
+    *TOTAL* time in the span, expressed in units of days.  This is not
     the same as :attr:`TimeSpan:DAY` because it includes a fractional
     part and is the *entire* span, not just the whole number of days leftover
     in the last partial year.
@@ -596,7 +600,7 @@ TimeSpan Structure
     :access: Get only
     :type: :struct:`Scalar`
 
-    TOTAL time in the span, expressed in units of hours.  This is not
+    *TOTAL* time in the span, expressed in units of hours.  This is not
     the same as :attr:`TimeSpan:HOUR` because it includes a fractional
     part and is the *entire* span, not just the whole number of hours
     leftover in the last partial day.
@@ -617,7 +621,7 @@ TimeSpan Structure
     :access: Get only
     :type: :struct:`Scalar`
 
-    TOTAL time in the span, expressed in units of minutes.  This is not
+    *TOTAL* time in the span, expressed in units of minutes.  This is not
     the same as :attr:`TimeSpan:MINUTE` because it includes a fractional
     part and is the *entire* span, not just the whole number of minutes
     leftover in the last partial hour.
@@ -639,7 +643,7 @@ TimeSpan Structure
     :access: Get only
     :type: :struct:`Scalar` (float)
 
-    Total Seconds in the TimeSpan, including fractonal part.  Note
+    *TOTAL* Seconds in the TimeSpan, including fractonal part.  Note
     this is NOT the same as :attr:`TimeSpan:SECOND` (singular),
     because this is the total span of time expressed in seconds,
     and not just the leftover seconds in the last minute of the span.
