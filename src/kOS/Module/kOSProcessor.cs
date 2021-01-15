@@ -439,7 +439,14 @@ namespace kOS.Module
 
         public void ForcePAWRefresh()
         {
-            part?.PartActionWindow?.UpdateWindow();
+            // Thanks to https://github.com/blowfishpro for finding this API call for me:
+            UIPartActionWindow paw = UIPartActionController.Instance?.GetItem(part, false);
+
+            if (paw != null)
+            {
+                paw.ClearList();
+                paw.displayDirty = true;
+            }
         }
 
         private IEnumerable<VolumePath> BootDirectoryFiles()
