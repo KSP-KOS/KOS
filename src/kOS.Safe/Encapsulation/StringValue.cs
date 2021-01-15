@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
+using kOS.Safe.Serialization;
 using System.Collections.Generic;
 using System.Collections;
 
@@ -19,7 +20,14 @@ namespace kOS.Safe.Encapsulation
     [KOSNomenclature("String")]
     public class StringValue : PrimitiveStructure, IIndexable, IConvertible, IEnumerable<string>
     {
-        private readonly string internalString;
+        // internalString is *almost* immutable.
+        // It is supposed to be immutable (readonly keyword here) except that
+        // it can't be and also fit the design pattern kOS uses for Serializable structures.
+        // That pattern is to load from a dump by creating an instance with a dummy
+        // constructor first, then populate it with LoadDump().  To populate it with LoadDump(),
+        // the internal representation cannot be readonly.  Populating from a dump should be
+        // the only place the immutability rule is violated.
+        private string internalString;
 
         public static StringValue Empty { get; } = new StringValue();
         public static StringValue None { get; } = new StringValue("None");
@@ -38,13 +46,13 @@ namespace kOS.Safe.Encapsulation
         public StringValue(StringValue stringValue)
         {
             internalString = stringValue.ToString();
-            StringInitializeSuffixes();
+            RegisterInitializer(StringInitializeSuffixes);
         }
 
         public StringValue(char ch)
         {
             internalString = new string(new char[] {ch});
-            StringInitializeSuffixes();
+            RegisterInitializer(StringInitializeSuffixes);
         }
 
         public override object ToPrimitive()
@@ -457,6 +465,26 @@ namespace kOS.Safe.Encapsulation
         ulong IConvertible.ToUInt64(IFormatProvider provider)
         {
             throw new KOSCastException(typeof(StringValue), typeof(UInt64));
+        }
+
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static StringValue CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new StringValue();
+            newObj.LoadDump(d);
+            return newObj;
+        }
+        public override Dump Dump()
+        {
+            DumpWithHeader dump = new DumpWithHeader();
+
+            dump.Add("value", internalString);
+
+            return dump;
+        }
+        public override void LoadDump(Dump dump)
+        {
+            internalString = Convert.ToString(dump["value"]);
         }
     }
 }

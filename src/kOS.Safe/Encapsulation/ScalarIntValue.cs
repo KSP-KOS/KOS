@@ -1,4 +1,7 @@
-﻿namespace kOS.Safe.Encapsulation
+using kOS.Safe.Serialization;
+using System;
+
+namespace kOS.Safe.Encapsulation
 {
     [kOS.Safe.Utilities.KOSNomenclature("Scalar", KOSToCSharp = false)]
     public class ScalarIntValue : ScalarValue
@@ -23,6 +26,13 @@
             get { return (int)Value != 0; }
         }
 
+        // All serializable structures need a default constructor, but it can
+        // be private to prevent it from being used externally:
+        private ScalarIntValue()
+        {
+
+        }
+
         public ScalarIntValue(int value)
         {
             Value = value;
@@ -43,5 +53,24 @@
             return new ScalarIntValue(int.MaxValue);
         }
 
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static ScalarIntValue CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new ScalarIntValue();
+            newObj.LoadDump(d);
+            return newObj;
+        }
+        public override Dump Dump()
+        {
+            DumpWithHeader dump = new DumpWithHeader();
+
+            dump.Add("value", Value);
+
+            return dump;
+        }
+        public override void LoadDump(Dump dump)
+        {
+            Value = Convert.ToInt32(dump["value"]);
+        }
     }
 }
