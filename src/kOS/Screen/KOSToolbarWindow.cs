@@ -718,6 +718,11 @@ namespace kOS.Screen
                                 "There are either no kOS CPU's\n" +
                                 "in this universe, or there are\n " +
                                 "but they are all \"on rails\".", panelSkin.label);
+
+            if (HighLogic.LoadedSceneIsEditor)
+            {
+                DrawRereadBootButton();
+            }
             CountEndVertical();
 
             GUILayout.EndScrollView();
@@ -799,6 +804,27 @@ namespace kOS.Screen
                                              ((partTag == null) ? "" : partTag.nameTag)
                                             );
             GUILayout.Box(new GUIContent(labelText, "This is the currently highlighted part on the vessel"), partNameStyle);
+        }
+
+        private void DrawRereadBootButton()
+        {
+            CountBeginVertical();
+            GUILayout.Box(" "); // just putting a bar above the button and text.
+            CountBeginHorizontal();
+            bool clicked = GUILayout.Button("Reread\nBoot\nFolder", panelSkin.button);
+            GUILayout.Label(
+                "If you added new files to the archive\n" +
+                "boot folder after entering this\n" +
+                "Editor scene, they won't show up in the\n" +
+                "part window unless you click here.\n", panelSkin.label);
+
+            if (clicked)
+            {
+                kOSProcessor.SetBootListDirty();
+            }
+            CountEndHorizontal();
+            GUILayout.Box(" "); // just putting a bar below the button and text.
+            CountEndVertical();
         }
 
         public void BeginHoverHousekeeping()
