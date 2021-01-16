@@ -23,11 +23,20 @@ namespace kOS.Function
             double prograde = GetDouble(PopValueAssert(shared));
             double normal = GetDouble(PopValueAssert(shared));
             double radial = GetDouble(PopValueAssert(shared));
-            double time = GetDouble(PopValueAssert(shared));
+            object time = PopValueAssert(shared);
             AssertArgBottomAndConsume(shared);
-
-            var result = new Node(time, radial, normal, prograde, shared);
-            ReturnValue = result;
+            if (time is kOS.Suffixed.TimeSpan)
+            {
+                ReturnValue = new Node((kOS.Suffixed.TimeSpan)time, radial, normal, prograde, shared);
+            }
+            else if (time is kOS.Suffixed.TimeStamp)
+            {
+                ReturnValue = new Node((TimeStamp)time, radial, normal, prograde, shared);
+            }
+            else
+            {
+                ReturnValue = new Node(GetDouble(time), radial, normal, prograde, shared);
+            }
         }
     }
 

@@ -24,8 +24,8 @@ namespace kOS.Suffixed
             nodeLookup = new Dictionary<ManeuverNode, Node>();
         }
 
-        public Node(double time, double radialOut, double normal, double prograde, SharedObjects shareObj)
-            : this(shareObj)
+        public Node(double time, double radialOut, double normal, double prograde, SharedObjects sharedObj)
+            : this(sharedObj)
         {
             this.time = time;
             this.prograde = prograde;
@@ -33,8 +33,22 @@ namespace kOS.Suffixed
             this.normal = normal;
         }
 
-        private Node(Vessel v, ManeuverNode existingNode, SharedObjects shareObj)
-            : this(shareObj)
+        public Node(TimeStamp stamp, double radialOut, double normal, double prograde, SharedObjects sharedObj)
+            : this(stamp.ToUnixStyleTime(), radialOut, normal, prograde, sharedObj)
+        {
+        }
+
+            public Node(kOS.Suffixed.TimeSpan span, double radialOut, double normal, double prograde, SharedObjects sharedObj)
+            : this(sharedObj)
+        {
+            this.time = Planetarium.GetUniversalTime() + span.ToUnixStyleTime();
+            this.prograde = prograde;
+            this.radialOut = radialOut;
+            this.normal = normal;
+        }
+
+        private Node(Vessel v, ManeuverNode existingNode, SharedObjects sharedObj)
+            : this(sharedObj)
         {
             NodeRef = existingNode;
             vesselRef = v;
@@ -63,6 +77,18 @@ namespace kOS.Suffixed
                 value =>
                 {
                     time = value + Planetarium.GetUniversalTime();
+                    ToNodeRef();
+                }
+            ));
+
+            AddSuffix("TIME", new SetSuffix<ScalarValue>(
+                () =>
+                {
+                    return time;
+                },
+                value =>
+                {
+                    time = value;
                     ToNodeRef();
                 }
             ));
