@@ -140,6 +140,9 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
         * - :attr:`CONFIG`
           - :struct:`String`
           - Engine configuration name (for RealFuels)
+        * - :attr:`CONSUMEDRESOURCES`
+          - :struct:`Lexicon` of :struct:`ConsumedResource`
+          - The fuel resources this engine consumes, and in what ratios
 
 
 .. note::
@@ -414,7 +417,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     If RealFuels is installed, returns true if this engine is a type of engine that requires ullage, otherwise returns false.
     Note: this is a static property of the engine, for current fuel status, check `FUELSTABILITY`.
 
-.. attribute:: Engine:FUELSTABILITY`
+.. attribute:: Engine:FUELSTABILITY
 
     :access: Get only
     :type: :ref:`scalar <scalar>`
@@ -422,32 +425,39 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     If RealFuels is installed, returns the fuel stability of this engine as a value between 0 and 1 (where 1 is fullly stable), otherwise returns 1.
     Engines that don't require ullage will always return 1, unless they are pressure fed and the feed pressure is too low.
 
-.. attribute:: Engine:PRESSUREFED`
+.. attribute:: Engine:PRESSUREFED
 
     :access: Get only
     :type: :ref:`Boolean <boolean>`
     
     If RealFuels is installed, returns true if this engine is pressure fed, otherwise returns false.
 
-.. attribute:: Engine:IGNITIONS`
+.. attribute:: Engine:IGNITIONS
 
     :access: Get only
     :type: :ref:`scalar <scalar>`
     
     If RealFuels is installed, returns the number of ignitions remaining, or -1 if it is unlimited, otherwise returns -1.
 
-.. attribute:: Engine:MINTHROTTLE`
+.. attribute:: Engine:MINTHROTTLE
 
     :access: Get only
     :type: :ref:`scalar <scalar>`
     
     If RealFuels is installed, returns the minimum throttle setting as a value between 0 and 1, otherwise returns 0.
 
-.. attribute:: Engine:CONFIG`
+.. attribute:: Engine:CONFIG
 
     :access: Get only
     :type: :struct:`String`
     
     If RealFuels is installed, returns the configuration name of this engine if applicable, otherwise returns the part title.
+
+.. attribute:: Engine:CONSUMEDRESOURCES
+
+    :access: Get only
+    :type: :struct:`Lexicon` of :struct:`ConsumedResource`
+
+    The fuel resources this engine consumes, and in what ratios.
 
 .. _isp: http://en.wikipedia.org/wiki/Specific_impulse

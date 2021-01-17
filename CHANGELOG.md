@@ -131,7 +131,9 @@ was an important KSM bugfix.
   manual control.  If you use this, the script will still keep
   running and *think* it's moving the controls, but the steering
   manager will ignore the script's commands until you turn the
-  suppression toggle off.
+  suppression toggle off.  *This can also be bound to an
+  action group for the kOS PartModule if you want a fast hotkey
+  for it.*
   [pull request](https://github.com/KSP-KOS/KOS/pull/2779)
 - ``Part`` suffixes that allow you to traverse the symmetrical
   sets of parts.  (i.e. if you place 4 fins in radial symmetry,
@@ -155,8 +157,8 @@ was an important KSM bugfix.
 - New suffixes for the special case where a Vessel is really an
   asteroid. (Thanks JonnyOThan)
   [pull request](https://github.com/KSP-KOS/KOS/pull/2736)
-- Ability to read the stock game's Delta-V readouts from the staging
-  list. (Thanks ThunderousEcho)
+- Ability to read the stock game's Delta-V readouts for the vessel.
+  (Thanks ThunderousEcho)
   [pull request](https://github.com/KSP-KOS/KOS/pull/2719)
 - New subtype for ``Part`` - the ``RCS`` part type, with information
   about how its nozzles are aimed, what fuel it uses, the ISP,
@@ -167,7 +169,8 @@ was an important KSM bugfix.
   Also can prepend the string with ``@`` to turn this off and keep
   it literal. (thanks thexa4)
   [pull request](https://github.com/KSP-KOS/KOS/pull/2673/)
-- New Engine value suffixes ``:DENSITY`` and ``:CONSUMEDRESOURCES``
+- New Engine value suffix ``:CONSUMEDRESOURCES``, and new
+  Type ``ConsumedResource`` it returns. These
   give more information about fuels the engine uses.  Mostly
   relevant when RealFuels mod is installed so every engine is a
   bit different. (Thanks RCrockford)
@@ -283,9 +286,6 @@ was an important KSM bugfix.
   [pull request 2800](https://github.com/KSP-KOS/KOS/pull/2800)
   [pull request 2819](https://github.com/KSP-KOS/KOS/pull/2819)
   [pull request 2833](https://github.com/KSP-KOS/KOS/pull/2833)
-  [pull request]()
-  [pull request]()
-  [pull request]()
 - kOS can now handle KSP's technique of having multiple KSPfields
   of the same name that resolve the name clash by only having one
   visible at a time.  KSP started doing this on a few fields
