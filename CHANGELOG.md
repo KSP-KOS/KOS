@@ -195,8 +195,13 @@ was an important KSM bugfix.
   [pull request](https://github.com/KSP-KOS/KOS/pull/2842)
 - Fixed: **KSM** files would corrupt one of the kRISC instruction
   operands (leading to any number of random results when running the
-  program) if the size of the entire pack of kRISC operands happened
-  to be within 3 bytes short of 2^8 or 2^16 or 2^24 or 2^32 bytes.
+  program) if the size of the operand pack happened to be *just barely*
+  over 2^8, 2^16, or 2^24 bytes. (When calculating how many bytes
+  addresses need to be to access the enire operand pack, its count
+  of the size of the pack was off by 3. This could make the last
+  operand in the pack get garbled when it loaded into memory from
+  some random other part of the file instead of where it was supposed
+  to come from.)
   (Thanks to newcomb-luke for discovering the problem and the cause)
   [pull request](https://github.com/KSP-KOS/KOS/pull/2827)
 - Fixed how positions of packed vessels were off by one
