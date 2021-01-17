@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Raw Control &mdash; kOS 1.2.0.0 documentation</title>
+  <title>Raw Control &mdash; kOS 1.3.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.2.0.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="Flight Control" href="../flight.html"/>
         <link rel="next" title="Pilot Input" href="pilot.html"/>
         <link rel="prev" title="Cooked Control" href="cooked.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.2.0.0
+                1.3.0.0
               </div>
             
           
@@ -123,6 +123,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../structures.html">Structures</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_help.html">Getting Help</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
@@ -208,16 +209,35 @@
 </pre></div>
 </div>
 <p>One can use <a class="reference internal" href="#ship-control-rotation"><span>SHIP:CONTROL:ROTATION</span></a> and <a class="reference internal" href="#ship-control-translation"><span>SHIP:CONTROL:TRANSLATION</span></a> to see the ship&#8217;s current situation.</p>
+<div class="section" id="config-suppressautopilot">
+<h2>CONFIG:SUPPRESSAUTOPILOT<a class="headerlink" href="#config-suppressautopilot" title="Permalink to this headline">¶</a></h2>
+<p>If <a class="reference internal" href="../../structures/misc/config.html#attribute:CONFIG:SUPPRESSAUTOPILOT" title="CONFIG:SUPPRESSAUTOPILOT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Config:SUPPRESSAUTOPILOT</span></code></a> is true, then none of the controls
+on this page will have an effect.  That setting is there to provide
+the player with an emergency way to quickly click a toggle on the
+toolbar window to force kOS to stop taking control, letting the player
+move the controls manually.</p>
+</div>
+<div class="section" id="breaking-ground-dlc">
+<h2>Breaking Ground DLC<a class="headerlink" href="#breaking-ground-dlc" title="Permalink to this headline">¶</a></h2>
+<p>Please note that the <em>Breaking Ground DLC</em> parts that can be configured
+to respond to the control axes, such as electric motors and propellor
+pitches, will only respond to the settings described on the
+<a class="reference internal" href="pilot.html#pilot"><span>pilot controls page</span></a> and NOT the settings described
+here on this <a class="reference internal" href="#raw"><span>raw control</span></a> page, nor will it respond to
+the settings in <code class="docutils literal"><span class="pre">lock</span> <span class="pre">throttle</span></code> or <code class="docutils literal"><span class="pre">lock</span> <span class="pre">steering</span></code>.  SQUAD designed
+the <em>Breaking Ground</em> DLC parts to only pay attention to the player&#8217;s
+controls, not autopilot controls.</p>
+</div>
 <div class="section" id="null-zone">
 <span id="raw-null-zone"></span><h2>5% null zone<a class="headerlink" href="#null-zone" title="Permalink to this headline">¶</a></h2>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">The stock raw controls enforce a null zone that kOS can&#8217;t seem to override
-(We&#8217;ve tried).  Be aware that if you set a translation raw control to a
-value between -0.05 and +0.05, the stock game seems to ignore it and treat
-it as zero.  (While this may seem to be related to the null zones on the
-game&#8217;s controls setttings page, which also default ot 5%, in reality this
-seems to happen regardless of what you change those settings to).</p>
+<p class="last">KSP imposes a built-in 5% null zone on RCS thrusters that makes it
+impossible for small raw inputs to have any effect in situations
+where RCS thrusters are the only source of control.  However,
+kOS allows you to override KSP&#8217;s stock RCS null zone for RCS parts
+with a bit of trickery under the hood, using the <code class="xref ks ks-attr docutils literal"><span class="pre">RCS:DEADZONE</span></code>
+suffix of RCS parts.</p>
 </div>
 </div>
 <div class="section" id="raw-flight-controls-reference">
@@ -269,15 +289,15 @@ properly placed thrusters and appropriate fuel.</p>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#ship-control-yawtrim"><span>YAWTRIM</span></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> [-1,1]</td>
-<td><code class="docutils literal"><span class="pre">ALT+D</span></code>, <code class="docutils literal"><span class="pre">ALT+A</span></code></td>
+<td>(No real effect, see below) <code class="docutils literal"><span class="pre">ALT+D</span></code>, <code class="docutils literal"><span class="pre">ALT+A</span></code></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#ship-control-pitchtrim"><span>PITCHTRIM</span></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> [-1,1]</td>
-<td><code class="docutils literal"><span class="pre">ALT+W</span></code>, <code class="docutils literal"><span class="pre">ALT+S</span></code></td>
+<td>(No real effect, see below) <code class="docutils literal"><span class="pre">ALT+W</span></code>, <code class="docutils literal"><span class="pre">ALT+S</span></code></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#ship-control-rolltrim"><span>ROLLTRIM</span></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> [-1,1]</td>
-<td><code class="docutils literal"><span class="pre">ALT+Q</span></code>, <code class="docutils literal"><span class="pre">ALT+E</span></code></td>
+<td>(No real effect, see below) <code class="docutils literal"><span class="pre">ALT+Q</span></code>, <code class="docutils literal"><span class="pre">ALT+E</span></code></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#ship-control-fore"><span>FORE</span></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> [-1,1]</td>
@@ -305,15 +325,15 @@ properly placed thrusters and appropriate fuel.</p>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#ship-control-wheelsteertrim"><span>WHEELSTEERTRIM</span></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> [-1,1]</td>
-<td><code class="docutils literal"><span class="pre">ALT+A</span></code>, <code class="docutils literal"><span class="pre">ALT+D</span></code></td>
+<td>(No real effect, see below) <code class="docutils literal"><span class="pre">ALT+A</span></code>, <code class="docutils literal"><span class="pre">ALT+D</span></code></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#ship-control-wheelthrottletrim"><span>WHEELTHROTTLETRIM</span></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> [-1,1]</td>
-<td><code class="docutils literal"><span class="pre">ALT+W</span></code>, <code class="docutils literal"><span class="pre">ALT+S</span></code></td>
+<td>(No real effect, see below) <code class="docutils literal"><span class="pre">ALT+W</span></code>, <code class="docutils literal"><span class="pre">ALT+S</span></code></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#ship-control-neutral"><span>NEUTRAL</span></a></td>
 <td><a class="reference internal" href="../../structures/misc/boolean.html#boolean"><span>Boolean</span></a></td>
-<td>Is <strong>kOS</strong> Controlling?</td>
+<td>True if ship:control is doing nothing.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#ship-control-neutralize"><span>NEUTRALIZE</span></a></td>
 <td><a class="reference internal" href="../../structures/misc/boolean.html#boolean"><span>Boolean</span></a></td>
@@ -354,19 +374,46 @@ properly placed thrusters and appropriate fuel.</p>
 <span class="target" id="ship-control-yawtrim"></span><dl class="object">
 <dt>
 <code class="descname">SHIP:CONTROL:YAWTRIM</code></dt>
-<dd><p>Controls the <code class="docutils literal"><span class="pre">YAW</span></code> of the rotational trim.</p>
+<dd><p><em>This has no real effect and is just here for completeness.</em></p>
+<p>IF you <em>really</em> want to control TRIM, use <code class="docutils literal"><span class="pre">SHIP:CONTROL:PILOTYAWTRIM</span></code>
+from the suffixes in the <a class="reference internal" href="pilot.html#pilot"><span>Pilot control section</span></a> instead.</p>
+<p>The reason why this trim does nothing and you have to use the pilot
+trim instead is because KSP only looks at the trim when its part of
+the <em>pilot&#8217;s</em> own control structure, not an autpilot&#8217;s control structure.</p>
+<p><em>Warning</em>:
+Setting this value can cause <a class="reference internal" href="#ship-control-neutral"><span>:NEUTRAL</span></a> to
+return false negatives by confusing the system about where the &#8220;at
+rest&#8221; point of the controls are.</p>
 </dd></dl>
 
 <span class="target" id="ship-control-pitchtrim"></span><dl class="object">
 <dt>
 <code class="descname">SHIP:CONTROL:PITCHTRIM</code></dt>
-<dd><p>Controls the <code class="docutils literal"><span class="pre">PITCH</span></code> of the rotational trim.</p>
+<dd><p><em>This has no real effect and is just here for completeness.</em></p>
+<p>IF you <em>really</em> want to control TRIM, use <code class="docutils literal"><span class="pre">SHIP:CONTROL:PILOTPITCHTRIM</span></code>
+from the suffixes in the <a class="reference internal" href="pilot.html#pilot"><span>Pilot control section</span></a> instead.</p>
+<p>The reason why this trim does nothing and you have to use the pilot
+trim instead is because KSP only looks at the trim when its part of
+the <em>pilot&#8217;s</em> own control structure, not an autpilot&#8217;s control structure.</p>
+<p><em>Warning</em>:
+Setting this value can cause <a class="reference internal" href="#ship-control-neutral"><span>NEUTRAL</span></a> to
+return false negatives by confusing the system about where the &#8220;at
+rest&#8221; point of the controls are.</p>
 </dd></dl>
 
 <span class="target" id="ship-control-rolltrim"></span><dl class="object">
 <dt>
 <code class="descname">SHIP:CONTROL:ROLLTRIM</code></dt>
-<dd><p>Controls the <code class="docutils literal"><span class="pre">ROLL</span></code> of the rotational trim.</p>
+<dd><p><em>This has no real effect and is just here for completeness.</em></p>
+<p>IF you <em>really</em> want to control TRIM, use <code class="docutils literal"><span class="pre">SHIP:CONTROL:PILOTROLLTRIM</span></code>
+from the suffixes in the <a class="reference internal" href="pilot.html#pilot"><span>Pilot control section</span></a> instead.</p>
+<p>The reason why this trim does nothing here is because KSP only looks at the
+trim when its part of the <em>pilot&#8217;s</em> own control structure, not an
+autpilot&#8217;s control structure.</p>
+<p><em>Warning</em>:
+Setting this value can cause <a class="reference internal" href="#ship-control-neutral"><span>NEUTRAL</span></a> to
+return false negatives by confusing the system about where the &#8220;at
+rest&#8221; point of the controls are.</p>
 </dd></dl>
 
 <span class="target" id="ship-control-fore"></span><dl class="object">
@@ -417,25 +464,58 @@ able to change.</p>
 <span class="target" id="ship-control-wheelsteertrim"></span><dl class="object">
 <dt>
 <code class="descname">SHIP:CONTROL:WHEELSTEERTRIM</code></dt>
-<dd><p>Controls the trim of the wheel steering.</p>
+<dd><p><em>This has no real effect and is just here for completeness.</em></p>
+<p>IF you <em>really</em> want to control TRIM, use <code class="docutils literal"><span class="pre">SHIP:CONTROL:PILOTYAWTRIM</span></code>
+from the suffixes in the <a class="reference internal" href="pilot.html#pilot"><span>Pilot control section</span></a> instead.</p>
+<p>The reason why this trim does nothing here is because KSP only looks at the
+trim when its part of the <em>pilot&#8217;s</em> own control structure, not an
+autpilot&#8217;s control structure.</p>
+<p><em>Warning</em>:
+Setting this value can cause <a class="reference internal" href="#ship-control-neutral"><span>NEUTRAL</span></a> to
+return false negatives by confusing the system about where the &#8220;at
+rest&#8221; point of the controls are.</p>
 </dd></dl>
 
 <span class="target" id="ship-control-wheelthrottletrim"></span><dl class="object">
 <dt>
 <code class="descname">SHIP:CONTROL:WHEELTHROTTLETRIM</code></dt>
-<dd><p>Controls the trim of the wheel throttle.</p>
+<dd><p><em>This has no real effect and is just here for completeness.</em></p>
+<p>IF you <em>really</em> want to control TRIM, use <code class="docutils literal"><span class="pre">SHIP:CONTROL:PILOTYAWTRIM</span></code>
+from the suffixes in the <a class="reference internal" href="pilot.html#pilot"><span>Pilot control section</span></a> instead.</p>
+<p>The reason why this trim does nothing here is because KSP only looks at the
+trim when its part of the <em>pilot&#8217;s</em> own control structure, not an
+autpilot&#8217;s control structure.</p>
+<p><em>Warning</em>:
+Setting this value can cause <a class="reference internal" href="#ship-control-neutral"><span>NEUTRAL</span></a> to
+return false negatives by confusing the system about where the &#8220;at
+rest&#8221; point of the controls are.</p>
 </dd></dl>
 
-<span class="target" id="ship-control-neutral"></span><dl class="object">
+<span class="target" id="ship-control-neutralize"><span id="ship-control-neutral"></span></span><dl class="object">
 <dt>
 <code class="descname">SHIP:CONTROL:NEUTRAL</code></dt>
-<dd><p>Returns true or false depending if <strong>kOS</strong> has any set controls. <em>This is not settable.</em></p>
-</dd></dl>
+<dd></dd></dl>
 
-<span class="target" id="ship-control-neutralize"></span><dl class="object">
+<dl class="object">
 <dt>
 <code class="descname">SHIP:CONTROL:NEUTRALIZE</code></dt>
-<dd><p>This causes manual control to let go. When set to true, <strong>kOS</strong> lets go of the controls and allows the player to manually control them again. <em>This is not gettable.</em></p>
+<dd><p>These used to be two suffixes but they are now synonyms who&#8217;s meaning
+changes depending on if you set or get them.</p>
+<p><em>Getting</em>:</p>
+<p><code class="docutils literal"><span class="pre">if</span> <span class="pre">(SHIP:CONTROL:NEUTRAL)</span></code> is true when the raw controls are at rest.</p>
+<p><em>Setting</em>:</p>
+<p><code class="docutils literal"><span class="pre">set</span> <span class="pre">SHIP:CONTROL:NEUTRALIZE</span> <span class="pre">TO</span> <span class="pre">TRUE.</span></code> causes the raw controls to let go.
+Setting it to false has no effect.</p>
+<p><em>Warnings</em>:</p>
+<p>Although it has no effect, setting a raw control TRIM value CAN cause
+<code class="docutils literal"><span class="pre">NEUTRAL</span></code> to return false when the control is at rest.  For example,
+if you do <code class="docutils literal"><span class="pre">SET</span> <span class="pre">SHIP:CONTROL:YAWTRIM</span> <span class="pre">to</span> <span class="pre">0.1.`</span> <span class="pre">then</span> <span class="pre">when</span> <span class="pre">the</span> <span class="pre">controls</span>
+<span class="pre">are</span> <span class="pre">at</span> <span class="pre">rest,</span> <span class="pre">``SHIP:CONTROL:NEUTRAL</span></code> will return false because the yaw
+position of 0 is differing from its trim position of 0.1.</p>
+<p>The two terms <code class="docutils literal"><span class="pre">NEUTRAL</span></code> and <code class="docutils literal"><span class="pre">NEUTRALIZE</span></code> are synonyms.  (They used to
+be two separate suffixes, one for getting and one for setting, but
+that made no sense so they were combined but both spellings were
+retained for backward compantiblity with old scripts.)</p>
 </dd></dl>
 
 </div>
@@ -472,7 +552,7 @@ To free any single control, set it back to zero. To give all controls back to th
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2017, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
 
     </p>
   </div>
@@ -494,7 +574,7 @@ To free any single control, set it back to zero. To give all controls back to th
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.2.0.0',
+            VERSION:'1.3.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

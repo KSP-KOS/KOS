@@ -190,7 +190,7 @@ As mentioned earlier, kOS 0.18.1 introduced a new structure called :struct:`pidl
     SET Kp TO 0.01.
     SET Ki TO 0.006.
     SET Kd TO 0.006.
-    SET PID TO PIDLOOP(Kp, Kp, Kd).
+    SET PID TO PIDLOOP(Kp, Ki, Kd).
     SET PID:SETPOINT TO 1.2.
 
     SET thrott TO 1.

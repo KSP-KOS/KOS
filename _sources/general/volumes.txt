@@ -157,7 +157,7 @@ volume but with the following exceptions:
    constitutes a form of cheating similar to any other edit of the
    persistence file.
 
-.. _boot:
+.. _boot_directory:
 
 Special handling of files in the "boot" directory
 -------------------------------------------------
@@ -165,7 +165,9 @@ Special handling of files in the "boot" directory
 For users requiring even more automation, the feature of custom boot scripts
 was introduced. If you have at least 1 file in the :code:`boot` directory on
 your Archive volume, you will be presented with the option to choose one of
-those files as a boot script for your kOS CPU.
+those files as a boot script for your kOS CPU.  (As with any other kerboscript
+file, the filename extension has to be ``.ks`` for text file scripts, or
+``.ksm`` for compiled scripts.
 
 
 .. image:: http://i.imgur.com/05kp7Sy.jpg

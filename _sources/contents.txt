@@ -20,6 +20,7 @@ Documentation Table of Contents
     Structures <structures>
     Addons <addons>
     Contribute <contribute>
+    Getting Help <getting_help>
     Changes <changes>
     About <about>
 

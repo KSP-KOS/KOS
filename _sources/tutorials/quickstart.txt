@@ -139,6 +139,16 @@ Further reading about files and volumes:
 - :ref:`File Control <files>`
 - :ref:`VolumeFile structure <volumefile>`
 
+Step 9: But can I make it boot automatically when I launch the vessel?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Yes. It is possible to create a boot file and have kOS automatically
+copy it to the vessel, then run it, when the vessel is first put on
+the launchpad.  You don't have to do so right now to follow this
+tutorial, but be aware that this feature exists and it's one you will
+probably want to make use of eventually.  It's described in
+:ref:`more detail here <boot>`.
+
 Second Example: Doing something real
 ------------------------------------
 

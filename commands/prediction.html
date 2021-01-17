@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Predictions of Flight Path &mdash; kOS 1.2.0.0 documentation</title>
+  <title>Predictions of Flight Path &mdash; kOS 1.3.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.2.0.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.3.0.0 documentation" href="../index.html"/>
         <link rel="up" title="Command Reference" href="../commands.html"/>
         <link rel="next" title="LIST Command" href="list.html"/>
         <link rel="prev" title="Ship Systems" href="flight/systems.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.2.0.0
+                1.3.0.0
               </div>
             
           
@@ -115,6 +115,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_help.html">Getting Help</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
@@ -212,7 +213,11 @@ its maneuver nodes.</p>
 </tr>
 </tbody>
 </table>
-<p>Returns a prediction of where the <a class="reference internal" href="../structures/orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></code></a> will be at some <a class="reference internal" href="../structures/misc/time.html#timestamp"><span>universal Timestamp</span></a>. If the <a class="reference internal" href="../structures/orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></code></a> is a <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a>, and the <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a> has planned <a class="reference internal" href="../structures/vessels/node.html#maneuver-node"><span>maneuver nodes</span></a>, the prediction assumes they will be executed exactly as planned.</p>
+<p>Returns a prediction of where the <a class="reference internal" href="../structures/orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></code></a> will be at some <a class="reference internal" href="../structures/misc/time.html#universal-time"><span>universal Time</span></a>. If the <a class="reference internal" href="../structures/orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></code></a> is a <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a>, and the <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a> has planned <a class="reference internal" href="../structures/vessels/node.html#maneuver-node"><span>maneuver nodes</span></a>, the prediction assumes they will be executed exactly as planned.</p>
+<p><em>Refrence Frame:</em> The reference frame that the future position
+gets returned in is the same reference frame as the current position
+vectors use.  In other words it&#8217;s in ship:raw coords where the origin
+is the current <code class="docutils literal"><span class="pre">SHIP</span></code>&#8216;s center of mass.</p>
 <p><em>Prerequisite:</em>  If you are in a career mode game rather than a
 sandbox mode game, This function requires that you have your space
 center&#8217;s buildings advanced to the point where you can make maneuver
@@ -243,11 +248,35 @@ nodes on the map view, as described in <code class="xref ks ks-struct docutils l
 </tr>
 </tbody>
 </table>
-<p>Returns a prediction of what the <a class="reference internal" href="../structures/orbits/orbitable.html#orbitable"><span>Orbitable&#8217;s</span></a> velocity will be at some <a class="reference internal" href="../structures/misc/time.html#timestamp"><span>universal Timestamp</span></a>. If the <a class="reference internal" href="../structures/orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></code></a> is a <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a>, and the <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a> has planned <code class="xref ks ks-struct docutils literal"><span class="pre">maneuver</span> <span class="pre">nodes</span></code>, the prediction assumes they will be executed exactly as planned.</p>
+<p>Returns a prediction of what the <a class="reference internal" href="../structures/orbits/orbitable.html#orbitable"><span>Orbitable&#8217;s</span></a> velocity will be at some <a class="reference internal" href="../structures/misc/time.html#universal-time"><span>universal Time</span></a>. If the <a class="reference internal" href="../structures/orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></code></a> is a <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a>, and the <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a> has planned <code class="xref ks ks-struct docutils literal"><span class="pre">maneuver</span> <span class="pre">nodes</span></code>, the prediction assumes they will be executed exactly as planned.</p>
 <p><em>Prerequisite:</em>  If you are in a career mode game rather than a
 sandbox mode game, This function requires that you have your space
 center&#8217;s buildings advanced to the point where you can make manuever
 nodes on the map view, as described in <code class="xref ks ks-struct docutils literal"><span class="pre">Career:CANMAKENODES</span></code>.</p>
+<p><em>Refrence Frame:</em> The reference frame that the future velocity gets
+returned in is the same reference frame as the current velocity
+vectors use.  In other words it&#8217;s relative to the ship&#8217;s CURRENT
+body it&#8217;s orbiting just like <code class="docutils literal"><span class="pre">ship:velocity</span></code> is.  For example,
+if the ship is currently in orbit of Kerbin, but will be in the Mun&#8217;s
+SOI in the future, then the <code class="docutils literal"><span class="pre">VELOCITYAT</span></code> that future time will return
+is still returned relative to Kerbin, not the Mun, because that&#8217;s the
+current reference for current velocities.  Here is an example
+illustrating that:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// This example imagines you are on an orbit that is leaving</span>
+<span class="c1">// the current body and on the way to transfer to another orbit:</span>
+
+<span class="c1">// Later_time is 1 minute into the Mun orbit patch:</span>
+<span class="k">local</span> <span class="nv">later_time</span> <span class="ow">is</span> <span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span> <span class="o">+</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">obt</span><span class="p">:</span><span class="nv">NEXTPATCHETA</span> <span class="o">+</span> <span class="mf">60</span><span class="p">.</span>
+<span class="k">local</span> <span class="nv">later_ship_vel</span> <span class="ow">is</span> <span class="nv">VELOCITYAT</span><span class="p">(</span><span class="nv">ship</span><span class="p">,</span> <span class="nv">later_time</span><span class="p">):</span><span class="nv">ORBIT</span><span class="p">.</span>
+<span class="k">local</span> <span class="nv">later_body_vel</span> <span class="ow">is</span> <span class="nv">VELOCITYAT</span><span class="p">(</span><span class="nv">ship</span><span class="p">:</span><span class="nv">obt</span><span class="p">:</span><span class="nv">NEXTPATCH</span><span class="p">:</span><span class="nv">body</span><span class="p">,</span> <span class="nv">later_time</span><span class="p">):</span><span class="nv">ORBIT</span><span class="p">.</span>
+
+<span class="k">local</span> <span class="nv">later_ship_vel_rel_to_later_body</span> <span class="ow">is</span> <span class="nv">later_ship_vel</span> <span class="o">-</span> <span class="nv">later_body_vel</span><span class="p">.</span>
+
+<span class="k">print</span> <span class="s">&quot;My later velocity relative to this body is: &quot;</span> <span class="o">+</span> <span class="nv">later_ship_vel</span><span class="p">.</span>
+<span class="k">print</span> <span class="s">&quot;My later velocity relative to the body I will be around then is: &quot;</span> <span class="o">+</span>
+  <span class="nv">later_ship_vel_rel_to_later_body</span><span class="p">.</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -274,7 +303,7 @@ nodes on the map view, as described in <code class="xref ks ks-struct docutils l
 </tr>
 </tbody>
 </table>
-<p>Returns the <a class="reference internal" href="../structures/orbits/orbit.html#orbit"><span>Orbit patch</span></a> where the <a class="reference internal" href="../structures/orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></code></a> object is predicted to be at some <a class="reference internal" href="../structures/misc/time.html#timestamp"><span>universal Timestamp</span></a>. If the <a class="reference internal" href="../structures/orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></code></a> is a <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a>, and the <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a> has planned <a class="reference internal" href="../structures/vessels/node.html#maneuver-node"><span>maneuver nodes</span></a>, the prediction assumes they will be executed exactly as planned.</p>
+<p>Returns the <a class="reference internal" href="../structures/orbits/orbit.html#orbit"><span>Orbit patch</span></a> where the <a class="reference internal" href="../structures/orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></code></a> object is predicted to be at some <a class="reference internal" href="../structures/misc/time.html#universal-time"><span>universal Time</span></a>. If the <a class="reference internal" href="../structures/orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></code></a> is a <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a>, and the <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a> has planned <a class="reference internal" href="../structures/vessels/node.html#maneuver-node"><span>maneuver nodes</span></a>, the prediction assumes they will be executed exactly as planned.</p>
 <p><em>Prerequisite:</em>  If you are in a career mode game rather than a
 sandbox mode game, This function requires that you have your space
 center&#8217;s buildings advanced to the point where you can make maneuver
@@ -324,7 +353,7 @@ nodes on the map view, as described in <code class="xref ks ks-struct docutils l
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2017, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
 
     </p>
   </div>
@@ -346,7 +375,7 @@ nodes on the map view, as described in <code class="xref ks ks-struct docutils l
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.2.0.0',
+            VERSION:'1.3.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

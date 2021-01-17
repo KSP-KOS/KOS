@@ -130,6 +130,28 @@ Drawing Vectors on the Screen
     done ``SET varname:show to FALSE`` for all vecdraw varnames in the
     entire system.
 
+Very large Vecdraws only show up on map view, not flight view
+-------------------------------------------------------------
+
+If your vecdraw is very big, for example if you try to draw a
+vector going from your ship to the Sun, or from one planet to
+another, you may find that it won't appear at all in the flight
+view, but will still appear in the map view.  There isn't much that
+kOS can do about this, as it is a feature of the camera settings
+chosen by KSP for the flight view camera.
+
+The reason very long vecdraws only get drawn in map view and not the
+flight view is the same as the reason you can only see distant planets
+in the map view and not the flight view.  Duna should still take up a
+few pixels of your screen when seen from Kerbin and yet there's nothing
+there not even a dot.  This has to do with a feature of computer
+graphics called the "camera far clipping plane", but the short version
+is that KSP's flight camera is configured to be unable to render any
+polygons where one of that polygons' vertices is very far away.
+
+Suffixes of Vecdraw
+-------------------
+
 .. structure:: VecDraw
 
     This is a structure that allows you to make a drawing of a vector on the screen in map view or in flight view.

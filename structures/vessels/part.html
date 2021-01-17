@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Part &mdash; kOS 1.2.0.0 documentation</title>
+  <title>Part &mdash; kOS 1.3.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.2.0.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="PartModule" href="partmodule.html"/>
         <link rel="prev" title="Maneuver Node" href="node.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.2.0.0
+                1.3.0.0
               </div>
             
           
@@ -108,20 +108,23 @@
 <li class="toctree-l3"><a class="reference internal" href="aggregateresource.html">AggregateResource</a></li>
 <li class="toctree-l3"><a class="reference internal" href="alt.html">ALT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="bounds.html">BOUNDS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="consumedresource.html">ConsumedResource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="consumedresourcercs.html">ConsumedResourceRCS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="core.html">Core</a></li>
 <li class="toctree-l3"><a class="reference internal" href="crafttemplate.html">CraftTemplate</a></li>
 <li class="toctree-l3"><a class="reference internal" href="crewmember.html">CrewMember</a></li>
 <li class="toctree-l3"><a class="reference internal" href="decoupler.html">Decoupler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="deltav.html">DeltaV</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dockingport.html">DockingPort</a></li>
 <li class="toctree-l3"><a class="reference internal" href="element.html">Element</a></li>
 <li class="toctree-l3"><a class="reference internal" href="engine.html">Engine</a></li>
-<li class="toctree-l3"><a class="reference internal" href="eta.html">ETA</a></li>
 <li class="toctree-l3"><a class="reference internal" href="gimbal.html">Gimbal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kosprocessor.html">kOSProcessor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="launchclamp.html">LaunchClamp</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">Maneuver Node</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="">Part</a></li>
 <li class="toctree-l3"><a class="reference internal" href="partmodule.html">PartModule</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rcs.html">RCS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="resource.html">Resource</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sciencedatavalue.html">ScienceData</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scienceexperiment.html">ScienceExperimentModule</a></li>
@@ -141,6 +144,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_help.html">Getting Help</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
@@ -331,6 +335,58 @@
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
 <td>List of attached <a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Parts</span></code></a></td>
 </tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:PART:SYMMETRYCOUNT" title="PART:SYMMETRYCOUNT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SYMMETRYCOUNT</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
+<td>How many parts in this part&#8217;s symmetry set</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:PART:REMOVESYMMETRY" title="PART:REMOVESYMMETRY method"><code class="xref ks ks-meth docutils literal"><span class="pre">REMOVESYMMETRY</span></code></a></td>
+<td>none</td>
+<td>Like the &#8220;Remove From Symmetry&#8221; button.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:PART:SYMMETRYPARTNER" title="PART:SYMMETRYPARTNER method"><code class="xref ks ks-meth docutils literal"><span class="pre">SYMMETRYPARTNER(index)</span></code></a></td>
+<td><a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">part</span></code></a></td>
+<td>Return one of the other parts symmetrical to this one.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSNAMED(name)</span></code></td>
+<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> (of <a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a>)</td>
+<td>Search the branch from here down based on name.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:PART:PARTSNAMEDPATTERN" title="PART:PARTSNAMEDPATTERN method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSNAMEDPATTERN(pattern)</span></code></a></td>
+<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> (of <a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a>)</td>
+<td>Regex search the branch from here down based on name.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:PART:PARTSTITLED" title="PART:PARTSTITLED method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSTITLED(name)</span></code></a></td>
+<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> (of <a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a>)</td>
+<td>Search the branch from here down for parts titled this.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:PART:PARTSTITLEDPATTERN" title="PART:PARTSTITLEDPATTERN method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSTITLEDPATTERN(pattern)</span></code></a></td>
+<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> (of <a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a>)</td>
+<td>Regex Search the branch from here down for parts titled this.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:PART:PARTSTAGGED" title="PART:PARTSTAGGED method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSTAGGED(tag)</span></code></a></td>
+<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> (of <a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a>)</td>
+<td>Search the branch from here down for parts tagged this.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:PART:PARTSTAGGEDPATTERN" title="PART:PARTSTAGGEDPATTERN method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSTAGGEDPATTERN(pattern)</span></code></a></td>
+<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> (of <a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a>)</td>
+<td>Regex Search the branch from here down for parts tagged this.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:PART:PARTSDUBBED" title="PART:PARTSDUBBED method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSDUBBED(name)</span></code></a></td>
+<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> (of <a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a>)</td>
+<td>Search the branch from here down for parts named, titled, or tagged this.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:PART:PARTSDUBBEDPATTERN" title="PART:PARTSDUBBEDPATTERN method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSDUBBEDPATTERN(name)</span></code></a></td>
+<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> (of <a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a>)</td>
+<td>Regex Search the branch from here down for parts named, titled, or tagged this.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:PART:MODULESNAMED" title="PART:MODULESNAMED method"><code class="xref ks ks-meth docutils literal"><span class="pre">MODULESNAMED(name)</span></code></a></td>
+<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> (of <a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></code></a>)</td>
+<td>Search the branch from here down for modules named, titled, or tagged this.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:PART:ALLTAGGEDPARTS" title="PART:ALLTAGGEDPARTS method"><code class="xref ks ks-meth docutils literal"><span class="pre">ALLTAGGEDPARTS</span></code></a></td>
+<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> (of <a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a>)</td>
+<td>Search the branch from here down for all parts with a non-blank tag name.</td>
+</tr>
 </tbody>
 </table>
 </dd></dl>
@@ -385,23 +441,6 @@ Part:<code class="descname">TAG</code><a class="headerlink" href="#attribute:PAR
 <p>The name tag value that may exist on this part if you have given the part a name via the <a class="reference internal" href="../../general/nametag.html#nametag"><span>name-tag system</span></a>.</p>
 <p>A part&#8217;s <em>tag</em> is whatever custom name you have given it using the <a class="reference internal" href="../../general/nametag.html#nametag"><span>name-tag system described here</span></a>. This is probably the best naming convention to use because it lets you make up whatever name you like for the part and use it to pick the parts you want to deal with in your script.</p>
 <p>WARNING: This suffix is only settable for parts attached to the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span>CPU Vessel</span></a></p>
-<p>This example assumes you have a target vessel picked, and that the target vessel is loaded into full-physics range and not &#8220;on rails&#8221;. vessels that are &#8220;on rails&#8221; do not have their full list of parts entirely populated at the moment:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LIST</span> <span class="nv">PARTS</span> <span class="k">FROM</span> <span class="nv">TARGET</span> <span class="nv">IN</span> <span class="nv">tParts</span><span class="p">.</span>
-
-<span class="k">PRINT</span> <span class="s">&quot;The target vessel has a&quot;</span><span class="p">.</span>
-<span class="k">PRINT</span> <span class="s">&quot;partcount of &quot;</span> <span class="o">+</span> <span class="nv">tParts</span><span class="p">:</span><span class="nv">LENGTH</span><span class="p">.</span>
-
-<span class="k">SET</span> <span class="nv">totTargetable</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span>
-<span class="k">FOR</span> <span class="nv">part</span> <span class="nv">in</span> <span class="nv">tParts</span> <span class="p">{</span>
-    <span class="k">IF</span> <span class="nv">part</span><span class="p">:</span><span class="nv">TARGETABLE</span> <span class="p">{</span>
-        <span class="k">SET</span> <span class="nv">totTargetable</span> <span class="ow">TO</span> <span class="nv">totTargetable</span> <span class="o">+</span> <span class="mf">1</span><span class="p">.</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">PRINT</span> <span class="s">&quot;...and &quot;</span> <span class="o">+</span> <span class="nv">totTargetable</span><span class="p">.</span>
-<span class="k">PRINT</span> <span class="s">&quot; of them are targetable parts.&quot;</span><span class="p">.</span>
-</pre></div>
-</div>
 </dd></dl>
 
 <dl class="method">
@@ -637,7 +676,24 @@ Part:<code class="descname">TARGETABLE</code><a class="headerlink" href="#attrib
 </tr>
 </tbody>
 </table>
-<p>true if this part can be selected by KSP as a target.</p>
+<p>True if this part can be selected by KSP as a target.</p>
+<p>This example assumes you have a target vessel picked, and that the target vessel is loaded into full-physics range and not &#8220;on rails&#8221;. vessels that are &#8220;on rails&#8221; do not have their full list of parts entirely populated at the moment:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LIST</span> <span class="nv">PARTS</span> <span class="k">FROM</span> <span class="nv">TARGET</span> <span class="nv">IN</span> <span class="nv">tParts</span><span class="p">.</span>
+
+<span class="k">PRINT</span> <span class="s">&quot;The target vessel has a&quot;</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="s">&quot;partcount of &quot;</span> <span class="o">+</span> <span class="nv">tParts</span><span class="p">:</span><span class="nv">LENGTH</span><span class="p">.</span>
+
+<span class="k">SET</span> <span class="nv">totTargetable</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span>
+<span class="k">FOR</span> <span class="nv">part</span> <span class="nv">in</span> <span class="nv">tParts</span> <span class="p">{</span>
+    <span class="k">IF</span> <span class="nv">part</span><span class="p">:</span><span class="nv">TARGETABLE</span> <span class="p">{</span>
+        <span class="k">SET</span> <span class="nv">totTargetable</span> <span class="ow">TO</span> <span class="nv">totTargetable</span> <span class="o">+</span> <span class="mf">1</span><span class="p">.</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">PRINT</span> <span class="s">&quot;...and &quot;</span> <span class="o">+</span> <span class="nv">totTargetable</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="s">&quot; of them are targetable parts.&quot;</span><span class="p">.</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
@@ -883,6 +939,349 @@ Part:<code class="descname">CHILDREN</code><a class="headerlink" href="#attribut
 <p>When walking the <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span>tree of parts</span></a>, this is all the parts that are attached as children of this part. It returns a list of zero length when this part is a &#8220;leaf&#8221; of the parts tree.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="attribute:PART:SYMMETRYCOUNT">
+Part:<code class="descname">SYMMETRYCOUNT</code><a class="headerlink" href="#attribute:PART:SYMMETRYCOUNT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
+</tr>
+</tbody>
+</table>
+<p>Returns how many parts are in the same symmetry set as this part.</p>
+<p>Note that all parts should at least return a minimum value of 1, since
+even a part placed without symmetry is technically in a group of 1 part,
+itself.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:PART:SYMMETRYTYPE">
+Part:<code class="descname">SYMMETRYTYPE</code><a class="headerlink" href="#attribute:PART:SYMMETRYTYPE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
+</tr>
+</tbody>
+</table>
+<p>Tells you the type of symmetry this part has by returning a number
+as follows:</p>
+<p>0 = This part has radial symmetry</p>
+<p>1 = This part has mirror symmetry</p>
+<p>It&#8217;s unclear if this means anything when the part&#8217;s symmetry is 1x.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:PART:REMOVESYMMETRY">
+Part:<code class="descname">REMOVESYMMETRY</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PART:REMOVESYMMETRY" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">method</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">nothing</td>
+</tr>
+</tbody>
+</table>
+<p>Call this method to remove this part from its symmetry group, reverting
+it back to a symmetry group of 1x (just itself).  This has the same
+effect as pressing the &#8220;Remove From Symmetry&#8221; button in the part&#8217;s
+action window.</p>
+<p>Note that just like when you press the &#8220;Remove from Symmetry&#8221; button,
+once a part has been removed from symmetry you don&#8217;t have a way to
+put it back into the symmetry group again.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:PART:SYMMETRYPARTNER">
+Part:<code class="descname">SYMMETRYPARTNER</code><span class="sig-paren">(</span>index<span class="sig-paren">)</span><a class="headerlink" href="#method:PART:SYMMETRYPARTNER" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body"><p class="first">method</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> &#8211; (<a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a>) Index of which part in the symmetry group</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>When a set of parts has been placed with symmetry in the Vehicle
+Assembly Building or Space Plane Hangar, this method can be used
+to find all the parts that are in the same symmetrical group.</p>
+<p>The index is numbered from zero to :attr:<code class="docutils literal"><span class="pre">SYMMETRYCOUNT</span></code> minus one.</p>
+<p>The zero-th symmetry partner is this part itself.  Even parts placed
+without symmetry still are technically in a symmetry group of 1 part.</p>
+<p>The index also wraps around in a cycle, such that if there are 4 parts in
+symmetry, then <code class="docutils literal"><span class="pre">SYMMETRYPARTNER(0)</span></code> and <code class="docutils literal"><span class="pre">SYMMETRYPARTNER(4)</span></code> and
+<code class="docutils literal"><span class="pre">SYMMETRYPARTNER(8)</span></code> would all actually be the same part.</p>
+<p>Example:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Print the symmetry group a part is inside:</span>
+<span class="kd">function</span> <span class="nv">print_sym</span> <span class="p">{</span>
+  <span class="kd">parameter</span> <span class="nv">a_part</span><span class="p">.</span>
+
+  <span class="k">print</span> <span class="nv">a_part</span> <span class="o">+</span> <span class="s">&quot; is in a &quot;</span> <span class="o">+</span> <span class="nv">a_part</span><span class="p">:</span><span class="nv">SYMMETRYCOUNT</span> <span class="o">+</span> <span class="s">&quot;x symmetry set.&quot;</span><span class="p">.</span>
+
+  <span class="k">if</span> <span class="nv">a_part</span><span class="p">:</span><span class="nv">SYMMETRAYCOUNT</span> <span class="o">=</span> <span class="mf">1</span> <span class="p">{</span>
+    <span class="k">return</span><span class="p">.</span> <span class="c1">// no point in printing the list when its not in a group.</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span> <span class="nv">a_part</span><span class="p">:</span><span class="nv">SYMMETRYTYPE</span> <span class="o">=</span> <span class="mf">0</span> <span class="p">{</span>
+    <span class="k">print</span> <span class="s">&quot;  The symmetry is radial.&quot;</span><span class="p">.</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="nv">a_part</span><span class="p">:</span><span class="nv">SYMMETRYTYPE</span> <span class="o">=</span> <span class="mf">1</span> <span class="p">{</span>
+    <span class="k">print</span> <span class="s">&quot;  The symmetry is mirror.&quot;</span><span class="p">.</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">print</span> <span class="s">&quot;  The symmetry is some other weird kind that&quot;</span><span class="p">.</span>
+    <span class="k">print</span> <span class="s">&quot;  didn&#39;t exist back when this example was written.&quot;</span><span class="p">.</span>
+  <span class="p">}</span>
+
+  <span class="k">print</span> <span class="s">&quot;    The Symmetry Group is: &quot;</span><span class="p">.</span>
+  <span class="k">for</span> <span class="nv">i</span> <span class="nv">in</span> <span class="nv">range</span> <span class="p">(</span><span class="mf">0</span><span class="p">,</span> <span class="nv">a_part</span><span class="p">:</span><span class="nv">SYMMETRYCOUNT</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">print</span> <span class="s">&quot;      [&quot;</span> <span class="o">+</span> <span class="nv">i</span> <span class="o">+</span> <span class="s">&quot;] &quot;</span> <span class="o">+</span> <span class="nv">a_part</span><span class="p">:</span><span class="nv">SYMMETRYPARTNER</span><span class="p">(</span><span class="nv">i</span><span class="p">).</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:PARTS:PARTSNAMED">
+Parts:<code class="descname">PARTSNAMED</code><span class="sig-paren">(</span>name<span class="sig-paren">)</span><a class="headerlink" href="#method:PARTS:PARTSNAMED" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> &#8211; (<a class="reference internal" href="../misc/string.html#string"><span>string</span></a>) Name of the parts</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a> objects</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Same as <a class="reference internal" href="vessel.html#method:VESSEL:PARTSNAMED" title="VESSEL:PARTSNAMED method"><code class="xref ks ks-meth docutils literal"><span class="pre">Vessel:PARTSNAMED(name)</span></code></a> except that this version
+doesn&#8217;t search the entire vessel tree and instead it only searches the
+branch of the vessel&#8217;s part tree from the current part down through
+its children and its children&#8217;s children and so on.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:PART:PARTSNAMEDPATTERN">
+Part:<code class="descname">PARTSNAMEDPATTERN</code><span class="sig-paren">(</span>namePattern<span class="sig-paren">)</span><a class="headerlink" href="#method:PART:PARTSNAMEDPATTERN" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>namePattern</strong> &#8211; (<a class="reference internal" href="../misc/string.html#string"><span>string</span></a>) Pattern of the name of the parts</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a> objects</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Same as <a class="reference internal" href="vessel.html#method:VESSEL:PARTSNAMEDPATTERN" title="VESSEL:PARTSNAMEDPATTERN method"><code class="xref ks ks-meth docutils literal"><span class="pre">Vessel:PARTSNAMEDPATTERN(namePattern)</span></code></a> except that this version
+doesn&#8217;t search the entire vessel tree and instead it only searches the
+branch of the vessel&#8217;s part tree from the current part down through
+its children and its children&#8217;s children and so on.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:PART:PARTSTITLED">
+Part:<code class="descname">PARTSTITLED</code><span class="sig-paren">(</span>title<span class="sig-paren">)</span><a class="headerlink" href="#method:PART:PARTSTITLED" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>title</strong> &#8211; (<a class="reference internal" href="../misc/string.html#string"><span>string</span></a>) Title of the parts</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a> objects</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Same as <a class="reference internal" href="vessel.html#method:VESSEL:PARTSTITLED" title="VESSEL:PARTSTITLED method"><code class="xref ks ks-meth docutils literal"><span class="pre">Vessel:PARTSTITLED(title)</span></code></a> except that this version
+doesn&#8217;t search the entire vessel tree and instead it only searches the
+branch of the vessel&#8217;s part tree from the current part down through
+its children and its children&#8217;s children and so on.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:PART:PARTSTITLEDPATTERN">
+Part:<code class="descname">PARTSTITLEDPATTERN</code><span class="sig-paren">(</span>titlePattern<span class="sig-paren">)</span><a class="headerlink" href="#method:PART:PARTSTITLEDPATTERN" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>titlePattern</strong> &#8211; (<a class="reference internal" href="../misc/string.html#string"><span>string</span></a>) Patern of the title of the parts</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a> objects</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Same as <a class="reference internal" href="vessel.html#method:VESSEL:PARTSTITLEDPATTERN" title="VESSEL:PARTSTITLEDPATTERN method"><code class="xref ks ks-meth docutils literal"><span class="pre">Vessel:PARTSTITLEDPATTERN(titlePattern)</span></code></a> except that this version
+doesn&#8217;t search the entire vessel tree and instead it only searches the
+branch of the vessel&#8217;s part tree from the current part down through
+its children and its children&#8217;s children and so on.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:PART:PARTSTAGGED">
+Part:<code class="descname">PARTSTAGGED</code><span class="sig-paren">(</span>tag<span class="sig-paren">)</span><a class="headerlink" href="#method:PART:PARTSTAGGED" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>tag</strong> &#8211; (<a class="reference internal" href="../misc/string.html#string"><span>string</span></a>) Tag of the parts</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a> objects</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Same as <a class="reference internal" href="vessel.html#method:VESSEL:PARTSTAGGED" title="VESSEL:PARTSTAGGED method"><code class="xref ks ks-meth docutils literal"><span class="pre">Vessel:PARTSTAGGED(tag)</span></code></a> except that this version
+doesn&#8217;t search the entire vessel tree and instead it only searches the
+branch of the vessel&#8217;s part tree from the current part down through
+its children and its children&#8217;s children and so on.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:PART:PARTSTAGGEDPATTERN">
+Part:<code class="descname">PARTSTAGGEDPATTERN</code><span class="sig-paren">(</span>tagPattern<span class="sig-paren">)</span><a class="headerlink" href="#method:PART:PARTSTAGGEDPATTERN" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>tagPattern</strong> &#8211; (<a class="reference internal" href="../misc/string.html#string"><span>string</span></a>) Pattern of the tag of the parts</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a> objects</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Same as <a class="reference internal" href="vessel.html#method:VESSEL:PARTSTAGGEDPATTERN" title="VESSEL:PARTSTAGGEDPATTERN method"><code class="xref ks ks-meth docutils literal"><span class="pre">Vessel:PARTSTAGGEDPATTERN(tagPattern)</span></code></a> except that this version
+doesn&#8217;t search the entire vessel tree and instead it only searches the
+branch of the vessel&#8217;s part tree from the current part down through
+its children and its children&#8217;s children and so on.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:PART:PARTSDUBBED">
+Part:<code class="descname">PARTSDUBBED</code><span class="sig-paren">(</span>name<span class="sig-paren">)</span><a class="headerlink" href="#method:PART:PARTSDUBBED" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> &#8211; (<a class="reference internal" href="../misc/string.html#string"><span>string</span></a>) name, title or tag of the parts</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a> objects</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Same as <a class="reference internal" href="vessel.html#method:VESSEL:PARTSDUBBED" title="VESSEL:PARTSDUBBED method"><code class="xref ks ks-meth docutils literal"><span class="pre">Vessel:PARTSDUBBED(name)</span></code></a> except that this version
+doesn&#8217;t search the entire vessel tree and instead it only searches the
+branch of the vessel&#8217;s part tree from the current part down through
+its children and its children&#8217;s children and so on.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:PART:PARTSDUBBEDPATTERN">
+Part:<code class="descname">PARTSDUBBEDPATTERN</code><span class="sig-paren">(</span>namePattern<span class="sig-paren">)</span><a class="headerlink" href="#method:PART:PARTSDUBBEDPATTERN" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>namePattern</strong> &#8211; (<a class="reference internal" href="../misc/string.html#string"><span>string</span></a>) Pattern of the name, title or tag of the parts</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a> objects</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Same as <code class="xref ks ks-meth docutils literal"><span class="pre">Vessel:PARTSDUBBEDPATERN(namePattern)</span></code> except that this version
+doesn&#8217;t search the entire vessel tree and instead it only searches the
+branch of the vessel&#8217;s part tree from the current part down through
+its children and its children&#8217;s children and so on.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:PART:MODULESNAMED">
+Part:<code class="descname">MODULESNAMED</code><span class="sig-paren">(</span>name<span class="sig-paren">)</span><a class="headerlink" href="#method:PART:MODULESNAMED" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> &#8211; (<a class="reference internal" href="../misc/string.html#string"><span>string</span></a>) Name of the part modules</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></code></a> objects</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Same as <a class="reference internal" href="vessel.html#method:VESSEL:MODULESNAMED" title="VESSEL:MODULESNAMED method"><code class="xref ks ks-meth docutils literal"><span class="pre">Vessel:MODULESNAMED(name)</span></code></a> except that this version
+doesn&#8217;t search the entire vessel tree and instead it only searches the
+branch of the vessel&#8217;s part tree from the current part down through
+its children and its children&#8217;s children and so on.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:PART:ALLTAGGEDPARTS">
+Part:<code class="descname">ALLTAGGEDPARTS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PART:ALLTAGGEDPARTS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a> objects</td>
+</tr>
+</tbody>
+</table>
+<p>Same as <a class="reference internal" href="vessel.html#method:VESSEL:ALLTAGGEDPARTS" title="VESSEL:ALLTAGGEDPARTS method"><code class="xref ks ks-meth docutils literal"><span class="pre">Vessel:ALLTAGGEDPARTS()</span></code></a> except that this version
+doesn&#8217;t search the entire vessel tree and instead it only searches the
+branch of the vessel&#8217;s part tree from the current part down through
+its children and its children&#8217;s children and so on.</p>
+</dd></dl>
+
 </div>
 
 
@@ -904,7 +1303,7 @@ Part:<code class="descname">CHILDREN</code><a class="headerlink" href="#attribut
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2017, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
 
     </p>
   </div>
@@ -926,7 +1325,7 @@ Part:<code class="descname">CHILDREN</code><a class="headerlink" href="#attribut
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.2.0.0',
+            VERSION:'1.3.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

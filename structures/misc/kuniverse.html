@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>KUniverse 4th wall methods &mdash; kOS 1.2.0.0 documentation</title>
+  <title>KUniverse 4th wall methods &mdash; kOS 1.3.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.2.0.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Vessel Load Distance" href="loaddistance.html"/>
         <link rel="prev" title="KOSDelegate" href="kosdelegate.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.2.0.0
+                1.3.0.0
               </div>
             
           
@@ -127,7 +127,11 @@
 <li class="toctree-l3"><a class="reference internal" href="string.html">String</a></li>
 <li class="toctree-l3"><a class="reference internal" href="terminal.html">Terminal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="terminalinput.html">Terminal Input</a></li>
-<li class="toctree-l3"><a class="reference internal" href="time.html">Time Span</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time.html">Time</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time.html#timestamp">TimeStamp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time.html#timespan">TimeSpan</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time.html#constructing">Constructing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time.html#time-operators">Time Operators</a></li>
 <li class="toctree-l3"><a class="reference internal" href="timewarp.html">WARP</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vecdraw.html">Drawing Vectors on the Screen</a></li>
 <li class="toctree-l3"><a class="reference internal" href="versioninfo.html">Structure</a></li>
@@ -139,6 +143,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_help.html">Getting Help</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
@@ -330,12 +335,17 @@
 <td>Method</td>
 <td>Launch a new instance of the given craft at the given site.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:CRAFTLIST" title="KUNIVERSE:CRAFTLIST method"><code class="xref ks ks-meth docutils literal"><span class="pre">CRAFTLIST()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:LAUNCHCRAFTWITHCREWFROM" title="KUNIVERSE:LAUNCHCRAFTWITHCREWFROM method"><code class="xref ks ks-meth docutils literal"><span class="pre">LAUNCHCRAFTWITHCREWFROM(template,</span> <span class="pre">crewlist,</span> <span class="pre">site)</span></code></a></td>
+<td>None</td>
+<td>Method</td>
+<td>Launch a new instance of the given craft with this crew list at the given site.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:CRAFTLIST" title="KUNIVERSE:CRAFTLIST method"><code class="xref ks ks-meth docutils literal"><span class="pre">CRAFTLIST()</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="../vessels/crafttemplate.html#structure:CRAFTTEMPLATE" title="CRAFTTEMPLATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">CraftTemplate</span></code></a></td>
 <td>Method</td>
 <td>A list of all craft templates in the save specific and stock folders.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:KUNIVERSE:REALTIME" title="KUNIVERSE:REALTIME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">REALTIME</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:KUNIVERSE:REALTIME" title="KUNIVERSE:REALTIME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">REALTIME</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>Get only</td>
 <td>Real world timestamp (outside of game) in seconds since 1970</td>
@@ -810,7 +820,35 @@ KUniverse:<code class="descname">LAUNCHCRAFTFROM</code><span class="sig-paren">(
 launch site. Valid values for site include <code class="docutils literal"><span class="pre">&quot;RUNWAY&quot;</span></code> and <code class="docutils literal"><span class="pre">&quot;LAUNCHPAD&quot;</span></code>.</p>
 <p><strong>NOTE:</strong> The craft will be launched with the KSP default crew assignment,
 as if you had clicked launch from the editor without manually adjusting the
-crew.</p>
+crew.  To pick which crew are on the craft use
+<a class="reference internal" href="#method:KUNIVERSE:LAUNCHCRAFTWITHCREWFROM" title="KUNIVERSE:LAUNCHCRAFTWITHCREWFROM method"><code class="xref ks ks-meth docutils literal"><span class="pre">Kuniverse:LAUNCHCRAFTWITHCREWFROM()</span></code></a> instead.</p>
+<p><strong>NOTE:</strong> Due to how KSP handles launching a new craft, this will end the
+current program even if the currently active vessel is located within
+physics range of the launch site.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:KUNIVERSE:LAUNCHCRAFTWITHCREWFROM">
+KUniverse:<code class="descname">LAUNCHCRAFTWITHCREWFROM</code><span class="sig-paren">(</span>template, crewlist, site<span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:LAUNCHCRAFTWITHCREWFROM" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>template</strong> &#8211; <a class="reference internal" href="../vessels/crafttemplate.html#structure:CRAFTTEMPLATE" title="CRAFTTEMPLATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">CraftTemplate</span></code></a> craft template object.</li>
+<li><strong>crewlist</strong> &#8211; <a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> kerbal names.</li>
+<li><strong>site</strong> &#8211; <a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> launch site name.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Launch a new instance of the given <a class="reference internal" href="../vessels/crafttemplate.html#structure:CRAFTTEMPLATE" title="CRAFTTEMPLATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">CraftTemplate</span></code></a> with the given crew
+manifest from the given launch site.
+Valid values for site include <code class="docutils literal"><span class="pre">&quot;RUNWAY&quot;</span></code> and <code class="docutils literal"><span class="pre">&quot;LAUNCHPAD&quot;</span></code>.</p>
+<p>If any of the kerbal names you use in the <code class="docutils literal"><span class="pre">crewlist</span></code> parameter don&#8217;t
+exist in the game, there will be no error.  Instead that name just
+gets ignored in the list.</p>
 <p><strong>NOTE:</strong> Due to how KSP handles launching a new craft, this will end the
 current program even if the currently active vessel is located within
 physics range of the launch site.</p>
@@ -972,7 +1010,7 @@ KUniverse:<code class="descname">REALWORLDTIME</code><a class="headerlink" href=
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2017, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
 
     </p>
   </div>
@@ -994,7 +1032,7 @@ KUniverse:<code class="descname">REALWORLDTIME</code><a class="headerlink" href=
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.2.0.0',
+            VERSION:'1.3.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -3,14 +3,20 @@
 Changes from version to version
 ===============================
 
-This is a slightly more verbose version of the new features
-mentioned in the CHANGELOG, specifically for new features and for
-users familiar with older versions of the documentation who want
-only a quick update to the docs without reading the entire set
-of documentation again from scratch.
+This is a place to mention important documentation changes that
+come with each version release.  Mostly it's here so you can
+have links to jump to where the changes are elsewhere in this
+documentation site.  The changes are not fully described here
+because the intention is to let you go through the list and click
+on the links to see the changes.
 
 This list is NOT a comprehensive list of everything.  Specifically,
-minor one-line changes, or bug fixes, are not mentioned here.
+minor one-line changes, or bug fixes that didn't alter the 
+documentation, are not mentioned here.
+
+Also changes that might alter the user visual interface but not
+change what a script does won't be mentioned here.  (For example,
+putting a new button on the toolbar dialog.)
 
 Most importantly, changes that might have broken previously working
 scripts are not always signposted here.  To be sure, you should read
@@ -23,6 +29,134 @@ release.
     :depth: 3
 
 ****
+
+Changes in 1.3
+--------------
+
+Nodes with ETA or Universal Time
+::::::::::::::::::::::::::::::::
+
+:func:`NODE(time, radial, normal, prograde)` now accepts time in
+:struct:`TimeStamp` and :struct:`TimeSpan` inputs, as well as
+the old practice of using scalar numbers of seconds.  If a
+:struct:`TimeSpan` is used, the time is an ETA time, else it's a
+UT time.  There is also a new suffix, :attr:`Node:TIME` to
+report the UT time.
+
+TimeSpan split into two types TimeStamp and TimeSpan
+::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+:ref:`What was TimeSpan is now two different types<timestamp_timespan_diff>`.
+
+Search on sub-branches of a vessel
+::::::::::::::::::::::::::::::::::
+
+Addition of :attr:`Part:PARTSTAGGED` and :attr:`Part:PARTSDUBBED` and
+:attr:`Part:PARTSNAMED`
+
+Can Set the RCS Deadband
+::::::::::::::::::::::::
+
+Addition on :attr:`RCS:DEADBAND`
+
+SteeringManager Epislon
+:::::::::::::::::::::::
+
+Addition of :attr:`SteeringManager:TORQUEEPSILONMIN` and
+:attr:`SteeringManager:TORQUEEPSILONMAX`
+
+Random seed
+:::::::::::
+
+Added :func:`RANDOMSEED(key, seed)`.
+
+Suppress Autopilot 
+::::::::::::::::::
+
+Added :attr:`Config:SUPPRESSAUTOPILOT`
+
+
+GET/SET Player's trim
+:::::::::::::::::::::
+
+Added :ref:`PILOTYAWTRIM <SHIP CONTROL PILOTYAWTRIM>`,
+:ref:`PILOTPITCHTRIM <SHIP CONTROL PILOTPITCHTRIM>`,
+:ref:`PILOROLLTRIM <SHIP CONTROL PILOTROLLTRIM>`,
+:ref:`PILOTWHEELSTEERTRIM <SHIP CONTROL PILOTWHEELSTEERTRIM>`, and
+:ref:`PILOTWHEELTHROTTLETRIM <SHIP CONTROL PILOTWHEELTHROTTLETRIM>`,
+which are set-able ways to control without locking out manual control.
+
+Addon Trajectories changes
+::::::::::::::::::::::::::
+
+To support Trajectories 2.4 and up, many new things
+are on the documentation page for :ref:`trajectories`.
+
+Launch craft picking the crew list
+::::::::::::::::::::::::::::::::::
+
+:meth:`KUniverse:LAUNCHCRAFTWITHCREWFROM(template, crewlist, site)`
+
+Asteroid-related vessel suffixes
+::::::::::::::::::::::::::::::::
+
+:meth:`Vessel:STOPTRACKING`, and :attr:`Vessel:SIZECLASS`.
+
+Stock Delta-V Info
+::::::::::::::::::
+
+:attr:`Vessel:DELTAV`, :attr:`Vessel:DELTAVASL`, :attr:`Vessel:DELTAVVACUUM`,
+:attr:`Vessel:BURNTIME`, :attr:`Stage:DELTAV`
+
+RCS Part type
+:::::::::::::
+
+:ref:`A new part type<rcs>` for when a part is an RCS thruster.
+
+Engine fuel info
+::::::::::::::::
+
+:attr:`Engine:CONSUMEDRESOURCE`, which returns a Lexicon of
+a new type, :struct:`ConsumedResource`.  This will show you
+what fuels an engine consumes and in what quantities.
+
+CreateOrbit from position and velocity
+::::::::::::::::::::::::::::::::::::::
+
+A new variant of CreateOrbit - :func:`CREATEORBIT(pos, vel, body, ut)`,
+that lets you make an orbit out of state vectors instead of
+Kepplerian values.
+
+Ranges take fractional numbers
+::::::::::::::::::::::::::::::
+
+:ref:`Ranges <range>` now accept fractional values for start, stop
+and step.  (Previously everthing had to be an integer.)
+
+Numerous mistake fixes
+::::::::::::::::::::::
+
+Not so much new documentation, but repairing typos and incorrect
+descriptions in the documentation.  Too numerous to mention
+in detail - see the associated Github issues:
+
+https://github.com/KSP-KOS/KOS/pull/2675
+https://github.com/KSP-KOS/KOS/pull/2680
+https://github.com/KSP-KOS/KOS/pull/2707
+https://github.com/KSP-KOS/KOS/pull/2712
+https://github.com/KSP-KOS/KOS/pull/2724
+https://github.com/KSP-KOS/KOS/pull/2751
+https://github.com/KSP-KOS/KOS/pull/2772
+https://github.com/KSP-KOS/KOS/pull/2775
+https://github.com/KSP-KOS/KOS/pull/2776
+https://github.com/KSP-KOS/KOS/pull/2777
+https://github.com/KSP-KOS/KOS/pull/2784
+https://github.com/KSP-KOS/KOS/pull/2788
+https://github.com/KSP-KOS/KOS/pull/2791
+https://github.com/KSP-KOS/KOS/pull/2800
+https://github.com/KSP-KOS/KOS/pull/2819
+https://github.com/KSP-KOS/KOS/pull/2833
+
 
 Changes in 1.2
 --------------

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Basic Math Functions &mdash; kOS 1.2.0.0 documentation</title>
+  <title>Basic Math Functions &mdash; kOS 1.3.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.2.0.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.3.0.0 documentation" href="../index.html"/>
         <link rel="up" title="Mathematics and Basic Geometry" href="../math.html"/>
         <link rel="next" title="Scalar" href="scalar.html"/>
         <link rel="prev" title="Mathematics and Basic Geometry" href="../math.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.2.0.0
+                1.3.0.0
               </div>
             
           
@@ -113,6 +113,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_help.html">Getting Help</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
@@ -452,19 +453,22 @@ which can be a rather advanced topic.
 <tr class="row-even"><td><a class="reference internal" href="#function:RANDOM" title="RANDOM function"><code class="xref ks ks-func docutils literal"><span class="pre">RANDOM()</span></code></a></td>
 <td>random fractional number between 0 and 1.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#function:ROUND" title="ROUND function"><code class="xref ks ks-func docutils literal"><span class="pre">ROUND(a)</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#function:RANDOMSEED" title="RANDOMSEED function"><code class="xref ks ks-func docutils literal"><span class="pre">RANDOMSEED()</span></code></a></td>
+<td>Start a new random sequence with a seed.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#function:ROUND" title="ROUND function"><code class="xref ks ks-func docutils literal"><span class="pre">ROUND(a)</span></code></a></td>
 <td>round to whole number</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#function:ROUND" title="ROUND function"><code class="xref ks ks-func docutils literal"><span class="pre">ROUND(a,b)</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#function:ROUND" title="ROUND function"><code class="xref ks ks-func docutils literal"><span class="pre">ROUND(a,b)</span></code></a></td>
 <td>round to nearest place</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#function:SQRT" title="SQRT function"><code class="xref ks ks-func docutils literal"><span class="pre">SQRT(a)</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#function:SQRT" title="SQRT function"><code class="xref ks ks-func docutils literal"><span class="pre">SQRT(a)</span></code></a></td>
 <td>square root</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#function:CHAR" title="CHAR function"><code class="xref ks ks-func docutils literal"><span class="pre">CHAR(a)</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#function:CHAR" title="CHAR function"><code class="xref ks ks-func docutils literal"><span class="pre">CHAR(a)</span></code></a></td>
 <td>character from unicode</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#function:UNCHAR" title="UNCHAR function"><code class="xref ks ks-func docutils literal"><span class="pre">UNCHAR(a)</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#function:UNCHAR" title="UNCHAR function"><code class="xref ks ks-func docutils literal"><span class="pre">UNCHAR(a)</span></code></a></td>
 <td>unicode from character</td>
 </tr>
 </tbody>
@@ -563,8 +567,13 @@ Keep in mind that it&#8217;s not a traditional mathematical Euclidean division w
 
 <dl class="function">
 <dt id="function:RANDOM">
-<code class="descname">RANDOM</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#function:RANDOM" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a random floating point number in the range [0..1]:</p>
+<code class="descname">RANDOM</code><span class="sig-paren">(</span>key<span class="sig-paren">)</span><a class="headerlink" href="#function:RANDOM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the next random floating point number from a random
+number sequence.  The result is always in the range [0..1]</p>
+<p>This uses what is called a <a class="reference external" href="https://en.wikipedia.org/wiki/Pseudorandom_number_generator">pseudo-random number generator</a>.</p>
+<p>For basic usage you can leave the <code class="docutils literal"><span class="pre">key</span></code> parameter off and it
+works fine, like so:</p>
+<p>Example, basic usage:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">RANDOM</span><span class="p">().</span> <span class="c1">//prints a random number</span>
 <span class="k">PRINT</span> <span class="s">&quot;Let&#39;s roll a 6-sided die 10 times:&quot;</span><span class="p">.</span>
 <span class="k">FOR</span> <span class="nv">n</span> <span class="nv">in</span> <span class="nv">range</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">10</span><span class="p">)</span> <span class="p">{</span>
@@ -577,6 +586,107 @@ Keep in mind that it&#8217;s not a traditional mathematical Euclidean division w
 <span class="p">}</span>
 </pre></div>
 </div>
+<p>The parameter <code class="docutils literal"><span class="pre">key</span></code> is a string, and it&#8217;s used when you want
+to track separate psuedo-random number sequences by name and
+have them be deterministically repeatable. <em>Like other
+string keys in kOS, this key is case-insensitive.</em></p>
+<ul class="simple">
+<li>If you leave the parameter <code class="docutils literal"><span class="pre">key</span></code> off, you get the next number
+from a default unnamed random number sequencer.</li>
+<li>If you supply the parameter <code class="docutils literal"><span class="pre">key</span></code>, you get the next number
+from a named random number sequencer.  You can invent however
+many keys you like and each one is a new random number sequencer.
+Supplying a key probably only means something if you have
+previously used <a class="reference internal" href="#function:RANDOMSEED" title="RANDOMSEED function"><code class="xref ks ks-func docutils literal"><span class="pre">RANDOMSEED(key,</span> <span class="pre">seed)</span></code></a>.</li>
+</ul>
+<p>The following example is more complex and shows the repeatability
+of the &#8220;random&#8221; sequence using seeds.  For most simple uses you
+probably don&#8217;t need to bother with this.  If words like &#8220;random
+number seed&#8221; are confusing, you can probably skip this part and
+get by just fine with the basic usage shown above.  (Explaining
+how pseudorandom number generators work is a bit beyond this
+page - check the wikipedia link above to learn more.)</p>
+<p>Example, deterministic usage:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// create two different random number sequencers, both starting</span>
+<span class="c1">// with seed 12345 so they should have the same exact values.</span>
+<span class="nv">RANDOMSEED</span><span class="p">(</span><span class="s">&quot;sequence1&quot;</span><span class="p">,</span><span class="mf">12345</span><span class="p">).</span>
+<span class="nv">RANDOMSEED</span><span class="p">(</span><span class="s">&quot;sequence2&quot;</span><span class="p">,</span><span class="mf">12345</span><span class="p">).</span>
+
+<span class="k">PRINT</span> <span class="s">&quot;5 coin flips from SEQUENCE 1:&quot;</span><span class="p">.</span>
+<span class="k">FOR</span> <span class="nv">n</span> <span class="nv">in</span> <span class="nv">range</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">5</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">print</span> <span class="nv">choose</span> <span class="s">&quot;heads&quot;</span> <span class="k">if</span> <span class="nv">RANDOM</span><span class="p">(</span><span class="s">&quot;sequence1&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0</span><span class="p">.</span><span class="mf">5</span> <span class="k">else</span> <span class="s">&quot;tails&quot;</span><span class="p">.</span>
+<span class="p">}</span>
+
+<span class="k">PRINT</span> <span class="s">&quot;5 coin flips from SEQUENCE 2, which should be the same:&quot;</span><span class="p">.</span>
+<span class="k">FOR</span> <span class="nv">n</span> <span class="nv">in</span> <span class="nv">range</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">5</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">print</span> <span class="nv">choose</span> <span class="s">&quot;heads&quot;</span> <span class="k">if</span> <span class="nv">RANDOM</span><span class="p">(</span><span class="s">&quot;sequence2&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0</span><span class="p">.</span><span class="mf">5</span> <span class="k">else</span> <span class="s">&quot;tails&quot;</span><span class="p">.</span>
+<span class="p">}</span>
+
+<span class="k">PRINT</span> <span class="s">&quot;5 more coin flips from SEQUENCE 1:&quot;</span><span class="p">.</span>
+<span class="k">FOR</span> <span class="nv">n</span> <span class="nv">in</span> <span class="nv">range</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">5</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">print</span> <span class="nv">choose</span> <span class="s">&quot;heads&quot;</span> <span class="k">if</span> <span class="nv">RANDOM</span><span class="p">(</span><span class="s">&quot;sequence1&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0</span><span class="p">.</span><span class="mf">5</span> <span class="k">else</span> <span class="s">&quot;tails&quot;</span><span class="p">.</span>
+<span class="p">}</span>
+
+<span class="k">PRINT</span> <span class="s">&quot;5 more coin flips from SEQUENCE 2, which should be the same:&quot;</span><span class="p">.</span>
+<span class="k">FOR</span> <span class="nv">n</span> <span class="nv">in</span> <span class="nv">range</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">5</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">print</span> <span class="nv">choose</span> <span class="s">&quot;heads&quot;</span> <span class="k">if</span> <span class="nv">RANDOM</span><span class="p">(</span><span class="s">&quot;sequence2&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0</span><span class="p">.</span><span class="mf">5</span> <span class="k">else</span> <span class="s">&quot;tails&quot;</span><span class="p">.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="function:RANDOMSEED">
+<code class="descname">RANDOMSEED</code><span class="sig-paren">(</span>key, seed<span class="sig-paren">)</span><a class="headerlink" href="#function:RANDOMSEED" title="Permalink to this definition">¶</a></dt>
+<dd><p>No Return Value.</p>
+<p>Initializes a new random number sequence from a seed, giving it a
+key name you can use to refer to it in future calls to <a class="reference internal" href="#function:RANDOM" title="RANDOM function"><code class="xref ks ks-func docutils literal"><span class="pre">RANDOM(key)</span></code></a></p>
+<p>Using this you can make psuedo-random number sequences that can be
+re-run using the same seed to get the same result a second time.</p>
+<p>Parameter <code class="docutils literal"><span class="pre">key</span></code> is a string - a name you can use to refer to this
+random series later.  Calls to <code class="docutils literal"><span class="pre">RANDOMSEED</span></code> that use different
+keys actually cause different new random number sequences to be
+created that are tracked separately from each other. <em>Like other
+string keys in kOS, this key is case-insensitive.</em></p>
+<p>Parameter <code class="docutils literal"><span class="pre">seed</span></code> is an integer - an initial value to cause a
+deterministic series of random numbers to come out of the random
+function.</p>
+<p>Whenever you call <code class="docutils literal"><span class="pre">RANDOMSEED(key,</span> <span class="pre">seed)</span></code>, it starts a new
+random number sequence using the integer seed you give it, and names
+that sequence with a string key you can use later to retrive
+values from that random number sequence.</p>
+<p>Example:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">RANDOMSEED</span><span class="p">(</span><span class="s">&quot;generator A&quot;</span><span class="p">,</span><span class="mf">1000</span><span class="p">).</span>
+<span class="nv">RANDOMSEED</span><span class="p">(</span><span class="s">&quot;generator B&quot;</span><span class="p">,</span><span class="mf">1000</span><span class="p">).</span>
+<span class="k">PRINT</span> <span class="s">&quot;Generators A and B should emit identical &quot;</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="s">&quot;sequences because they both started at seed 1000.&quot;</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="s">&quot;3 numbers from Generator A:&quot;</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="nv">floor</span><span class="p">(</span><span class="nv">RANDOM</span><span class="p">(</span><span class="s">&quot;generator A&quot;</span><span class="p">)</span><span class="o">*</span><span class="mf">100</span><span class="p">).</span>
+<span class="k">PRINT</span> <span class="nv">floor</span><span class="p">(</span><span class="nv">RANDOM</span><span class="p">(</span><span class="s">&quot;generator A&quot;</span><span class="p">)</span><span class="o">*</span><span class="mf">100</span><span class="p">).</span>
+<span class="k">PRINT</span> <span class="nv">floor</span><span class="p">(</span><span class="nv">RANDOM</span><span class="p">(</span><span class="s">&quot;generator A&quot;</span><span class="p">)</span><span class="o">*</span><span class="mf">100</span><span class="p">).</span>
+<span class="k">PRINT</span> <span class="s">&quot;3 numbers from Generator B - they should &quot;</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="s">&quot;be the same as above:&quot;</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="nv">floor</span><span class="p">(</span><span class="nv">RANDOM</span><span class="p">(</span><span class="s">&quot;generator B&quot;</span><span class="p">)</span><span class="o">*</span><span class="mf">100</span><span class="p">).</span>
+<span class="k">PRINT</span> <span class="nv">floor</span><span class="p">(</span><span class="nv">RANDOM</span><span class="p">(</span><span class="s">&quot;generator B&quot;</span><span class="p">)</span><span class="o">*</span><span class="mf">100</span><span class="p">).</span>
+<span class="k">PRINT</span> <span class="nv">floor</span><span class="p">(</span><span class="nv">RANDOM</span><span class="p">(</span><span class="s">&quot;generator B&quot;</span><span class="p">)</span><span class="o">*</span><span class="mf">100</span><span class="p">).</span>
+
+<span class="k">PRINT</span> <span class="s">&quot;Resetting generator A but not Generator B:&quot;</span><span class="p">.</span>
+<span class="nv">RANDOMSEED</span><span class="p">(</span><span class="s">&quot;generator A&quot;</span><span class="p">,</span><span class="mf">1000</span><span class="p">).</span>
+
+<span class="k">PRINT</span> <span class="s">&quot;3 more numbers from Generator A which got reset&quot;</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="s">&quot;so they should match the first ones again:&quot;</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="nv">floor</span><span class="p">(</span><span class="nv">RANDOM</span><span class="p">(</span><span class="s">&quot;generator A&quot;</span><span class="p">)</span><span class="o">*</span><span class="mf">100</span><span class="p">).</span>
+<span class="k">PRINT</span> <span class="nv">floor</span><span class="p">(</span><span class="nv">RANDOM</span><span class="p">(</span><span class="s">&quot;generator A&quot;</span><span class="p">)</span><span class="o">*</span><span class="mf">100</span><span class="p">).</span>
+<span class="k">PRINT</span> <span class="nv">floor</span><span class="p">(</span><span class="nv">RANDOM</span><span class="p">(</span><span class="s">&quot;generator A&quot;</span><span class="p">)</span><span class="o">*</span><span class="mf">100</span><span class="p">).</span>
+<span class="k">PRINT</span> <span class="s">&quot;3 numbers from Generator B, which didn&#39;t get reset:&quot;</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="nv">floor</span><span class="p">(</span><span class="nv">RANDOM</span><span class="p">(</span><span class="s">&quot;generator B&quot;</span><span class="p">)</span><span class="o">*</span><span class="mf">100</span><span class="p">).</span>
+<span class="k">PRINT</span> <span class="nv">floor</span><span class="p">(</span><span class="nv">RANDOM</span><span class="p">(</span><span class="s">&quot;generator B&quot;</span><span class="p">)</span><span class="o">*</span><span class="mf">100</span><span class="p">).</span>
+<span class="k">PRINT</span> <span class="nv">floor</span><span class="p">(</span><span class="nv">RANDOM</span><span class="p">(</span><span class="s">&quot;generator B&quot;</span><span class="p">)</span><span class="o">*</span><span class="mf">100</span><span class="p">).</span>
+</pre></div>
+</div>
+<p>If you call <code class="docutils literal"><span class="pre">RANDOMSEED</span></code> using the same key as a key you already used
+before, it just forgets the previous random number sequence and starts
+a new one using the new seed.  You can use this to reset the sequence.</p>
 </dd></dl>
 
 <dl class="function">
@@ -856,7 +966,7 @@ Keep in mind that it&#8217;s not a traditional mathematical Euclidean division w
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2017, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
 
     </p>
   </div>
@@ -878,7 +988,7 @@ Keep in mind that it&#8217;s not a traditional mathematical Euclidean division w
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.2.0.0',
+            VERSION:'1.3.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

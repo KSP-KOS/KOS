@@ -64,6 +64,18 @@ Structure
         * - :meth:`JOIN(separator)`
           - :ref:`string <string>`
           - joins all list elements into a string
+        * - :meth:`FIND(item)`
+          - :ref:`scalar <scalar>`
+          - returns the first index of the item within the list
+        * - :meth:`INDEXOF(item)`
+          - :ref:`scalar <scalar>`
+          - Alias for :meth:`FIND(item)`
+        * - :meth:`FINDLAST(item)`
+          - :ref:`scalar <scalar>`
+          - returns the last index of the item within the list
+        * - :meth:`LASTINDEXOF(item)`
+          - :ref:`scalar <scalar>`
+          - Alias for :meth:`FINDLAST(item)`
 
 .. note::
 
@@ -116,6 +128,35 @@ Structure
     :return: :ref:`string <string>`
 
     Returns a string created by converting each element of the array to a string, separated by the given separator.
+
+.. method:: List:FIND(item)
+
+    :parameter item: (any type) the item to attempt to find within the list
+    :return: :struct:`Scalar`
+
+    Returns the first integer index within the list where an item equal to
+    this item can be found.  Whatever the definition of "equals" is for this
+    item type will be used to decide if a match is found.  This is a linear
+    search from start to finish so it can be slow if the list is long.
+
+    If no such item is found, a ``-1`` is returned.
+
+.. method:: List:INDEXOF(item)
+
+    This is just an alias for :meth:`FIND(item)`.
+
+.. method:: List:FINDLAST(item)
+
+    :parameter item: (any type) the item to attempt to find within the list
+    :return: :struct:`Scalar`
+
+    This is the same as :meth:`FIND(item)`, except that it searches
+    backward instead of forward through the list.  It finds the lastmost
+    element that is equal to the item.
+
+.. method:: List:LASTINDEXOF(item)
+
+    This is just an alias for :meth:`FINDLAST(item)`.
 
 Access to Individual Elements
 -----------------------------

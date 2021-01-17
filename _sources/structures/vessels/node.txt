@@ -34,22 +34,46 @@ A planned velocity change along an orbit. These are the nodes that you can set i
 Creation
 --------
 
-.. function:: NODE(utime, radial, normal, prograde)
+.. function:: NODE(time, radial, normal, prograde)
 
-    :parameter utime: (sec) Time of this maneuver
+    :parameter time: :ref:`TimeSpan` (ETA), :ref:`TimeStamp` (UT), or :ref:`Scalar` (UT)
     :parameter radial: (m/s) Delta-V in radial-out direction
     :parameter normal: (m/s) Delta-V normal to orbital plane
     :parameter prograde: (m/s) Delta-V in prograde direction
     :returns: :struct:`ManeuverNode`
 
-    You can make a maneuver node in a variable using the :func:`NODE` function::
+    You can make a maneuver node in a variable using the :func:`NODE` function.
+    The radial, normal, and prograde parameters represent the 3 axes you can
+    adjust on the manuever node.  The time parameter represents when the node
+    is along a vessel's path.  The time parameter has two different possible
+    meanings depending on what kind of value you pass in for it.  It's either
+    an absolute time since the game started, or it's a relative time (ETA)
+    from now, according to the following rule:
 
-        SET myNode to NODE( TIME:SECONDS+200, 0, 50, 10 ).
+    Using a TimeSpan for time means it's an ETA time offset
+    relative to right now at the moment you called this function::
 
-    Once you have a maneuver node in a variable, you use the :global:`ADD` and :global:`REMOVE` commands to attach it to your vessel's flight plan. A kOS CPU can only manipulate the flight plan of its :ref:`CPU vessel <cpu vessel>`.
+        // Example: This makes a node 2 minutes and 30 seconds from now:
+        SET myNode to NODE( TimeSpan(0, 0, 0, 2, 30), 0, 50, 10 ).
+        // Example: This also makes a node 2 minutes and 30 seconds from now,
+        // but does it by total seconds (2*60 + 30 = 150):
+        SET myNode to NODE( TimeSpan(150), 0, 50, 10 ).
 
-    .. warning::
-        When *constructing* a new node using the :func:`NODE` function call, you use the universal time (you must add the ETA time to the current time to arrive at the value to pass in), but when using the suffix :attr:`ManeuverNode:ETA`, you do NOT use universal time, instead just giving the number of seconds from now.
+     Using a TimeStamp, or a Scalar number of seconds for time means
+     it's a time expressed in absolute universal time since game
+     start::
+
+        // Example: A node at: year 5, day 23, hour 1, minute 30, second zero:
+        SET myNode to NODE( TimeStamp(5,23,1,30,0), 0, 50, 10 ).
+
+        // Using a Scalar number of seconds for time also means it's
+        // a time expressed in absolute universal time (seconds since
+        // epoch):
+        // Example: A node exactly one hour (3600 seconds) after the
+        // campaign started:
+        SET myNode to NODE( 3600, 0, 50, 10 ).
+
+     Either way, once you have a maneuver node in a variable, you use the :global:`ADD` and :global:`REMOVE` commands to attach it to your vessel's flight plan. A kOS CPU can only manipulate the flight plan of its :ref:`CPU vessel <cpu vessel>`.
 
     Once you have created a node, it's just a hypothetical node that hasn't
     been attached to anything yet. To attach a node to the flight path, you must use the command :global:`ADD` to attach it to the ship.
@@ -137,6 +161,7 @@ Structure
 
         PRINT X:PROGRADE. // prints 100.
         PRINT X:ETA.      // prints seconds till maneuver
+        PRINT X:TIME.     // prints exact UT time of manuever
         PRINT X:DELTAV    // prints delta-v vector
 
         REMOVE X.         // remove node from flight plan
@@ -173,6 +198,10 @@ Structure
           - :ref:`scalar <scalar>` (s)
           - Get/Set
           - Time until this maneuver
+        * - :attr:`TIME`
+          - :ref:`scalar <scalar>` (s)
+          - Get/Set
+          - Universal Time of this maneuver
         * - :attr:`PROGRADE`
           - :ref:`scalar <scalar>` (m/s)
           - Get/Set
@@ -208,6 +237,14 @@ Structure
     :type: :ref:`scalar <scalar>`
 
     The number of seconds until the expected burn time. If you SET this, it will actually move the maneuver node along the path in the map view, identically to grabbing the maneuver node and dragging it.
+
+.. attribute:: ManeuverNode:TIME
+
+    :access: Get/Set
+    :type: :ref:`scalar <scalar>`
+
+    The time of the node in universal time, rather than ETA relative to the current
+    time.  This should be the same as adding :attr:`ManeuverNode:ETA` to ``TIME:SECONDS``.
 
 .. attribute:: ManeuverNode:PROGRADE
 

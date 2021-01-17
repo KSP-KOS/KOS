@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Configuration of kOS &mdash; kOS 1.2.0.0 documentation</title>
+  <title>Configuration of kOS &mdash; kOS 1.3.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.2.0.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Part Highlighting" href="highlight.html"/>
         <link rel="prev" title="Colors" href="colors.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.2.0.0
+                1.3.0.0
               </div>
             
           
@@ -125,7 +125,11 @@
 <li class="toctree-l3"><a class="reference internal" href="string.html">String</a></li>
 <li class="toctree-l3"><a class="reference internal" href="terminal.html">Terminal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="terminalinput.html">Terminal Input</a></li>
-<li class="toctree-l3"><a class="reference internal" href="time.html">Time Span</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time.html">Time</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time.html#timestamp">TimeStamp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time.html#timespan">TimeSpan</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time.html#constructing">Constructing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time.html#time-operators">Time Operators</a></li>
 <li class="toctree-l3"><a class="reference internal" href="timewarp.html">WARP</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vecdraw.html">Drawing Vectors on the Screen</a></li>
 <li class="toctree-l3"><a class="reference internal" href="versioninfo.html">Structure</a></li>
@@ -137,6 +141,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_help.html">Getting Help</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
@@ -255,35 +260,35 @@ to be local to the current save file.</p>
 <td>False</td>
 <td>Print statistics to screen</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:RT" title="CONFIG:RT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RT</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>False</td>
-<td>Enable RemoteTech2 integration</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:ARCH" title="CONFIG:ARCH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ARCH</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:ARCH" title="CONFIG:ARCH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ARCH</span></code></a></td>
 <td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>False</td>
 <td>Start on archive (instead of volume 1)</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:OBEYHIDEUI" title="CONFIG:OBEYHIDEUI attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">OBEYHIDEUI</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:OBEYHIDEUI" title="CONFIG:OBEYHIDEUI attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">OBEYHIDEUI</span></code></a></td>
 <td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>True</td>
 <td>Obey the KSP Hide user interface key (usually mapped to F2).</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:SAFE" title="CONFIG:SAFE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SAFE</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:SAFE" title="CONFIG:SAFE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SAFE</span></code></a></td>
 <td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>False</td>
 <td>Enable safe mode</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:AUDIOERR" title="CONFIG:AUDIOERR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">AUDIOERR</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:AUDIOERR" title="CONFIG:AUDIOERR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">AUDIOERR</span></code></a></td>
 <td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>False</td>
 <td>Enable sound effect on kOS error</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:VERBOSE" title="CONFIG:VERBOSE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VERBOSE</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:VERBOSE" title="CONFIG:VERBOSE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VERBOSE</span></code></a></td>
 <td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>False</td>
 <td>Enable verbose exceptions</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:SUPPRESSAUTOPILOT" title="CONFIG:SUPPRESSAUTOPILOT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SUPPRESSAUTOPILOT</span></code></a></td>
+<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+<td>False</td>
+<td>If true, kOS&#8217;s controls do nothing.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:TELNET" title="CONFIG:TELNET attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TELNET</span></code></a></td>
 <td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
@@ -385,24 +390,6 @@ deep analysis of your program run, if you are so inclined.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="attribute:CONFIG:RT">
-Config:<code class="descname">RT</code><a class="headerlink" href="#attribute:CONFIG:RT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>Configures the <code class="docutils literal"><span class="pre">enableRTIntegration</span></code> setting.</p>
-<p>If true, then the kOS mod will attempt to interact with the Remote Tech 2 mod, letting RT2 make decisions about whether or not a vessel is within communications range rather than having kOS use its own more primitive algorithm for it.</p>
-<p>Due to a long stall in the development of the RT2 mod, this setting should still be considered experimental at this point.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="attribute:CONFIG:ARCH">
 Config:<code class="descname">ARCH</code><a class="headerlink" href="#attribute:CONFIG:ARCH" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
@@ -497,6 +484,35 @@ Config:<code class="descname">VERBOSE</code><a class="headerlink" href="#attribu
 </table>
 <p>Configures the <code class="docutils literal"><span class="pre">verboseExceptions</span></code> setting.</p>
 <p>If true, then it enables a mode in which errors coming from kOS are very long and verbose, trying to explain every detail of the problem.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:CONFIG:SUPPRESSAUTOPILOT">
+Config:<code class="descname">SUPPRESSAUTOPILOT</code><a class="headerlink" href="#attribute:CONFIG:SUPPRESSAUTOPILOT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+</tr>
+</tbody>
+</table>
+<p><em>This is settable by use of the &#8220;Toggle Autopilot&#8221; Action Group too.</em></p>
+<p>When this is set to True, it suppresses all of kOS&#8217;s attempts to
+override the steering, throttle, or translation controls, leaving
+them entirely under manual control.  It is intended to be a way
+to let you take manual control in an emergency quickly (through
+the toolbar window where this setting appears) without having to
+quit the running program or figure out which terminal window has
+the program causing the control lock.</p>
+<p>You can also bind this setting to an action group for a kOS core part
+in the VAB or SPH.  The action is called &#8220;Toggle Suppress&#8221;.
+(Or &#8220;Suppress On&#8221; and &#8220;Suppress Off&#8221; for one-way action groups
+that don&#8217;t toggle.)</p>
+<p>While it does suppress steering, throttle, and translation, it cannot
+suppress action groups or staging.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -715,7 +731,7 @@ the kOS dev team.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2017, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
 
     </p>
   </div>
@@ -737,7 +753,7 @@ the kOS dev team.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.2.0.0',
+            VERSION:'1.3.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

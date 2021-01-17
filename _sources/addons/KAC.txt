@@ -11,6 +11,12 @@ You can find out if Kerbal Alarm Clock addon is available in the
 current game installation by usng the boolean expression
 ``addons:available("KAC")``.
 
+Note that due to changes in Kerbal Alarm Clock, kOS can no longer support
+versions of KAC that are older than 3.0.0.2.  The API that Kerbal
+Alarm Clock publishes for other mods to use changed such that
+kOS can ether support newer Kerbal Alarm Clock, or older Kerbal Alarm
+Clock, but not both.
+
 The Kerbal Alarm Clock is a plugin that allows you to create reminder alarms at future periods to help you manage your flights and not warp past important times.
 
 .. figure:: http://triggerau.github.io/KerbalAlarmClock/images/KACForumPic.png

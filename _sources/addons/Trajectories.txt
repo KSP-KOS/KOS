@@ -4,7 +4,7 @@ Trajectories
 ==================
 
 - Download: https://github.com/neuoy/KSPTrajectories/releases
-- Forum thread: http://forum.kerbalspaceprogram.com/index.php?/topic/94368-trajectories
+- Forum thread: https://forum.kerbalspaceprogram.com/index.php?/topic/162324-131-110/
 
 Trajectories is a mod that displays trajectory predictions, accounting for atmospheric drag, lift, etc.. See the forum thread for more details.
 
@@ -13,7 +13,7 @@ This addon is not associated with and not supported by the creator of Trajectori
 The Trajectories API is accessed through C# reflection, and is designed for the
 current version. This means that future Trajectories updates may break this
 addon, in which case ``ADDONS:TR:AVAILABLE`` will return false.  It is also
-possible for future versions of Trjectories to remain fully compatible.
+possible for future versions of Trajectories to remain fully compatible.
 
 .. note::
 
@@ -45,32 +45,42 @@ and Trajectories 2.x.  These changes alter the way that the kOS
 Trajectories AddOn has to communicate with the Trajectories mod, and
 added new suffixes that kOS could use.  However, for backward
 compatibility kOS will try to support an older version of Trajectories
-if that's what's installed.  Places where a suffx only works with
+if that's what's installed.  Places where a suffix only works with
 newer versions of Trajectories are noted below in the suffix table.
 
 Access structure TRAddon via ``ADDONS:TR``.
 
 .. structure:: TRAddon
 
-    ============================= ===================================== =============
-     Suffix                        Type                                  Description
-    ============================= ===================================== =============
-     :attr:`AVAILABLE`             :struct:`Boolean` (readonly)          True if a compatible Trajectories version is installed.
-     :attr:`GETVERSION`            :struct:`String` (readonly)           **(only TR 2.2.0 and up)** Trajectories version string.
-     :attr:`ISVERTWO`              :struct:`Boolean` (readonly)          True if Trajectories version is 2.0.0 or above.
-     :attr:`ISVERTWOTWO`           :struct:`Boolean` (readonly)          True if Trajectories version is 2.2.0 or above.
-     :attr:`HASIMPACT`             :struct:`Boolean` (readonly)          True if Trajectories has calculated an impact position for the current vessel.
-     :attr:`IMPACTPOS`             :struct:`GeoCoordinates` (readonly)   Returns a :struct:`GeoCoordinates` with the predicted impact position.
-     :attr:`PLANNEDVEC`            :struct:`Vector` (readonly)           Vector at which to point to follow predicted trajectory.
-     :attr:`PLANNEDVECTOR`         :struct:`Vector` (readonly)           Alias for :attr:`PLANNEDVEC`
-     :meth:`SETTARGET(position)`   None                                  Set Trajectories target.
-     :attr:`HASTARGET`             :struct:`Boolean` (readonly)          **(only TR 2.0.0 and up)** True if Trajectories' target position has been selected.
-     :attr:`TIMETILLIMPACT`        :struct:`ScalarValue` (readonly)      **(only TR 2.2.0 and up)** Seconds until impact
-     :attr:`RETROGRADE`            :struct:`Boolean`                     **(only TR 2.2.0 and up)** Descent profile is retrograde mode.
-     :attr:`PROGRADE`              :struct:`Boolean`                     **(only TR 2.2.0 and up)** Descent profile is prograde mode.
-     :attr:`CORRECTEDVEC`          :struct:`Vector` (readonly)           Offset plus :attr:`PLANNEDVEC` to correct path for targeted impact.
-     :attr:`CORRECTEDVECTOR`       :struct:`Vector` (readonly)           Alias for :attr:`CORRECTEDVEC`
-    ============================= ===================================== =============
+    ==================================== ===================================== =============
+     Suffix                               Type                                  Description
+    ==================================== ===================================== =============
+     :attr:`AVAILABLE`                    :struct:`Boolean` (readonly)          True if a compatible Trajectories version is installed.
+     :attr:`GETVERSION`                   :struct:`String` (readonly)           Trajectories version string.
+     :attr:`GETVERSIONMAJOR`              :struct:`ScalarValue` (readonly)      Trajectories version Major.
+     :attr:`GETVERSIONMINOR`              :struct:`ScalarValue` (readonly)      Trajectories version Minor.
+     :attr:`GETVERSIONPATCH`              :struct:`ScalarValue` (readonly)      Trajectories version Patch.
+     :attr:`ISVERTWO`                     :struct:`Boolean` (readonly)          True if Trajectories version is 2.0.0 or above.
+     :attr:`ISVERTWOTWO`                  :struct:`Boolean` (readonly)          True if Trajectories version is 2.2.0 or above.
+     :attr:`ISVERTWOFOUR`                 :struct:`Boolean` (readonly)          True if Trajectories version is 2.4.0 or above.
+     :attr:`HASIMPACT`                    :struct:`Boolean` (readonly)          True if Trajectories has calculated an impact position for the current vessel.
+     :attr:`IMPACTPOS`                    :struct:`GeoCoordinates` (readonly)   Returns a :struct:`GeoCoordinates` with the predicted impact position.
+     :attr:`TIMETILLIMPACT`               :struct:`ScalarValue` (readonly)      **(only TR 2.2.0 and up)** Seconds until impact.
+     :meth:`RESETDESCENTPROFILE(AoA)`     None                                  **(only TR 2.4.0 and up)** Reset all the Descent profile nodes.
+     :attr:`DESCENTANGLES`                :struct:`List<ScalarValue>`           **(only TR 2.4.0 and up)** Descent profile angles.
+     :attr:`DESCENTGRADES`                :struct:`List<Boolean>`               **(only TR 2.4.0 and up)** Descent profile grades (Retro or Pro).
+     :attr:`DESCENTMODES`                 :struct:`List<Boolean>`               **(only TR 2.4.0 and up)** Descent profile modes (AoA or Horizon).
+     :attr:`PROGRADE`                     :struct:`Boolean`                     **(only TR 2.2.0 and up** Descent profile all prograde.
+     :attr:`RETROGRADE`                   :struct:`Boolean`                     **(only TR 2.2.0 and up** Descent profile all retrograde.
+     :attr:`PLANNEDVEC`                   :struct:`Vector` (readonly)           Vector at which to point to follow predicted trajectory.
+     :attr:`PLANNEDVECTOR`                :struct:`Vector` (readonly)           Alias for :attr:`PLANNEDVEC`
+     :meth:`SETTARGET(position)`          None                                  Set Trajectories target.
+     :attr:`HASTARGET`                    :struct:`Boolean` (readonly)          **(only TR 2.0.0 and up)** True if Trajectories target position has been set.
+     :attr:`GETTARGET`                    :struct:`GeoCoordinates` (readonly)   **(only TR 2.4.0 and up)** Returns a :struct:`GeoCoordinates` with the Trajectories target position.
+     :meth:`CLEARTARGET()`                None                                  **(only TR 2.4.0 and up)** Clear Trajectories target.
+     :attr:`CORRECTEDVEC`                 :struct:`Vector` (readonly)           Offset plus :attr:`PLANNEDVEC` to correct path for targeted impact.
+     :attr:`CORRECTEDVECTOR`              :struct:`Vector` (readonly)           Alias for :attr:`CORRECTEDVEC`
+    ==================================== ===================================== =============
 
 
 
@@ -89,7 +99,7 @@ Access structure TRAddon via ``ADDONS:TR``.
     :access: Get
 
     **Only gives the correct answer for Trajectries version >= 2.2.0**
-    
+
     *For earlier versions, it gives a hardcoded fixed answer, as follows:*
 
     - For any Trajectories version earlier than 2.0.0,
@@ -102,8 +112,65 @@ Access structure TRAddon via ``ADDONS:TR``.
 
     For cases where you need to check for a known minimum Trajectories
     version, it is probably better to use the specific boolean suffix
-    for that version (for example, :attr:`TRAddon:ISVERTWO`, or 
-    :attr:`TRAddon:ISVERTWOTWO`.)
+    for that version (for example, :attr:`TRAddon:ISVERTWO`, or
+    :attr:`TRAddon:ISVERTWOTWO` etc.)
+
+.. attribute:: TRAddon:GETVERSIONMAJOR
+
+    :type: :struct:`Scalar`
+    :access: Get
+
+    **Only gives the correct answer for Trajectries version >= 2.0.0**
+
+    *For earlier versions, it gives a hardcoded fixed answer, as follows:*
+
+    - For any Trajectories version earlier than 2.0.0,
+      this returns "0".
+    - If your Trajectories version is at least 2.0.0 or above,
+      this returns the specific version major value correctly.
+
+    For cases where you need to check for a known minimum Trajectories
+    version, it is probably better to use the specific boolean suffix
+    for that version (for example, :attr:`TRAddon:ISVERTWO`, or
+    :attr:`TRAddon:ISVERTWOTWO` etc.)
+
+.. attribute:: TRAddon:GETVERSIONMINOR
+
+    :type: :struct:`Scalar`
+    :access: Get
+
+    **Only gives the correct answer for Trajectries version >= 2.2.0**
+
+    *For earlier versions, it gives a hardcoded fixed answer, as follows:*
+
+    - For any Trajectories version below 2.2.0, this returns
+      "0" regardless of the precise version number within that range.
+    - If your Trajectories version is at least 2.2.0 or above,
+      this returns the specific version minor value correctly.
+
+    For cases where you need to check for a known minimum Trajectories
+    version, it is probably better to use the specific boolean suffix
+    for that version (for example, :attr:`TRAddon:ISVERTWO`, or
+    :attr:`TRAddon:ISVERTWOTWO` etc.)
+
+.. attribute:: TRAddon:GETVERSIONPATCH
+
+    :type: :struct:`Scalar`
+    :access: Get
+
+    **Only gives the correct answer for Trajectries version >= 2.2.0**
+
+    *For earlier versions, it gives a hardcoded fixed answer, as follows:*
+
+    - For any Trajectories version below 2.2.0, this returns
+      "0" regardless of the precise version number within that range.
+    - If your Trajectories version is at least 2.2.0 or above,
+      this returns the specific version patch value correctly.
+
+    For cases where you need to check for a known minimum Trajectories
+    version, it is probably better to use the specific boolean suffix
+    for that version (for example, :attr:`TRAddon:ISVERTWO`, or
+    :attr:`TRAddon:ISVERTWOTWO` etc.)
 
 .. attribute:: TRAddon:ISVERTWO
 
@@ -119,6 +186,13 @@ Access structure TRAddon via ``ADDONS:TR``.
 
     True if the Trajectories mod is at least version 2.2.0 or above.
 
+.. attribute:: TRAddon:ISVERTWOFOUR
+
+    :type: :struct:`Boolean`
+    :access: Get
+
+    True if the Trajectories mod is at least version 2.4.0 or above.
+
 .. attribute:: TRAddon:HASIMPACT
 
     :type: :struct:`Boolean`
@@ -133,6 +207,126 @@ Access structure TRAddon via ``ADDONS:TR``.
 
     Estimated impact position.
 
+.. attribute:: TRAddon:TIMETILLIMPACT
+
+    :type: :struct:`Scalar`
+    :access: Get
+
+    **Did Not Exist in Trajectories before 2.2.0!**
+
+    *If :attr:`TRAddons:ISVERTWOTWO` is false, using this suffix will cause
+    a runtime error.*
+
+    Gives you Trajectories prediction of how many seconds until impact
+    on ground or water.
+
+.. method:: TRAddon:RESETDESCENTPROFILE(AoA)
+
+    :parameter AoA: :struct:`Scalar`
+    :return: None
+
+    **Did Not Exist in Trajectories before 2.4.0!**
+
+    *If :attr:`TRAddons:ISVERTWOFOUR` is false, using this suffix will cause
+    a runtime error.*
+
+    Resets all the Trajectories descent profile nodes to the passed AoA value (in Degrees),
+    also sets Retrograde if AoA value is greater than 90 degrees (PI/2 radians)
+    otherwise sets to Prograde.
+
+.. attribute:: TRAddon:DESCENTANGLES
+
+    :type: :struct:`List<Scalar>`
+    :access: Get/Set
+
+    **Did Not Exist in Trajectories before 2.4.0!**
+
+    *If :attr:`TRAddons:ISVERTWOFOUR` is false, using this suffix will cause
+    a runtime error.*
+
+    Returns or sets all the Trajectories descent profile AoA values (in Degrees),
+    also sets a node to Retrograde if it's passed AoA is greater than 90 degrees
+    (PI/2 radians)
+    Note. also use with :attr:`TRAddons:DESCENTGRADES` to set a nodes grade
+    if needed and passing AoA values as displayed in the gui with max 90 degrees
+    (PI/2 radians).
+
+    List<Scalar>(atmospheric entry, high altitude, low altitude, final approach).
+
+.. attribute:: TRAddon:DESCENTGRADES
+
+    :type: :struct:`List<Boolean>`
+    :access: Get/Set
+
+    **Did Not Exist in Trajectories before 2.4.0!**
+
+    *If :attr:`TRAddons:ISVERTWOFOUR` is false, using this suffix will cause
+    a runtime error.*
+
+    Returns or sets all the Trajectories descent profile grades,
+    True = Retrograde, False = Prograde.
+
+    List<Boolean>(atmospheric entry, high altitude, low altitude, final approach).
+
+.. attribute:: TRAddon:DESCENTMODES
+
+    :type: :struct:`List<Boolean>`
+    :access: Get/Set
+
+    **Did Not Exist in Trajectories before 2.4.0!**
+
+    *If :attr:`TRAddons:ISVERTWOFOUR` is false, using this suffix will cause
+    a runtime error.*
+
+    Returns or sets all the Trajectories descent profile modes,
+    True = AoA, False = Horizon.
+
+    List<Boolean>(atmospheric entry, high altitude, low altitude, final approach).
+
+.. attribute:: TRAddon:PROGRADE
+
+    :type: :struct:`Boolean`
+    :access: Get/Set
+
+    **Did Not Exist in Trajectories before 2.2.0!**
+
+    *If :attr:`TRAddons:ISVERTWOTWO` is false, using this suffix will cause
+    a runtime error.*
+
+    For Trajectories 2.2.0 True if all the descent profile AoA values are 0.
+    For Trajectories 2.4.0 True if all the descent profile nodes are 'prograde'
+
+    You can set this to have the same effect as clicking on prograde mode
+    in the trajectories GUI. Setting this value to true causes
+    :attr:`TRAddon:RETROGRADE` to become false. (They cannot both be
+    true at the same time.)
+
+    Setting this causes all Trajectories descent profile nodes
+    to be set to 'prograde' mode if True or 'retrograde' mode if False.
+    Also resets all AoA values to 0.
+
+.. attribute:: TRAddon:RETROGRADE
+
+    :type: :struct:`Boolean`
+    :access: Get/Set
+
+    **Did Not Exist in Trajectories before 2.2.0!**
+
+    *If :attr:`TRAddons:ISVERTWOTWO` is false, using this suffix will cause
+    a runtime error.*
+
+    For Trajectories 2.2.0 True if all the descent profile AoA values are 180.
+    For Trajectories 2.4.0 True if all the descent profile nodes are 'retrograde'
+
+    You can set this to have the same effect as clicking on retrograde mode
+    in the trajectories GUI. Setting this value to true causes
+    :attr:`TRAddon:PROGRADE` to become false. (They cannot both be
+    true at the same time.)
+
+    Setting this causes all Trajectories descent profile nodes
+    to be set to 'retrograde' mode if True or 'prograde' mode if False.
+    Also resets all AoA values to 0.
+
 .. attribute:: TRAddon:PLANNEDVEC
 
     :type: :struct:`Vector`
@@ -140,7 +334,7 @@ Access structure TRAddon via ``ADDONS:TR``.
 
     Vector pointing the direction your vessel should face to follow the
     predicted trajectory, based on the angle of attack selected in the
-    Trajectories user interface.
+    Trajectories descent profile.
 
 .. attribute:: TRAddon:PLANNEDVECTOR
 
@@ -162,57 +356,36 @@ Access structure TRAddon via ``ADDONS:TR``.
     :access: Get
 
     **Did Not Exist in Trajectories before 2.0.0!**
-    
+
     *If :attr:`TRAddons:ISVERTWO` is false, using this suffix will cause
     a runtime error.*
 
-    The Trajectories Addon can be given a target position on the ground.
-    This is true if such a position is selected, or false if it is not.
+    The Trajectories Addon can be given a target position.
+    This is true if such a position is set, or false if it is not.
 
-.. attribute:: TRAddon:TIMETILLIMPACT
+.. attribute:: TRAddon:GETTARGET
 
-    :type: :struct:`Scalar`
+    :type: :struct:`GeoCoordinates`
     :access: Get
 
-    **Did Not Exist in Trajectories before 2.2.0!**
-    
-    *If :attr:`TRAddons:ISVERTWOTWO` is false, using this suffix will cause
+    **Did Not Exist in Trajectories before 2.4.0!**
+
+    *If :attr:`TRAddons:ISVERTWOFOUR` is false, using this suffix will cause
     a runtime error.*
 
-    Gives you Trajectories' prediction of how many seconds until impact
-    on ground or water.
+    Returns the Trajectories target position if one is set.
 
-.. attribute:: TRAddon:PROGRADE
+.. method:: TRAddon:CLEARTARGET()
 
-    :type: :struct:`Boolean`
-    :access: Get/Set
+    :parameter None
+    :return: None
 
-    **Did Not Exist in Trajectories before 2.2.0!**
-    
-    *If :attr:`TRAddons:ISVERTWOTWO` is false, using this suffix will cause
+    **Did Not Exist in Trajectories before 2.4.0!**
+
+    *If :attr:`TRAddons:ISVERTWOFOUR` is false, using this suffix will cause
     a runtime error.*
 
-    True if the Trajectories descent profile is set to 'prograde' mode.
-    You can set this to have the same effect as clicking on prograde mode
-    in the trajectories GUI.  Setting this value to true causes
-    :attr:`TRAddon:RETROGRADE` to become false.  (They cannot both be
-    true at the same time.)
-
-.. attribute:: TRAddon:RETROGRADE
-
-    :type: :struct:`Boolean`
-    :access: Get/Set
-
-    **Did Not Exist in Trajectories before 2.2.0!**
-    
-    *If :attr:`TRAddons:ISVERTWOTWO` is false, using this suffix will cause
-    a runtime error.*
-
-    True if the Trajectories descent profile is set to 'retrograde' mode.
-    You can set this to have the same effect as clicking on retrograde mode
-    in the trajectories GUI.  Setting this value to true causes
-    :attr:`TRAddon:PROGRADE` to become false.  (They cannot both be
-    true at the same time.)
+    Clears the Trajectories target position.
 
 .. attribute:: TRAddon:CORRECTEDVEC
 

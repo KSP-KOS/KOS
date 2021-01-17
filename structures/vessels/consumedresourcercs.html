@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ETA &mdash; kOS 1.2.0.0 documentation</title>
+  <title>ConsumedResourceRCS &mdash; kOS 1.3.0.0 documentation</title>
   
 
   
@@ -35,10 +35,10 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.2.0.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
-        <link rel="next" title="Gimbal" href="gimbal.html"/>
-        <link rel="prev" title="Engine" href="engine.html"/> 
+        <link rel="next" title="Core" href="core.html"/>
+        <link rel="prev" title="ConsumedResource" href="consumedresource.html"/> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.2.0.0
+                1.3.0.0
               </div>
             
           
@@ -108,20 +108,23 @@
 <li class="toctree-l3"><a class="reference internal" href="aggregateresource.html">AggregateResource</a></li>
 <li class="toctree-l3"><a class="reference internal" href="alt.html">ALT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="bounds.html">BOUNDS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="consumedresource.html">ConsumedResource</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">ConsumedResourceRCS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="core.html">Core</a></li>
 <li class="toctree-l3"><a class="reference internal" href="crafttemplate.html">CraftTemplate</a></li>
 <li class="toctree-l3"><a class="reference internal" href="crewmember.html">CrewMember</a></li>
 <li class="toctree-l3"><a class="reference internal" href="decoupler.html">Decoupler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="deltav.html">DeltaV</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dockingport.html">DockingPort</a></li>
 <li class="toctree-l3"><a class="reference internal" href="element.html">Element</a></li>
 <li class="toctree-l3"><a class="reference internal" href="engine.html">Engine</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">ETA</a></li>
 <li class="toctree-l3"><a class="reference internal" href="gimbal.html">Gimbal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kosprocessor.html">kOSProcessor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="launchclamp.html">LaunchClamp</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">Maneuver Node</a></li>
 <li class="toctree-l3"><a class="reference internal" href="part.html">Part</a></li>
 <li class="toctree-l3"><a class="reference internal" href="partmodule.html">PartModule</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rcs.html">RCS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="resource.html">Resource</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sciencedatavalue.html">ScienceData</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scienceexperiment.html">ScienceExperimentModule</a></li>
@@ -141,6 +144,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_help.html">Getting Help</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
@@ -177,11 +181,11 @@
       
           <li><a href="../vessels.html">Vessels and Parts</a> &raquo;</li>
       
-    <li>ETA</li>
+    <li>ConsumedResourceRCS</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../_sources/structures/vessels/eta.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/structures/vessels/consumedresourcercs.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -191,14 +195,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="eta">
-<span id="id1"></span><h1>ETA<a class="headerlink" href="#eta" title="Permalink to this headline">¶</a></h1>
-<p>ETA is a special object that exists just to help you get the
-times from now to certain events in a vessel&#8217;s future.  It
-always presumes you&#8217;re operating on the current SHIP vessel:</p>
+  <div class="section" id="consumedresourcercs">
+<span id="id1"></span><h1>ConsumedResourceRCS<a class="headerlink" href="#consumedresourcercs" title="Permalink to this headline">¶</a></h1>
+<p>A single resource value an rcs thruster consumes (i.e. monopropellant, etc). This is the type returned by the <a class="reference internal" href="rcs.html#structure:RCS" title="RCS structure"><code class="xref ks ks-struct docutils literal"><span class="pre">RCS</span></code></a>:CONSUMEDRESOURCES suffix</p>
 <dl class="structure">
-<dt id="structure:ETA">
-<em class="property">structure </em><code class="descname">ETA</code><a class="headerlink" href="#structure:ETA" title="Permalink to this definition">¶</a></dt>
+<dt id="structure:CONSUMEDRESOURCERCS">
+<em class="property">structure </em><code class="descname">ConsumedResourceRCS</code><a class="headerlink" href="#structure:CONSUMEDRESOURCERCS" title="Permalink to this definition">¶</a></dt>
 <dd><table border="1" class="docutils">
 <colgroup>
 <col width="29%" />
@@ -212,76 +214,111 @@ always presumes you&#8217;re operating on the current SHIP vessel:</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#attribute:ETA:APOAPSIS" title="ETA:APOAPSIS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">APOAPSIS</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a>, seconds</td>
-<td>Seconds until SHIP hits its apoapsis.</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:CONSUMEDRESOURCERCS:NAME" title="CONSUMEDRESOURCERCS:NAME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></code></a></td>
+<td><a class="reference internal" href="../misc/string.html#string"><span>string</span></a></td>
+<td>Resource name</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:ETA:PERIAPSIS" title="ETA:PERIAPSIS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PERIAPSIS</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a>, seconds</td>
-<td>Seconds until SHIP hits its periapsis.</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONSUMEDRESOURCERCS:AMOUNT" title="CONSUMEDRESOURCERCS:AMOUNT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">AMOUNT</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<td>Total amount remaining (only valid while engine is running)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:ETA:TRANSITION" title="ETA:TRANSITION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TRANSITION</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a>, seconds</td>
-<td>Seconds until SHIP hits the next orbit patch.</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:CONSUMEDRESOURCERCS:CAPACITY" title="CONSUMEDRESOURCERCS:CAPACITY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CAPACITY</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<td>Total amount when full (only valid while engine is running)</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONSUMEDRESOURCERCS:DENSITY" title="CONSUMEDRESOURCERCS:DENSITY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DENSITY</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<td>Density of this resource</td>
+</tr>
+<tr class="row-even"><td><code class="xref ks ks-attr docutils literal"><span class="pre">RATIO</span></code></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<td>Volumetric flow ratio of this resource</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="attribute:ETA:APOAPSIS">
-ETA:<code class="descname">APOAPSIS</code><a class="headerlink" href="#attribute:ETA:APOAPSIS" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:CONSUMEDRESOURCERCS:NAME">
+ConsumedResourceRCS:<code class="descname">NAME</code><a class="headerlink" href="#attribute:CONSUMEDRESOURCERCS:NAME" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a>, seconds</td>
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#string"><span>string</span></a></td>
 </tr>
 </tbody>
 </table>
-<p>Seconds until SHIP hits its apoapsis.  If the ship is on an escape
-trajectory (hyperbolic orbit) such that you will never reach apoapsis,
-it will return zero.</p>
+<p>The name of the resource, i.e. &#8220;LIQUIDFUEL&#8221;, &#8220;ELECTRICCHARGE&#8221;, &#8220;MONOPROP&#8221;.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="attribute:ETA:PERIAPSIS">
-ETA:<code class="descname">PERIAPSIS</code><a class="headerlink" href="#attribute:ETA:PERIAPSIS" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:CONSUMEDRESOURCERCS:AMOUNT">
+ConsumedResourceRCS:<code class="descname">AMOUNT</code><a class="headerlink" href="#attribute:CONSUMEDRESOURCERCS:AMOUNT" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a>, seconds</td>
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 </tbody>
 </table>
-<p>Seconds until SHIP hits its periapsis.  If the ship is on an intersect
-with the ground, such that you&#8217;ll hit the ground first before you&#8217;d
-get to periapsis, it will still return the hypothetical number of
-seconds it would have taken to get to periapsis if you had the magical
-ability to pass through the ground as if it wasn&#8217;t there.</p>
+<p>The value of how much resource is left and accessible to this thruster. Only valid while the thruster is running.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="attribute:ETA:TRANSITION">
-ETA:<code class="descname">TRANSITION</code><a class="headerlink" href="#attribute:ETA:TRANSITION" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:CONSUMEDRESOURCERCS:CAPACITY">
+ConsumedResourceRCS:<code class="descname">CAPACITY</code><a class="headerlink" href="#attribute:CONSUMEDRESOURCERCS:CAPACITY" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a>, seconds</td>
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 </tbody>
 </table>
-<p>Seconds until SHIP hits its the end of its current orbit patch and
-transitions into another one, ignoring the effect of any intervening
-manuever nodes it might hit before it gets there.</p>
+<p>What AMOUNT would be if the resource was filled to the top. Only valid while the thruster is running.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:CONSUMEDRESOURCERCS:DENSITY">
+ConsumedResourceRCS:<code class="descname">DENSITY</code><a class="headerlink" href="#attribute:CONSUMEDRESOURCERCS:DENSITY" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+</tr>
+</tbody>
+</table>
+<p>The density value of this resource, expressed in Megagrams f mass
+per Unit of resource.  (i.e. a value of 0.005 would mean that each
+unit of this resource is 5 kilograms.  Megagrams [metric tonnes] is
+the usual unit that most mass in the game is represented in.)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:CONSUMEDRESOURCE:RCSRATIO">
+ConsumedResource:<code class="descname">RCSRATIO</code><a class="headerlink" href="#attribute:CONSUMEDRESOURCE:RCSRATIO" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+</tr>
+</tbody>
+</table>
+<p>What is the volumetric ratio of this fuel as a proportion of the overall fuel mixture, e.g. if this is 0.5 then this fuel is half the required fuel for the thruster.</p>
 </dd></dl>
 
 </div>
@@ -293,10 +330,10 @@ manuever nodes it might hit before it gets there.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="gimbal.html" class="btn btn-neutral float-right" title="Gimbal" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="core.html" class="btn btn-neutral float-right" title="Core" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="engine.html" class="btn btn-neutral" title="Engine" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="consumedresource.html" class="btn btn-neutral" title="ConsumedResource" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -305,7 +342,7 @@ manuever nodes it might hit before it gets there.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2017, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
 
     </p>
   </div>
@@ -327,7 +364,7 @@ manuever nodes it might hit before it gets there.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.2.0.0',
+            VERSION:'1.3.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

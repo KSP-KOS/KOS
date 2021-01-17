@@ -10,8 +10,33 @@ RemoteTech is a modification for Squad's "Kerbal Space Program" (KSP) which over
 - Documentation: http://remotetechnologiesgroup.github.io/RemoteTech/
 
 You can find out if the RemoteTech addon is available in the
-current game installation by usng the boolean expression
-``addons:available("RT")``.
+current game installation by usng the boolean expression::
+
+    addons:available("RT")
+
+Then you can access the Remote Tech addon with::
+
+    set myRemoteTech to addons:RT.
+
+Quick example
+-------------
+
+A quick example of usage::
+
+    if addons:available("RT") {
+      local myRT is addons:RT.
+      print "The delay from KSC to Myself is:".
+      print myRT:KSCDELAY(ship) + " seconds.".
+    }
+
+Connectivity Manager
+--------------------
+
+Note, that some of the methods in here can be handled more generically
+regardless of whether RT is installed or not, by using the methods
+:ref:`in the Connectivity Manager <connectivityManagers>`.  The
+ConnectivityManager can abstract away the differences between 
+communication mods.
 
 Interaction with kOS
 --------------------
@@ -74,6 +99,9 @@ of some of its suffixes.
 
 RTAddon
 ~~~~~~~
+
+This is obtained with ``Addons:RT``.
+
 
 .. structure:: RTAddon
 

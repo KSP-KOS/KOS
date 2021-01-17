@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>PIDLoop &mdash; kOS 1.2.0.0 documentation</title>
+  <title>PIDLoop &mdash; kOS 1.3.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.2.0.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Resource Transfer" href="resource_transfer.html"/>
         <link rel="prev" title="Note" href="note.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.2.0.0
+                1.3.0.0
               </div>
             
           
@@ -127,7 +127,11 @@
 <li class="toctree-l3"><a class="reference internal" href="string.html">String</a></li>
 <li class="toctree-l3"><a class="reference internal" href="terminal.html">Terminal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="terminalinput.html">Terminal Input</a></li>
-<li class="toctree-l3"><a class="reference internal" href="time.html">Time Span</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time.html">Time</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time.html#timestamp">TimeStamp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time.html#timespan">TimeSpan</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time.html#constructing">Constructing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time.html#time-operators">Time Operators</a></li>
 <li class="toctree-l3"><a class="reference internal" href="timewarp.html">WARP</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vecdraw.html">Drawing Vectors on the Screen</a></li>
 <li class="toctree-l3"><a class="reference internal" href="versioninfo.html">Structure</a></li>
@@ -139,6 +143,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_help.html">Getting Help</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
@@ -191,40 +196,207 @@
             
   <div class="section" id="pidloop">
 <span id="id1"></span><h1>PIDLoop<a class="headerlink" href="#pidloop" title="Permalink to this headline">¶</a></h1>
-<p>The <cite>PIDLoop</cite> has multiple constructors available.  Valid syntax can be seen here:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Create a loop with default parameters</span>
+<p>A PID loop is a standard control mechanism taught in many control
+theory textbooks.  It&#8217;s a simple way to deal with a scenario where
+you want a program to move a control lever of some sort in order
+to cause a measured phenomenon to settle on a target value.  That
+base description actually covers many scenarios:</p>
+<blockquote>
+<div><ul class="simple">
+<li>A car&#8217;s cruise control moving the accelerator
+pedal to seek a target speed.</li>
+<li>A ship at sea moving the rudder to seek a target
+compass heading.</li>
+<li>An electric oven changing the amount of current to
+the heating element to seek a target temperature.</li>
+<li></li>
+</ul>
+</div></blockquote>
+<p>It should be clear why such a thing would come up a lot in kOS,
+which is all about having a computer move the controls to seek
+some kind of target result.</p>
+<p>PID stands for &#8220;Proportional, Integral, Derivative&#8221;.  It tracks
+the thing you are measuring and how it changes over time, and
+uses that to decide how you should set the control.</p>
+<p>The kOS documenation has a
+<a class="reference internal" href="../../tutorials/pidloops.html#pidloops"><span>tutorial about what PID loops are</span></a> that goes over the
+general principles and shows code examples of how to create your
+own PID loop with your own script code.</p>
+<p>But, you don&#8217;t actually need to do that (make your own PID loop code)
+because kOS comes with a built-in PID loop type you can use, which is
+what this page describes.  However, to make sense out of what these
+terms mean and what they are for, it&#8217;s still recommended that you
+read the <a class="reference internal" href="../../tutorials/pidloops.html#pidloops"><span>tutorial about what PID loops are</span></a> first.</p>
+<div class="section" id="constructors">
+<h2>Constructors<a class="headerlink" href="#constructors" title="Permalink to this headline">¶</a></h2>
+<p>The <cite>PIDLoop</cite> constructor function has a number of parametres, and
+they can be left off, leaving optional defaults.</p>
+<p>The full version is this:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">MYPID</span> <span class="ow">TO</span> <span class="nv">PIDLOOP</span><span class="p">(</span><span class="nv">Kp</span><span class="p">,</span> <span class="nv">Ki</span><span class="p">,</span> <span class="nv">Kd</span><span class="p">,</span> <span class="nv">min_output</span><span class="p">,</span> <span class="nv">max_output</span><span class="p">,</span> <span class="nv">epsilon</span><span class="p">).</span>
+</pre></div>
+</div>
+<p>With these defaults:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="33%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameter</th>
+<th class="head">Default if left off</th>
+<th class="head">Meaning</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Kp</td>
+<td>1.0</td>
+<td>Proportional gain</td>
+</tr>
+<tr class="row-odd"><td>Ki</td>
+<td>0.0</td>
+<td>Integral gain</td>
+</tr>
+<tr class="row-even"><td>Kd</td>
+<td>0.0</td>
+<td>Derivative gain</td>
+</tr>
+<tr class="row-odd"><td>min_output</td>
+<td>Very Big negative number. about -1.7e308</td>
+<td>The minimum value this PIDLoop will output.</td>
+</tr>
+<tr class="row-even"><td>max_output</td>
+<td>Very Big positive number. about -1.7e308</td>
+<td>The maximum value this PIDLoop will output.</td>
+</tr>
+<tr class="row-odd"><td>epsilon</td>
+<td>0.0</td>
+<td>The PIDLoop will ignore any input error smaller than this.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<div class="section" id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// With zero parameters, the PIDLoop has default parameters:</span>
 <span class="c1">// kp = 1, ki = 0, kd = 0</span>
 <span class="c1">// maxoutput = maximum number value</span>
 <span class="c1">// minoutput = minimum number value</span>
 <span class="k">SET</span> <span class="nv">PID</span> <span class="ow">TO</span> <span class="nv">PIDLOOP</span><span class="p">().</span>
 
-<span class="c1">// Other constructors include:</span>
-<span class="k">SET</span> <span class="nv">PID</span> <span class="ow">TO</span> <span class="nv">PIDLOOP</span><span class="p">(</span><span class="nv">KP</span><span class="p">).</span>
-<span class="k">SET</span> <span class="nv">PID</span> <span class="ow">TO</span> <span class="nv">PIDLOOP</span><span class="p">(</span><span class="nv">KP</span><span class="p">,</span> <span class="nv">KI</span><span class="p">,</span> <span class="nv">KD</span><span class="p">).</span>
-<span class="c1">// you must specify both minimum and maximum output directly.</span>
-<span class="k">SET</span> <span class="nv">PID</span> <span class="ow">TO</span> <span class="nv">PIDLOOP</span><span class="p">(</span><span class="nv">KP</span><span class="p">,</span> <span class="nv">KI</span><span class="p">,</span> <span class="nv">KD</span><span class="p">,</span> <span class="nv">MINOUTPUT</span><span class="p">,</span> <span class="nv">MAXOUTPUT</span><span class="p">).</span>
-
-<span class="c1">// remember to update both minimum and maximum output if the value changes symmetrically</span>
-<span class="k">SET</span> <span class="nv">LIMIT</span> <span class="ow">TO</span> <span class="mf">0</span><span class="p">.</span><span class="mf">5</span><span class="p">.</span>
-<span class="k">SET</span> <span class="nv">PID</span><span class="p">:</span><span class="nv">MAXOUTPUT</span> <span class="ow">TO</span> <span class="nv">LIMIT</span><span class="p">.</span>
-<span class="k">SET</span> <span class="nv">PID</span><span class="p">:</span><span class="nv">MINOUTPUT</span> <span class="ow">TO</span> <span class="o">-</span><span class="nv">LIMIT</span><span class="p">.</span>
-
-<span class="c1">// call the update suffix to get the output</span>
-<span class="k">SET</span> <span class="nv">OUT</span> <span class="ow">TO</span> <span class="nv">PID</span><span class="p">:</span><span class="nv">UPDATE</span><span class="p">(</span><span class="nv">TIME</span><span class="p">:</span><span class="nv">SECONDS</span><span class="p">,</span> <span class="nv">IN</span><span class="p">).</span>
-
-<span class="c1">// you can also get the output value later from the PIDLoop object</span>
-<span class="k">SET</span> <span class="nv">OUT</span> <span class="ow">TO</span> <span class="nv">PID</span><span class="p">:</span><span class="nv">OUTPUT</span><span class="p">.</span>
+<span class="c1">// Create a PIDLoop with a few stated paremeters:</span>
+<span class="k">SET</span> <span class="nv">PID</span> <span class="ow">TO</span> <span class="nv">PIDLOOP</span><span class="p">(</span><span class="mf">2</span><span class="p">.</span><span class="mf">5</span><span class="p">).</span>
+<span class="k">SET</span> <span class="nv">PID</span> <span class="ow">TO</span> <span class="nv">PIDLOOP</span><span class="p">(</span><span class="mf">2</span><span class="p">.</span><span class="mf">0</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">05</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">1</span><span class="p">).</span>
+<span class="k">SET</span> <span class="nv">PID</span> <span class="ow">TO</span> <span class="nv">PIDLOOP</span><span class="p">(</span><span class="mf">2</span><span class="p">.</span><span class="mf">0</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">05</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">).</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-of-using-it">
+<h3>Example of using it:<a class="headerlink" href="#example-of-using-it" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Throttle up when below target altitude, throttle down when above</span>
+<span class="c1">// target altitude, trying to hover:</span>
+<span class="k">local</span> <span class="nv">target_alt</span> <span class="ow">is</span> <span class="mf">100</span><span class="p">.</span>
+<span class="k">set</span> <span class="nv">HOVERPID</span> <span class="ow">to</span> <span class="nv">PIDLOOP</span><span class="p">(</span>
+    <span class="mf">50</span><span class="p">,</span>  <span class="c1">// adjust throttle 0.1 per 5m in error from desired altitude.</span>
+    <span class="mf">0</span><span class="p">.</span><span class="mf">1</span><span class="p">,</span> <span class="c1">// adjust throttle 0.1 per second spent at 1m error in altitude.</span>
+    <span class="mf">30</span><span class="p">,</span>  <span class="c1">// adjust throttle 0.1 per 3 m/s speed toward desired altitude.</span>
+    <span class="mf">0</span><span class="p">,</span>   <span class="c1">// min possible throttle is zero.</span>
+    <span class="mf">1</span>    <span class="c1">// max possible throttle is one.</span>
+  <span class="p">).</span>
+<span class="k">set</span> <span class="nv">HOVERPID</span><span class="p">:</span><span class="nv">SETPOINT</span> <span class="ow">to</span> <span class="nv">target_alt</span><span class="p">.</span>
+<span class="k">set</span> <span class="nv">mythrot</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span>
+<span class="k">lock</span> <span class="nv">throttle</span> <span class="ow">to</span> <span class="nv">mythrot</span><span class="p">.</span>
+<span class="k">until</span> <span class="nb">false</span> <span class="p">{</span>
+  <span class="k">set</span> <span class="nv">mythrot</span> <span class="ow">to</span> <span class="nv">HOVERPID</span><span class="p">:</span><span class="nv">UPDATE</span><span class="p">(</span><span class="nv">TIME</span><span class="p">:</span><span class="nv">SECONDS</span><span class="p">,</span> <span class="nv">alt</span><span class="p">:</span><span class="nv">radar</span><span class="p">).</span>
+  <span class="k">wait</span> <span class="mf">0</span><span class="p">.</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Please see the bottom of this page for information on the derivation of the loop&#8217;s output.</p>
+</div>
+</div>
+<div class="section" id="basic-pidloop-example">
+<span id="id2"></span><h2>Basic PIDloop Example<a class="headerlink" href="#basic-pidloop-example" title="Permalink to this headline">¶</a></h2>
+<p>Here is a simple example that would move a throttle on a hovering
+rocket to get it to settle in at an <code class="docutils literal"><span class="pre">alt:radar</span></code> of 100 meters:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Example PIDLoop usage to hover a rocket at 100 meters off the ground:</span>
+<span class="c1">// Please use it with a rocket that has lots of fuel to test it,</span>
+<span class="c1">// and a TWR between about 1.75 and 2.0.</span>
+
+<span class="k">lock</span> <span class="nv">steering</span> <span class="ow">to</span> <span class="nv">up</span><span class="p">.</span>
+
+<span class="k">print</span> <span class="s">&quot;Setting up PID structure:&quot;</span><span class="p">.</span>
+<span class="k">set</span> <span class="nv">hoverPID</span> <span class="ow">to</span> <span class="nv">PIDLoop</span><span class="p">(</span><span class="mf">0</span><span class="p">.</span><span class="mf">02</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">0015</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">02</span><span class="p">,</span> <span class="mf">0</span><span class="p">,</span> <span class="mf">1</span><span class="p">).</span>
+<span class="k">set</span> <span class="nv">hoverPID</span><span class="p">:</span><span class="nv">SETPOINT</span> <span class="ow">to</span> <span class="mf">100</span><span class="p">.</span>
+
+<span class="k">set</span> <span class="nv">wanted_throttle</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span> <span class="c1">// for now.</span>
+<span class="k">lock</span> <span class="nv">throttle</span> <span class="ow">to</span> <span class="nv">wanted_throttle</span><span class="p">.</span>
+
+<span class="k">print</span> <span class="s">&quot;Now starting loop:&quot;</span><span class="p">.</span>
+<span class="k">print</span> <span class="s">&quot;Make sure you stage until the engine is active.&quot;</span><span class="p">.</span>
+<span class="k">print</span> <span class="s">&quot;You will have to kill it with CTRL-C&quot;</span><span class="p">.</span>
+<span class="k">until</span> <span class="nb">false</span> <span class="p">{</span>
+  <span class="k">set</span> <span class="nv">wanted_throttle</span> <span class="ow">to</span> <span class="nv">hoverPID</span><span class="p">:</span><span class="nv">UPDATE</span><span class="p">(</span><span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span><span class="p">,</span> <span class="nv">alt</span><span class="p">:</span><span class="nv">radar</span><span class="p">).</span>
+  <span class="k">print</span> <span class="s">&quot;Radar Alt &quot;</span> <span class="o">+</span> <span class="nv">round</span><span class="p">(</span><span class="nv">alt</span><span class="p">:</span><span class="nv">radar</span><span class="p">,</span><span class="mf">1</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;m, PID wants throttle=&quot;</span> <span class="o">+</span> <span class="nv">round</span><span class="p">(</span><span class="nv">wanted_throttle</span><span class="p">,</span><span class="mf">3</span><span class="p">).</span>
+  <span class="k">wait</span> <span class="mf">0</span><span class="p">.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-setpoint-is-better-than-using-zero">
+<span id="please-use-setpoint"></span><h2>Using SETPOINT is better than using Zero<a class="headerlink" href="#using-setpoint-is-better-than-using-zero" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PIDloop</span></code></a> type has a <code class="xref ks ks-attr docutils literal"><span class="pre">SETPOINT</span></code> suffix, which tells the
+loop what the desired target value is that the loop should be seeking.
+In most cases the result of using <code class="xref ks ks-attr docutils literal"><span class="pre">SETPOINT</span></code> would be the
+same as just adjusting the value yourself to center it around zero,
+and you&#8217;d think the following two would product identical results,
+but they don&#8217;t:</p>
+<p>Version (A):</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// assume `wanted` is a variable with the desired target value:</span>
+<span class="c1">// when initializing, do:</span>
+<span class="k">set</span> <span class="nv">myPid</span> <span class="ow">to</span> <span class="nv">PIDLOOP</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">2</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">02</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">).</span>
+
+<span class="c1">// later, when updating in a loop, do:</span>
+<span class="k">set</span> <span class="nv">ctrl</span> <span class="ow">to</span> <span class="nv">myPid</span><span class="p">:</span><span class="nv">UPDATE</span><span class="p">(</span><span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span><span class="p">,</span> <span class="nv">measurement</span> <span class="o">-</span> <span class="nv">wanted</span><span class="p">).</span>
+</pre></div>
+</div>
+<p>Version (B):</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// assume `wanted` is a variable with the desired target value:</span>
+<span class="c1">// when initializing, do:</span>
+<span class="k">set</span> <span class="nv">myPid</span> <span class="ow">to</span> <span class="nv">PIDLOOP</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">2</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">02</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">).</span>
+<span class="k">set</span> <span class="nv">myPid</span><span class="p">:</span><span class="nv">SETPOINT</span> <span class="ow">to</span> <span class="nv">wanted</span><span class="p">.</span>
+
+<span class="c1">// Later, when updating in a loop, do:</span>
+<span class="k">set</span> <span class="nv">ctrl</span> <span class="ow">to</span> <span class="nv">myPid</span><span class="p">:</span><span class="nv">UPDATE</span><span class="p">(</span><span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span><span class="p">,</span> <span class="nv">measurement</span><span class="p">).</span>
+</pre></div>
+</div>
+<p>Actually, with kOS&#8217;s PIDLoop, the second version, Version(B), works a bit better
+and should be preferred.  The reason is that when calcualting the D term,
+<a class="reference internal" href="#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></code></a> uses the change in the raw measure, not the error of the
+the measure, to calculate the rate of change of the value.  This becomes
+relevant when your script suddenly changes its mind what the target value is
+supposed to be.  If you change your mind when using Version(B) above, by
+saying <code class="docutils literal"><span class="pre">Set</span> <span class="pre">MyPid:SETPOINT</span> <span class="pre">to</span> <span class="pre">newValue.</span></code>, then the PIDLoop is aware that
+the D value didn&#8217;t actually suddenly change to an enormously large number,
+because it measures the change in raw value not the change in error.  If
+using Version(A), the PIDLoop would think there has been a huge sudden
+large change all at once, and thus the D term calculation would take
+that to mean it needs to violently counteract that change.  Using Version(B)
+with kOS&#8217;s PIDLoop allows it to respond to the change less violently
+because it knows the actual raw value didn&#8217;t suddenly jump - just the
+desired target value did.</p>
+</div>
+<div class="section" id="structure">
+<h2>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
 <dl class="structure">
 <dt id="structure:PIDLOOP">
 <em class="property">structure </em><code class="descname">PIDLoop</code><a class="headerlink" href="#structure:PIDLOOP" title="Permalink to this definition">¶</a></dt>
 <dd><table border="1" class="docutils">
 <colgroup>
-<col width="37%" />
-<col width="25%" />
-<col width="38%" />
+<col width="35%" />
+<col width="24%" />
+<col width="42%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Suffix</th>
@@ -273,6 +445,14 @@
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
 <td>The maximum output value</td>
 </tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:PIDLOOP:EPSILON" title="PIDLOOP:EPSILON attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">EPSILON</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
+<td>The &#8220;don&#8217;t care&#8221; tolerance of error</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:PIDLOOP:IGNOREERROR" title="PIDLOOP:IGNOREERROR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">IGNOREERROR</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
+<td>Alias for <a class="reference internal" href="#attribute:PIDLOOP:EPSILON" title="PIDLOOP:EPSILON attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">EPSILON</span></code></a>.</td>
+</tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:PIDLOOP:ERRORSUM" title="PIDLOOP:ERRORSUM attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ERRORSUM</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
 <td>The time weighted sum of error</td>
@@ -295,7 +475,7 @@
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#method:PIDLOOP:RESET" title="PIDLOOP:RESET method"><code class="xref ks ks-meth docutils literal"><span class="pre">RESET</span></code></a></td>
 <td>none</td>
-<td>Reset the integral component</td>
+<td>Reset the integral and derivative components</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#method:PIDLOOP:UPDATE" title="PIDLOOP:UPDATE method"><code class="xref ks ks-meth docutils literal"><span class="pre">UPDATE(time,</span> <span class="pre">input)</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
@@ -366,7 +546,7 @@ PIDLoop:<code class="descname">KD</code><a class="headerlink" href="#attribute:P
 </tr>
 </tbody>
 </table>
-<p>The derivative gain factor</p>
+<p>The derivative gain factor.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -399,6 +579,8 @@ PIDLoop:<code class="descname">SETPOINT</code><a class="headerlink" href="#attri
 </tbody>
 </table>
 <p>The current setpoint.  This is the value to which input is compared when <code class="xref ks ks-meth docutils literal"><span class="pre">UPDATE</span></code> is called.  It may not be synced with the last sample.</p>
+<p>It is desirable to use <code class="xref ks ks-attr docutils literal"><span class="pre">SETPOINT</span></code> for the
+<a class="reference internal" href="#please-use-setpoint"><span>reasons described above</span></a>.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -463,6 +645,53 @@ PIDLoop:<code class="descname">MINOUTPUT</code><a class="headerlink" href="#attr
 </tbody>
 </table>
 <p>The current minimum output value.  This value also helps with regulating integral wind up mitigation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:PIDLOOP:EPSILON">
+PIDLoop:<code class="descname">EPSILON</code><a class="headerlink" href="#attribute:PIDLOOP:EPSILON" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Default = 0.</p>
+<p>The size of the &#8220;don&#8217;t care&#8221; tolerance window of the error measurement.</p>
+<p>When the error measurement (difference between input and setpoint) is smaller
+than this number, then this PID loop will simply <em>pretend</em> the error is
+actually zero and react accordingly (it won&#8217;t output any control deflection
+to bother correcting the error until after it&#8217;s bigger than epsilon.)
+This can be handy when you want a null zone in the input measure.  (This is
+different from having a null zone in the output, as in having a lever
+that can&#8217;t do anything unless it&#8217;s moved far enough.  This is more of a
+null zone on the input measurement.)</p>
+<p>(In the PIDLoops that are contained internally within the
+<a class="reference internal" href="steeringmanager.html#structure:STEERINGMANAGER" title="STEERINGMANAGER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">SteeringManager</span></code></a> that <code class="docutils literal"><span class="pre">lock</span> <span class="pre">steering</span></code> uses, they use this
+epsilon to try to reduce the use of RCS propellant that comes from
+wiggling the controls unnecessarily.)</p>
+<p>Because the PIDloop will pretend any error smaller than epsilon is zero,
+it also will not incur any &#8220;integral windup&#8221; for that error.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:PIDLOOP:IGNOREERROR">
+PIDLoop:<code class="descname">IGNOREERROR</code><a class="headerlink" href="#attribute:PIDLOOP:IGNOREERROR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>This is just an alias that is the same thing as <code class="xref ks ks-attr docutils literal"><span class="pre">EPSILON</span></code>.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -556,7 +785,7 @@ PIDLoop:<code class="descname">RESET</code><span class="sig-paren">(</span><span
 </tr>
 </tbody>
 </table>
-<p>Call this method to clear the <code class="xref ks ks-attr docutils literal"><span class="pre">ERRORSUM</span></code> and <code class="xref ks ks-attr docutils literal"><span class="pre">ITERM</span></code> components of the PID calculation.</p>
+<p>Call this method to clear the <code class="xref ks ks-attr docutils literal"><span class="pre">ERRORSUM</span></code>, <code class="xref ks ks-attr docutils literal"><span class="pre">ITERM</span></code>, and <code class="xref ks ks-attr docutils literal"><span class="pre">LASTSAMPLETIME</span></code> components of the PID calculation.</p>
 </dd></dl>
 
 <dl class="method">
@@ -580,13 +809,18 @@ PIDLoop:<code class="descname">UPDATE</code><span class="sig-paren">(</span>time
 <p>Upon calling this method, the PIDLoop will calculate the output based on this this basic framework (see below for detailed derivation): output = error * kp + errorsum * ki + (change in input) / (change in time) * kd.  This method is usually called with the current time in seconds (<cite>TIME:SECONDS</cite>), however it may be called using whatever rate measurement you prefer.  Windup mitigation is included, based on <code class="xref ks ks-attr docutils literal"><span class="pre">MAXOUTPUT</span></code> and <code class="xref ks ks-attr docutils literal"><span class="pre">MINOUTPUT</span></code>.  Both integral components and derivative components are guarded against a change in time greater than 1s, and will not be calculated on the first iteration.</p>
 </dd></dl>
 
+</div>
 <div class="section" id="pidloop-update-derivation">
 <h2>PIDLoop Update Derivation<a class="headerlink" href="#pidloop-update-derivation" title="Permalink to this headline">¶</a></h2>
 <p>The internal update method of the <a class="reference internal" href="#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></code></a> structure is the equivalent of the following in kerboscript</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// assume that the terms LastInput, LastSampleTime, ErrorSum, Kp, Ki, Kd, Setpoint, MinOutput, and MaxOutput are previously defined</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// assume that the terms LastInput, LastSampleTime, ErrorSum, Kp, Ki, Kd, Setpoint, MinOutput, MaxOutput, and Epsilon are previously defined</span>
 <span class="k">declare</span> <span class="kd">function</span> <span class="nv">Update</span> <span class="p">{</span>
     <span class="k">declare</span> <span class="kd">parameter</span> <span class="nv">sampleTime</span><span class="p">,</span> <span class="nv">input</span><span class="p">.</span>
     <span class="k">set</span> <span class="nv">Error</span> <span class="ow">to</span> <span class="nv">Setpoint</span> <span class="o">-</span> <span class="nv">input</span><span class="p">.</span>
+    <span class="k">if</span> <span class="nv">Error</span> <span class="o">&gt;</span> <span class="o">-</span><span class="nv">Epsilon</span> <span class="ow">and</span> <span class="nv">Error</span> <span class="o">&lt;</span> <span class="nv">Epsilon</span> <span class="p">{</span>
+      <span class="k">set</span> <span class="nv">Error</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span> <span class="c1">// pretend there is no error.</span>
+      <span class="k">set</span> <span class="nv">input</span> <span class="ow">to</span> <span class="nv">Setpoint</span><span class="p">.</span> <span class="c1">// pretend there is no error.</span>
+    <span class="p">}</span>
     <span class="k">set</span> <span class="nv">PTerm</span> <span class="ow">to</span> <span class="nv">error</span> <span class="o">*</span> <span class="nv">Kp</span><span class="p">.</span>
     <span class="k">set</span> <span class="nv">ITerm</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span>
     <span class="k">set</span> <span class="nv">DTerm</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span>
@@ -649,7 +883,7 @@ PIDLoop:<code class="descname">UPDATE</code><span class="sig-paren">(</span>time
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2017, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
 
     </p>
   </div>
@@ -671,7 +905,7 @@ PIDLoop:<code class="descname">UPDATE</code><span class="sig-paren">(</span>time
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.2.0.0',
+            VERSION:'1.3.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

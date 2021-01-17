@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>List &mdash; kOS 1.2.0.0 documentation</title>
+  <title>List &mdash; kOS 1.3.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.2.0.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="Collections" href="../collections.html"/>
         <link rel="next" title="Queue" href="queue.html"/>
         <link rel="prev" title="Lexicon" href="lexicon.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.2.0.0
+                1.3.0.0
               </div>
             
           
@@ -127,6 +127,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_help.html">Getting Help</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
@@ -249,6 +250,22 @@ need to be of a homogeneous type.</p>
 <tr class="row-odd"><td><a class="reference internal" href="#method:LIST:JOIN" title="LIST:JOIN method"><code class="xref ks ks-meth docutils literal"><span class="pre">JOIN(separator)</span></code></a></td>
 <td><a class="reference internal" href="../misc/string.html#string"><span>string</span></a></td>
 <td>joins all list elements into a string</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:LIST:FIND" title="LIST:FIND method"><code class="xref ks ks-meth docutils literal"><span class="pre">FIND(item)</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<td>returns the first index of the item within the list</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:LIST:INDEXOF" title="LIST:INDEXOF method"><code class="xref ks ks-meth docutils literal"><span class="pre">INDEXOF(item)</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<td>Alias for <a class="reference internal" href="#method:LIST:FIND" title="LIST:FIND method"><code class="xref ks ks-meth docutils literal"><span class="pre">FIND(item)</span></code></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:LIST:FINDLAST" title="LIST:FINDLAST method"><code class="xref ks ks-meth docutils literal"><span class="pre">FINDLAST(item)</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<td>returns the last index of the item within the list</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:LIST:LASTINDEXOF" title="LIST:LASTINDEXOF method"><code class="xref ks ks-meth docutils literal"><span class="pre">LASTINDEXOF(item)</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<td>Alias for <a class="reference internal" href="#method:LIST:FINDLAST" title="LIST:FINDLAST method"><code class="xref ks ks-meth docutils literal"><span class="pre">FINDLAST(item)</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -379,6 +396,64 @@ List:<code class="descname">JOIN</code><span class="sig-paren">(</span>separator
 </tbody>
 </table>
 <p>Returns a string created by converting each element of the array to a string, separated by the given separator.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:LIST:FIND">
+List:<code class="descname">FIND</code><span class="sig-paren">(</span>item<span class="sig-paren">)</span><a class="headerlink" href="#method:LIST:FIND" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>item</strong> &#8211; (any type) the item to attempt to find within the list</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Returns the first integer index within the list where an item equal to
+this item can be found.  Whatever the definition of &#8220;equals&#8221; is for this
+item type will be used to decide if a match is found.  This is a linear
+search from start to finish so it can be slow if the list is long.</p>
+<p>If no such item is found, a <code class="docutils literal"><span class="pre">-1</span></code> is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:LIST:INDEXOF">
+List:<code class="descname">INDEXOF</code><span class="sig-paren">(</span>item<span class="sig-paren">)</span><a class="headerlink" href="#method:LIST:INDEXOF" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is just an alias for <code class="xref ks ks-meth docutils literal"><span class="pre">FIND(item)</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:LIST:FINDLAST">
+List:<code class="descname">FINDLAST</code><span class="sig-paren">(</span>item<span class="sig-paren">)</span><a class="headerlink" href="#method:LIST:FINDLAST" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>item</strong> &#8211; (any type) the item to attempt to find within the list</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This is the same as <code class="xref ks ks-meth docutils literal"><span class="pre">FIND(item)</span></code>, except that it searches
+backward instead of forward through the list.  It finds the lastmost
+element that is equal to the item.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:LIST:LASTINDEXOF">
+List:<code class="descname">LASTINDEXOF</code><span class="sig-paren">(</span>item<span class="sig-paren">)</span><a class="headerlink" href="#method:LIST:LASTINDEXOF" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is just an alias for <code class="xref ks ks-meth docutils literal"><span class="pre">FINDLAST(item)</span></code>.</p>
 </dd></dl>
 
 </div>
@@ -557,7 +632,7 @@ by item, like so:</p>
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2017, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
 
     </p>
   </div>
@@ -579,7 +654,7 @@ by item, like so:</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.2.0.0',
+            VERSION:'1.3.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

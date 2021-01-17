@@ -113,6 +113,10 @@ KUniverse 4th wall methods
           - None
           - Method
           - Launch a new instance of the given craft at the given site.
+        * - :meth:`LAUNCHCRAFTWITHCREWFROM(template, crewlist, site)`
+          - None
+          - Method
+          - Launch a new instance of the given craft with this crew list at the given site.
         * - :meth:`CRAFTLIST()`
           - :struct:`List` of :struct:`CraftTemplate`
           - Method
@@ -365,7 +369,26 @@ KUniverse 4th wall methods
 
     **NOTE:** The craft will be launched with the KSP default crew assignment,
     as if you had clicked launch from the editor without manually adjusting the
-    crew.
+    crew.  To pick which crew are on the craft use
+    :meth:`Kuniverse:LAUNCHCRAFTWITHCREWFROM()` instead.
+
+    **NOTE:** Due to how KSP handles launching a new craft, this will end the
+    current program even if the currently active vessel is located within
+    physics range of the launch site.
+
+.. method:: KUniverse:LAUNCHCRAFTWITHCREWFROM(template, crewlist, site)
+
+    :parameter template: :struct:`CraftTemplate` craft template object.
+    :parameter crewlist: :struct:`List` of :struct:`String` kerbal names.
+    :parameter site: :struct:`String` launch site name.
+
+    Launch a new instance of the given :struct:`CraftTemplate` with the given crew
+    manifest from the given launch site.
+    Valid values for site include ``"RUNWAY"`` and ``"LAUNCHPAD"``.
+
+    If any of the kerbal names you use in the ``crewlist`` parameter don't
+    exist in the game, there will be no error.  Instead that name just 
+    gets ignored in the list.
 
     **NOTE:** Due to how KSP handles launching a new craft, this will end the
     current program even if the currently active vessel is located within

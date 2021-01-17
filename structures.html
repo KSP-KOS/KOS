@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Structure Reference &mdash; kOS 1.2.0.0 documentation</title>
+  <title>Structure Reference &mdash; kOS 1.3.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="about.html"/>
         <link rel="copyright" title="Copyright" href="copyright.html"/>
-    <link rel="top" title="kOS 1.2.0.0 documentation" href="index.html"/>
+    <link rel="top" title="kOS 1.3.0.0 documentation" href="index.html"/>
         <link rel="next" title="Reflection" href="structures/reflection.html"/>
         <link rel="prev" title="Transferring resources" href="commands/resource_transfer.html"/> 
 
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                1.2.0.0
+                1.3.0.0
               </div>
             
           
@@ -114,6 +114,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="addons.html">Addons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_help.html">Getting Help</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
 </ul>
@@ -193,20 +194,23 @@
 <li class="toctree-l2"><a class="reference internal" href="structures/vessels/aggregateresource.html">AggregateResource</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/vessels/alt.html">ALT</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/vessels/bounds.html">BOUNDS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structures/vessels/consumedresource.html">ConsumedResource</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structures/vessels/consumedresourcercs.html">ConsumedResourceRCS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/vessels/core.html">Core</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/vessels/crafttemplate.html">CraftTemplate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/vessels/crewmember.html">CrewMember</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/vessels/decoupler.html">Decoupler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structures/vessels/deltav.html">DeltaV</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/vessels/dockingport.html">DockingPort</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/vessels/element.html">Element</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/vessels/engine.html">Engine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="structures/vessels/eta.html">ETA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/vessels/gimbal.html">Gimbal</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/vessels/kosprocessor.html">kOSProcessor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/vessels/launchclamp.html">LaunchClamp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/vessels/node.html">Maneuver Node</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/vessels/part.html">Part</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/vessels/partmodule.html">PartModule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structures/vessels/rcs.html">RCS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/vessels/resource.html">Resource</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/vessels/sciencedatavalue.html">ScienceData</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/vessels/scienceexperiment.html">ScienceExperimentModule</a></li>
@@ -223,6 +227,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="structures/orbits.html">Orbits</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structures/orbits/eta.html">OrbitEta</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/orbits/orbit.html">Orbit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/orbits/orbitable.html">Orbitable (Vessels and Bodies)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/orbits/orbitablevelocity.html">OrbitableVelocity</a></li>
@@ -257,7 +262,11 @@
 <li class="toctree-l2"><a class="reference internal" href="structures/misc/string.html">String</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/misc/terminal.html">Terminal</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/misc/terminalinput.html">Terminal Input</a></li>
-<li class="toctree-l2"><a class="reference internal" href="structures/misc/time.html">Time Span</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structures/misc/time.html">Time</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structures/misc/time.html#timestamp">TimeStamp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structures/misc/time.html#timespan">TimeSpan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structures/misc/time.html#constructing">Constructing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structures/misc/time.html#time-operators">Time Operators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/misc/timewarp.html">WARP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/misc/vecdraw.html">Drawing Vectors on the Screen</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/misc/versioninfo.html">Structure</a></li>
@@ -288,7 +297,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="copyright.html">Copyright</a> 2013-2017, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
 
     </p>
   </div>
@@ -310,7 +319,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.2.0.0',
+            VERSION:'1.3.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

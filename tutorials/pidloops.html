@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>PID Loops in kOS &mdash; kOS 1.2.0.0 documentation</title>
+  <title>PID Loops in kOS &mdash; kOS 1.3.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.2.0.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.3.0.0 documentation" href="../index.html"/>
         <link rel="up" title="Tutorials" href="../tutorials.html"/>
         <link rel="next" title="Execute Node Script" href="exenode.html"/>
         <link rel="prev" title="Design Patterns and Considerations with kOS" href="designpatterns.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.2.0.0
+                1.3.0.0
               </div>
             
           
@@ -114,6 +114,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_help.html">Getting Help</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
@@ -334,7 +335,7 @@ understanding of what that built-in feature is really doing.</p>
 <span class="k">SET</span> <span class="nv">Kp</span> <span class="ow">TO</span> <span class="mf">0</span><span class="p">.</span><span class="mf">01</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">Ki</span> <span class="ow">TO</span> <span class="mf">0</span><span class="p">.</span><span class="mf">006</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">Kd</span> <span class="ow">TO</span> <span class="mf">0</span><span class="p">.</span><span class="mf">006</span><span class="p">.</span>
-<span class="k">SET</span> <span class="nv">PID</span> <span class="ow">TO</span> <span class="nv">PIDLOOP</span><span class="p">(</span><span class="nv">Kp</span><span class="p">,</span> <span class="nv">Kp</span><span class="p">,</span> <span class="nv">Kd</span><span class="p">).</span>
+<span class="k">SET</span> <span class="nv">PID</span> <span class="ow">TO</span> <span class="nv">PIDLOOP</span><span class="p">(</span><span class="nv">Kp</span><span class="p">,</span> <span class="nv">Ki</span><span class="p">,</span> <span class="nv">Kd</span><span class="p">).</span>
 <span class="k">SET</span> <span class="nv">PID</span><span class="p">:</span><span class="nv">SETPOINT</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span><span class="mf">2</span><span class="p">.</span>
 
 <span class="k">SET</span> <span class="nv">thrott</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
@@ -605,7 +606,7 @@ way if you tried using this example today.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2017, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
 
     </p>
   </div>
@@ -627,7 +628,7 @@ way if you tried using this example today.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.2.0.0',
+            VERSION:'1.3.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

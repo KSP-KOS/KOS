@@ -249,6 +249,7 @@ Mathematical Functions
 :func:`MIN(a,b)`     return a or b, whichever is lesser.
 :func:`MAX(a,b)`     return a or b, whichever is greater.
 :func:`RANDOM()`     random fractional number between 0 and 1.
+:func:`RANDOMSEED()` Start a new random sequence with a seed.
 :func:`ROUND(a)`     round to whole number
 :func:`ROUND(a,b)`   round to nearest place
 :func:`SQRT(a)`      square root
@@ -318,9 +319,18 @@ Mathematical Functions
 
         PRINT MAX(0,100). // prints 100
 
-.. function:: RANDOM()
+.. function:: RANDOM(key) // parameter 'key' is optional.
 
-    Returns a random floating point number in the range [0..1]::
+    Returns the next random floating point number from a random
+    number sequence.  The result is always in the range [0..1]
+
+    This uses what is called a `pseudo-random number generator
+    <https://en.wikipedia.org/wiki/Pseudorandom_number_generator>`_.
+
+    For basic usage you can leave the ``key`` parameter off and it
+    works fine, like so:
+
+    Example, basic usage::
 
         PRINT RANDOM(). //prints a random number
         PRINT "Let's roll a 6-sided die 10 times:".
@@ -332,6 +342,114 @@ Mathematical Functions
           // So for example : a die giving values from 1 to 6 is like this:
           print (1 + floor(6*RANDOM())).
         }
+
+    The parameter ``key`` is a string, and it's used when you want
+    to track separate psuedo-random number sequences by name and 
+    have them be deterministically repeatable. *Like other
+    string keys in kOS, this key is case-insensitive.*
+
+    * If you leave the parameter ``key`` off, you get the next number
+      from a default unnamed random number sequencer.
+    * If you supply the parameter ``key``, you get the next number
+      from a named random number sequencer.  You can invent however
+      many keys you like and each one is a new random number sequencer.
+      Supplying a key probably only means something if you have
+      previously used :func:`RANDOMSEED(key, seed)`.
+
+    The following example is more complex and shows the repeatability
+    of the "random" sequence using seeds.  For most simple uses you
+    probably don't need to bother with this.  If words like "random
+    number seed" are confusing, you can probably skip this part and 
+    get by just fine with the basic usage shown above.  (Explaining
+    how pseudorandom number generators work is a bit beyond this
+    page - check the wikipedia link above to learn more.)
+
+    Example, deterministic usage::
+
+        // create two different random number sequencers, both starting
+        // with seed 12345 so they should have the same exact values.
+        RANDOMSEED("sequence1",12345).
+        RANDOMSEED("sequence2",12345).
+
+        PRINT "5 coin flips from SEQUENCE 1:".
+        FOR n in range(0,5) {
+          print choose "heads" if RANDOM("sequence1") < 0.5 else "tails".
+        }
+
+        PRINT "5 coin flips from SEQUENCE 2, which should be the same:".
+        FOR n in range(0,5) {
+          print choose "heads" if RANDOM("sequence2") < 0.5 else "tails".
+        }
+
+        PRINT "5 more coin flips from SEQUENCE 1:".
+        FOR n in range(0,5) {
+          print choose "heads" if RANDOM("sequence1") < 0.5 else "tails".
+        }
+
+        PRINT "5 more coin flips from SEQUENCE 2, which should be the same:".
+        FOR n in range(0,5) {
+          print choose "heads" if RANDOM("sequence2") < 0.5 else "tails".
+        }
+
+
+.. function:: RANDOMSEED(key, seed)
+
+    No Return Value.
+
+    Initializes a new random number sequence from a seed, giving it a
+    key name you can use to refer to it in future calls to :func:`RANDOM(key)`
+
+    Using this you can make psuedo-random number sequences that can be
+    re-run using the same seed to get the same result a second time.
+
+    Parameter ``key`` is a string - a name you can use to refer to this
+    random series later.  Calls to ``RANDOMSEED`` that use different
+    keys actually cause different new random number sequences to be
+    created that are tracked separately from each other. *Like other
+    string keys in kOS, this key is case-insensitive.*
+
+    Parameter ``seed`` is an integer - an initial value to cause a
+    deterministic series of random numbers to come out of the random
+    function.
+
+    Whenever you call ``RANDOMSEED(key, seed)``, it starts a new
+    random number sequence using the integer seed you give it, and names
+    that sequence with a string key you can use later to retrive
+    values from that random number sequence.
+
+    Example::
+
+      RANDOMSEED("generator A",1000).
+      RANDOMSEED("generator B",1000).
+      PRINT "Generators A and B should emit identical ".
+      PRINT "sequences because they both started at seed 1000.".
+      PRINT "3 numbers from Generator A:".
+      PRINT floor(RANDOM("generator A")*100).
+      PRINT floor(RANDOM("generator A")*100).
+      PRINT floor(RANDOM("generator A")*100).
+      PRINT "3 numbers from Generator B - they should ".
+      PRINT "be the same as above:".
+      PRINT floor(RANDOM("generator B")*100).
+      PRINT floor(RANDOM("generator B")*100).
+      PRINT floor(RANDOM("generator B")*100).
+
+      PRINT "Resetting generator A but not Generator B:".
+      RANDOMSEED("generator A",1000).
+
+      PRINT "3 more numbers from Generator A which got reset".
+      PRINT "so they should match the first ones again:".
+      PRINT floor(RANDOM("generator A")*100).
+      PRINT floor(RANDOM("generator A")*100).
+      PRINT floor(RANDOM("generator A")*100).
+      PRINT "3 numbers from Generator B, which didn't get reset:".
+      PRINT floor(RANDOM("generator B")*100).
+      PRINT floor(RANDOM("generator B")*100).
+      PRINT floor(RANDOM("generator B")*100).
+
+    
+    If you call ``RANDOMSEED`` using the same key as a key you already used
+    before, it just forgets the previous random number sequence and starts
+    a new one using the new seed.  You can use this to reset the sequence.
 
 .. function:: ROUND(a)
 

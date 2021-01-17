@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Stage &mdash; kOS 1.2.0.0 documentation</title>
+  <title>Stage &mdash; kOS 1.3.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.2.0.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="Vessel" href="vessel.html"/>
         <link rel="prev" title="Sensor" href="sensor.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.2.0.0
+                1.3.0.0
               </div>
             
           
@@ -108,20 +108,23 @@
 <li class="toctree-l3"><a class="reference internal" href="aggregateresource.html">AggregateResource</a></li>
 <li class="toctree-l3"><a class="reference internal" href="alt.html">ALT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="bounds.html">BOUNDS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="consumedresource.html">ConsumedResource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="consumedresourcercs.html">ConsumedResourceRCS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="core.html">Core</a></li>
 <li class="toctree-l3"><a class="reference internal" href="crafttemplate.html">CraftTemplate</a></li>
 <li class="toctree-l3"><a class="reference internal" href="crewmember.html">CrewMember</a></li>
 <li class="toctree-l3"><a class="reference internal" href="decoupler.html">Decoupler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="deltav.html">DeltaV</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dockingport.html">DockingPort</a></li>
 <li class="toctree-l3"><a class="reference internal" href="element.html">Element</a></li>
 <li class="toctree-l3"><a class="reference internal" href="engine.html">Engine</a></li>
-<li class="toctree-l3"><a class="reference internal" href="eta.html">ETA</a></li>
 <li class="toctree-l3"><a class="reference internal" href="gimbal.html">Gimbal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kosprocessor.html">kOSProcessor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="launchclamp.html">LaunchClamp</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">Maneuver Node</a></li>
 <li class="toctree-l3"><a class="reference internal" href="part.html">Part</a></li>
 <li class="toctree-l3"><a class="reference internal" href="partmodule.html">PartModule</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rcs.html">RCS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="resource.html">Resource</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sciencedatavalue.html">ScienceData</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scienceexperiment.html">ScienceExperimentModule</a></li>
@@ -143,6 +146,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_help.html">Getting Help</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
@@ -272,6 +276,8 @@ vessel will throw an exception.</p>
 </div>
 <div class="section" id="stage-structure">
 <span id="stagestructure"></span><h2>Stage Structure<a class="headerlink" href="#stage-structure" title="Permalink to this headline">¶</a></h2>
+<p>The &#8220;Stage&#8221; structure gives you some information about the current stage
+of the vessel.</p>
 <dl class="structure">
 <dt id="structure:STAGE">
 <em class="property">structure </em><code class="descname">Stage</code><a class="headerlink" href="#structure:STAGE" title="Permalink to this definition">¶</a></dt>
@@ -320,6 +326,11 @@ vessel will throw an exception.</p>
 <td><a class="reference internal" href="decoupler.html#structure:DECOUPLER" title="DECOUPLER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Decoupler</span></code></a> or <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
 <td>Get only</td>
 <td>Alias name for <a class="reference internal" href="#attribute:STAGE:NEXTDECOUPLER" title="STAGE:NEXTDECOUPLER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NEXTDECOUPLER</span></code></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STAGE:DELTAV" title="STAGE:DELTAV attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DELTAV</span></code></a></td>
+<td><a class="reference internal" href="deltav.html#structure:DELTAV" title="DELTAV structure"><code class="xref ks ks-struct docutils literal"><span class="pre">DeltaV</span></code></a></td>
+<td>Get only</td>
+<td>Gets delta-V information about the current stage.</td>
 </tr>
 </tbody>
 </table>
@@ -442,6 +453,27 @@ Stage:<code class="descname">NextSeparator</code><a class="headerlink" href="#at
 <p>Alias for <a class="reference internal" href="#attribute:STAGE:NEXTDECOUPLER" title="STAGE:NEXTDECOUPLER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NEXTDECOUPLER</span></code></a></p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="attribute:STAGE:DELTAV">
+Stage:<code class="descname">DELTAV</code><a class="headerlink" href="#attribute:STAGE:DELTAV" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="deltav.html#structure:DELTAV" title="DELTAV structure"><code class="xref ks ks-struct docutils literal"><span class="pre">DeltaV</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Returns delta-V information (see <a class="reference internal" href="deltav.html#structure:DELTAV" title="DELTAV structure"><code class="xref ks ks-struct docutils literal"><span class="pre">DeltaV</span></code></a>) about the current stage.:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// These two lines would do the same thing:</span>
+<span class="k">SET</span> <span class="nv">DV</span> <span class="ow">TO</span> <span class="k">STAGE</span><span class="p">:</span><span class="nv">DELTAV</span><span class="p">.</span>
+<span class="k">SET</span> <span class="nv">DV</span> <span class="ow">TO</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">STAGEDELTAV</span><span class="p">(</span><span class="nv">SHIP</span><span class="p">:</span><span class="nv">STAGRENUM</span><span class="p">).</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </div>
 </div>
 
@@ -464,7 +496,7 @@ Stage:<code class="descname">NextSeparator</code><a class="headerlink" href="#at
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2017, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
 
     </p>
   </div>
@@ -486,7 +518,7 @@ Stage:<code class="descname">NextSeparator</code><a class="headerlink" href="#at
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.2.0.0',
+            VERSION:'1.3.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -21,7 +21,7 @@ A loop using an :struct:`Iterator` on a :struct:`List` might look like this::
     SET MyCurrent TO MyList:ITERATOR.
     PRINT "before the first NEXT, position = " + MyCurrent:INDEX.
     UNTIL NOT MyCurrent:NEXT {
-        PRINT "Item at position " + MyIter:INDEX + " is [" + MyIter:VALUE + "].".
+        PRINT "Item at position " + MyCurrent:INDEX + " is [" + MyCurrent:VALUE + "].".
     }
 
 .. highlight:: none

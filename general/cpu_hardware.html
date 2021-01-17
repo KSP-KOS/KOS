@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>The kOS CPU hardware &mdash; kOS 1.2.0.0 documentation</title>
+  <title>The kOS CPU hardware &mdash; kOS 1.3.0.0 documentation</title>
   
 
   
@@ -35,9 +35,9 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.2.0.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.3.0.0 documentation" href="../index.html"/>
         <link rel="up" title="General Topics" href="../general.html"/>
-        <link rel="next" title="KOS Processor PartModule Configuration Fields" href="kospartmodule.html"/>
+        <link rel="next" title="Boot Files" href="boot.html"/>
         <link rel="prev" title="CPU Vessel (SHIP)" href="cpu_vessel.html"/> 
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.2.0.0
+                1.3.0.0
               </div>
             
           
@@ -102,6 +102,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="">CPU Hardware</a><ul class="simple">
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="boot.html">Booting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kospartmodule.html">Game Part</a></li>
 <li class="toctree-l2"><a class="reference internal" href="settingsWindows.html">Settings Windows</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gui.html">Making User GUIs</a></li>
@@ -120,6 +121,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_help.html">Getting Help</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
@@ -210,45 +212,63 @@ more advanced scripts. This page contains that type of information.</p>
 small incremental time intervals that for the purpose of this
 document, we will call &#8220;<strong>physics ticks</strong>&#8221;. The exact length of time
 for a physics tick varies as the program runs. One physics tick might
-take 0.09 seconds while the next one might take 0.085 seconds. (The
-default setting for the rate of physics ticks is 25 ticks per second,
-just to give a ballpark figure, but you <strong>must not</strong> write any scripts
-that depend on this assumption because it&#8217;s a setting the user can
-change, and it can also vary a bit during play depending on system
-load. The setting is a target goal for the game to try to achieve, not
-a guarantee. If it&#8217;s a fast computer with a speedy animation frame
-rate, it will try to run physics ticks less often than it runs
-animation frame updates, to try to make the physics tick rate match
-this setting. On the other hand, If it&#8217;s a slow computer, it will try
-to sacrifice animation frame rate to archive this number (meaning
-physics get calculated faster than you can see the effects.)</p>
-<p>When calculating physics formulas, you need to actually measure
-elapsed time in the TIME:SECONDS variable in your scripts.</p>
+take 0.02 seconds while the next one might take 0.021 seconds and maybe
+the next one takes 0.019 seconds.</p>
+<p>The game <em>tries</em> to simulate the universe using 50 physics ticks per
+second (0.02 seconds per tick), but there is no guarantee it succeeds
+at this.  There is a lot of variation depending on how fast your
+computer is, and how heavily you are loading it with large rockets or
+complex mods.</p>
+<p>If the KSP game is unable to execute <em>physics ticks</em> fast enough to
+keep up the 50-per-second rate, that&#8217;s when you see the time display
+in the upper-left of the Kerbal Space Program screen turn red as a
+warning that simulation is getting coarse-grain and might start
+getting error-prone because of it.</p>
+<p>Note that the game may also resort to slowing down the presentation
+of the simulated world in order to make the simulated time still
+be fine-grained at 0.02 seconds per physics tick even though the
+computer can&#8217;t keep up with it.  In this state it is showing
+the game in slow motion.  This is what it means when the clock in
+the upper-left corner of the screen is yellow.</p>
+<p>The relevant take-away from that is this: When calculating physics
+formulas, never assume elapsed time moves in constant amounts.  It
+is <em>typically</em> about 0.02 seconds per physics tick, but not reliably
+so.  You need to actually measure elapsed time in the TIME:SECONDS
+variable in any formulas that depend on delta time.</p>
 <p>The entire simulated universe is utterly frozen during the duration of
 a physics tick. For example, if one physics tick occurs at timestamp
-10.51 seconds, and the next physics tick occurs 0.08 seconds later at
-timestamp 10.59 seconds, then during the entire intervening time, at
-timestamp 10.52 seconds, 10.53 seconds, and so on, nothing moves. The
-clock is frozen at 10.51 seconds, and the fuel isn&#8217;t being consumed,
-and the vessel is at the same position. On the next physics tick at
-10.59 seconds, then all the numbers are updated.  The full details of
-the physics ticks system are more complex than that, but that quick
-description is enough to describe what you need to know about how
-kOS&#8217;s CPU works.</p>
-<p>There is another kind of time tick called an <strong>Update tick</strong>. It is
+10.50 seconds, and the next physics tick occurs 0.02 seconds later at
+timestamp 10.52 seconds, then during all the intervening times, such
+as at timestamp 10.505 seconds, 10.51 seconds, and 10.515 seconds
+nothing has moved. <code class="docutils literal"><span class="pre">TIME:SECONDS</span></code> will claim the time is still 10.50
+seconds during that whole time, and the fuel isn&#8217;t being consumed, and
+the vessel is at the same position. On the next physics tick at 10.52
+seconds, then all the numbers are updated.  The full details of the
+physics ticks system are more complex than that, but that quick
+description is enough to describe what you need to know about how kOS&#8217;s
+CPU works.</p>
+<p><strong>Physics ticks are NOT your FPS:</strong>
+There is another kind of time tick called an <strong>Update tick</strong>. It is
 similar to, but different from, a <strong>physics tick</strong>. <em>Update ticks</em>
 often occur a bit more often than <em>physics ticks</em>. Update ticks are
 exactly the same thing as your game&#8217;s Frame Rate. Each time your game
-renders another animation frame, it performs another Update tick. On a
-good gaming computer with fast speed and a good graphics card, It is
-typical to have about 2 or even 3 <em>Update ticks</em> happen within the
-time it takes to have one <em>physics tick</em> happen. On a slower computer,
-it is also possible to go the other way and have <em>Update ticks</em>
-happening <em>less</em> frequently than <em>physics tics</em>. Basically, look at
-your frame rate. Is it higher than 25 fps? If so, then your <em>update
-ticks</em> happen faster than your <em>physics ticks</em>, otherwise its the
-other way around.</p>
-<p>It is important to note that versions of kOS prior to 0.17 executed program code during update ticks.  After that point, program code was executed during the physics ticks.</p>
+renders another animation frame, it performs another Update tick.
+Essentially, <em>physics ticks</em> get the first dibs on execution time,
+while <em>update ticks</em> use up whatever time is leftover after that.
+If your computer is super fast so there&#8217;s a lot of leftover time
+after <em>physics ticks</em> are satisfied, it just uses that time to make
+more <em>update ticks</em>, not to make more <em>physics ticks</em>.  A fast
+computer might have 2 or 3 <em>update ticks</em> per <em>physics tick</em>.  A slow
+computer might only be able to manage 1 <em>update tick</em> per <em>physics
+tick</em>, or in extreme cases, less than 1 so animation is in fact
+painting the picture at a slower frame rate than the frame rate that
+the physical world is actually being simulated under the hood.</p>
+<p>It is important to note that versions of kOS prior to v0.17 executed
+program code during these <em>update ticks</em> so they were tied to your
+animation FPS.  But versions more recent than that started executing
+code on <em>physics ticks</em>, as is more proper for the simulation, and
+to make script behvaior more consistent across different computers with
+different frame rates.</p>
 </div>
 <div class="section" id="electric-drain">
 <span id="electricdrain"></span><h2><a class="toc-backref" href="#id4">Electric Drain</a><a class="headerlink" href="#electric-drain" title="Permalink to this headline">¶</a></h2>
@@ -759,7 +779,7 @@ main code can continue.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="kospartmodule.html" class="btn btn-neutral float-right" title="KOS Processor PartModule Configuration Fields" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="boot.html" class="btn btn-neutral float-right" title="Boot Files" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="cpu_vessel.html" class="btn btn-neutral" title="CPU Vessel (SHIP)" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -771,7 +791,7 @@ main code can continue.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2017, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
 
     </p>
   </div>
@@ -793,7 +813,7 @@ main code can continue.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.2.0.0',
+            VERSION:'1.3.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
