@@ -55,7 +55,6 @@ In the VAB or SPH
     :width: 50%
     :align: right
     :alt: Figure of selecting a boot file
-    :caption: Selecting a boot file in the VAB
 
 You may select a boot file from the Vehicle Assembly Building
 or Spaceplane Hangar.  To do this you must have placed the

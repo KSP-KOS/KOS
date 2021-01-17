@@ -42,7 +42,7 @@ These return predicted information about the future position and velocity of an 
     :type time:     :struct:`TimeSpan`
     :return:        A position :struct:`Vector` expressed as the coordinates in the :ref:`ship-center-raw-rotation <ship-raw>` frame
 
-    Returns a prediction of where the :struct:`Orbitable` will be at some :ref:`universal Time <unversal_time>`. If the :struct:`Orbitable` is a :struct:`Vessel`, and the :struct:`Vessel` has planned :ref:`maneuver nodes <maneuver node>`, the prediction assumes they will be executed exactly as planned.
+    Returns a prediction of where the :struct:`Orbitable` will be at some :ref:`universal Time <universal_time>`. If the :struct:`Orbitable` is a :struct:`Vessel`, and the :struct:`Vessel` has planned :ref:`maneuver nodes <maneuver node>`, the prediction assumes they will be executed exactly as planned.
 
     *Refrence Frame:* The reference frame that the future position
     gets returned in is the same reference frame as the current position

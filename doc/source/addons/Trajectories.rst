@@ -231,7 +231,8 @@ Access structure TRAddon via ``ADDONS:TR``.
     a runtime error.*
 
     Resets all the Trajectories descent profile nodes to the passed AoA value (in Degrees),
-    also sets Retrograde if AoA value is greater than ±90° (±PI/2) otherwise sets to Prograde.
+    also sets Retrograde if AoA value is greater than 90 degrees (PI/2 radians)
+    otherwise sets to Prograde.
 
 .. attribute:: TRAddon:DESCENTANGLES
 
@@ -244,9 +245,11 @@ Access structure TRAddon via ``ADDONS:TR``.
     a runtime error.*
 
     Returns or sets all the Trajectories descent profile AoA values (in Degrees),
-    also sets a node to Retrograde if it's passed AoA is greater than ±90° (±PI/2)
+    also sets a node to Retrograde if it's passed AoA is greater than 90 degrees
+    (PI/2 radians)
     Note. also use with :attr:`TRAddons:DESCENTGRADES` to set a nodes grade
-    if needed and passing AoA values as displayed in the gui with max ±90° (±PI/2).
+    if needed and passing AoA values as displayed in the gui with max 90 degrees
+    (PI/2 radians).
 
     List<Scalar>(atmospheric entry, high altitude, low altitude, final approach).
 
@@ -290,7 +293,7 @@ Access structure TRAddon via ``ADDONS:TR``.
     *If :attr:`TRAddons:ISVERTWOTWO` is false, using this suffix will cause
     a runtime error.*
 
-    For Trajectories 2.2.0 True if all the descent profile AoA values are 0°
+    For Trajectories 2.2.0 True if all the descent profile AoA values are 0.
     For Trajectories 2.4.0 True if all the descent profile nodes are 'prograde'
 
     You can set this to have the same effect as clicking on prograde mode
@@ -300,7 +303,7 @@ Access structure TRAddon via ``ADDONS:TR``.
 
     Setting this causes all Trajectories descent profile nodes
     to be set to 'prograde' mode if True or 'retrograde' mode if False.
-    Also resets all AoA values to 0°.
+    Also resets all AoA values to 0.
 
 .. attribute:: TRAddon:RETROGRADE
 
@@ -312,7 +315,7 @@ Access structure TRAddon via ``ADDONS:TR``.
     *If :attr:`TRAddons:ISVERTWOTWO` is false, using this suffix will cause
     a runtime error.*
 
-    For Trajectories 2.2.0 True if all the descent profile AoA values are 180°
+    For Trajectories 2.2.0 True if all the descent profile AoA values are 180.
     For Trajectories 2.4.0 True if all the descent profile nodes are 'retrograde'
 
     You can set this to have the same effect as clicking on retrograde mode
@@ -322,7 +325,7 @@ Access structure TRAddon via ``ADDONS:TR``.
 
     Setting this causes all Trajectories descent profile nodes
     to be set to 'retrograde' mode if True or 'prograde' mode if False.
-    Also resets all AoA values to 0°.
+    Also resets all AoA values to 0.
 
 .. attribute:: TRAddon:PLANNEDVEC
 

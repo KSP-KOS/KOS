@@ -79,9 +79,12 @@ Added :attr:`Config:SUPPRESSAUTOPILOT`
 GET/SET Player's trim
 :::::::::::::::::::::
 
-Added :ref:`PILOTYAWTRIM`, :ref:`PILOTPITCHTRIM`, :ref:`PILOROLLTRIM`,
-:ref:`PILOTWHEELSTEERTRIM`, and :ref:`PILOTWHEELTHROTTLETRIM`, which
-are set-able ways to control without locking out manual control.
+Added :ref:`PILOTYAWTRIM <SHIP CONTROL PILOTYAWTRIM>`,
+:ref:`PILOTPITCHTRIM <SHIP CONTROL PILOTPITCHTRIM>`,
+:ref:`PILOROLLTRIM <SHIP CONTROL PILOTROLLTRIM>`,
+:ref:`PILOTWHEELSTEERTRIM <SHIP CONTROL PILOTWHEELSTEERTRIM>`, and
+:ref:`PILOTWHEELTHROTTLETRIM <SHIP CONTROL PILOTWHEELTHROTTLETRIM>`,
+which are set-able ways to control without locking out manual control.
 
 Addon Trajectories changes
 ::::::::::::::::::::::::::

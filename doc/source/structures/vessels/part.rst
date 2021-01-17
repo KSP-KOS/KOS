@@ -603,6 +603,7 @@ These are the generic properties every PART has. You can obtain a list of values
 .. method:: Part:ALLTAGGEDPARTS()
 
     :return: :struct:`List` of :struct:`Part` objects
+
     Same as :meth:`Vessel:ALLTAGGEDPARTS()` except that this version
     doesn't search the entire vessel tree and instead it only searches the
     branch of the vessel's part tree from the current part down through

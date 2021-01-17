@@ -1,7 +1,7 @@
 .. _consumedresourcercs:
 
 ConsumedResourceRCS
-================
+===================
 
 A single resource value an rcs thruster consumes (i.e. monopropellant, etc). This is the type returned by the :struct:`RCS`:CONSUMEDRESOURCES suffix
 
@@ -32,28 +32,28 @@ A single resource value an rcs thruster consumes (i.e. monopropellant, etc). Thi
           - Volumetric flow ratio of this resource
 
 
-.. attribute:: ConsumedResource:NAME
+.. attribute:: ConsumedResourceRCS:NAME
 
     :access: Get only
     :type: :ref:`string <string>`
 
     The name of the resource, i.e. "LIQUIDFUEL", "ELECTRICCHARGE", "MONOPROP".
 
-.. attribute:: ConsumedResource:AMOUNT
+.. attribute:: ConsumedResourceRCS:AMOUNT
 
     :access: Get only
     :type: :ref:`scalar <scalar>`
 
     The value of how much resource is left and accessible to this thruster. Only valid while the thruster is running.
 
-.. attribute:: ConsumedResource:CAPACITY
+.. attribute:: ConsumedResourceRCS:CAPACITY
 
     :access: Get only
     :type: :ref:`scalar <scalar>`
 
     What AMOUNT would be if the resource was filled to the top. Only valid while the thruster is running.
 
-.. attribute:: ConsumedResource:DENSITY
+.. attribute:: ConsumedResourceRCS:DENSITY
 
     :access: Get only
     :type: :ref:`scalar <scalar>`
@@ -63,7 +63,7 @@ A single resource value an rcs thruster consumes (i.e. monopropellant, etc). Thi
     unit of this resource is 5 kilograms.  Megagrams [metric tonnes] is
     the usual unit that most mass in the game is represented in.)
 
-.. attribute:: ConsumedResource:RATIO
+.. attribute:: ConsumedResource:RCSRATIO
 
     :access: Get only
     :type: :ref:`scalar <scalar>`

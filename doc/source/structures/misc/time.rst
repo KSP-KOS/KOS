@@ -694,7 +694,7 @@ You may add or subtract a Scalar to either TimeStamps or TimeSpans. In either
 case, *when adding or subtracting it assumes a Scalar is a number of seconds*:
 
    * a :struct:`TimeStamp` + a :struct:`Scalar` = a :struct:`TimeStamp`
-   * a :struct:`TimeStamp` - a :sturct:`Scalar` = a :struct:`TimeStamp`
+   * a :struct:`TimeStamp` - a :struct:`Scalar` = a :struct:`TimeStamp`
    * a :struct:`TimeSpan` + a :struct:`Scalar` = a :struct:`TimeSpan`
    * a :struct:`TimeSpan` - a :struct:`Scalar` = a :struct:`TimeSpan`
 
@@ -737,10 +737,10 @@ the order does not matter, but if dividing, then you *may not* put the
 TimeStamp in the denominator.
 
    * a :struct:`TimeSpan` * a :struct:`Scalar` = a :struct:`TimeSpan`
-   * a :struct:`TimeSpan` / a :sturct:`Scalar` = a :struct:`TimeSpan`
+   * a :struct:`TimeSpan` / a :struct:`Scalar` = a :struct:`TimeSpan`
    * a :struct:`Scalar` * a :struct:`TimeSpan` = a :struct:`TimeSpan`
    * a :struct:`Scalar` / a :struct:`TimeSpan` = Illegal Operation
-   * a :struct:`TimeSpan` / a :sturct:`Scalar` = a :struct:`TimeSpan`
+   * a :struct:`TimeSpan` / a :struct:`Scalar` = a :struct:`TimeSpan`
    * a :struct:`TimeStamp` * a :struct:`Scalar` = Illegal Operation
    * a :struct:`TimeStamp` / a :struct:`Scalar` = Illegal Operation
    * a :struct:`TimeStamp` * a :struct:`TimeSpan` = Illegal Operation

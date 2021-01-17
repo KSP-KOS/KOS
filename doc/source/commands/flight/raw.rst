@@ -65,6 +65,13 @@ controls, not autopilot controls.
 
 .. warning::
 
+    KSP imposes a built-in 5% null zone on RCS thrusters that makes it
+    impossible for small raw inputs to have any effect in situations
+    where RCS thrusters are the only source of control.  However,
+    kOS allows you to override KSP's stock RCS null zone for RCS parts
+    with a bit of trickery under the hood, using the :attr:`RCS:DEADZONE`
+    suffix of RCS parts.
+
 Raw Flight Controls Reference
 -----------------------------
 

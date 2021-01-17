@@ -157,7 +157,7 @@ volume but with the following exceptions:
    constitutes a form of cheating similar to any other edit of the
    persistence file.
 
-.. _boot:
+.. _boot_directory:
 
 Special handling of files in the "boot" directory
 -------------------------------------------------
