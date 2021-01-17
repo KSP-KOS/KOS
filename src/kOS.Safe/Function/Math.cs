@@ -190,8 +190,28 @@ namespace kOS.Safe.Function
 
         public override void Execute(SafeSharedObjects shared)
         {
+            int argCount = CountRemainingArgs(shared);
+            string key;
+            if (argCount == 0)
+                key = "\0\0\0"; // the default key is a value nobody would use for their own key
+            else
+                key = PopValueAssert(shared).ToString();
             AssertArgBottomAndConsume(shared);
-            ReturnValue = Structure.FromPrimitive(random.NextDouble());
+            ReturnValue = Structure.FromPrimitive(Utilities.KOSMath.GetRandom(key));
+        }
+    }
+
+    [Function("randomseed")]
+    public class FunctionRandomSeed : SafeFunctionBase
+    {
+        private readonly Random random = new Random();
+
+        public override void Execute(SafeSharedObjects shared)
+        {
+            int seed = GetInt(PopValueAssert(shared));
+            string key = PopValueAssert(shared).ToString();
+            AssertArgBottomAndConsume(shared);
+            Utilities.KOSMath.StartRandomFromSeed(key, seed);
         }
     }
 

@@ -1,4 +1,7 @@
-﻿namespace kOS.Safe.Utilities
+using System;
+using System.Collections.Generic;
+
+namespace kOS.Safe.Utilities
 {
     public static class KOSMath
     {
@@ -111,6 +114,38 @@
             while (outAngle < rangeStart)
                 outAngle += 360.0;
             return outAngle;
+        }
+
+        private static Dictionary<string, System.Random> randomizers = null;
+
+        /// <summary>
+        /// Begin a new random number sequence from an integer seed, giving it
+        /// a string key to refer to later in GetRandom.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="seed">If null, no seed is given and it does the default seed</param>
+        public static void StartRandomFromSeed(string key, int? seed)
+        {
+            if (randomizers == null)
+                randomizers = new Dictionary<string, Random>(StringComparer.OrdinalIgnoreCase);
+            if (!randomizers.ContainsKey(key))
+                randomizers.Add(key, null);
+            randomizers[key] = (seed == null ? new Random() : new System.Random(seed.Value));
+        }
+
+        /// <summary>
+        /// Get the next number from a random number sequence given its string key
+        /// you gave it in StartRandomFromSeed()
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static double GetRandom(string key)
+        {
+            if (randomizers == null)
+                randomizers = new Dictionary<string, Random>(StringComparer.OrdinalIgnoreCase);
+            if (!randomizers.ContainsKey(key))
+                randomizers.Add(key, new Random());
+            return randomizers[key].NextDouble();
         }
     }
 }

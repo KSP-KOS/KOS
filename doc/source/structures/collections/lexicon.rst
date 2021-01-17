@@ -143,7 +143,7 @@ In other words, this will cause an error::
 
     local mylex is lexicon().
     print mylex:mykey. // <--- Error: no such thing in the lexicon yet.
-    sey mylex["mykey"] to "value". // here it gets added, but it's too late.
+    set mylex["mykey"] to "value". // here it gets added, but it's too late.
 
 While doing it in this order will work::
 

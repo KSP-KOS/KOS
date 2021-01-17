@@ -1,4 +1,5 @@
-﻿using kOS.Safe.Exceptions;
+using kOS.Safe.Exceptions;
+using kOS.Safe.Serialization;
 using System;
 using System.Globalization;
 using System.Reflection;

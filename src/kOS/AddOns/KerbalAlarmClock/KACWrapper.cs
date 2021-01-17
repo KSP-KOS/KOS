@@ -1,15 +1,16 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 
 namespace kOS.AddOns.KerbalAlarmClock
 {
 
     ///////////////////////////////////////////////////////////////////////////////////////////
-    // BELOW HERE SHOULD NOT BE EDITED - this links to the loaded KAC module without requiring a Hard Dependency
+    // BELOW HERE SHOULD NOT BE EDITED - this links to the loaded KAC module without requiring a Hard Dependancy
     ///////////////////////////////////////////////////////////////////////////////////////////
 
     /// <summary>
@@ -46,31 +47,14 @@ namespace kOS.AddOns.KerbalAlarmClock
         /// SET AFTER INIT
         /// </summary>
         private static Boolean _KACWrapped = false;
-        /// <summary>
-        /// Whether the KerbalAlarmClock assembly is loaded by KSP
-        /// 
-        /// SET AFTER FIRST INIT, THEN CONSTANT UNTIL THE NEXT KSP LAUNCH
-        /// </summary>
-        private static bool? hasAssembly = null;
 
         /// <summary>
         /// Whether the object has been wrapped and the APIReady flag is set in the real KAC
         /// </summary>
-        public static Boolean APIReady { get { return hasAssembly.HasValue && hasAssembly.Value && _KACWrapped && KAC.APIReady && !NeedUpgrade; } }
+        public static Boolean APIReady { get { return _KACWrapped && KAC.APIReady && !NeedUpgrade; } }
 
 
         public static Boolean NeedUpgrade { get; private set; }
-
-        public static Type GetType(string name)
-        {
-            Type type = null;
-            AssemblyLoader.loadedAssemblies.TypeOperation(t =>
-            {
-                if (t.FullName == name)
-                    type = t;
-            });
-            return type;
-        }
 
         /// <summary>
         /// This method will set up the KAC object and wrap all the methods/functions
@@ -79,21 +63,6 @@ namespace kOS.AddOns.KerbalAlarmClock
         /// <returns></returns>
         public static Boolean InitKACWrapper()
         {
-            // Prevent the init function from continuing to initialize if KerbalAlarmClock is not installed.
-            if (hasAssembly == null)
-            {
-                LogFormatted("Attempting to Grab KAC Assembly...");
-                hasAssembly = AssemblyLoader.loadedAssemblies.Any(a => a.dllName.Equals("KerbalAlarmClock"));
-                if (hasAssembly.Value)
-                    LogFormatted("Found KAC Assembly!");
-                else
-                    LogFormatted("Did not find KAC Assembly.");
-            }
-            if (!hasAssembly.Value)
-            {
-                _KACWrapped = false;
-                return _KACWrapped;
-            }
             //if (!_KACWrapped )
             //{
             //reset the internal objects
@@ -103,7 +72,11 @@ namespace kOS.AddOns.KerbalAlarmClock
             LogFormatted("Attempting to Grab KAC Types...");
 
             //find the base type
-            KACType = GetType("KerbalAlarmClock.KerbalAlarmClock");
+            AssemblyLoader.loadedAssemblies.TypeOperation(t =>
+            {
+                if (t.FullName == "KerbalAlarmClock.KerbalAlarmClock")
+                    KACType = t;
+            });
 
             if (KACType == null)
             {
@@ -118,7 +91,10 @@ namespace kOS.AddOns.KerbalAlarmClock
             }
             
             //now the Alarm Type
-            KACAlarmType = GetType("KerbalAlarmClock.KACAlarm");
+            KACAlarmType = AssemblyLoader.loadedAssemblies
+                .Select(a => a.assembly.GetExportedTypes())
+                .SelectMany(t => t)
+                .FirstOrDefault(t => t.FullName == "KerbalAlarmClock.KACAlarm");
 
             if (KACAlarmType == null)
             {
@@ -196,7 +172,7 @@ namespace kOS.AddOns.KerbalAlarmClock
                 //DrawTimeEntryMethod = KACType.GetMethod("DrawTimeEntryAPI", BindingFlags.Public | BindingFlags.Instance);
                 //LogFormatted_DebugOnly("Success: " + (DrawTimeEntryMethod != null).ToString());
 
-                //Commenting out rubbish lines
+				//Commenting out rubbish lines
                 //MethodInfo[] mis = KACType.GetMethods(BindingFlags.Public | BindingFlags.Instance);
                 //foreach (MethodInfo mi in mis)
                 //{
@@ -407,8 +383,10 @@ namespace kOS.AddOns.KerbalAlarmClock
                     AlarmTypeField = KACAlarmType.GetField("TypeOfAlarm");
                     AlarmTimeProperty = KACAlarmType.GetProperty("AlarmTimeUT");
                     AlarmMarginField = KACAlarmType.GetField("AlarmMarginSecs");
-                    AlarmActionField = KACAlarmType.GetField("AlarmAction");
                     RemainingField = KACAlarmType.GetField("Remaining");
+
+                    AlarmActionField = KACAlarmType.GetField("AlarmAction");
+                    ActionActionProperty = KACAlarmType.GetProperty("AlarmActionConvert");
 
                     XferOriginBodyNameField = KACAlarmType.GetField("XferOriginBodyName");
                     //LogFormatted("XFEROrigin:{0}", XferOriginBodyNameField == null);
@@ -519,11 +497,22 @@ namespace kOS.AddOns.KerbalAlarmClock
                 /// <summary>
                 /// What should the Alarm Clock do when the alarm fires
                 /// </summary>
+                //public AlarmActionEnum AlarmAction
+                //{
+                //    get { return (AlarmActionEnum)AlarmActionField.GetValue(actualAlarm); }
+                //    set { AlarmActionField.SetValue(actualAlarm, (Int32)value); }
+                //}
+                /// <summary>
+                /// What should the Alarm Clock do when the alarm fires
+                /// </summary>
                 public AlarmActionEnum AlarmAction
                 {
-                    get { return (AlarmActionEnum)AlarmActionField.GetValue(actualAlarm); }
-                    set { AlarmActionField.SetValue(actualAlarm, (Int32)value); }
+                    get { return (AlarmActionEnum)ActionActionProperty.GetValue(actualAlarm, null); }
+                    set { ActionActionProperty.SetValue(actualAlarm, (Int32)value, null); }
                 }
+                private PropertyInfo ActionActionProperty;
+
+
 
                 private FieldInfo RemainingField;
                 /// <summary>
@@ -581,7 +570,10 @@ namespace kOS.AddOns.KerbalAlarmClock
                 TransferModelled,
                 Distance,
                 Crew,
-                EarthTime
+                EarthTime,
+                Contract,
+                ContractAuto,
+                ScienceLab
             }
 
             public enum AlarmActionEnum
@@ -591,7 +583,7 @@ namespace kOS.AddOns.KerbalAlarmClock
                 [Description("Message Only-No Affect on warp")]     MessageOnly,
                 [Description("Kill Warp Only-No Message")]          KillWarpOnly,
                 [Description("Kill Warp and Message")]              KillWarp,
-                [Description("Pause Game and Message")]             PauseGame,
+                [Description("Pause Game and Message")]             PauseGame
             }
 
             public enum TimeEntryPrecisionEnum

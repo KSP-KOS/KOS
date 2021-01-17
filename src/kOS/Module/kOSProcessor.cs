@@ -28,6 +28,8 @@ namespace kOS.Module
 {
     public class kOSProcessor : PartModule, IProcessor, IPartCostModifier, IPartMassModifier
     {
+        private const string PAWGroup = "kOS";
+
         public ProcessorModes ProcessorMode { get; private set; }
 
         public Harddisk HardDisk { get; private set; }
@@ -35,6 +37,8 @@ namespace kOS.Module
         public Archive Archive { get; private set; }
 
         public MessageQueue Messages { get; private set; }
+
+        private static bool bootListDirty;
 
         public string Tag
         {
@@ -78,28 +82,28 @@ namespace kOS.Module
 
         private const string BootDirectoryName = "boot";
 
-        [KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Boot File"), UI_ChooseOption(scene = UI_Scene.Editor)]
+        [KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Boot File", groupName = PAWGroup, groupDisplayName = PAWGroup), UI_ChooseOption(scene = UI_Scene.Editor)]
         public string bootFile = "None";
 
-        [KSPField(isPersistant = true, guiName = "kOS Disk Space", guiActive = true)]
+        [KSPField(isPersistant = true, guiName = "kOS Disk Space", guiActive = true, groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public int diskSpace = 1024;
 
-        [KSPField(isPersistant = true, guiName = "kOS Base Disk Space", guiActive = false)]
+        [KSPField(isPersistant = true, guiName = "kOS Base Disk Space", guiActive = false, groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public int baseDiskSpace = 0;
 
-        [KSPField(isPersistant = false, guiName = "kOS Base Module Cost", guiActive = false)]
+        [KSPField(isPersistant = false, guiName = "kOS Base Module Cost", guiActive = false, groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public float baseModuleCost = 0F;  // this is the base cost added to a part for including the kOSProcessor, default to 0.
 
-        [KSPField(isPersistant = true, guiName = "kOS Base Module Mass", guiActive = false)]
+        [KSPField(isPersistant = true, guiName = "kOS Base Module Mass", guiActive = false, groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public float baseModuleMass = 0F;  // this is the base mass added to a part for including the kOSProcessor, default to 0.
 
-        [KSPField(isPersistant = false, guiName = "kOS Disk Space", guiActive = false, guiActiveEditor = true), UI_ChooseOption(scene = UI_Scene.Editor)]
+        [KSPField(isPersistant = false, guiName = "kOS Disk Space", guiActive = false, guiActiveEditor = true, groupName = PAWGroup, groupDisplayName = PAWGroup), UI_ChooseOption(scene = UI_Scene.Editor)]
         public string diskSpaceUI = "1024";
 
-        [KSPField(isPersistant = true, guiName = "CPU/Disk Upgrade Cost", guiActive = false, guiActiveEditor = true)]
+        [KSPField(isPersistant = true, guiName = "CPU/Disk Upgrade Cost", guiActive = false, guiActiveEditor = true, groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public float additionalCost = 0F;
 
-        [KSPField(isPersistant = false, guiName = "CPU/Disk Upgrade Mass", guiActive = false, guiActiveEditor = true, guiUnits = "Kg", guiFormat = "0.00")]
+        [KSPField(isPersistant = false, guiName = "CPU/Disk Upgrade Mass", guiActive = false, guiActiveEditor = true, guiUnits = "Kg", guiFormat = "0.00", groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public float additionalMassGui = 0F;
 
         [KSPField(isPersistant = false, guiActive = false, guiActiveEditor = false)]
@@ -121,7 +125,7 @@ namespace kOS.Module
         public float ECPerInstruction = 0.000004F;
 
         // This represents how much EC to consume per Byte of the current volume, per second.
-        // This would be the "continuous" compoenent of the processor's power (though it varies
+        // This would be the "continuous" component of the processor's power (though it varies
         // when you change to another volume).
         // IMPORTANT: The value defaults to zero and must be overriden in the module
         // definition for any given part (within the part.cfg file).
@@ -143,24 +147,24 @@ namespace kOS.Module
             }
         }
 
-        [KSPEvent(guiActive = true, guiName = "Open Terminal", category = "skip_delay;")]
+        [KSPEvent(guiActive = true, guiName = "Open Terminal", category = "skip_delay;", groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public void Activate()
         {
             SafeHouse.Logger.Log("Open Window by event");
             OpenWindow();
         }
 
-        [KSPEvent(guiActive = true, guiName = "Close Terminal", category = "skip_delay;")]
+        [KSPEvent(guiActive = true, guiName = "Close Terminal", category = "skip_delay;", groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public void Deactivate()
         {
             SafeHouse.Logger.Log("Close Window by event");
             CloseWindow();
         }
 
-        [KSPField(isPersistant = true, guiName = "kOS Average Power", guiActive = true, guiActiveEditor = true, guiUnits = "EC/s", guiFormat = "0.000")]
+        [KSPField(isPersistant = true, guiName = "kOS Average Power", guiActive = true, guiActiveEditor = true, guiUnits = "EC/s", guiFormat = "0.000", groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public float RequiredPower = 0;
 
-        [KSPEvent(guiActive = true, guiName = "Toggle Power")]
+        [KSPEvent(guiActive = true, guiName = "Toggle Power", groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public void TogglePower()
         {
             SafeHouse.Logger.Log("Toggle Power");
@@ -195,6 +199,28 @@ namespace kOS.Module
             SafeHouse.Logger.Log("Toggle Power from ActionGroup");
             TogglePower();
         }
+
+        [KSPAction("Suppress On", actionGroup = KSPActionGroup.None)]
+        public void StartSuppressAutopilot(KSPActionParam param)
+        {
+            SafeHouse.Logger.Log("Start Suppress Autopilot from ActionGroup");
+            SafeHouse.Config.SuppressAutopilot = true;
+        }
+
+        [KSPAction("Suppress Off", actionGroup = KSPActionGroup.None)]
+        public void StopSuppressAutopilot(KSPActionParam param)
+        {
+            SafeHouse.Logger.Log("Stop Suppress Autopilot from ActionGroup");
+            SafeHouse.Config.SuppressAutopilot = false;
+        }
+
+        [KSPAction("Toggle Suppression", actionGroup = KSPActionGroup.None)]
+        public void ToggleSuppressAutopilot(KSPActionParam param)
+        {
+            SafeHouse.Logger.Log("Toggle Suppress Autopilot from ActionGroup");
+            SafeHouse.Config.SuppressAutopilot = !SafeHouse.Config.SuppressAutopilot;
+        }
+
         public void OpenWindow()
         {
             shared.Window.Open();
@@ -267,7 +293,10 @@ namespace kOS.Module
 
         private void UpdateCostAndMass()
         {
-            float spaceDelta = diskSpace - baseDiskSpace;
+            // Clamp this to prevent negative cost and mass.
+            // (Can happen when people edit part.cfg data or
+            // use ModuleManager.)
+            float spaceDelta = Mathf.Max(diskSpace - baseDiskSpace, 0.0f);
             additionalCost = (float)System.Math.Round(spaceDelta * diskSpaceCostFactor, 0);
             AdditionalMass = spaceDelta * diskSpaceMassFactor;
             additionalMassGui = AdditionalMass * 1000;
@@ -310,10 +339,16 @@ namespace kOS.Module
 
                 SafeHouse.Logger.Log(string.Format("OnStart: {0} {1}", state, ProcessorMode));
                 InitObjects();
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 SafeHouse.Logger.LogException(e);
             }
+        }
+
+        public static void SetBootListDirty()
+        {
+            bootListDirty = true;
         }
 
         private void InitUI()
@@ -388,6 +423,9 @@ namespace kOS.Module
             options.options = availableOptions.ToArray();
             options.display = availableDisplays.ToArray();
 
+            bootListDirty = false;
+            ForcePAWRefresh();
+
             //populate diskSpaceUI selector
             diskSpaceUI = diskSpace.ToString();
             field = Fields["diskSpaceUI"];
@@ -397,6 +435,18 @@ namespace kOS.Module
             sizeOptions[1] = (baseDiskSpace * 2).ToString();
             sizeOptions[2] = (baseDiskSpace * 4).ToString();
             options.options = sizeOptions;
+        }
+
+        public void ForcePAWRefresh()
+        {
+            // Thanks to https://github.com/blowfishpro for finding this API call for me:
+            UIPartActionWindow paw = UIPartActionController.Instance?.GetItem(part, false);
+
+            if (paw != null)
+            {
+                paw.ClearList();
+                paw.displayDirty = true;
+            }
         }
 
         private IEnumerable<VolumePath> BootDirectoryFiles()
@@ -668,6 +718,10 @@ namespace kOS.Module
         {
             if (HighLogic.LoadedScene == GameScenes.EDITOR && EditorLogic.fetch != null)
             {
+                if (bootListDirty)
+                {
+                    InitUI();
+                }
                 if (diskSpace != Convert.ToInt32(diskSpaceUI))
                 {
                     diskSpace = Convert.ToInt32(diskSpaceUI);

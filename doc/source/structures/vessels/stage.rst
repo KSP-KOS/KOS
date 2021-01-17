@@ -74,6 +74,9 @@ Stage Function
 Stage Structure
 ---------------
 
+The "Stage" structure gives you some information about the current stage
+of the vessel.
+
 .. structure:: Stage
 
     .. list-table:: Members
@@ -109,6 +112,10 @@ Stage Structure
           - :struct:`Decoupler` or :struct:`String`
           - Get only
           - Alias name for :attr:`NEXTDECOUPLER`
+        * - :attr:`DELTAV`
+          - :struct:`DeltaV`
+          - Get only
+          - Gets delta-V information about the current stage.
 
 .. attribute:: Stage:READY
 
@@ -173,3 +180,15 @@ Stage Structure
     :type: :struct:`Decoupler`
 
     Alias for :attr:`NEXTDECOUPLER<Stage:NEXTDECOUPLER>`
+
+.. attribute:: Stage:DELTAV
+
+    :type: :struct:`DeltaV`
+    :access: Get only
+
+    Returns delta-V information (see :struct:`DeltaV`) about the current stage.::
+
+        // These two lines would do the same thing:
+        SET DV TO STAGE:DELTAV.
+        SET DV TO SHIP:STAGEDELTAV(SHIP:STAGRENUM).
+

@@ -5,6 +5,7 @@ using kOS.Safe.Persistence;
 using UnityEngine;
 using UnityEngine.Networking;
 using kOS.Safe.Screen;
+using kOS.Safe.Encapsulation;
 using kOS.Module;
 using kOS.UserIO;
 using kOS.Safe.UserIO;
@@ -102,7 +103,6 @@ namespace kOS.Screen
         private Texture2D networkZigZagImage;
         private Texture2D brightnessButtonImage;
         private Texture2D fontHeightButtonImage;
-        private AudioSource beepSource;
         private int guiTerminalBeepsPending;
 
         private SharedObjects shared;
@@ -164,8 +164,6 @@ namespace kOS.Screen
             terminalFrameStyle = Create9SliceStyle(terminalFrameImage);
             terminalFrameActiveStyle = Create9SliceStyle(terminalFrameActiveImage);
 
-            LoadAudio();
-            
             tinyToggleStyle = new GUIStyle(HighLogic.Skin.toggle)
             {
                 fontSize = 10
@@ -216,21 +214,6 @@ namespace kOS.Screen
         public kOS.Safe.Sound.ISoundMaker GetSoundMaker()
         {
             return soundMaker;
-        }
-
-        private void LoadAudio()
-        {
-            // Deliberately not fixing the following deprecation warning for using WWW, because I want this
-            // codebase to be back-portable to older KSP versions for RO/RP-1 without too much hassle.  Eventually
-            // it might not work and we may be forced to change this, but the KSP1 lifecycle may be done
-            // by then, so I don't want to make the effort prematurely.  Fixing this requires a very ugly
-            // coroutine mess to load URLs the new way Unity wants you to do it.
-#pragma warning disable CS0618 // ^^^ see above comment about why this is disabled.
-            WWW beepURL = new WWW("file://" + root + "GameData/kOS/GFX/terminal-beep.wav");
-#pragma warning enable CS0618
-            AudioClip beepClip = beepURL.GetAudioClip();
-            beepSource = gameObject.AddComponent<AudioSource>();
-            beepSource.clip = beepClip;
         }
 
         public void OpenPopupEditor(Volume v, GlobalPath path)
@@ -342,8 +325,6 @@ namespace kOS.Screen
 
             GetFontIfChanged(true);
 
-            ProcessUnconsumedInput();
-
             if (isLocked) ProcessKeyEvents();
             if (FlightResultsDialog.isDisplaying) return;
             if (uiGloballyHidden)
@@ -379,6 +360,7 @@ namespace kOS.Screen
             GetNewestBuffer();
             TelnetOutputUpdate();
             ProcessTelnetInput(); // want to do this even when the terminal isn't actually displaying.
+            ProcessUnconsumedInput(); // Moved here from OnGUI because it needs to run even when the GUI terminal is closed.
             if (telnetsGotRepainted)
             {
                 // Move the beeps from the screenbuffer "queue" to my own local terminal "queue".
@@ -488,7 +470,7 @@ namespace kOS.Screen
                 // command sequences
                 if (e.keyCode == KeyCode.C && e.control) // Ctrl+C
                 {
-                    ProcessOneInputChar((char)UnicodeCommand.BREAK, null);
+                    ProcessOneInputChar((char)UnicodeCommand.BREAK, null, true, true);
                     consumeEvent = true;
                     return;
                 }
@@ -498,21 +480,21 @@ namespace kOS.Screen
                     (e.keyCode == KeyCode.D && e.control) // control-D to match the telnet experience
                    )
                 {
-                    ProcessOneInputChar((char)0x000d, null);
+                    ProcessOneInputChar((char)0x000d, null, true, true);
                     consumeEvent = true;
                     return;
                 }
                 
                 if (e.keyCode == KeyCode.A && e.control)
                 {
-                    ProcessOneInputChar((char)0x0001, null);
+                    ProcessOneInputChar((char)0x0001, null, true, true);
                     consumeEvent = true;
                     return;
                 }
                 
                 if (e.keyCode == KeyCode.E && e.control)
                 {
-                    ProcessOneInputChar((char)0x0005, null);
+                    ProcessOneInputChar((char)0x0005, null, true, true);
                     consumeEvent = true;
                     return;
                 }
@@ -523,7 +505,7 @@ namespace kOS.Screen
                     if (DebugInternational)
                         c = DebugInternationalMapping(c);
 #pragma warning restore CS0162
-                    ProcessOneInputChar(c, null);
+                    ProcessOneInputChar(c, null, true, true);
                     consumeEvent = true;
                     cursorBlinkTime = 0.0f; // Don't blink while the user is still actively typing.
                 }
@@ -532,19 +514,19 @@ namespace kOS.Screen
                     consumeEvent = true;
                     switch (e.keyCode)
                     {
-                        case KeyCode.Tab:          ProcessOneInputChar('\t', null);                                  break;
-                        case KeyCode.LeftArrow:    ProcessOneInputChar((char)UnicodeCommand.LEFTCURSORONE, null);    break;
-                        case KeyCode.RightArrow:   ProcessOneInputChar((char)UnicodeCommand.RIGHTCURSORONE, null);   break;
-                        case KeyCode.UpArrow:      ProcessOneInputChar((char)UnicodeCommand.UPCURSORONE, null);      break;
-                        case KeyCode.DownArrow:    ProcessOneInputChar((char)UnicodeCommand.DOWNCURSORONE, null);    break;
-                        case KeyCode.Home:         ProcessOneInputChar((char)UnicodeCommand.HOMECURSOR, null);       break;
-                        case KeyCode.End:          ProcessOneInputChar((char)UnicodeCommand.ENDCURSOR, null);        break;
-                        case KeyCode.PageUp:       ProcessOneInputChar((char)UnicodeCommand.PAGEUPCURSOR, null);     break;
-                        case KeyCode.PageDown:     ProcessOneInputChar((char)UnicodeCommand.PAGEDOWNCURSOR, null);   break;
-                        case KeyCode.Delete:       ProcessOneInputChar((char)UnicodeCommand.DELETERIGHT, null);      break;
-                        case KeyCode.Backspace:    ProcessOneInputChar((char)UnicodeCommand.DELETELEFT, null);       break;
+                        case KeyCode.Tab:          ProcessOneInputChar('\t', null, true, true);                                  break;
+                        case KeyCode.LeftArrow:    ProcessOneInputChar((char)UnicodeCommand.LEFTCURSORONE, null, true, true);    break;
+                        case KeyCode.RightArrow:   ProcessOneInputChar((char)UnicodeCommand.RIGHTCURSORONE, null, true, true);   break;
+                        case KeyCode.UpArrow:      ProcessOneInputChar((char)UnicodeCommand.UPCURSORONE, null, true, true);      break;
+                        case KeyCode.DownArrow:    ProcessOneInputChar((char)UnicodeCommand.DOWNCURSORONE, null, true, true);    break;
+                        case KeyCode.Home:         ProcessOneInputChar((char)UnicodeCommand.HOMECURSOR, null, true, true);       break;
+                        case KeyCode.End:          ProcessOneInputChar((char)UnicodeCommand.ENDCURSOR, null, true, true);        break;
+                        case KeyCode.PageUp:       ProcessOneInputChar((char)UnicodeCommand.PAGEUPCURSOR, null, true, true);     break;
+                        case KeyCode.PageDown:     ProcessOneInputChar((char)UnicodeCommand.PAGEDOWNCURSOR, null, true, true);   break;
+                        case KeyCode.Delete:       ProcessOneInputChar((char)UnicodeCommand.DELETERIGHT, null, true, true);      break;
+                        case KeyCode.Backspace:    ProcessOneInputChar((char)UnicodeCommand.DELETELEFT, null, true, true);       break;
                         case KeyCode.KeypadEnter:  // (deliberate fall through to next case)
-                        case KeyCode.Return:       ProcessOneInputChar((char)UnicodeCommand.STARTNEXTLINE, null);    break;
+                        case KeyCode.Return:       ProcessOneInputChar((char)UnicodeCommand.STARTNEXTLINE, null, true, true);    break;
                         
                         // More can be added to the list here to support things like F1, F2, etc.  But at the moment we don't use them yet.
                         
@@ -617,7 +599,7 @@ namespace kOS.Screen
                 {
                     while (telnet.InputWaiting())
                     {
-                        ProcessOneInputChar(telnet.ReadChar(), telnet);
+                        ProcessOneInputChar(telnet.ReadChar(), telnet, true, true);
                     }
                 }
             }
@@ -638,9 +620,14 @@ namespace kOS.Screen
         /// <param name="ch">The character, which might be a UnicodeCommand char</param>
         /// <param name="whichTelnet">If this came from a telnet session, which one did it come from?
         /// Set to null in order to say it wasn't from a telnet but was from the interactive GUI</param>
-        /// <param name="doQueuing">true if the keypress should get queued if we're not ready for it
+        /// <param name="allowQueue">true if the keypress should get queued if we're not ready for it
         /// right now.  If false, then the keypress will be ignored if we're not ready for it.</param>
-        public void ProcessOneInputChar(char ch, TelnetSingletonServer whichTelnet, bool doQueuing = true)
+        /// <param name="forceQueue">true if the keypress MUST get queued even if we are ready for it.
+        /// Use this for input that can jam in quickly faster than the interpeter could respond, to ensure it
+        /// doesn't get the order mixed up.  (I.e. use it for paste buffer dumps or telnet input, but not
+        /// live GUI typed stuff.)</param>
+        /// <returns>True if the input got consuemed or enqueued.  If the input was blocked and not ignored, it returns false.</returns>
+        public bool ProcessOneInputChar(char ch, TelnetSingletonServer whichTelnet, bool allowQueue = true, bool forceQueue = true)
         {
             // Weird exceptions for multi-char data combos that would have been begun on previous calls to this method:
             switch (inputExpected)
@@ -648,37 +635,40 @@ namespace kOS.Screen
                 case ExpectNextChar.RESIZEWIDTH:
                     pendingWidth = ch;
                     inputExpected = ExpectNextChar.RESIZEHEIGHT;
-                    return;
+                    return true;
                 case ExpectNextChar.RESIZEHEIGHT:
                     int height = ch;
                     shared.Screen.SetSize(height, pendingWidth);
                     inputExpected = ExpectNextChar.NORMAL;
-                    return;
+                    return true;
                 default:
                     break;
             }
 
             if (! IsSpecial(ch))
             {
-                 Type(ch, doQueuing);
+                 return Type(ch, allowQueue, forceQueue);
             }
             else
             {
                 switch(ch)
                 {
+                    // WARNING: CHARACTERS IN THIS SECTION ARE BYPASSING THE QUEUE.  BUT THEY ARE
+                    // WEIRD ASYNC THINGS THAT PROBABLY SHOULD:
+
                     // A few conversions from UnicodeCommand into those parts of ASCII that it 
                     // maps directly into nicely, otherwise just pass it through to SpecialKey():
 
                     case (char)UnicodeCommand.DELETELEFT:
                     case (char)8:
-                        Type((char)8, doQueuing);
+                        Type((char)8, allowQueue, forceQueue);
                         break;
                     case (char)UnicodeCommand.STARTNEXTLINE:
                     case '\r':
-                        Type('\r', doQueuing);
+                        Type('\r', allowQueue, forceQueue);
                         break;
                     case '\t':
-                        Type('\t', doQueuing);
+                        Type('\t', allowQueue, forceQueue);
                         break;
                     case (char)UnicodeCommand.RESIZESCREEN:
                         inputExpected = ExpectNextChar.RESIZEWIDTH;
@@ -709,52 +699,94 @@ namespace kOS.Screen
                     // Typical case is to just let SpecialKey do the work:
                     
                     default:
-                        SpecialKey(ch, doQueuing);
-                        break;
+                        return SpecialKey(ch, allowQueue, forceQueue);
                 }
+                return true;
             }
 
             // else ignore it - unimplemented char.
         }
 
-        void Type(char ch, bool doQueuing = true)
+        /// <summary>
+        /// Type a normal unicode char (not a magic control char) to the terminal,
+        /// or if the interpreter is busy queue it for later if flags allow.
+        /// </summary>
+        /// <param name="ch">char to type</param>
+        /// <param name="doQueuing">true if you want to queue the char when the interpreter isn't at the prompt
+        /// accepting input yet (i.e. the prev command is still running.) if false it will just do nothing in
+        /// that case.</param>
+        /// <param name="forceQueue">true if you want to queue the char even when the interpreter could have accepted
+        /// it.  (never have this true if doQueueing is false.)</param>
+        /// <returns>true if the char got either used or queued.  False means calling the method had no effect.
+        /// This can only return false when doQueuing is false.</returns>
+        bool Type(char ch, bool doQueuing = true, bool forceQueue = true)
         {
+            bool accepted = false;
             if (shared != null)
             {
-                if (shared.Interpreter != null && shared.Interpreter.IsWaitingForCommand())
+                if ((!forceQueue) && shared.Interpreter != null && shared.Interpreter.IsWaitingForCommand())
                 {
                     shared.Interpreter.Type(ch);
+                    accepted = true;
                 }
                 else if (doQueuing)
                 {
                     shared.Screen.CharInputQueue.Enqueue(ch);
+                    accepted = true;
                 }
                 if (IsOpen && keyClickEnabled && doQueuing)
                     shared.SoundMaker.BeginFileSound("click");
             }
+            return accepted;
         }
 
-        void SpecialKey(char key, bool doQueuing = true)
+        /// <summary>
+        /// Type a special control char to the terminal,
+        /// or if the interpreter is busy queue it for later if flags allow.
+        /// </summary>
+        /// <param name="ch">char to type</param>
+        /// <param name="doQueuing">true if you want to queue the char when the interpreter isn't at the prompt
+        /// accepting input yet (i.e. the prev command is still running.) if false it will just do nothing in
+        /// that case. (*EXCEPTION* The BREAK char will bypass the queue and happen right away.)</param>
+        /// <param name="forceQueue">true if you want to queue the char even when the interpreter could have accepted
+        /// it.  (never have this true if doQueueing is false.)</param>
+        /// <returns>true if the char got either used or queued.  False means calling the method had no effect.
+        /// This can only return false when doQueuing is false.</returns>
+        bool SpecialKey(char key, bool doQueuing = true, bool forceQueue = true)
         {
+            bool accepted = false;
+
+            // Force async out of order processing right now for interrupt keys:
+            bool rudeQueueSkipping = (key == (char)UnicodeCommand.BREAK);
+            if (rudeQueueSkipping)
+            {
+                forceQueue = false;
+                WipeAllTypeAhead();
+            }
+
             if (shared != null)
             {
                 bool wasUsed = false;
-                
-                if (shared.Interpreter != null && 
-                    (shared.Interpreter.IsWaitingForCommand() || (key == (char)UnicodeCommand.BREAK)))
+
+                if ((!forceQueue) &&
+                    shared.Interpreter != null && 
+                    (shared.Interpreter.IsWaitingForCommand() || rudeQueueSkipping))
                 {
                     wasUsed = shared.Interpreter.SpecialKey(key);
+                    accepted = true;
                 }
                 else if (doQueuing)
                 {
                     shared.Screen.CharInputQueue.Enqueue(key);
                     wasUsed = true;
+                    accepted = true;
                 }
                 if (IsOpen && keyClickEnabled && wasUsed && doQueuing)
                     shared.SoundMaker.BeginFileSound("click");
             }
+            return accepted;
         }
-        
+
         /// <summary>
         /// When the input queue is not empty and the program or command is done such that
         /// the input cursor is now all the way back to the interpreter awaiting new input,
@@ -778,10 +810,24 @@ namespace kOS.Screen
                     // that logic, we want to avoid an infinite loop here
                     // (which could happen if we kept re-queuing the
                     // chars every time we processed one in this loop.)
-                    char key = q.Dequeue();
-                    ProcessOneInputChar(key, null, false);
+                    char key = q.Peek();
+                    bool wasAccepted = ProcessOneInputChar(key, null, false, false);
+                    if (wasAccepted)
+                        q.Dequeue();
+                    else
+                        break; // do NOT consume any more of the queue until it's accepting input again in a future pass.
                 }
             }
+        }
+
+        /// <summary>
+        /// Throws away everything in the typeahead buffer and any state vars from multi-char combo command
+        /// sequences we might be in the middle of.  Used when you want to fully flush and start input over.
+        /// </summary>
+        void WipeAllTypeAhead()
+        {
+            shared.Screen.CharInputQueue.Clear();
+            inputExpected = ExpectNextChar.NORMAL;
         }
         
         /// <summary>
@@ -891,9 +937,9 @@ namespace kOS.Screen
             GUI.Label(fontHeightLabelRect,charHeight+"px", customSkin.label);
             postponedCharPixelHeight = -1; // -1 means "font size buttons weren't clicked on this pass".
             if (GUI.Button(fontHeightLessButtonRect, "-", customSkin.button))
-                postponedCharPixelHeight = Math.Max(4, charHeight - 2);
+                postponedCharPixelHeight = Math.Max(TerminalStruct.MINCHARPIXELS, charHeight - 2);
             if (GUI.Button(fontHeightMoreButtonRect, "+", customSkin.button))
-                postponedCharPixelHeight = Math.Min(24, charHeight + 2);
+                postponedCharPixelHeight = Math.Min(TerminalStruct.MAXCHARPIXELS, charHeight + 2);
 
             fontGotResized = false;
             if (formerCharPixelWidth != screen.CharacterPixelWidth || formerCharPixelHeight != screen.CharacterPixelHeight)

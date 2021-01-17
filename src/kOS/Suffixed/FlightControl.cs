@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using kOS.AddOns.RemoteTech;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
 using kOS.Utilities;
 using Math = System.Math;
@@ -31,18 +32,14 @@ namespace kOS.Suffixed
         private float wheelThrottle;
         private float wheelThrottleTrim;
         private float mainThrottle;
-        private readonly Flushable<bool> neutral;
-        private readonly Flushable<bool> killRotation;
-        private readonly Flushable<bool> resetTrim;
         private bool bound;
+        private Flushable<bool> neutral;
         private readonly List<string> floatSuffixes;
         private readonly List<string> vectorSuffixes;
 
         public FlightControl(Vessel vessel)
         {
             neutral = new Flushable<bool>(); 
-            killRotation = new Flushable<bool>(); 
-            resetTrim = new Flushable<bool>(); 
             bound = false;
             Vessel = vessel;
 
@@ -54,25 +51,12 @@ namespace kOS.Suffixed
 
         public Vessel Vessel { get; private set; }
 
+        public bool FightsWithSas { get { return false; } }
+
         public override bool SetSuffix(string suffixName, object value, bool failOkay = false)
         {
             float floatValue = 0;
             Vector vectorValue = null;
-
-            if (CheckNeutral(suffixName, value))
-            {
-                return true;
-            }
-
-            if (CheckKillRotation(suffixName, value))
-            {
-                return true;
-            }
-
-            if (CheckResetTrim(suffixName, value))
-            {
-                return true;
-            }
 
             if (floatSuffixes.Contains(suffixName))
             {
@@ -99,20 +83,26 @@ namespace kOS.Suffixed
         private void InitializePilotSuffixes()
         {
             AddSuffix(new[] { "PILOTYAW" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.yaw)));
-            AddSuffix(new[] { "PILOTYAWTRIM" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.yawTrim)));
+            AddSuffix(new[] { "PILOTYAWTRIM" }, new SetSuffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.yawTrim),
+                v => WritePilot(ref FlightInputHandler.state.yawTrim, v)));
             AddSuffix(new[] { "PILOTROLL" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.roll)));
-            AddSuffix(new[] { "PILOTROLLTRIM" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.rollTrim)));
+            AddSuffix(new[] { "PILOTROLLTRIM" }, new SetSuffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.rollTrim),
+                                v => WritePilot(ref FlightInputHandler.state.rollTrim, v)));
             AddSuffix(new[] { "PILOTPITCH" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.pitch)));
-            AddSuffix(new[] { "PILOTPITCHTRIM" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.pitchTrim)));
+            AddSuffix(new[] { "PILOTPITCHTRIM" }, new SetSuffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.pitchTrim),
+                                v => WritePilot(ref FlightInputHandler.state.pitchTrim, v)));
 
             AddSuffix(new[] { "PILOTFORE" }, new Suffix<ScalarValue>(() => Invert(ReadPilot(ref FlightInputHandler.state.Z))));
             AddSuffix(new[] { "PILOTSTARBOARD" }, new Suffix<ScalarValue>(() => Invert(ReadPilot(ref FlightInputHandler.state.X))));
-            
             AddSuffix(new[] { "PILOTTOP" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.Y)));
-            AddSuffix(new[] { "PILOTWHEELTHROTTLE" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.wheelThrottle)));
-            AddSuffix(new[] { "PILOTWHEELTHROTTLETRIM" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.wheelThrottleTrim)));
+
+            AddSuffix(new[] { "PILOTWHEELTHROTTLE" }, new SetSuffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.wheelThrottle),
+                                                                v => WritePilot(ref FlightInputHandler.state.wheelThrottle, v)));
+            AddSuffix(new[] { "PILOTWHEELTHROTTLETRIM" }, new SetSuffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.wheelThrottleTrim),
+                                v => WritePilot(ref FlightInputHandler.state.wheelThrottleTrim, v)));
             AddSuffix(new[] { "PILOTWHEELSTEER" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.wheelSteer)));
-            AddSuffix(new[] { "PILOTWHEELSTEERTRIM" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.wheelSteerTrim)));
+            AddSuffix(new[] { "PILOTWHEELSTEERTRIM" }, new SetSuffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.wheelSteerTrim),
+                                v => WritePilot(ref FlightInputHandler.state.wheelSteerTrim, v)));
             AddSuffix(new[] { "PILOTNEUTRAL" }, new Suffix<BooleanValue>(() => Vessel == FlightGlobals.ActiveVessel && FlightInputHandler.state.isNeutral));
 
             AddSuffix(new[] { "PILOTROTATION" }, new Suffix<Vector>(GetPilotRotation));
@@ -131,6 +121,12 @@ namespace kOS.Suffixed
         private float ReadPilot(ref float flightInputValue)
         {
             return Vessel == FlightGlobals.ActiveVessel ? flightInputValue : 0f;
+        }
+
+        private void WritePilot(ref float flightInputValue, float newVal)
+        {
+            if (FlightGlobals.ActiveVessel)
+                flightInputValue = newVal;
         }
 
         private void InitializeSuffixes()
@@ -162,8 +158,7 @@ namespace kOS.Suffixed
 
             //OTHER
             AddSuffix(new[] { "BOUND" }, new SetSuffix<BooleanValue>(() => bound, value => bound = value));
-            AddSuffix(new[] { "NEUTRAL" }, new Suffix<BooleanValue>(() => neutral.Value));
-
+            AddSuffix(new[] { "NEUTRAL", "NEUTRALIZE" }, new SetSuffix<BooleanValue>(IsNeutral, v => {if (v) Neutralize();}));
         }
 
         private Vector GetPilotTranslation()
@@ -258,49 +253,36 @@ namespace kOS.Suffixed
             return true;
         }
 
-        private bool CheckKillRotation(string suffixName, object value)
+        private void Neutralize()
         {
-            if (suffixName.Equals("KILLROTATION", StringComparison.OrdinalIgnoreCase))
-            {
-                killRotation.Value = bool.Parse(value.ToString());
-                return true;
-            }
-            killRotation.Value = false;
-            return false;
-        }
-        private bool CheckResetTrim(string suffixName, object value)
-        {
-            if (suffixName.Equals("RESETTRIM", StringComparison.OrdinalIgnoreCase))
-            {
-                resetTrim.Value = bool.Parse(value.ToString());
-                return true;
-            }
-            resetTrim.Value = false;
-            return false;
-        }
-
-        private bool CheckNeutral(string suffix, object value)
-        {
-            if (suffix.Equals("NEUTRALIZE", StringComparison.OrdinalIgnoreCase))
-            {
-                ResetControls();
-                neutral.Value = bool.Parse(value.ToString());
-                return true;
-            }
-            neutral.Value = false;
-            return false;
+            ResetControls();
         }
 
         private void ResetControls()
         {
             yaw = default(float);
+            yawTrim = default(float);
             pitch = default(float);
+            pitchTrim = default(float);
             roll = default(float);
+            rollTrim = default(float);
             fore = default(float);
             starboard = default(float);
             top = default(float);
             wheelSteer = default(float);
+            wheelSteerTrim = default(float);
             wheelThrottle = default(float);
+            wheelThrottleTrim = default(float);
+            neutral.Value = true;
+            neutral.SetStale();
+        }
+
+        private BooleanValue IsNeutral()
+        {
+            return (yaw == yawTrim && pitch == pitchTrim && roll == rollTrim &&
+                fore == 0 && starboard == 0 && top == 0 &&
+                wheelSteer == wheelSteerTrim && wheelThrottle == wheelSteerTrim);
+
         }
 
         private void OnFlyByWire(FlightCtrlState st)
@@ -310,14 +292,7 @@ namespace kOS.Suffixed
                 if (neutral.FlushValue)
                 {
                     st.Neutralize();
-                }
-            }
-
-            if (resetTrim.IsStale)
-            {
-                if (resetTrim.FlushValue)
-                {
-                    st.ResetTrim();
+                    neutral.Value = false;
                 }
             }
 
@@ -333,7 +308,6 @@ namespace kOS.Suffixed
             if(Math.Abs(yawTrim) > SETTING_EPILSON) st.yawTrim = yawTrim;
             if(Math.Abs(pitchTrim) > SETTING_EPILSON) st.pitchTrim = pitchTrim;
             if(Math.Abs(rollTrim) > SETTING_EPILSON) st.rollTrim = rollTrim;
-
             if(Math.Abs(starboard) > SETTING_EPILSON) st.X = Invert(starboard);
             if(Math.Abs(top) > SETTING_EPILSON) st.Y = top;
             if(Math.Abs(fore) > SETTING_EPILSON) st.Z = Invert(fore);
@@ -351,7 +325,7 @@ namespace kOS.Suffixed
         {
             get
             {
-                return !neutral.Value;
+                return !IsNeutral();
             }
         }
 
@@ -398,6 +372,11 @@ namespace kOS.Suffixed
             OnFlyByWire(c);
         }
 
+        bool IFlightControlParameter.SuppressAutopilot(FlightCtrlState c)
+        {
+            return !(IsNeutral());
+        }
+
         void IFlightControlParameter.EnableControl(SharedObjects shared)
         {
             // No need to enable control, it will automatically enable based on setting values
@@ -405,14 +384,12 @@ namespace kOS.Suffixed
 
         void IFlightControlParameter.DisableControl(SharedObjects shared)
         {
-            // We'll just neutralize here
-            neutral.Value = true;
+            Neutralize();
         }
 
         void IFlightControlParameter.DisableControl()
         {
-            // We'll just neutralize here
-            neutral.Value = true;
+            Neutralize();
         }
 
         void IFlightControlParameter.CopyFrom(IFlightControlParameter origin)

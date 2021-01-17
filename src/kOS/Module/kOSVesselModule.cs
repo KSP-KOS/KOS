@@ -312,6 +312,8 @@ namespace kOS.Module
                 TimingManager.FixedUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, resetControllable);
                 workAroundEventsEnabled = false;
             }
+            AutopilotMsgManager.Instance.TurnOffSuppressMessage(this);
+            AutopilotMsgManager.Instance.TurnOffSasMessage(this);
         }
 
         #region Hack to fix "Require Signal for Control"
@@ -399,6 +401,11 @@ namespace kOS.Module
             if (RP0Lock != 0)
                 return;
 
+            bool isSuppressing = SafeHouse.Config.SuppressAutopilot;
+
+            AutopilotMsgManager.Instance.TurnOffSuppressMessage(this);
+            AutopilotMsgManager.Instance.TurnOffSasMessage(this);
+
             if (Vessel != null)
             {
                 if (childParts.Count > 0)
@@ -416,7 +423,18 @@ namespace kOS.Module
                                     parameter.GetShared().Vessel.id, Vessel.id));
                                 foundWrongVesselAutopilot = true;
                             }
-                            parameter.UpdateAutopilot(c);
+                            if (isSuppressing)
+                            {
+                                if (parameter.SuppressAutopilot(c))
+                                    AutopilotMsgManager.Instance.TurnOnSuppressMessage(this);
+                            }
+                            else
+                            {
+                                parameter.UpdateAutopilot(c);
+
+                                if (parameter.FightsWithSas && vessel.ActionGroups[KSPActionGroup.SAS])
+                                    AutopilotMsgManager.Instance.TurnOnSasMessage(this);
+                            }
                         }
                     }
                 }

@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Utilities;
 using System;
@@ -28,7 +28,7 @@ namespace kOS.AddOns.KerbalAlarmClock
             AddSuffix("ID", new Suffix<StringValue>(() => alarm.ID));
             AddSuffix("NAME", new SetSuffix<StringValue>(() => alarm.Name, value => alarm.Name = value));
 
-            AddSuffix("NOTES", new SetSuffix<StringValue>(() => alarm.Name, value => alarm.Name = value));
+            AddSuffix("NOTES", new SetSuffix<StringValue>(() => alarm.Notes, value => alarm.Notes = value));
 
             AddSuffix("ACTION", new SetSuffix<StringValue>(GetAlarmAction, SetAlarmAction));
 
@@ -45,6 +45,15 @@ namespace kOS.AddOns.KerbalAlarmClock
 
             AddSuffix("ORIGINBODY", new SetSuffix<StringValue>(() => alarm.XferOriginBodyName, value => alarm.XferOriginBodyName = value));
             AddSuffix("TARGETBODY", new SetSuffix<StringValue>(() => alarm.XferTargetBodyName, value => alarm.XferTargetBodyName = value));
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0} Alarm at {1}: {2}{3}",
+                alarm.AlarmType.ToString(),
+                KSPUtil.dateTimeFormatter.PrintTimeStamp(alarm.AlarmTime, true, true),
+                alarm.Name,
+                (alarm.Notes != null && alarm.Notes.Length > 0) ? ("\n" + alarm.Notes ) : "" );
         }
 
         private ScalarValue GetTimeToAlarm()
