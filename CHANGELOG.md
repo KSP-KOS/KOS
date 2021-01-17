@@ -1,6 +1,104 @@
 kOS Mod Changelog
 =================
 
+# v1.3.0.0 It's been a year
+
+There's a lot of changes over the last year and although there
+isn't a large difference right now it is still worth making
+a release anyway to catch up on the year of work.
+
+
+### BREAKING CHANGES
+
+- Temperature tolerance for the kOS parts was way too high, making
+  them effective heat shields when they shouldn't be. If you had been
+  taking advantage of this before that might not work anymore.
+- CREATEORBIT() used to take mean anomaly at epoch as a value in
+  radians, which didn't match how everything else in kOS works.
+  It is now expecting it in degrees as described in BUG FIXES
+  below.
+- If you ever happend to have a string literal with a backslash
+  followed by a quote mark (``\"``) that has now become a special
+  escaped quote char and is no longer literally a backslash and
+  quote mark.
+
+### NEW FEATURES
+
+- New suffixes for the special case where a Vessel is really an
+  asteroid. (Thanks JonnyOThan)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2736)
+- Ability to read the stock game's Delta-V readouts from the staging
+  list. (Thanks ThunderousEcho)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2719)
+- New subtype for ``Part`` - the ``RCS`` part type, with information
+  about how its nozzles are aimed, what fuel it uses, the ISP,
+  max thrust, etc. (Thanks RCrockford)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2678)
+- Can now use ``\"`` in string literals for embedded quote marks.
+  Also can prepend the string with ``@`` to turn this off and keep
+  it literal. (thanks thexa4)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2673/)
+- New Engine value suffixes ``:DENSITY`` and ``:CONSUMEDRESOURCES``
+  give more information about fuels the engine uses.  Mostly
+  relevant when RealFuels mod is installed so every engine is a
+  bit different. (Thanks RCrockford)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2662/files)
+- Can CreateOrbit() from position and velocity (before
+  it only worked with Keplerian parameters).
+  (Thanks ThunderousEcho)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2650/files)
+
+### BUG FIXES
+
+- The ConnectionManager dialog box at the start of a career was
+  repositioned to where it is unlikely to appear secretly hidden
+  behind other mod's dialog boxes.  (Other mods putting their)
+  dialogs in front of kOS's and not blocking clickthroughs made
+  some users accidentally pick a ConnectionManager and dismiss
+  the dialog before they ever saw it.)
+  [pull request](https://github.com/KSP-KOS/KOS/issues/2733)
+- UI sound effects from kOS (error beep, SKID sounds) no longer
+  have an origin point in 3-D space inside the part.  They are
+  now "ambient".  This is to get sound mods to stop dampening
+  the volume the same way they'd dampen sounds from engine
+  parts, etc.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2717)
+- Parts no longer have excessive temperature tolerance.
+  (Thanks robopitek)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2699)
+- CREATEORBIT() now takes mean anomaly at epoch as degrees.  It
+  was in radians before which didn't match how other things worked.
+  (Thanks vzynev)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2689)
+- Better fuel stability (ullage in RealFuels) calculation.
+  (thanks RCrockford)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2677)
+- Documentation fixes:
+  [pull request 2675](https://github.com/KSP-KOS/KOS/pull/2675)
+  [pull request 2680](https://github.com/KSP-KOS/KOS/pull/2680)
+  [pull request 2707](https://github.com/KSP-KOS/KOS/pull/2707)
+  [pull request 2712](https://github.com/KSP-KOS/KOS/pull/2712)
+  [pull request 2724](https://github.com/KSP-KOS/KOS/pull/2724)
+  [pull request]()
+  [pull request]()
+  [pull request]()
+  [pull request]()
+- kOS can now handle KSP's technique of having multiple KSPfields
+  of the same name that resolve the name clash by only having one
+  visible at a time.  KSP started doing this on a few fields
+  about a year ago and caused bugs like "authority limiter"
+  not working. (https://github.com/KSP-KOS/KOS/issues/2666)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2667)
+- kOS no longer allows ModuleManager configs to give it negative mass.
+  (Antimatter summons the Kraken.)
+  [pull reqeust](https://github.com/KSP-KOS/KOS/pull/2661/files)
+- ETA:APOAPSIS no longer returns Infinity on hyperbolic
+  orbits (While infinity is a correct answer, kOS scripts
+  would crash when they get infinity on the stack. So now
+  it says zero instead).
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2646)
+
+
 # v1.2.1 Pathsep fix
 
 v1.2'S DDS fix had a backslash path separator that broke it on UNIX
