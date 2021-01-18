@@ -149,12 +149,12 @@ namespace kOS.Suffixed
             return new OrbitableVelocity(Body, Shared);
         }
 
-        public override Vector GetPositionAtUT(TimeSpan timeStamp)
+        public override Vector GetPositionAtUT(TimeStamp timeStamp)
         {
             return new Vector(Body.getPositionAtUT(timeStamp.ToUnixStyleTime()) - Shared.Vessel.CoMD);
         }
 
-        public override OrbitableVelocity GetVelocitiesAtUT(TimeSpan timeStamp)
+        public override OrbitableVelocity GetVelocitiesAtUT(TimeStamp timeStamp)
         {
             CelestialBody parent = Body.KOSExtensionGetParentBody();
             if (parent == null) // only if Body is Sun and therefore has no parent, then do more complex work instead because KSP didn't provide a way itself

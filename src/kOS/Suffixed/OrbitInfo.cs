@@ -59,8 +59,8 @@ namespace kOS.Suffixed
                                                                    ));
             AddSuffix("EPOCH", new Suffix<ScalarValue>(() => orbit.epoch));
             AddSuffix("TRANSITION", new Suffix<StringValue>(() => orbit.patchEndTransition.ToString()));
-            AddSuffix("POSITION", new Suffix<Vector>(() => GetPositionAtUT( new TimeSpan(Planetarium.GetUniversalTime() ) )));
-            AddSuffix("VELOCITY", new Suffix<OrbitableVelocity>(() => GetVelocityAtUT( new TimeSpan(Planetarium.GetUniversalTime() ) )));
+            AddSuffix("POSITION", new Suffix<Vector>(() => GetPositionAtUT( new TimeStamp(Planetarium.GetUniversalTime() ) )));
+            AddSuffix("VELOCITY", new Suffix<OrbitableVelocity>(() => GetVelocityAtUT( new TimeStamp(Planetarium.GetUniversalTime() ) )));
             AddSuffix("NEXTPATCH", new Suffix<OrbitInfo>(GetNextPatch));
             AddSuffix("HASNEXTPATCH", new Suffix<BooleanValue>(GetHasNextPatch));
             AddSuffix("NEXTPATCHETA", new Suffix<ScalarValue>(() => GetETA().GetEndTransition()));  // deprecated alias for :ETA:TRANSITION
@@ -94,7 +94,7 @@ namespace kOS.Suffixed
         /// </summary>
         /// <param name="timeStamp">The universal time to query for</param>
         /// <returns></returns>
-        public Vector GetPositionAtUT( TimeSpan timeStamp )
+        public Vector GetPositionAtUT( TimeStamp timeStamp )
         {
             return new Vector( orbit.getPositionAtUT( timeStamp.ToUnixStyleTime() ) - Shared.Vessel.CoMD );
         }
@@ -107,7 +107,7 @@ namespace kOS.Suffixed
         /// </summary>
         /// <param name="timeStamp">The universal time to query for</param>
         /// <returns></returns>
-        public OrbitableVelocity GetVelocityAtUT( TimeSpan timeStamp )
+        public OrbitableVelocity GetVelocityAtUT( TimeStamp timeStamp )
         {
             var orbVel = new Vector( orbit.getOrbitalVelocityAtUT( timeStamp.ToUnixStyleTime() ) );
             // For some weird reason orbit returns velocities with Y and Z swapped, so flip them back:

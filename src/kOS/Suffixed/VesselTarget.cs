@@ -80,7 +80,7 @@ namespace kOS.Suffixed
         /// <param name="timeStamp">The time to predict for.  Although the intention is to
         ///   predict for a future time, it could be used to predict for a past time.</param>
         /// <returns>The position as a user-readable Vector in Shared.Vessel-origin raw rotation coordinates.</returns>
-        public override Vector GetPositionAtUT(TimeSpan timeStamp)
+        public override Vector GetPositionAtUT(TimeStamp timeStamp)
         {
             string blockingTech;
             if (!Career.CanMakeNodes(out blockingTech))
@@ -118,7 +118,7 @@ namespace kOS.Suffixed
         /// <param name="timeStamp">The time to predict for.  Although the intention is to
         ///   predict for a future time, it could be used to predict for a past time.</param>
         /// <returns>The orbit/surface velocity pair as a user-readable Vector in raw rotation coordinates.</returns>
-        public override OrbitableVelocity GetVelocitiesAtUT(TimeSpan timeStamp)
+        public override OrbitableVelocity GetVelocitiesAtUT(TimeStamp timeStamp)
         {
             string blockingTech;
             if (!Career.CanMakeNodes(out blockingTech))

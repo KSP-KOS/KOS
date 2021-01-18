@@ -379,7 +379,7 @@ namespace kOS.Function
             int argCount = CountRemainingArgs(shared);
 
             // If zero args, then the default is to assume you want to
-            // make a Timespan of "now":
+            // make a TimeStamp of "now":
             if (argCount == 0)
             {
                 ReturnValue = new kOS.Suffixed.TimeStamp(Planetarium.GetUniversalTime());
@@ -667,7 +667,7 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            var when = GetTimeSpan(PopValueAssert(shared));
+            var when = GetTimeStamp(PopValueAssert(shared));
             var what = GetOrbitable(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
 
@@ -680,7 +680,7 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            var when = GetTimeSpan(PopValueAssert(shared));
+            var when = GetTimeStamp(PopValueAssert(shared));
             var what = GetOrbitable(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
 
@@ -706,7 +706,7 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            var when = GetTimeSpan(PopValueAssert(shared));
+            var when = GetTimeStamp(PopValueAssert(shared));
             var what = GetOrbitable(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
 
