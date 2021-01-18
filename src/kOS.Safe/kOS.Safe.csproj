@@ -79,7 +79,6 @@
     <Compile Include="Exceptions\KOSNumberParseException.cs" />
     <Compile Include="Exceptions\KOSObsoletionException.cs" />
     <Compile Include="Exceptions\KOSPatchesObsoletionException.cs" />
-    <Compile Include="Exceptions\KOSTimeStampTimeSpanException.cs" />
     <Compile Include="Exceptions\KOSVolumeOutOfRangeException.cs" />
     <Compile Include="Exceptions\KOSYouShouldNeverSeeThisException.cs" />
     <Compile Include="Compilation\KS\BreakInfo.cs" />

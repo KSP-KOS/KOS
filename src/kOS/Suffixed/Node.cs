@@ -38,7 +38,7 @@ namespace kOS.Suffixed
         {
         }
 
-            public Node(kOS.Suffixed.TimeSpan span, double radialOut, double normal, double prograde, SharedObjects sharedObj)
+        public Node(kOS.Suffixed.TimeSpan span, double radialOut, double normal, double prograde, SharedObjects sharedObj)
             : this(sharedObj)
         {
             this.time = Planetarium.GetUniversalTime() + span.ToUnixStyleTime();

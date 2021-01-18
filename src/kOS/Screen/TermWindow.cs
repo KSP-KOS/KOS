@@ -80,9 +80,9 @@ namespace kOS.Screen
             
         private bool isLocked;
         /// <summary>How long blinks should last for, for various blinking needs</summary>
-        private readonly TimeSpan blinkDuration = TimeSpan.FromMilliseconds(150);
+        private readonly TimeSpan blinkDuration = System.TimeSpan.FromMilliseconds(150);
         /// <summary>How long to pad between consecutive blinks to ensure they are visibly detectable as distinct blinks.</summary>
-        private readonly TimeSpan blinkCoolDownDuration = TimeSpan.FromMilliseconds(50);
+        private readonly TimeSpan blinkCoolDownDuration = System.TimeSpan.FromMilliseconds(50);
         /// <summary>At what milliseconds-from-epoch timestamp will the current blink be over.</summary>
         private DateTime blinkEndTime;
         /// <summary>text color that changes depending on if the computer is on</summary>
@@ -438,7 +438,7 @@ namespace kOS.Screen
             
             // Throttle it back so the faster Update() rates don't cause pointlessly repeated work:
             // Needs to be no faster than the fastest theoretical typist or script might change the view.
-            if (newTime > lastTelnetIncrementalRepaint + TimeSpan.FromMilliseconds(50)) // = 1/20th second.
+            if (newTime > lastTelnetIncrementalRepaint + System.TimeSpan.FromMilliseconds(50)) // = 1/20th second.
             {
                 lastTelnetIncrementalRepaint = newTime;
                 foreach (TelnetSingletonServer telnet in telnets)
@@ -844,7 +844,7 @@ namespace kOS.Screen
             
             // Throttle it back so the faster Update() rates don't cause pointlessly repeated work:
             // Needs to be no faster than the fastest theoretical typist or script might change the view.
-            if (newTime > lastBufferGet + TimeSpan.FromMilliseconds(50)) // = 1/20th second.
+            if (newTime > lastBufferGet + System.TimeSpan.FromMilliseconds(50)) // = 1/20th second.
             {
                 mostRecentScreen = new ScreenSnapShot(shared.Screen);
                 lastBufferGet = newTime;
