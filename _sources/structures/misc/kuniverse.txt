@@ -323,8 +323,9 @@ KUniverse 4th wall methods
     have passed (25 x 60 x 60).  It doesn't care how that translates into
     minutes, hours, days, and years until showing it on screen to the player.)
 
-    This setting also affects how values from :struct:Timespan calculate
-    the ``:hours``, ``:days``, and ``:years`` suffixes.
+    This setting also affects how values from :struct:`TimeSpan` and
+    :struct:`TimeStamp` calculate the ``:hours``, ``:days``, and ``:years``
+    suffixes.
 
     Note that this setting is not settable.  This decision was made because
     the main stock KSP game only ever changes the setting on the main
