@@ -236,7 +236,6 @@
     <Compile Include="Utilities\MovingAverage.cs" />
     <Compile Include="Utilities\ReflectUtil.cs" />
     <Compile Include="Utilities\SafeHouse.cs" />
-    <Compile Include="Utilities\Flushable.cs" />
     <Compile Include="Utilities\kOSKeys.cs" />
     <Compile Include="Utilities\kosMath.cs" />
     <Compile Include="Utilities\TickGen.cs" />

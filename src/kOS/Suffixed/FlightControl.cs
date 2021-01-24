@@ -33,13 +33,11 @@ namespace kOS.Suffixed
         private float wheelThrottleTrim;
         private float mainThrottle;
         private bool bound;
-        private Flushable<bool> neutral;
         private readonly List<string> floatSuffixes;
         private readonly List<string> vectorSuffixes;
 
         public FlightControl(Vessel vessel)
         {
-            neutral = new Flushable<bool>(); 
             bound = false;
             Vessel = vessel;
 
@@ -273,8 +271,6 @@ namespace kOS.Suffixed
             wheelSteerTrim = default(float);
             wheelThrottle = default(float);
             wheelThrottleTrim = default(float);
-            neutral.Value = true;
-            neutral.SetStale();
         }
 
         private BooleanValue IsNeutral()
@@ -282,20 +278,10 @@ namespace kOS.Suffixed
             return (yaw == yawTrim && pitch == pitchTrim && roll == rollTrim &&
                 fore == 0 && starboard == 0 && top == 0 &&
                 wheelSteer == wheelSteerTrim && wheelThrottle == wheelSteerTrim);
-
         }
 
         private void OnFlyByWire(FlightCtrlState st)
         {
-            if (neutral.IsStale)
-            {
-                if (neutral.FlushValue)
-                {
-                    st.Neutralize();
-                    neutral.Value = false;
-                }
-            }
-
             PushNewSetting(ref st);
         }
 

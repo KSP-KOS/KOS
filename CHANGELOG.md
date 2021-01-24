@@ -1,6 +1,30 @@
 kOS Mod Changelog
 =================
 
+# v1.3.2.0 - Don't Steer Me wronger
+
+A quick patch to v1.3.0.0 that fixes issue #2857 that would
+zero controls for just a brief single physics frame if
+raw control neutralize had been previously used or if a
+reboot had occurred while raw controls were in use.  Most
+players won't notice a single physics frame of zeroed
+controls, but if you're using realism mods with limited
+engine ignitions, it would unfairly consume an engine
+ignition when the throttle zeroed for an instant. (Which
+was disasterous for those engines that only get one
+ignition.)
+
+Normally one bug fix wouldn't warrant a release, but this
+bug was caused by changes in v1.3.0.0, and the consumed
+ignition was unfair.
+ 
+# v1.3.1.0 - Don't Steer Me Wrong, this time
+
+A quick patch to v1.3.0.0 that fixed issue #2850 where
+one or two places in the code still used TimeSpan where
+they were supposed to have been changed to use TimeStamp.
+
+
 # v1.3.0.0 - Don't Steer Me Wrong
 
 There's a lot of small changes over the last year that have added
