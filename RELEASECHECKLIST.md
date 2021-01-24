@@ -5,11 +5,12 @@ older version of KSP instead of the most recent version.  Please
 note where it says "(*backport*)" below if you are doing a backport.
 
 ### Pre-Build
-- [ ] Update AssemblyInfo for kOS project
-- [ ] Update AssemblyInfo for kOS.Safe project
-- [ ] Update AssemblyInfo for kOS.Safe.Test project
+- [ ] Assign the new kOS version number to `AssemblyVersion` and `AssemblyFileVersion` in these C# files:
+  - [ ] In `src/kOS/Properties/AssemblyInfo.cs`
+  - [ ] In `src/kOS.Safe/Properties/AssemblyInfo.cs`
+  - [ ] In `src/kOS.Safe.Test/Properties/AssemblyInfo.cs`
 - [ ] Update `Resources\GameData\kOS\kOS.version`
-- [ ] Update `CHANGELOG.MD`
+- [ ] Update `CHANGELOG.MD``
 - [ ] If this is a normal release for the most recent KSP version supported:
   - [ ] Update `doc\source\conf.py`
   - [ ] Update `doc\source\changes.rst`
