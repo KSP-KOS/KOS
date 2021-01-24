@@ -19,7 +19,8 @@ note where it says "(*backport*)" below if you are doing a backport.
   - [ ] Above changes merged into `backport-for-KSPversion.number.here` branch on repo instead of into `develop` branch.
 
 ### Build
-- [ ] Build kOS solution in release mode
+- [ ] Configure build for "Release" mode not Debug
+- [ ] Fully rebuild kOS solution (clean, then build) in release mode
 - [ ] Run all unit tests
 - [ ] Ensure that all required resources are in place (module manager) (*backport* : Note if this is a backport you may need to use an older modulemanager DLL here.)
 - [ ] Create a ZIP file that has only the `GameData` folder of the `\Resources\` directory in it.  Make sure the ZIP's folder structure starts with `GameData`.
