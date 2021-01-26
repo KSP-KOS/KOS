@@ -708,6 +708,28 @@ namespace kOS.Screen
         }
 
         /// <summary>
+        /// This is identical to calling ProcessOneInputChar with the fourth argument defaulted.
+        /// <para>
+        /// Why is it needed then?  Because kOSPropMonitor hasn't been recompiled to be aware of the
+        /// fourth defaulted argument and it looks like it's unlikely to ever get recompiled in the near
+        /// future.  One place where adding a new parameter but defaulting it does NOT keep things
+        /// compatible is when the caller is part of a previously compiled DLL.  The previously
+        /// compiled DLL is explicitly looking for a method's long signature when trying to find
+        /// a match.  To support such previously compiled DLLs, it's not sufficient to just default
+        /// any extra parameters, you need a variant that exactly matches what existed when that DLL
+        /// was compiled.
+        /// </para>
+        /// </summary>
+        /// <param name="ch"></param>
+        /// <param name="whichTelnet"></param>
+        /// <param name="allowQueue"></param>
+        /// <returns></returns>
+        public bool ProcessOneInputChar(char ch, TelnetSingletonServer whichTelnet, bool allowQueue = true)
+        {
+            return ProcessOneInputChar(ch, whichTelnet, allowQueue, true);
+        }
+
+        /// <summary>
         /// Type a normal unicode char (not a magic control char) to the terminal,
         /// or if the interpreter is busy queue it for later if flags allow.
         /// </summary>
