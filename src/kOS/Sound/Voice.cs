@@ -77,6 +77,7 @@ namespace kOS.Sound
             source = gameObject.AddComponent<AudioSource>();
             source.loop = true;
             source.spatialBlend = 0; // Makes it ignore spatial position for calculating sound.
+            source.bypassListenerEffects = true; // Makes other mods like Rocket Sound Enhancement not affect it.
 
             // Dummy test stupid values:
             Attack = 0f;
