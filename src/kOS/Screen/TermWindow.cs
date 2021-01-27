@@ -708,41 +708,35 @@ namespace kOS.Screen
         }
 
         /// <summary>
-        /// This is identical to calling ProcessOneInputChar with forceQueue defaulted to true.
-        /// <para>This is being done this way instead of making forceQueue an optional defaulted
-        /// parameter because there are external DLLs calling this method (kOSPropMonitor),
-        /// and in C# default parameters are a compile-time thing the caller needs to be
-        /// aware of, not a run-time thing that can be tacked on later.</para>
-        /// <para>tl;dr - backward compatiblity with existing DLLs requires an exact method matching
-        /// the previous signatures, rather than a method with defaulted parameters to 'fake'
-        /// looking like the previous signatures.</para>
+        /// This is identical to calling ProcessOneInputChar with forceQueue defaulted to true,
+        /// and it returns void instead of bool.
+        /// <para>This is being done this way because it has to match exactly to how the
+        /// signature of the method used to look, to keep it compatible with the DLL for
+        /// kOSPropMonitor without kOSPropMonitor being recompiled.</para>
         /// </summary>
         /// <param name="ch"></param>
         /// <param name="whichTelnet"></param>
         /// <param name="allowQueue"></param>
         /// <returns></returns>
-        public bool ProcessOneInputChar(char ch, TelnetSingletonServer whichTelnet, bool allowQueue)
+        public void ProcessOneInputChar(char ch, TelnetSingletonServer whichTelnet, bool allowQueue)
         {
-            return ProcessOneInputChar(ch, whichTelnet, allowQueue, true);
+            ProcessOneInputChar(ch, whichTelnet, allowQueue, true);
         }
 
         /// <summary>
-        /// This is identical to calling ProcessOneInputChar with allowQueu and forceQueue both defaulted to true.
-        /// <para>This is being done this way instead of making forceQueue an optional defaulted
-        /// parameter because there are external DLLs calling this method (kOSPropMonitor),
-        /// and in C# default parameters are a compile-time thing the caller needs to be
-        /// aware of, not a run-time thing that can be tacked on later.</para>
-        /// <para>tl;dr - backward compatiblity with existing DLLs requires an exact method matching
-        /// the previous signatures, rather than a method with defaulted parameters to 'fake'
-        /// looking like the previous signatures.</para>
+        /// This is identical to calling ProcessOneInputChar with allowQueu and forceQueue both defaulted to true,
+        /// and it reutrns void instead of bool.
+        /// <para>This is being done this way because it has to match exactly to how the
+        /// signature of the method used to look, to keep it compatible with the DLL for
+        /// kOSPropMonitor without kOSPropMonitor being recompiled.</para>
         /// </summary>
         /// <param name="ch"></param>
         /// <param name="whichTelnet"></param>
         /// <param name="allowQueue"></param>
         /// <returns></returns>
-        public bool ProcessOneInputChar(char ch, TelnetSingletonServer whichTelnet)
+        public void ProcessOneInputChar(char ch, TelnetSingletonServer whichTelnet)
         {
-            return ProcessOneInputChar(ch, whichTelnet, true, true);
+            ProcessOneInputChar(ch, whichTelnet, true, true);
         }
 
         /// <summary>
