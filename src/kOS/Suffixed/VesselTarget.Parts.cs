@@ -148,14 +148,17 @@ namespace kOS.Suffixed
                     // this can e.g. be heat shield or some sensor with integrated decoupler
                     else
                     {
-                        if (!module.StagingEnabled())
-                            continue;
+                        DecouplerValue port;
                         if (module is LaunchClamp)
-                            separator = decoupler = new LaunchClampValue(Shared, part, parent, decoupler);
+                            port = new LaunchClampValue(Shared, part, parent, decoupler);
                         else if (module is ModuleDecouple || module is ModuleAnchoredDecoupler)
-                            separator = decoupler = new DecouplerValue(Shared, part, parent, decoupler);
+                            port = new DecouplerValue(Shared, part, parent, decoupler);
                         else // ModuleServiceModule ?
                             continue; // rather continue the search
+                        separator = port;
+                        if (!module.StagingEnabled())
+                            continue;
+                        decoupler = port;
                         decouplers.Add(decoupler);
                     }
                     // ignore leftover decouplers

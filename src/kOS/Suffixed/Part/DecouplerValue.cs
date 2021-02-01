@@ -26,14 +26,9 @@ namespace kOS.Suffixed.Part
                 {
                     if (!(module is IStageSeparator))
                         continue;
-                    var dockingNode = module as ModuleDockingNode;
-                    if (dockingNode != null && !dockingNode.stagingEnabled)
+                    if (!module.stagingEnabled)
                         continue;
-                    if (module is ModuleDecouple || module is ModuleAnchoredDecoupler
-                        || module is LaunchClamp)
-                    {
-                        toReturn.Add(vessel[part]);
-                    }
+                    toReturn.Add(vessel[part]);
                 }
             }
             return toReturn;
