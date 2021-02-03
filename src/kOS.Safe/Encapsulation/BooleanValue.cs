@@ -1,4 +1,5 @@
-﻿using kOS.Safe.Exceptions;
+using kOS.Safe.Exceptions;
+using kOS.Safe.Serialization;
 using System;
 using System.Reflection;
 
@@ -7,13 +8,26 @@ namespace kOS.Safe.Encapsulation
     [kOS.Safe.Utilities.KOSNomenclature("Boolean")]
     public class BooleanValue : PrimitiveStructure, IConvertible
     {
-        private readonly bool internalValue;
+        // internalValue is *almost* immutable.
+        // It is supposed to be immutable (readonly keyword here) except that
+        // it can't be and also fit the design pattern kOS uses for Serializable structures.
+        // That pattern is to load from a dump by creating an instance with a dummy
+        // constructor first, then populate it with LoadDump().  To populate it with LoadDump(),
+        // the internal representation cannot be readonly.  Populating from a dump should be the
+        // ONLY place the immutability rule is violated.
+        private bool internalValue;
 
         public bool Value { get { return internalValue; } }
 
         public BooleanValue(bool value)
         {
             internalValue = value;
+            InitializeSuffixes();
+        }
+
+        private BooleanValue()
+        {
+            internalValue = false;
             InitializeSuffixes();
         }
 
@@ -236,6 +250,26 @@ namespace kOS.Safe.Encapsulation
         ulong IConvertible.ToUInt64(IFormatProvider provider)
         {
             throw new KOSCastException(typeof(BooleanValue), typeof(ulong));
+        }
+
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static BooleanValue CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new BooleanValue();
+            newObj.LoadDump(d);
+            return newObj;
+        }
+        public override Dump Dump()
+        {
+            DumpWithHeader dump = new DumpWithHeader();
+
+            dump.Add("value", internalValue);
+
+            return dump;
+        }
+        public override void LoadDump(Dump dump)
+        {
+            internalValue = Convert.ToBoolean(dump["value"]);
         }
     }
 }

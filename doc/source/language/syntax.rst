@@ -43,8 +43,10 @@ operator symbols:
       as ``not(A)`` in kerboscript to make it parse right.
     * ``=``, <>``, ``>=``, ``<=``, ``>``, ``<`` -> Comparitors.  Note
       that equals and not-equals are different than in some common languages:
-         * The equals comparitor is a single character ``=`` not a double-equal ``==``.
-         * The not-equal comparitor is ``<>`` not ``!=``.
+
+        * The equals comparitor is a single character ``=`` not a double-equal ``==``.
+        * The not-equal comparitor is ``<>`` not ``!=``.
+
     * ``and`` -> Logical AND of two Boolean expresssions.
     * ``or`` -> Logical OR of two Boolean expresssions.
       

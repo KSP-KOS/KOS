@@ -47,6 +47,15 @@ namespace kOS.AddOns.KerbalAlarmClock
             AddSuffix("TARGETBODY", new SetSuffix<StringValue>(() => alarm.XferTargetBodyName, value => alarm.XferTargetBodyName = value));
         }
 
+        public override string ToString()
+        {
+            return string.Format("{0} Alarm at {1}: {2}{3}",
+                alarm.AlarmType.ToString(),
+                KSPUtil.dateTimeFormatter.PrintTimeStamp(alarm.AlarmTime, true, true),
+                alarm.Name,
+                (alarm.Notes != null && alarm.Notes.Length > 0) ? ("\n" + alarm.Notes ) : "" );
+        }
+
         private ScalarValue GetTimeToAlarm()
         {
             //workaround for alarm.Remaining type mismatch

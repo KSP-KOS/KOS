@@ -301,7 +301,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     currently stages 5, 4, 3, 2, 1, and 0, then passing in -99 gives you stage 0,
     and passing in stage 9999 gets you stage 5.
 
-.. attribute:: STAGENUM
+.. attribute:: Vessel:STAGENUM
 
     :type: :struct:`Scalar`
     :access: get only
@@ -629,7 +629,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
     Returns this vessel's message queue. You can only access this attribute for your current vessel (using for example `SHIP:MESSAGES`).
 
-.. attribute:: Vessel:`DELTAV`
+.. attribute:: Vessel:DELTAV
 
     :return: :struct:`scalar`
 
@@ -637,7 +637,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     calulations the KSP game shows in the staging list.  Note that this is only
     as accurate as the stock KSP game's numbers are.
 
-.. attribute:: Vessel:`DELTAVASL`
+.. attribute:: Vessel:DELTAVASL
 
     :return: :struct:`scalar`
 
@@ -645,7 +645,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     calulations the KSP game shows in the staging list.  Note that this is only
     as accurate as the stock KSP game's numbers are.
 
-.. attribute:: Vessel:`DELTAVVACUUM`
+.. attribute:: Vessel:DELTAVVACUUM
 
     :return: :struct:`scalar`
 
@@ -653,7 +653,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     calulations the KSP game shows in the staging list.  Note that this is only
     as accurate as the stock KSP game's numbers are.
 
-.. attribute:: Vessel:`BURNTIME`
+.. attribute:: Vessel:BURNTIME
 
     :return: :struct:`scalar`
 

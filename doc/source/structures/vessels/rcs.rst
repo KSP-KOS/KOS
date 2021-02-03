@@ -25,31 +25,31 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type R
           - :struct:`RCS` objects are a type of :struct:`Part`
 
 
-        * - :meth:`ENABLED`
+        * - :attr:`ENABLED`
           -
           - Is this thruster enabled.
-        * - :meth:`YAWENABLED`
+        * - :attr:`YAWENABLED`
           -
           - Is yaw control enabled for this thruster.
-        * - :meth:`PITCHENABLED`
+        * - :attr:`PITCHENABLED`
           -
           - Is pitch control enabled for this thruster.
-        * - :meth:`ROLLENABLED`
+        * - :attr:`ROLLENABLED`
           -
           - Is roll control enabled for this thruster.
-        * - :meth:`FOREENABLED`
+        * - :attr:`FOREENABLED`
           -
           - Is fore/aft control enabled for this thruster.
-        * - :meth:`STARBOARDENABLED`
+        * - :attr:`STARBOARDENABLED`
           -
           - Is port/starboard control enabled for this thruster.
-        * - :meth:`TOPENABLED`
+        * - :attr:`TOPENABLED`
           -
           - Is dorsal/ventral control enabled for this thruster.
-        * - :meth:`FOREBYTHROTTLE`
+        * - :attr:`FOREBYTHROTTLE`
           -
           - Does this thruster apply fore thrust when the ship throttled up.
-        * - :meth:`FULLTHRUST`
+        * - :attr:`FULLTHRUST`
           -
           - Does this thruster always apply full thrust.
         * - :attr:`THRUSTLIMIT`
@@ -116,42 +116,42 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type R
     
     Is this rcs thruster enabled.
     
-.. attribute:: RCS:ENABLEYAW
+.. attribute:: RCS:YAWENABLED
 
     :access: Get/Set
     :type: :ref:`Boolean <boolean>`
         
     Is yaw control enabled for this rcs thruster.
     
-.. attribute:: RCS:ENABLEPITCH
+.. attribute:: RCS:PITCHENABLED
 
     :access: Get/Set
     :type: :ref:`Boolean <boolean>`
         
     Is pitch control enabled for this rcs thruster.
     
-.. attribute:: RCS:ENABLEROLL
+.. attribute:: RCS:ROLLENABLED
 
     :access: Get/Set
     :type: :ref:`Boolean <boolean>`
         
     Is roll control enabled for this rcs thruster.
     
-.. attribute:: RCS:ENABLEFORE
+.. attribute:: RCS:FOREENABLED
 
     :access: Get/Set
     :type: :ref:`Boolean <boolean>`
         
     Is fore/aft control enabled for this rcs thruster.
     
-.. attribute:: RCS:ENABLESTARBOARD
+.. attribute:: RCS:STARBOARDENABLED
 
     :access: Get/Set
     :type: :ref:`Boolean <boolean>`
         
     Is port/starboard control enabled for this rcs thruster.
     
-.. attribute:: RCS:ENABLETOP
+.. attribute:: RCS:TOPENABLED
 
     :access: Get/Set
     :type: :ref:`Boolean <boolean>`

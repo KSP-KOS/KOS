@@ -77,7 +77,9 @@ With these defaults:
 
 Examples
 ~~~~~~~~
+
 ::
+
     // With zero parameters, the PIDLoop has default parameters:
     // kp = 1, ki = 0, kd = 0
     // maxoutput = maximum number value
@@ -91,6 +93,8 @@ Examples
 
 Example of using it:
 ~~~~~~~~~~~~~~~~~~~~
+
+::
 
     // Throttle up when below target altitude, throttle down when above
     // target altitude, trying to hover:

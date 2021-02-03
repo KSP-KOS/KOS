@@ -210,6 +210,8 @@
     <Compile Include="Suffixed\AggregateResourceValue.cs" />
     <Compile Include="Suffixed\SingleResourceValue.cs" />
     <Compile Include="Suffixed\StageValues.cs" />
+    <Compile Include="Suffixed\TimeStamp.cs" />
+    <Compile Include="Suffixed\TimeSpan.cs" />
     <Compile Include="Suffixed\TimeWarpValue.cs" />
     <Compile Include="Suffixed\VectorRenderer.cs" />
     <Compile Include="Suffixed\VesselAlt.cs" />
@@ -243,7 +245,7 @@
     <Compile Include="Utilities\BetaShim.cs" />
     <Compile Include="Utilities\PartUtilities.cs" />
     <Compile Include="Screen\TermWindow.cs" />
-    <Compile Include="Suffixed\Timespan.cs" />
+    <Compile Include="Suffixed\TimeBase.cs" />
     <Compile Include="Utilities\Utils.cs" />
     <Compile Include="Suffixed\Vector.cs" />
     <Compile Include="Suffixed\Direction.cs" />

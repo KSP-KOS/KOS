@@ -74,7 +74,7 @@ namespace kOS.Suffixed
         ///   </a>
         ///   coordinate reference frame.
         /// </returns>
-        public abstract Vector GetPositionAtUT( TimeSpan timeStamp );
+        public abstract Vector GetPositionAtUT( TimeStamp timeStamp );
 
         /// <summary>
         ///   Subclasses must override this method to return the OrbitableVelocity of this object at some
@@ -91,7 +91,7 @@ namespace kOS.Suffixed
         ///   </a>
         ///   coordinate reference frame.
         /// </returns>
-        public abstract OrbitableVelocity GetVelocitiesAtUT( TimeSpan timeStamp );
+        public abstract OrbitableVelocity GetVelocitiesAtUT( TimeStamp timeStamp );
 
         /// <summary>
         ///   Return the Orbit that the object will be in at some point in the future.

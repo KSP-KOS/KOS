@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Net.Sockets;
@@ -478,7 +478,7 @@ namespace kOS.UserIO
                     // we'll use the terminal type request as a make-do version of a keepalive.  It should force the
                     // telnet client to send some sort of bytes back to us as it answers the terminal type request:
                     TelnetAskForTerminalType();
-                    keepAliveSendTimeStamp = DateTime.Now + TimeSpan.FromSeconds(HUNG_CHECK_INTERVAL);
+                    keepAliveSendTimeStamp = DateTime.Now + System.TimeSpan.FromSeconds(HUNG_CHECK_INTERVAL);
 
                     // This will get set to true when we receive any bytes at all from the client,
                     // whether they're the answer to our query, or something else like user typing.
@@ -508,7 +508,7 @@ namespace kOS.UserIO
                         // This is blocking, so the rawStream.DataAvailable check is vital to prevent hang:
                         rawStream.Read(rawReadBuffer, 0, rawReadBuffer.Length);
                         // But still remember the traffic counts as keepalive proof, even if we ignore it:
-                        keepAliveSendTimeStamp = DateTime.Now + TimeSpan.FromSeconds(HUNG_CHECK_INTERVAL);
+                        keepAliveSendTimeStamp = DateTime.Now + System.TimeSpan.FromSeconds(HUNG_CHECK_INTERVAL);
                     }
                     flushPendingInput = false;
                 }
@@ -519,7 +519,7 @@ namespace kOS.UserIO
                     // As long as some input came recently, no matter what it is, we don't need to bother sending the keepalive:
                     lock (keepAliveAccess)
                         gotSomeRecentTraffic = true;
-                    keepAliveSendTimeStamp = DateTime.Now + TimeSpan.FromSeconds(HUNG_CHECK_INTERVAL);
+                    keepAliveSendTimeStamp = DateTime.Now + System.TimeSpan.FromSeconds(HUNG_CHECK_INTERVAL);
                     
                     // Process the input bytes that arrived:
                     char[] scrapedBytes = Encoding.UTF8.GetChars(TelnetProtocolScrape(rawReadBuffer, numRead));

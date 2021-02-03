@@ -51,8 +51,8 @@ namespace kOS.Communication
 
         private void InitializeSuffixes()
         {
-            AddSuffix("SENTAT", new Suffix<kOS.Suffixed.TimeSpan>(() => new kOS.Suffixed.TimeSpan(Message.SentAt)));
-            AddSuffix("RECEIVEDAT", new Suffix<kOS.Suffixed.TimeSpan>(() => new kOS.Suffixed.TimeSpan(Message.ReceivedAt)));
+            AddSuffix("SENTAT", new Suffix<kOS.Suffixed.TimeStamp>(() => new kOS.Suffixed.TimeStamp(Message.SentAt)));
+            AddSuffix("RECEIVEDAT", new Suffix<kOS.Suffixed.TimeStamp>(() => new kOS.Suffixed.TimeStamp(Message.ReceivedAt)));
             AddSuffix("SENDER", new Suffix<Structure>(GetVesselTarget));
             AddSuffix("HASSENDER", new Suffix<BooleanValue>(GetVesselExists));
             AddSuffix("CONTENT", new Suffix<Structure>(DeserializeContent));

@@ -1,3 +1,6 @@
+using System;
+using kOS.Safe.Serialization;
+
 namespace kOS.Safe.Encapsulation
 {
     [kOS.Safe.Utilities.KOSNomenclature("Scalar", KOSToCSharp = false)]
@@ -19,7 +22,11 @@ namespace kOS.Safe.Encapsulation
         {
             get { return (double)Value != 0d; }
         }
+        // All serializable structures need a default constructor even if it's not public:
+        private ScalarDoubleValue()
+        {
 
+        }
         public ScalarDoubleValue(double value)
         {
             Value = value;
@@ -38,6 +45,26 @@ namespace kOS.Safe.Encapsulation
         public static ScalarDoubleValue MaxValue()
         {
             return new ScalarDoubleValue(double.MaxValue);
+        }
+
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static ScalarDoubleValue CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new ScalarDoubleValue();
+            newObj.LoadDump(d);
+            return newObj;
+        }
+        public override Dump Dump()
+        {
+            DumpWithHeader dump = new DumpWithHeader();
+
+            dump.Add("value", Value);
+
+            return dump;
+        }
+        public override void LoadDump(Dump dump)
+        {
+            Value = Convert.ToDouble(dump["value"]);
         }
     }
 }

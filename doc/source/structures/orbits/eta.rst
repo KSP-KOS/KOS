@@ -1,7 +1,7 @@
 .. _eta:
 
 OrbitEta
-===
+========
 
 OrbitEta is a special object that exists just to help you get the
 times from now to certain events in an orbit's future.  It operates
@@ -51,10 +51,10 @@ on an Orbit, and can be obtained one of two ways:
 .. attribute:: ETA:APOAPSIS
 
     :type: :ref:`scalar <scalar>`, seconds
-    :access: Get only
+    :access: Get-only
 
     Seconds until the object in this orbit patch would hit its apoapsis.
-    Note, that even hypothetical orbits created by :function:`CREATEORBIT`
+    Note, that even hypothetical orbits created by :func:`CREATEORBIT`
     which have no "object in orbit" right now, still have a hypothetical
     imaginary point along that orbit that represents where the "object" is
     "now".

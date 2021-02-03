@@ -38,6 +38,8 @@ namespace kOS.Module
 
         public MessageQueue Messages { get; private set; }
 
+        private static bool bootListDirty;
+
         public string Tag
         {
             get
@@ -337,10 +339,16 @@ namespace kOS.Module
 
                 SafeHouse.Logger.Log(string.Format("OnStart: {0} {1}", state, ProcessorMode));
                 InitObjects();
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 SafeHouse.Logger.LogException(e);
             }
+        }
+
+        public static void SetBootListDirty()
+        {
+            bootListDirty = true;
         }
 
         private void InitUI()
@@ -415,6 +423,9 @@ namespace kOS.Module
             options.options = availableOptions.ToArray();
             options.display = availableDisplays.ToArray();
 
+            bootListDirty = false;
+            ForcePAWRefresh();
+
             //populate diskSpaceUI selector
             diskSpaceUI = diskSpace.ToString();
             field = Fields["diskSpaceUI"];
@@ -424,6 +435,18 @@ namespace kOS.Module
             sizeOptions[1] = (baseDiskSpace * 2).ToString();
             sizeOptions[2] = (baseDiskSpace * 4).ToString();
             options.options = sizeOptions;
+        }
+
+        public void ForcePAWRefresh()
+        {
+            // Thanks to https://github.com/blowfishpro for finding this API call for me:
+            UIPartActionWindow paw = UIPartActionController.Instance?.GetItem(part, false);
+
+            if (paw != null)
+            {
+                paw.ClearList();
+                paw.displayDirty = true;
+            }
         }
 
         private IEnumerable<VolumePath> BootDirectoryFiles()
@@ -695,6 +718,10 @@ namespace kOS.Module
         {
             if (HighLogic.LoadedScene == GameScenes.EDITOR && EditorLogic.fetch != null)
             {
+                if (bootListDirty)
+                {
+                    InitUI();
+                }
                 if (diskSpace != Convert.ToInt32(diskSpaceUI))
                 {
                     diskSpace = Convert.ToInt32(diskSpaceUI);

@@ -249,7 +249,7 @@ Mathematical Functions
 :func:`MIN(a,b)`     return a or b, whichever is lesser.
 :func:`MAX(a,b)`     return a or b, whichever is greater.
 :func:`RANDOM()`     random fractional number between 0 and 1.
-:func:`RANDOMSEED()  Start a new random sequence with a seed.
+:func:`RANDOMSEED()` Start a new random sequence with a seed.
 :func:`ROUND(a)`     round to whole number
 :func:`ROUND(a,b)`   round to nearest place
 :func:`SQRT(a)`      square root

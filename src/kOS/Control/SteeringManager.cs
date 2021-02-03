@@ -1211,37 +1211,37 @@ namespace kOS.Control
             {
                 pitchRateWriter = KSP.IO.File.AppendText<PIDLoop>(
                     string.Format(FILE_BASE_NAME, fileDateString, shared.Vessel.vesselName, "pitchRate"));
-                pitchRateWriter.WriteLine("LastSampleTime,Error,ErrorSum,Output,Kp,Ki,Kd,MaxOutput");
+                pitchRateWriter.WriteLine("LastSampleTime,Error,ErrorSum,Output,Kp,Ki,Kd,MinOutput,MaxOutput");
             }
             if (yawRateWriter == null)
             {
                 yawRateWriter = KSP.IO.File.AppendText<PIDLoop>(
                     string.Format(FILE_BASE_NAME, fileDateString, shared.Vessel.vesselName, "yawRate"));
-                yawRateWriter.WriteLine("LastSampleTime,Error,ErrorSum,Output,Kp,Ki,Kd,MaxOutput");
+                yawRateWriter.WriteLine("LastSampleTime,Error,ErrorSum,Output,Kp,Ki,Kd,MinOutput,MaxOutput");
             }
             if (rollRateWriter == null)
             {
                 rollRateWriter = KSP.IO.File.AppendText<PIDLoop>(
                     string.Format(FILE_BASE_NAME, fileDateString, shared.Vessel.vesselName, "rollRate"));
-                rollRateWriter.WriteLine("LastSampleTime,Error,ErrorSum,Output,Kp,Ki,Kd,MaxOutput");
+                rollRateWriter.WriteLine("LastSampleTime,Error,ErrorSum,Output,Kp,Ki,Kd,MinOutput,MaxOutput");
             }
             if (pitchTorqueWriter == null)
             {
                 pitchTorqueWriter = KSP.IO.File.AppendText<PIDLoop>(
                     string.Format(FILE_BASE_NAME, fileDateString, shared.Vessel.vesselName, "pitchTorque"));
-                pitchTorqueWriter.WriteLine("LastSampleTime,Input,Setpoint,Error,ErrorSum,Output,Kp,Ki,Tr,Ts,I,MaxOutput");
+                pitchTorqueWriter.WriteLine("LastSampleTime,Input,Setpoint,Error,ErrorSum,Output,Kp,Ki,Tr,Ts,I,MinOutput,MaxOutput");
             }
             if (yawTorqueWriter == null)
             {
                 yawTorqueWriter = KSP.IO.File.AppendText<PIDLoop>(
                     string.Format(FILE_BASE_NAME, fileDateString, shared.Vessel.vesselName, "yawTorque"));
-                yawTorqueWriter.WriteLine("LastSampleTime,Input,Setpoint,Error,ErrorSum,Output,Kp,Ki,Tr,Ts,I,MaxOutput");
+                yawTorqueWriter.WriteLine("LastSampleTime,Input,Setpoint,Error,ErrorSum,Output,Kp,Ki,Tr,Ts,I,MinOutput,MaxOutput");
             }
             if (rollTorqueWriter == null)
             {
                 rollTorqueWriter = KSP.IO.File.AppendText<PIDLoop>(
                     string.Format(FILE_BASE_NAME, fileDateString, shared.Vessel.vesselName, "rollTorque"));
-                rollTorqueWriter.WriteLine("LastSampleTime,Input,Setpoint,Error,ErrorSum,Output,Kp,Ki,Tr,Ts,I,MaxOutput");
+                rollTorqueWriter.WriteLine("LastSampleTime,Input,Setpoint,Error,ErrorSum,Output,Kp,Ki,Tr,Ts,I,MinOutput,MaxOutput");
             }
             if (adjustTorqueWriter == null)
             {
@@ -1446,8 +1446,8 @@ namespace kOS.Control
 
             public string ToCSVString()
             {
-                return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}",
-                    Loop.LastSampleTime, Loop.Input, Loop.Setpoint, Loop.Error, Loop.ErrorSum, Loop.Output, Loop.Kp, Loop.Ki, Tr, Ts, I, Loop.MaxOutput);
+                return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12}",
+                    Loop.LastSampleTime, Loop.Input, Loop.Setpoint, Loop.Error, Loop.ErrorSum, Loop.Output, Loop.Kp, Loop.Ki, Tr, Ts, I, Loop.MinOutput, Loop.MaxOutput);
             }
         }
 

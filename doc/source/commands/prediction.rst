@@ -39,10 +39,10 @@ These return predicted information about the future position and velocity of an 
     :param orbitable: A :struct:`Vessel`, :struct:`Body` or other :struct:`Orbitable` object
     :type orbitable:  :struct:`Orbitable`
     :param time:    Time of prediction
-    :type time:     :struct:`TimeSpan`
+    :type time:     :struct:`TimeStamp` or :struct:`Scalar` universal seconds
     :return:        A position :struct:`Vector` expressed as the coordinates in the :ref:`ship-center-raw-rotation <ship-raw>` frame
 
-    Returns a prediction of where the :struct:`Orbitable` will be at some :ref:`universal Timestamp <timestamp>`. If the :struct:`Orbitable` is a :struct:`Vessel`, and the :struct:`Vessel` has planned :ref:`maneuver nodes <maneuver node>`, the prediction assumes they will be executed exactly as planned.
+    Returns a prediction of where the :struct:`Orbitable` will be at some :ref:`universal Time <universal_time>`. If the :struct:`Orbitable` is a :struct:`Vessel`, and the :struct:`Vessel` has planned :ref:`maneuver nodes <maneuver node>`, the prediction assumes they will be executed exactly as planned.
 
     *Refrence Frame:* The reference frame that the future position
     gets returned in is the same reference frame as the current position
@@ -59,10 +59,10 @@ These return predicted information about the future position and velocity of an 
     :param orbitable: A :struct:`Vessel`, :struct:`Body` or other :struct:`Orbitable` object
     :type orbitable:  :struct:`Orbitable`
     :param time:    Time of prediction
-    :type time:     :struct:`TimeSpan`
+    :type time:     :struct:`TimeStamp` or :struct:`Scalar` universal seconds
     :return: An :ref:`ObitalVelocity <orbitablevelocity>` structure.
 
-    Returns a prediction of what the :ref:`Orbitable's <orbitable>` velocity will be at some :ref:`universal Timestamp <timestamp>`. If the :struct:`Orbitable` is a :struct:`Vessel`, and the :struct:`Vessel` has planned :struct:`maneuver nodes <Node>`, the prediction assumes they will be executed exactly as planned.
+    Returns a prediction of what the :ref:`Orbitable's <orbitable>` velocity will be at some :ref:`universal Time <universal_time>`. If the :struct:`Orbitable` is a :struct:`Vessel`, and the :struct:`Vessel` has planned :struct:`maneuver nodes <Node>`, the prediction assumes they will be executed exactly as planned.
 
     *Prerequisite:*  If you are in a career mode game rather than a
     sandbox mode game, This function requires that you have your space
@@ -98,10 +98,10 @@ These return predicted information about the future position and velocity of an 
     :param orbitable: A :Ref:`Vessel <vessel>`, :struct:`Body` or other :struct:`Orbitable` object
     :type orbitable:  :struct:`Orbitable`
     :param time:    Time of prediction
-    :type time:     :struct:`TimeSpan`
+    :type time:     :struct:`TimeStamp` or :struct:`Scalar` universal seconds
     :return: An :struct:`Orbit` structure.
 
-    Returns the :ref:`Orbit patch <orbit>` where the :struct:`Orbitable` object is predicted to be at some :ref:`universal Timestamp <timestamp>`. If the :struct:`Orbitable` is a :struct:`Vessel`, and the :struct:`Vessel` has planned :ref:`maneuver nodes <maneuver node>`, the prediction assumes they will be executed exactly as planned.
+    Returns the :ref:`Orbit patch <orbit>` where the :struct:`Orbitable` object is predicted to be at some :ref:`universal Time <universal_time>`. If the :struct:`Orbitable` is a :struct:`Vessel`, and the :struct:`Vessel` has planned :ref:`maneuver nodes <maneuver node>`, the prediction assumes they will be executed exactly as planned.
 
     *Prerequisite:*  If you are in a career mode game rather than a
     sandbox mode game, This function requires that you have your space

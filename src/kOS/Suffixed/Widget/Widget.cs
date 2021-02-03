@@ -105,6 +105,7 @@ namespace kOS.Suffixed.Widget
             AddSuffix("STYLE", new SetSuffix<WidgetStyle>(() => copyOnWriteStyle, value => copyOnWriteStyle = value));
             AddSuffix("GUI", new Suffix<GUIWidgets>(() => FindGUI()));
             AddSuffix("PARENT", new Suffix<Widget>(() => parent));
+            AddSuffix("HASPARENT", new Suffix<BooleanValue>(() => parent != null));
         }
 
         virtual public void Show()

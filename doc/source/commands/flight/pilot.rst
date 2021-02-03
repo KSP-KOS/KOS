@@ -44,7 +44,7 @@ what kOS is doing.
 .. structure:: Control
 
 .. list-table::
-    :widths: 1 1 1
+    :widths: 1 1 1 1
     :header-rows: 1
 
     * - Suffix
