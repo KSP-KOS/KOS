@@ -41,19 +41,33 @@ namespace kOS.Suffixed.Widget
         private WidgetStyle emptyHintStyle;
 
         /// <summary>
-        /// Tracks Unity's ID of this gui widget for the sake of seeing if the widget has focus.
-        /// </summary>
-        private int uiID = -1;
-
-        /// <summary>
         /// True if this gui widget had the keyboard focus on the previous OnGUI pass:
         /// </summary>
         private bool hadFocus = false;
+
+        // For all TextField widgets, this counter hands out unique ID's.
+        private static int highestIdSoFar = 0;
+
+        private int myId;
+        private string myIdName = null;
 
         public TextField(Box parent, string text) : base(parent,text,parent.FindStyle("textField"))
         {
             emptyHintStyle = FindStyle("emptyHintStyle");
             RegisterInitializer(InitializeSuffixes);
+            AssignMyIdName();
+        }
+
+        private void AssignMyIdName()
+        {
+            if (myIdName == null)
+            {
+                myId = ++highestIdSoFar;
+                // Placing the unique part of the string (the number) first rather
+                // than last, to speed up string compares by discovering "does not equal"
+                // sooner.  This is because this will get string-compared frequently in OnGUI().
+                myIdName = string.Format("{0}_kOSTF", myId);
+            }
         }
 
         private void InitializeSuffixes()
@@ -104,27 +118,35 @@ namespace kOS.Suffixed.Widget
 
         public override void DoGUI()
         {
+            // This condition is hypothetically impossible as the constructor should have done this:
+            if (myIdName == null)
+                AssignMyIdName();
+
+            System.Console.WriteLine(string.Format("eraseme: TextField DoGUI - myIdName={0}, name of focused={1}", myIdName, GUI.GetNameOfFocusedControl()));
             bool shouldConfirm = false;
-            if (GUIUtility.keyboardControl == uiID)
+            if (GUI.GetNameOfFocusedControl().Equals(myIdName))
             {
+                System.Console.WriteLine("eraseme: TextField has keyboard focus. setting hadfocus to true.");
                 if (Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter)
                     shouldConfirm = true;
                 hadFocus = true;
             }
             else
             {
+                System.Console.WriteLine("eraseme: TextField has lost keyboard focus. setting hadfocus to false.");
                 if (hadFocus)
                     shouldConfirm = true;
                 hadFocus = false;
             }
             if (shouldConfirm)
             {
+                System.Console.WriteLine("eraseme: going to fire OnConfirm");
                 Communicate(() => Confirmed = true);
-                GUIUtility.keyboardControl = -1;
             }
-
-            uiID = GUIUtility.GetControlID(FocusType.Passive) + 1; // Dirty kludge.
+            
+            GUI.SetNextControlName(myIdName);
             string newtext = GUILayout.TextField(VisibleText(), ReadOnlyStyle);
+
             if (newtext != VisibleText()) {
                 SetVisibleText(newtext);
                 Changed = true;
@@ -132,6 +154,7 @@ namespace kOS.Suffixed.Widget
             if (newtext == "") {
                 GUI.Label(GUILayoutUtility.GetLastRect(), VisibleTooltip(), emptyHintStyle.ReadOnly);
             }
+            System.Console.WriteLine("eraseme: TextField DoGUI ending.");
         }
 
         public override string ToString()
