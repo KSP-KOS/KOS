@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Execution;
 using UnityEngine;
@@ -176,13 +176,22 @@ namespace kOS.Suffixed.Widget
             // Toggles stay pressed until clicked again.
             // one-shot buttons release as soon as the click is noticed by the script.
             if (IsToggle) {
+                myId = GUIUtility.GetControlID(FocusType.Passive);
+                string myIdString = myId.ToString();
+                GUI.SetNextControlName(myIdString);
                 bool newpressed = GUILayout.Toggle(PressedVisible, VisibleContent(), ReadOnlyStyle);
                 if (IsExclusive && !newpressed) return; // stays pressed
+                if (newpressed != pressed) // if it just toggled on or toggled off 
+                    GUI.FocusControl(myIdString);
                 SetPressedVisible(newpressed);
             } else {
+                myId = GUIUtility.GetControlID(FocusType.Passive);
+                string myIdString = myId.ToString();
+                GUI.SetNextControlName(myIdString);
                 if (GUILayout.Toggle(PressedVisible, VisibleContent(), ReadOnlyStyle)) {
                     if (!PressedVisible) {
                         PressedVisible = true;
+                        GUI.FocusControl(myIdString);
                         Communicate(() => Pressed = true);
                     }
                 }

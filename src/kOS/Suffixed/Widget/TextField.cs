@@ -45,29 +45,10 @@ namespace kOS.Suffixed.Widget
         /// </summary>
         private bool hadFocus = false;
 
-        // For all TextField widgets, this counter hands out unique ID's.
-        private static int highestIdSoFar = 0;
-
-        private int myId;
-        private string myIdName = null;
-
         public TextField(Box parent, string text) : base(parent,text,parent.FindStyle("textField"))
         {
             emptyHintStyle = FindStyle("emptyHintStyle");
             RegisterInitializer(InitializeSuffixes);
-            AssignMyIdName();
-        }
-
-        private void AssignMyIdName()
-        {
-            if (myIdName == null)
-            {
-                myId = ++highestIdSoFar;
-                // Placing the unique part of the string (the number) first rather
-                // than last, to speed up string compares by discovering "does not equal"
-                // sooner.  This is because this will get string-compared frequently in OnGUI().
-                myIdName = string.Format("{0}_kOSTF", myId);
-            }
         }
 
         private void InitializeSuffixes()
@@ -118,34 +99,41 @@ namespace kOS.Suffixed.Widget
 
         public override void DoGUI()
         {
-            // This condition is hypothetically impossible as the constructor should have done this:
-            if (myIdName == null)
-                AssignMyIdName();
-
-            System.Console.WriteLine(string.Format("eraseme: TextField DoGUI - myIdName={0}, name of focused={1}", myIdName, GUI.GetNameOfFocusedControl()));
             bool shouldConfirm = false;
-            if (GUI.GetNameOfFocusedControl().Equals(myIdName))
+            myId = GUIUtility.GetControlID(FocusType.Keyboard);
+            string myIdString = myId.ToString();
+            GUI.SetNextControlName(myIdString);
+            string newtext = GUILayout.TextField(VisibleText(), ReadOnlyStyle);
+            if (myId >= 0 && myIdString != null) // skips on the first pass, and on in-between OnGUI passes where sometimes the control Id's are -1
             {
-                System.Console.WriteLine("eraseme: TextField has keyboard focus. setting hadfocus to true.");
-                if (Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter)
-                    shouldConfirm = true;
-                hadFocus = true;
-            }
-            else
-            {
-                System.Console.WriteLine("eraseme: TextField has lost keyboard focus. setting hadfocus to false.");
-                if (hadFocus)
-                    shouldConfirm = true;
-                hadFocus = false;
+                if (GUI.GetNameOfFocusedControl().Equals(myIdString))
+                {
+                    Event thisEvent = Event.current;
+                    if ((thisEvent.keyCode == KeyCode.Return || thisEvent.keyCode == KeyCode.KeypadEnter)
+                        &&
+                        // Next condition is because Unity populates the keyCode even when the event has nothing to do 
+                        // with keypresses, like on the repaint and layout events that constantly fire every time it
+                        // paints the window.  If we do thisEvent.Use() when the event is a repaint or layout instead of
+                        // an actual key event, then Unity aborts drawing the window and it goes away from the screen:
+                       (thisEvent.type == EventType.KeyDown || thisEvent.type == EventType.Used))
+                    {
+                        shouldConfirm = true;
+                        thisEvent.Use();
+                    }
+                    hadFocus = true;
+                }
+                else
+                {
+                    if (hadFocus)
+                        shouldConfirm = true;
+                    hadFocus = false;
+                }
             }
             if (shouldConfirm)
             {
-                System.Console.WriteLine("eraseme: going to fire OnConfirm");
                 Communicate(() => Confirmed = true);
             }
-            
-            GUI.SetNextControlName(myIdName);
-            string newtext = GUILayout.TextField(VisibleText(), ReadOnlyStyle);
+
 
             if (newtext != VisibleText()) {
                 SetVisibleText(newtext);
@@ -154,7 +142,6 @@ namespace kOS.Suffixed.Widget
             if (newtext == "") {
                 GUI.Label(GUILayoutUtility.GetLastRect(), VisibleTooltip(), emptyHintStyle.ReadOnly);
             }
-            System.Console.WriteLine("eraseme: TextField DoGUI ending.");
         }
 
         public override string ToString()

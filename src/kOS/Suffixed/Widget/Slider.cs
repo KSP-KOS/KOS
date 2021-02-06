@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Execution;
 using UnityEngine;
@@ -51,12 +51,16 @@ namespace kOS.Suffixed.Widget
         public override void DoGUI()
         {
             float newvalue;
+            myId = GUIUtility.GetControlID(FocusType.Passive);
+            string myIdString = myId.ToString();
+            GUI.SetNextControlName(myIdString);
             if (horizontal)
                 newvalue = GUILayout.HorizontalSlider(valueVisible, min, max, ReadOnlyStyle, thumbStyle.ReadOnly);
             else
                 newvalue = GUILayout.VerticalSlider(valueVisible, min, max, ReadOnlyStyle, thumbStyle.ReadOnly);
             if (newvalue != valueVisible) {
                 valueVisible = newvalue;
+                GUI.FocusControl(myIdString);
                 Communicate(() => Value = newvalue);
             }
         }
