@@ -118,6 +118,7 @@ namespace kOS.Suffixed
             // gather all potential modules and then select from those valid.
             IEngineStatus engine = null;
             ModuleRCS rcs = null;
+            ModuleReactionWheel torqueWheel = null;
             PartValue separator = null;
             ModuleEnviroSensor sensor = null;
 
@@ -130,6 +131,10 @@ namespace kOS.Suffixed
                 else if (module is ModuleRCS)
                 {
                     rcs = module as ModuleRCS;
+                }
+                else if (module is ModuleReactionWheel)
+                {
+                    torqueWheel = module as ModuleReactionWheel;
                 }
                 else if (module is IStageSeparator)
                 {
@@ -177,6 +182,8 @@ namespace kOS.Suffixed
                 self = new EngineValue(Shared, part, parent, decoupler);
             else if (rcs != null)
                 self = new RCSValue(Shared, part, parent, decoupler, rcs);
+            else if (torqueWheel != null)
+                self = new ReactionWheelValue(Shared, part, parent, decoupler, torqueWheel);
             else if (separator != null)
                 self = separator;
             else if (sensor != null)
