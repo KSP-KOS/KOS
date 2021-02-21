@@ -86,10 +86,6 @@ namespace kOS.Utilities
                     list = RCSValue.PartsToList(partList, sharedObj);
                     break;
 
-                case "REACTIONWHEELS":
-                    list = ReactionWheelValue.PartsToList(partList, sharedObj);
-                    break;
-
                 case "SENSORS":
                     list = SensorValue.PartsToList(partList, sharedObj);
                     break;
