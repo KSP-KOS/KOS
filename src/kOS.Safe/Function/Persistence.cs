@@ -12,7 +12,7 @@ namespace kOS.Safe.Function
      * remove these function below as well any metions of delete/rename file/rename volume/copy from kRISC.tpg in the future.
      */
 
-    [Function("copy_deprecated")]
+    [Function("copy_deprecated", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionCopyDeprecated : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -49,7 +49,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("rename_file_deprecated")]
+    [Function("rename_file_deprecated", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionRenameFileDeprecated : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -76,7 +76,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("rename_volume_deprecated")]
+    [Function("rename_volume_deprecated", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionRenameVolumeDeprecated : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -99,7 +99,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("delete_deprecated")]
+    [Function("delete_deprecated", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionDeleteDeprecated : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -127,7 +127,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("scriptpath")]
+    [Function("scriptpath", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionScriptPath : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -164,7 +164,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("cd", "chdir")]
+    [Function("cd", "chdir", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionCd : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -198,7 +198,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("copypath")]
+    [Function("copypath", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionCopyPath : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -214,7 +214,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("movepath")]
+    [Function("movepath", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionMove : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -230,7 +230,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("deletepath")]
+    [Function("deletepath", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionDeletePath : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -245,7 +245,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("writejson")]
+    [Function("writejson", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionWriteJson : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -270,7 +270,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("readjson")]
+    [Function("readjson", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionReadJson : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -293,7 +293,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("exists")]
+    [Function("exists", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionExists : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -308,7 +308,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("open")]
+    [Function("open", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionOpen : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -328,7 +328,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("create")]
+    [Function("create", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionCreate : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -345,7 +345,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("createdir")]
+    [Function("createdir", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionCreateDirectory : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)

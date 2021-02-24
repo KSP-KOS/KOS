@@ -74,7 +74,7 @@ namespace kOS.Safe.Encapsulation
     [kOS.Safe.Utilities.KOSNomenclature("Stack", KOSToCSharp = false)] // one-way because the generic templated StackValue<T> is the canonical one.  
     public class StackValue : StackValue<Structure>
     {
-        [Function("stack")]
+        [Function("stack", Contexts=new string[] { "ksp", "archive" })]
         public class FunctionStack : SafeFunctionBase
         {
             public override void Execute(SafeSharedObjects shared)

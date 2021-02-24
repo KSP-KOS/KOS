@@ -4,7 +4,7 @@ using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Function
 {
-    [Function("abs")]
+    [Function("abs", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionAbs : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -16,7 +16,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("mod")]
+    [Function("mod", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionMod : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -29,7 +29,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("floor")]
+    [Function("floor", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionFloor : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -44,7 +44,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("ceiling")]
+    [Function("ceiling", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionCeiling : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -59,7 +59,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("round")]
+    [Function("round", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionRound : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -86,7 +86,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("sqrt")]
+    [Function("sqrt", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionSqrt : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -99,7 +99,7 @@ namespace kOS.Safe.Function
     }
 
 
-    [Function("ln")]
+    [Function("ln", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionLn : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -111,7 +111,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("log10")]
+    [Function("log10", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionLog10 : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -123,7 +123,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("min")]
+    [Function("min", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionMin : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -153,7 +153,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("max")]
+    [Function("max", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionMax : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -183,7 +183,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("random")]
+    [Function("random", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionRandom : SafeFunctionBase
     {
         private readonly Random random = new Random();
@@ -201,7 +201,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("randomseed")]
+    [Function("randomseed", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionRandomSeed : SafeFunctionBase
     {
         private readonly Random random = new Random();
@@ -215,7 +215,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("char")]
+    [Function("char", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionChar : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -227,7 +227,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("unchar")]
+    [Function("unchar", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionUnchar : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)

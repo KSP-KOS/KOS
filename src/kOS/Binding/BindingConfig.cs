@@ -4,7 +4,7 @@ using kOS.Suffixed;
 
 namespace kOS.Binding
 {
-    [Binding("ksp")]
+    [Binding("ksp", "archive")]
     public class BindingConfig : Binding
     {
         public override void AddTo(SharedObjects shared)

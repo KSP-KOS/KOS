@@ -67,7 +67,7 @@ namespace kOS.Safe.Test.Execution
             shared.UpdateHandler = new UpdateHandler();
             shared.VolumeMgr = new VolumeManager();
 
-            shared.FunctionManager.Load();
+            shared.FunctionManager.Load(new string[] { "ksp" });
 
             Archive archive = new Archive(baseDir);
             shared.VolumeMgr.Add(archive);

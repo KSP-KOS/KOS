@@ -4,7 +4,7 @@ using kOS.Safe.Encapsulation;
 
 namespace kOS.Binding
 {
-    [Binding("ksp")]
+    [Binding("ksp", "archive")]
     public class DoNothingBinding : Binding
     {
         private NoDelegate doNothingInstance = null;

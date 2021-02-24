@@ -136,6 +136,7 @@ namespace kOS.Screen
         }
 
         public bool ShowCursor { get; set; }
+        public bool VirtualCPU { get; set; }
 
         public void Awake()
         {
@@ -352,10 +353,13 @@ namespace kOS.Screen
         
         void Update()
         {
-            if (shared == null || shared.Vessel == null || shared.Vessel.parts.Count == 0)
+            if (!VirtualCPU)
             {
-                // Holding onto a vessel instance that no longer exists?
-                Close();
+                if (shared == null || shared.Vessel == null || shared.Vessel.parts.Count == 0)
+                {
+                    // Holding onto a vessel instance that no longer exists?
+                    Close();
+                }
             }
             GetNewestBuffer();
             TelnetOutputUpdate();
@@ -1124,8 +1128,10 @@ namespace kOS.Screen
         
         internal string CalcualteTitle()
         {
-           KOSNameTag partTag = shared.KSPPart.Modules.OfType<KOSNameTag>().FirstOrDefault();
-           return String.Format("{0} CPU: {1} ({2})",
+            if (shared.KSPPart == null)
+                return "CPU";
+            KOSNameTag partTag = shared.KSPPart.Modules.OfType<KOSNameTag>().FirstOrDefault();
+            return String.Format("{0} CPU: {1} ({2})",
                                 shared.Vessel.vesselName,
                                 shared.KSPPart.partInfo.title.Split(' ')[0], // just the first word of the name, i.e "CX-4181"
                                 ((partTag==null) ? "" : partTag.nameTag)

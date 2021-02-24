@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using kOS.Safe.Compilation;
 using kOS.Safe.Function;
 using kOS.Suffixed;
@@ -7,7 +7,7 @@ using kOS.Safe.Encapsulation;
 
 namespace kOS.Function
 {
-    [Function("vcrs", "vectorcrossproduct")]
+    [Function("vcrs", "vectorcrossproduct", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionVectorCross : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -26,7 +26,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("vdot", "vectordotproduct")]
+    [Function("vdot", "vectordotproduct", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionVectorDot : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -45,7 +45,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("vxcl", "vectorexclude")]
+    [Function("vxcl", "vectorexclude", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionVectorExclude : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -64,7 +64,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("vang", "vectorangle")]
+    [Function("vang", "vectorangle", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionVectorAngle : FunctionBase
     {
         public override void Execute(SharedObjects shared)

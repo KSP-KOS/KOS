@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using kOS.Execution;
@@ -162,6 +162,8 @@ namespace kOS.Screen
             // If running from a boot script, there will be no interpreter instructions,
             // only a single OpcodeEOF.  So we check to see if the interpreter is locked,
             // which is a sign that a sub-program is running.
+            if (context == null || context.InstructionPointer >= context.Program.Count || context.InstructionPointer < 0)
+                return !locked;
             return !locked && context.Program[context.InstructionPointer] is OpcodeEOF;
         }
 

@@ -4,7 +4,7 @@ namespace kOS.Safe.Binding
 {
     public interface IBindingManager
     {
-        void Load();
+        void Load(string[] contexts);
         void AddBoundVariable(string name, BindingGetDlg getDelegate, BindingSetDlg setDelegate);
         void AddGetter(string name, BindingGetDlg dlg);
         void AddGetter(IEnumerable<string> names, BindingGetDlg dlg);

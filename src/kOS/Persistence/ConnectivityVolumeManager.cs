@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Exceptions;
+using kOS.Safe.Exceptions;
 using kOS.Safe.Persistence;
 
 namespace kOS.Persistence
@@ -39,6 +39,11 @@ namespace kOS.Persistence
             var archive = volume as Archive;
             if (archive != null)
             {
+                if (shared.Vessel == null)
+                {
+                    // We're a floating cpu and therefore part of the KSC mainframe.
+                    return true;
+                }
                 if (shared.Vessel.situation == Vessel.Situations.PRELAUNCH || Communication.ConnectivityManager.HasConnectionToHome(shared.Vessel))
                     return true;
             }

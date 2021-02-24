@@ -282,7 +282,7 @@ namespace kOS.Safe.Test.Opcode
             throw new NotImplementedException();
         }
 
-        public void Boot()
+        public void Boot(string[] contexts)
         {
             throw new NotImplementedException();
         }

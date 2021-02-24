@@ -91,8 +91,10 @@ namespace kOS.Safe.Execution
             popContextNotifyees = new List<WeakReference>();
         }
 
-        public void Boot()
+        public void Boot(string[] ctxs = null)
         {
+            if (ctxs == null)
+                ctxs = new string[] { "ksp" };
             // break all running programs
             currentContext = null;
             contexts.Clear();            
@@ -107,9 +109,9 @@ namespace kOS.Safe.Execution
             // clear interpreter
             if (shared.Interpreter != null) shared.Interpreter.Reset();
             // load functions
-            if (shared.FunctionManager != null) shared.FunctionManager.Load();
+            if (shared.FunctionManager != null) shared.FunctionManager.Load(ctxs);
             // load bindings
-            if (shared.BindingMgr != null) shared.BindingMgr.Load();
+            if (shared.BindingMgr != null) shared.BindingMgr.Load(ctxs);
 
             // Booting message
             if (shared.Screen != null)
@@ -400,6 +402,8 @@ namespace kOS.Safe.Execution
         // only two contexts exist now, one for the interpreter and one for the programs
         public IProgramContext GetInterpreterContext()
         {
+            if (contexts.Count == 0)
+                return null;
             return contexts[0];
         }
 

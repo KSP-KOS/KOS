@@ -16,7 +16,7 @@ using kOS.Safe;
 
 namespace kOS.Function
 {
-    [Function("printlist")]
+    [Function("printlist", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionPrintList : FunctionBase
     {
         public override void Execute(SharedObjects shared)

@@ -3,7 +3,7 @@ using kOS.Suffixed;
 
 namespace kOS.Binding
 {
-    [Binding("ksp")]
+    [Binding("ksp", "archive")]
     public class ColorBinding : Binding
     {
         public override void AddTo(SharedObjects shared)

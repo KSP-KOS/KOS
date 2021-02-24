@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 namespace kOS.Function
 {
-    [Function("edit")]
+    [Function("edit", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionEdit : FunctionBase
     {
         public override void Execute(SharedObjects shared)

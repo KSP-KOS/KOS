@@ -19,7 +19,7 @@ using kOS.Safe;
 
 namespace kOS.Function
 {
-    [Function("clearscreen")]
+    [Function("clearscreen", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionClearScreen : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -29,7 +29,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("hudtext")]
+    [Function("hudtext", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionHudText : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -115,7 +115,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("warpto")]
+    [Function("warpto", Contexts=new string[] { "ksp", "archive" })]
     public class WarpTo : FunctionBase
     {
         public override void Execute(SharedObjects shared)

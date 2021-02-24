@@ -40,7 +40,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("v")]
+    [Function("v", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionVector : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -55,7 +55,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("r")]
+    [Function("r", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionRotation : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -70,7 +70,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("q")]
+    [Function("q", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionQuaternion : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -86,7 +86,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("createOrbit")]
+    [Function("createOrbit", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionCreateOrbit : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -131,7 +131,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("rotatefromto")]
+    [Function("rotatefromto", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionRotateFromTo : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -145,7 +145,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("lookdirup")]
+    [Function("lookdirup", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionLookDirUp : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -159,7 +159,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("angleaxis")]
+    [Function("angleaxis", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionAngleAxis : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -173,7 +173,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("latlng")]
+    [Function("latlng", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionLatLng : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -187,7 +187,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("vessel")]
+    [Function("vessel", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionVessel : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -199,7 +199,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("body")]
+    [Function("body", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionBody : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -211,7 +211,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("bodyexists")]
+    [Function("bodyexists", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionBodyExists : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -222,7 +222,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("bodyatmosphere")]
+    [Function("bodyatmosphere", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionBodyAtmosphere : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -237,7 +237,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("bounds")]
+    [Function("bounds", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionBounds : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -274,7 +274,7 @@ namespace kOS.Function
         }
     }
     
-    [Function("slidenote")]
+    [Function("slidenote", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionSlideNote : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -304,7 +304,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("note")]
+    [Function("note", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionNote : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -333,7 +333,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("GetVoice")]
+    [Function("GetVoice", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionGetVoice : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -354,7 +354,7 @@ namespace kOS.Function
     }
 
 
-    [Function("StopAllVoices")]
+    [Function("StopAllVoices", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionStopAllVoices : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -362,7 +362,7 @@ namespace kOS.Function
             shared.SoundMaker.StopAllVoices();
         }
     }
-    [Function("timestamp", "time")]
+    [Function("timestamp", "time", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionTimeStamp : FunctionBase
     {
         // Note: "TIME" is both a bound variable AND a built-in function now.
@@ -426,7 +426,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("timespan")]
+    [Function("timespan", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionTimeSpan : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -477,7 +477,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("hsv")]
+    [Function("hsv", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionHsv : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -490,7 +490,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("hsva")]
+    [Function("hsva", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionHsva : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -504,7 +504,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("rgb")]
+    [Function("rgb", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionRgb : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -517,7 +517,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("rgba")]
+    [Function("rgba", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionRgba : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -639,7 +639,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("clearguis")]
+    [Function("clearguis", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionClearAllGuis : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -649,7 +649,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("gui")]
+    [Function("gui", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionWidgets : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -714,7 +714,7 @@ namespace kOS.Function
         }
     }
     
-    [Function("career")]
+    [Function("career", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionCareer : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -724,7 +724,7 @@ namespace kOS.Function
         }
     }
     
-    [Function("allwaypoints")]
+    [Function("allwaypoints", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionAllWaypoints : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -758,7 +758,7 @@ namespace kOS.Function
         }
     }
     
-    [Function("waypoint")]
+    [Function("waypoint", Contexts=new string[] { "ksp", "archive" })]
     public class FunctionWaypoint : FunctionBase
     {
         public override void Execute(SharedObjects shared)

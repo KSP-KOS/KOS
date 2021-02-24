@@ -58,7 +58,7 @@ namespace kOS.Safe.Execution
         void RemovePopContextNotifyee(IPopContextNotifyee notifyee);
         Opcode GetCurrentOpcode();
         Opcode GetOpcodeAt(int instructionPtr);
-        void Boot();
+        void Boot(string[] contexts = null);
         int InstructionsThisUpdate { get; }
         void StartCompileStopwatch();
         void StopCompileStopwatch();

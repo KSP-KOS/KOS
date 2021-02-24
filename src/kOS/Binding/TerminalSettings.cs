@@ -3,7 +3,7 @@ using kOS.Safe.Encapsulation;
 
 namespace kOS.Binding
 {
-    [Binding("ksp")]
+    [Binding("ksp", "archive")]
     public class TerminalSettings : Binding
     {
         private TerminalStruct terminalStructInstance = null;

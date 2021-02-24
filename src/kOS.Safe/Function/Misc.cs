@@ -10,7 +10,7 @@ using System.Text;
 
 namespace kOS.Safe.Function
 {
-    [Function("print")]
+    [Function("print", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionPrint : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -21,7 +21,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("printat")]
+    [Function("printat", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionPrintAt : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -57,7 +57,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("run")]
+    [Function("run", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionRun : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -128,7 +128,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [FunctionAttribute("load")]
+    [FunctionAttribute("load", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionLoad : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -251,7 +251,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("logfile")]
+    [Function("logfile", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionLogFile : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -289,7 +289,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("reboot")]
+    [Function("reboot", Contexts = new string[] { "ksp", "archive" })]
     public class FunctionReboot : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -315,7 +315,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("debugdump")]
+    [Function("debugdump", Contexts = new string[] { "ksp", "archive" })]
     public class DebugDump : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -372,7 +372,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("makebuiltindelegate")]
+    [Function("makebuiltindelegate", Contexts = new string[] { "ksp", "archive" })]
     public class MakeBuiltinDelegate : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -384,7 +384,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("droppriority")]
+    [Function("droppriority", Contexts = new string[] { "ksp", "archive" })]
     public class AllowInterrupt : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)

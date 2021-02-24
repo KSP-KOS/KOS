@@ -4,6 +4,7 @@ using kOS.Safe.Module;
 using kOS.Safe.Utilities;
 using kOS.UserIO;
 using kOS.Utilities;
+using kOS.AddOns.ArchiveMainframe;
 using KSP.UI.Screens;
 using System;
 using System.Globalization;
@@ -712,6 +713,10 @@ namespace kOS.Screen
                 }
                 DrawPartRow(thisPart);
             }
+            if (Mainframe.instance != null)
+            {
+                DrawMainframeRow(Mainframe.instance);
+            }
             if (!atLeastOne)
                 GUILayout.Label("No Loaded CPUs Found.\n" +
                                 "-------------------------\n" +
@@ -776,6 +781,28 @@ namespace kOS.Screen
             CountEndHorizontal();
 
             CheckHoverOnPreviousGUIElement(part);
+        }
+        private void DrawMainframeRow(Mainframe mainframe)
+        {
+            CountBeginHorizontal();
+
+            GUILayout.Box(new GUIContent("Archive\nMainframe", ""), partNameStyle);
+
+            var processorModule = mainframe.processor;
+            GUIStyle powerBoxStyle = boxOnStyle;
+            string powerLabelText = "power\non";
+            string powerLabelTooltip = "Mainframe is turned on and running.\n";
+
+            GUILayout.Box(new GUIContent(powerLabelText, powerLabelTooltip), powerBoxStyle);
+            if (GUILayout.Button((processorModule.WindowIsOpen() ?
+                                  new GUIContent((processorModule.TelnetIsAttached() ? terminalOpenTelnetIconTexture : terminalOpenIconTexture),
+                                                 "Click to close terminal window.") :
+                                  new GUIContent((processorModule.TelnetIsAttached() ? terminalClosedTelnetIconTexture : terminalClosedIconTexture),
+                                                 "Click to open terminal window.")),
+                                  panelSkin.button))
+                processorModule.ToggleWindow();
+
+            CountEndHorizontal();
         }
 
         private void DrawPart(Part part)

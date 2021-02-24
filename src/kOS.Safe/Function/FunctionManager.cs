@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Utilities;
+using kOS.Safe.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,16 +16,17 @@ namespace kOS.Safe.Function
         public FunctionManager(SafeSharedObjects shared)
         {
             this.shared = shared;
-            Load();
+            Load(new string[] { "ksp" });
         }
 
-        public void Load()
+        public void Load(string[] contexts)
         {
             functions = new Dictionary<string, SafeFunctionBase>(StringComparer.OrdinalIgnoreCase);
             foreach (FunctionAttribute attr in rawAttributes.Keys)
             {
                 var type = rawAttributes[attr];
                 if (attr == null || type == null) continue;
+                if (attr.Contexts.Any() && !attr.Contexts.Intersect(contexts).Any()) continue;
                 object functionObject = Activator.CreateInstance(type);
                 foreach (string functionName in attr.Names)
                 {
