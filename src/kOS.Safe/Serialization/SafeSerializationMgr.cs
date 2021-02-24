@@ -36,16 +36,22 @@ namespace kOS.Safe.Serialization
             return serialized is PrimitiveStructure;
         }
 
-        private object DumpValue(object value, bool includeType)
+        private object DumpValue(object value, bool includeType, bool allowTruncatedRecursion, List<IDumper> seenList)
         {
             var valueDumper = value as IDumper;
 
             if (valueDumper != null) {
+                if (seenList.Contains(valueDumper))
+                {
+                    if (!allowTruncatedRecursion)
+                        throw new Exception("Trying to serialize a structure that loops on itself. Unable to serialize non-DAG structures.");
+                    return "...recurse...";
+                }
                 return Dump(valueDumper, includeType);
             } else if (value is Dump) {
                 return value;
             } else if (value is List<object>) {
-                return (value as List<object>).Select((v) => DumpValue(v, includeType)).ToList();
+                return (value as List<object>).Select((v) => DumpValue(v, includeType, allowTruncatedRecursion, seenList)).ToList();
             } else if (IsSerializablePrimitive(value)) {
                 return Structure.ToPrimitive(value);
             } else {
@@ -53,15 +59,20 @@ namespace kOS.Safe.Serialization
             }
         }
 
-        public Dump Dump(IDumper dumper, bool includeType = true)
+        public Dump Dump(IDumper dumper, bool includeType = true, bool allowTruncatedRecursion = false, List<IDumper> seenList = null)
         {
+            if (seenList == null)
+                seenList = new List<IDumper>();
+            seenList = new List<IDumper>(seenList);
+            seenList.Add(dumper);
+
             var dump = dumper.Dump();
 
             List<object> keys = new List<object>(dump.Keys);
 
             foreach (object key in keys)
             {
-                dump[key] = DumpValue(dump[key], includeType);
+                dump[key] = DumpValue(dump[key], includeType, allowTruncatedRecursion, seenList);
             }
 
             if (includeType)
@@ -72,9 +83,9 @@ namespace kOS.Safe.Serialization
             return dump;
         }
 
-        public string Serialize(IDumper serialized, IFormatWriter formatter, bool includeType = true)
+        public string Serialize(IDumper serialized, IFormatWriter formatter, bool includeType = true, bool allowTruncatedRecursion = false)
         {
-            return formatter.Write(Dump(serialized, includeType));
+            return formatter.Write(Dump(serialized, includeType, allowTruncatedRecursion));
         }
 
         public object CreateValue(object value)
@@ -221,7 +232,7 @@ namespace kOS.Safe.Serialization
 
         public string ToString(IDumper dumper)
         {
-            return Serialize(dumper, TerminalFormatter.Instance, false);
+            return Serialize(dumper, TerminalFormatter.Instance, false, true);
         }
     }
 }
