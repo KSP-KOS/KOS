@@ -8,13 +8,19 @@ Drawing Vectors on the Screen
     to a new location, make it appear or disappear, change its color,
     and label.  This page describes how to do that.
 
-.. function:: VECDRAW(start, vec, color, label, scale, show, width, pointy)
-.. function:: VECDRAWARGS(start, vec, color, label, scale, show, width, pointy)
+.. function:: VECDRAW(start, vec, color, label, scale, show, width, pointy, wiping)
+.. function:: VECDRAWARGS(start, vec, color, label, scale, show, width, pointy, wiping)
 
     Both these two function names do the same thing.  For historical
     reasons both names exist, but now they both do the same thing.
     They create a new ``vecdraw`` object that you can then manipulate
-    to show things on the screen::
+    to show things on the screen.
+
+    For an explanation what the parameters start, vec, color, label, scale, show,
+    width, pointy, and wiping mean, they correspond to the same suffix names
+    below in the table.
+
+    Here are some examples::
 
         SET anArrow TO VECDRAW(
               V(0,0,0),
