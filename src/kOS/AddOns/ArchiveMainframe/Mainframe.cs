@@ -19,6 +19,7 @@ namespace kOS.AddOns.ArchiveMainframe
     class Mainframe : MonoBehaviour
     {
         public static Mainframe instance;
+        public static Dump queueDump;
         public void Start()
         {
             Mainframe.instance = this;
@@ -49,6 +50,8 @@ namespace kOS.AddOns.ArchiveMainframe
 
             // TODO: load from disk?
             messageQueue = new MessageQueue();
+            if (queueDump != null)
+                messageQueue.LoadDump(queueDump);
         }
 
         private SharedObjects shared;
@@ -58,6 +61,11 @@ namespace kOS.AddOns.ArchiveMainframe
         public void Update()
         {
             processor.Update();
+        }
+
+        public void OnDestroy()
+        {
+            queueDump = messageQueue.Dump();
         }
     }
 }

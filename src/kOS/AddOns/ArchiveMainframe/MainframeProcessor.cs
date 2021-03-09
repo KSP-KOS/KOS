@@ -24,8 +24,23 @@ namespace kOS.AddOns.ArchiveMainframe
         public int KOSCoreId { get { return -1; } }
         public void SetMode(ProcessorModes newProcessorMode)
         {
-            if (newProcessorMode == ProcessorModes.READY)
-                firstUpdate = true;
+            switch (newProcessorMode)
+            {
+                case ProcessorModes.READY:
+                    shared.VolumeMgr.SwitchTo(shared.VolumeMgr.GetVolume(0));
+                    if (shared.Interpreter != null) shared.Interpreter.SetInputLock(false);
+                    firstUpdate = true;
+                    if (shared.Window != null) shared.Window.IsPowered = true;
+                    foreach (var w in shared.ManagedWindows) w.IsPowered = true;
+                    break;
+                case ProcessorModes.OFF:
+                    if (shared.Cpu != null) shared.Cpu.BreakExecution(true);
+                    if (shared.Interpreter != null) shared.Interpreter.SetInputLock(true);
+                    if (shared.Window != null) shared.Window.IsPowered = false;
+                    if (shared.SoundMaker != null) shared.SoundMaker.StopAllVoices();
+                    foreach (var w in shared.ManagedWindows) w.IsPowered = false;
+                    break;
+            }
         }
 
         public void OpenWindow()
