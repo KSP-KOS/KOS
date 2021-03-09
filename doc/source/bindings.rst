@@ -535,7 +535,8 @@ point in the firmament, also known as the "skybox".
 TICKSLEFT
 ---------
 
-This returns the amount of IPU that are left in this physics tick. After this
+This returns the amount of IPU that are left in this physics tick. This means
+that if you receive the value 20, you can run 20 more instructions. After this
 amount of instructions, other CPUs will run their instructions and then
 `TIME:SECONDS` will increase.
 
@@ -556,6 +557,8 @@ To use:
    
    IF STARTTIME = TIME:SECONDS {
      SET TICKSNEEDED TO STARTIPU - TICKSLEFT.
+   } ELSE {
+     PRINT "Code is taking too long to execute. Please make the code shorter or raise the IPU.".
    }
 
 Addons
