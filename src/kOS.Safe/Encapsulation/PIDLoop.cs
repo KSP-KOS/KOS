@@ -80,6 +80,7 @@ namespace kOS.Safe.Encapsulation
                 DTerm = source.DTerm,
                 ExtraUnwind = source.ExtraUnwind,
                 ChangeRate = source.ChangeRate,
+                lastIError = source.lastIError,
                 unWinding = source.unWinding
             };
             return newLoop;
@@ -119,6 +120,7 @@ namespace kOS.Safe.Encapsulation
 
         public double ChangeRate { get; set; }
 
+        private double lastIError;
         private bool unWinding;
 
         public PIDLoop()
@@ -198,7 +200,11 @@ namespace kOS.Safe.Encapsulation
             double pTerm = error * Kp;
             double iTerm = 0;
             double dTerm = 0;
-            if (LastSampleTime < sampleTime)
+            if (LastSampleTime == double.MaxValue)
+            {
+                lastIError = error * Ki;
+            }
+            else if (LastSampleTime < sampleTime)
             {
                 double dt = sampleTime - LastSampleTime;
                 if (Ki != 0)
@@ -219,7 +225,8 @@ namespace kOS.Safe.Encapsulation
                             unWinding = false;
                         }
                     }
-                    iTerm = ITerm + error * dt * Ki;
+                    iTerm = ITerm + lastIError * dt;
+                    lastIError = error * Ki;
                 }
                 ChangeRate = (input - Input) / dt;
                 if (Kd != 0)
