@@ -1,5 +1,7 @@
-﻿using kOS.Safe.Communication;
+using kOS.Safe.Communication;
 using kOS.Safe.Encapsulation;
+using kOS.Suffixed;
+using kOS.AddOns.ArchiveMainframe;
 
 namespace kOS.Communication
 {
@@ -36,7 +38,14 @@ namespace kOS.Communication
 
         protected override BooleanValue SendMessage(Structure content)
         {
-            throw new Safe.Exceptions.KOSException("kOS does not support sending messages to HOME (KSC in Stock)");
+            if (Mainframe.instance == null)
+                throw new Safe.Exceptions.KOSException("KSC Mainframe not responding.");
+            double sentAt = Planetarium.GetUniversalTime();
+            VesselTarget sender = null;
+            if (!(shared is SharedMainframeObjects))
+                sender = VesselTarget.CreateOrGetExisting(shared);
+            Mainframe.instance.messageQueue.Push(Message.Create(content, sentAt, sentAt, sender, "archive"));
+            return true;
         }
     }
 }

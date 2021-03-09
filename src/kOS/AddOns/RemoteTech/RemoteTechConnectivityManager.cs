@@ -39,6 +39,10 @@ namespace kOS.AddOns.RemoteTech
 
         public double GetDelay(Vessel vessel1, Vessel vessel2)
         {
+            if (vessel1 == null)
+                return GetDelayToHome(vessel2);
+            if (vessel2 == null)
+                return GetDelayToHome(vessel1);
             if (!(RemoteTechHook.IsAvailable()))
                 return -1; // default to no connection if RT itself isn't available.
             double delay = RemoteTechHook.Instance.GetSignalDelayToSatellite(vessel1.id, vessel2.id);
@@ -47,6 +51,9 @@ namespace kOS.AddOns.RemoteTech
 
         public double GetDelayToControl(Vessel vessel)
         {
+            // Archive Mainframe <-> Home = 0ms
+            if (vessel == null)
+                return 0;
             if (!RemoteTechHook.IsAvailable())
                 return -1; // default to no connection if RT itself isn't available.
             if (RemoteTechHook.Instance.HasLocalControl(vessel.id)) return 0d;
@@ -56,6 +63,9 @@ namespace kOS.AddOns.RemoteTech
 
         public double GetDelayToHome(Vessel vessel)
         {
+            // Archive Mainframe <-> Home = 0ms
+            if (vessel == null)
+                return 0;
             if (!RemoteTechHook.IsAvailable())
                 return -1; // default to no connection if RT itself isn't available.
             double delay = RemoteTechHook.Instance.GetSignalDelayToKSC(vessel.id);
@@ -70,6 +80,8 @@ namespace kOS.AddOns.RemoteTech
 
         public bool HasConnectionToHome(Vessel vessel)
         {
+            if (vessel == null)
+                return true;
             if (!RemoteTechHook.IsAvailable())
                 return false; // default to no connection if RT itself isn't available.
             return RemoteTechHook.Instance.HasConnectionToKSC(vessel.id);
@@ -77,6 +89,8 @@ namespace kOS.AddOns.RemoteTech
 
         public bool HasConnectionToControl(Vessel vessel)
         {
+            if (vessel == null)
+                return true;
             if (!RemoteTechHook.IsAvailable())
                 return vessel.CurrentControlLevel >= Vessel.ControlLevel.PARTIAL_MANNED; // default to checking for local control if RT itself isn't available.
             return RemoteTechHook.Instance.HasAnyConnection(vessel.id) || RemoteTechHook.Instance.HasLocalControl(vessel.id);

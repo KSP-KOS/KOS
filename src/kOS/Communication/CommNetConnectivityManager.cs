@@ -117,6 +117,10 @@ namespace kOS.Communication
         {
             if (!IsEnabled)
                 return true;
+            if (vessel1 == null)
+                return HasConnectionToControl(vessel2);
+            if (vessel2 == null)
+                return HasConnectionToControl(vessel1);
             if (!IsCommnetParticipant(vessel1) || !IsCommnetParticipant(vessel2))
                 return false;
 

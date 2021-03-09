@@ -23,7 +23,7 @@ namespace kOS.AddOns.ArchiveMainframe
         public void Start()
         {
             Mainframe.instance = this;
-            shared = new SharedObjects();
+            shared = new SharedMainframeObjects();
             
             shared.UpdateHandler = new UpdateHandler();
             shared.BindingMgr = new BindingManager(shared);
@@ -48,7 +48,6 @@ namespace kOS.AddOns.ArchiveMainframe
             // initialize archive
             shared.VolumeMgr.Add(new Archive(SafeHouse.ArchiveFolder));
 
-            // TODO: load from disk?
             messageQueue = new MessageQueue();
             if (queueDump != null)
                 messageQueue.LoadDump(queueDump);

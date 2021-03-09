@@ -95,6 +95,9 @@
     <Compile Include="AddOns\ActionGroupsExtended\ActionGroupsExtendedAPI.cs" />
     <Compile Include="AddOns\ActionGroupsExtended\ActionGroupsExtendedBinding.cs" />
     <Compile Include="AddOns\ArchiveMainframe\ArchiveBindings.cs" />
+    <Compile Include="AddOns\ArchiveMainframe\ArchiveCore.cs" />
+    <Compile Include="AddOns\ArchiveMainframe\ArchiveConnection.cs" />
+    <Compile Include="AddOns\ArchiveMainframe\ArchiveShip.cs" />
     <Compile Include="AddOns\ArchiveMainframe\Mainframe.cs" />
     <Compile Include="AddOns\ArchiveMainframe\MainframeProcessor.cs" />
     <Compile Include="AddOns\ArchiveMainframe\SharedMainframeObjects.cs" />

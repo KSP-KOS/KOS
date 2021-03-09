@@ -42,13 +42,19 @@ namespace kOS.Communication
         public Message(Dump content, double sentAt, double receivedAt, VesselTarget sender)
             : base(content, sentAt, receivedAt)
         {
-            Vessel = sender.Guid.ToString();
+            if (sender == null)
+                Vessel = "Archive";
+            else
+                Vessel = sender.Guid.ToString();
         }
 
         public Message(PrimitiveStructure content, double sentAt, double receivedAt, VesselTarget sender)
             : base(content, sentAt, receivedAt)
         {
-            Vessel = sender.Guid.ToString();
+            if (sender == null)
+                Vessel = "Archive";
+            else
+                Vessel = sender.Guid.ToString();
         }
 
         // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:

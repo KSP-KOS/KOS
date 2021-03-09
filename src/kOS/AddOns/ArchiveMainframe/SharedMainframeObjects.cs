@@ -7,6 +7,8 @@ namespace kOS.AddOns.ArchiveMainframe
 {
     class SharedMainframeObjects : SharedObjects
     {
-
+        public ArchiveShip ArchiveShip;
+        public ArchiveCore ArchiveCore;
+        public ArchiveConnection ArchiveConnection;
     }
 }
