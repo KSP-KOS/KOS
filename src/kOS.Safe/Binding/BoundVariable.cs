@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Execution;
+using kOS.Safe.Execution;
 using kOS.Safe.Encapsulation;
 
 namespace kOS.Safe.Binding
@@ -7,6 +7,8 @@ namespace kOS.Safe.Binding
     {
         public BindingSetDlg Set;
         public BindingGetDlg Get;
+
+        public bool Volatile = false;
 
         private object currentValue;
 
@@ -20,7 +22,10 @@ namespace kOS.Safe.Binding
                 // new primitive encapsulation types we instead encapsulate any value returned
                 // by the delegate.  This makes it so that all of the getters for bound variables
                 // don't need to be modified to explicitly return the encapsulated types.
-                return currentValue ?? (currentValue = Structure.FromPrimitive(Get()));
+                if (!Volatile && currentValue != null)
+                    return currentValue;
+                currentValue = Structure.FromPrimitive(Get());
+                return currentValue;
             }
             set
             {

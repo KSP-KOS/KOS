@@ -122,6 +122,15 @@ namespace kOS.Binding
             return variables.ContainsKey(name);
         }
 
+        /// <summary>
+        /// Indicates that the binding should not be cached during execution
+        /// </summary>
+        /// <param name="name">The binding to modify</param>
+        public void MarkVolatile(string name)
+        {
+            variables[name].Volatile = true;
+        }
+
         public void PreUpdate()
         {
             foreach (var variable in variables)
