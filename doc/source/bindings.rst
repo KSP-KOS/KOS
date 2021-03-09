@@ -532,6 +532,32 @@ for this purpose.
 For Kerbals, it refers to a more arbitrary line in space, pointing at a fixed
 point in the firmament, also known as the "skybox".
 
+TICKSLEFT
+---------
+
+This returns the amount of IPU that are left in this physics tick. After this
+amount of instructions, other CPUs will run their instructions and then
+`TIME:SECONDS` will increase.
+
+TICKSLEFT can be used to try to make sure you run a block of code in one
+physics tick. This is useful when working with vectors or when interacting
+with shared message queues. 
+
+To use:
+
+   // Will always wait the first time, becomes more accurate the second time.
+   GLOBAL TICKSNEEDED TO 1000.
+   IF TICKSLEFT < TICKSNEEDED
+     WAIT 0.
+   LOCAL STARTIPU TO TICKSLEFT.
+   LOCAL STARTTIME TO TIME:SECONDS.
+   
+   // your code here, make sure to keep the instruction count lower than your CONFIG:IPU
+   
+   IF STARTTIME = TIME:SECONDS {
+     SET TICKSNEEDED TO STARTIPU - TICKSLEFT.
+   }
+
 Addons
 ------
 

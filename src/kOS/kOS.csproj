@@ -114,6 +114,7 @@
     <Compile Include="Binding\FlightControlManager.cs" />
     <Compile Include="Binding\FlightStats.cs" />
     <Compile Include="Binding\MissionSettings.cs" />
+    <Compile Include="Binding\CPUBinding.cs" />
     <Compile Include="Binding\RoverStats.cs" />
     <Compile Include="Callback\GameEventDispatcher.cs" />
     <Compile Include="Callback\KOSGameEventDispatcher.cs" />
