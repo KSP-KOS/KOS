@@ -1502,8 +1502,8 @@ namespace kOS.Safe.Execution
                 }
                 else
                 {
-                    executeNext = ExecuteInstruction(currentContext, doProfiling);
                     ++InstructionsThisUpdate;
+                    executeNext = ExecuteInstruction(currentContext, doProfiling);
                     if (CurrentPriority == InterruptPriority.Normal)
                         ++howManyNormalPriority;
                 }

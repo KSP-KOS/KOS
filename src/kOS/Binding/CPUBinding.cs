@@ -9,6 +9,7 @@ namespace kOS.Binding
         public override void AddTo(SharedObjects shared)
         {
             shared.BindingMgr.AddGetter("TICKSLEFT", delegate { return kOSCustomParameters.Instance.InstructionsPerUpdate - shared.Cpu.InstructionsThisUpdate; });
+            shared.BindingMgr.MarkVolatile("TICKSLEFT");
         }
     }
 }
