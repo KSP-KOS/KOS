@@ -94,6 +94,10 @@
   <ItemGroup>
     <Compile Include="AddOns\ActionGroupsExtended\ActionGroupsExtendedAPI.cs" />
     <Compile Include="AddOns\ActionGroupsExtended\ActionGroupsExtendedBinding.cs" />
+    <Compile Include="AddOns\ArchiveMainframe\ArchiveBindings.cs" />
+    <Compile Include="AddOns\ArchiveMainframe\Mainframe.cs" />
+    <Compile Include="AddOns\ArchiveMainframe\MainframeProcessor.cs" />
+    <Compile Include="AddOns\ArchiveMainframe\SharedMainframeObjects.cs" />
     <Compile Include="AddOns\kOSAddonAttribute.cs" />
     <Compile Include="AddOns\AddonManager.cs" />
     <Compile Include="AddOns\InfernalRobotics\IRControlGroup.cs" />
