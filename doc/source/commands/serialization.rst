@@ -30,7 +30,7 @@ It is **important** to remember that any data that you supply to :ref:`WRITEJSON
 
   It's not possible to serialize structures that loop on themselves. Only `Directed Acyclical Graphs <https://en.wikipedia.org/wiki/Directed_acyclic_graph>`_ are supported.
   
-  An example of a looping structure is:
+  An example of a looping structure is::
   
       SET a TO LIST().
 	  SET b TO LIST(a).
