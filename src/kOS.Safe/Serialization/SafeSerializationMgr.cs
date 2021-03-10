@@ -36,22 +36,25 @@ namespace kOS.Safe.Serialization
             return serialized is PrimitiveStructure;
         }
 
-        private object DumpValue(object value, bool includeType, bool allowTruncatedRecursion, List<IDumper> seenList)
+        private object DumpValue(object value, bool includeType, bool allowTruncatedRecursion, List<object> seenList)
         {
             var valueDumper = value as IDumper;
 
+            if (seenList.Contains(value))
+            {
+                if (!allowTruncatedRecursion)
+                    throw new KOSSerializationException("Trying to serialize a structure that loops on itself. Unable to serialize non-DAG structures.");
+                return "...recurse...";
+            }
+
             if (valueDumper != null) {
-                if (seenList.Contains(valueDumper))
-                {
-                    if (!allowTruncatedRecursion)
-                        throw new Exception("Trying to serialize a structure that loops on itself. Unable to serialize non-DAG structures.");
-                    return "...recurse...";
-                }
-                return Dump(valueDumper, includeType);
+                return Dump(valueDumper, includeType, allowTruncatedRecursion, seenList);
             } else if (value is Dump) {
                 return value;
             } else if (value is List<object>) {
-                return (value as List<object>).Select((v) => DumpValue(v, includeType, allowTruncatedRecursion, seenList)).ToList();
+                var nextSeenList = new List<object>(seenList);
+                nextSeenList.Add(value);
+                return (value as List<object>).Select((v) => DumpValue(v, includeType, allowTruncatedRecursion, nextSeenList)).ToList();
             } else if (IsSerializablePrimitive(value)) {
                 return Structure.ToPrimitive(value);
             } else {
@@ -59,11 +62,14 @@ namespace kOS.Safe.Serialization
             }
         }
 
-        public Dump Dump(IDumper dumper, bool includeType = true, bool allowTruncatedRecursion = false, List<IDumper> seenList = null)
+        public Dump Dump(IDumper dumper, bool includeType = true, bool allowTruncatedRecursion = false, List<object> seenList = null)
         {
+            // We want to allow DAG-like structure serialization (so nodes can occur in the output more than once.
+            // Cyclical graphs crash us with a stackoverflow however. To protect from this we check wether we're already
+            // in the list of objects that are between us and the root.
             if (seenList == null)
-                seenList = new List<IDumper>();
-            seenList = new List<IDumper>(seenList);
+                seenList = new List<object>();
+            seenList = new List<object>(seenList);
             seenList.Add(dumper);
 
             var dump = dumper.Dump();
