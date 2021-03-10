@@ -30,6 +30,8 @@ namespace kOS.Suffixed.Widget
         /// </summary>
         protected bool guiCaused;
 
+        protected int myId;
+
         // The WidgetStyle is cheap as it only creates a new GUIStyle if it is
         // actually changed, otherwise it just refers to the one in the GUI:SKIN.
         private WidgetStyle copyOnWriteStyle;

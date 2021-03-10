@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using UnityEngine;
 
@@ -22,6 +22,7 @@ namespace kOS.Suffixed.Widget
 
         public override void DoGUI()
         {
+            GUI.SetNextControlName(myId.ToString());
             if (amount < 0)
                 GUILayout.FlexibleSpace();
             else
