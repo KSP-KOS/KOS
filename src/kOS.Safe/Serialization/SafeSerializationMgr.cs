@@ -43,7 +43,7 @@ namespace kOS.Safe.Serialization
             if (seenList.Contains(value))
             {
                 if (!allowTruncatedRecursion)
-                    throw new KOSSerializationException("Trying to serialize a structure that loops on itself. Unable to serialize non-DAG structures.");
+                    throw new KOSSerializationException("Trying to serialize a structure that loops on itself. Only Directed Acyclical Graphs are supported.");
                 return "...recurse...";
             }
 

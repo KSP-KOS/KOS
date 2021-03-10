@@ -25,3 +25,14 @@ They allow to transform data structures into JSON objects and store them in a fi
 It serializes messages currently stored on message queues to ConfigNode (KSP data format) and adds them to KSP save files.
 
 It is **important** to remember that any data that you supply to :ref:`WRITEJSON` and :meth:`Connection:SENDMESSAGE` must be serializable.
+
+.. note::
+
+  It's not possible to serialize structures that loop on themselves. Only `Directed Acyclical Graphs <https://en.wikipedia.org/wiki/Directed_acyclic_graph>`_ are supported.
+  
+  An example of a looping structure is:
+  
+      SET a TO LIST().
+	  SET b TO LIST(a).
+	  a:ADD(b).
+	  WRITEJSON(a, "test"). // <-- This will fail
