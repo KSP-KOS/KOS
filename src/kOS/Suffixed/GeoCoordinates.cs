@@ -196,7 +196,7 @@ namespace kOS.Suffixed
 
         /// <summary>Check to find terrain, adding extra masking logic to deal with KSP having put some
         /// objects on the terrain layer which weren't really terrain.</summary>
-        private bool RaycastForTerrain(Vector3d worldRayCastStart, Vector3d worldRayCastStop, out RaycastHit hit, int recurseSofar = 0)
+        private bool RaycastForTerrain(Vector3d worldRayCastStart, Vector3d worldRayCastStop, out RaycastHit hit)
         {
             Vector3d aimVector = worldRayCastStop - worldRayCastStart;
             Vector3d originalStart = worldRayCastStart;
@@ -221,7 +221,7 @@ namespace kOS.Suffixed
                     return true;
                 }
                 // Hit was a Part, so it doesn't count.  Go again starting from just past that hit:
-                worldRayCastStart += hit.point + tinySkipDistance * aimVector.normalized;
+                worldRayCastStart = hit.point + tinySkipDistance * aimVector.normalized;
                 if (--remainingAttempts == 0)
                 {
                     // The majority of the time this loop should only need one iteration. If the
