@@ -170,6 +170,7 @@ All of the main celestial bodies in the game are reserved variable names. The fo
 .. method:: Body:GEOPOSITIONOF(vectorPos)
 
     :parameter vectorPos: :struct:`Vector` input position in XYZ space.
+    :type: :struct:`GeoCoordinates`
 
     The geoposition underneath the given vector position.  SHIP:BODY:GEOPOSITIONOF(SHIP:POSITION) should, in principle, give the same thing as SHIP:GEOPOSITION, while SHIP:BODY:GEOPOSITIONOF(SHIP:POSITION + 1000*SHIP:NORTH) would give you the lat/lng of the position 1 kilometer north of you.  Be careful not to confuse this with :GEOPOSITION (no "OF" in the name), which is also a suffix of Body by virtue of the fact that Body is an Orbitable, but it doesn't mean the same thing.
 
