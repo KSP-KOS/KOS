@@ -48,6 +48,12 @@ A ship usually has various attitude controllers like control surfaces, engines, 
         * - :attr:`CUSTOMTHROTTLE`
           - :ref:`scalar <scalar>` (%)
           - The value the custom throttle.
+        * - :attr:`ROTATIONAUTHRORITYLIMITER`
+          - :ref:`scalar <scalar>` (%)
+          - The authority limit for rotation.
+        * - :attr:`TRANSLATIONAUTHRORITYLIMITER`
+          - :ref:`scalar <scalar>` (%)
+          - The authority limit for translation.
         * - :attr:`CONTROLLERTYPE`
           - :ref:`string <string>`
           - The type of the controller.
@@ -163,6 +169,24 @@ A ship usually has various attitude controllers like control surfaces, engines, 
     :type: :ref:`scalar <scalar>` (%)
 
     Sets the custom throttle for this controller.
+
+.. _attitudecontroller_ROTATIONAUTHORITYLIMITER:
+
+.. attribute:: AttitudeController:ROTATIONAUTHORITYLIMITER
+
+    :access: Get/Set
+    :type: :ref:`scalar <scalar>` (%)
+
+    Sets the authority limiter used during rotation.
+
+.. _attitudecontroller_TRANSLATIONAUTHORITYLIMITER:
+
+.. attribute:: AttitudeController:TRANSLATIONAUTHORITYLIMITER
+
+    :access: Get/Set
+    :type: :ref:`scalar <scalar>` (%)
+
+    Sets the authority limiter used during translation.
 
 .. _attitudecontroller_CONTROLLERTYPE:
 
