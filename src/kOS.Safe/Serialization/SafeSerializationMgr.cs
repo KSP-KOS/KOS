@@ -40,7 +40,7 @@ namespace kOS.Safe.Serialization
         {
             var valueDumper = value as IDumper;
 
-            if (seenList.Contains(value))
+            if (!(value is string) && seenList.Contains(value))
             {
                 if (!allowTruncatedRecursion)
                     throw new KOSSerializationException("Trying to serialize a structure that loops on itself. Only Directed Acyclical Graphs are supported.");
