@@ -37,6 +37,12 @@ namespace kOS.Safe.Encapsulation
             InnerEnumerable.Enqueue(val);
         }
 
+        public override Dump Dump()
+        {
+            Dump result = base.Dump();
+            result.Annotations.Add(0, "<-- front");
+            return result;
+        }
         public override void LoadDump(Dump dump)
         {
             InnerEnumerable.Clear();

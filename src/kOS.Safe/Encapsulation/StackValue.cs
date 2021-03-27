@@ -42,6 +42,12 @@ namespace kOS.Safe.Encapsulation
             InnerEnumerable.Push(val);
         }
 
+        public override Dump Dump()
+        {
+            Dump result = base.Dump();
+            result.Annotations.Add(0, "<-- top");
+            return result;
+        }
         public override void LoadDump(Dump dump)
         {
             InnerEnumerable.Clear();
