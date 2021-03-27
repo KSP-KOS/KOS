@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Properties;
@@ -73,6 +74,30 @@ namespace kOS.Safe.Encapsulation
             }
         }
 
+        public override string ToStringItems(int level)
+        {
+            StringBuilder sb = new StringBuilder();
+            string pad = string.Empty.PadRight(level * TerminalFormatter.INDENT_SPACES, ' ');
+            int cnt = this.Count();
+            int digitWidth = Utilities.KOSMath.DecimalDigitsIn(cnt);
+            for (int i = 0; i < cnt; ++i)
+            {
+                Structure asStructure = this[i] as Structure;
+                if (asStructure != null)
+                {
+                    sb.Append(string.Format("{0}[{1}] = {2}\n",
+                        pad,
+                        i.ToString().PadLeft(digitWidth),
+                        asStructure.ToStringIndented(level)
+                        ));
+                }
+                else // Hypothetically this case should not happen, but if we screwed up somewhere so it does, at least you can see something.
+                {
+                    sb.Append(this[i].ToString());
+                }
+            }
+            return sb.ToString();
+        }
         private void ListInitializeSuffixes()
         {
             AddSuffix("COPY",     new NoArgsSuffix<ListValue<T>>        (() => new ListValue<T>(this)));

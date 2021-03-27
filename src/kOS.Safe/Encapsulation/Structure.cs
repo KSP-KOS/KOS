@@ -358,5 +358,29 @@ namespace kOS.Safe.Encapsulation
 
             return value;
         }
+
+        /// <summary>
+        /// A wrapper around Structure.ToString() that will indent the ToString() output
+        /// to the desired indent level.
+        /// </summary>
+        public virtual string ToStringIndented(int level)
+        {
+            if (level >= TerminalFormatter.MAX_INDENT_LEVEL)
+                return "<<TOSTRING REFUSES TO RECURSE DEEPER THAN NESTING LEVEL " + level + ">>";
+
+            StringBuilder returnVal = new StringBuilder();
+            string[] lines = ToString().Split('\n');
+            string pad = "";
+            if (lines.Count() > 1)
+            {
+                pad = String.Empty.PadRight(level * TerminalFormatter.INDENT_SPACES, ' ');
+                returnVal.Append("\n");
+            }
+            foreach (string line in lines)
+            {
+                returnVal.AppendFormat("{0}{1}", pad, line);
+            }
+            return returnVal.ToString();
+        }
     }
 }

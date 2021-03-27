@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using System.Linq;
@@ -7,7 +7,17 @@ namespace kOS.Safe.Serialization
 {
     public class TerminalFormatter : IFormatWriter
     {
-        private static int INDENT_SPACES = 2;
+        public static int INDENT_SPACES = 2;
+
+        // eraseme - MUST INCREASE THIS VALUE AFTER TESTING IS OVER!!!
+        public static int MAX_INDENT_LEVEL = 5; // SET LOW DURING TESTING SO IT'S EASY TO TRIGGER IT
+
+        // eraseme - THIS ENTIRE CLASS BELOW THIS POINT IS PROBABLY NOT NEEDED ANYMORE IF THIS PR IS USED.
+        // eraseme - IT ONLY USES THE ABOVE TWO SETTINGS (TEST THIS BY REMOVING THE REST OF THIS AND
+        // eraseme - SEEING IF IT COMPILES.)
+        // eraseme - THE ENTIRE CLASS COULD GO AWAY AND THESE SETTINGS COULD BE MOVED ELSEWHERE,
+        // eraseme - WHERE A USER SCRIPT COULD ALTER THEM.
+
         private static readonly TerminalFormatter instance;
 
         public static TerminalFormatter Instance

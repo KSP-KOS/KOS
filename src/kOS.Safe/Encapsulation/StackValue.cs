@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Serialization;
 using kOS.Safe.Function;
@@ -68,6 +69,31 @@ namespace kOS.Safe.Encapsulation
         public static StackValue<T> CreateStack<TU>(IEnumerable<TU> list)
         {
             return new StackValue<T>(list.Cast<T>());
+        }
+        public override string ToStringItems(int level)
+        {
+            StringBuilder sb = new StringBuilder();
+            string pad = string.Empty.PadRight(level * TerminalFormatter.INDENT_SPACES, ' ');
+            var asArray = InnerEnumerable.ToArray();
+            int i = 0;
+            foreach (object item in asArray)
+            {
+                Structure asStructure = item as Structure;
+                if (asStructure != null)
+                {
+                    sb.Append(string.Format("{0}[{1}] = {2}\n",
+                        pad,
+                        (i == 0 ? "front->" : (i == asArray.Count() ? "back ->" : "       ")),
+                        asStructure.ToStringIndented(level)
+                        ));
+                }
+                else // Hypothetically this case should not happen, but if we screwed up somewhere so it does, at least you can see something.
+                {
+                    sb.Append(item.ToString());
+                }
+                ++i;
+            }
+            return sb.ToString();
         }
     }
 
