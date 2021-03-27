@@ -8,7 +8,8 @@ namespace kOS.Safe
         public const string Items = "items";
         public const string Entries = "entries";
 
-        public DumpKeyType KeyType { get
+        public virtual DumpKeyType KeyType {
+            get
             {
                 if (ContainsKey(Items))
                     return DumpKeyType.List;
@@ -39,6 +40,7 @@ namespace kOS.Safe
         KeyValue,
         List,
         Value,
+        Hidden,
     }
 
 }

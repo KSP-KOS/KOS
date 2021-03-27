@@ -91,6 +91,10 @@ namespace kOS.Suffixed
                 {DumpV, hsvValue },
                 {DumpA, Alpha }
             };
+
+            dump.Header = ToString();
+            dump.ShouldHideValues = true;
+
             return dump;
         }
 

@@ -9,7 +9,7 @@ namespace kOS.Safe.Serialization
     public class TerminalFormatter : IFormatWriter
     {
         private static string INDENT = "  ";
-        private static int MAX_DEPTH = 2;
+        private static int MAX_DEPTH = 4;
         private static readonly TerminalFormatter instance;
 
         public static TerminalFormatter Instance
@@ -76,6 +76,8 @@ namespace kOS.Safe.Serialization
                 Dictionary<object, object> reconstructedDict = d;
                 switch (d.KeyType)
                 {
+                    case DumpKeyType.Hidden:
+                        return;
                     case DumpKeyType.List:
                         IEnumerable<object> enumerable = d[Dump.Items] as IEnumerable<object>;
                         if (enumerable == null)
