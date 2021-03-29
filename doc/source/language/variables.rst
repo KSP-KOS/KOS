@@ -268,6 +268,11 @@ This follows the :ref:`scoping rules explained below <scope>`.  If the
 variable can be found in the current local scope, or any scope higher
 up, then it won't be created and instead the existing one will be used.
 
+It is also possible to set the values of multiple variables in a single ``SET`` statement
+by separating the assignments with commas, as shown below::
+
+    SET X TO 1, Y TO 5, S TO "abc".
+
 .. _unset:
 
 ``UNSET``

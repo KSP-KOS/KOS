@@ -2175,7 +2175,11 @@ namespace kOS.Safe.Compilation.KS
         private void VisitSetStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            ProcessSetOperation(node.Nodes[1], node.Nodes[3]);
+
+            for (int i = 1; i < node.Nodes.Count; i += 4)
+            {
+                ProcessSetOperation(node.Nodes[i], node.Nodes[i + 2]);
+            }
         }
 
         /// <summary>
