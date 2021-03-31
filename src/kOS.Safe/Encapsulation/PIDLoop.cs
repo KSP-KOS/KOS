@@ -196,45 +196,41 @@ namespace kOS.Safe.Encapsulation
 
         public ScalarValue Update(ScalarValue sampleTime, ScalarValue input)
         {
-            Error = Setpoint - input;
-            if (Error > -Epsilon && Error < Epsilon)
+            if (LastSampleTime == sampleTime) return Output;
+
+            double error = Setpoint - input;
+            if (error > -Epsilon && error < Epsilon)
             {
                 // Pretend there is no error (get everything to zero out)
                 // because the error is within the epsilon:
-                Error = 0;
+                error = 0;
                 input = Setpoint;
-                Input = input;
             }
 
-            PTerm = Error * Kp;
+            PTerm = error * Kp;
 
-            if (LastSampleTime == double.MaxValue)
-            {
-                lastIError = Error * Ki;
-            }
-            else if (LastSampleTime < sampleTime)
+            if (LastSampleTime < sampleTime)
             {
                 double dt = sampleTime - LastSampleTime;
 
-                ChangeRate = (input - Input) / dt;
-                DTerm = -ChangeRate * Kd;
+                ChangeRate = (error - Error) / dt;
+                DTerm = ChangeRate * Kd;
 
                 if (Ki != 0)
                 {
-                    ExtraUnwindIfEnabled();
-
+                    ExtraUnwindIfEnabled(error);
                     ITerm += lastIError * dt;
-                    lastIError = AntiWindup(Error * Ki);
                 }
                 else
                 {
                     ITerm = 0;
-                    lastIError = Error * Ki;
                 }
             }
             
+            lastIError = AntiWindup(error * Ki);
             LastSampleTime = sampleTime;
             Input = input;
+            Error = error;
             if (Ki != 0) ErrorSum = ITerm / Ki;
             else ErrorSum = 0;
 
@@ -243,11 +239,11 @@ namespace kOS.Safe.Encapsulation
             return Output;
         }
 
-        private void ExtraUnwindIfEnabled()
+        private void ExtraUnwindIfEnabled(double error)
         {
             if (ExtraUnwind)
             {
-                if (Math.Sign(Error) != Math.Sign(ErrorSum))
+                if (Math.Sign(error) != Math.Sign(ErrorSum))
                 {
                     if (!unWinding)
                     {
