@@ -3,7 +3,7 @@
 Attitude Correction Result
 ======
 
-When you perform a control action on a ship (yaw, pitch, roll, x, y, z, throttle) this always has two effects on the ship. Part of the impulse will be be imparted as rotation and part of it will be translation.
+When you perform a control action on a ship (yaw, pitch, roll, fore, top, star, throttle) this always has two effects on the ship. Part of the impulse will be be imparted as rotation and part of it will be translation.
 
 .. structure:: AttitudeCorrectionResult
 
@@ -20,4 +20,4 @@ When you perform a control action on a ship (yaw, pitch, roll, x, y, z, throttle
           - The torque vector (pitch, roll, yaw).
         * - :attr:`TRANSLATION`
           - :struct:`Vector <Vector>`
-          - The translation force (x, y, z)
+          - The translation force (fore, top, star)

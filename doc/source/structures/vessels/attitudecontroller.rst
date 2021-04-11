@@ -132,7 +132,7 @@ A ship usually has various attitude controllers like control surfaces, engines, 
     :access: Get/Set
     :type: :ref:`boolean <boolean>`
 
-    Determines whether this controller is allowed to respond to translation X input.
+    Determines whether this controller is allowed to respond to translation fore input.
 
 .. _attitudecontroller_ALLOWY:
 
@@ -141,7 +141,7 @@ A ship usually has various attitude controllers like control surfaces, engines, 
     :access: Get/Set
     :type: :ref:`boolean <boolean>`
 
-    Determines whether this controller is allowed to respond to translation Y input.
+    Determines whether this controller is allowed to respond to translation top input.
 
 .. _attitudecontroller_ALLOWZ:
 
@@ -150,7 +150,7 @@ A ship usually has various attitude controllers like control surfaces, engines, 
     :access: Get/Set
     :type: :ref:`boolean <boolean>`
 
-    Determines whether this controller is allowed to respond to translation Z input.
+    Determines whether this controller is allowed to respond to translation star input.
 
 .. _attitudecontroller_HASCUSTOMTHROTTLE:
 
@@ -238,7 +238,7 @@ A ship usually has various attitude controllers like control surfaces, engines, 
 .. method:: AttitudeController:RESPONSEFOR(pitchYawRollInput, translateXYZInput, throttle)
 
     :parameter pitchYawRollInput: A vector describing user pitch, yaw, roll input between -1 and 1.
-	:parameter translateXYZInput: A vector describing user x, y, z translation input between -1 and 1.
+	:parameter translateXYZInput: A vector describing user fore, top, star translation input between -1 and 1.
 	:parameter throttle: A scalar representing the custom throttle value in percent.
     :type: :struct:`AttitudeCorrectionResult <AttitudeCorrectionResult>`
 
