@@ -667,7 +667,6 @@ namespace kOS.Control
             rawTorque.x = (rawTorque.x + PitchTorqueAdjust) * PitchTorqueFactor;
             rawTorque.z = (rawTorque.z + YawTorqueAdjust) * YawTorqueFactor;
             rawTorque.y = (rawTorque.y + RollTorqueAdjust) * RollTorqueFactor;
-
             controlTorque = rawTorque + adjustTorque;
             //controlTorque = Vector3d.Scale(rawTorque, adjustTorque);
             //controlTorque = rawTorque;
@@ -717,6 +716,14 @@ namespace kOS.Control
                     for (int i = rcs.thrusterTransforms.Count-1; i >= 0; --i)
                     {
                         Transform rcsTransform = rcs.thrusterTransforms[i];
+
+                        // Fixes github issue #2912:  As of KSP 1.11.x, RCS parts now use part variants.  To keep kOS
+                        // from counting torque as if the superset of all variant nozzles were present, the ones not
+                        // currently active have to be culled out here, since KSP isn't culling them out itself when
+                        // it populates ModuleRCS.thrusterTransforms:
+                        if (!rcsTransform.gameObject.activeInHierarchy)
+                            continue;
+
                         Vector3 rcsPosFromCoM = rcsTransform.position - Vessel.CurrentCoM;
                         Vector3 rcsThrustDir = rcs.useZaxis ? -rcsTransform.forward : rcsTransform.up;
                         float powerFactor = rcs.thrusterPower * rcs.thrustPercentage * 0.01f;
