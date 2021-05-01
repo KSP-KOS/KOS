@@ -16,6 +16,13 @@
         "repository" : "https://github.com/KSP-KOS/KOS"
     },
     "conflicts"      :   [ { "name" : "kOS-Classic" } ],
+    "depends"        : [
+        {
+            "name" : "ClickThroughBlocker",
+            "min_version" : "0.10.0",
+            "comment" : "For better cooperation with the many other mods that use it, kOS now also uses ClickThroughBlocker to open its GUI windows.  But this means kOS won't work if ClickThroughBlocker is missing. <br/> (Geek technical note: Any implementation that tried to make this dependency optional would have involved too much expensive Reflection.)"
+        }
+    ],
     "recommends"     : [
         {
             "name": "ModuleManager",

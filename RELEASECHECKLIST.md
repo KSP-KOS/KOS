@@ -41,6 +41,10 @@ note where it says "(*backport*)" below if you are doing a backport.
 - [ ] Copy Github release to [Spacedock](http://spacedock.info/mod/60/kOS:%20Scriptable%20Autopilot%20System)
   - [ ] If this is a *normal release* for the most recent KSP version supported, Make sure it is set as the default (using the "changelog" link on the Spacedock page).
   - [ ] If this is a *backport*, make sure it did NOT become the default, and set the default back to the most recent non-backport version (using the "changelog" link on Spacedock).
+- [ ] NOW that all the ZIP releases are out there on the various sites, NOW go back and merge any netkan_issue_NNNN PRs into develop and into master:
+  - Any PR branches named like "netkan_issue_NNNN" are deliberately delayed until after the release ZIP file was made public in the above steps.
+  - Now that the ZIP is public, now you can merge those PR's in to both develop and master.
+  - Why? See the file called kOS.version.README_SUPER_IMPORTANT.md.
 - [ ] Update [Forum thread](https://forum.kerbalspaceprogram.com/index.php?/topic/165628-13-kos-v1130-kos-scriptable-autopilot-system/) with new change log, release date and version
 - [ ] Post update in the forum thread
 - [ ] Post update on [reddit board](http://www.reddit.com/r/kos)
