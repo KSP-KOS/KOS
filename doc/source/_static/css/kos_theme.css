@@ -18,6 +18,81 @@ a.reference span.pre { color: #2980B9; }
 /*removes extra padding around highlighted search results*/
 .rst-content span.highlighted{padding: 0 0px}
 
-/* It is possible to do a lot more here, but let's
- * leave it at that for now.
- */
+.wy-nav-content {
+    max-width: none;
+}
+
+
+a:visited {
+    text-shadow:1px 0px #343131;
+}
+
+a:link {
+    text-shadow:0px 1px #343131;
+}
+
+a:hover {
+    color: #e77617;
+    text-shadow: initial;
+    cursor: help;
+    border-style: double;
+    border-color: #e77617;
+}
+
+.lastupdated::before {
+    display: block;
+	white-space: pre;
+	content: "\A";
+}
+
+.icon.icon-home {
+    color: #ffffff;
+}
+
+@page { counter-increment: ch1 }
+
+h1::before {
+    content: counter(ch1) " - ";
+}
+h2::before {
+    content: counter(ch1) "." counter(ch2) " - ";
+}
+h3::before {
+    content: counter(ch1) "." counter(ch2) "." counter(ch3) " - ";
+}
+h1 {
+    color: #e77617;
+    border-style: none none double none;
+    -webkit-border-image: 
+        -webkit-gradient(linear, 0 100%, 0 0, from(#e77617), to(#3a7c9d)) 1 100%;
+    counter-reset: ch2 0 ch3 0;
+    counter-increment: ch1;
+}
+h2 {
+    color: #3a7c9d;
+    text-decoration: underline solid;
+    text-indent: 5%;
+    counter-reset: ch3 0;
+    counter-increment: ch2;
+}
+h3 {
+  text-indent: 10%;
+  counter-increment: ch3;
+}
+
+p {
+    text-align: justify;
+}
+dt {
+    border-style: outset;
+}
+.wy-nav-side {
+    border-style: none solid none none;
+
+    -webkit-border-image: 
+      -webkit-gradient(linear, 0 100%, 0 0, from(#e77617), to(rgba(0,0,0,0))) 1 100%;
+}
+.highlighttable {
+    border-left: 6px solid #e77617;
+    border-bottom: 6px solid lightgrey;
+}
