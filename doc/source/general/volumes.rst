@@ -115,6 +115,8 @@ the volumes using the same names::
 
 If a kOS processor has a name tag set, then that processor's volume
 will have its name initially set to the value of the name tag.
+If the tag contains characters that would not be allowed in the volume's name 
+they will be removed, exept spaces which are replaced with underscore instead.
 
 Archive
 -------
