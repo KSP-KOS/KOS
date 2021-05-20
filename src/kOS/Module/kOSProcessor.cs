@@ -17,6 +17,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
+
 using kOS.Safe.Execution;
 using UnityEngine;
 using kOS.Safe.Encapsulation;
@@ -478,6 +480,8 @@ namespace kOS.Module
             return result;
         }
 
+        private static Regex VolumeNameRemoveChars = new Regex("[/\\\\<>:\"|?*]*", RegexOptions.Compiled);
+
         public void InitObjects()
         {
             if (objectsInitialized)
@@ -526,7 +530,13 @@ namespace kOS.Module
 
                 if (!string.IsNullOrEmpty(Tag))
                 {
-                    HardDisk.Name = Tag;
+                    // Tag could contain characters that are not allowed.
+                    var tmpTag = VolumeNameRemoveChars.Replace(Tag, "");
+
+                    if( !string.IsNullOrWhiteSpace(tmpTag))
+                    {
+                        HardDisk.Name = tmpTag.Replace(' ', '_');
+                    }
                 }
 
                 var path = BootFilePath;
