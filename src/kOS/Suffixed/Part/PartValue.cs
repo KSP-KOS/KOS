@@ -92,11 +92,16 @@ namespace kOS.Suffixed.Part
 
             Bounds unionBounds = new Bounds();
 
-            MeshFilter[] meshes = Part.GetComponentsInChildren<MeshFilter>();
-            for (int meshIndex = 0; meshIndex < meshes.Length; ++meshIndex)
+            Collider[] colliders = Part.GetComponentsInChildren<Collider>();
+            for (int colliderIndex = 0; colliderIndex < colliders.Length; ++colliderIndex)
             {
-                MeshFilter mesh = meshes[meshIndex];
-                Bounds bounds = mesh.mesh.bounds;
+                Collider collider = colliders[colliderIndex];
+
+                // Colliders that are triggers should be ignored.
+                // They merely fire an event when they intersect with something, but have no physics effect.
+                if (collider.isTrigger) continue;
+
+                Bounds bounds = collider.bounds;
 
                 // Part meshes could be scaled as well as rotated (the mesh might describe a
                 // part that's 1 meter wide while the real part is 2 meters wide, and has a scale of 2x
@@ -113,7 +118,7 @@ namespace kOS.Suffixed.Part
                         for (int signZ = -1; signZ <= 1; signZ += 2) // -1, then +1
                         {
                             Vector3 corner = center + new Vector3(signX * bounds.extents.x, signY * bounds.extents.y, signZ * bounds.extents.z);
-                            Vector3 worldCorner = mesh.transform.TransformPoint(corner);
+                            Vector3 worldCorner = collider.transform.TransformPoint(corner);
                             Vector3 partCorner = rotateYToZ * Part.transform.InverseTransformPoint(worldCorner);
 
                             // Stretches the bounds we're making (which started at size zero in all axes),
