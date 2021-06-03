@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<KSPedia xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="kos" CreatedTime="-8585788580723301754">
+<KSPedia xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="kos" CreatedTime="-8585788467202808493">
   <Categories>
     <Category Name="kOS">
       <Title>kOS</Title>
       <TitleScreen>kOS</TitleScreen>
-      <Screens>
-        <Screen>WhatIskOS</Screen>
-      </Screens>
+      <Screens />
       <Subcategories>
-        <Subcategory Name="Tutorials">
+        <Subcategory Name="tutorials">
           <Title>Tutorials</Title>
           <TitleScreen>Tutorials</TitleScreen>
           <Screens>
-            <Screen>BasicExplanation</Screen>
-            <Screen>HelloWorld</Screen>
             <Screen>RocketTutorial</Screen>
+            <Screen>HelloWorld</Screen>
           </Screens>
           <Subcategories />
         </Subcategory>
-        <Subcategory Name="Documentation">
+        <Subcategory Name="docs">
           <Title>Documentation</Title>
           <TitleScreen>Documentation</TitleScreen>
           <Screens />
@@ -28,27 +25,9 @@
     </Category>
   </Categories>
   <Screens>
-    <Screen Name="WhatIskOS">
-      <BundleName>kos</BundleName>
-      <AssetPath>Assets/KSPedia Panels/WhatIskOS.prefab</AssetPath>
-      <Title>What is kOS</Title>
-      <Background />
-      <Text>
-        <Text Name="Heading">
-          <Text>What is kOS?</Text>
-        </Text>
-        <Text Name="Heading/Subheading">
-          <Text>Kerbal Operating System</Text>
-        </Text>
-        <Text Name="Text">
-          <Text>New Text</Text>
-        </Text>
-      </Text>
-      <Tooltips />
-    </Screen>
     <Screen Name="Tutorials">
       <BundleName>kos</BundleName>
-      <AssetPath>Assets/KSPedia Panels/Tutorials.prefab</AssetPath>
+      <AssetPath>Assets/panels/Tutorials.prefab</AssetPath>
       <Title />
       <Background />
       <Text>
@@ -63,7 +42,7 @@
     </Screen>
     <Screen Name="Template">
       <BundleName>kos</BundleName>
-      <AssetPath>Assets/KSPedia Panels/Template.prefab</AssetPath>
+      <AssetPath>Assets/panels/Template.prefab</AssetPath>
       <Title />
       <Background />
       <Text>
@@ -81,15 +60,15 @@
     </Screen>
     <Screen Name="RocketTutorial">
       <BundleName>kos</BundleName>
-      <AssetPath>Assets/KSPedia Panels/RocketTutorial.prefab</AssetPath>
+      <AssetPath>Assets/panels/RocketTutorial.prefab</AssetPath>
       <Title>Rocket Tutorial</Title>
       <Background />
       <Text>
         <Text Name="Heading">
-          <Text>Hello World Tutorial</Text>
+          <Text>Fly a Rocket!</Text>
         </Text>
         <Text Name="Heading/Subheading">
-          <Text>Learn your way around the terminal, file storage, and printing</Text>
+          <Text>Learn basic commands on how to fly a rocket on a suborbital trajectory</Text>
         </Text>
         <Text Name="Text">
           <Text>New Text</Text>
@@ -99,15 +78,24 @@
     </Screen>
     <Screen Name="kOS">
       <BundleName>kos</BundleName>
-      <AssetPath>Assets/KSPedia Panels/kOS.prefab</AssetPath>
+      <AssetPath>Assets/panels/kOS.prefab</AssetPath>
       <Title />
       <Background />
-      <Text />
+      <Text>
+        <Text Name="Heading">
+          <Text>Kerbal Operating System</Text>
+        </Text>
+        <Text Name="Heading/Subheading">
+          <Text>kOS is the do-it-yourself autopilot mod for KSP.
+This is basic documentation and tutorials to get you started.
+Full docs can be found at https://ksp-kos.github.io/KOS/</Text>
+        </Text>
+      </Text>
       <Tooltips />
     </Screen>
     <Screen Name="HelloWorld">
       <BundleName>kos</BundleName>
-      <AssetPath>Assets/KSPedia Panels/HelloWorld.prefab</AssetPath>
+      <AssetPath>Assets/panels/HelloWorld.prefab</AssetPath>
       <Title>Hello World Tutorial</Title>
       <Background />
       <Text>
@@ -125,7 +113,7 @@
     </Screen>
     <Screen Name="Documentation">
       <BundleName>kos</BundleName>
-      <AssetPath>Assets/KSPedia Panels/Documentation.prefab</AssetPath>
+      <AssetPath>Assets/panels/Documentation.prefab</AssetPath>
       <Title />
       <Background />
       <Text>
@@ -142,7 +130,7 @@ tutorials and explanations.</Text>
     </Screen>
     <Screen Name="BasicExplanation">
       <BundleName>kos</BundleName>
-      <AssetPath>Assets/KSPedia Panels/BasicExplanation.prefab</AssetPath>
+      <AssetPath>Assets/panels/BasicExplanation.prefab</AssetPath>
       <Title>Basic Explanation</Title>
       <Background />
       <Text>
