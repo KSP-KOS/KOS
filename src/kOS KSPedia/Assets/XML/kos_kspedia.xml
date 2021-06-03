@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<KSPedia xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="kos" CreatedTime="-8585788711108879429">
+<KSPedia xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="kos" CreatedTime="-8585788642762848960">
   <Categories>
     <Category Name="kOS">
       <Title>kOS</Title>
@@ -24,6 +24,24 @@
     </Category>
   </Categories>
   <Screens>
+    <Screen Name="Template">
+      <BundleName>kos</BundleName>
+      <AssetPath>Assets/KSPedia Panels/Template.prefab</AssetPath>
+      <Title />
+      <Background />
+      <Text>
+        <Text Name="Heading">
+          <Text>Heading</Text>
+        </Text>
+        <Text Name="Heading/Subheading">
+          <Text>A subheading. Here is some amazing sample text about kOS!</Text>
+        </Text>
+        <Text Name="Text">
+          <Text>New Text</Text>
+        </Text>
+      </Text>
+      <Tooltips />
+    </Screen>
     <Screen Name="SubSub1">
       <BundleName>kos</BundleName>
       <AssetPath>Assets/KSPedia Panels/SubSub1.prefab</AssetPath>
@@ -43,6 +61,7 @@
     <Screen Name="Sub1">
       <BundleName>kos</BundleName>
       <AssetPath>Assets/KSPedia Panels/Sub1.prefab</AssetPath>
+      <Title />
       <Background />
       <Text />
       <Tooltips />
@@ -50,6 +69,7 @@
     <Screen Name="kOS">
       <BundleName>kos</BundleName>
       <AssetPath>Assets/KSPedia Panels/kOS.prefab</AssetPath>
+      <Title />
       <Background />
       <Text />
       <Tooltips />

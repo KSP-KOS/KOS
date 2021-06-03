@@ -324,6 +324,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sub1
       objectReference: {fileID: 0}
+    - target: {fileID: 790269918611503253, guid: c42e6156becef5747bee47f2ee4d2275,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 790269918611503252, guid: c42e6156becef5747bee47f2ee4d2275,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -442,6 +447,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SubSub1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2885017979004958015, guid: 901baf9ec15914c4aaa2c2a535ed0b49,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2885017979004958014, guid: 901baf9ec15914c4aaa2c2a535ed0b49,
         type: 3}
@@ -680,6 +690,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Sub2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7215156337972878118, guid: ece49b2873dcf1e4195c65a4f54404e0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7215156337972878119, guid: ece49b2873dcf1e4195c65a4f54404e0,
         type: 3}
