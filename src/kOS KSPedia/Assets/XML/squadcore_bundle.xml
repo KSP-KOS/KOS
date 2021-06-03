@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<KSPBundleDefinition xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" UrlName="squadcore" Name="squadcore" CreatedTime="-8585788708151094598" AutoLoad="false">
+  <Author />
+  <Info />
+  <Assets>
+    <Asset Name="BackgroundBlack" Path="Assets/SquadCore/KSPedia/Backgrounds/BackgroundBlack.png" Type="Texture2D" Url="SquadCore/KSPedia/Backgrounds/BackgroundBlack" AutoLoad="false" />
+    <Asset Name="BackgroundBlue" Path="Assets/SquadCore/KSPedia/Backgrounds/BackgroundBlue.png" Type="Texture2D" Url="SquadCore/KSPedia/Backgrounds/BackgroundBlue" AutoLoad="false" />
+    <Asset Name="BackgroundBlueGrid" Path="Assets/SquadCore/KSPedia/Backgrounds/BackgroundBlueGrid.png" Type="Texture2D" Url="SquadCore/KSPedia/Backgrounds/BackgroundBlueGrid" AutoLoad="false" />
+    <Asset Name="BackgroundKSC" Path="Assets/SquadCore/KSPedia/Backgrounds/BackgroundKSC.png" Type="Texture2D" Url="SquadCore/KSPedia/Backgrounds/BackgroundKSC" AutoLoad="false" />
+    <Asset Name="BackgroundWhite" Path="Assets/SquadCore/KSPedia/Backgrounds/BackgroundWhite.png" Type="Texture2D" Url="SquadCore/KSPedia/Backgrounds/BackgroundWhite" AutoLoad="false" />
+  </Assets>
+  <Dependencies />
+</KSPBundleDefinition>

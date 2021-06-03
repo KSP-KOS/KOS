@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<KSPedia xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="kos" CreatedTime="-8585788711108879429">
+  <Categories>
+    <Category Name="kOS">
+      <Title>kOS</Title>
+      <TitleScreen>kOS</TitleScreen>
+      <Screens />
+      <Subcategories>
+        <Subcategory Name="Sub1">
+          <Title>Sub 1</Title>
+          <TitleScreen>Sub1</TitleScreen>
+          <Screens>
+            <Screen>SubSub1</Screen>
+          </Screens>
+          <Subcategories />
+        </Subcategory>
+        <Subcategory Name="Sub2">
+          <Title>Sub 2</Title>
+          <TitleScreen>Sub2</TitleScreen>
+          <Screens />
+          <Subcategories />
+        </Subcategory>
+      </Subcategories>
+    </Category>
+  </Categories>
+  <Screens>
+    <Screen Name="SubSub1">
+      <BundleName>kos</BundleName>
+      <AssetPath>Assets/KSPedia Panels/SubSub1.prefab</AssetPath>
+      <Title>Sub Sub 1!</Title>
+      <Background />
+      <Text />
+      <Tooltips />
+    </Screen>
+    <Screen Name="Sub2">
+      <BundleName>kos</BundleName>
+      <AssetPath>Assets/KSPedia Panels/Sub2.prefab</AssetPath>
+      <Title />
+      <Background />
+      <Text />
+      <Tooltips />
+    </Screen>
+    <Screen Name="Sub1">
+      <BundleName>kos</BundleName>
+      <AssetPath>Assets/KSPedia Panels/Sub1.prefab</AssetPath>
+      <Background />
+      <Text />
+      <Tooltips />
+    </Screen>
+    <Screen Name="kOS">
+      <BundleName>kos</BundleName>
+      <AssetPath>Assets/KSPedia Panels/kOS.prefab</AssetPath>
+      <Background />
+      <Text />
+      <Tooltips />
+    </Screen>
+  </Screens>
+</KSPedia>
