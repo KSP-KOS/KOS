@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2885017979004958008}
   - component: {fileID: 2885017979004958009}
   m_Layer: 5
-  m_Name: HelloWorld
+  m_Name: Rocket Tutorial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -248,7 +248,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Hello World Tutorial
+  m_Text: Fly a Rocket!
 --- !u!1 &8503129734835382599
 GameObject:
   m_ObjectHideFlags: 0
@@ -327,4 +327,4 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Learn your way around the terminal, file storage, and printing
+  m_Text: Learn basic commands on how to fly a rocket on a suborbital trajectory

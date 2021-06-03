@@ -327,7 +327,7 @@ PrefabInstance:
     - target: {fileID: 2885017979004958015, guid: 1e16201ddc39c0440b87b8561671aacc,
         type: 3}
       propertyPath: m_Name
-      value: Rocket Tutorial
+      value: RocketTutorial
       objectReference: {fileID: 0}
     - target: {fileID: 2885017979004958014, guid: 1e16201ddc39c0440b87b8561671aacc,
         type: 3}

@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<KSPedia xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="kos" CreatedTime="-8585788632381678945">
+<KSPedia xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="kos" CreatedTime="-8585788580723301754">
   <Categories>
     <Category Name="kOS">
       <Title>kOS</Title>
       <TitleScreen>kOS</TitleScreen>
-      <Screens />
+      <Screens>
+        <Screen>WhatIskOS</Screen>
+      </Screens>
       <Subcategories>
-        <Subcategory Name="Sub1">
-          <Title>Sub 1</Title>
-          <TitleScreen>Sub1</TitleScreen>
+        <Subcategory Name="Tutorials">
+          <Title>Tutorials</Title>
+          <TitleScreen>Tutorials</TitleScreen>
           <Screens>
-            <Screen>SubSub1</Screen>
+            <Screen>BasicExplanation</Screen>
+            <Screen>HelloWorld</Screen>
+            <Screen>RocketTutorial</Screen>
           </Screens>
           <Subcategories />
         </Subcategory>
-        <Subcategory Name="Sub2">
-          <Title>Sub 2</Title>
-          <TitleScreen>Sub2</TitleScreen>
+        <Subcategory Name="Documentation">
+          <Title>Documentation</Title>
+          <TitleScreen>Documentation</TitleScreen>
           <Screens />
           <Subcategories />
         </Subcategory>
@@ -24,6 +28,39 @@
     </Category>
   </Categories>
   <Screens>
+    <Screen Name="WhatIskOS">
+      <BundleName>kos</BundleName>
+      <AssetPath>Assets/KSPedia Panels/WhatIskOS.prefab</AssetPath>
+      <Title>What is kOS</Title>
+      <Background />
+      <Text>
+        <Text Name="Heading">
+          <Text>What is kOS?</Text>
+        </Text>
+        <Text Name="Heading/Subheading">
+          <Text>Kerbal Operating System</Text>
+        </Text>
+        <Text Name="Text">
+          <Text>New Text</Text>
+        </Text>
+      </Text>
+      <Tooltips />
+    </Screen>
+    <Screen Name="Tutorials">
+      <BundleName>kos</BundleName>
+      <AssetPath>Assets/KSPedia Panels/Tutorials.prefab</AssetPath>
+      <Title />
+      <Background />
+      <Text>
+        <Text Name="Heading">
+          <Text>Tutorials</Text>
+        </Text>
+        <Text Name="Heading/Subheading">
+          <Text>Basic tutorials on how to use some of the features of kOS</Text>
+        </Text>
+      </Text>
+      <Tooltips />
+    </Screen>
     <Screen Name="Template">
       <BundleName>kos</BundleName>
       <AssetPath>Assets/KSPedia Panels/Template.prefab</AssetPath>
@@ -42,28 +79,22 @@
       </Text>
       <Tooltips />
     </Screen>
-    <Screen Name="SubSub1">
+    <Screen Name="RocketTutorial">
       <BundleName>kos</BundleName>
-      <AssetPath>Assets/KSPedia Panels/SubSub1.prefab</AssetPath>
-      <Title>Sub Sub 1!</Title>
+      <AssetPath>Assets/KSPedia Panels/RocketTutorial.prefab</AssetPath>
+      <Title>Rocket Tutorial</Title>
       <Background />
-      <Text />
-      <Tooltips />
-    </Screen>
-    <Screen Name="Sub2">
-      <BundleName>kos</BundleName>
-      <AssetPath>Assets/KSPedia Panels/Sub2.prefab</AssetPath>
-      <Title />
-      <Background />
-      <Text />
-      <Tooltips />
-    </Screen>
-    <Screen Name="Sub1">
-      <BundleName>kos</BundleName>
-      <AssetPath>Assets/KSPedia Panels/Sub1.prefab</AssetPath>
-      <Title />
-      <Background />
-      <Text />
+      <Text>
+        <Text Name="Heading">
+          <Text>Hello World Tutorial</Text>
+        </Text>
+        <Text Name="Heading/Subheading">
+          <Text>Learn your way around the terminal, file storage, and printing</Text>
+        </Text>
+        <Text Name="Text">
+          <Text>New Text</Text>
+        </Text>
+      </Text>
       <Tooltips />
     </Screen>
     <Screen Name="kOS">
@@ -72,6 +103,59 @@
       <Title />
       <Background />
       <Text />
+      <Tooltips />
+    </Screen>
+    <Screen Name="HelloWorld">
+      <BundleName>kos</BundleName>
+      <AssetPath>Assets/KSPedia Panels/HelloWorld.prefab</AssetPath>
+      <Title>Hello World Tutorial</Title>
+      <Background />
+      <Text>
+        <Text Name="Heading">
+          <Text>Hello World Tutorial</Text>
+        </Text>
+        <Text Name="Heading/Subheading">
+          <Text>Learn your way around the terminal, file storage, and printing</Text>
+        </Text>
+        <Text Name="Text">
+          <Text>New Text</Text>
+        </Text>
+      </Text>
+      <Tooltips />
+    </Screen>
+    <Screen Name="Documentation">
+      <BundleName>kos</BundleName>
+      <AssetPath>Assets/KSPedia Panels/Documentation.prefab</AssetPath>
+      <Title />
+      <Background />
+      <Text>
+        <Text Name="Heading">
+          <Text>Tutorials</Text>
+        </Text>
+        <Text Name="Heading/Subheading">
+          <Text>Basic tutorials on how to use some of the features of kOS
+Visit https://ksp-kos.github.io/KOS/tutorials for more in-depth
+tutorials and explanations.</Text>
+        </Text>
+      </Text>
+      <Tooltips />
+    </Screen>
+    <Screen Name="BasicExplanation">
+      <BundleName>kos</BundleName>
+      <AssetPath>Assets/KSPedia Panels/BasicExplanation.prefab</AssetPath>
+      <Title>Basic Explanation</Title>
+      <Background />
+      <Text>
+        <Text Name="Heading">
+          <Text>Basic Explanation</Text>
+        </Text>
+        <Text Name="Heading/Subheading">
+          <Text>New to programming but want to learn kOS? This is the place for you.</Text>
+        </Text>
+        <Text Name="Text">
+          <Text>New Text</Text>
+        </Text>
+      </Text>
       <Tooltips />
     </Screen>
   </Screens>
