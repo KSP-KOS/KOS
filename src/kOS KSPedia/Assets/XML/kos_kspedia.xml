@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<KSPedia xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="kos" CreatedTime="-8585788467202808493">
+<KSPedia xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="kos" CreatedTime="-8585788448460023427">
   <Categories>
     <Category Name="kOS">
       <Title>kOS</Title>
       <TitleScreen>kOS</TitleScreen>
-      <Screens />
+      <Screens>
+        <Screen>WhatIskOS</Screen>
+      </Screens>
       <Subcategories>
         <Subcategory Name="tutorials">
           <Title>Tutorials</Title>
@@ -12,6 +14,7 @@
           <Screens>
             <Screen>RocketTutorial</Screen>
             <Screen>HelloWorld</Screen>
+            <Screen>BasicExplanation</Screen>
           </Screens>
           <Subcategories />
         </Subcategory>
@@ -25,6 +28,24 @@
     </Category>
   </Categories>
   <Screens>
+    <Screen Name="WhatIskOS">
+      <BundleName>kos</BundleName>
+      <AssetPath>Assets/panels/WhatIskOS.prefab</AssetPath>
+      <Title>What is kOS?</Title>
+      <Background />
+      <Text>
+        <Text Name="Heading">
+          <Text>What Is kOS?</Text>
+        </Text>
+        <Text Name="Heading/Subheading">
+          <Text>Kerbal Operating System</Text>
+        </Text>
+        <Text Name="Text">
+          <Text>New Text</Text>
+        </Text>
+      </Text>
+      <Tooltips />
+    </Screen>
     <Screen Name="Tutorials">
       <BundleName>kos</BundleName>
       <AssetPath>Assets/panels/Tutorials.prefab</AssetPath>
