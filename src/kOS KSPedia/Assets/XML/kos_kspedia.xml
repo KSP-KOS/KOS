@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<KSPedia xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="kos" CreatedTime="-8585788448460023427">
+<KSPedia xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="kos" CreatedTime="-8585788433849811156">
   <Categories>
     <Category Name="kOS">
       <Title>kOS</Title>
@@ -21,7 +21,15 @@
         <Subcategory Name="docs">
           <Title>Documentation</Title>
           <TitleScreen>Documentation</TitleScreen>
-          <Screens />
+          <Screens>
+            <Screen>LanguageSyntax</Screen>
+            <Screen>FileStorage</Screen>
+            <Screen>DataTypes</Screen>
+            <Screen>BoundVariables</Screen>
+            <Screen>LoopsAndWait</Screen>
+            <Screen>RunningPrograms</Screen>
+            <Screen>ManyMore</Screen>
+          </Screens>
           <Subcategories />
         </Subcategory>
       </Subcategories>
@@ -79,6 +87,24 @@
       </Text>
       <Tooltips />
     </Screen>
+    <Screen Name="RunningPrograms">
+      <BundleName>kos</BundleName>
+      <AssetPath>Assets/panels/RunningPrograms.prefab</AssetPath>
+      <Title>Running Programs</Title>
+      <Background />
+      <Text>
+        <Text Name="Heading">
+          <Text>Running Programs</Text>
+        </Text>
+        <Text Name="Heading/Subheading">
+          <Text>Subheading</Text>
+        </Text>
+        <Text Name="Text">
+          <Text>New Text</Text>
+        </Text>
+      </Text>
+      <Tooltips />
+    </Screen>
     <Screen Name="RocketTutorial">
       <BundleName>kos</BundleName>
       <AssetPath>Assets/panels/RocketTutorial.prefab</AssetPath>
@@ -90,6 +116,57 @@
         </Text>
         <Text Name="Heading/Subheading">
           <Text>Learn basic commands on how to fly a rocket on a suborbital trajectory</Text>
+        </Text>
+        <Text Name="Text">
+          <Text>New Text</Text>
+        </Text>
+      </Text>
+      <Tooltips />
+    </Screen>
+    <Screen Name="ManyMore">
+      <BundleName>kos</BundleName>
+      <AssetPath>Assets/panels/ManyMore.prefab</AssetPath>
+      <Title>And Many More!</Title>
+      <Background />
+      <Text>
+        <Text Name="Heading">
+          <Text>...And Many More!</Text>
+        </Text>
+        <Text Name="Heading/Subheading">
+          <Text>kOS has many more features, this is just a very brief overview of some of the more common features used. Visit https://ksp-kos.github.io/KOS/ for all of the many features that kOS offers, along with in-depth explanations.</Text>
+        </Text>
+      </Text>
+      <Tooltips />
+    </Screen>
+    <Screen Name="LoopsAndWait">
+      <BundleName>kos</BundleName>
+      <AssetPath>Assets/panels/LoopsAndWait.prefab</AssetPath>
+      <Title>Loops and Wait</Title>
+      <Background />
+      <Text>
+        <Text Name="Heading">
+          <Text>Loops and Wait</Text>
+        </Text>
+        <Text Name="Heading/Subheading">
+          <Text>Subheading</Text>
+        </Text>
+        <Text Name="Text">
+          <Text>New Text</Text>
+        </Text>
+      </Text>
+      <Tooltips />
+    </Screen>
+    <Screen Name="LanguageSyntax">
+      <BundleName>kos</BundleName>
+      <AssetPath>Assets/panels/LanguageSyntax.prefab</AssetPath>
+      <Title>Language Syntax</Title>
+      <Background />
+      <Text>
+        <Text Name="Heading">
+          <Text>Language Syntax</Text>
+        </Text>
+        <Text Name="Heading/Subheading">
+          <Text>Subheading</Text>
         </Text>
         <Text Name="Text">
           <Text>New Text</Text>
@@ -132,6 +209,24 @@ Full docs can be found at https://ksp-kos.github.io/KOS/</Text>
       </Text>
       <Tooltips />
     </Screen>
+    <Screen Name="FileStorage">
+      <BundleName>kos</BundleName>
+      <AssetPath>Assets/panels/FileStorage.prefab</AssetPath>
+      <Title>File Storage</Title>
+      <Background />
+      <Text>
+        <Text Name="Heading">
+          <Text>File Storage</Text>
+        </Text>
+        <Text Name="Heading/Subheading">
+          <Text>Subheading</Text>
+        </Text>
+        <Text Name="Text">
+          <Text>New Text</Text>
+        </Text>
+      </Text>
+      <Tooltips />
+    </Screen>
     <Screen Name="Documentation">
       <BundleName>kos</BundleName>
       <AssetPath>Assets/panels/Documentation.prefab</AssetPath>
@@ -145,6 +240,42 @@ Full docs can be found at https://ksp-kos.github.io/KOS/</Text>
           <Text>Basic tutorials on how to use some of the features of kOS
 Visit https://ksp-kos.github.io/KOS/tutorials for more in-depth
 tutorials and explanations.</Text>
+        </Text>
+      </Text>
+      <Tooltips />
+    </Screen>
+    <Screen Name="DataTypes">
+      <BundleName>kos</BundleName>
+      <AssetPath>Assets/panels/DataTypes.prefab</AssetPath>
+      <Title>Data Types</Title>
+      <Background />
+      <Text>
+        <Text Name="Heading">
+          <Text>Data Types</Text>
+        </Text>
+        <Text Name="Heading/Subheading">
+          <Text>New to programming but want to learn kOS? This is the place for you.</Text>
+        </Text>
+        <Text Name="Text">
+          <Text>New Text</Text>
+        </Text>
+      </Text>
+      <Tooltips />
+    </Screen>
+    <Screen Name="BoundVariables">
+      <BundleName>kos</BundleName>
+      <AssetPath>Assets/panels/BoundVariables.prefab</AssetPath>
+      <Title>Bound Variables</Title>
+      <Background />
+      <Text>
+        <Text Name="Heading">
+          <Text>Bound Variables</Text>
+        </Text>
+        <Text Name="Heading/Subheading">
+          <Text>Subheading</Text>
+        </Text>
+        <Text Name="Text">
+          <Text>New Text</Text>
         </Text>
       </Text>
       <Tooltips />
