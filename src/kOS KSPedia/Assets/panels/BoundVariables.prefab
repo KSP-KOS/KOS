@@ -124,8 +124,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1015, y: -817}
-  m_SizeDelta: {x: 1900, y: 1100}
+  m_AnchoredPosition: {x: 1015, y: -633.2}
+  m_SizeDelta: {x: 1900, y: 732.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2111191494840191842
 CanvasRenderer:
@@ -168,7 +168,28 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 'You cannot name any of your variables anything in this list. However, you
+    can use these variables in your scripts.
+
+
+    SHIP
+
+    This is used to get information about the vessel that has the kOS CPU on it.
+
+
+    TARGET
+
+    Whatever happens to be the active target.
+
+
+    STAGE
+
+    Used to stage the rocket.
+
+
+    Many more can be found here: https://ksp-kos.github.io/KOS/bindings
+
+'
 --- !u!1 &6654046372223078425
 GameObject:
   m_ObjectHideFlags: 0
@@ -327,4 +348,4 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Subheading
+  m_Text: Special and reserved variables

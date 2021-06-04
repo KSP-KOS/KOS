@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<KSPedia xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="kos" CreatedTime="-8585788433849811156">
+<KSPedia xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="kos" CreatedTime="-8585787875173164528">
   <Categories>
     <Category Name="kOS">
       <Title>kOS</Title>
@@ -23,8 +23,6 @@
           <TitleScreen>Documentation</TitleScreen>
           <Screens>
             <Screen>LanguageSyntax</Screen>
-            <Screen>FileStorage</Screen>
-            <Screen>DataTypes</Screen>
             <Screen>BoundVariables</Screen>
             <Screen>LoopsAndWait</Screen>
             <Screen>RunningPrograms</Screen>
@@ -209,24 +207,6 @@ Full docs can be found at https://ksp-kos.github.io/KOS/</Text>
       </Text>
       <Tooltips />
     </Screen>
-    <Screen Name="FileStorage">
-      <BundleName>kos</BundleName>
-      <AssetPath>Assets/panels/FileStorage.prefab</AssetPath>
-      <Title>File Storage</Title>
-      <Background />
-      <Text>
-        <Text Name="Heading">
-          <Text>File Storage</Text>
-        </Text>
-        <Text Name="Heading/Subheading">
-          <Text>Subheading</Text>
-        </Text>
-        <Text Name="Text">
-          <Text>New Text</Text>
-        </Text>
-      </Text>
-      <Tooltips />
-    </Screen>
     <Screen Name="Documentation">
       <BundleName>kos</BundleName>
       <AssetPath>Assets/panels/Documentation.prefab</AssetPath>
@@ -240,24 +220,6 @@ Full docs can be found at https://ksp-kos.github.io/KOS/</Text>
           <Text>Basic tutorials on how to use some of the features of kOS
 Visit https://ksp-kos.github.io/KOS/tutorials for more in-depth
 tutorials and explanations.</Text>
-        </Text>
-      </Text>
-      <Tooltips />
-    </Screen>
-    <Screen Name="DataTypes">
-      <BundleName>kos</BundleName>
-      <AssetPath>Assets/panels/DataTypes.prefab</AssetPath>
-      <Title>Data Types</Title>
-      <Background />
-      <Text>
-        <Text Name="Heading">
-          <Text>Data Types</Text>
-        </Text>
-        <Text Name="Heading/Subheading">
-          <Text>New to programming but want to learn kOS? This is the place for you.</Text>
-        </Text>
-        <Text Name="Text">
-          <Text>New Text</Text>
         </Text>
       </Text>
       <Tooltips />

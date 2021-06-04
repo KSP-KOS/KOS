@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<KSPBundleDefinition xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" UrlName="kos" Name="kos" CreatedTime="-8585788433751721143" AutoLoad="false">
+<KSPBundleDefinition xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" UrlName="kos" Name="kos" CreatedTime="-8585787874624717200" AutoLoad="false">
   <Author>kna27</Author>
   <Info>KSPedia pages for kOS</Info>
   <Assets>
     <Asset Name="BasicExplanation" Path="Assets/panels/BasicExplanation.prefab" Type="GameObject" Url="panels/BasicExplanation" AutoLoad="false" />
     <Asset Name="BoundVariables" Path="Assets/panels/BoundVariables.prefab" Type="GameObject" Url="panels/BoundVariables" AutoLoad="false" />
-    <Asset Name="DataTypes" Path="Assets/panels/DataTypes.prefab" Type="GameObject" Url="panels/DataTypes" AutoLoad="false" />
     <Asset Name="Documentation" Path="Assets/panels/Documentation.prefab" Type="GameObject" Url="panels/Documentation" AutoLoad="false" />
-    <Asset Name="FileStorage" Path="Assets/panels/FileStorage.prefab" Type="GameObject" Url="panels/FileStorage" AutoLoad="false" />
     <Asset Name="HelloWorld" Path="Assets/panels/HelloWorld.prefab" Type="GameObject" Url="panels/HelloWorld" AutoLoad="false" />
     <Asset Name="kOS" Path="Assets/panels/kOS.prefab" Type="GameObject" Url="panels/kOS" AutoLoad="false" />
     <Asset Name="LanguageSyntax" Path="Assets/panels/LanguageSyntax.prefab" Type="GameObject" Url="panels/LanguageSyntax" AutoLoad="false" />
