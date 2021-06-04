@@ -302,6 +302,83 @@ namespace kOS.Module
             additionalMassGui = AdditionalMass * 1000;
         }
 
+        private PartModule RP1AvionicsModule = null;
+
+        private void FindRP1Modules()
+        {
+            RP1AvionicsModule = null;
+            foreach (PartModule otherModule in part.Modules)
+            {
+                for (System.Type t = otherModule.GetType(); t != null; t = t.BaseType)
+                {
+                    if (t.Name.Contains("ModuleProceduralAvionics"))
+                    {
+                        RP1AvionicsModule = otherModule;
+                        break;
+                    }
+                }
+                if (RP1AvionicsModule != null)
+                    break;
+            }
+            SafeHouse.Logger.Log(string.Format("FindRP1Module: {0}", RP1AvionicsModule != null ? "Found" : "Not Found"));
+        }
+
+        private void UpdateRP1TechLevel(bool InEditor)
+        {
+            if (RP1AvionicsModule != null)
+            {
+                var techNodePropInfo = RP1AvionicsModule.GetType().GetProperty("CurrentProceduralAvionicsTechNode");
+                if (techNodePropInfo != null)
+                {
+                    var techNodeProp = techNodePropInfo.GetValue(RP1AvionicsModule);
+                    if (techNodeProp != null)
+                    {
+                        System.Type techNodeType = techNodeProp.GetType();
+                        System.Reflection.FieldInfo fieldInfo;
+
+                        if (InEditor)
+                        {
+                            fieldInfo = techNodeType.GetField("kosDiskSpace");
+                            int newDiskSpace = (fieldInfo != null) ? (int)fieldInfo.GetValue(techNodeProp) : 0;
+                            if (newDiskSpace != baseDiskSpace && newDiskSpace > 0)
+                            {
+                                SafeHouse.Logger.Log(string.Format("Changing base disk space for RP-1 config change: {0} -> {1}", baseDiskSpace, newDiskSpace));
+
+                                // Adjust disk space to be the same multiple of the new base disk space
+                                diskSpace = newDiskSpace * diskSpace / baseDiskSpace;
+                                baseDiskSpace = newDiskSpace;
+
+                                PopulateDiskSpaceUI();
+                            }
+                        }
+
+                        fieldInfo = techNodeType.GetField("kosSpaceCostFactor");
+                        if (fieldInfo != null)
+                            diskSpaceCostFactor = (float)fieldInfo.GetValue(techNodeProp);
+                        fieldInfo = techNodeType.GetField("kosSpaceMassFactor");
+                        if (fieldInfo != null)
+                            diskSpaceMassFactor = (float)fieldInfo.GetValue(techNodeProp);
+                        fieldInfo = techNodeType.GetField("kosECPerInstruction");
+                        if (fieldInfo != null)
+                            ECPerInstruction = (float)fieldInfo.GetValue(techNodeProp);
+                    }
+                }
+            }
+        }
+
+        private void PopulateDiskSpaceUI()
+        {
+            //populate diskSpaceUI selector
+            diskSpaceUI = diskSpace.ToString();
+            BaseField field = Fields["diskSpaceUI"];
+            UI_ChooseOption options = (UI_ChooseOption)field.uiControlEditor;
+            var sizeOptions = new string[3];
+            sizeOptions[0] = baseDiskSpace.ToString();
+            sizeOptions[1] = (baseDiskSpace * 2).ToString();
+            sizeOptions[2] = (baseDiskSpace * 4).ToString();
+            options.options = sizeOptions;
+        }
+
         //implement IPartMassModifier component
         public float GetModuleMass(float defaultMass, ModifierStagingSituation sit)
         {
@@ -319,6 +396,9 @@ namespace kOS.Module
         {
             try
             {
+                FindRP1Modules();
+                UpdateRP1TechLevel(state == StartState.Editor);
+
                 //if in Editor, populate boot script selector, diskSpace selector and etc.
                 if (state == StartState.Editor)
                 {
@@ -426,15 +506,7 @@ namespace kOS.Module
             bootListDirty = false;
             ForcePAWRefresh();
 
-            //populate diskSpaceUI selector
-            diskSpaceUI = diskSpace.ToString();
-            field = Fields["diskSpaceUI"];
-            options = (UI_ChooseOption)field.uiControlEditor;
-            var sizeOptions = new string[3];
-            sizeOptions[0] = baseDiskSpace.ToString();
-            sizeOptions[1] = (baseDiskSpace * 2).ToString();
-            sizeOptions[2] = (baseDiskSpace * 4).ToString();
-            options.options = sizeOptions;
+            PopulateDiskSpaceUI();
         }
 
         public void ForcePAWRefresh()
@@ -722,6 +794,7 @@ namespace kOS.Module
                 {
                     InitUI();
                 }
+                UpdateRP1TechLevel(true);
                 if (diskSpace != Convert.ToInt32(diskSpaceUI))
                 {
                     diskSpace = Convert.ToInt32(diskSpaceUI);
