@@ -101,7 +101,72 @@ namespace kOS.Suffixed.Part
                 // They merely fire an event when they intersect with something, but have no physics effect.
                 if (collider.isTrigger) continue;
 
-                Bounds bounds = collider.bounds;
+                // Colliders report their bounds in world space, as AABB. But we need the bounds in Part local space.
+                // AABB also means that there may be (significant) empty space inside the bounds.
+                // To get the local bounds:
+                // For a MeshCollider we get the sharedMesh.bounds which does use local space.
+                // For the other colliders we need special cases.
+
+                Vector3 center;
+                Vector3 extents;
+
+                if (collider is MeshCollider meshCollider)
+                {
+                    center = meshCollider.sharedMesh.bounds.center;
+                    extents = meshCollider.sharedMesh.bounds.extents;
+                }
+                else if (collider is BoxCollider boxCollider)
+                {
+                    center = boxCollider.center;
+                    extents = boxCollider.size / 2;
+                }
+                else if (collider is SphereCollider sphereCollider)
+                {
+                    center = sphereCollider.center;
+                    extents = Vector3.one * sphereCollider.radius;
+                }
+                else if (collider is CapsuleCollider capsuleCollider)
+                {
+                    center = capsuleCollider.center;
+
+                    extents = Vector3.one * capsuleCollider.radius;
+                    // The Capsule could face in one of 3 directions, overwrite extent on that axis.
+                    switch (capsuleCollider.direction)
+                    {
+                        case 0:
+                        {
+                            extents.x = capsuleCollider.height / 2;
+                            break;
+                        }
+                        case 1:
+                        {
+                            extents.y = capsuleCollider.height / 2;
+                            break;
+                        }
+                        case 2:
+                        {
+                            extents.z = capsuleCollider.height / 2;
+                            break;
+                        }
+                        default:
+                        {
+                            throw new Exception("Unknown CapsuleCollider direction: " + capsuleCollider.direction);
+                        }
+                    }
+                }
+                else if (collider is WheelCollider wheelCollider)
+                {
+                    center = wheelCollider.center;
+                    extents = Vector3.one * wheelCollider.radius;
+
+                    // Wheels may move on their suspension.
+                    center.y += wheelCollider.suspensionDistance / 2;
+                    extents.y += wheelCollider.suspensionDistance / 2;
+                }
+                else
+                {
+                    throw new Exception("Unknown Collider type: " + collider.GetType().FullName);
+                }
 
                 // Part meshes could be scaled as well as rotated (the mesh might describe a
                 // part that's 1 meter wide while the real part is 2 meters wide, and has a scale of 2x
@@ -110,14 +175,13 @@ namespace kOS.Suffixed.Part
                 // of the bounding box, transforming them with the mesh's transform, then back-calculating
                 // from that world-space result back into the part's own reference frame to get the bounds
                 // relative to the part.
-                Vector3 center = bounds.center;
 
                 // This triple-nested loop visits all 8 corners of the box:
                 for (int signX = -1; signX <= 1; signX += 2) // -1, then +1
                     for (int signY = -1; signY <= 1; signY += 2) // -1, then +1
                         for (int signZ = -1; signZ <= 1; signZ += 2) // -1, then +1
                         {
-                            Vector3 corner = center + new Vector3(signX * bounds.extents.x, signY * bounds.extents.y, signZ * bounds.extents.z);
+                            Vector3 corner = center + new Vector3(signX * extents.x, signY * extents.y, signZ * extents.z);
                             Vector3 worldCorner = collider.transform.TransformPoint(corner);
                             Vector3 partCorner = rotateYToZ * Part.transform.InverseTransformPoint(worldCorner);
 
