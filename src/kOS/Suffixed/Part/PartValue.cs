@@ -9,6 +9,8 @@ using System.Text.RegularExpressions;
 using System.Linq;
 using System.Collections.Generic;
 using kOS.Safe.Compilation.KS;
+using kOS.Safe.Utilities;
+
 using UnityEngine;
 
 namespace kOS.Suffixed.Part
@@ -150,7 +152,8 @@ namespace kOS.Suffixed.Part
                         }
                         default:
                         {
-                            throw new Exception("Unknown CapsuleCollider direction: " + capsuleCollider.direction);
+                            SafeHouse.Logger.LogWarning($"Unknown CapsuleCollider direction: {capsuleCollider.direction} collider #{colliderIndex} of '{Part}' will be skipped.");
+                            continue;
                         }
                     }
                 }
@@ -165,7 +168,8 @@ namespace kOS.Suffixed.Part
                 }
                 else
                 {
-                    throw new Exception("Unknown Collider type: " + collider.GetType().FullName);
+                    SafeHouse.Logger.LogWarning($"Unknown Collider type: '{collider.GetType().FullName}' collider #{colliderIndex} of Part: '{Part}' will be skipped.");
+                    continue;
                 }
 
                 // Part meshes could be scaled as well as rotated (the mesh might describe a
