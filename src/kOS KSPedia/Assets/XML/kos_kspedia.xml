@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<KSPedia xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="kos" CreatedTime="-8585786092399284823">
+<KSPedia xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="kos" CreatedTime="-8585786079848126253">
   <Categories>
     <Category Name="kOS">
       <Title>kOS</Title>
@@ -8,7 +8,7 @@
         <Screen>WhatIskOS</Screen>
       </Screens>
       <Subcategories>
-        <Subcategory Name="tutorials">
+        <Subcategory Name="Tutorials">
           <Title>Tutorials</Title>
           <TitleScreen>Tutorials</TitleScreen>
           <Screens>
@@ -18,11 +18,12 @@
           </Screens>
           <Subcategories />
         </Subcategory>
-        <Subcategory Name="docs">
+        <Subcategory Name="Documentation">
           <Title>Documentation</Title>
           <TitleScreen>Documentation</TitleScreen>
           <Screens>
             <Screen>LanguageSyntax</Screen>
+            <Screen>Variables</Screen>
             <Screen>BoundVariables</Screen>
             <Screen>LoopsAndWait</Screen>
             <Screen>ManyMore</Screen>
@@ -36,7 +37,7 @@
     <Screen Name="WhatIskOS">
       <BundleName>kos</BundleName>
       <AssetPath>Assets/panels/WhatIskOS.prefab</AssetPath>
-      <Title>What is kOS?</Title>
+      <Title>What Is kOS?</Title>
       <Background />
       <Text>
         <Text Name="Heading">
@@ -46,7 +47,45 @@
           <Text>Kerbal Operating System</Text>
         </Text>
         <Text Name="Text">
-          <Text>New Text</Text>
+          <Text>kOS is a community-supported mod for Kerbal Space Program.
+kOS is an autopilot that you script yourself. You don’t have to know what you’re doing to get started, but you may find yourself learning a lot by accident as you play with it.
+
+kOS introduces a few new parts that each contain a simulated computer capable of running programs written in its own scripting langauge called kerboscript. The computer has powerful smarts built in to the hardware that allow it to do complex spacecraft operations in one command, thus making it possible to make complex programs with only a few lines of script text.</Text>
+        </Text>
+      </Text>
+      <Tooltips />
+    </Screen>
+    <Screen Name="Variables">
+      <BundleName>kos</BundleName>
+      <AssetPath>Assets/panels/Variables.prefab</AssetPath>
+      <Title />
+      <Background />
+      <Text>
+        <Text Name="Heading">
+          <Text>Variables</Text>
+        </Text>
+        <Text Name="Subheading (1)">
+          <Text>SET command</Text>
+        </Text>
+        <Text Name="Text">
+          <Text>This is used to create or change a variable with a given name and value:</Text>
+        </Text>
+        <Text Name="Text (1)">
+          <Text>SET X TO 1. // Creates a variable named "X" with a value of 1
+PRINT(X). // Prints the value of X, which is 1
+SET X TO X + 3. // Sets the value of X to itself plus 3, which is 4
+PRINT(X) // Will print the value of X, which is 4
+SET Y TO X. // Creates a variable named "Y" with the value of X, which is 4
+PRINT(X +Y). // Prints what X plus Y is, which is 8 (4 + 4 = 8)</Text>
+        </Text>
+        <Text Name="Text (2)">
+          <Text>Variables don't just have to be whole numbers, however.</Text>
+        </Text>
+        <Text Name="Text (3)">
+          <Text>SET Z TO "Hello World!". // Creates Z with a value of "Hello World!"
+SET A TO 3.19. // Creates A with a value of 3.19
+SET B TO -42.1 // You should be able to figure this one out
+</Text>
         </Text>
       </Text>
       <Tooltips />
@@ -61,7 +100,9 @@
           <Text>Tutorials</Text>
         </Text>
         <Text Name="Heading/Subheading">
-          <Text>Basic tutorials on how to use some of the features of kOS</Text>
+          <Text>Basic tutorials to learn the basics of kOS and to get you started.
+Visit https://ksp-kos.github.io/KOS/tutorials for more in-depth
+tutorials and explanations.</Text>
         </Text>
       </Text>
       <Tooltips />
@@ -96,8 +137,92 @@
         <Text Name="Heading/Subheading">
           <Text>Learn basic commands on how to fly a rocket on a suborbital trajectory</Text>
         </Text>
+        <Text Name="Subheading">
+          <Text>Make a Rocket</Text>
+        </Text>
         <Text Name="Text">
-          <Text>New Text</Text>
+          <Text>Make a rocket that contains a kOS CPU found under the Control section. In this example, we are using the following rocket. You can make whatever you want, as long as it contains a kOS CPU.</Text>
+        </Text>
+        <Text Name="Subheading (1)">
+          <Text>Make the Script</Text>
+        </Text>
+        <Text Name="Text (1)">
+          <Text>Open a text editor on your PC (i.e. Notepad on Windows, TextEdit on Mac, or anything you prefer)
+Type the following:</Text>
+        </Text>
+        <Text Name="Text (2)">
+          <Text>//hellolaunch
+
+//First, we'll clear the terminal screen to make it look nice
+CLEARSCREEN.
+
+//This is our countdown loop, which cycles from 10 to 0
+PRINT "Counting down:".
+FROM {local countdown is 10.} UNTIL countdown = 0 STEP {SET countdown to countdown - 1.} DO {
+    PRINT "..." + countdown.
+    WAIT 1. // pauses the script here for 1 second.
+}</Text>
+        </Text>
+        <Text Name="Text (3)">
+          <Text>Save the file in your Ships/Script folder of your KSP installation under the filename “hellolaunch.ks”. DO NOT save it anywhere under GameData/kOS/. If the Script/ folder does not exist, make it.
+Now, when you launch your vessel, right click on the kOS CPU you added, click "Open Terminal", and type the following:</Text>
+        </Text>
+        <Text Name="Text (4)">
+          <Text>SWITCH TO 1.
+COPYPATH("0:/HELLOLAUNCH", ""). // copies from 0 (archive) to current default location (local drive (1)).
+RUN HELLOLAUNCH.</Text>
+        </Text>
+        <Text Name="Text (5)">
+          <Text>Right now, the script just counts down from 10. Edit your script to make it like this:</Text>
+        </Text>
+        <Text Name="Text (6)">
+          <Text>//hellolaunch
+
+//First, we'll clear the terminal screen to make it look nice
+CLEARSCREEN.
+
+//Next, we'll lock our throttle to 100%.
+LOCK THROTTLE TO 1.0.   // 1.0 is the max, 0.0 is idle.
+
+//This is our countdown loop, which cycles from 10 to 0
+PRINT "Counting down:".
+FROM {local countdown is 10.} UNTIL countdown = 0 STEP {SET countdown to countdown - 1.} DO {
+    PRINT "..." + countdown.
+    WAIT 1. // pauses the script here for 1 second.
+}
+
+UNTIL SHIP:MAXTHRUST &gt; 0 {
+    WAIT 0.5. // pause half a second between stage attempts.
+    PRINT "Stage activated.".
+    STAGE. // same as hitting the spacebar.
+}
+
+WAIT UNTIL SHIP:ALTITUDE &gt; 70000.
+
+// NOTE that it is vital to not just let the script end right away
+// here.  Once a kOS script just ends, it releases all the controls
+// back to manual piloting so that you can fly the ship by hand again.
+// If the program just ended here, then that would cause the throttle
+// to turn back off again right away and nothing would happen.</Text>
+        </Text>
+        <Text Name="Text (7)">
+          <Text>Save your file, relaunch your rocket, and type the following in the console to run the program:</Text>
+        </Text>
+        <Text Name="Text (8)">
+          <Text>COPYPATH("0:/HELLOLAUNCH", "").
+RUN HELLOLAUNCH.</Text>
+        </Text>
+        <Text Name="Text (9)">
+          <Text>Yay! Now it launches, but it just falls over because we are not controlling the steering. To fix this, add the following right after the countdown finishes:</Text>
+        </Text>
+        <Text Name="Text (10)">
+          <Text>LOCK STEERING TO UP.</Text>
+        </Text>
+        <Text Name="Text (11)">
+          <Text>Save your file, relaunch your rocket, and type the following in the console to run the program:</Text>
+        </Text>
+        <Text Name="Text (12)">
+          <Text>Now you made a rocket that is able to fly on its own! You can do much more with this, such as making it follow a gravity turn and getting it to orbit, all with kOS. You can learn how to make it follow a gravity turn here: https://ksp-kos.github.io/KOS/tutorials/quickstart.</Text>
         </Text>
       </Text>
       <Tooltips />
@@ -105,7 +230,7 @@
     <Screen Name="ManyMore">
       <BundleName>kos</BundleName>
       <AssetPath>Assets/panels/ManyMore.prefab</AssetPath>
-      <Title>And Many More!</Title>
+      <Title>...And Many More!</Title>
       <Background />
       <Text>
         <Text Name="Heading">
@@ -126,11 +251,32 @@
         <Text Name="Heading">
           <Text>Loops and Wait</Text>
         </Text>
-        <Text Name="Heading/Subheading">
-          <Text>Subheading</Text>
+        <Text Name="Subheading">
+          <Text>UNTIL Loop</Text>
         </Text>
         <Text Name="Text">
-          <Text>New Text</Text>
+          <Text>This is used to repeat something until a condition is met:</Text>
+        </Text>
+        <Text Name="Text (1)">
+          <Text>SET X to 1.
+UNTIL X &gt; 10 {      // Prints the numbers 1-10
+    PRINT X.
+    SET X to X + 1.
+}</Text>
+        </Text>
+        <Text Name="Text (2)">
+          <Text>This creates a variable named X, which has a value of 1. Until X is greater than 10, we want to print the value of X, and then increase it's value by 1. Once X reaches 10, the program is done executing.</Text>
+        </Text>
+        <Text Name="Subheading (1)">
+          <Text>WAIT command</Text>
+        </Text>
+        <Text Name="Text (3)">
+          <Text>This causes your program to wait for either a set number of seconds, or until a condition is met.</Text>
+        </Text>
+        <Text Name="Text (4)">
+          <Text>WAIT 6.2.                     // Wait 6.2 seconds
+WAIT UNTIL X &gt; 40.            // Wait until X is greater than 40
+WAIT UNTIL APOAPSIS &gt; 150000. // You can see where this is going</Text>
         </Text>
       </Text>
       <Tooltips />
@@ -145,10 +291,38 @@
           <Text>Language Syntax</Text>
         </Text>
         <Text Name="Heading/Subheading">
-          <Text>Subheading</Text>
+          <Text>learn how to prevent syntax errors in your kOS scripts</Text>
         </Text>
         <Text Name="Text">
-          <Text>New Text</Text>
+          <Text>Indentation and spacing does not matter. You don't have to indent, add a set amount of spaces, or new lines in your scripts.
+
+All statements must end with a period (.)
+
+Capitalization does not matter.
+
+</Text>
+        </Text>
+        <Text Name="Subheading (1)">
+          <Text>Operators</Text>
+        </Text>
+        <Text Name="Text (1)">
+          <Text>( ..to.. ) -&gt; Grouping with brackets makes the expression evaluate first, like in math
+e -&gt; The scientific notation operator
+^ -&gt; Exponent
+* and / -&gt; Multiplacation and Division.
++ and - -&gt; Addition and Subtraction.
+not -&gt; Inverse. not A would be the inverse of A.
+&lt; and &gt; -&gt; Less than and greater than.
+&lt;= and &gt;= -&gt; Less than or equal to and greater than or equal to.
+= -&gt; Equal to.
+== -&gt; Is equal to.
+&lt;&gt; -&gt; Not equal to.
+and -&gt; AND of two boolean expressions.
+or -&gt; OR of two booleans.
+true and false -&gt; True and false of two booleans, case sensitive.
+// -&gt; A comment.
+
+Visit https://ksp-kos.github.io/KOS/language/syntax for a full list</Text>
         </Text>
       </Text>
       <Tooltips />
@@ -180,10 +354,48 @@ Full docs can be found at https://ksp-kos.github.io/KOS/</Text>
           <Text>Hello World Tutorial</Text>
         </Text>
         <Text Name="Heading/Subheading">
-          <Text>Learn your way around the terminal, file storage, and printing</Text>
+          <Text>Learn your way around the terminal, files, and printing</Text>
         </Text>
         <Text Name="Text">
-          <Text>New Text</Text>
+          <Text>In this tutorial you will learn how to print something on the kOS terminal. To do that, you need to add a kOS CPU to your vessel. Go to the "Control" section in the VAB, and add the CX-4181 Scriptable Control System anywhere on your vessel. Make sure to also include batteries and a regular probe core.
+
+Now, launch your rocket. It doesn't matter if you have engines or fuel.
+Now to open the terminal, right click on the kOS CPU (the CX-4181 that you added before), and press the button that says "Open Terminal". Click anywhere inside of the box that popped up to make it active, you should now be able to type in it.
+
+Now let's actually do something!
+Inside of the terminal, type:</Text>
+        </Text>
+        <Text Name="Text (1)">
+          <Text>CLEARSCREEN. PRINT "==HELLO WORLD==".</Text>
+        </Text>
+        <Text Name="Text (2)">
+          <Text>Make sure to also include the periods. Hit enter, and the command will be executed. Note that periods are required at the end of each command, and you can type in either uppercase, lowercase, or a combination of both. kOS does not care. The terminal will respond with your command by clearing all previous text on the terminal, and showing you the text "==HELLO WORLD==".
+
+Okay, that's cool! But, what if you want to store your commands in a script that you can execute?
+Enter the command:</Text>
+        </Text>
+        <Text Name="Text (3)">
+          <Text>EDIT HELLO.</Text>
+        </Text>
+        <Text Name="Text (4)">
+          <Text>Again, note that capitalization does not matter, and that you have to add a period at the end of your commands.
+You should now see a blank editor window appear. Type the following text into the window, then hit "Save" and "Exit":</Text>
+        </Text>
+        <Text Name="Text (5)">
+          <Text>PRINT "=========================================".
+PRINT "      HELLO WORLD".
+PRINT "THIS IS THE FIRST SCRIPT I WROTE IN kOS.".
+PRINT "=========================================".</Text>
+        </Text>
+        <Text Name="Text (6)">
+          <Text>Now, in the main terminal, type:</Text>
+        </Text>
+        <Text Name="Text (7)">
+          <Text>RUN HELLO.</Text>
+        </Text>
+        <Text Name="Text (8)">
+          <Text>Great! Now your script got executed. However, your script will get deleted after you recover the vessel. If you want to learn about file storage and saving scripts permanently, visit
+https://ksp-kos.github.io/KOS/tutorials/quickstart.html#step-7-okay-but-where-is-this-program</Text>
         </Text>
       </Text>
       <Tooltips />
@@ -195,12 +407,12 @@ Full docs can be found at https://ksp-kos.github.io/KOS/</Text>
       <Background />
       <Text>
         <Text Name="Heading">
-          <Text>Tutorials</Text>
+          <Text>Documentation</Text>
         </Text>
         <Text Name="Heading/Subheading">
-          <Text>Basic tutorials on how to use some of the features of kOS
-Visit https://ksp-kos.github.io/KOS/tutorials for more in-depth
-tutorials and explanations.</Text>
+          <Text>Simple documentation on a few of the major features of kOS.
+Visit https://ksp-kos.github.io for more in-depth documentation
+on all of the many features of kOS</Text>
         </Text>
       </Text>
       <Tooltips />
@@ -215,10 +427,22 @@ tutorials and explanations.</Text>
           <Text>Bound Variables</Text>
         </Text>
         <Text Name="Heading/Subheading">
-          <Text>Subheading</Text>
+          <Text>Special and reserved variables</Text>
         </Text>
         <Text Name="Text">
-          <Text>New Text</Text>
+          <Text>You cannot name any of your variables anything in this list. However, you can use these variables in your scripts.
+
+SHIP
+This is used to get information about the vessel that has the kOS CPU on it.
+
+TARGET
+Whatever happens to be the active target.
+
+STAGE
+Used to stage the rocket.
+
+Many more can be found here: https://ksp-kos.github.io/KOS/bindings
+</Text>
         </Text>
       </Text>
       <Tooltips />
@@ -235,8 +459,106 @@ tutorials and explanations.</Text>
         <Text Name="Heading/Subheading">
           <Text>New to programming but want to learn kOS? This is the place for you.</Text>
         </Text>
+        <Text Name="Terminal">
+          <Text>Accessing the Terminal</Text>
+        </Text>
         <Text Name="Text">
-          <Text>New Text</Text>
+          <Text>Create a vessel with a kOS processor (found in the navigation section) and put it on the launchpad. Right-click on it and press the 'open terminal' button, and click the window that just popped up. Typing the following will create a file called 'hello', to enter the command press the enter key (don’t forget the period at the end):</Text>
+        </Text>
+        <Text Name="Text (1)">
+          <Text>edit hello.</Text>
+        </Text>
+        <Text Name="Text (2)">
+          <Text>You can now edit the file and make your script for the processor to execute, which other tutorials will do. Files made on a ship's processor will dissapear after the vessel is gone. To make scripts that don't dissapear, visit https://ksp-kos.github.io/KOS/tutorials/basictutorial. To run the file, type:</Text>
+        </Text>
+        <Text Name="Text (3)">
+          <Text>run hello.</Text>
+        </Text>
+        <Text Name="Terminal (1)">
+          <Text>Printing</Text>
+        </Text>
+        <Text Name="Text (4)">
+          <Text>To print something on the terminal, use the print command. Note that all liens of code in kOS must end with a period.</Text>
+        </Text>
+        <Text Name="Text (5)">
+          <Text>print "hello world". //shows: hello world</Text>
+        </Text>
+        <Text Name="Text (6)">
+          <Text>See those two forward slashes? That is a comment. Anything after the double slashes won't get executed by kOS</Text>
+        </Text>
+        <Text Name="Terminal (2)">
+          <Text>Variables</Text>
+        </Text>
+        <Text Name="Text (7)">
+          <Text>It would get annoying to have to type "hello world" every time. That's where variables come in!</Text>
+        </Text>
+        <Text Name="Text (8)">
+          <Text>set x to "hello world".
+print x. //prints hello world</Text>
+        </Text>
+        <Text Name="Text (9)">
+          <Text>Variables can be set to many other things. Note that normal text (strings) require quotes around them, while other things don't, such as numbers and booleans (true or false).</Text>
+        </Text>
+        <Text Name="Text (10)">
+          <Text>set x to "hello world".
+set y to true.
+set z to 123.
+print y. // prints out what the variable y is equal to, in this case true
+print "y". // prints out the letter "y"
+// quotes around something causes it to get treated as text</Text>
+        </Text>
+        <Text Name="Text (11)">
+          <Text>You can also change the value of a variable after it has been made.</Text>
+        </Text>
+        <Text Name="Text (12)">
+          <Text>set x to "hello world".
+print x. // prints hello world
+set x to "updated text".
+print x. // prints updated text</Text>
+        </Text>
+        <Text Name="Text (13)">
+          <Text>Variables can be named anything, as long as it is one word.</Text>
+        </Text>
+        <Text Name="Text (14)">
+          <Text>set aVeryLongVariableName to "hello!".
+set aShorterName to "goodbye.".</Text>
+        </Text>
+        <Text Name="Terminal (3)">
+          <Text>If Statements</Text>
+        </Text>
+        <Text Name="Text (15)">
+          <Text>You can use if statements to see if values match another value. The code below will print "x is one".</Text>
+        </Text>
+        <Text Name="Text (16)">
+          <Text>set x to 1.
+if x = 1 {
+	print "x is one".
+}</Text>
+        </Text>
+        <Text Name="Text (17)">
+          <Text>If statements are special in that they do not need periods at the end of them. You can do more than just compare if two values are equal. You can also compare greater than, less than, greater than or equal to, less than or equal to, and is not equal to.</Text>
+        </Text>
+        <Text Name="Text (19)">
+          <Text>set x to 1.
+if x &gt; 1 {
+	print "x is greater than one". // won't get run
+}
+if x &gt;= 1 {
+	print "x is less than or equal to one". // will get run
+}
+if x &lt;&gt; 1 {
+	print "x is not equal to one". // won't get run
+}</Text>
+        </Text>
+        <Text Name="Terminal (4)">
+          <Text>Wait</Text>
+        </Text>
+        <Text Name="Text (18)">
+          <Text>The wait command is useful for, well, making your program wait!</Text>
+        </Text>
+        <Text Name="Text (20)">
+          <Text>wait 5. // wait for five seconds
+print "done waiting".</Text>
         </Text>
       </Text>
       <Tooltips />
