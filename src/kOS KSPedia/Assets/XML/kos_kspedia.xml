@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<KSPedia xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="kos" CreatedTime="-8585787875173164528">
+<KSPedia xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="kos" CreatedTime="-8585786092399284823">
   <Categories>
     <Category Name="kOS">
       <Title>kOS</Title>
@@ -12,9 +12,9 @@
           <Title>Tutorials</Title>
           <TitleScreen>Tutorials</TitleScreen>
           <Screens>
-            <Screen>RocketTutorial</Screen>
             <Screen>HelloWorld</Screen>
             <Screen>BasicExplanation</Screen>
+            <Screen>RocketTutorial</Screen>
           </Screens>
           <Subcategories />
         </Subcategory>
@@ -25,7 +25,6 @@
             <Screen>LanguageSyntax</Screen>
             <Screen>BoundVariables</Screen>
             <Screen>LoopsAndWait</Screen>
-            <Screen>RunningPrograms</Screen>
             <Screen>ManyMore</Screen>
           </Screens>
           <Subcategories />
@@ -78,24 +77,6 @@
         </Text>
         <Text Name="Heading/Subheading">
           <Text>A subheading. Here is some amazing sample text about kOS!</Text>
-        </Text>
-        <Text Name="Text">
-          <Text>New Text</Text>
-        </Text>
-      </Text>
-      <Tooltips />
-    </Screen>
-    <Screen Name="RunningPrograms">
-      <BundleName>kos</BundleName>
-      <AssetPath>Assets/panels/RunningPrograms.prefab</AssetPath>
-      <Title>Running Programs</Title>
-      <Background />
-      <Text>
-        <Text Name="Heading">
-          <Text>Running Programs</Text>
-        </Text>
-        <Text Name="Heading/Subheading">
-          <Text>Subheading</Text>
         </Text>
         <Text Name="Text">
           <Text>New Text</Text>

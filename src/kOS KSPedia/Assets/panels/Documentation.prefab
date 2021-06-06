@@ -79,7 +79,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Tutorials
+  m_Text: Documentation
 --- !u!1 &5002841520059945906
 GameObject:
   m_ObjectHideFlags: 0
@@ -114,8 +114,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 715.5, y: -104.5}
-  m_SizeDelta: {x: 1431.3, y: 208.9}
+  m_AnchoredPosition: {x: 981.7, y: -104.5}
+  m_SizeDelta: {x: 1963.5, y: 208.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4194675688363412903
 CanvasRenderer:
@@ -158,11 +158,11 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Basic and very brief documentation of a few features of kOS
+  m_Text: 'Simple documentation on a few of the major features of kOS.
 
-    Visit https://ksp-kos.github.io/KOS/ for more in-depth
+    Visit https://ksp-kos.github.io for more in-depth documentation
 
-    documentation on all the features.'
+    on all of the many features of kOS'
 --- !u!1 &7215156337972878118
 GameObject:
   m_ObjectHideFlags: 0

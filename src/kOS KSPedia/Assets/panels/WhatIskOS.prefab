@@ -168,7 +168,14 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: "kOS is a community-supported mod for Kerbal Space Program.\nkOS is an autopilot
+    that you script yourself. You don\u2019t have to know what you\u2019re doing to
+    get started, but you may find yourself learning a lot by accident as you play
+    with it.\n\nkOS introduces a few new parts that each contain a simulated computer
+    capable of running programs written in its own scripting langauge called kerboscript.
+    The computer has powerful smarts built in to the hardware that allow it to do
+    complex spacecraft operations in one command, thus making it possible to make
+    complex programs with only a few lines of script text."
 --- !u!1 &6654046372223078425
 GameObject:
   m_ObjectHideFlags: 0
