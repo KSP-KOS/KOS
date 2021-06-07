@@ -35,7 +35,7 @@ What it does
 
 **kOS** introduces a few new parts that each contain a simulated
 computer capable of running programs written in its own scripting
-langauge called **kerboscript**.  The computer has powerful
+language called **kerboscript**.  The computer has powerful
 smarts built in to the hardware that allow it to do complex 
 spacecraft operations in one command, thus making it possible to
 make complex programs with only a few lines of script text.
