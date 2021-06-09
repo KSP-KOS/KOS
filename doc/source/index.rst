@@ -81,6 +81,6 @@ History
 
 kOS was originally begun as a mod by a single author, Kevin Laity aka Nivekk.
 Although the project has undergone massive changes since then and now has
-a very different underlying archetecture and is under active development
+a very different underlying architecture and is under active development
 by a `different set of people <https://github.com/orgs/KSP-KOS/people>`_, none
 of that would have been possible without his original vision and work.
