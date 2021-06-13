@@ -291,10 +291,10 @@ namespace kOS.Safe.Execution
             popContextNotifyees.Add(container);
 
             popContextNotifyeesCleanupCounter++;
-            if (popContextNotifyeesCleanupCounter > 1000)
+            if (popContextNotifyeesCleanupCounter > 10000)
             {
                 popContextNotifyeesCleanupCounter = 0;
-                popContextNotifyees.RemoveWhere((c) => !c.popContextNotifyee.IsAlive || c.popContextNotifyee.Target == null);
+                popContextNotifyees = new HashSet<PopContextNotifyeeContainer>(popContextNotifyees.Where((c) => c.popContextNotifyee.IsAlive && c.popContextNotifyee.Target != null));
             }
         }
 
