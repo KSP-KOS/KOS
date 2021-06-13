@@ -255,9 +255,15 @@ namespace kOS.Safe.Execution
         {
             // Not sure what the definition of Equals is for a weak reference,
             // this walks through looking if it's already registered, to avoid duplicates:
-            for (int i = 0; i < popContextNotifyees.Count; ++i)
+            for (int i = popContextNotifyees.Count - 1; i >= 0; i--)
+            {
                 if (popContextNotifyees[i].Target == notifyee)
                     return;
+
+                // Lets clean up while we're here anyway
+                if (!popContextNotifyees[i].IsAlive)
+                    popContextNotifyees.RemoveAt(i);
+            }
 
             popContextNotifyees.Add(new WeakReference(notifyee));
         }
