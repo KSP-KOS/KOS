@@ -10,7 +10,7 @@ namespace kOS.Safe.Exceptions
     {
         public override string HelpURL
         {
-            get { return "https://ksp-kos.github.io/KOS_DOC/command/flowControl/index.html#BREAK"; }
+            get { return "https://ksp-kos.github.io/KOS_DOC/language/flow.html#break"; }
         }
 
         public override string VerboseMessage { get { return VerbosePrefix + APPEND_TEXT; } }
