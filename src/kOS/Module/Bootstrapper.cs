@@ -48,7 +48,7 @@ namespace kOS.Module
             SafeHouse.Init(
                 Config.Instance, 
                 Core.VersionInfo,
-                "http://ksp-kos.github.io/KOS_DOC/",
+                "https://ksp-kos.github.io/KOS_DOC/",
                 Application.platform == RuntimePlatform.WindowsPlayer,
                 GameDatabase.Instance.PluginDataFolder + "/Ships/Script/"
                 );

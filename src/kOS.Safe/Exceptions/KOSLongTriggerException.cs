@@ -35,7 +35,7 @@ namespace kOS.Safe.Exceptions
         
         public override string HelpURL
         {
-            get{ return "http://ksp-kos.github.io/KOS_DOC/summary_topics/CPU_hardware/index.html#TRIGGERS"; }
+            get{ return "https://ksp-kos.github.io/KOS_DOC/summary_topics/CPU_hardware/index.html#TRIGGERS"; }
         }
 
         public KOSLongTriggerException(int numInstructions) :

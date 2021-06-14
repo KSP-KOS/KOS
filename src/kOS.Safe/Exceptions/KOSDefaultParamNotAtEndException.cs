@@ -12,7 +12,7 @@ namespace kOS.Safe.Exceptions
     {
         public override string HelpURL
         {
-            get { return "http://ksp-kos.github.io/KOS_DOC/language/variables/index.html#DECLARE_PARAMETER"; }
+            get { return "https://ksp-kos.github.io/KOS_DOC/language/variables/index.html#DECLARE_PARAMETER"; }
         }
 
         public override string VerboseMessage { get { return VerbosePrefix + APPEND_TEXT;} }

@@ -40,7 +40,7 @@ namespace kOS.Suffixed
         /// </summary>
         /// <returns>
         ///   The coords of the object in the
-        ///   <a href='http://ksp-kos.github.io/KOS_DOC/summary_topics/coordframe/raw/'>
+        ///   <a href='https://ksp-kos.github.io/KOS_DOC/summary_topics/coordframe/raw/'>
         ///     raw (cpu-vessel-origin)
         ///   </a>
         ///   coordinate reference frame.
@@ -52,7 +52,7 @@ namespace kOS.Suffixed
         /// </summary>
         /// <returns>
         ///   A OrbitableVelocity object containing both the orbital and surface velocities of the object in the
-        ///   <a href='http://ksp-kos.github.io/KOS_DOC/summary_topics/coordframe/raw/'>
+        ///   <a href='https://ksp-kos.github.io/KOS_DOC/summary_topics/coordframe/raw/'>
         ///     raw (soi-body-origin)
         ///   </a>
         ///   coordinate reference frame.
@@ -69,7 +69,7 @@ namespace kOS.Suffixed
         /// <param name="timeStamp">The universal time of the future prediction</param>
         /// <returns>
         ///   The coords of the object in the
-        ///   <a href='http://ksp-kos.github.io/KOS_DOC/summary_topics/coordframe/raw/'>
+        ///   <a href='https://ksp-kos.github.io/KOS_DOC/summary_topics/coordframe/raw/'>
         ///     raw (cpu-vessel-origin)
         ///   </a>
         ///   coordinate reference frame.
@@ -86,7 +86,7 @@ namespace kOS.Suffixed
         /// <param name="timeStamp">The universal time of the future prediction</param>
         /// <returns>
         ///   A OrbitableVelocity object containing both the orbital and surface velocities of the object in the
-        ///   <a href='http://ksp-kos.github.io/KOS_DOC/summary_topics/coordframe/raw/'>
+        ///   <a href='https://ksp-kos.github.io/KOS_DOC/summary_topics/coordframe/raw/'>
         ///     raw (soi-body-origin)
         ///   </a>
         ///   coordinate reference frame.

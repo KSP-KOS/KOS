@@ -3,7 +3,7 @@ kOS
 
 kOS is a scriptable autopilot Mod for Kerbal Space Program. It allows you write small programs that automate specific tasks.
 
-Documentation : http://ksp-kos.github.io/KOS_DOC/
+Documentation : https://ksp-kos.github.io/KOS_DOC/
 
 Addon release thread: https://forum.kerbalspaceprogram.com/index.php?/topic/165628-13-kos-v1130-kos-scriptable-autopilot-system/
 
