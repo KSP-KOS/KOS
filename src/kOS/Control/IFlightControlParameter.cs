@@ -31,7 +31,7 @@ namespace kOS.Control
         /// ask this controller how to set the controls.
         /// </summary>
         /// <param name="c">the flight control state it should try to alter</param>
-        void UpdateAutopilot(FlightCtrlState c);
+        void UpdateAutopilot(FlightCtrlState c, ControlTypes ctrlLock);
         /// <summary>
         /// Called each update in which kOS CONFIG has autopilot disabled, to
         /// ask this controller if it *would have* set the controls had it

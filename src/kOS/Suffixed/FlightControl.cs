@@ -353,7 +353,7 @@ namespace kOS.Suffixed
             return Vessel;
         }
 
-        void IFlightControlParameter.UpdateAutopilot(FlightCtrlState c)
+        void IFlightControlParameter.UpdateAutopilot(FlightCtrlState c, ControlTypes ctrlLock)
         {
             OnFlyByWire(c);
         }
