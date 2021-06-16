@@ -368,7 +368,6 @@ namespace kOS.Control
             AddSuffix("ROLLTORQUEFACTOR", new SetSuffix<ScalarValue>(() => RollTorqueFactor, value => RollTorqueFactor = value));
             AddSuffix("AVERAGEDURATION", new Suffix<ScalarValue>(() => AverageDuration.Mean));
             AddSuffix("ROLLCONTROLANGLERANGE", new SetSuffix<ScalarValue>(() => RollControlAngleRange, value => RollControlAngleRange = value));
-#if DEBUG
             AddSuffix("MOI", new Suffix<Vector>(() => new Vector(momentOfInertia)));
             AddSuffix("ACTUATION", new Suffix<Vector>(() => new Vector(accPitch, accRoll, accYaw)));
             AddSuffix("CONTROLTORQUE", new Suffix<Vector>(() => new Vector(controlTorque)));
@@ -379,7 +378,6 @@ namespace kOS.Control
             AddSuffix("ANGULARVELOCITY", new Suffix<Vector>(() => new Vector(omega)));
             AddSuffix("ANGULARACCELERATION", new Suffix<Vector>(() => new Vector(angularAcceleration)));
             AddSuffix("ENABLETORQUEADJUST", new SetSuffix<BooleanValue>(() => EnableTorqueAdjust, value => EnableTorqueAdjust = value));
-#endif
         }
 
         public void EnableControl(SharedObjects sharedObj)
