@@ -467,24 +467,28 @@ namespace kOS.Safe.Encapsulation
             throw new KOSCastException(typeof(StringValue), typeof(UInt64));
         }
 
-        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
-        public static StringValue CreateFromDump(SafeSharedObjects shared, Dump d)
+
+        #region Serialization
+        public override Dump Dump(DumperState s)
         {
-            var newObj = new StringValue();
-            newObj.LoadDump(d);
-            return newObj;
-        }
-        public override Dump Dump()
-        {
-            DumpWithHeader dump = new DumpWithHeader();
+            DumpDictionary dump = new DumpDictionary(this.GetType());
 
             dump.Add("value", internalString);
 
             return dump;
         }
-        public override void LoadDump(Dump dump)
+
+        public static StringValue CreateFromDump(SafeSharedObjects shared, DumpDictionary d)
         {
-            internalString = Convert.ToString(dump["value"]);
+            return new StringValue(d.GetString("value"));
         }
+
+        public static void Print(DumpDictionary dump, IndentedStringBuilder sb)
+        {
+            sb.Append("\"");
+            sb.Append(Value.Replace("\"", "\"\""));
+            sb.Append("\"");
+        }
+        #endregion
     }
 }

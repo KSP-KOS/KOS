@@ -15,81 +15,49 @@ namespace kOS.Safe.Communication
         public double SentAt { get; set; }
         public double ReceivedAt { get; set; }
 
-        /// <summary>
-        /// Message content can be either a simple encapsulated type (something that implements ISerializableValue) or a Dump.
-        ///
-        /// Currently kOS serialization doesn't allow primitives as top level objects, but Messages do allow them.
-        /// </summary>
-        private object content;
+        public IDumper Content { get; set; }
 
-        public object Content
-        {
-            get
-            {
-                return content;
-            }
-            set
-            {
-                if (value is PrimitiveStructure || value is Dump)
-                {
-                    content = value;
-                } else
-                {
-                    throw new KOSCommunicationException("Message can only contain primitives and serializable types");
-                }
-            }
-        }
-
-        // Only used by CreateFromDump() and derived classes.
-        // Don't make it public because it leaves fields
-        // unpopulated:
-        protected BaseMessage()
-        {
-
-        }
-
-        public BaseMessage(Dump content, double sentAt, double receivedAt)
+        public BaseMessage(Structure content, double sentAt, double receivedAt)
         {
             Content = content;
             SentAt = sentAt;
             ReceivedAt = receivedAt;
         }
 
-        public BaseMessage(PrimitiveStructure content, double sentAt, double receivedAt)
+        public virtual Dump Dump(DumperState s)
         {
-            Content = content;
-            SentAt = sentAt;
-            ReceivedAt = receivedAt;
-        }
+            var dump = new DumpDictionary(typeof(BaseMessage));
 
-        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
-        public static BaseMessage CreateFromDump(SafeSharedObjects shared, Dump d)
-        {
-            var newObj = new BaseMessage();
-            newObj.LoadDump(d);
-            return newObj;
-        }
-
-        public virtual Dump Dump()
-        {
-            DumpWithHeader dump = new DumpWithHeader();
-
-            dump.Header = "MESSAGE";
-
-            dump.Add(DumpSentAt, SentAt);
-            dump.Add(DumpReceivedAt, ReceivedAt);
-            dump.Add(DumpContent, content);
+            using (var context = s.Context(this))
+            {
+                dump.Add(DumpSentAt, SentAt);
+                dump.Add(DumpReceivedAt, ReceivedAt);
+                dump.Add(DumpContent, Content, context);
+            }
 
             return dump;
         }
 
-        public virtual void LoadDump(Dump dump)
+        public static BaseMessage CreateFromDump(DumpDictionary d, SafeSharedObjects shared)
         {
-            SentAt = Convert.ToDouble(dump[DumpSentAt]);
-            ReceivedAt = Convert.ToDouble(dump[DumpReceivedAt]);
-            content = dump[DumpContent];
+            return new BaseMessage(d.GetStructure(DumpContent, shared), d.GetDouble(DumpSentAt), d.GetDouble(DumpReceivedAt));
         }
 
+        public static void Print(DumpDictionary d, IndentedStringBuilder sb)
+        {
+            sb.Append("Message [sent: ");
+            sb.Append(d.GetDouble(DumpSentAt).ToString());
+            sb.Append(", received: ");
+            sb.Append(d.GetDouble(DumpReceivedAt).ToString());
+            sb.Append("]:");
+
+            using (sb.Indent())
+            {
+                var inner = d.GetDump(DumpContent);
+                inner.WriteReadable(sb);
+            }
+        }
+        
         public int CompareTo(BaseMessage other)
         {
             return ReceivedAt.CompareTo(other.ReceivedAt);

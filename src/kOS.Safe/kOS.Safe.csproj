@@ -222,6 +222,7 @@
     <Compile Include="Screen\ScreenSnapshot.cs" />
     <Compile Include="Screen\SubBuffer.cs" />
     <Compile Include="Screen\TextEditor.cs" />
+    <Compile Include="Serialization\IndentedStringBuilder.cs" />
     <Compile Include="Sound\IProceduralSoundWave.cs" />
     <Compile Include="Sound\ISoundMaker.cs" />
     <Compile Include="Sound\IVoice.cs" />
@@ -251,7 +252,6 @@
     <Compile Include="Exceptions\KOSSerializationException.cs" />
     <Compile Include="Serialization\SafeSerializationMgr.cs" />
     <Compile Include="Serialization\Dump.cs" />
-    <Compile Include="Serialization\DumpWithHeader.cs" />
     <Compile Include="Serialization\SerializableStructure.cs" />
     <Compile Include="Persistence\FileContent.cs" />
     <Compile Include="Encapsulation\PrimitiveStructure.cs" />

@@ -61,13 +61,18 @@ namespace kOS.Safe.Encapsulation
               // enabling this one:
               //     AddSuffix("TYPENAME",   new NoArgsSuffix<StringValue>(() => GetType().ToString()));
 
-              AddSuffix("TOSTRING",       new NoArgsSuffix<StringValue>(() => ToString()));
+              AddSuffix("TOSTRING",       new NoArgsSuffix<StringValue>(() => ToIngameString()));
               AddSuffix("HASSUFFIX",      new OneArgsSuffix<BooleanValue, StringValue>(HasSuffix));
               AddSuffix("SUFFIXNAMES",    new NoArgsSuffix<ListValue<StringValue>>(GetSuffixNames));
               AddSuffix("ISSERIALIZABLE", new NoArgsSuffix<BooleanValue>(() => this is SerializableStructure));
               AddSuffix("TYPENAME",       new NoArgsSuffix<StringValue>(() => new StringValue(KOSName)));
               AddSuffix("ISTYPE",         new OneArgsSuffix<BooleanValue,StringValue>(GetKOSIsType));
               AddSuffix("INHERITANCE",    new NoArgsSuffix<StringValue>(GetKOSInheritance));
+        }
+
+        protected virtual string ToIngameString()
+        {
+            return KOSNomenclature.GetKOSName(GetType()) + ": \"\""; // print as the KOSNomenclature string name, will look like: Structure: ""
         }
 
         protected void AddSuffix(string suffixName, ISuffix suffixToAdd)

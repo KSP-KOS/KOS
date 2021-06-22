@@ -88,14 +88,6 @@ namespace kOS.Safe.Encapsulation
             }
         }
 
-        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
-        public static Lexicon CreateFromDump(SafeSharedObjects shared, Dump d)
-        {
-            var newObj = new Lexicon();
-            newObj.LoadDump(d);
-            return newObj;
-        }
-
         private void FillWithEnumerableValues(IEnumerable<Structure> values)
         {
             if ((values.Count() == 1) && (values.First() is IEnumerable<Structure>)) {
@@ -394,35 +386,49 @@ namespace kOS.Safe.Encapsulation
             }
             return new ListValue<StringValue>(theList.OrderBy(item => item.ToString()));
         }
-        public override Dump Dump()
+
+        public override Dump Dump(DumperState s)
         {
-            var result = new DumpWithHeader
-            {
-                Header = "LEXICON of " + internalDictionary.Count() + " items:"
-            };
+            var dump = new DumpLexicon(typeof(BaseMessage));
 
-            List<object> list = new List<object>();
-
-            foreach (KeyValuePair<Structure, Structure> entry in internalDictionary)
+            using (var context = s.Context(this))
             {
-                list.Add(entry.Key);
-                list.Add(entry.Value);
+                foreach (KeyValuePair<Structure, Structure> entry in internalDictionary)
+                {
+                    dump.Add(entry.Key, entry.Value, context);
+                }
             }
 
-            result.Add(kOS.Safe.Dump.Entries, list);
-
-            return result;
+            return dump;
         }
 
-        public override void LoadDump(Dump dump)
+        public static Lexicon CreateFromDump(DumpLexicon d, SafeSharedObjects shared)
         {
-            internalDictionary.Clear();
+            return new Lexicon(d.GetStructures(shared));
+        }
 
-            List<object> values = (List<object>)dump[kOS.Safe.Dump.Entries];
+        public static void Print(DumpLexicon d, IndentedStringBuilder sb)
+        {
+            sb.Append("LEXICON of ");
+            sb.Append(d.Count.ToString());
+            sb.Append("items: ");
 
-            for (int i = 0; 2 * i < values.Count; i++)
+            var kvpairs = d.GetItems();
+            foreach (var kv in kvpairs)
             {
-                internalDictionary.Add(Structure.FromPrimitiveWithAssert(values[2 * i]), Structure.FromPrimitiveWithAssert(values[2 * i + 1]));
+                sb.AppendLine();
+                var keyBuilder = new SingleLineIndentedStringBuilder();
+                kv.Key.WriteReadable(keyBuilder);
+                sb.Append(keyBuilder.ToString());
+                if (!keyBuilder.IsSingleLine)
+                {
+                    sb.Append("...");
+                }
+                sb.Append(": ");
+                using (sb.Indent())
+                {
+                    kv.Value.WriteReadable(sb);
+                }
             }
         }
     }

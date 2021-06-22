@@ -7,6 +7,10 @@ namespace kOS.Safe.Encapsulation
     public abstract class PrimitiveStructure : SerializableStructure
     {
         public abstract object ToPrimitive();
+        protected override string ToIngameString()
+        {
+            return ToPrimitive().ToString();
+        }
     }
 }
 
