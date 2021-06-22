@@ -457,8 +457,10 @@ namespace kOS.Safe.Compilation.KS
             tok = scanner.LookAhead(TokenType.COMMA); // ZeroOrMore Rule
             while (tok.Type == TokenType.COMMA)
             {
+
+                 // Concat Rule
                 tok = scanner.Scan(TokenType.COMMA); // Terminal Rule: COMMA
-                n = node.CreateNode(tok, tok.ToString());
+                n = node.CreateNode(tok, tok.ToString() );
                 node.Token.UpdateRange(tok);
                 node.Nodes.Add(n);
                 if (tok.Type != TokenType.COMMA) {
@@ -471,7 +473,7 @@ namespace kOS.Safe.Compilation.KS
 
                  // Concat Rule
                 tok = scanner.Scan(TokenType.TO); // Terminal Rule: TO
-                n = node.CreateNode(tok, tok.ToString());
+                n = node.CreateNode(tok, tok.ToString() );
                 node.Token.UpdateRange(tok);
                 node.Nodes.Add(n);
                 if (tok.Type != TokenType.TO) {
@@ -481,8 +483,7 @@ namespace kOS.Safe.Compilation.KS
 
                  // Concat Rule
                 Parseexpr(node); // NonTerminal Rule: expr
-
-                tok = scanner.LookAhead(TokenType.COMMA); // ZeroOrMore Rule
+            tok = scanner.LookAhead(TokenType.COMMA); // ZeroOrMore Rule
             }
 
              // Concat Rule

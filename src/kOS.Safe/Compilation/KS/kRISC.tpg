@@ -153,7 +153,7 @@ directive            -> lazyglobal_directive; // Add to this list later if we ma
 // ------------ statements --------------------
 
 empty_stmt     -> EOI;
-set_stmt       -> SET varidentifier TO expr EOI;
+set_stmt       -> SET varidentifier TO expr (COMMA varidentifier TO expr)* EOI;
 if_stmt        -> IF expr instruction EOI? (ELSE instruction EOI?)?;
 until_stmt     -> UNTIL expr instruction EOI?;
 fromloop_stmt  -> FROM instruction_block UNTIL expr STEP instruction_block DO instruction EOI?;
