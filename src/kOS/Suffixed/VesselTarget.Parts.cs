@@ -118,7 +118,7 @@ namespace kOS.Suffixed
             // gather all potential modules and then select from those valid.
             IEngineStatus engine = null;
             ModuleRCS rcs = null;
-            PartValue separator = null;
+            DecouplerValue separator = null;
             ModuleEnviroSensor sensor = null;
 
             foreach (var module in part.Modules)
@@ -139,8 +139,8 @@ namespace kOS.Suffixed
                         var port = new DockingPortValue(Shared, part, parent, decoupler, dock);
                         separator = port;
                         dockingPorts.Add(port);
-                        if (!module.StagingEnabled())
-                            continue;
+                        //if (!module.StagingEnabled())
+                        //    continue;
                         decoupler = port;
                         decouplers.Add(decoupler);
                     }
@@ -152,12 +152,12 @@ namespace kOS.Suffixed
                         if (module is LaunchClamp)
                             port = new LaunchClampValue(Shared, part, parent, decoupler);
                         else if (module is ModuleDecouple || module is ModuleAnchoredDecoupler)
-                            port = new DecouplerValue(Shared, part, parent, decoupler);
+                            port = new SeparatorValue(Shared, part, parent, decoupler, module as ModuleDecouplerBase);
                         else // ModuleServiceModule ?
                             continue; // rather continue the search
                         separator = port;
-                        if (!module.StagingEnabled())
-                            continue;
+                        //if (!module.StagingEnabled())
+                        //    continue;
                         decoupler = port;
                         decouplers.Add(decoupler);
                     }
