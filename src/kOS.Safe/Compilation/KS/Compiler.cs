@@ -2691,8 +2691,10 @@ namespace kOS.Safe.Compilation.KS
             //    DECLARE [GLOBAL|LOCAL] identifier TO expr.
             if (lastSubNode.Token.Type == TokenType.declare_identifier_clause)
             {
-                VisitNode(lastSubNode.Nodes[2]);
-                AddOpcode(CreateAppropriateStoreCode(whereToStore, true, "$" + GetIdentifierText(lastSubNode.Nodes[0])));
+                for (int i = 0; i < lastSubNode.Nodes.Count; i += 4) {
+                    VisitNode(lastSubNode.Nodes[i + 2]);
+                    AddOpcode(CreateAppropriateStoreCode(whereToStore, true, "$" + GetIdentifierText(lastSubNode.Nodes[i])));
+                }
             }
             
             // If the declare statement is of the form:

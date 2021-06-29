@@ -1366,6 +1366,65 @@ namespace kOS.Safe.Compilation.KS
             Parseexpr(node); // NonTerminal Rule: expr
 
              // Concat Rule
+            tok = scanner.LookAhead(TokenType.COMMA); // ZeroOrMore Rule
+            while (tok.Type == TokenType.COMMA)
+            {
+
+                 // Concat Rule
+                tok = scanner.Scan(TokenType.COMMA); // Terminal Rule: COMMA
+                n = node.CreateNode(tok, tok.ToString() );
+                node.Token.UpdateRange(tok);
+                node.Nodes.Add(n);
+                if (tok.Type != TokenType.COMMA) {
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.COMMA.ToString(), 0x1001, tok));
+                    return;
+                }
+
+                 // Concat Rule
+                tok = scanner.Scan(TokenType.IDENTIFIER); // Terminal Rule: IDENTIFIER
+                n = node.CreateNode(tok, tok.ToString() );
+                node.Token.UpdateRange(tok);
+                node.Nodes.Add(n);
+                if (tok.Type != TokenType.IDENTIFIER) {
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.IDENTIFIER.ToString(), 0x1001, tok));
+                    return;
+                }
+
+                 // Concat Rule
+                tok = scanner.LookAhead(TokenType.TO, TokenType.IS); // Choice Rule
+                switch (tok.Type)
+                { // Choice Rule
+                    case TokenType.TO:
+                        tok = scanner.Scan(TokenType.TO); // Terminal Rule: TO
+                        n = node.CreateNode(tok, tok.ToString() );
+                        node.Token.UpdateRange(tok);
+                        node.Nodes.Add(n);
+                        if (tok.Type != TokenType.TO) {
+                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.TO.ToString(), 0x1001, tok));
+                            return;
+                        }
+                        break;
+                    case TokenType.IS:
+                        tok = scanner.Scan(TokenType.IS); // Terminal Rule: IS
+                        n = node.CreateNode(tok, tok.ToString() );
+                        node.Token.UpdateRange(tok);
+                        node.Nodes.Add(n);
+                        if (tok.Type != TokenType.IS) {
+                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.IS.ToString(), 0x1001, tok));
+                            return;
+                        }
+                        break;
+                    default:
+                        tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected TO or IS.", 0x0002, tok));
+                        break;
+                } // Choice Rule
+
+                 // Concat Rule
+                Parseexpr(node); // NonTerminal Rule: expr
+            tok = scanner.LookAhead(TokenType.COMMA); // ZeroOrMore Rule
+            }
+
+             // Concat Rule
             tok = scanner.Scan(TokenType.EOI); // Terminal Rule: EOI
             n = node.CreateNode(tok, tok.ToString() );
             node.Token.UpdateRange(tok);

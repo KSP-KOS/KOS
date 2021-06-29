@@ -172,7 +172,7 @@ remove_stmt    -> REMOVE expr EOI;
 log_stmt       -> LOG expr TO expr EOI;
 break_stmt     -> BREAK EOI;
 preserve_stmt  -> PRESERVE EOI;
-declare_identifier_clause -> IDENTIFIER (TO|IS) expr EOI;
+declare_identifier_clause -> IDENTIFIER (TO|IS) expr (COMMA IDENTIFIER (TO|IS) expr)* EOI;
 declare_parameter_clause  -> PARAMETER IDENTIFIER ((TO|IS) expr)? (COMMA IDENTIFIER ((TO|IS) expr)?)* EOI;
 declare_function_clause   -> FUNCTION IDENTIFIER instruction_block EOI?;
 declare_lock_clause       -> LOCK IDENTIFIER TO expr EOI;
