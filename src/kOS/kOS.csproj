@@ -172,6 +172,7 @@
     <Compile Include="Suffixed\KUniverseValue.cs" />
     <Compile Include="Suffixed\LoadDistanceValue.cs" />
     <Compile Include="Suffixed\Part\DecouplerValue.cs" />
+    <Compile Include="Suffixed\Part\SeparatorValue.cs" />
     <Compile Include="Suffixed\Part\LaunchClampValue.cs" />
     <Compile Include="Suffixed\Part\RCSValue.cs" />
     <Compile Include="Suffixed\ResourceTransferValue.cs" />
