@@ -66,6 +66,10 @@ namespace kOS.Function
                     list = GetRCSList(shared);
                     break;
 
+                case "reactionwheels":
+                    list = GetReactionWheelList(shared);
+                    break;
+
                 case "sensors":
                     list = GetSensorList(shared);
                     break;
@@ -283,6 +287,27 @@ namespace kOS.Function
                 {
                     var rcs = module as ModuleRCS;
                     if (rcs != null)
+                    {
+                        list.AddItem(part.ConstructID(), part.partInfo.name);
+                    }
+                }
+            }
+
+            return list;
+        }
+
+        private kList GetReactionWheelList(SharedObjects shared)
+        {
+            var list = new kList();
+            list.AddColumn("ID", 12, ColumnAlignment.Left);
+            list.AddColumn("Name", 28, ColumnAlignment.Left);
+
+            foreach (Part part in shared.Vessel.Parts)
+            {
+                foreach (PartModule module in part.Modules)
+                {
+                    var wheel = module as ModuleReactionWheel;
+                    if (wheel != null)
                     {
                         list.AddItem(part.ConstructID(), part.partInfo.name);
                     }

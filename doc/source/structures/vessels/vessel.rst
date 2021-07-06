@@ -56,6 +56,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :attr:`SIZECLASS`                        :struct:`String`                Return the size class for an asteroid-like object
     :attr:`ANGULARMOMENTUM`                  :struct:`Vector`                In :ref:`SHIP_RAW <ship-raw>`
     :attr:`ANGULARVEL`                       :struct:`Vector`                In :ref:`SHIP_RAW <ship-raw>`
+	:attr:`MOMENTOFINERTIA`					 :struct:`Vector`				 Moment of inertia over pitch, yaw, roll
     :attr:`SENSORS`                          :struct:`VesselSensors`         Sensor data
     :attr:`LOADED`                           :struct:`Boolean`               loaded into KSP physics engine or "on rails"
     :attr:`UNPACKED`                         :struct:`Boolean`               The ship has individual parts unpacked
@@ -80,6 +81,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :meth:`PARTSINGROUP(group)`              :struct:`List`                  :struct:`Parts <Part>` by action group
     :meth:`MODULESINGROUP(group)`            :struct:`List`                  :struct:`PartModules <PartModule>` by action group
     :meth:`ALLTAGGEDPARTS()`                 :struct:`List`                  :struct:`Parts <Part>` that have non-blank nametags
+    :meth:`ATTITUDECONTROLLERS()`            :struct:`List`                  :struct:`Attitude Controllers <AtttitudeController>` present on this ship.
     :attr:`CREWCAPACITY`                     :struct:`scalar`                Crew capacity of this vessel
     :meth:`CREW()`                           :struct:`List`                  all :struct:`CrewMembers <CrewMember>`
     :attr:`CONNECTION`                       :struct:`Connection`            Returns your connection to this vessel
@@ -410,6 +412,10 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     congruent with how VESSEL:ANGULARMOMENTUM is expressed, and for
     backward compatibility with older kOS scripts.
 
+.. attribute:: Vessel:MOMENTOFINERTIA
+
+    The moment of inertia of this ship over the pitch, yaw and roll axis.
+
 .. attribute:: Vessel:SENSORS
 
     :type: :struct:`VesselSensors`
@@ -603,6 +609,12 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
     Return all parts who's nametag isn't blank.
     For more information, see :ref:`ship parts and modules <parts and partmodules>`.
+
+.. method:: Vessel::ATTITUDECONTROLLERS()
+
+    :return: :struct:`List` of :struct:`AttitudeController` objects
+
+    Return all Attitude Controllers on this ship.
 
 .. attribute:: Vessel:CREWCAPACITY
 
