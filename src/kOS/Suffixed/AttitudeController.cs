@@ -45,8 +45,8 @@ namespace kOS.Suffixed
             AddSuffix("POSITIVEROTATION", new Suffix<AttitudeCorrectionResult>(() => positiveRotation, "What is the torque applied when giving a positive input on pitch, roll and yaw."));
             AddSuffix("NEGATIVEROTATION", new Suffix<AttitudeCorrectionResult>(() => negativeRotation, "What is the torque applied when giving a negative input on pitch, roll and yaw."));
             
-            AddSuffix("ROTATIONAUTHRORITYLIMITER", new SetSuffix<ScalarValue>(() => rotationAuthorityLimiter, (v) => { rotationAuthorityLimiter = v; }, "The authority limit for rotating."));
-            AddSuffix("TRANSLATIONAUTHRORITYLIMITER", new SetSuffix<ScalarValue>(() => translationAuthorityLimiter, (v) => { translationAuthorityLimiter = v; }, "The authority limit for translating."));
+            AddSuffix("ROTATIONAUTHORITYLIMITER", new SetSuffix<ScalarValue>(() => rotationAuthorityLimiter, (v) => { rotationAuthorityLimiter = v; }, "The authority limit for rotating."));
+            AddSuffix("TRANSLATIONAUTHORITYLIMITER", new SetSuffix<ScalarValue>(() => translationAuthorityLimiter, (v) => { translationAuthorityLimiter = v; }, "The authority limit for translating."));
             
             AddSuffix("RESPONSEFOR", new ThreeArgsSuffix<AttitudeCorrectionResult, Vector, Vector, ScalarValue>((rotation, translation, thrust) =>
             {

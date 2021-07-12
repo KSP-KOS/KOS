@@ -48,10 +48,10 @@ A ship usually has various attitude controllers like control surfaces, engines, 
         * - :attr:`CUSTOMTHROTTLE`
           - :ref:`scalar <scalar>` (%)
           - The value the custom throttle.
-        * - :attr:`ROTATIONAUTHRORITYLIMITER`
+        * - :attr:`ROTATIONAUTHORITYLIMITER`
           - :ref:`scalar <scalar>` (%)
           - The authority limit for rotation.
-        * - :attr:`TRANSLATIONAUTHRORITYLIMITER`
+        * - :attr:`TRANSLATIONAUTHORITYLIMITER`
           - :ref:`scalar <scalar>` (%)
           - The authority limit for translation.
         * - :attr:`CONTROLLERTYPE`
