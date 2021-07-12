@@ -1,12 +1,18 @@
 .. _attitudecontroller:
 
 Attitude Controller
-======
+===================
 
-A ship usually has various attitude controllers like control surfaces, engines, RCS thrusters, rotors and drain valves. These controllers can be configured as follows:
+A ship usually has various parts that can rotate or translate the ship.
+(These include areodynamic control surfaces, engines with gimbaled thrust,
+RCS thrusters, reaction wheels, and drain valves.)
+Information about these controllers can be read, and in some cases set,
+using the ``AttitudeController`` structure defined on this page.
 
-    local controllers to ship:AttitudeControllers.
-    print(controllers[0]:ControllerType + " allows pitch: " + controllers[0]:allowPitch).
+Example::
+
+    local controllers is ship:AttitudeControllers.
+    print(controllers[0]:part + " allows pitch? " + controllers[0]:allowPitch).
 
 .. structure:: AttitudeController
 
@@ -48,10 +54,10 @@ A ship usually has various attitude controllers like control surfaces, engines, 
         * - :attr:`CUSTOMTHROTTLE`
           - :ref:`scalar <scalar>` (%)
           - The value the custom throttle.
-        * - :attr:`ROTATIONAUTHRORITYLIMITER`
+        * - :attr:`ROTATIONAUTHORITYLIMITER`
           - :ref:`scalar <scalar>` (%)
           - The authority limit for rotation.
-        * - :attr:`TRANSLATIONAUTHRORITYLIMITER`
+        * - :attr:`TRANSLATIONAUTHORITYLIMITER`
           - :ref:`scalar <scalar>` (%)
           - The authority limit for translation.
         * - :attr:`CONTROLLERTYPE`

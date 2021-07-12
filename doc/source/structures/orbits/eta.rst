@@ -22,31 +22,32 @@ on an Orbit, and can be obtained one of two ways:
 
     print SHIP:OBT:ETA:APOAPSIS
 
-   .. structure:: OrbitEta
+  .. structure:: OrbitEta
 
-    .. list-table::
-        :header-rows: 1
-        :widths: 2 1 4
+  .. list-table::
 
-        * - Suffix
-          - Type
-          - Description
+     :header-rows: 1
+     :widths: 2 1 4
 
-        * - :attr:`APOAPSIS`
-          - :ref:`scalar <scalar>`, seconds
-          - Seconds from now until apoapsis.
+     * - Suffix
+       - Type
+       - Description
 
-        * - :attr:`PERIAPSIS`
-          - :ref:`scalar <scalar>`, seconds
-          - Seconds from now until periapsis.
+     * - :attr:`APOAPSIS`
+       - :ref:`scalar <scalar>`, seconds
+       - Seconds from now until apoapsis.
 
-        * - :attr:`NEXTNODE`
-          - :ref:`scalar <scalar>`, seconds
-          - Seconds from now until the next maneuver node.
+     * - :attr:`PERIAPSIS`
+       - :ref:`scalar <scalar>`, seconds
+       - Seconds from now until periapsis.
 
-        * - :attr:`TRANSITION`
-          - :ref:`scalar <scalar>`, seconds
-          - Seconds from now until the next orbit patch starts.
+     * - :attr:`NEXTNODE`
+       - :ref:`scalar <scalar>`, seconds
+       - Seconds from now until the next maneuver node.
+
+     * - :attr:`TRANSITION`
+       - :ref:`scalar <scalar>`, seconds
+       - Seconds from now until the next orbit patch starts.
 		  
 .. attribute:: ETA:APOAPSIS
 

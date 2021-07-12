@@ -6,7 +6,8 @@ Decoupler
 Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type :struct:`Decoupler`.
 It is a type of :struct:`Part`, and therefore can use all the suffixes of :struct:`Part`.
 It serves as base for all decouplers, separators, launch clamps and docking ports.
-Alias :struct:`Separator` can also be used for :struct:`Decoupler`.
+Most :struct:`Decoupler` parts are actually :struct:`Separator` parts, which is where most
+of the suffixes for them are found.
 
 .. structure:: Decoupler
 
@@ -24,4 +25,5 @@ Alias :struct:`Separator` can also be used for :struct:`Decoupler`.
 
 .. structure:: Separator
 
-    :struct:`Separator` is an alias for the structure :struct:`Decoupler`
+    Most :struct:`Decoupler` parts are also :struct:`Separator` parts, and most of
+    the useful suffixes for them are in :struct:`Separator`.

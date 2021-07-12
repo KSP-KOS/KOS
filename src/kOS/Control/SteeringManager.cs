@@ -667,7 +667,6 @@ namespace kOS.Control
             rawTorque.x = (rawTorque.x + PitchTorqueAdjust) * PitchTorqueFactor;
             rawTorque.z = (rawTorque.z + YawTorqueAdjust) * YawTorqueFactor;
             rawTorque.y = (rawTorque.y + RollTorqueAdjust) * RollTorqueFactor;
-
             controlTorque = rawTorque + adjustTorque;
             //controlTorque = Vector3d.Scale(rawTorque, adjustTorque);
             //controlTorque = rawTorque;
@@ -717,6 +716,14 @@ namespace kOS.Control
                     for (int i = rcs.thrusterTransforms.Count-1; i >= 0; --i)
                     {
                         Transform rcsTransform = rcs.thrusterTransforms[i];
+
+                        // Fixes github issue #2912:  As of KSP 1.11.x, RCS parts now use part variants.  To keep kOS
+                        // from counting torque as if the superset of all variant nozzles were present, the ones not
+                        // currently active have to be culled out here, since KSP isn't culling them out itself when
+                        // it populates ModuleRCS.thrusterTransforms:
+                        if (!rcsTransform.gameObject.activeInHierarchy)
+                            continue;
+
                         Vector3 rcsPosFromCoM = rcsTransform.position - Vessel.CurrentCoM;
                         Vector3 rcsThrustDir = rcs.useZaxis ? -rcsTransform.forward : rcsTransform.up;
                         float powerFactor = rcs.thrusterPower * rcs.thrustPercentage * 0.01f;
@@ -771,9 +778,9 @@ namespace kOS.Control
         /// TODO: Check this again after each KSP stock release to see if it's been changed or not.
         public static Vector3 FindMoI(Vessel vessel)
         {
-            var vesselTransform = vessel.ReferenceTransform;
-            var vesselRotation = vesselTransform.rotation * Quaternion.Euler(-90, 0, 0);
-            var centerOfMass = vessel.CoMD;
+            var vesTransform = vessel.ReferenceTransform;
+            var vesRotation = vesTransform.rotation * Quaternion.Euler(-90, 0, 0);
+            var vesCenterOfMass = vessel.CoMD;
 
             var tensor = Matrix4x4.zero;
             Matrix4x4 partTensor = Matrix4x4.identity;
@@ -785,7 +792,7 @@ namespace kOS.Control
                 {
                     KSPUtil.ToDiagonalMatrix2(part.rb.inertiaTensor, ref partTensor);
 
-                    Quaternion rot = Quaternion.Inverse(vesselRotation) * part.transform.rotation * part.rb.inertiaTensorRotation;
+                    Quaternion rot = Quaternion.Inverse(vesRotation) * part.transform.rotation * part.rb.inertiaTensorRotation;
                     Quaternion inv = Quaternion.Inverse(rot);
 
                     Matrix4x4 rotMatrix = Matrix4x4.TRS(Vector3.zero, rot, Vector3.one);
@@ -794,7 +801,7 @@ namespace kOS.Control
                     // add the part inertiaTensor to the ship inertiaTensor
                     KSPUtil.Add(ref tensor, rotMatrix * partTensor * invMatrix);
 
-                    Vector3 position = vesselTransform.InverseTransformDirection(part.rb.position - centerOfMass);
+                    Vector3 position = vesTransform.InverseTransformDirection(part.rb.position - vesCenterOfMass);
 
                     // add the part mass to the ship inertiaTensor
                     KSPUtil.ToDiagonalMatrix2(part.rb.mass * position.sqrMagnitude, ref inertiaMatrix);

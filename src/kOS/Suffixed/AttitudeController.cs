@@ -18,8 +18,8 @@ namespace kOS.Suffixed
     {
         public AttitudeController(PartValue part, PartModuleFields module, ITorqueProvider provider)
         {
-            torqueProvider = provider;
-            this.part = part;
+            TorqueProvider = provider;
+            this.Part = part;
 
             AddSuffix("PART", new Suffix<PartValue>(() => part, "The part this AttitudeController belongs to."));
             AddSuffix("MODULE", new Suffix<Structure>(() =>
@@ -28,25 +28,25 @@ namespace kOS.Suffixed
                     return new BooleanValue(false);
                 return module;
             }, "The module this AttitudeController belongs to."));
-            AddSuffix("ALLOWPITCH", new SetSuffix<BooleanValue>(() => allowPitch, (v) => { allowPitch = v; }, "Should this attitude controller respond to pitch input?"));
-            AddSuffix("ALLOWROLL", new SetSuffix<BooleanValue>(() => allowRoll, (v) => { allowRoll = v; }, "Should this attitude controller respond to roll input?"));
-            AddSuffix("ALLOWYAW", new SetSuffix<BooleanValue>(() => allowYaw, (v) => { allowYaw = v; }, "Should this attitude controller respond to yaw input?"));
-            AddSuffix("ALLOWX", new SetSuffix<BooleanValue>(() => allowX, (v) => { allowX = v; }, "Should this attitude controller respond to translation X input?"));
-            AddSuffix("ALLOWY", new SetSuffix<BooleanValue>(() => allowY, (v) => { allowY = v; }, "Should this attitude controller respond to translation Y input?"));
-            AddSuffix("ALLOWZ", new SetSuffix<BooleanValue>(() => allowZ, (v) => { allowZ = v; }, "Should this attitude controller respond to translation Z input?"));
+            AddSuffix("ALLOWPITCH", new SetSuffix<BooleanValue>(() => AllowPitch, (v) => { AllowPitch = v; }, "Should this attitude controller respond to pitch input?"));
+            AddSuffix("ALLOWROLL", new SetSuffix<BooleanValue>(() => AllowRoll, (v) => { AllowRoll = v; }, "Should this attitude controller respond to roll input?"));
+            AddSuffix("ALLOWYAW", new SetSuffix<BooleanValue>(() => AllowYaw, (v) => { AllowYaw = v; }, "Should this attitude controller respond to yaw input?"));
+            AddSuffix("ALLOWX", new SetSuffix<BooleanValue>(() => AllowX, (v) => { AllowX = v; }, "Should this attitude controller respond to translation X input?"));
+            AddSuffix("ALLOWY", new SetSuffix<BooleanValue>(() => AllowY, (v) => { AllowY = v; }, "Should this attitude controller respond to translation Y input?"));
+            AddSuffix("ALLOWZ", new SetSuffix<BooleanValue>(() => AllowZ, (v) => { AllowZ = v; }, "Should this attitude controller respond to translation Z input?"));
 
-            AddSuffix("HASCUSTOMTHROTTLE", new Suffix<BooleanValue>(() => hasCustomThrottle, "Does this attitude controller have an independent custom throttle?"));
-            AddSuffix("CUSTOMTHROTTLE", new SetSuffix<ScalarValue>(() => customThrottle, (v) => { customThrottle = v; }, "The value of the independent custom throttle."));
-            AddSuffix("CONTROLLERTYPE", new Suffix<StringValue>(() => controllerType, "The type of controller."));
-            AddSuffix("STATUS", new Suffix<StringValue>(() => status, "The status of the controller."));
+            AddSuffix("HASCUSTOMTHROTTLE", new Suffix<BooleanValue>(() => HasCustomThrottle, "Does this attitude controller have an independent custom throttle?"));
+            AddSuffix("CUSTOMTHROTTLE", new SetSuffix<ScalarValue>(() => CustomThrottle, (v) => { CustomThrottle = v; }, "The value of the independent custom throttle."));
+            AddSuffix("CONTROLLERTYPE", new Suffix<StringValue>(() => ControllerType, "The type of controller."));
+            AddSuffix("STATUS", new Suffix<StringValue>(() => Status, "The status of the controller."));
             
-            AddSuffix("RESPONSETIME", new Suffix<ScalarValue>(() => responseTime, "The response speed of the controller."));
+            AddSuffix("RESPONSETIME", new Suffix<ScalarValue>(() => ResponseTime, "The response speed of the controller."));
             
             AddSuffix("POSITIVEROTATION", new Suffix<AttitudeCorrectionResult>(() => positiveRotation, "What is the torque applied when giving a positive input on pitch, roll and yaw."));
             AddSuffix("NEGATIVEROTATION", new Suffix<AttitudeCorrectionResult>(() => negativeRotation, "What is the torque applied when giving a negative input on pitch, roll and yaw."));
             
-            AddSuffix("ROTATIONAUTHRORITYLIMITER", new SetSuffix<ScalarValue>(() => rotationAuthorityLimiter, (v) => { rotationAuthorityLimiter = v; }, "The authority limit for rotating."));
-            AddSuffix("TRANSLATIONAUTHRORITYLIMITER", new SetSuffix<ScalarValue>(() => translationAuthorityLimiter, (v) => { translationAuthorityLimiter = v; }, "The authority limit for translating."));
+            AddSuffix("ROTATIONAUTHORITYLIMITER", new SetSuffix<ScalarValue>(() => RotationAuthorityLimiter, (v) => { RotationAuthorityLimiter = v; }, "The authority limit for rotating."));
+            AddSuffix("TRANSLATIONAUTHORITYLIMITER", new SetSuffix<ScalarValue>(() => TranslationAuthorityLimiter, (v) => { TranslationAuthorityLimiter = v; }, "The authority limit for translating."));
             
             AddSuffix("RESPONSEFOR", new ThreeArgsSuffix<AttitudeCorrectionResult, Vector, Vector, ScalarValue>((rotation, translation, thrust) =>
             {
@@ -75,33 +75,33 @@ namespace kOS.Suffixed
             return null;
         }
 
-        protected PartValue part { get; private set; }
-        protected ITorqueProvider torqueProvider { get; private set; }
-        public virtual bool allowPitch { get { return false; } set { } }
-        public virtual bool allowRoll { get { return false; } set { } }
-        public virtual bool allowYaw { get { return false; } set { } }
-        public virtual bool allowX { get { return false; } set { } }
-        public virtual bool allowY { get { return false; } set { } }
-        public virtual bool allowZ { get { return false; } set { } }
+        protected PartValue Part { get; private set; }
+        protected ITorqueProvider TorqueProvider { get; private set; }
+        public virtual bool AllowPitch { get { return false; } set { } }
+        public virtual bool AllowRoll { get { return false; } set { } }
+        public virtual bool AllowYaw { get { return false; } set { } }
+        public virtual bool AllowX { get { return false; } set { } }
+        public virtual bool AllowY { get { return false; } set { } }
+        public virtual bool AllowZ { get { return false; } set { } }
 
-        public virtual float rotationAuthorityLimiter { get { return 0; } set { } }
-        public virtual float translationAuthorityLimiter { get { return 0; } set { } }
+        public virtual float RotationAuthorityLimiter { get { return 0; } set { } }
+        public virtual float TranslationAuthorityLimiter { get { return 0; } set { } }
 
-        public virtual bool hasCustomThrottle { get { return false; } }
-        public virtual float customThrottle { get { return 0; } set { } }
-        public virtual string controllerType { get { return "UNKNOWN"; } }
-        public virtual string status { get { return "UNKNOWN"; } }
-        public virtual float responseTime { get { return 0; } set { } }
+        public virtual bool HasCustomThrottle { get { return false; } }
+        public virtual float CustomThrottle { get { return 0; } set { } }
+        public virtual string ControllerType { get { return "UNKNOWN"; } }
+        public virtual string Status { get { return "UNKNOWN"; } }
+        public virtual float ResponseTime { get { return 0; } set { } }
 
 
         public override string ToString()
         {
-            return "AttitudeController(" + controllerType + ")";
+            return "AttitudeController(" + ControllerType + ")";
         }
 
         protected void GetPotentialTorque(out Vector3 positive, out Vector3 negative)
         {
-            var controlParameter = kOSVesselModule.GetInstance(part.Shared.Vessel).GetFlightControlParameter("steering");
+            var controlParameter = kOSVesselModule.GetInstance(Part.Shared.Vessel).GetFlightControlParameter("steering");
             var steeringManager = controlParameter as SteeringManager;
 
             if (steeringManager == null)
@@ -112,7 +112,7 @@ namespace kOS.Suffixed
             }
             Vector3 pos = Vector3.zero;
             Vector3 neg = Vector3.zero;
-            steeringManager.CorrectedGetPotentialTorque(torqueProvider, out pos, out neg);
+            steeringManager.CorrectedGetPotentialTorque(TorqueProvider, out pos, out neg);
             positive.x = pos.x;
             positive.y = pos.z;
             positive.z = pos.y;
@@ -128,7 +128,7 @@ namespace kOS.Suffixed
                 Vector3 _ = Vector3.zero;
                 GetPotentialTorque(out pos, out _);
 
-                AttitudeCorrectionResult estimate = GetResponseFor(1, 1, 1, 0, 0, 0, customThrottle);
+                AttitudeCorrectionResult estimate = GetResponseFor(1, 1, 1, 0, 0, 0, CustomThrottle);
                 return new AttitudeCorrectionResult(new Vector(pos), estimate.translation);
             }
         }
@@ -140,7 +140,7 @@ namespace kOS.Suffixed
                 Vector3 neg = Vector3.zero;
                 GetPotentialTorque(out _, out neg);
                 
-                AttitudeCorrectionResult estimate = GetResponseFor(-1, -1, -1, 0, 0, 0, customThrottle);
+                AttitudeCorrectionResult estimate = GetResponseFor(-1, -1, -1, 0, 0, 0, CustomThrottle);
                 return new AttitudeCorrectionResult(new Vector(neg), estimate.translation);
             }
         }
@@ -149,9 +149,9 @@ namespace kOS.Suffixed
             return new AttitudeCorrectionResult(Vector.Zero, Vector.Zero);
         }
 
-        protected Vector3 StarVector { get { return VesselUtils.GetFacing(part.Shared.Vessel).Rotation * Vector3.right; } }
-        protected Vector3 TopVector { get { return VesselUtils.GetFacing(part.Shared.Vessel).Rotation * Vector3.up; } }
-        protected Vector3 ForeVector { get { return VesselUtils.GetFacing(part.Shared.Vessel).Rotation * Vector3.forward; } }
+        protected Vector3 StarVector { get { return VesselUtils.GetFacing(Part.Shared.Vessel).Rotation * Vector3.right; } }
+        protected Vector3 TopVector { get { return VesselUtils.GetFacing(Part.Shared.Vessel).Rotation * Vector3.up; } }
+        protected Vector3 ForeVector { get { return VesselUtils.GetFacing(Part.Shared.Vessel).Rotation * Vector3.forward; } }
         protected Vector3 PitchVector(Vector3 lever)
         {
             Vector3 projectedLever = Vector3.ProjectOnPlane(lever, StarVector);
@@ -175,7 +175,7 @@ namespace kOS.Suffixed
         }
         protected Vector3 PositionToLever(Vector3 position)
         {
-            Vector3 shipCenterOfMass = part.Shared.Vessel.CoMD;
+            Vector3 shipCenterOfMass = Part.Shared.Vessel.CoMD;
             return position - shipCenterOfMass;
         }
         public static Direction GetTransformFacing(Transform transform)
@@ -227,13 +227,13 @@ namespace kOS.Suffixed
 
         protected ModuleReactionWheel wheel { get; private set; }
         
-        public override string controllerType { get { return "REACTIONWHEEL"; } }
-        public override string status { get { return wheel.State.ToString().ToUpper(); } }
-        public override float rotationAuthorityLimiter { get { return wheel.authorityLimiter; } set { wheel.authorityLimiter = Math.Max(Math.Min(value, 100), 0); } }
-        public override bool allowPitch { get { return true; } set { } }
-        public override bool allowRoll { get { return true; } set { } }
-        public override bool allowYaw { get { return true; } set { } }
-        public override float responseTime { get { return wheel.torqueResponseSpeed; } set { } }
+        public override string ControllerType { get { return "REACTIONWHEEL"; } }
+        public override string Status { get { return wheel.State.ToString().ToUpper(); } }
+        public override float RotationAuthorityLimiter { get { return wheel.authorityLimiter; } set { wheel.authorityLimiter = Math.Max(Math.Min(value, 100), 0); } }
+        public override bool AllowPitch { get { return true; } set { } }
+        public override bool AllowRoll { get { return true; } set { } }
+        public override bool AllowYaw { get { return true; } set { } }
+        public override float ResponseTime { get { return wheel.torqueResponseSpeed; } set { } }
         public override AttitudeCorrectionResult GetResponseFor(float pitch, float yaw, float roll, float x, float y, float z, float throttle)
         {
             Vector3 pos = Vector3.zero;
@@ -265,11 +265,11 @@ namespace kOS.Suffixed
 
         protected ModuleControlSurface surface { get; private set; }
 
-        public override string controllerType { get { return "CONTROLSURFACE"; } }
-        public override bool allowPitch { get { return !surface.ignorePitch; } set { surface.ignorePitch = !value; } }
-        public override bool allowRoll { get { return !surface.ignoreRoll; } set { surface.ignoreRoll = !value; } }
-        public override bool allowYaw { get { return !surface.ignoreYaw; } set { surface.ignoreYaw = !value; } }
-        public override float rotationAuthorityLimiter { get { return surface.authorityLimiter; } set { surface.authorityLimiter = Math.Max(Math.Min(value, 100), 0); } }
+        public override string ControllerType { get { return "CONTROLSURFACE"; } }
+        public override bool AllowPitch { get { return !surface.ignorePitch; } set { surface.ignorePitch = !value; } }
+        public override bool AllowRoll { get { return !surface.ignoreRoll; } set { surface.ignoreRoll = !value; } }
+        public override bool AllowYaw { get { return !surface.ignoreYaw; } set { surface.ignoreYaw = !value; } }
+        public override float RotationAuthorityLimiter { get { return surface.authorityLimiter; } set { surface.authorityLimiter = Math.Max(Math.Min(value, 100), 0); } }
         public override AttitudeCorrectionResult GetResponseFor(float pitch, float yaw, float roll, float x, float y, float z, float throttle)
         {
             Vector3 pos = Vector3.zero;
@@ -302,13 +302,13 @@ namespace kOS.Suffixed
 
         protected ModuleRoboticServoRotor rotor { get; private set; }
 
-        public override string controllerType { get { return "ROTOR"; } }
+        public override string ControllerType { get { return "ROTOR"; } }
         public override AttitudeCorrectionResult positiveRotation { get { return new AttitudeCorrectionResult(Vector.Zero, Vector.Zero); } }
         public override AttitudeCorrectionResult negativeRotation { get { return new AttitudeCorrectionResult(Vector.Zero, Vector.Zero); } }
-        public override bool hasCustomThrottle { get { return true; } }
-        public override float customThrottle { get { return rotor.maxTorque; } set { rotor.maxTorque = Math.Max(Math.Min(value, 100), 0); } }
-        public override string status { get { return rotor.motorState.ToUpper(); } }
-        public override float responseTime { get { return rotor.rotorSpoolTime; } set { } }
+        public override bool HasCustomThrottle { get { return true; } }
+        public override float CustomThrottle { get { return rotor.maxTorque; } set { rotor.maxTorque = Math.Max(Math.Min(value, 100), 0); } }
+        public override string Status { get { return rotor.motorState.ToUpper(); } }
+        public override float ResponseTime { get { return rotor.rotorSpoolTime; } set { } }
 
         public override AttitudeCorrectionResult GetResponseFor(float pitch, float yaw, float roll, float x, float y, float z, float throttle)
         {
@@ -316,7 +316,7 @@ namespace kOS.Suffixed
                 return new AttitudeCorrectionResult(Vector.Zero, Vector.Zero);
             // Likely makes too many assumptions about the axis direction but the rotation axis does not seem to be public.
             Quaternion rotator = rotor.servoTransformRotation;
-            Vector3d facing = part.GetFacing().Vector;
+            Vector3d facing = Part.GetFacing().Vector;
             Vector3 axis = new Vector3((float)facing.x, (float)facing.y, (float)facing.z);
             float pitchAlignment = Vector3.Dot(axis, StarVector);
             float yawAlignment = Vector3.Dot(axis, TopVector);
@@ -384,7 +384,7 @@ namespace kOS.Suffixed
         protected List<ModuleGimbal> gimbals { get; private set; }
         protected Dictionary<ModuleEngines, ModuleGimbal> gimbalLinking { get; private set; }
 
-        public override bool allowPitch
+        public override bool AllowPitch
         {
             get
             {
@@ -399,7 +399,7 @@ namespace kOS.Suffixed
                     gimbal.enablePitch = value;
             }
         }
-        public override bool allowRoll
+        public override bool AllowRoll
         {
             get
             {
@@ -414,7 +414,7 @@ namespace kOS.Suffixed
                     gimbal.enableRoll = value;
             }
         }
-        public override bool allowYaw
+        public override bool AllowYaw
         {
             get
             {
@@ -429,11 +429,11 @@ namespace kOS.Suffixed
                     gimbal.enableYaw = value;
             }
         }
-        public override AttitudeCorrectionResult positiveRotation { get { return GetResponseFor(1, 1, 1, 0, 0, 0, customThrottle); } }
-        public override AttitudeCorrectionResult negativeRotation { get { return GetResponseFor(-1, -1, -1, 0, 0, 0, customThrottle); } }
-        public override string controllerType { get { return "ENGINE"; } }
+        public override AttitudeCorrectionResult positiveRotation { get { return GetResponseFor(1, 1, 1, 0, 0, 0, CustomThrottle); } }
+        public override AttitudeCorrectionResult negativeRotation { get { return GetResponseFor(-1, -1, -1, 0, 0, 0, CustomThrottle); } }
+        public override string ControllerType { get { return "ENGINE"; } }
 
-        public override bool hasCustomThrottle
+        public override bool HasCustomThrottle
         {
             get
             {
@@ -444,7 +444,7 @@ namespace kOS.Suffixed
                 return false;
             }
         }
-        public override float customThrottle
+        public override float CustomThrottle
         {
             get
             {
@@ -460,7 +460,7 @@ namespace kOS.Suffixed
                     engine.independentThrottlePercentage = Math.Max(Math.Min(value, 100), 0);
             }
         }
-        public override float responseTime
+        public override float ResponseTime
         {
             get
             {
@@ -479,11 +479,11 @@ namespace kOS.Suffixed
             var engines = gimbalLinking.Keys;
             if (engines.Count == 0)
                 return new AttitudeCorrectionResult(new Vector(0, 0, 0), new Vector(0, 0, 0));
-            Vector3d facing3d = part.GetFacing().Vector;
+            Vector3d facing3d = Part.GetFacing().Vector;
             Vector3 facing = new Vector3((float)facing3d.x, (float)facing3d.y, (float)facing3d.z);
 
 
-            float shipThrottle = (float)kOSVesselModule.GetInstance(part.Shared.Vessel).GetFlightControlParameter("throttle").GetValue();
+            float shipThrottle = (float)kOSVesselModule.GetInstance(Part.Shared.Vessel).GetFlightControlParameter("throttle").GetValue();
 
             var result = new AttitudeCorrectionResult(new Vector(0, 0, 0), new Vector(0, 0, 0));
 
@@ -560,7 +560,7 @@ namespace kOS.Suffixed
 
         protected ModuleResourceDrain drain { get; private set; }
         
-        public override string controllerType { get { return "DRAIN"; } }
+        public override string ControllerType { get { return "DRAIN"; } }
         public override AttitudeCorrectionResult positiveRotation { get { return new AttitudeCorrectionResult(Vector.Zero, Vector.Zero); } }
         public override AttitudeCorrectionResult negativeRotation { get { return new AttitudeCorrectionResult(Vector.Zero, Vector.Zero); } }
         public override AttitudeCorrectionResult GetResponseFor(float pitch, float yaw, float roll, float x, float y, float z, float throttle)
@@ -569,20 +569,20 @@ namespace kOS.Suffixed
             // Assumes all resources are drained (not always true)
 
             float ISP = 5.0f; // All resources in ResourcesGeneric.cfg have a drain ISP of 5.
-            var parent = part.Parent;
+            var parent = Part.Parent;
             float weightDelta = parent.Part.GetWetMass() - parent.Part.GetDryMass();
             float fuelFlow = weightDelta / 5; // Max throttle (20%) drains tank in 5 seconds
 
             float throttleFraction = Math.Min(Math.Max(throttle, 0), 20) / 20;
             float thrust = fuelFlow * ISP * 9.80665f * throttleFraction;
 
-            Vector3d facing = part.GetFacing().Vector;
-            Vector3 lever = PositionToLever(part.Part.transform.position);
+            Vector3d facing = Part.GetFacing().Vector;
+            Vector3 lever = PositionToLever(Part.Part.transform.position);
 
             return SplitComponents(lever, facing * thrust);
         }
-        public override bool hasCustomThrottle { get { return true; } }
-        public override float customThrottle
+        public override bool HasCustomThrottle { get { return true; } }
+        public override float CustomThrottle
         {
             get { return drain.drainRate; }
             set { drain.drainRate = Math.Min(Math.Max(value, 0), 20); }
@@ -600,17 +600,17 @@ namespace kOS.Suffixed
 
         protected ModuleRCS rcs { get; private set; }
         
-        public override string controllerType { get { return "RCS"; } }
-        public override bool allowPitch { get { return rcs.enablePitch; } set { rcs.enablePitch = value; } }
-        public override bool allowRoll { get { return rcs.enableRoll; } set { rcs.enableRoll = value; } }
-        public override bool allowYaw { get { return rcs.enableYaw; } set { rcs.enableYaw = value; } }
-        public override bool allowX { get { return rcs.enableX; } set { rcs.enableX = value; } }
-        public override bool allowY { get { return rcs.enableY; } set { rcs.enableY = value; } }
-        public override bool allowZ { get { return rcs.enableZ; } set { rcs.enableZ = value; } }
+        public override string ControllerType { get { return "RCS"; } }
+        public override bool AllowPitch { get { return rcs.enablePitch; } set { rcs.enablePitch = value; } }
+        public override bool AllowRoll { get { return rcs.enableRoll; } set { rcs.enableRoll = value; } }
+        public override bool AllowYaw { get { return rcs.enableYaw; } set { rcs.enableYaw = value; } }
+        public override bool AllowX { get { return rcs.enableX; } set { rcs.enableX = value; } }
+        public override bool AllowY { get { return rcs.enableY; } set { rcs.enableY = value; } }
+        public override bool AllowZ { get { return rcs.enableZ; } set { rcs.enableZ = value; } }
         public override AttitudeCorrectionResult GetResponseFor(float pitch, float yaw, float roll, float x, float y, float z, float throttle)
         {
             var result = new AttitudeCorrectionResult(new Vector(0, 0, 0), new Vector(0, 0, 0));
-            if (part.Part.ShieldedFromAirstream || !rcs.rcsEnabled || !rcs.isEnabled ||
+            if (Part.Part.ShieldedFromAirstream || !rcs.rcsEnabled || !rcs.isEnabled ||
                 rcs.isJustForShow || rcs.flameout || !rcs.rcs_active)
                 return result;
 
@@ -623,7 +623,7 @@ namespace kOS.Suffixed
 
             foreach (var transform in rcs.thrusterTransforms)
             {
-                Vector3 rcsPosFromCoM = transform.position - part.Part.vessel.CurrentCoM;
+                Vector3 rcsPosFromCoM = transform.position - Part.Part.vessel.CurrentCoM;
                 Vector3 rcsThrustDir = rcs.useZaxis ? -transform.forward : transform.up;
                 float powerFactor = rcs.thrusterPower * rcs.thrustPercentage * 0.01f;
                 // Normally you'd check for precision mode to nerf powerFactor here,
@@ -631,8 +631,8 @@ namespace kOS.Suffixed
                 Vector3 thrust = powerFactor * rcsThrustDir;
                 Vector3 torque = Vector3d.Cross(rcsPosFromCoM, thrust);
                 Vector3 translation = rcsPosFromCoM.normalized * (float)Vector3d.Dot(rcsPosFromCoM.normalized, thrust);
-                Vector3 transformedTorque = part.Part.vessel.ReferenceTransform.InverseTransformDirection(torque);
-                Vector3 transformedTranslation = part.Part.vessel.ReferenceTransform.InverseTransformDirection(translation);
+                Vector3 transformedTorque = Part.Part.vessel.ReferenceTransform.InverseTransformDirection(torque);
+                Vector3 transformedTranslation = Part.Part.vessel.ReferenceTransform.InverseTransformDirection(translation);
 
                 Vector3 desiredTorque = new Vector3(maskedPitch, maskedRoll, maskedYaw);
                 Vector3 desiredTranslation = new Vector3(maskedX, maskedY, maskedZ);

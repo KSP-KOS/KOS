@@ -41,11 +41,6 @@ namespace kOS.Suffixed.Widget
         private WidgetStyle emptyHintStyle;
 
         /// <summary>
-        /// Tracks Unity's ID of this gui widget for the sake of seeing if the widget has focus.
-        /// </summary>
-        private int uiID = -1;
-
-        /// <summary>
         /// True if this gui widget had the keyboard focus on the previous OnGUI pass:
         /// </summary>
         private bool hadFocus = false;
@@ -105,26 +100,41 @@ namespace kOS.Suffixed.Widget
         public override void DoGUI()
         {
             bool shouldConfirm = false;
-            if (GUIUtility.keyboardControl == uiID)
+            myId = GUIUtility.GetControlID(FocusType.Keyboard);
+            string myIdString = myId.ToString();
+            GUI.SetNextControlName(myIdString);
+            string newtext = GUILayout.TextField(VisibleText(), ReadOnlyStyle);
+            if (myId >= 0 && myIdString != null) // skips on the first pass, and on in-between OnGUI passes where sometimes the control Id's are -1
             {
-                if (Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter)
-                    shouldConfirm = true;
-                hadFocus = true;
-            }
-            else
-            {
-                if (hadFocus)
-                    shouldConfirm = true;
-                hadFocus = false;
+                if (GUI.GetNameOfFocusedControl().Equals(myIdString))
+                {
+                    Event thisEvent = Event.current;
+                    if ((thisEvent.keyCode == KeyCode.Return || thisEvent.keyCode == KeyCode.KeypadEnter)
+                        &&
+                        // Next condition is because Unity populates the keyCode even when the event has nothing to do 
+                        // with keypresses, like on the repaint and layout events that constantly fire every time it
+                        // paints the window.  If we do thisEvent.Use() when the event is a repaint or layout instead of
+                        // an actual key event, then Unity aborts drawing the window and it goes away from the screen:
+                       (thisEvent.type == EventType.KeyDown || thisEvent.type == EventType.Used))
+                    {
+                        shouldConfirm = true;
+                        thisEvent.Use();
+                    }
+                    hadFocus = true;
+                }
+                else
+                {
+                    if (hadFocus)
+                        shouldConfirm = true;
+                    hadFocus = false;
+                }
             }
             if (shouldConfirm)
             {
                 Communicate(() => Confirmed = true);
-                GUIUtility.keyboardControl = -1;
             }
 
-            uiID = GUIUtility.GetControlID(FocusType.Passive) + 1; // Dirty kludge.
-            string newtext = GUILayout.TextField(VisibleText(), ReadOnlyStyle);
+
             if (newtext != VisibleText()) {
                 SetVisibleText(newtext);
                 Changed = true;

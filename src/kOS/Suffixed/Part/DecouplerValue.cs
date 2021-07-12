@@ -5,8 +5,7 @@ using System.Collections.Generic;
 namespace kOS.Suffixed.Part
 {
     [kOS.Safe.Utilities.KOSNomenclature("Decoupler")]
-    [kOS.Safe.Utilities.KOSNomenclature("Separator", CSharpToKOS = false)]
-    public class DecouplerValue : PartValue
+    public abstract class DecouplerValue : PartValue
     {
         /// <summary>
         /// Do not call! VesselTarget.ConstructPart uses this, would use `friend VesselTarget` if this was C++!
@@ -26,14 +25,9 @@ namespace kOS.Suffixed.Part
                 {
                     if (!(module is IStageSeparator))
                         continue;
-                    var dockingNode = module as ModuleDockingNode;
-                    if (dockingNode != null && !dockingNode.stagingEnabled)
-                        continue;
-                    if (module is ModuleDecouple || module is ModuleAnchoredDecoupler
-                        || module is LaunchClamp)
-                    {
-                        toReturn.Add(vessel[part]);
-                    }
+                    //if (!module.stagingEnabled)
+                    //    continue;
+                    toReturn.Add(vessel[part]);
                 }
             }
             return toReturn;
