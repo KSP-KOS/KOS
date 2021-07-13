@@ -330,7 +330,7 @@ If you do, you will get seemingly "random" errors.  The reasons
 for this are complex, but the short version is because the
 memory the script files' pseudo-machine language instructions
 live in and the memory the interpreter's pseudo-machine
-langauge instructions live in are two different things.
+language instructions live in are two different things.
 
 The effect you may see if you attempt this is merely
 an "Unknown Identifer" error, or worse yet, it may end
