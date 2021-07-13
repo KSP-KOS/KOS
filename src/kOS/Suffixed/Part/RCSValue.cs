@@ -110,8 +110,11 @@ namespace kOS.Suffixed.Part
             var toReturn = new ListValue();
             foreach (Transform t in module.thrusterTransforms)
             {
-                // RCS thrusts along up. Possibly useZAxis property means it thrusts along forward?
-                toReturn.Add(new Vector(t.up));
+                if (t.gameObject.activeInHierarchy)
+                {
+                    // RCS thrusts along up. Possibly useZAxis property means it thrusts along forward?
+                    toReturn.Add(new Vector(t.up));
+                }
             }
             return toReturn;
         }
