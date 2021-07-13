@@ -1578,16 +1578,21 @@ namespace kOS.Safe.Execution
                 {
                     opcode.ProfileTicksElapsed += instructionWatch.ElapsedTicks;
                     opcode.ProfileExecutionCount++;
-                    
                 }
-                // Add the time this took to the exeuction stats for current priority level:
-                if (! executionStats.ContainsKey(CurrentPriority))
-                    executionStats[CurrentPriority] = new ExecutionStatBlock();
-                executionStats[CurrentPriority].LogOneInstruction(instructionWatch.ElapsedTicks);
+                if (doProfiling || SafeHouse.Config.ShowStatistics)
+                {
+                    // Add the time this took to the exeuction stats for current priority level:
+                    if (! executionStats.ContainsKey(CurrentPriority))
+                        executionStats[CurrentPriority] = new ExecutionStatBlock();
+                    executionStats[CurrentPriority].LogOneInstruction(instructionWatch.ElapsedTicks);
+                }
 
                 // start the *next* instruction's timer right after this instruction ended
                 instructionWatch.Reset();
-                instructionWatch.Start();
+                if (doProfiling || SafeHouse.Config.ShowStatistics)
+                {
+                    instructionWatch.Start();
+                }
 
                 if (opcode.AbortProgram)
                 {
