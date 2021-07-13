@@ -97,7 +97,7 @@ namespace kOS.Control
             return internalVessel.ctrlState.mainThrottle;
         }
 
-        void IFlightControlParameter.UpdateAutopilot(FlightCtrlState c)
+        void IFlightControlParameter.UpdateAutopilot(FlightCtrlState c, ControlTypes ctrlLock)
         {
             if (!Enabled) return;
 
