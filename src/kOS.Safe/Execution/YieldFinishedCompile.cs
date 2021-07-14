@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Compilation;
+using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Persistence;
 using System.Collections.Generic;
@@ -6,9 +6,9 @@ using System.Threading;
 
 namespace kOS.Safe.Execution
 {
-    public class YieldFinishedCompile : YiedFinishedThreadedDetector
+    public class YieldFinishedCompile : YieldFinishedThreadedDetector
     {
-        private enum CompileMode
+        protected enum CompileMode
         {
             RUN = 0,
             LOAD = 1,
@@ -28,9 +28,9 @@ namespace kOS.Safe.Execution
 
         private IProgramContext programContext;
 
-        private YieldFinishedCompile(GlobalPath scriptPath, int lineNumber, string fileContent, string contextIdentifier, CompilerOptions compilerOptions)
+        protected YieldFinishedCompile(CompileMode mode, GlobalPath scriptPath, int lineNumber, string fileContent, string contextIdentifier, CompilerOptions compilerOptions)
         {
-            compileMode = CompileMode.RUN;
+            compileMode = mode;
             path = scriptPath;
             startLineNum = lineNumber;
             content = fileContent;
@@ -38,19 +38,20 @@ namespace kOS.Safe.Execution
             options = compilerOptions;
         }
 
-        public override void ThreadInitialize(SafeSharedObjects shared)
+        protected override bool ThreadInitialize()
         {
             if (compileMode != CompileMode.FILE)
                 programContext = shared.Cpu.SwitchToProgramContext(); // only switch the context if executing
             codeParts = new List<CodePart>();
+            return true;
         }
 
-        public override void ThreadExecute()
+        protected override void ThreadExecute()
         {
             codeParts = shared.ScriptHandler.Compile(path, startLineNum, content, contextId, options);
         }
 
-        public override void ThreadFinish()
+        protected override void ThreadFinish()
         {
             switch (compileMode)
             {
@@ -76,27 +77,17 @@ namespace kOS.Safe.Execution
             shared.Cpu.StopCompileStopwatch();
         }
 
-        public static YieldFinishedCompile RunScript(GlobalPath scriptPath, int lineNumber, string fileContent, string contextIdentifier, CompilerOptions compilerOptions)
-        {
-            var ret = new YieldFinishedCompile(scriptPath, lineNumber, fileContent, contextIdentifier, compilerOptions);
-            ret.compileMode = CompileMode.RUN;
-            return ret;
-        }
+        public static YieldFinishedCompile RunScript(GlobalPath scriptPath, int lineNumber, string fileContent, string contextIdentifier, CompilerOptions compilerOptions) =>
+            new YieldFinishedCompile(CompileMode.RUN, scriptPath, lineNumber, fileContent, contextIdentifier, compilerOptions);
 
-        public static YieldFinishedCompile LoadScript(GlobalPath scriptPath, int lineNumber, string fileContent, string contextIdentifier, CompilerOptions compilerOptions)
-        {
-            var ret = new YieldFinishedCompile(scriptPath, lineNumber, fileContent, contextIdentifier, compilerOptions);
-            ret.compileMode = CompileMode.LOAD;
-            return ret;
-        }
+        public static YieldFinishedCompile LoadScript(GlobalPath scriptPath, int lineNumber, string fileContent, string contextIdentifier, CompilerOptions compilerOptions) =>
+            new YieldFinishedCompile(CompileMode.LOAD, scriptPath, lineNumber, fileContent, contextIdentifier, compilerOptions);
 
-        public static YieldFinishedCompile CompileScriptToFile(GlobalPath scriptPath, int lineNumber, string fileContent, CompilerOptions compilerOptions, Volume storageVolume, GlobalPath storagePath)
-        {
-            var ret = new YieldFinishedCompile(scriptPath, lineNumber, fileContent, string.Empty, compilerOptions);
-            ret.compileMode = CompileMode.FILE;
-            ret.volume = storageVolume;
-            ret.outPath = storagePath;
-            return ret;
-        }
+        public static YieldFinishedCompile CompileScriptToFile(GlobalPath scriptPath, int lineNumber, string fileContent, CompilerOptions compilerOptions, Volume storageVolume, GlobalPath storagePath) =>
+            new YieldFinishedCompile(CompileMode.FILE, scriptPath, lineNumber, fileContent, string.Empty, compilerOptions)
+            {
+                volume = storageVolume,
+                outPath = storagePath
+            };
     }
 }
