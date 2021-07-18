@@ -3,8 +3,8 @@ This contains **basic** information for kOS, and is not intended to replace the 
 
 Install the [KSP Part Tools](https://forum.kerbalspaceprogram.com/index.php?/topic/160487-official-parttools/)
 
+If you have TMP errors in your console delete the `Library/PackageCache/com.unity.textmeshpro@2.0.1` folder
+
 Make sure all panels are enabled before building (KSPAssets > Asset Compiler > Build All)
 
 To add this to a kOS build, make sure to add the kos.ksp file (KOS/src/kOS KSPedia/AssetBundles) anywhere in the Gamedata/kOS folder
-
-If you need any further information, contact @kna27
