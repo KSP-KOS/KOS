@@ -57,6 +57,7 @@ netkan.exe
 # KSPedia files
 src/kOS KSPedia/*.sln
 src/kOS KSPedia/*.csproj
+src/kOS KSPedia/AssetBundles/
 src/kOS KSPedia/Assets/PartTools/
 src/kOS KSPedia/Assets/Plugins/
 src/kOS KSPedia/Assets/SquadCore/
