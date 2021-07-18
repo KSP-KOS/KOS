@@ -92,6 +92,18 @@ Any variable declared with ``DECLARE``, ``DECLARE LOCAL``, or ``LOCAL``
 will only exist inside the code block section it was created in.
 After that code block is finished, the variable will no longer exist.
 
+It is also possible to declare multiple variables in a single ``DECLARE`` statement,
+separated by commas, as shown below::
+
+    // These all do the exact same thing - make local variables:
+    DECLARE A IS 5, B TO 1, C TO "O".
+    LOCAL A IS 5, B TO 1, C TO "O".
+    DECLARE LOCAL A IS 5, B TO 1, C TO "O".
+
+    // These do the exact same thing - make global variables:
+    GLOBAL A IS 5, B TO 1, C TO "O".
+    DECLARE GLOBAL A IS 5, B TO 1, C TO "O".
+
 See Scoping:
 ::::::::::::
 
@@ -267,6 +279,11 @@ unless :ref:`the @lazyglobal off<lazyglobal>` directive has been given::
 This follows the :ref:`scoping rules explained below <scope>`.  If the
 variable can be found in the current local scope, or any scope higher
 up, then it won't be created and instead the existing one will be used.
+
+It is also possible to set the values of multiple variables in a single ``SET`` statement
+by separating the assignments with commas, as shown below::
+
+    SET X TO 1, Y TO 5, S TO "abc".
 
 .. _unset:
 
