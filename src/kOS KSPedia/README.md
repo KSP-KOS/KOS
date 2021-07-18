@@ -7,4 +7,6 @@ If you have TMP errors in your console delete the `Library/PackageCache/com.unit
 
 Make sure all panels are enabled before building (KSPAssets > Asset Compiler > Build All)
 
+If it gets built without the `.ksp` extension, just add it back on.
+
 To add this to a kOS build, make sure to add the kos.ksp file (KOS/src/kOS KSPedia/AssetBundles) anywhere in the Gamedata/kOS folder
