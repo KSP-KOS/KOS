@@ -92,6 +92,18 @@ Any variable declared with ``DECLARE``, ``DECLARE LOCAL``, or ``LOCAL``
 will only exist inside the code block section it was created in.
 After that code block is finished, the variable will no longer exist.
 
+It is also possible to declare multiple variables in a single ``DECLARE`` statement,
+separated by commas, as shown below::
+
+    // These all do the exact same thing - make local variables:
+    DECLARE A IS 5, B TO 1, C TO "O".
+    LOCAL A IS 5, B TO 1, C TO "O".
+    DECLARE LOCAL A IS 5, B TO 1, C TO "O".
+
+    // These do the exact same thing - make global variables:
+    GLOBAL A IS 5, B TO 1, C TO "O".
+    DECLARE GLOBAL A IS 5, B TO 1, C TO "O".
+
 See Scoping:
 ::::::::::::
 
