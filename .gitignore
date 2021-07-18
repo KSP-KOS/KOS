@@ -60,3 +60,6 @@ src/kOS KSPedia/*.csproj
 src/kOS KSPedia/Assets/PartTools/
 src/kOS KSPedia/Assets/Plugins/
 src/kOS KSPedia/Assets/SquadCore/
+src/kOS KSPedia/Assets/PartTools.meta
+src/kOS KSPedia/Assets/Plugins.meta
+src/kOS KSPedia/Assets/SquadCore.meta
