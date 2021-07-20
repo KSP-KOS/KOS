@@ -111,7 +111,7 @@ Example::
     :access: Get/Set
     :type: :ref:`boolean <boolean>`
 
-    Determines whether this controller is allowed to respond to pitch input.
+    Determines whether this controller is allowed to respond to pitch input. Not all controller types allow setting this, make sure to check the value after setting it!
 
 .. _attitudecontroller_ALLOWYAW:
 
@@ -120,7 +120,7 @@ Example::
     :access: Get/Set
     :type: :ref:`boolean <boolean>`
 
-    Determines whether this controller is allowed to respond to yaw input.
+    Determines whether this controller is allowed to respond to yaw input. Not all controller types allow setting this, make sure to check the value after setting it!
 
 .. _attitudecontroller_ALLOWROLL:
 
@@ -129,7 +129,7 @@ Example::
     :access: Get/Set
     :type: :ref:`boolean <boolean>`
 
-    Determines whether this controller is allowed to respond to roll input.
+    Determines whether this controller is allowed to respond to roll input. Not all controller types allow setting this, make sure to check the value after setting it!
 
 .. _attitudecontroller_ALLOWX:
 
@@ -138,7 +138,7 @@ Example::
     :access: Get/Set
     :type: :ref:`boolean <boolean>`
 
-    Determines whether this controller is allowed to respond to translation fore input.
+    Determines whether this controller is allowed to respond to translation fore input. Not all controller types allow setting this, make sure to check the value after setting it!
 
 .. _attitudecontroller_ALLOWY:
 
@@ -147,7 +147,7 @@ Example::
     :access: Get/Set
     :type: :ref:`boolean <boolean>`
 
-    Determines whether this controller is allowed to respond to translation top input.
+    Determines whether this controller is allowed to respond to translation top input. Not all controller types allow setting this, make sure to check the value after setting it!
 
 .. _attitudecontroller_ALLOWZ:
 
@@ -156,7 +156,7 @@ Example::
     :access: Get/Set
     :type: :ref:`boolean <boolean>`
 
-    Determines whether this controller is allowed to respond to translation star input.
+    Determines whether this controller is allowed to respond to translation star input. Not all controller types allow setting this, make sure to check the value after setting it!
 
 .. _attitudecontroller_HASCUSTOMTHROTTLE:
 
@@ -174,7 +174,7 @@ Example::
     :access: Get/Set
     :type: :ref:`scalar <scalar>` (%)
 
-    Sets the custom throttle for this controller.
+    Sets the custom throttle for this controller. Not all controller types allow setting this, make sure to check the value after setting it!
 
 .. _attitudecontroller_ROTATIONAUTHORITYLIMITER:
 
@@ -183,7 +183,7 @@ Example::
     :access: Get/Set
     :type: :ref:`scalar <scalar>` (%)
 
-    Sets the authority limiter used during rotation.
+    Sets the authority limiter used during rotation. Not all controller types allow setting this, make sure to check the value after setting it!
 
 .. _attitudecontroller_TRANSLATIONAUTHORITYLIMITER:
 
@@ -192,7 +192,7 @@ Example::
     :access: Get/Set
     :type: :ref:`scalar <scalar>` (%)
 
-    Sets the authority limiter used during translation.
+    Sets the authority limiter used during translation. Not all controller types allow setting this, make sure to check the value after setting it!
 
 .. _attitudecontroller_CONTROLLERTYPE:
 
