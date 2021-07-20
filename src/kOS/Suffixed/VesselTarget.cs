@@ -9,7 +9,9 @@ using kOS.Safe.Serialization;
 using kOS.Safe.Utilities;
 using kOS.Suffixed.Part;
 using kOS.Utilities;
+using kOS.Control;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -259,6 +261,7 @@ namespace kOS.Suffixed
             AddSuffix("DOCKINGPORTS", new NoArgsSuffix<ListValue<DockingPortValue>>(() => DockingPorts));
             AddSuffix(new string[] { "DECOUPLERS", "SEPARATORS" }, new NoArgsSuffix<ListValue<DecouplerValue>>(() => Decouplers));
             AddSuffix("ELEMENTS", new NoArgsSuffix<ListValue>(() => Vessel.PartList("elements", Shared)));
+            AddSuffix("ATTITUDECONTROLLERS", new NoArgsSuffix<ListValue>(GetAttitudeControllers));
 
             AddSuffix("CONTROL", new Suffix<FlightControl>(GetFlightControl));
             AddSuffix("BEARING", new Suffix<ScalarValue>(() => VesselUtils.GetTargetBearing(CurrentVessel, Vessel)));
@@ -306,6 +309,12 @@ namespace kOS.Suffixed
             AddSuffix("CREWCAPACITY", new NoArgsSuffix<ScalarValue>(GetCrewCapacity));
             AddSuffix("CONNECTION", new NoArgsSuffix<VesselConnection>(() => new VesselConnection(Vessel, Shared)));
             AddSuffix("MESSAGES", new NoArgsSuffix<MessageQueueStructure>(() => GetMessages()));
+            AddSuffix("MOMENTOFINERTIA", new Suffix<Vector>(() =>
+            {
+                Vector3 moi = SteeringManager.FindMoI(Vessel);
+                // pitch, yaw, roll
+                return new Vector(moi.x, moi.z, moi.y);
+            }));
 
             AddSuffix("STARTTRACKING", new NoArgsVoidSuffix(StartTracking));
             AddSuffix("STOPTRACKING", new NoArgsVoidSuffix(StopTracking));
@@ -409,6 +418,13 @@ namespace kOS.Suffixed
         public ScalarValue GetMaxThrustAt(ScalarValue atmPressure)
         {
             return VesselUtils.GetMaxThrust(Vessel, atmPressure);
+        }
+
+        public ListValue GetAttitudeControllers()
+        {
+            IEnumerable<AttitudeController> controllers = new AttitudeController[]{ };
+            controllers = Parts.Aggregate(controllers, (result, part) => result.Concat(part.GetAttitudeControllers()));
+            return new ListValue(controllers);
         }
 
         private void RetypeVessel(StringValue value)

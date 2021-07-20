@@ -144,6 +144,9 @@ These are the generic properties every PART has. You can obtain a list of values
         * - :meth:`ALLTAGGEDPARTS`
           - :struct:`List` (of :struct:`Part`)
           - Search the branch from here down for all parts with a non-blank tag name.
+        * - :meth:`ATTITUDECONTROLLERS`
+          - :struct:`List` (of :struct:`AttitudeController`)
+          - List of Attitude Controllers in this part.
 
 
 .. attribute:: Part:NAME
@@ -609,3 +612,8 @@ These are the generic properties every PART has. You can obtain a list of values
     branch of the vessel's part tree from the current part down through
     its children and its children's children and so on.
 
+.. method:: Vessel::ATTITUDECONTROLLERS()
+
+    :return: :struct:`List` of :struct:`AttitudeController` objects
+
+    Return all Attitude Controllers in this part.
