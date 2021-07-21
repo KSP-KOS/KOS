@@ -33,6 +33,24 @@ namespace kOS.Safe
         }
 
     }
+
+    public class DumpOpaque : Dump
+    {
+        public DumpOpaque(string classname)
+        {
+            this.classname = classname;
+        }
+
+        private string classname;
+
+        public override void WriteReadable(IndentedStringBuilder sb)
+        {
+            sb.Append("<");
+            sb.Append(classname);
+            sb.Append(">");
+        }
+    }
+
     public class DumpRecursionPlaceholder : Dump
     {
         public override void WriteReadable(IndentedStringBuilder sb)
@@ -137,6 +155,17 @@ namespace kOS.Safe
 
             primitiveItems.Add(key, value);
         }
+        public void Add(string key, bool value)
+        {
+            if (key == null)
+                throw new ArgumentNullException("Unable to add items to a null key", "key");
+            if (key == "items" || key == "entries")
+                throw new ArgumentException(String.Format("Key cannot be {0}. Please use a different key or consider using DumpList or DumpLexicon.", key), "key");
+            if (dumpItems.ContainsKey(key) || primitiveItems.ContainsKey(key))
+                throw new ArgumentException("An element with the same key already exists in this Dictionary.", "key");
+
+            primitiveItems.Add(key, value);
+        }
 
         public void Add(string key, string value)
         {
@@ -168,6 +197,17 @@ namespace kOS.Safe
                 return (double)primitiveItems[key];
 
             throw new KOSSerializationException(string.Format("Key {0} was expected to be a double but is actually a {1}.", key, primitiveItems[key].GetType().Name));
+        }
+
+        public double GetBool(string key)
+        {
+            if (!primitiveItems.ContainsKey(key))
+                throw new KOSSerializationException(string.Format("Missing key {0} when trying to parse {1}", key, deserializer.Name));
+
+            if (primitiveItems[key] is bool)
+                return (bool)primitiveItems[key];
+
+            throw new KOSSerializationException(string.Format("Key {0} was expected to be a bool but is actually a {1}.", key, primitiveItems[key].GetType().Name));
         }
 
         public Dump GetDump(string key)

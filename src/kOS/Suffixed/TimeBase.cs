@@ -24,7 +24,7 @@ namespace kOS.Suffixed
     /// or starting at 0.
     /// </summary>
     [kOS.Safe.Utilities.KOSNomenclature("TimeBase")]
-    public abstract class TimeBase : SerializableStructure
+    public abstract class TimeBase : Structure
     {
         /// <summary>
         /// For serializaation, how will it be named in the JSON output.

@@ -7,7 +7,7 @@ using kOS.Safe.Serialization;
 namespace kOS.Safe.Encapsulation
 {
     [kOS.Safe.Utilities.KOSNomenclature("PIDLoop")]
-    public class PIDLoop : SerializableStructure
+    public class PIDLoop : Structure
     {
         [Function("pidloop")]
         public class PIDLoopConstructor : SafeFunctionBase

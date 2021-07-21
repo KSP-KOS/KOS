@@ -12,7 +12,7 @@ namespace kOS.Safe.Encapsulation
 {
     [kOS.Safe.Utilities.KOSNomenclature("Lexicon")]
     [kOS.Safe.Utilities.KOSNomenclature("Lex", CSharpToKOS = false) ]
-    public class Lexicon : SerializableStructure, IDictionary<Structure, Structure>, IIndexable
+    public class Lexicon : Structure, IDictionary<Structure, Structure>, IIndexable
     {
         [Function("lex", "lexicon")]
         public class FunctionLexicon : SafeFunctionBase
@@ -389,7 +389,7 @@ namespace kOS.Safe.Encapsulation
 
         public override Dump Dump(DumperState s)
         {
-            var dump = new DumpLexicon(typeof(BaseMessage));
+            var dump = new DumpLexicon(typeof(Lexicon));
 
             using (var context = s.Context(this))
             {

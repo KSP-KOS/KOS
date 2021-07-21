@@ -11,7 +11,7 @@ using kOS.Safe.Serialization;
 namespace kOS.Safe.Encapsulation
 {
     [KOSNomenclature("Structure")]
-    public abstract class Structure : ISuffixed 
+    public abstract class Structure : ISuffixed, IDumper
     {
         private static readonly IDictionary<Type,IDictionary<string, ISuffix>> globalSuffixes;
         private readonly IDictionary<string, ISuffix> instanceSuffixes;
@@ -64,15 +64,23 @@ namespace kOS.Safe.Encapsulation
               AddSuffix("TOSTRING",       new NoArgsSuffix<StringValue>(() => ToIngameString()));
               AddSuffix("HASSUFFIX",      new OneArgsSuffix<BooleanValue, StringValue>(HasSuffix));
               AddSuffix("SUFFIXNAMES",    new NoArgsSuffix<ListValue<StringValue>>(GetSuffixNames));
-              AddSuffix("ISSERIALIZABLE", new NoArgsSuffix<BooleanValue>(() => this is SerializableStructure));
+              AddSuffix("ISSERIALIZABLE", new NoArgsSuffix<BooleanValue>(() => {
+                  DumperState s = new DumperState();
+                  Dump d = Dump(s);
+                  return d.IsSerializable;
+              }));
               AddSuffix("TYPENAME",       new NoArgsSuffix<StringValue>(() => new StringValue(KOSName)));
               AddSuffix("ISTYPE",         new OneArgsSuffix<BooleanValue,StringValue>(GetKOSIsType));
               AddSuffix("INHERITANCE",    new NoArgsSuffix<StringValue>(GetKOSInheritance));
         }
 
-        protected virtual string ToIngameString()
+        private string ToIngameString()
         {
-            return KOSNomenclature.GetKOSName(GetType()) + ": \"\""; // print as the KOSNomenclature string name, will look like: Structure: ""
+            DumperState s = new DumperState();
+            Dump d = Dump(s);
+            IndentedStringBuilder sb = new IndentedStringBuilder();
+            d.WriteReadable(sb);
+            return sb.ToString();
         }
 
         protected void AddSuffix(string suffixName, ISuffix suffixToAdd)
@@ -362,6 +370,11 @@ namespace kOS.Safe.Encapsulation
             }
 
             return value;
+        }
+
+        public virtual Dump Dump(DumperState s)
+        {
+            return new DumpOpaque(KOSNomenclature.GetKOSName(GetType()));
         }
     }
 }

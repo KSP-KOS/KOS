@@ -247,12 +247,10 @@
     <Compile Include="Encapsulation\EnumerableValue.cs" />
     <Compile Include="Serialization\Formatter.cs" />
     <Compile Include="Serialization\JSONFormatter.cs" />
-    <Compile Include="Serialization\TerminalFormatter.cs" />
     <Compile Include="SimpleJson.cs" />
     <Compile Include="Exceptions\KOSSerializationException.cs" />
     <Compile Include="Serialization\SafeSerializationMgr.cs" />
     <Compile Include="Serialization\Dump.cs" />
-    <Compile Include="Serialization\SerializableStructure.cs" />
     <Compile Include="Persistence\FileContent.cs" />
     <Compile Include="Encapsulation\PrimitiveStructure.cs" />
     <Compile Include="Communication\Connection.cs" />

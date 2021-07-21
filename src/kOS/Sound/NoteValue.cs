@@ -12,7 +12,7 @@ namespace kOS.Sound
     /// </summary>
     [kOS.Safe.Utilities.KOSNomenclature("Note")]
     [kOS.Safe.Utilities.KOSNomenclature("SlideNote", CSharpToKOS = false)]
-    public class NoteValue : SerializableStructure
+    public class NoteValue : Structure
     {
         public float Frequency { get; set; }
         public float EndFrequency { get; set; }

@@ -18,9 +18,10 @@ namespace kOS.Communication
 
         public static Message Create(object content, double sentAt, double receivedAt, VesselTarget sender, string processor)
         {
-            if (content is SerializableStructure)
+            throw NotImplementedException("Add isserializable check");
+            if (content is Structure)
             {
-                return new Message(new SafeSerializationMgr(null).Dump(content as SerializableStructure), sentAt, receivedAt, sender);
+                return new Message(new SafeSerializationMgr(null).Dump(content as Structure), sentAt, receivedAt, sender);
             }
             else if (content is PrimitiveStructure)
             {
@@ -30,6 +31,7 @@ namespace kOS.Communication
             {
                 throw new KOSCommunicationException("Only serializable types and primitives can be sent in a message");
             }
+            
         }
 
         // Only used by CreateFromDump() - unsafe to make public because it makes a message where
