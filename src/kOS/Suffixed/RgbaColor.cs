@@ -9,7 +9,7 @@ using System;
 namespace kOS.Suffixed
 {
     [kOS.Safe.Utilities.KOSNomenclature("RGBA")]
-    public class RgbaColor : SerializableStructure
+    public class RgbaColor : Structure
     {
         static string DumpR = "R";
         static string DumpG = "G";
@@ -110,6 +110,9 @@ namespace kOS.Suffixed
                 {DumpB, Blue },
                 {DumpA, Alpha }
             };
+
+            dump.Header = ToString();
+            dump.ShouldHideValues = true;
 
             return dump;
         }

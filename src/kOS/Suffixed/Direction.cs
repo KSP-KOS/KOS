@@ -9,7 +9,7 @@ namespace kOS.Suffixed
 {
     [Safe.Utilities.KOSNomenclature("Direction")]
     [Safe.Utilities.KOSNomenclature("Rotation", CSharpToKOS = false)]
-    public class Direction : SerializableStructure
+    public class Direction : Structure
     {
         static string DumpQuaternionW = "q_w";
         static string DumpQuaternionX = "q_x";

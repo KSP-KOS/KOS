@@ -7,7 +7,7 @@ using System.Linq;
 namespace kOS.Safe.Encapsulation
 {
     [kOS.Safe.Utilities.KOSNomenclature("Enumerable")]
-    public abstract class EnumerableValue<T, TE> : SerializableStructure, IEnumerable<T>
+    public abstract class EnumerableValue<T, TE> : Structure, IEnumerable<T>
         where TE : IEnumerable<T>
         where T : Structure
     {
@@ -42,16 +42,14 @@ namespace kOS.Safe.Encapsulation
             return new SafeSerializationMgr(null).ToString(this);
         }
 
-        public override Dump Dump()
+        public void PopulateDumpList(DumpList d, DumperState s)
         {
-            var result = new DumpWithHeader
-            {
-                Header = label + " of " + InnerEnumerable.Count() + " items:"
-            };
-
-            result.Add(kOS.Safe.Dump.Items, InnerEnumerable.Cast<object>().ToList());
-
-            return result;
+            using (var context = s.Context(this)) {
+                foreach (var i in InnerEnumerable)
+                {
+                    d.Add(i, context);
+                }
+            }
         }
 
         private void InitializeEnumerableSuffixes()

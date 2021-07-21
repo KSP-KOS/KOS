@@ -16,7 +16,7 @@ namespace kOS.Safe
     /// Instances of this class are on the other hand created only for the user.
     /// </summary>
     [kOS.Safe.Utilities.KOSNomenclature("Path")]
-    public class PathValue : SerializableStructure
+    public class PathValue : Structure
     {
         [Function("path")]
         public class FunctionPath : SafeFunctionBase

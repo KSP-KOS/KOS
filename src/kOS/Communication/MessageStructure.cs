@@ -10,7 +10,7 @@ using kOS.Safe.Exceptions;
 namespace kOS.Communication
 {
     [kOS.Safe.Utilities.KOSNomenclature("Message")]
-    public class MessageStructure : SerializableStructure
+    public class MessageStructure : Structure
     {
         private static string DumpMessage = "message";
 
@@ -84,7 +84,7 @@ namespace kOS.Communication
         {
             if (Message.Content is Dump)
             {
-                return new SerializationMgr(shared).CreateFromDump(Message.Content as Dump) as SerializableStructure;
+                return new SerializationMgr(shared).CreateFromDump(Message.Content as Dump) as Structure;
             }
 
             return Structure.FromPrimitiveWithAssert(Message.Content);

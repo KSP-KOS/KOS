@@ -13,7 +13,7 @@ namespace kOS.Suffixed
     /// or a moon.
     /// </summary>
     [kOS.Safe.Utilities.KOSNomenclature("Orbitable")]
-    public abstract class Orbitable : SerializableStructure
+    public abstract class Orbitable : Structure
     {
         protected Orbitable(SharedObjects shareObj) : this()
         {

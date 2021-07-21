@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Execution;
 using NUnit.Framework;
@@ -18,7 +18,7 @@ namespace kOS.Safe.Test
             cpu = new FakeCpu();
         }
 
-        protected object InvokeDelegate(SerializableStructure stack, string suffixName, params object[] parameters)
+        protected object InvokeDelegate(Structure stack, string suffixName, params object[] parameters)
         {
             var lengthObj = stack.GetSuffix(suffixName) as DelegateSuffixResult;
             Assert.IsNotNull(lengthObj);
