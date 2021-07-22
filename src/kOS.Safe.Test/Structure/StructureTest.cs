@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
@@ -11,6 +11,8 @@ namespace kOS.Safe.Test.Structure
     [TestFixture]
     public class StructureTest
     {
+        [KOSNomenclature("StructureTest_TestStructure")]
+
         public class TestStructure: Encapsulation.Structure
         {
             public static void TestAddGlobal<T>(string name, ISuffix suffix)

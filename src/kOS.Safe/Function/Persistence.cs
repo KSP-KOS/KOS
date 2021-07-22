@@ -251,7 +251,7 @@ namespace kOS.Safe.Function
         public override void Execute(SafeSharedObjects shared)
         {
             object pathObject = PopValueAssert(shared, true);
-            SerializableStructure serialized = PopValueAssert(shared, true) as Structure;
+                Structure serialized = PopValueAssert(shared, true) as Structure;
             AssertArgBottomAndConsume(shared);
 
             if (serialized == null)
@@ -259,7 +259,7 @@ namespace kOS.Safe.Function
                 throw new KOSException("This type is not serializable");
             }
 
-            string serializedString = new SafeSerializationMgr(shared).Serialize(serialized, JsonFormatter.WriterInstance);
+            string serializedString = "";//new SafeSerializationMgr(shared).Serialize(serialized, JsonFormatter.WriterInstance);
 
             FileContent fileContent = new FileContent(serializedString);
 
@@ -288,8 +288,8 @@ namespace kOS.Safe.Function
                 throw new KOSException("File does not exist: " + path);
             }
 
-            Structure read = new SafeSerializationMgr(shared).Deserialize(volumeFile.ReadAll().String, JsonFormatter.ReaderInstance) as Structure;
-            ReturnValue = read;
+            //Structure read = new SafeSerializationMgr(shared).Deserialize(volumeFile.ReadAll().String, JsonFormatter.ReaderInstance) as Structure;
+            ReturnValue = new Lexicon();
         }
     }
 

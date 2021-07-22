@@ -63,13 +63,15 @@ namespace kOS.Safe.Persistence
             AddSuffix("ITERATOR", new Suffix<Enumerator>(() => new Enumerator(GetEnumerator())));
         }
 
-        public override Dump Dump()
+        public Dump Dump()
         {
-            return new Dump { { DumpContent, PersistenceUtilities.EncodeBase64(Bytes) } };
+            //return new Dump { { DumpContent, PersistenceUtilities.EncodeBase64(Bytes) } };
+            return null;
         }
 
-        public override void LoadDump(Dump dump)
+        public void LoadDump(Dump dump)
         {
+            /*
             string contentString = dump[DumpContent] as string;
 
             if (contentString == null)
@@ -78,6 +80,7 @@ namespace kOS.Safe.Persistence
             }
 
             Bytes = PersistenceUtilities.DecodeBase64ToBinary(contentString);
+            */
         }
 
         public List<CodePart> AsParts(GlobalPath path, string prefix)

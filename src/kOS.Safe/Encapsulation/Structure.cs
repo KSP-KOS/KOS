@@ -64,16 +64,21 @@ namespace kOS.Safe.Encapsulation
               AddSuffix("TOSTRING",       new NoArgsSuffix<StringValue>(() => ToIngameString()));
               AddSuffix("HASSUFFIX",      new OneArgsSuffix<BooleanValue, StringValue>(HasSuffix));
               AddSuffix("SUFFIXNAMES",    new NoArgsSuffix<ListValue<StringValue>>(GetSuffixNames));
-              AddSuffix("ISSERIALIZABLE", new NoArgsSuffix<BooleanValue>(() => {
-                  DumperState s = new DumperState();
-                  Dump d = Dump(s);
-                  return d.IsSerializable;
-              }));
+              AddSuffix("ISSERIALIZABLE", new NoArgsSuffix<BooleanValue>(() => IsSerializable));
               AddSuffix("TYPENAME",       new NoArgsSuffix<StringValue>(() => new StringValue(KOSName)));
               AddSuffix("ISTYPE",         new OneArgsSuffix<BooleanValue,StringValue>(GetKOSIsType));
               AddSuffix("INHERITANCE",    new NoArgsSuffix<StringValue>(GetKOSInheritance));
         }
 
+        public bool IsSerializable
+        {
+            get
+            {
+                DumperState s = new DumperState();
+                Dump d = Dump(s);
+                return d.IsSerializable;
+            }
+        }
         private string ToIngameString()
         {
             DumperState s = new DumperState();

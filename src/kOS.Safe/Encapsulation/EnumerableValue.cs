@@ -37,11 +37,6 @@ namespace kOS.Safe.Encapsulation
             return InnerEnumerable.Contains(item);
         }
 
-        public override string ToString()
-        {
-            return new SafeSerializationMgr(null).ToString(this);
-        }
-
         public void PopulateDumpList(DumpList d, DumperState s)
         {
             using (var context = s.Context(this)) {

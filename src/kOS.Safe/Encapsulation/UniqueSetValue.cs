@@ -45,13 +45,9 @@ namespace kOS.Safe.Encapsulation
             return Collection.Remove(item);
         }
 
-        public void Clear()
+        public void LoadDump(Dump dump)
         {
-            Collection.Clear();
-        }
-
-        public override void LoadDump(Dump dump)
-        {
+            /*
             Collection.Clear();
 
             List<object> values = (List<object>)dump[kOS.Safe.Dump.Items];
@@ -59,7 +55,7 @@ namespace kOS.Safe.Encapsulation
             foreach (object item in values)
             {
                 Collection.Add((T)FromPrimitive(item));
-            }
+            }*/
         }
 
         private void SetInitializeSuffixes()

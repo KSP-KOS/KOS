@@ -20,14 +20,7 @@ namespace kOS.Safe.Encapsulation
     [KOSNomenclature("String")]
     public class StringValue : PrimitiveStructure, IIndexable, IConvertible, IEnumerable<string>
     {
-        // internalString is *almost* immutable.
-        // It is supposed to be immutable (readonly keyword here) except that
-        // it can't be and also fit the design pattern kOS uses for Serializable structures.
-        // That pattern is to load from a dump by creating an instance with a dummy
-        // constructor first, then populate it with LoadDump().  To populate it with LoadDump(),
-        // the internal representation cannot be readonly.  Populating from a dump should be
-        // the only place the immutability rule is violated.
-        private string internalString;
+        private readonly string internalString;
 
         public static StringValue Empty { get; } = new StringValue();
         public static StringValue None { get; } = new StringValue("None");
@@ -486,7 +479,7 @@ namespace kOS.Safe.Encapsulation
         public static void Print(DumpDictionary dump, IndentedStringBuilder sb)
         {
             sb.Append("\"");
-            sb.Append(Value.Replace("\"", "\"\""));
+            sb.Append(dump.GetString("value").Replace("\"", "\"\""));
             sb.Append("\"");
         }
         #endregion

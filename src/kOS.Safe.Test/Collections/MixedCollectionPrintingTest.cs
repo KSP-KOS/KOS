@@ -12,27 +12,30 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void CanSerialize()
         {
-            /**
-             * Reference generated from:
-             
-local s to lex(
-  "Boolean", true,
-  "List", list(1, false, "foo"),
-  "Pid", PidLoop(1, 2, 3, 4, 5),
-  "Queue", queue(1, false, "foo"),
-  "Range", range(1, 2),
-  "Double", 1.1,
-  "Int", 42,
-  "Stack", stack(1, 2),
-  "String", "foo",
-  "Set", uniqueset(1, 2)
+
+            var runner = new KSRunner(@"
+local l to lex(
+  ""Boolean"", true,
+  ""List"", list(1, false, ""foo""),
+  ""Pid"", PidLoop(1, 2, 3, 4, 5),
+  ""Queue"", queue(1, false, ""foo""),
+  ""Range"", range(1, 2),
+  ""Double"", 1.1,
+  ""Int"", 42,
+  ""Stack"", stack(1, 2),
+  ""String"", ""foo"",
+  ""Set"", uniqueset(1, 2)
 ).
+writejson(l, ""serialization.json"").
+return l.
+");
+            Assert.AreEqual("", runner.Output);
 
-print(writejson(s, "serialization.json")).
-             **/
+            Lexicon l = runner.Result as Lexicon;
+            Assert.NotNull(l);
 
-            Lexicon lex = new Lexicon();
-            lex.Add(new StringValue("Boolean"), new BooleanValue(true));
+            var file = runner.Volume.RootHarddiskDirectory.GetFileContent("serialization.json");
+            Assert.NotNull(file);
 
             string reference = @"{
     ""entries"": [
@@ -181,7 +184,7 @@ print(writejson(s, "serialization.json")).
     ""$type"": ""kOS.Safe.Encapsulation.Lexicon""
 }";
 
-            Assert.IsTrue(false);
+            Assert.AreEqual(reference, file.String);
 
         }
 

@@ -139,9 +139,9 @@ namespace kOS.Safe.Test.Communication
         {
             Lexicon lex = new Lexicon();
             lex.Add(new StringValue("key1"), new StringValue("value1"));
-            queue.Push(new BaseMessage(new SafeSerializationMgr(null).Dump(lex), 0, 0));
+            //queue.Push(new BaseMessage(new SafeSerializationMgr(null).Dump(lex), 0, 0));
 
-            Lexicon read = new SafeSerializationMgr(null).CreateFromDump(queue.Pop().Content as Dump) as Lexicon;
+            Lexicon read = null;// new SafeSerializationMgr(null).CreateFromDump(queue.Pop().Content as Dump) as Lexicon;
             Assert.AreEqual(new StringValue("value1"), read[new StringValue("key1")]);
         }
 

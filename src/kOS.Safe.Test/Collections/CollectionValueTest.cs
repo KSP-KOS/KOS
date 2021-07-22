@@ -18,7 +18,7 @@ namespace kOS.Safe.Test
             cpu = new FakeCpu();
         }
 
-        protected object InvokeDelegate(Structure stack, string suffixName, params object[] parameters)
+        protected object InvokeDelegate(kOS.Safe.Encapsulation.Structure stack, string suffixName, params object[] parameters)
         {
             var lengthObj = stack.GetSuffix(suffixName) as DelegateSuffixResult;
             Assert.IsNotNull(lengthObj);

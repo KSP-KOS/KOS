@@ -244,6 +244,7 @@ namespace kOS.Safe.Encapsulation
         {
             throw new KOSCastException(typeof(BooleanValue), typeof(ulong));
         }
+
         public override Dump Dump(DumperState s)
         {
             DumpDictionary dump = new DumpDictionary(typeof(BooleanValue));
@@ -260,7 +261,7 @@ namespace kOS.Safe.Encapsulation
 
         public static void Print(DumpDictionary d, IndentedStringBuilder sb)
         {
-            sb.Append(d.GetBool("value").ToString(CultureInfo.InvariantCulture))
+            sb.Append(d.GetBool("value").ToString(CultureInfo.InvariantCulture));
         }
     }
 }

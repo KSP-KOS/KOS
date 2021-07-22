@@ -119,14 +119,15 @@ namespace kOS.Safe
             return FromPath(Path.Combine(segments.Select(s => s.ToString()).ToArray()));
         }
 
-        public override Dump Dump()
+        public Dump Dump()
         {
-            return new Dump { { DumpPath, Path.ToString() } };
+            //return new Dump { { DumpPath, Path.ToString() } };
+            return null;
         }
 
-        public override void LoadDump(Dump dump)
+        public void LoadDump(Dump dump)
         {
-            Path = GlobalPath.FromString(dump[DumpPath] as string);
+            //Path = GlobalPath.FromString(dump[DumpPath] as string);
         }
 
         public override string ToString()

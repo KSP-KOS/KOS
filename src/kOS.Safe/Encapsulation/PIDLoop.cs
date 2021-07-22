@@ -292,8 +292,9 @@ namespace kOS.Safe.Encapsulation
             return newObj;
         }
 
-        public override Dump Dump()
+        public Dump Dump()
         {
+            /*
             var result = new DumpWithHeader { Header = "PIDLoop" };
             result.Add("Kp", Kp);
             result.Add("Ki", Ki);
@@ -304,10 +305,13 @@ namespace kOS.Safe.Encapsulation
             result.Add("ExtraUnwind", ExtraUnwind);
 
             return result;
-    }
+            */
+            return null;
+        }
 
-    public override void LoadDump(Dump dump)
+        public void LoadDump(Dump dump)
         {
+            /*
             Kp = Convert.ToDouble(dump["Kp"]);
             Ki = Convert.ToDouble(dump["Ki"]);
             Kd = Convert.ToDouble(dump["Kd"]);
@@ -315,6 +319,7 @@ namespace kOS.Safe.Encapsulation
             MinOutput = Convert.ToDouble(dump["MinOutput"]);
             MaxOutput = Convert.ToDouble(dump["MaxOutput"]);
             ExtraUnwind = Convert.ToBoolean(dump["ExtraUnwind"]);
+            */
         }
     }
 }

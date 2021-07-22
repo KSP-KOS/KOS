@@ -62,12 +62,12 @@ namespace kOS.Safe.Serialization
         private Dump ReadJsonObject(JsonObject dictionary)
         {
             var result = new Dump();
-
+            /*
             foreach (var entry in dictionary)
             {
                 result[entry.Key] = ReadValue(entry.Value);
             }
-
+            */
             return result;
         }
 

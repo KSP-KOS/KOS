@@ -289,10 +289,6 @@ namespace kOS.Safe.Encapsulation
             internalDictionary[FromPrimitiveWithAssert(index)] = value;
         }
 
-        public override string ToString()
-        {
-            return new SafeSerializationMgr(null).ToString(this);
-        }
 
         // Try to call the normal SetSuffix that all structures do, but if that fails,
         // then try to use this suffix name as a key and set the value in the lexicon

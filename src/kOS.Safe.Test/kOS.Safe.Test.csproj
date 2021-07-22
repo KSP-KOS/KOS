@@ -52,6 +52,7 @@
     <Compile Include="Calculator\CalculatorScalarTest.cs" />
     <Compile Include="Calculator\CalculatorStructureTest.cs" />
     <Compile Include="Collections\MixedCollectionPrintingTest.cs" />
+    <Compile Include="KSRunner.cs" />
     <Compile Include="Structures\BooleanValueTest.cs" />
     <Compile Include="Structures\ScalarValueTest.cs" />
     <Compile Include="Structures\StringValueTest.cs" />

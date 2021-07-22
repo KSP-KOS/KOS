@@ -139,6 +139,7 @@ namespace kOS.Safe.Communication
 
         public Dump Dump()
         {
+            /*
             DumpWithHeader dump = new DumpWithHeader();
             dump.Header = "MESSAGE QUEUE";
 
@@ -151,11 +152,13 @@ namespace kOS.Safe.Communication
                 i++;
             }
 
-            return dump;
+            return dump;*/
+            return null;
         }
 
         public void LoadDump(Dump dump)
         {
+            /*
             queue.Clear();
 
             foreach (KeyValuePair<object, object> entry in dump)
@@ -166,8 +169,12 @@ namespace kOS.Safe.Communication
                 {
                     Push(message);
                 }
-            }
+            }*/
         }
 
+        public Dump Dump(DumperState s)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

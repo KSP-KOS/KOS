@@ -199,7 +199,7 @@ namespace kOS.Safe
             throw new KOSSerializationException(string.Format("Key {0} was expected to be a double but is actually a {1}.", key, primitiveItems[key].GetType().Name));
         }
 
-        public double GetBool(string key)
+        public bool GetBool(string key)
         {
             if (!primitiveItems.ContainsKey(key))
                 throw new KOSSerializationException(string.Format("Missing key {0} when trying to parse {1}", key, deserializer.Name));
