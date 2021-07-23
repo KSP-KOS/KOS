@@ -53,6 +53,7 @@
     <Compile Include="Calculator\CalculatorStructureTest.cs" />
     <Compile Include="Collections\MixedCollectionPrintingTest.cs" />
     <Compile Include="KSRunner.cs" />
+    <Compile Include="Serialization\FormatterTest.cs" />
     <Compile Include="Structures\BooleanValueTest.cs" />
     <Compile Include="Structures\ScalarValueTest.cs" />
     <Compile Include="Structures\StringValueTest.cs" />
@@ -71,10 +72,8 @@
     <Compile Include="Structure\TwoArgsVoidSuffixTest.cs" />
     <Compile Include="Collections\QueueValueTest.cs" />
     <Compile Include="Collections\StackValueTest.cs" />
-    <Compile Include="Serialization\JSONFormatterTest.cs" />
     <Compile Include="Collections\CollectionValueTest.cs" />
     <Compile Include="Collections\RangeValueTest.cs" />
-    <Compile Include="Serialization\FormatterTest.cs" />
     <Compile Include="Communication\MessageQueueTest.cs" />
     <Compile Include="Communication\FakeCurrentTimeProvider.cs" />
     <Compile Include="Collections\UniqueSetValueTest.cs" />

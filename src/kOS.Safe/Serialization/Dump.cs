@@ -4,6 +4,7 @@ using kOS.Safe.Encapsulation;
 using kOS.Safe.Serialization;
 using kOS.Safe.Exceptions;
 using System.Reflection;
+using System.Linq;
 
 namespace kOS.Safe
 {
@@ -17,9 +18,9 @@ namespace kOS.Safe
             DebugInfo = new Dictionary<string, string>();
         }
 
-        public virtual object ToJsonObject()
+        public virtual JsonObject ToJsonObject()
         {
-            return null;
+            throw new NotImplementedException();
         }
 
         public virtual void WriteReadable(IndentedStringBuilder sb)
@@ -32,7 +33,45 @@ namespace kOS.Safe
             return null;
         }
 
-    }
+        public static Dump FromJson(JsonObject json)
+        {
+            string typename = json["$type"] as string;
+            if (typename == null)
+                throw new KOSSerializationException("Unable to deserialize object without $type string.");
+
+            var destinationTypes = AppDomain.CurrentDomain.GetAssemblies().
+                Where(a => !a.IsDynamic).
+                Select(a => a.GetType(typename)).
+                ToList();
+            if (destinationTypes.Count > 1)
+                throw new KOSYouShouldNeverSeeThisException("Multiple definitions found of " + typename);
+            if (!destinationTypes.Any())
+                throw new KOSSerializationException("Unable to deserialize class with type " + typename);
+            Type destinationType = destinationTypes.First();
+
+            Type dumpType = null;
+
+            foreach (var method in destinationType.GetMethods())
+            {
+                if (!method.IsStatic)
+                    continue;
+
+                var printAttr = method.GetCustomAttribute<DumpPrinter>();
+                if (printAttr == null)
+                    continue;
+
+                dumpType = printAttr.DumpType;
+                break;
+            }
+
+            if (dumpType == null)
+                throw new KOSSerializationException(string.Format("Objects of type {0} do not support deserialization.", typename));
+
+            if (!dumpType.IsSubclassOf(typeof(DeserializableDump)))
+                throw new KOSYouShouldNeverSeeThisException("Not sure how this can happen but it would be bad.");
+
+            // TODO, do switch statement and call static CreateFromJson
+        }
 
     public class DumpOpaque : Dump
     {
@@ -61,58 +100,107 @@ namespace kOS.Safe
 
     public abstract class DeserializableDump : Dump
     {
-        protected Type deserializer = null;
+        protected Type deserializer { get; private set; }
+        protected Delegate deserializerDelegate { get; private set; }
+        protected Delegate printerDelegate { get; private set; }
+
         public DeserializableDump(Type deserializer)
         {
             if (deserializer == null)
                 throw new ArgumentNullException("Deserializer cannot be null", "deserializer");
             this.deserializer = deserializer;
+
+            MethodInfo deserializeMethod = null;
+            MethodInfo printMethod = null;
+
+            var methods = deserializer.GetMethods();
+            foreach (var method in methods)
+            {
+                if (!method.IsStatic)
+                    continue;
+
+                var printAttr = method.GetCustomAttribute<DumpPrinter>();
+                var deserializeAttr = method.GetCustomAttribute<DumpDeserializer>();
+
+                if (printAttr != null)
+                {
+                    if (printMethod != null)
+                        throw new KOSYouShouldNeverSeeThisException("Duplicate PrintDump function defined on " + deserializer.FullName);
+                    printMethod = method;
+                }
+
+                if (deserializeAttr != null)
+                {
+                    if (deserializeMethod != null)
+                        throw new KOSYouShouldNeverSeeThisException("Duplicate DeserializeDump function defined on " + deserializer.FullName);
+                    deserializeMethod = method;
+                }
+            }
+
+            if (printMethod == null)
+                throw new KOSYouShouldNeverSeeThisException("Dump created without corresponding print method in: " + deserializer.FullName);
+
+            var finalPrintAttr = printMethod.GetCustomAttribute<DumpPrinter>();
+
+            if (deserializeMethod != null)
+            {
+                if (finalPrintAttr.DumpType != deserializeMethod.GetCustomAttribute<DumpDeserializer>().DumpType)
+                    throw new KOSYouShouldNeverSeeThisException("Deserializable class contains conflicting Dump types in PrintDump and DeserializeDump: " + deserializer.FullName);
+            }
+
+            if (finalPrintAttr.DumpType != GetType())
+                throw new KOSYouShouldNeverSeeThisException(String.Format(
+                    "Deserializable class {0} expects to print using {1} but created a {2}.",
+                    deserializer.FullName,
+                    finalPrintAttr.DumpType.FullName,
+                    GetType().FullName
+                ));
+
+            //void Print(T dump, IndentedStringBuilder sb)
+            Type printType = typeof(Action<,>).MakeGenericType(finalPrintAttr.DumpType, typeof(IndentedStringBuilder));
+            //StringValue CreateFromDump(T d, SafeSharedObjects shared)
+            Type deserializeType = typeof(Func<,,>).MakeGenericType(finalPrintAttr.DumpType, typeof(SafeSharedObjects), deserializer);
+
+            try
+            {
+                printerDelegate = printMethod.CreateDelegate(printType);
+            }
+            catch (System.ArgumentException) { }
+            if (printerDelegate == null)
+                throw new KOSYouShouldNeverSeeThisException(string.Format(
+                    "Class {0} defines a Printer function with the wrong type. Please use void Print({1} dump, IndentedStringBuilder sb).",
+                    deserializer.FullName,
+                    finalPrintAttr.DumpType.FullName
+                ));
+
+            if (deserializeMethod != null)
+            {
+                try {
+                deserializerDelegate = deserializeMethod.CreateDelegate(deserializeType);
+                }
+                catch (System.ArgumentException) { }
+
+                if (deserializerDelegate == null)
+                    throw new KOSYouShouldNeverSeeThisException(string.Format(
+                        "Class {0} defines a Deserialization function with the wrong type. Please use StringValue CreateFromDump(SafeSharedObjects shared, {1} d)",
+                        deserializer.FullName,
+                        finalPrintAttr.DumpType.FullName
+                    ));
+            }
         }
 
         protected Structure Deserialize<T>(T dump, SafeSharedObjects safeSharedObjects) where T : Dump
         {
-            Type[] paramSignature = new Type[] { typeof(T), typeof(SafeSharedObjects) };
-            MethodInfo method = deserializer.GetMethod("CreateFromDump", BindingFlags.Public | BindingFlags.Static, null, paramSignature, null);
-            if (method == null)
-                throw new KOSYouShouldNeverSeeThisException(String.Format("{0} is supposed to be able to deserialize {1} objects but it does not implement the `public static {0} CreateFromDump({1} dump, SafeSharedObjects shared)` method to do so.", deserializer.Name, typeof(T).Name));
-
-            Structure instance;
-            try
-            {
-                instance = (Structure)method.Invoke(null, new object[] { safeSharedObjects, dump });
-            }
-            catch (TargetInvocationException reflectiveCallException)
-            {
-                // When you call a method via reflection with MethodInfo.Invoke(),
-                // it hides any exceptions that method tried to throw inside its own
-                // wrapper called TargetInvocationException.  That would mask our
-                // intended error messages to the user if we didn't re-throw the actual 
-                // exception the method wanted to generate like so:
-                throw reflectiveCallException.InnerException;
-            }
-            return instance;
+            if (typeof(T) != GetType())
+                throw new KOSYouShouldNeverSeeThisException("Tried to deserialize with the wrong Dump type.");
+            return (Structure)deserializerDelegate.DynamicInvoke(dump, safeSharedObjects);
         }
 
         protected void Print<T>(T dump, IndentedStringBuilder sb) where T : Dump
         {
-            Type[] paramSignature = new Type[] { typeof(T), typeof(IndentedStringBuilder) };
-            MethodInfo method = deserializer.GetMethod("PrintDump", BindingFlags.Public | BindingFlags.Static, null, paramSignature, null);
-            if (method == null)
-                throw new KOSYouShouldNeverSeeThisException(String.Format("{0} is supposed to be able to print {1} objects but it does not implement the `public static void Print({1} dump, IndentedStringBuilder sb)` method to do so.", deserializer.Name, typeof(T).Name));
-
-            try
-            {
-                method.Invoke(null, new object[] { dump, sb });
-            }
-            catch (TargetInvocationException reflectiveCallException)
-            {
-                // When you call a method via reflection with MethodInfo.Invoke(),
-                // it hides any exceptions that method tried to throw inside its own
-                // wrapper called TargetInvocationException.  That would mask our
-                // intended error messages to the user if we didn't re-throw the actual 
-                // exception the method wanted to generate like so:
-                throw reflectiveCallException.InnerException;
-            }
+            if (typeof(T) != GetType())
+                throw new KOSYouShouldNeverSeeThisException("Tried to deserialize with the wrong Dump type.");
+            printerDelegate.DynamicInvoke(dump, sb);
         }
     }
 
@@ -222,9 +310,17 @@ namespace kOS.Safe
         {
             return GetDump(key).ToStructure(sharedObjects);
         }
-        public override object ToJsonObject()
+        public override JsonObject ToJsonObject()
         {
-            throw new NotImplementedException();
+            var result = new JsonObject();
+
+            foreach (var primitiveKv in primitiveItems)
+                result.Add(primitiveKv.Key, primitiveKv.Value);
+            foreach (var dumpKv in dumpItems)
+                result.Add(dumpKv.Key, dumpKv.Value.ToJsonObject());
+
+            result.Add("$type", deserializer.FullName);
+            return result;
         }
 
         public override void WriteReadable(IndentedStringBuilder sb)
@@ -239,7 +335,6 @@ namespace kOS.Safe
     }
     public class DumpList : DeserializableDump
     {
-        // TODO: dump with Items
         public DumpList(Type deserializer) : base(deserializer) { }
 
         public override bool IsSerializable { get { return !hasUnserializableChildren; } }
@@ -262,18 +357,43 @@ namespace kOS.Safe
             items.Add(valueDump);
         }
 
-        public Structure Get(int i, SafeSharedObjects sharedObjects)
+        public Dump this[int i]
+        {
+            get
+            {
+                return items[i];
+            }
+        }
+
+        public Structure GetDeserialized(int i, SafeSharedObjects sharedObjects)
         {
             return items[i].ToStructure(sharedObjects);
+        }
+
+        public override JsonObject ToJsonObject()
+        {
+            var result = new JsonObject();
+
+            var arr = new JsonArray();
+            result.Add("items", arr);
+
+            foreach (var i in items)
+            {
+                arr.Add(i.ToJsonObject());
+            }
+
+            result.Add("$type", deserializer.FullName);
+            return result;
         }
     }
 
     public class DumpLexicon : DeserializableDump
     {
-        // TODO: dump with Entries
         public DumpLexicon(Type deserializer) : base(deserializer) { }
 
         public int Count { get { return keys.Count; } }
+        public override bool IsSerializable { get { return !hasUnserializableChildren; } }
+
 
         private List<Dump> values = new List<Dump>();
         private List<Dump> keys = new List<Dump>();
@@ -317,6 +437,23 @@ namespace kOS.Safe
                 result.Add(new KeyValuePair<Structure, Structure>(keys[i].ToStructure(sharedObjects), values[i].ToStructure(sharedObjects)));
             }
 
+            return result;
+        }
+
+        public override JsonObject ToJsonObject()
+        {
+            var result = new JsonObject();
+
+            var entries = new JsonArray();
+            result.Add("entries", entries);
+
+            foreach(var kv in GetItems())
+            {
+                entries.Add(kv.Key.ToJsonObject());
+                entries.Add(kv.Value.ToJsonObject());
+            }
+
+            result.Add("$type", deserializer.FullName);
             return result;
         }
     }

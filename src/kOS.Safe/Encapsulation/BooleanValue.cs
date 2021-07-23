@@ -254,11 +254,13 @@ namespace kOS.Safe.Encapsulation
             return dump;
         }
 
+        [DumpDeserializer(typeof(DumpDictionary))]
         public static BooleanValue CreateFromDump(DumpDictionary d, SafeSharedObjects shared)
         {
             return new BooleanValue(d.GetBool("value"));
         }
 
+        [DumpPrinter(typeof(DumpDictionary))]
         public static void Print(DumpDictionary d, IndentedStringBuilder sb)
         {
             sb.Append(d.GetBool("value").ToString(CultureInfo.InvariantCulture));

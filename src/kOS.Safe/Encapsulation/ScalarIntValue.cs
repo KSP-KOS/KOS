@@ -61,11 +61,13 @@ namespace kOS.Safe.Encapsulation
             return dump;
         }
 
+        [DumpDeserializer(typeof(DumpDictionary))]
         public static ScalarIntValue CreateFromDump(DumpDictionary d, SafeSharedObjects shared)
         {
             return new ScalarIntValue((int)d.GetDouble("value"));
         }
 
+        [DumpPrinter(typeof(DumpDictionary))]
         public static void Print(DumpDictionary d, IndentedStringBuilder sb)
         {
             sb.Append(((int)d.GetDouble("value")).ToString(CultureInfo.InvariantCulture));

@@ -38,11 +38,13 @@ namespace kOS.Safe.Communication
             return dump;
         }
 
+        [DumpDeserializer(typeof(DumpDictionary))]
         public static BaseMessage CreateFromDump(DumpDictionary d, SafeSharedObjects shared)
         {
             return new BaseMessage(d.GetStructure(DumpContent, shared), d.GetDouble(DumpSentAt), d.GetDouble(DumpReceivedAt));
         }
 
+        [DumpPrinter(typeof(DumpDictionary))]
         public static void Print(DumpDictionary d, IndentedStringBuilder sb)
         {
             sb.Append("Message [sent: ");

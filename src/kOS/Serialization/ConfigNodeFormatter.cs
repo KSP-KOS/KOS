@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using kOS.Safe.Serialization;
 using System.Collections.Generic;
 using kOS.Safe;
@@ -10,26 +10,13 @@ using kOS.Safe.Persistence;
 
 namespace kOS.Serialization
 {
-    public class ConfigNodeFormatter : IFormatWriter, IFormatReader
+    public class ConfigNodeFormatter
     {
         private const string ParentNode = "";
         private const string ListKey = "$list";
         private const string BooleanKey = "$boolean";
         private const string ScalarKey = "$scalar";
         private const string ValueKey = "$value";
-        private static readonly ConfigNodeFormatter instance = new ConfigNodeFormatter();
-
-        public static ConfigNodeFormatter Instance
-        {
-            get 
-            {
-                return instance;
-            }
-        }
-
-        private ConfigNodeFormatter()
-        {
-        }
 
         public ConfigNode ToConfigNode(Dump dump)
         {

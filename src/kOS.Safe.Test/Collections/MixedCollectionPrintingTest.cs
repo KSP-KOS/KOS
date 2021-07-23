@@ -17,14 +17,14 @@ namespace kOS.Safe.Test.Collections
 local l to lex(
   ""Boolean"", true,
   ""List"", list(1, false, ""foo""),
-  ""Pid"", PidLoop(1, 2, 3, 4, 5),
-  ""Queue"", queue(1, false, ""foo""),
-  ""Range"", range(1, 2),
-  ""Double"", 1.1,
-  ""Int"", 42,
-  ""Stack"", stack(1, 2),
-  ""String"", ""foo"",
-  ""Set"", uniqueset(1, 2)
+  ""Pid"", PidLoop(1, 2, 3, 4, 5)
+//  ""Queue"", queue(1, false, ""foo""),
+//  ""Range"", range(1, 2),
+//  ""Double"", 1.1,
+//  ""Int"", 42,
+//  ""Stack"", stack(1, 2),
+//  ""String"", ""foo"",
+//  ""Set"", uniqueset(1, 2)
 ).
 writejson(l, ""serialization.json"").
 return l.
@@ -182,9 +182,11 @@ return l.
         }
     ],
     ""$type"": ""kOS.Safe.Encapsulation.Lexicon""
-}";
+}".Replace("\r\n", "\n");
 
-            Assert.AreEqual(reference, file.String);
+            string serializationResult = file.String.Replace("\r\n", "\n");
+            System.Diagnostics.Debug.WriteLine(serializationResult);
+            Assert.AreEqual(reference, serializationResult);
 
         }
 

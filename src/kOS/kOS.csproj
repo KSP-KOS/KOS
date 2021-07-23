@@ -275,7 +275,6 @@
     <Compile Include="Communication\IConnectivityManager.cs" />
     <Compile Include="Communication\PermitAllConnectivityManager.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechConnectivityManager.cs" />
-    <Compile Include="Serialization\SerializationMgr.cs" />
     <Compile Include="Suffixed\ScienceDataValue.cs" />
     <Compile Include="Suffixed\PartModuleField\ScienceExperimentFieldsFactory.cs" />
     <Compile Include="AddOns\OrbitalScience\DMModuleScienceAnimateFields.cs" />

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using kOS.Safe.Encapsulation;
 using NUnit.Framework;
 using kOS.Safe.Serialization;
@@ -7,9 +7,6 @@ namespace kOS.Safe.Test.Serialization
 {
     public abstract class FormatterTest
     {
-        protected abstract IFormatReader FormatReader { get; }
-        protected abstract IFormatWriter FormatWriter { get; }
-
         [SetUp]
         public void Setup()
         {

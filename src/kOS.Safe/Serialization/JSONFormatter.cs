@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System;
 using System.Linq;
 using System.Text;
@@ -6,35 +6,8 @@ using kOS.Safe.Persistence;
 
 namespace kOS.Safe.Serialization
 {
-    public class JsonFormatter : IFormatWriter, IFormatReader
+    public class JsonFormatter
     {
-        private static readonly JsonFormatter instance;
-
-        public static IFormatReader ReaderInstance
-        {
-            get 
-            {
-                return instance; 
-            }
-        }
-
-        public static IFormatWriter WriterInstance
-        {
-            get 
-            {
-                return instance; 
-            }
-        }
-
-        private JsonFormatter()
-        {
-        }
-
-        static JsonFormatter()
-        {
-            instance = new JsonFormatter();
-        }
-
         private object WriteJsonObjects(object value)
         {
             var objects = value as IDictionary<object, object>;
@@ -56,7 +29,7 @@ namespace kOS.Safe.Serialization
 
         public string Write(Dump value)
         {
-            return JsonHelper.FormatJson(SimpleJson.SerializeObject(WriteJsonObjects(value)));
+            return JsonHelper.FormatJson(SimpleJson.SerializeObject(WriteJsonObjects(value.ToJsonObject())));
         }
 
         private Dump ReadJsonObject(JsonObject dictionary)

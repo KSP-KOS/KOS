@@ -246,7 +246,6 @@
     <Compile Include="Encapsulation\RangeValue.cs" />
     <Compile Include="Encapsulation\CollectionValue.cs" />
     <Compile Include="Encapsulation\EnumerableValue.cs" />
-    <Compile Include="Serialization\Formatter.cs" />
     <Compile Include="Serialization\JSONFormatter.cs" />
     <Compile Include="SimpleJson.cs" />
     <Compile Include="Exceptions\KOSSerializationException.cs" />

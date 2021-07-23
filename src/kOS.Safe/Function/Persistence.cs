@@ -251,15 +251,19 @@ namespace kOS.Safe.Function
         public override void Execute(SafeSharedObjects shared)
         {
             object pathObject = PopValueAssert(shared, true);
-                Structure serialized = PopValueAssert(shared, true) as Structure;
+                Structure obj = PopValueAssert(shared, true) as Structure;
             AssertArgBottomAndConsume(shared);
 
-            if (serialized == null)
-            {
-                throw new KOSException("This type is not serializable");
-            }
+            if (obj == null)
+                throw new KOSException("Unable to serialize this object. Can only serialize Structures.");
 
-            string serializedString = "";//new SafeSerializationMgr(shared).Serialize(serialized, JsonFormatter.WriterInstance);
+            DumperState s = new DumperState();
+            var dump = obj.Dump(s);
+            if (!dump.IsSerializable)
+                throw new KOSException("Unable to serialize this structure, it contains unserializable components. Please check :ISSERIALIZABLE before calling WRITEJSON.");
+
+            var formatter = new JsonFormatter();
+            string serializedString = formatter.Write(dump);
 
             FileContent fileContent = new FileContent(serializedString);
 

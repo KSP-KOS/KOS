@@ -6,6 +6,7 @@ using kOS.Safe.Exceptions;
 using kOS.Safe.Properties;
 using kOS.Safe.Serialization;
 using kOS.Safe.Function;
+using System.Globalization;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -21,14 +22,6 @@ namespace kOS.Safe.Encapsulation
         public ListValue(IEnumerable<T> listValue) : base("LIST", new List<T>(listValue))
         {
             RegisterInitializer(ListInitializeSuffixes);
-        }
-
-        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
-        public static ListValue<T> CreateFromDump(SafeSharedObjects shared, Dump d)
-        {
-            var newObj = new ListValue<T>();
-            newObj.LoadDump(d);
-            return newObj;
         }
 
         public int Count => Collection.Count;
@@ -59,19 +52,6 @@ namespace kOS.Safe.Encapsulation
                 CheckReadOnly();
                 Collection[index] = value;
             }
-        }
-
-        public void LoadDump(Dump dump)
-        {
-            /*
-            Collection.Clear();
-
-            List<object> values = (List<object>)dump[kOS.Safe.Dump.Items];
-
-            foreach (object item in values)
-            {
-                Collection.Add((T)FromPrimitive(item));
-            }*/
         }
 
         private void ListInitializeSuffixes()
@@ -146,6 +126,51 @@ namespace kOS.Safe.Encapsulation
             CheckReadOnly();
             Collection.Insert(index, item);
         }
+
+        public override Dump Dump(DumperState s)
+        {
+            var dump = new DumpList(typeof(ListValue<T>));
+            PopulateDumpList(dump, s);
+            return dump;
+        }
+
+        [DumpDeserializer(typeof(DumpList))]
+        public static ListValue<T> CreateFromDump(DumpList d, SafeSharedObjects shared)
+        {
+            var result = new ListValue<T>();
+            for (int i = 0; i < d.Count; i++)
+            {
+                T value = d.GetDeserialized(i, shared) as T;
+                if (value == null)
+                    throw new KOSSerializationException("Serialized object contains an object with the wrong type.");
+                result.Add(value);
+            }
+            return result;
+        }
+
+        [DumpPrinter(typeof(DumpList))]
+        public static void Print(DumpList d, IndentedStringBuilder sb)
+        {
+            sb.Append("LIST of ");
+            sb.Append(d.Count.ToString());
+            sb.Append("items: ");
+
+            int maxwidth = (d.Count.ToString(CultureInfo.InvariantCulture) + ". ").Length;
+
+            for (int i = 0; i < d.Count; i++)
+            {
+                sb.AppendLine();
+                var keyBuilder = new SingleLineIndentedStringBuilder();
+
+                string key = (i.ToString(CultureInfo.InvariantCulture) + ". ").PadRight(maxwidth);
+                sb.Append(key);
+
+                using (sb.Indent())
+                {
+                    d[i].WriteReadable(sb);
+                }
+            }
+        }
     }
 
     [kOS.Safe.Utilities.KOSNomenclature("List", KOSToCSharp = false)] // one-way because the generic templated ListValue<T> is the canonical one.  
@@ -175,12 +200,11 @@ namespace kOS.Safe.Encapsulation
             RegisterInitializer(InitializeSuffixes);
         }
 
-        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
-        public static new ListValue CreateFromDump(SafeSharedObjects shared, Dump d)
+        public override Dump Dump(DumperState s)
         {
-            var newObj = new ListValue();
-            newObj.LoadDump(d);
-            return newObj;
+            var dump = new DumpList(typeof(ListValue));
+            PopulateDumpList(dump, s);
+            return dump;
         }
 
         private void InitializeSuffixes() =>

@@ -471,11 +471,13 @@ namespace kOS.Safe.Encapsulation
             return dump;
         }
 
-        public static StringValue CreateFromDump(SafeSharedObjects shared, DumpDictionary d)
+        [DumpDeserializer(typeof(DumpDictionary))]
+        public static StringValue CreateFromDump(DumpDictionary d, SafeSharedObjects shared)
         {
             return new StringValue(d.GetString("value"));
         }
 
+        [DumpPrinter(typeof(DumpDictionary))]
         public static void Print(DumpDictionary dump, IndentedStringBuilder sb)
         {
             sb.Append("\"");

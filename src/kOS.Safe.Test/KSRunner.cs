@@ -23,26 +23,6 @@ namespace kOS.Safe.Test
             public BindingManager(SafeSharedObjects s) : base(s) { }
         }
 
-        class Logger : NoopLogger
-        {
-            public override void Log(Exception e)
-            {
-                throw e;
-            }
-
-            public override void LogError(string s)
-            {
-                throw new Exception(s);
-            }
-
-            public override void LogException(Exception exception)
-            {
-                throw exception;
-            }
-
-
-        }
-
         public string KerboScript { get; private set; }
         public Harddisk Volume { get; private set; }
 
@@ -107,8 +87,9 @@ namespace kOS.Safe.Test
             shared.VolumeMgr.Add(Volume);
             shared.VolumeMgr.SwitchTo(Volume);
 
-            shared.Cpu = new CPU(shared);
-            shared.Logger = new Logger();
+            var cpu = new CPU(shared);
+            shared.Cpu = cpu;
+            cpu.ShouldSwallowExceptions = false;
 
             shared.Cpu.Boot();
 

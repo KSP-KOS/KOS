@@ -5,6 +5,25 @@ using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Serialization
 {
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    public class DumpDeserializer : Attribute
+    {
+        public DumpDeserializer(Type dumpType)
+        {
+            DumpType = dumpType;
+        }
+        public Type DumpType { get; private set; }
+    }
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    public class DumpPrinter : Attribute
+    {
+        public DumpPrinter(Type dumpType)
+        {
+            DumpType = dumpType;
+        }
+        public Type DumpType { get; private set; }
+    }
+
     public interface IDumperContext : IDisposable
     {
         Dump Convert(IDumper conversionTarget);
