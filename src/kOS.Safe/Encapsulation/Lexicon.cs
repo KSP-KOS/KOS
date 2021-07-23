@@ -398,13 +398,13 @@ namespace kOS.Safe.Encapsulation
             return dump;
         }
 
-        [DumpDeserializer(typeof(DumpLexicon))]
+        [DumpDeserializer]
         public static Lexicon CreateFromDump(DumpLexicon d, SafeSharedObjects shared)
         {
             return new Lexicon(d.GetStructures(shared));
         }
 
-        [DumpPrinter(typeof(DumpLexicon))]
+        [DumpPrinter]
         public static void Print(DumpLexicon d, IndentedStringBuilder sb)
         {
             sb.Append("LEXICON of ");

@@ -134,7 +134,7 @@ namespace kOS.Safe.Encapsulation
             return dump;
         }
 
-        [DumpDeserializer(typeof(DumpList))]
+        [DumpDeserializer]
         public static ListValue<T> CreateFromDump(DumpList d, SafeSharedObjects shared)
         {
             var result = new ListValue<T>();
@@ -148,7 +148,7 @@ namespace kOS.Safe.Encapsulation
             return result;
         }
 
-        [DumpPrinter(typeof(DumpList))]
+        [DumpPrinter]
         public static void Print(DumpList d, IndentedStringBuilder sb)
         {
             sb.Append("LIST of ");

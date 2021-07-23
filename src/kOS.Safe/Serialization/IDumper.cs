@@ -6,23 +6,9 @@ using kOS.Safe.Exceptions;
 namespace kOS.Safe.Serialization
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-    public class DumpDeserializer : Attribute
-    {
-        public DumpDeserializer(Type dumpType)
-        {
-            DumpType = dumpType;
-        }
-        public Type DumpType { get; private set; }
-    }
+    public class DumpDeserializer : Attribute { }
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-    public class DumpPrinter : Attribute
-    {
-        public DumpPrinter(Type dumpType)
-        {
-            DumpType = dumpType;
-        }
-        public Type DumpType { get; private set; }
-    }
+    public class DumpPrinter : Attribute { }
 
     public interface IDumperContext : IDisposable
     {

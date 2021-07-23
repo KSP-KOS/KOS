@@ -300,7 +300,7 @@ namespace kOS.Safe.Encapsulation
             return dump;
         }
 
-        [DumpDeserializer(typeof(DumpDictionary))]
+        [DumpDeserializer]
         public static PIDLoop CreateFromDump(DumpDictionary d, SafeSharedObjects shared)
         {
             double Kp = d.GetDouble("Kp");
@@ -316,7 +316,7 @@ namespace kOS.Safe.Encapsulation
             return result;
         }
 
-        [DumpPrinter(typeof(DumpDictionary))]
+        [DumpPrinter]
         public static void Print(DumpDictionary d, IndentedStringBuilder sb)
         {
             sb.Append(d.GetDouble("value").ToString(CultureInfo.InvariantCulture));

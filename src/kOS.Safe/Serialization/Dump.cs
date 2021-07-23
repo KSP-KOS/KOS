@@ -60,7 +60,12 @@ namespace kOS.Safe
                 if (printAttr == null)
                     continue;
 
-                dumpType = printAttr.DumpType;
+                var parameters = method.GetParameters();
+                if (parameters.Length != 2)
+                    throw new KOSYouShouldNeverSeeThisException("PrintDump function defined with wrong amount of parameters.");
+
+
+                dumpType = parameters[0].ParameterType;
                 break;
             }
 
@@ -68,10 +73,12 @@ namespace kOS.Safe
                 throw new KOSSerializationException(string.Format("Objects of type {0} do not support deserialization.", typename));
 
             if (!dumpType.IsSubclassOf(typeof(DeserializableDump)))
-                throw new KOSYouShouldNeverSeeThisException("Not sure how this can happen but it would be bad.");
+                throw new KOSYouShouldNeverSeeThisException("PrintDump function uses non-dump type as first argument.");
 
             // TODO, do switch statement and call static CreateFromJson
+            return null;
         }
+    }
 
     public class DumpOpaque : Dump
     {
@@ -126,6 +133,8 @@ namespace kOS.Safe
                 {
                     if (printMethod != null)
                         throw new KOSYouShouldNeverSeeThisException("Duplicate PrintDump function defined on " + deserializer.FullName);
+                    if (method.GetParameters().Length != 2)
+                        throw new KOSYouShouldNeverSeeThisException("PrintDump function defined with incorrect number of arguments.");
                     printMethod = method;
                 }
 
@@ -133,6 +142,8 @@ namespace kOS.Safe
                 {
                     if (deserializeMethod != null)
                         throw new KOSYouShouldNeverSeeThisException("Duplicate DeserializeDump function defined on " + deserializer.FullName);
+                    if (method.GetParameters().Length != 2)
+                        throw new KOSYouShouldNeverSeeThisException("DeserializeDump function defined with incorrect number of arguments.");
                     deserializeMethod = method;
                 }
             }
@@ -140,26 +151,27 @@ namespace kOS.Safe
             if (printMethod == null)
                 throw new KOSYouShouldNeverSeeThisException("Dump created without corresponding print method in: " + deserializer.FullName);
 
-            var finalPrintAttr = printMethod.GetCustomAttribute<DumpPrinter>();
+            var printArg = printMethod.GetParameters()[0];
 
             if (deserializeMethod != null)
             {
-                if (finalPrintAttr.DumpType != deserializeMethod.GetCustomAttribute<DumpDeserializer>().DumpType)
+                var deserializeArg = deserializeMethod.GetParameters()[0];
+                if (printArg.ParameterType != deserializeArg.ParameterType)
                     throw new KOSYouShouldNeverSeeThisException("Deserializable class contains conflicting Dump types in PrintDump and DeserializeDump: " + deserializer.FullName);
             }
 
-            if (finalPrintAttr.DumpType != GetType())
+            if (printArg.ParameterType != GetType())
                 throw new KOSYouShouldNeverSeeThisException(String.Format(
                     "Deserializable class {0} expects to print using {1} but created a {2}.",
                     deserializer.FullName,
-                    finalPrintAttr.DumpType.FullName,
+                    printArg.ParameterType.FullName,
                     GetType().FullName
                 ));
 
             //void Print(T dump, IndentedStringBuilder sb)
-            Type printType = typeof(Action<,>).MakeGenericType(finalPrintAttr.DumpType, typeof(IndentedStringBuilder));
+            Type printType = typeof(Action<,>).MakeGenericType(printArg.ParameterType, typeof(IndentedStringBuilder));
             //StringValue CreateFromDump(T d, SafeSharedObjects shared)
-            Type deserializeType = typeof(Func<,,>).MakeGenericType(finalPrintAttr.DumpType, typeof(SafeSharedObjects), deserializer);
+            Type deserializeType = typeof(Func<,,>).MakeGenericType(printArg.ParameterType, typeof(SafeSharedObjects), deserializer);
 
             try
             {
@@ -170,7 +182,7 @@ namespace kOS.Safe
                 throw new KOSYouShouldNeverSeeThisException(string.Format(
                     "Class {0} defines a Printer function with the wrong type. Please use void Print({1} dump, IndentedStringBuilder sb).",
                     deserializer.FullName,
-                    finalPrintAttr.DumpType.FullName
+                    printArg.ParameterType.FullName
                 ));
 
             if (deserializeMethod != null)
@@ -184,7 +196,7 @@ namespace kOS.Safe
                     throw new KOSYouShouldNeverSeeThisException(string.Format(
                         "Class {0} defines a Deserialization function with the wrong type. Please use StringValue CreateFromDump(SafeSharedObjects shared, {1} d)",
                         deserializer.FullName,
-                        finalPrintAttr.DumpType.FullName
+                        printArg.ParameterType.FullName
                     ));
             }
         }
@@ -193,14 +205,18 @@ namespace kOS.Safe
         {
             if (typeof(T) != GetType())
                 throw new KOSYouShouldNeverSeeThisException("Tried to deserialize with the wrong Dump type.");
-            return (Structure)deserializerDelegate.DynamicInvoke(dump, safeSharedObjects);
+
+            var func = (Func<T, SafeSharedObjects, Structure>)deserializerDelegate;
+            return func(dump, safeSharedObjects);
         }
 
         protected void Print<T>(T dump, IndentedStringBuilder sb) where T : Dump
         {
             if (typeof(T) != GetType())
                 throw new KOSYouShouldNeverSeeThisException("Tried to deserialize with the wrong Dump type.");
-            printerDelegate.DynamicInvoke(dump, sb);
+
+            var func = (Action<T, IndentedStringBuilder>)printerDelegate;
+            func(dump, sb);
         }
     }
 
