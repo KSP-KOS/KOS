@@ -107,6 +107,28 @@ namespace kOS.Utilities
         }
 
         /// <summary>
+        /// Get current thrust (of operating engines)
+        /// </summary>
+        /// <param name="vessel">The vessel/ship</param>
+        /// <returns>Current thrust</returns>
+        public static double GetCurrentThrust(Vessel vessel)
+        {
+            var thrust = 0.0;
+
+            foreach (var p in vessel.parts)
+            {
+                foreach (PartModule module in p.Modules)
+                {
+                    if (!module.isEnabled) continue;
+                    var engine = module as ModuleEngines;
+                    if (engine != null)
+                        thrust += engine.finalThrust;
+                }
+            }
+
+            return thrust;
+        }
+        /// <summary>
         /// Get total thrust (of operational engines at full throttle,
         /// not counting with thrust limits - assuming 100% unless useThrustLimit: true)
         /// </summary>

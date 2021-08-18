@@ -11,8 +11,8 @@
     "release_status" : "stable",
     "x_netkan_version_edit": "^[vV]?(?<version>.+)$",
     "resources"      : {
-        "homepage"   : "http://ksp-kos.github.io/KOS_DOC/",
-        "manual"     : "http://ksp-kos.github.io/KOS_DOC/",
+        "homepage"   : "https://ksp-kos.github.io/KOS_DOC/",
+        "manual"     : "https://ksp-kos.github.io/KOS_DOC/",
         "repository" : "https://github.com/KSP-KOS/KOS"
     },
     "conflicts"      :   [ { "name" : "kOS-Classic" } ],
