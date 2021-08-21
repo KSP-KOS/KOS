@@ -34,8 +34,7 @@ namespace kOS.Suffixed.PartModuleField
             }
 
             // see if any addons have registered a constructor for this module
-            var constructionMethod = constructionMethods[mod.moduleName];
-            if (constructionMethod != null)
+            if (constructionMethods.TryGetValue(mod.moduleName, out var constructionMethod))
             {
                 var moduleFields = constructionMethod(mod, shared);
                 if (moduleFields != null)
