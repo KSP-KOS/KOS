@@ -1744,7 +1744,7 @@ namespace kOS.Safe.Compilation.KS
 
                 bool remember = identifierIsSuffix;
                 identifierIsSuffix = (nodeIndex > 0);
-
+                bool suffixTrailersExist = node.Nodes.Count > 1;
                 ParseNode suffixTerm;
                 if (nodeIndex == 0)
                     suffixTerm = node.Nodes[nodeIndex];
@@ -1764,7 +1764,7 @@ namespace kOS.Safe.Compilation.KS
                 {
                     firstIdentifier = GetIdentifierText(suffixTerm);
                     UserFunction userFuncObject = GetUserFunctionWithScopeWalk(firstIdentifier, node);
-                    if (userFuncObject != null && !compilingSetDestination)
+                    if (userFuncObject != null && (suffixTrailersExist || !compilingSetDestination))
                     {
                         firstIdentifier = userFuncObject.ScopelessPointerIdentifier;
                         isUserFunc = true;
