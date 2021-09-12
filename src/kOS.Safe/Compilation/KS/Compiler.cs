@@ -1644,7 +1644,7 @@ namespace kOS.Safe.Compilation.KS
 
             if (isDirect)
             {
-                if (options.FuncManager.Exists(directName)) // if the name is a built-in, then add the "()" after it.
+                if (options.BuiltInExists(directName)) // if the name is a built-in, then add the "()" after it.
                     directName += "()";
                 AddOpcode(new OpcodeCall(directName));
             }
@@ -1702,7 +1702,7 @@ namespace kOS.Safe.Compilation.KS
         {
             if (isDirect)
             {
-                if (options.FuncManager.Exists(directName)) // if the name is a built-in, then make a BuiltInDelegate
+                if (options.BuiltInExists(directName)) // if the name is a built-in, then make a BuiltInDelegate
                 {
                     AddOpcode(new OpcodePush(new KOSArgMarkerType()));
                     AddOpcode(new OpcodePush(directName));
