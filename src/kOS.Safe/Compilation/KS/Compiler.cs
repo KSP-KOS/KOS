@@ -30,6 +30,7 @@ namespace kOS.Safe.Compilation.KS
         private bool needImplicitReturn;
         private bool nextBraceIsFunction;
         private bool allowLazyGlobal;
+        private bool allowClobberBuiltIn;
         /// <summary>Used when you want to set the next opcode's label but there's many places the next AddOpcode call might happen in the code</summary>
         private string forcedNextLabel;
         private Int16 braceNestLevel;
@@ -46,6 +47,16 @@ namespace kOS.Safe.Compilation.KS
             GLOBAL,
             /// <summary>The storage will be whatever scope it happens to find the first hit, or global if not found.</summary>
             LAZYGLOBAL
+        };
+
+        private enum IdentifierType
+        {
+            OTHER,
+            SYSTEM_LOCK,
+            BUILTIN_FUNCTION,
+            BUILTIN_READONLY_VARIABLE,
+            BUILTIN_SETTABLE_VARIABLE
+            // More enum vals could be added here if future edits require it.
         };
         
         // Because the Compiler object can be re-used, with its Compile()
@@ -73,6 +84,7 @@ namespace kOS.Safe.Compilation.KS
             braceNestLevel = 0;
             nextBraceIsFunction = false;
             allowLazyGlobal = true;
+            allowClobberBuiltIn = options.AllowClobberBuiltins;
             forcedNextLabel = String.Empty;
             scopeStack.Clear();
             scopeMap.Clear();
@@ -82,14 +94,107 @@ namespace kOS.Safe.Compilation.KS
             boilerplateLoadAndRunEntryLabel = "@LR00";
         }
 
+        /// <summary>
+        /// Tests if this string is a built-in identifier used by kOS, and if so, which kind.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>IdentiferType.OTHER if it's not a built-in.  Otherwise it's a built-in ident of some kind.</returns>
+        private IdentifierType BuiltInIdentifierType(string name)
+        {
+            string lowerName = name.ToLower();
+            if (options.BuiltInFunctionExists(lowerName))
+                return IdentifierType.BUILTIN_FUNCTION;
+            if (UserFunction.IsSystemLock(lowerName))
+                return IdentifierType.SYSTEM_LOCK;
+
+            // Check Settable before Gettable, because if it's both settable and gettable, we want to return settable:
+            if (options.BoundSetVariableExists(lowerName))
+                return IdentifierType.BUILTIN_SETTABLE_VARIABLE;
+            if (options.BoundGetVariableExists(lowerName))
+                return IdentifierType.BUILTIN_READONLY_VARIABLE;
+
+            return IdentifierType.OTHER;
+        }
+
+        private void AssertNoSetBuiltinViolation(string name)
+        {
+            if (allowClobberBuiltIn)
+                return;
+
+            IdentifierType builtIn = BuiltInIdentifierType(name);
+            if (
+                /* Don't set things like PRINT() or HEADING() so they no longer call the built-ins. */
+                builtIn == IdentifierType.BUILTIN_FUNCTION ||
+                /* Don't use set to mask or clobber get-only builtins like SHIP or NORTH, but okay if it's settable like TARGET. */
+                builtIn == IdentifierType.BUILTIN_READONLY_VARIABLE ||
+                /* Don't set things like THROTTLE or STEERING. */
+                builtIn == IdentifierType.SYSTEM_LOCK
+                )
+            {
+                throw new KOSCompileException(new LineCol(lastLine, lastColumn),
+                    string.Format("Not allowed to SET a name that will clobber or hide the {0} called '{1}'.\nSee kOS documentation for CLOBBERBUILTINS for more information.",
+                        builtIn, name));
+            }
+            return;
+        }
+
+        private void AssertNoLockBuiltinViolation(string name)
+        {
+            if (allowClobberBuiltIn)
+                return;
+
+            IdentifierType builtIn = BuiltInIdentifierType(name);
+            if (
+                /* Don't lock things like PRINT() or HEADING() so they no longer call the built-ins. */
+                builtIn == IdentifierType.BUILTIN_FUNCTION ||
+                /* Don't use lock on any of the built-in vars that are meant for get or set. */
+                builtIn == IdentifierType.BUILTIN_READONLY_VARIABLE ||
+                builtIn == IdentifierType.BUILTIN_SETTABLE_VARIABLE
+
+                /* It's okay to lock things like THROTTLE or STEERING.
+                 * builtIn == IdentifierType.SYSTEM_LOCK
+                 */
+                )
+            {
+                throw new KOSCompileException(new LineCol(lastLine, lastColumn),
+                    string.Format("Not allowed to LOCK a name that will clobber or hide the {0} called '{1}'.\nSee kOS documentation for CLOBBERBUILTINS for more information.",
+                        builtIn, name));
+            }
+            return;
+        }
+
+        private void AssertNoFuncBuiltinViolation(string name)
+        {
+            if (allowClobberBuiltIn)
+                return;
+
+            IdentifierType builtIn = BuiltInIdentifierType(name);
+            if (
+                /* Don't define a function that hides things like PRINT() or HEADING() so they no longer call the built-ins. */
+                builtIn == IdentifierType.BUILTIN_FUNCTION ||
+                /* Don't define a function that hides any of the built-in vars that are meant for get or set. */
+                builtIn == IdentifierType.BUILTIN_READONLY_VARIABLE ||
+                builtIn == IdentifierType.BUILTIN_SETTABLE_VARIABLE ||
+
+                /* Don't change a SYSTEM LOCK into a function, although it's similar there's some relevant differences: */
+                builtIn == IdentifierType.SYSTEM_LOCK
+                )
+            {
+                throw new KOSCompileException(new LineCol(lastLine, lastColumn),
+                    string.Format("Not allowed to make a function name that will clobber or hide the {0} called '{1}'.\nSee kOS documentation for CLOBBERBUILTINS for more information.",
+                        builtIn, name));
+            }
+            return;
+        }
+
         public CodePart Compile(int startLineNum, ParseTree tree, Context context, CompilerOptions options)
         {
+            this.options = options;
+            this.context = context;
             InitCompileFlags();
+            this.startLineNum = startLineNum;
 
             part = new CodePart();
-            this.context = context;
-            this.options = options;
-            this.startLineNum = startLineNum;
             
             ++context.NumCompilesSoFar;
 
@@ -692,12 +797,14 @@ namespace kOS.Safe.Compilation.KS
             if (isLock)
             {
                 userFuncIdentifier = lastSubNode.Nodes[1].Token.Text; // The IDENT of: LOCK IDENT TO EXPR.
+                AssertNoLockBuiltinViolation(userFuncIdentifier);
                 bodyNode = lastSubNode.Nodes[3]; // The EXPR of: LOCK IDENT TO EXPR.
                 needImplicitArgBottom = true;
             }
             else if (isDefFunc)
             {
                 userFuncIdentifier = lastSubNode.Nodes[1].Token.Text; // The IDENT of: DEFINE FUNCTION IDENT INSTRUCTION_BLOCK.
+                AssertNoFuncBuiltinViolation(userFuncIdentifier);
                 bodyNode = lastSubNode.Nodes[2]; // The INSTRUCTION_BLOCK of: DEFINE FUNCTION IDENT INSTRUCTION_BLOCK.
             }
             else
@@ -1644,7 +1751,7 @@ namespace kOS.Safe.Compilation.KS
 
             if (isDirect)
             {
-                if (options.BuiltInExists(directName)) // if the name is a built-in, then add the "()" after it.
+                if (options.BuiltInFunctionExists(directName)) // if the name is a built-in, then add the "()" after it.
                     directName += "()";
                 AddOpcode(new OpcodeCall(directName));
             }
@@ -1702,7 +1809,7 @@ namespace kOS.Safe.Compilation.KS
         {
             if (isDirect)
             {
-                if (options.BuiltInExists(directName)) // if the name is a built-in, then make a BuiltInDelegate
+                if (options.BuiltInFunctionExists(directName)) // if the name is a built-in, then make a BuiltInDelegate
                 {
                     AddOpcode(new OpcodePush(new KOSArgMarkerType()));
                     AddOpcode(new OpcodePush(directName));
@@ -2218,6 +2325,8 @@ namespace kOS.Safe.Compilation.KS
 
                 string identifier = GetIdentifierText(setThis);
 
+                AssertNoSetBuiltinViolation(identifier);
+
                 UserFunction userFuncObject = GetUserFunctionWithScopeWalk(identifier, setThis);
                 if (userFuncObject != null)
                 {
@@ -2541,6 +2650,9 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
             string lockIdentifier = node.Nodes[1].Token.Text;
+
+            AssertNoLockBuiltinViolation(lockIdentifier);
+        
             int expressionHash = ConcatenateNodes(node.Nodes[3]).GetHashCode();
             UserFunction lockObject = context.UserFunctions.GetUserFunction(
                 lockIdentifier, 
@@ -2693,7 +2805,9 @@ namespace kOS.Safe.Compilation.KS
             {
                 for (int i = 0; i < lastSubNode.Nodes.Count; i += 4) {
                     VisitNode(lastSubNode.Nodes[i + 2]);
-                    AddOpcode(CreateAppropriateStoreCode(whereToStore, true, "$" + GetIdentifierText(lastSubNode.Nodes[i])));
+                    string identifier = GetIdentifierText(lastSubNode.Nodes[i]);
+                    AssertNoSetBuiltinViolation(identifier);
+                    AddOpcode(CreateAppropriateStoreCode(whereToStore, true, "$" + identifier));
                 }
             }
             
@@ -2763,7 +2877,9 @@ namespace kOS.Safe.Compilation.KS
 
                 branchSkippingInit.DestinationLabel = GetNextLabel(false);
             }
-            AddOpcode(CreateAppropriateStoreCode(whereToStore, true, "$" + GetIdentifierText(identifierNode)));
+            string identifier = GetIdentifierText(identifierNode);
+            AssertNoSetBuiltinViolation(identifier);
+            AddOpcode(CreateAppropriateStoreCode(whereToStore, true, "$" + identifier));
         }
                 
         /// <summary>
@@ -2879,7 +2995,12 @@ namespace kOS.Safe.Compilation.KS
         private void VisitToggleStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            string varName = "$" + GetIdentifierText(node.Nodes[1]);
+
+            string identifier = GetIdentifierText(node.Nodes[1]);
+
+            AssertNoSetBuiltinViolation(identifier);
+
+            string varName = "$" + identifier;
             VisitVarIdentifier(node.Nodes[1]);
             AddOpcode(new OpcodeLogicToBool());
             AddOpcode(new OpcodeLogicNot());
@@ -3181,7 +3302,11 @@ namespace kOS.Safe.Compilation.KS
             if (hasIn)
             {
                 // destination variable
-                string varName = "$" + GetIdentifierText(node.Nodes[3]);
+                string identifier = GetIdentifierText(node.Nodes[3]);
+
+                AssertNoSetBuiltinViolation(identifier);
+
+                string varName = "$" + identifier;
                 // list type
                 AddOpcode(new OpcodePush(new KOSArgMarkerType()));
                 VisitNode(node.Nodes[1]);

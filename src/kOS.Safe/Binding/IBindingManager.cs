@@ -11,6 +11,7 @@ namespace kOS.Safe.Binding
         void AddSetter(string name, BindingSetDlg dlg);
         void AddSetter(IEnumerable<string> names, BindingSetDlg dlg);
         bool HasGetter(string name);
+        bool HasSetter(string name);
         void MarkVolatile(string name);
         void PreUpdate();
         void PostUpdate();

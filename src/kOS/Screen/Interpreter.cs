@@ -7,6 +7,7 @@ using kOS.Safe.Execution;
 using kOS.Safe.Screen;
 using kOS.Safe.UserIO;
 using kOS.Safe.Persistence;
+using kOS.Safe.Utilities;
 
 namespace kOS.Screen
 {
@@ -137,6 +138,8 @@ namespace kOS.Screen
                 {
                     LoadProgramsInSameAddressSpace = false,
                     FuncManager = Shared.FunctionManager,
+                    BindManager = Shared.BindingMgr,
+                    AllowClobberBuiltins = SafeHouse.Config.AllowClobberBuiltIns,
                     IsCalledFromRun = false
                 };
 

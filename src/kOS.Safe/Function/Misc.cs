@@ -97,7 +97,12 @@ namespace kOS.Safe.Function
                 shared.Cpu.StartCompileStopwatch();
                 shared.ScriptHandler.ClearContext("program");
                 //string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + fileName;
-                var options = new CompilerOptions { LoadProgramsInSameAddressSpace = true, FuncManager = shared.FunctionManager };
+                var options = new CompilerOptions
+                {
+                    LoadProgramsInSameAddressSpace = true,
+                    FuncManager = shared.FunctionManager,
+                    BindManager = shared.BindingMgr, AllowClobberBuiltins = Utilities.SafeHouse.Config.AllowClobberBuiltIns
+                };
                 var programContext = shared.Cpu.SwitchToProgramContext();
 
                 List<CodePart> codeParts;
@@ -207,7 +212,13 @@ namespace kOS.Safe.Function
             if (shared.ScriptHandler != null)
             {
                 shared.Cpu.StartCompileStopwatch();
-                var options = new CompilerOptions { LoadProgramsInSameAddressSpace = true, FuncManager = shared.FunctionManager };
+                var options = new CompilerOptions
+                {
+                    LoadProgramsInSameAddressSpace = true,
+                    FuncManager = shared.FunctionManager,
+                    AllowClobberBuiltins = Utilities.SafeHouse.Config.AllowClobberBuiltIns,
+                    BindManager = shared.BindingMgr
+                };
                 // add this program to the address space of the parent program,
                 // or to a file to save:
                 if (justCompiling)
