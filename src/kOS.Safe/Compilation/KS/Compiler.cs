@@ -1122,7 +1122,9 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.lazyglobal_directive:
                     VisitLazyGlobalDirective(node);
                     break;
-                    
+                case TokenType.clobberbuiltins_directive:
+                    VisitClobberBuiltinsDirective(node);
+                    break;
                 default:
                     foreach (ParseNode childNode in node.Nodes)
                           TraverseScopeBranch(childNode);
@@ -3536,28 +3538,31 @@ namespace kOS.Safe.Compilation.KS
             // not the parser.  Therefore the parser treats it like a normal statement and here in
             // the compiler we'll decide per-directive which directives can go where:
 
-            ParseNode directiveNode = node.Nodes[0]; // a directive contains the exact directive node nested one step inside it.
+            ParseNode directiveNode = node.Nodes[1]; // a directive contains the exact directive node nested one step inside it.
             
             if (directiveNode.Nodes.Count < 2)
                 throw new KOSCompileException(new LineCol(lastLine, lastColumn), "Kerboscript compiler directive ('@') without a keyword after it.");
             
             
-            switch (directiveNode.Nodes[1].Token.Type)
+            switch (directiveNode.Nodes[0].Token.Type)
             {
                 case TokenType.LAZYGLOBAL:
                     VisitLazyGlobalDirective(directiveNode);
                     break;
-                    
+                case TokenType.CLOBBERBUILTINS:
+                    VisitClobberBuiltinsDirective(directiveNode);
+                    break;
+
                 // There is room for expansion here if we want to add more compiler directives.
                 
                 default:
-                    throw new KOSCompileException(new LineCol(lastLine, lastColumn), "Kerboscript compiler directive @"+directiveNode.Nodes[1].Text+" is unknown.");
+                    throw new KOSCompileException(new LineCol(lastLine, lastColumn), "Kerboscript compiler directive @"+directiveNode.Nodes[0].Text+" is unknown.");
             }
         }
         
         public void VisitLazyGlobalDirective(ParseNode node)
         {
-            if (node.Nodes.Count < 3 || node.Nodes[2].Token.Type != TokenType.onoff_trailer)
+            if (node.Nodes.Count < 2 || node.Nodes[1].Token.Type != TokenType.onoff_trailer)
                 throw new KOSCompileException(new LineCol(lastLine, lastColumn), "Kerboscript compiler directive @LAZYGLOBAL requires an ON or an OFF keyword.");
             
             // This particular directive is only allowed up at the top of a file, prior to any other non-directive statements.
@@ -3566,8 +3571,8 @@ namespace kOS.Safe.Compilation.KS
             bool validLocation = true; // will change to false if this isn't where a LazyGlobalDirective is allowed.
 
             // Check 1 - see if I'm nested in anything other than the outermost list of statements:
-            ParseNode ancestor = node.Parent;
-            ParseNode myInstructionContainer = node.Parent;
+            ParseNode ancestor = node.Parent?.Parent;
+            ParseNode myInstructionContainer = node.Parent?.Parent;
             while( ancestor != null && ancestor.Token.Type != TokenType.Start)
             {
                 switch (ancestor.Token.Type)
@@ -3595,11 +3600,12 @@ namespace kOS.Safe.Compilation.KS
                 int myInstructionIndex = ancestor.Nodes.IndexOf(myInstructionContainer); // would be an expensive walk - except this should only exist once, near the top.
                 for (int i = 0; validLocation && i < myInstructionIndex; ++i)
                 {
-                    // if a statement preceding me is anything other than another directive, it's wrong:
-                    if (ancestor.Nodes[i].Token.Type != TokenType.directive ||
+                    // The only thing allowed to preceed this directive is another directive or instruction containing a directive.
+                    bool isDirective = ancestor.Nodes[i].Token.Type == TokenType.directive;
+                    bool isDireciveInsideInstruction =
                             (ancestor.Nodes[i].Token.Type == TokenType.instruction &&
-                             ancestor.Nodes[i].Nodes[0].Token.Type != TokenType.directive)
-                       )
+                             ancestor.Nodes[i].Nodes[0].Token.Type == TokenType.directive);
+                    if (!isDirective && !isDireciveInsideInstruction)
                         validLocation = false;
                 }
             }
@@ -3609,11 +3615,74 @@ namespace kOS.Safe.Compilation.KS
                                                 "at the start of a script file, prior to any other statements");
 
             // Okay the location is fine - do the work:
-            ParseNode onOffValue = node.Nodes[2].Nodes[0];
+            ParseNode onOffValue = node.Nodes[1].Nodes[0];
             if (onOffValue.Token.Type == TokenType.ON)
                 allowLazyGlobal = true; // this is the default anyway, so this is just here for completeness in case we change the default.
             else if (onOffValue.Token.Type == TokenType.OFF)
                 allowLazyGlobal = false;
+            // else do nothing, which really should be an impossible case.
+        }
+
+        public void VisitClobberBuiltinsDirective(ParseNode node)
+        {
+            if (node.Nodes.Count < 2 || node.Nodes[1].Token.Type != TokenType.onoff_trailer)
+                throw new KOSCompileException(new LineCol(lastLine, lastColumn), "Kerboscript compiler directive @CLOBBERBUILTINS requires an ON or an OFF keyword.");
+
+            // This particular directive is only allowed up at the top of a file, prior to any other non-directive statements.
+            // ---------------------------------------------------------------------------------------------------------------
+
+            bool validLocation = true; // will change to false if this isn't where a LazyGlobalDirective is allowed.
+
+            // Check 1 - see if I'm nested in anything other than the outermost list of statements:
+            ParseNode ancestor = node.Parent?.Parent;
+            ParseNode myInstructionContainer = node.Parent?.Parent;
+            while (ancestor != null && ancestor.Token.Type != TokenType.Start)
+            {
+                switch (ancestor.Token.Type)
+                {
+                    case TokenType.instruction_block:
+                    case TokenType.if_stmt:
+                    case TokenType.until_stmt:
+                    case TokenType.when_stmt:
+                    case TokenType.for_stmt:
+                    case TokenType.on_stmt:
+                        validLocation = false;
+                        break;
+                    case TokenType.instruction:
+                        myInstructionContainer = ancestor;
+                        break;
+                    default:
+                        break;
+                }
+                ancestor = ancestor.Parent;
+            }
+            // Check 2 - see if I am at the top.  The only statements allowed to precede me are other directives:
+            if (validLocation && ancestor != null && ancestor.Token.Type == TokenType.Start)
+            {
+                // ancestor is now the Start node for the compile:
+                int myInstructionIndex = ancestor.Nodes.IndexOf(myInstructionContainer); // would be an expensive walk - except this should only exist once, near the top.
+                for (int i = 0; validLocation && i < myInstructionIndex; ++i)
+                {
+                    // The only thing allowed to preceed this directive is another directive or instruction containing a directive.
+                    bool isDirective = ancestor.Nodes[i].Token.Type == TokenType.directive;
+                    bool isDireciveInsideInstruction =
+                            (ancestor.Nodes[i].Token.Type == TokenType.instruction &&
+                             ancestor.Nodes[i].Nodes[0].Token.Type == TokenType.directive);
+                    if (!isDirective && !isDireciveInsideInstruction)
+                        validLocation = false;
+                }
+            }
+            if (!validLocation)
+                throw new KOSCommandInvalidHereException(new LineCol(node.Token.Line, node.Token.Column), "@CLOBBERBUILTINS",
+                                                "after the first command in the file",
+                                                "at the start of a script file, prior to any other statements");
+
+            // Okay the location is fine - do the work:
+            ParseNode onOffValue = node.Nodes[1].Nodes[0];
+            if (onOffValue.Token.Type == TokenType.ON)
+                allowClobberBuiltIn = true;
+            else if (onOffValue.Token.Type == TokenType.OFF)
+                allowClobberBuiltIn = false; // this is the default anyway, so this is just here for completeness in case we change the default.
             // else do nothing, which really should be an impossible case.
         }
     }

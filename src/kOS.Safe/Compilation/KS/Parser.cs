@@ -353,16 +353,6 @@ namespace kOS.Safe.Compilation.KS
 
 
              // Concat Rule
-            tok = scanner.Scan(TokenType.ATSIGN); // Terminal Rule: ATSIGN
-            n = node.CreateNode(tok, tok.ToString() );
-            node.Token.UpdateRange(tok);
-            node.Nodes.Add(n);
-            if (tok.Type != TokenType.ATSIGN) {
-                tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.ATSIGN.ToString(), 0x1001, tok));
-                return;
-            }
-
-             // Concat Rule
             tok = scanner.Scan(TokenType.LAZYGLOBAL); // Terminal Rule: LAZYGLOBAL
             n = node.CreateNode(tok, tok.ToString() );
             node.Token.UpdateRange(tok);
@@ -388,6 +378,40 @@ namespace kOS.Safe.Compilation.KS
             parent.Token.UpdateRange(node.Token);
         } // NonTerminalSymbol: lazyglobal_directive
 
+        private void Parseclobberbuiltins_directive(ParseNode parent) // NonTerminalSymbol: clobberbuiltins_directive
+        {
+            Token tok;
+            ParseNode n;
+            ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.clobberbuiltins_directive), "clobberbuiltins_directive");
+            parent.Nodes.Add(node);
+
+
+             // Concat Rule
+            tok = scanner.Scan(TokenType.CLOBBERBUILTINS); // Terminal Rule: CLOBBERBUILTINS
+            n = node.CreateNode(tok, tok.ToString() );
+            node.Token.UpdateRange(tok);
+            node.Nodes.Add(n);
+            if (tok.Type != TokenType.CLOBBERBUILTINS) {
+                tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.CLOBBERBUILTINS.ToString(), 0x1001, tok));
+                return;
+            }
+
+             // Concat Rule
+            Parseonoff_trailer(node); // NonTerminal Rule: onoff_trailer
+
+             // Concat Rule
+            tok = scanner.Scan(TokenType.EOI); // Terminal Rule: EOI
+            n = node.CreateNode(tok, tok.ToString() );
+            node.Token.UpdateRange(tok);
+            node.Nodes.Add(n);
+            if (tok.Type != TokenType.EOI) {
+                tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.EOI.ToString(), 0x1001, tok));
+                return;
+            }
+
+            parent.Token.UpdateRange(node.Token);
+        } // NonTerminalSymbol: clobberbuiltins_directive
+
         private void Parsedirective(ParseNode parent) // NonTerminalSymbol: directive
         {
             Token tok;
@@ -395,7 +419,31 @@ namespace kOS.Safe.Compilation.KS
             ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.directive), "directive");
             parent.Nodes.Add(node);
 
-            Parselazyglobal_directive(node); // NonTerminal Rule: lazyglobal_directive
+
+             // Concat Rule
+            tok = scanner.Scan(TokenType.ATSIGN); // Terminal Rule: ATSIGN
+            n = node.CreateNode(tok, tok.ToString() );
+            node.Token.UpdateRange(tok);
+            node.Nodes.Add(n);
+            if (tok.Type != TokenType.ATSIGN) {
+                tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.ATSIGN.ToString(), 0x1001, tok));
+                return;
+            }
+
+             // Concat Rule
+            tok = scanner.LookAhead(TokenType.LAZYGLOBAL, TokenType.CLOBBERBUILTINS); // Choice Rule
+            switch (tok.Type)
+            { // Choice Rule
+                case TokenType.LAZYGLOBAL:
+                    Parselazyglobal_directive(node); // NonTerminal Rule: lazyglobal_directive
+                    break;
+                case TokenType.CLOBBERBUILTINS:
+                    Parseclobberbuiltins_directive(node); // NonTerminal Rule: clobberbuiltins_directive
+                    break;
+                default:
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected LAZYGLOBAL or CLOBBERBUILTINS.", 0x0002, tok));
+                    break;
+            } // Choice Rule
 
             parent.Token.UpdateRange(node.Token);
         } // NonTerminalSymbol: directive
