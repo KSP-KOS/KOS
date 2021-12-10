@@ -39,6 +39,7 @@ namespace kOS.Safe.Compilation.KS
             SkipList = new List<TokenType>();
             SkipList.Add(TokenType.WHITESPACE);
             SkipList.Add(TokenType.COMMENTLINE);
+            SkipList.Add(TokenType.COMMENTBLOCK);
 
             regex = new Regex(@"\G(?:(\+|-))");
             Patterns.Add(TokenType.PLUSMINUS, regex);
@@ -372,6 +373,10 @@ namespace kOS.Safe.Compilation.KS
             Patterns.Add(TokenType.COMMENTLINE, regex);
             Tokens.Add(TokenType.COMMENTLINE);
 
+            regex = new Regex(@"\G(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)");
+            Patterns.Add(TokenType.COMMENTBLOCK, regex);
+            Tokens.Add(TokenType.COMMENTBLOCK);
+
 
         }
 
@@ -684,7 +689,8 @@ namespace kOS.Safe.Compilation.KS
             LAZYGLOBAL= 148,
             EOF     = 149,
             WHITESPACE= 150,
-            COMMENTLINE= 151
+            COMMENTLINE= 151,
+            COMMENTBLOCK= 152
     }
 
     public class Token
