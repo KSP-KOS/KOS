@@ -45,6 +45,7 @@ class KerboscriptLexer(RegexLexer):
             #     stuck doing that forever.
             #
             (r'//[^\r\n]*[\r\n]', Comment.Single),
+            (r'/\*[^*]*\*+(?:[^/*][^*]*\*+)*/', Comment.MULTILINE),
             (r'"[^"]*"', String),
             (r'[\t\s\r\n]+', Text), #whitespace
             (r'[*/+|?<>=#^\-]', Operator),
