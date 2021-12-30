@@ -35,7 +35,7 @@ What it does
 
 **kOS** introduces a few new parts that each contain a simulated
 computer capable of running programs written in its own scripting
-langauge called **kerboscript**.  The computer has powerful
+language called **kerboscript**.  The computer has powerful
 smarts built in to the hardware that allow it to do complex 
 spacecraft operations in one command, thus making it possible to
 make complex programs with only a few lines of script text.
@@ -81,6 +81,6 @@ History
 
 kOS was originally begun as a mod by a single author, Kevin Laity aka Nivekk.
 Although the project has undergone massive changes since then and now has
-a very different underlying archetecture and is under active development
+a very different underlying architecture and is under active development
 by a `different set of people <https://github.com/orgs/KSP-KOS/people>`_, none
 of that would have been possible without his original vision and work.

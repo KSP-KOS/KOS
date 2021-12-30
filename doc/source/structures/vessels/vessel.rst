@@ -29,6 +29,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :attr:`CONTROL`                          :struct:`Control`               Raw flight controls
     :attr:`BEARING`                          :struct:`scalar` (deg)          relative heading to this vessel
     :attr:`HEADING`                          :struct:`scalar` (deg)          Absolute heading to this vessel
+    :attr:`THRUST`                           :struct:`scalar`                Sum of active thrusts
     :attr:`MAXTHRUST`                        :struct:`scalar`                Sum of active maximum thrusts
     :meth:`MAXTHRUSTAT(pressure)`            :struct:`scalar`                Sum of active maximum thrusts at the given atmospheric pressure
     :attr:`AVAILABLETHRUST`                  :struct:`scalar`                Sum of active limited maximum thrusts
@@ -66,6 +67,8 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :attr:`ROOTPART`                         :struct:`Part`                  Root :struct:`Part` of this vessel
     :attr:`CONTROLPART`                      :struct:`Part`                  Control reference :struct:`Part` of this vessel
     :attr:`PARTS`                            :struct:`List`                  all :struct:`Parts <Part>`
+    :attr:`ENGINES`                          :struct:`List`                  all :struct:`Engines <Engine>`
+    :attr:`RCS`                              :struct:`List`                  all :struct:`RCS <RCS>`
     :attr:`DOCKINGPORTS`                     :struct:`List`                  all :struct:`DockingPorts <DockingPort>`
     :attr:`ELEMENTS`                         :struct:`List`                  all :struct:`Elements <Element>`
     :attr:`RESOURCES`                        :struct:`List`                  all :struct:`AggrgateResources <AggregateResource>`
@@ -118,6 +121,13 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :access: Get only
 
     *absolute* compass heading (degrees) to this vessel from the :ref:`CPU Vessel <cpu vessel>`
+
+.. attribute:: Vessel:THRUST
+
+    :type: :ref:`scalar <scalar>`
+    :access: Get only
+
+    Sum of all the :ref:`engines' THRUSTs <engine_THRUST>` of all the currently active engines In Kilonewtons.
 
 .. attribute:: Vessel:MAXTHRUST
 
@@ -495,6 +505,20 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
     A List of all the :ref:`parts <part>` on the vessel. ``SET FOO TO SHIP:PARTS.`` has exactly the same effect as ``LIST PARTS IN FOO.``. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
 
+.. attribute:: Vessel:ENGINES
+
+    :type: :struct:`List` of :struct:`Engine` objects
+    :access: Get only
+
+    A List of all the :ref:`engines <Engine>` on the Vessel.
+    
+.. attribute:: Vessel:RCS
+
+    :type: :struct:`List` of :struct:`RCS` objects
+    :access: Get only
+
+    A List of all the :ref:`RCS thrusters <RCS>` on the Vessel.
+    
 .. attribute:: Vessel:DOCKINGPORTS
 
     :type: :struct:`List` of :struct:`DockingPort` objects

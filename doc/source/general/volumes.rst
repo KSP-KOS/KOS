@@ -113,8 +113,17 @@ the volumes using the same names::
 
   SET VOLUME("0"):NAME TO "newname".
 
-If a kOS processor has a name tag set, then that processor's volume
-will have its name initially set to the value of the name tag.
+Volume Name inherits from Tag Name
+----------------------------------
+
+If the part that contains the Volume (a kOS processor core part
+typically) has a kOS nametag set, then the Volume will have its
+name initially set to the value of the name tag.
+
+When doing this, if the tag contains characters that are not 
+allowed in a volume name, the volume name will have those characters
+deleted, except for spaces which get replaced with underscores
+rather than being deleted.
 
 Archive
 -------

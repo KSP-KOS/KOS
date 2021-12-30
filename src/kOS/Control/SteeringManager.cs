@@ -1499,9 +1499,24 @@ namespace kOS.Control
             return Value;
         }
 
-        void IFlightControlParameter.UpdateAutopilot(FlightCtrlState c)
+        void IFlightControlParameter.UpdateAutopilot(FlightCtrlState c, ControlTypes ctrlLock)
         {
             this.OnFlyByWire(c);
+            if ((ctrlLock & ControlTypes.PITCH) != 0)
+            {
+                pitchPI.ResetI();
+                pitchRatePI.ResetI();
+            }
+            if ((ctrlLock & ControlTypes.YAW) != 0)
+            {
+                yawPI.ResetI();
+                yawRatePI.ResetI();
+            }
+            if ((ctrlLock & ControlTypes.ROLL) != 0)
+            {
+                rollPI.ResetI();
+                rollRatePI.ResetI();
+            }
         }
 
         bool IFlightControlParameter.SuppressAutopilot(FlightCtrlState c)

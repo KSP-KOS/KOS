@@ -124,7 +124,7 @@ Configuration of kOS
 
     Configures the ``InstructionsPerUpdate`` setting.
 
-    This is the number of kRISC psuedo-machine-langauge instructions that each kOS CPU will attempt to execute from the main program per :ref:`physics update tick <cpu hardware>`.
+    This is the number of kRISC psuedo-machine-language instructions that each kOS CPU will attempt to execute from the main program per :ref:`physics update tick <cpu hardware>`.
 
     This value is constrained to stay within the range [50..2000]. If you set it to a value outside that range, it will reset itself to remain in that range.
 
