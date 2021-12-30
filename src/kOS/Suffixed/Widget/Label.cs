@@ -88,6 +88,8 @@ namespace kOS.Suffixed.Widget
         public override void DoGUI()
         {
             ScheduleTextUpdate();
+            myId = GUIUtility.GetControlID(FocusType.Passive);
+            GUI.SetNextControlName(myId.ToString());
             GUILayout.Label(content_visible, ReadOnlyStyle);
         }
 

@@ -396,10 +396,8 @@ namespace kOS.Module
         /// <param name="c"></param>
         private void UpdateAutopilot(FlightCtrlState c)
         {
-            // Lock out controls if insufficient avionics in RP-0.
-            ControlTypes RP0Lock = InputLockManager.GetControlLock("RP0ControlLocker");
-            if (RP0Lock != 0)
-                return;
+            ControlTypes ctrlLock = InputLockManager.GetControlLock("RP0ControlLocker");
+            FlightCtrlState originalCtrl = c;
 
             bool isSuppressing = SafeHouse.Config.SuppressAutopilot;
 
@@ -430,11 +428,53 @@ namespace kOS.Module
                             }
                             else
                             {
-                                parameter.UpdateAutopilot(c);
+                                parameter.UpdateAutopilot(c, ctrlLock);
 
                                 if (parameter.FightsWithSas && vessel.ActionGroups[KSPActionGroup.SAS])
                                     AutopilotMsgManager.Instance.TurnOnSasMessage(this);
                             }
+                        }
+                    }
+
+                    // Lock out controls if insufficient avionics in RP-0.
+                    ControlTypes RP0Lock = InputLockManager.GetControlLock("RP0ControlLocker");
+                    if (ctrlLock != 0)
+                    {
+                        if ((ctrlLock & ControlTypes.THROTTLE) != 0)
+                        {
+                            // Throttle locked to full or off (effectively the same as allowing z/x).
+                            c.mainThrottle = c.mainThrottle > 0 ? 1 : 0;
+                            // Fore/Aft locked to full or off
+                            c.Z = c.Z > 0 ? 1 : (c.Z < 0 ? -1 : 0);
+                            // Star / top disabled.
+                            c.Y = originalCtrl.Y;
+                            c.X = originalCtrl.X;
+                        }
+                        if ((ctrlLock & ControlTypes.WHEEL_STEER) != 0)
+                        {
+                            // wheel steering disabled
+                            c.wheelThrottleTrim = originalCtrl.wheelThrottleTrim;
+                            c.wheelSteerTrim = originalCtrl.wheelSteerTrim;
+                            c.wheelSteer = originalCtrl.wheelSteer;
+                        }
+                        if ((ctrlLock & ControlTypes.WHEEL_THROTTLE) != 0)
+                        {
+                            c.wheelThrottle = originalCtrl.wheelThrottle;
+                        }
+                        if ((ctrlLock & ControlTypes.PITCH) != 0)
+                        {
+                            c.pitchTrim = originalCtrl.pitchTrim;
+                            c.pitch = originalCtrl.pitch;
+                        }
+                        if ((ctrlLock & ControlTypes.YAW) != 0)
+                        {
+                            c.yawTrim = originalCtrl.yawTrim;
+                            c.yaw = originalCtrl.yaw;
+                        }
+                        if ((ctrlLock & ControlTypes.ROLL) != 0)
+                        {
+                            c.rollTrim = originalCtrl.rollTrim;
+                            c.roll = originalCtrl.roll;
                         }
                     }
                 }

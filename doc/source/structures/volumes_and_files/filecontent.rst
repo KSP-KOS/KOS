@@ -42,6 +42,9 @@ Instances of this class can be iterated over. In each iteration step a single li
         * - :attr:`STRING`
           - :struct:`String`
           - Contents of the file decoded using UTF-8 encoding
+        * - :attr:`BINARY`
+          - :struct:`List`
+          - Contents of the file as a list of bytes
         * - :attr:`ITERATOR`
           - :struct:`Iterator`
           - Iterates over the lines of a file
@@ -89,6 +92,13 @@ Instances of this class can be iterated over. In each iteration step a single li
     :type: :struct:`String`
 
     Contents of the file decoded using UTF-8 encoding
+
+.. attribute:: FileContent:BINARY
+
+    :access: Get only
+    :type: :struct:`List`
+
+    Contents of the file as a list of bytes. Each item in the list is a number between 0 and 255 representing a single byte from the file.
 
 .. attribute:: FileContent:ITERATOR
 

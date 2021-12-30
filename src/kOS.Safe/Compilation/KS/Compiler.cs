@@ -2175,7 +2175,11 @@ namespace kOS.Safe.Compilation.KS
         private void VisitSetStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            ProcessSetOperation(node.Nodes[1], node.Nodes[3]);
+
+            for (int i = 1; i < node.Nodes.Count; i += 4)
+            {
+                ProcessSetOperation(node.Nodes[i], node.Nodes[i + 2]);
+            }
         }
 
         /// <summary>
@@ -2687,8 +2691,10 @@ namespace kOS.Safe.Compilation.KS
             //    DECLARE [GLOBAL|LOCAL] identifier TO expr.
             if (lastSubNode.Token.Type == TokenType.declare_identifier_clause)
             {
-                VisitNode(lastSubNode.Nodes[2]);
-                AddOpcode(CreateAppropriateStoreCode(whereToStore, true, "$" + GetIdentifierText(lastSubNode.Nodes[0])));
+                for (int i = 0; i < lastSubNode.Nodes.Count; i += 4) {
+                    VisitNode(lastSubNode.Nodes[i + 2]);
+                    AddOpcode(CreateAppropriateStoreCode(whereToStore, true, "$" + GetIdentifierText(lastSubNode.Nodes[i])));
+                }
             }
             
             // If the declare statement is of the form:

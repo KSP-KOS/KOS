@@ -29,7 +29,7 @@ if you are thinking in terms of List&lt;Opcode&gt;, then you're thinking
 of what this document is calling *kRISC*
 
 The purpose of CompiledObject.cs is to convert between the kRISC and
-the Machine Langauge (ML) formats of storing the same thing.
+the Machine Language (ML) formats of storing the same thing.
 
 At What Level of the script compilation?
 ----------------------------------------

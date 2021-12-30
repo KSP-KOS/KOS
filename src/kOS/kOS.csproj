@@ -90,6 +90,10 @@
     <Reference Include="UnityEngine.UnityWebRequestWWWModule">
       <HintPath>..\..\Resources\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.VehiclesModule">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Resources\UnityEngine.VehiclesModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddOns\ActionGroupsExtended\ActionGroupsExtendedAPI.cs" />
@@ -114,6 +118,7 @@
     <Compile Include="Binding\FlightControlManager.cs" />
     <Compile Include="Binding\FlightStats.cs" />
     <Compile Include="Binding\MissionSettings.cs" />
+    <Compile Include="Binding\CPUBinding.cs" />
     <Compile Include="Binding\RoverStats.cs" />
     <Compile Include="Callback\GameEventDispatcher.cs" />
     <Compile Include="Callback\KOSGameEventDispatcher.cs" />
@@ -171,6 +176,7 @@
     <Compile Include="Suffixed\KUniverseValue.cs" />
     <Compile Include="Suffixed\LoadDistanceValue.cs" />
     <Compile Include="Suffixed\Part\DecouplerValue.cs" />
+    <Compile Include="Suffixed\Part\SeparatorValue.cs" />
     <Compile Include="Suffixed\Part\LaunchClampValue.cs" />
     <Compile Include="Suffixed\Part\RCSValue.cs" />
     <Compile Include="Suffixed\ResourceTransferValue.cs" />
