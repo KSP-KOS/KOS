@@ -15,7 +15,7 @@ namespace kOS.Suffixed
     [kOS.Safe.Utilities.KOSNomenclature("Stage")]
     public class StageValues : Structure
     {
-        private readonly SharedObjects shared;
+        private readonly SafeSharedObjects shared;
         private HashSet<global::Part> partHash = new HashSet<global::Part>();
         private PartSet partSet;
         private ListValue<ActiveResourceValue> resList;

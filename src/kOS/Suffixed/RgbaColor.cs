@@ -11,10 +11,10 @@ namespace kOS.Suffixed
     [kOS.Safe.Utilities.KOSNomenclature("RGBA")]
     public class RgbaColor : Structure
     {
-        static string DumpR = "R";
-        static string DumpG = "G";
-        static string DumpB = "B";
-        static string DumpA = "A";
+        const string DumpR = "R";
+        const string DumpG = "G";
+        const string DumpB = "B";
+        const string DumpA = "A";
 
         protected float Red { get; set; }
 

@@ -23,7 +23,7 @@ namespace kOS.Suffixed
     [kOS.Safe.Utilities.KOSNomenclature("Vessel")]
     public partial class VesselTarget : Orbitable, IKOSTargetable, IDisposable
     {
-        private static string DumpGuid = "guid";
+        private const string DumpGuid = "guid";
         public Guid Guid { get { return Vessel.id; } }
 
         public override Orbit Orbit { get { return Vessel.orbit; } }
@@ -563,31 +563,20 @@ namespace kOS.Suffixed
             return !Equals(left, right);
         }
 
-        public override Dump Dump()
+        public override Dump Dump(DumperState s)
         {
-            DumpWithHeader dump = new DumpWithHeader();
+            DumpDictionary dump = new DumpDictionary(this.GetType());
 
-            dump.Header = "VESSEL '" + Vessel.vesselName + "'";
 
             dump.Add(DumpGuid, Vessel.id.ToString());
 
             return dump;
         }
 
-        public override void LoadDump(Dump dump)
+        [DumpDeserializer]
+        public static VesselTarget CreateFromDump(DumpDictionary d, SafeSharedObjects shared)
         {
-            Vessel = VesselFromDump(dump);
-        }
-
-        private static Vessel VesselFromDump(Dump dump)
-        {
-            string guid = dump[DumpGuid] as string;
-
-            if (guid == null)
-            {
-                throw new KOSSerializationException("Vessel's guid is null or invalid");
-            }
-
+            string guid = d.GetString(DumpGuid);
             Vessel vessel = FlightGlobals.Vessels.Find((v) => v.id.ToString().Equals(guid));
 
             if (vessel == null)
@@ -595,7 +584,29 @@ namespace kOS.Suffixed
                 throw new KOSSerializationException("Vessel with the given id does not exist");
             }
 
-            return vessel;
+            return CreateOrGetExisting(vessel, shared as SharedObjects);
+        }
+
+        [DumpPrinter]
+        public static void Print(DumpDictionary dump, IndentedStringBuilder sb)
+        {
+            sb.Append("VESSEL(");
+
+            string guid = dump.GetString(DumpGuid);
+            Vessel vessel = FlightGlobals.Vessels.Find((v) => v.id.ToString().Equals(guid));
+
+            if (vessel)
+            {
+                sb.Append("\"");
+                sb.Append(vessel.vesselName.Replace("\"", "\"\""));
+                sb.Append("\"");
+            } else
+            {
+                sb.Append("<");
+                sb.Append(guid);
+                sb.Append(">");
+            }
+            sb.Append(")");
         }
     }
 }

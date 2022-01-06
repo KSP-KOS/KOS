@@ -14,9 +14,9 @@ namespace kOS.Suffixed
     [kOS.Safe.Utilities.KOSNomenclature("LatLng", CSharpToKOS = false)]
     public class GeoCoordinates : Structure
     {
-        private static string DumpLat = "lat";
-        private static string DumpLng = "lng";
-        private static string DumpBody = "body";
+        private const string DumpLat = "lat";
+        private const string DumpLng = "lng";
+        private const string DumpBody = "body";
 
         private double lat;
         private double lng;
@@ -347,23 +347,38 @@ namespace kOS.Suffixed
             Shared = sharedObjects;
         }
 
-        public override Dump Dump()
-        {
-            var dictionary = new DumpWithHeader
-            {
-                {DumpLat, lat},
-                {DumpLng, lng},
-                {DumpBody, BodyTarget.CreateOrGetExisting(Body, Shared)}
-            };
 
-            return dictionary;
+        public override Dump Dump(DumperState s)
+        {
+            DumpDictionary dump = new DumpDictionary(this.GetType());
+
+            dump.Add(DumpLat, lat);
+            dump.Add(DumpLng, lng);
+            using(var c = s.Context(this))
+                dump.Add(DumpBody, BodyTarget.CreateOrGetExisting(Body, Shared), c);
+
+            return dump;
         }
 
-        public override void LoadDump(Dump dump)
+        [DumpDeserializer]
+        public static GeoCoordinates CreateFromDump(DumpDictionary d, SafeSharedObjects shared)
         {
-            Body = (dump[DumpBody] as BodyTarget).Body;
-            lat = Convert.ToDouble(dump[DumpLat]);
-            lng = Convert.ToDouble(dump[DumpLng]);
+
+            var body = (d.GetStructure(DumpBody, shared) as BodyTarget).Body;
+            double lat = d.GetDouble(DumpLat);
+            double lnt = d.GetDouble(DumpLng);
+
+            return new GeoCoordinates(body, shared as SharedObjects, lat, lng);
+        }
+
+        [DumpPrinter]
+        public static void Print(DumpDictionary d, IndentedStringBuilder sb)
+        {
+            string name = (d.GetDump(DumpBody) as DumpDictionary)?.GetString("name") ?? "unknown";
+            double lat = d.GetDouble(DumpLat);
+            double lng = d.GetDouble(DumpLng);
+
+            sb.Append(string.Format("{0}:GEOPOSITIONLATLNG({1},{2})", name, lat, lng));
         }
     }
 }

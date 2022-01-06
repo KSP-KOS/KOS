@@ -14,7 +14,7 @@ namespace kOS.Suffixed
     [kOS.Safe.Utilities.KOSNomenclature("Body")]
     public class BodyTarget : Orbitable, IKOSTargetable
     {
-        private static string DumpName = "name";
+        private const string DumpName = "name";
 
         public CelestialBody Body { get; set; }
 
@@ -65,17 +65,6 @@ namespace kOS.Suffixed
             BodyTarget newlyConstructed = new BodyTarget(body, shared);
             instanceCache.Add(key, new WeakReference(newlyConstructed));
             return newlyConstructed;
-        }
-
-        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
-        public static Orbitable CreateFromDump(SafeSharedObjects shared, Dump d)
-        {
-            var newObj = CreateOrGetExisting(BodyFromDump(d), (SharedObjects)shared);
-            // Uncomment the line below if LoadDump ever does more things in the future.
-            // Right now, LoadDump is redundant with CreateOrGetExisting's work.
-            //
-            // newObj.LoadDump(d);
-            return newObj;
         }
 
         public static void ClearInstanceCache()
@@ -322,32 +311,19 @@ namespace kOS.Suffixed
             Shared = sharedObjects;
         }
 
-        public override Dump Dump()
+        public override Dump Dump(DumperState s)
         {
-            var dump = new DumpWithHeader
-            {
-                Header = string.Format("BODY '{0}'", Body.bodyName)
-            };
+            DumpDictionary dump = new DumpDictionary(this.GetType());
 
             dump.Add(DumpName, Body.bodyName);
 
             return dump;
         }
 
-        public override void LoadDump(Dump dump)
+        [DumpDeserializer]
+        public static BodyTarget CreateFromDump(DumpDictionary d, SafeSharedObjects shared)
         {
-            Body = BodyFromDump(dump);
-        }
-
-        private static CelestialBody BodyFromDump(Dump dump)
-        {
-            string name = dump[DumpName] as string;
-
-            if (name == null)
-            {
-                throw new KOSSerializationException("Body's name is null or invalid");
-            }
-
+            string name = d.GetString(DumpName);
             CelestialBody body = VesselUtils.GetBodyByName(name);
 
             if (body == null)
@@ -355,7 +331,18 @@ namespace kOS.Suffixed
                 throw new KOSSerializationException("Body with the given name does not exist");
             }
 
-            return body;
+            return CreateOrGetExisting(body, shared as SharedObjects);
+        }
+
+        [DumpPrinter]
+        public static void Print(DumpDictionary dump, IndentedStringBuilder sb)
+        {
+            sb.Append("BODY(\"");
+
+            string name = dump.GetString(DumpName);
+            sb.Append(name.Replace("\"", "\"\""));
+
+            sb.Append("\")");
         }
 
         // The data that identifies a unique instance of this class, for use

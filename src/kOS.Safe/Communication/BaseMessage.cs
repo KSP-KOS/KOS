@@ -15,7 +15,7 @@ namespace kOS.Safe.Communication
         public double SentAt { get; set; }
         public double ReceivedAt { get; set; }
 
-        public IDumper Content { get; set; }
+        public Structure Content { get; set; }
 
         public BaseMessage(Structure content, double sentAt, double receivedAt)
         {

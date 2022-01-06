@@ -10,10 +10,10 @@ namespace kOS.Suffixed
     [kOS.Safe.Utilities.KOSNomenclature("HSVA")]
     public class HsvaColor : RgbaColor
     {
-        private static string DumpH = "H";
-        private static string DumpS = "S";
-        private static string DumpV = "V";
-        private static string DumpA = "A";
+        private const string DumpH = "H";
+        private const string DumpS = "S";
+        private const string DumpV = "V";
+        private const string DumpA = "A";
         private float hue;
         private float saturation;
         private float hsvValue;

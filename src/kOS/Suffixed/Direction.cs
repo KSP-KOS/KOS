@@ -11,10 +11,10 @@ namespace kOS.Suffixed
     [Safe.Utilities.KOSNomenclature("Rotation", CSharpToKOS = false)]
     public class Direction : Structure
     {
-        static string DumpQuaternionW = "q_w";
-        static string DumpQuaternionX = "q_x";
-        static string DumpQuaternionY = "q_y";
-        static string DumpQuaternionZ = "q_z";
+        const string DumpQuaternionW = "q_w";
+        const string DumpQuaternionX = "q_x";
+        const string DumpQuaternionY = "q_y";
+        const string DumpQuaternionZ = "q_z";
 
         private Vector3d euler;
         private Quaternion rotation;
@@ -246,26 +246,42 @@ namespace kOS.Suffixed
             return "R(" + Math.Round(euler.x, 3) + "," + Math.Round(euler.y, 3) + "," + Math.Round(euler.z, 3) + ")";
         }
 
-        public override Dump Dump()
+
+        public override Dump Dump(DumperState s)
         {
-            DumpWithHeader dump = new DumpWithHeader
-            {
-                { DumpQuaternionW, rotation.w },
-                { DumpQuaternionX, rotation.x },
-                { DumpQuaternionY, rotation.y },
-                { DumpQuaternionZ, rotation.z }
-            };
+            DumpDictionary dump = new DumpDictionary(this.GetType());
+
+            dump.Add(DumpQuaternionW, rotation.w);
+            dump.Add(DumpQuaternionX, rotation.x);
+            dump.Add(DumpQuaternionY, rotation.y);
+            dump.Add(DumpQuaternionZ, rotation.z);
+
             return dump;
         }
 
-        public override void LoadDump(Dump dump)
+        [DumpDeserializer]
+        public static Quaternion CreateFromDump(DumpDictionary d, SafeSharedObjects shared)
         {
-            Rotation = new Quaternion(
-                (float)Convert.ToDouble(dump[DumpQuaternionW]),
-                (float)Convert.ToDouble(dump[DumpQuaternionX]),
-                (float)Convert.ToDouble(dump[DumpQuaternionY]),
-                (float)Convert.ToDouble(dump[DumpQuaternionZ])
-                );
+            double w = d.GetDouble(DumpQuaternionW);
+            double x = d.GetDouble(DumpQuaternionX);
+            double y = d.GetDouble(DumpQuaternionY);
+            double z = d.GetDouble(DumpQuaternionZ);
+
+            return new Quaternion((float)w, (float)x, (float)y, (float)z);
+        }
+
+        [DumpPrinter]
+        public static void Print(DumpDictionary d, IndentedStringBuilder sb)
+        {
+            double w = d.GetDouble(DumpQuaternionW);
+            double x = d.GetDouble(DumpQuaternionX);
+            double y = d.GetDouble(DumpQuaternionY);
+            double z = d.GetDouble(DumpQuaternionZ);
+
+            var q = new Quaternion((float)w, (float)x, (float)y, (float)z);
+            var euler = q.eulerAngles;
+
+            sb.Append("R(" + Math.Round(euler.x, 3) + "," + Math.Round(euler.y, 3) + "," + Math.Round(euler.z, 3) + ")");
         }
     }
 }

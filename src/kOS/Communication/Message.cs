@@ -16,35 +16,16 @@ namespace kOS.Communication
         public string Vessel { get; set; }
         public string Processor { get; set; }
 
-        public static Message Create(object content, double sentAt, double receivedAt, VesselTarget sender, string processor)
-        {
-            throw NotImplementedException("Add isserializable check");
-            if (content is Structure)
-            {
-                return new Message(new SafeSerializationMgr(null).Dump(content as Structure), sentAt, receivedAt, sender);
-            }
-            else if (content is PrimitiveStructure)
-            {
-                return new Message(content as PrimitiveStructure, sentAt, receivedAt, sender);
-            }
-            else
-            {
-                throw new KOSCommunicationException("Only serializable types and primitives can be sent in a message");
-            }
-            
-        }
-
-        // Only used by CreateFromDump() - unsafe to make public because it makes a message where
-        // the fields aren't populated:
-        private Message()
-            : base()
-        {
-        }
-
-        public Message(Dump content, double sentAt, double receivedAt, VesselTarget sender)
+        public Message(Structure content, double sentAt, double receivedAt, VesselTarget sender)
             : base(content, sentAt, receivedAt)
         {
             Vessel = sender.Guid.ToString();
+        }
+
+        private Message(Structure content, double sentAt, double receivedAt, string vesselGUID)
+            : base(content, sentAt, receivedAt)
+        {
+            Vessel = vesselGUID;
         }
 
         public Message(PrimitiveStructure content, double sentAt, double receivedAt, VesselTarget sender)
@@ -53,28 +34,41 @@ namespace kOS.Communication
             Vessel = sender.Guid.ToString();
         }
 
-        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
-        public static Message CreateFromDump(SafeSharedObjects shared, Dump d)
+        public override Dump Dump(DumperState s)
         {
-            var newObj = new Message();
-            newObj.LoadDump(d);
-            return newObj;
-        }
+            var dump = new DumpDictionary(this.GetType());
 
-        public override Dump Dump()
-        {
-            Dump dump = base.Dump();
-
-            dump.Add(DumpVessel, Vessel);
+            using (var context = s.Context(this))
+            {
+                dump.Add(DumpSentAt, SentAt);
+                dump.Add(DumpReceivedAt, ReceivedAt);
+                dump.Add(DumpContent, Content, context);
+                dump.Add(DumpVessel, Vessel);
+            }
 
             return dump;
         }
 
-        public override void LoadDump(Dump dump)
+        [DumpDeserializer]
+        public static new Message CreateFromDump(DumpDictionary d, SafeSharedObjects shared)
         {
-            base.LoadDump(dump);
+            return new Message(d.GetStructure(DumpContent, shared), d.GetDouble(DumpSentAt), d.GetDouble(DumpReceivedAt), d.GetString(DumpVessel));
+        }
 
-            Vessel = dump[DumpVessel] as string;
+        [DumpPrinter]
+        public static new void Print(DumpDictionary d, IndentedStringBuilder sb)
+        {
+            sb.Append("Message [sent: ");
+            sb.Append(d.GetDouble(DumpSentAt).ToString());
+            sb.Append(", received: ");
+            sb.Append(d.GetDouble(DumpReceivedAt).ToString());
+            sb.Append("]:");
+
+            using (sb.Indent())
+            {
+                var inner = d.GetDump(DumpContent);
+                inner.WriteReadable(sb);
+            }
         }
     }
 }

@@ -12,7 +12,7 @@ namespace kOS.Communication
     [kOS.Safe.Utilities.KOSNomenclature("Message")]
     public class MessageStructure : Structure
     {
-        private static string DumpMessage = "message";
+        private const string DumpMessage = "message";
 
         public Message Message { get; private set; }
         private SharedObjects shared;
@@ -25,28 +25,12 @@ namespace kOS.Communication
             }
         }
 
-        // Only used by CreateFromDump() - don't make it public because it leaves fields
-        // unpopulated if not immediately followed up by LoadDump():
-        private MessageStructure()
-        {
-            InitializeSuffixes();
-        }
-
         public MessageStructure(Message message, SharedObjects shared)
         {
             Message = message;
             this.shared = shared;
 
             InitializeSuffixes();
-        }
-
-        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
-        public static MessageStructure CreateFromDump(SafeSharedObjects shared, Dump d)
-        {
-            var newObj = new MessageStructure();
-            newObj.Shared = (SharedObjects)shared;
-            newObj.LoadDump(d);
-            return newObj;
         }
 
         private void InitializeSuffixes()
@@ -82,34 +66,24 @@ namespace kOS.Communication
 
         public Structure DeserializeContent()
         {
-            if (Message.Content is Dump)
-            {
-                return new SerializationMgr(shared).CreateFromDump(Message.Content as Dump) as Structure;
-            }
-
-            return Structure.FromPrimitiveWithAssert(Message.Content);
-        }
+            return Message.Content;        }
 
         public override string ToString()
         {
             return "Message(" + Message.Vessel.ToString() + ")";
         }
 
-        public override Dump Dump()
+        [DumpDeserializer]
+        public static MessageStructure CreateFromDump(DumpDictionary d, SafeSharedObjects shared)
         {
-            Dump dump = new DumpWithHeader
-            {
-                Header = "Message"
-            };
-
-            dump.Add(DumpMessage, Message);
-
-            return dump;
+            var message = Message.CreateFromDump(d.GetDump(DumpMessage) as DumpDictionary, shared);
+            return new MessageStructure(message, shared as SharedObjects);
         }
 
-        public override void LoadDump(Dump dump)
+        [DumpPrinter]
+        public static void Print(DumpDictionary d, IndentedStringBuilder sb)
         {
-            Message = dump[DumpMessage] as Message;
+            Message.Print(d, sb);
         }
     }
 }
