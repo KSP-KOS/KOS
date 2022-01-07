@@ -194,7 +194,7 @@ namespace kOS.Safe
 
                 if (deserializerDelegate == null)
                     throw new KOSYouShouldNeverSeeThisException(string.Format(
-                        "Class {0} defines a Deserialization function with the wrong type. Please use StringValue CreateFromDump(SafeSharedObjects shared, {1} d)",
+                        "Class {0} defines a Deserialization function with the wrong type. Please use {0} CreateFromDump(SafeSharedObjects shared, {1} d)",
                         deserializer.FullName,
                         printArg.ParameterType.FullName
                     ));

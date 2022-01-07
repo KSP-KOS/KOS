@@ -18,13 +18,6 @@ namespace kOS.Suffixed
         private float saturation;
         private float hsvValue;
 
-        protected HsvaColor()
-        {
-            // InitAfterSettinFields() not called here, which is why this must
-            // not be made public.  It's just bere because the IDumper
-            // system needs it for how CreateFromDump() works.
-        }
-
         public HsvaColor(float hue, float saturation, float value, float alpha = 1.0f)
         {
             this.hue = hue;
@@ -39,14 +32,6 @@ namespace kOS.Suffixed
         {
             InitializeSuffixColor();
             ReconcileHsvToRgb();
-        }
-
-        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
-        public static HsvaColor CreateFromDump(SafeSharedObjects shared, Dump d)
-        {
-            var newObj = new HsvaColor();
-            newObj.LoadDump(d);
-            return newObj;
         }
 
         public override string ToString()
@@ -82,29 +67,39 @@ namespace kOS.Suffixed
             saturation = newSaturation;
             hsvValue = newValue;
         }
-        public override Dump Dump()
-        {
-            DumpWithHeader dump = new DumpWithHeader
-            {
-                {DumpH, hue },
-                {DumpS, saturation },
-                {DumpV, hsvValue },
-                {DumpA, Alpha }
-            };
 
-            dump.Header = ToString();
-            dump.ShouldHideValues = true;
+        public override Dump Dump(DumperState s)
+        {
+            DumpDictionary dump = new DumpDictionary(this.GetType());
+
+            dump.Add(DumpH, hue);
+            dump.Add(DumpS, saturation);
+            dump.Add(DumpV, hsvValue);
+            dump.Add(DumpA, Alpha);
 
             return dump;
         }
 
-        public override void LoadDump(Dump dump)
+        [DumpDeserializer]
+        public static new HsvaColor CreateFromDump(DumpDictionary d, SafeSharedObjects shared)
         {
-            hue = (float)Convert.ToDouble(dump[DumpH]);
-            saturation = (float)Convert.ToDouble(dump[DumpS]);
-            hsvValue = (float)Convert.ToDouble(dump[DumpV]);
-            Alpha = (float)Convert.ToDouble(dump[DumpA]);
-            InitAfterSettingFields();
+            double h = d.GetDouble(DumpH);
+            double s = d.GetDouble(DumpS);
+            double v = d.GetDouble(DumpV);
+            double a = d.GetDouble(DumpA);
+
+            return new HsvaColor((float)h, (float)s, (float)v, (float)a);
+        }
+
+        [DumpPrinter]
+        public static new void Print(DumpDictionary d, IndentedStringBuilder sb)
+        {
+            double h = d.GetDouble(DumpH);
+            double s = d.GetDouble(DumpS);
+            double v = d.GetDouble(DumpV);
+            double a = d.GetDouble(DumpA);
+
+            sb.Append(string.Format("HSVA({0}, {1}, {2}, {3})", h, s, v, a));
         }
     }
 }

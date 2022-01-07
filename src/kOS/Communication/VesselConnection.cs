@@ -54,7 +54,7 @@ namespace kOS.Communication
 
             double sentAt = Planetarium.GetUniversalTime();
             double receivedAt = sentAt + Delay;
-            queue.Push(Message.Create(content, sentAt, receivedAt, VesselTarget.CreateOrGetExisting(shared), shared.Processor.Tag));
+            queue.Push(new Message(content, sentAt, receivedAt, VesselTarget.CreateOrGetExisting(shared)));
 
             return true;
         }

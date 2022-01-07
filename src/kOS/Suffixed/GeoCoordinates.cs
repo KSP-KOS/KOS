@@ -47,14 +47,6 @@ namespace kOS.Suffixed
 
         private const int TERRAIN_MASK_BIT = 15;
 
-        // Only used by CreateFromDump() and the other constructors.
-        // Don't make it public because it leaves fields unpopulated if
-        // used by itself:
-        private GeoCoordinates()
-        {
-            GeoCoordsInitializeSuffixes();
-        }
-
         /// <summary>
         ///   Build a GeoCoordinates from the current lat/long of the orbitable
         ///   object passed in.  The object being checked for should be in the same
@@ -62,8 +54,9 @@ namespace kOS.Suffixed
         /// </summary>
         /// <param name="orb">object to take current coords of</param>
         /// <param name="sharedObj">to know the current CPU's running vessel</param>
-        public GeoCoordinates(Orbitable orb, SharedObjects sharedObj) : this()
+        public GeoCoordinates(Orbitable orb, SharedObjects sharedObj)
         {
+            GeoCoordsInitializeSuffixes();
             Shared = sharedObj;
             Vector p = orb.GetPosition();
             Latitude = orb.PositionToLatitude(p);
@@ -78,8 +71,9 @@ namespace kOS.Suffixed
         /// <param name="sharedObj">to know the current CPU's running vessel</param>
         /// <param name="latitude">latitude</param>
         /// <param name="longitude">longitude</param>
-        public GeoCoordinates(CelestialBody body, SharedObjects sharedObj, double latitude, double longitude) : this()
+        public GeoCoordinates(CelestialBody body, SharedObjects sharedObj, double latitude, double longitude)
         {
+            GeoCoordsInitializeSuffixes();
             Latitude = latitude;
             Longitude = longitude;
             Shared = sharedObj;
@@ -103,21 +97,13 @@ namespace kOS.Suffixed
         /// <param name="sharedObj">to know the current CPU's running vessel</param>
         /// <param name="latitude">latitude</param>
         /// <param name="longitude">longitude</param>
-        public GeoCoordinates(SharedObjects sharedObj, double latitude, double longitude) : this()
+        public GeoCoordinates(SharedObjects sharedObj, double latitude, double longitude)
         {
+            GeoCoordsInitializeSuffixes();
             Latitude = latitude;
             Longitude = longitude;
             Shared = sharedObj;
             Body = Shared.Vessel.GetOrbit().referenceBody;
-        }
-
-        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
-        public static GeoCoordinates CreateFromDump(SafeSharedObjects shared, Dump d)
-        {
-            var newObj = new GeoCoordinates();
-            newObj.Shared = (SharedObjects)shared;
-            newObj.LoadDump(d);
-            return newObj;
         }
 
         /// <summary>
@@ -366,7 +352,7 @@ namespace kOS.Suffixed
 
             var body = (d.GetStructure(DumpBody, shared) as BodyTarget).Body;
             double lat = d.GetDouble(DumpLat);
-            double lnt = d.GetDouble(DumpLng);
+            double lng = d.GetDouble(DumpLng);
 
             return new GeoCoordinates(body, shared as SharedObjects, lat, lng);
         }

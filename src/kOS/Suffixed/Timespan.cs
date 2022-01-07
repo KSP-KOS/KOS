@@ -16,20 +16,13 @@ namespace kOS.Suffixed
     [kOS.Safe.Utilities.KOSNomenclature("TimeSpan")]
     public class TimeSpan : TimeBase, IComparable<TimeSpan>
     {
-        public override string DumpName { get { return "timespan"; } }
+        public const string DumpName = "timespan";
         
         /// <summary>
         /// Override with either 0 or 1 for whether counting years and days starts counting at 0 or at 1.
         /// </summary>
         protected override double CountOffset { get { return 0.0; } }
 
-        // Only used by CreateFromDump() and the other constructors.
-        // Don't make it public because it leaves fields
-        // unpopulated:
-        private TimeSpan()
-        {
-            InitializeSuffixes();
-        }
 
         public TimeSpan(double unixStyleTime) : base(unixStyleTime)
         {
@@ -46,7 +39,7 @@ namespace kOS.Suffixed
         /// <param name="hour"></param>
         /// <param name="minute"></param>
         /// <param name="second"></param>
-        public TimeSpan(double year, double day, double hour, double minute, double second) : this()
+        public TimeSpan(double year, double day, double hour, double minute, double second) : this(0)
         {
             seconds =
                 year * SecondsPerYear +
@@ -54,13 +47,6 @@ namespace kOS.Suffixed
                 hour * SecondsPerHour +
                 minute * SecondsPerMinute +
                 second;
-        }
-
-        public static TimeSpan CreateFromDump(SafeSharedObjects shared, Dump d)
-        {
-            var newObj = new TimeSpan();
-            newObj.LoadDump(d);
-            return newObj;
         }
 
         protected override void InitializeSuffixes()
@@ -178,21 +164,31 @@ namespace kOS.Suffixed
             return string.Format("TIMESPAN({0})", seconds);
         }
 
-        public override Dump Dump()
+        public override Dump Dump(DumperState s)
         {
-            var dump = new Dump
-            {
-                {DumpName, seconds}
-            };
+            DumpDictionary dump = new DumpDictionary(this.GetType());
+
+            dump.Add(DumpName, seconds);
 
             return dump;
         }
 
-        public override void LoadDump(Dump dump)
+        [DumpDeserializer]
+        public static TimeSpan CreateFromDump(DumpDictionary d, SafeSharedObjects shared)
         {
-            seconds = Convert.ToDouble(dump[DumpName]);
+            double seconds = d.GetDouble(DumpName);
+
+            return new TimeSpan(seconds);
         }
-            
+
+        [DumpPrinter]
+        public static void Print(DumpDictionary d, IndentedStringBuilder sb)
+        {
+            double seconds = d.GetDouble(DumpName);
+
+            sb.Append(string.Format("TIMESPAN({0})", seconds));
+        }
+        
         public int CompareTo(TimeSpan other)
         {
             return seconds.CompareTo(other.seconds);

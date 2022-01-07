@@ -15,20 +15,12 @@ namespace kOS.Suffixed
     [kOS.Safe.Utilities.KOSNomenclature("TimeStamp")]
     public class TimeStamp : TimeBase, IComparable<TimeStamp>
     {
-        public override string DumpName { get { return "timestamp"; } }
+        public const string DumpName = "timestamp";
 
         /// <summary>
         /// Override with either 0 or 1 for whether counting years and days starts counting at 0 or at 1.
         /// </summary>
         protected override double CountOffset { get { return 1.0; } }
-
-        // Only used by CreateFromDump() and the other constructors.
-        // Don't make it public because it leaves fields
-        // unpopulated:
-        private TimeStamp()
-        {
-            InitializeSuffixes();
-        }
 
         public TimeStamp(double unixStyleTime) : base(unixStyleTime)
         {
@@ -45,7 +37,7 @@ namespace kOS.Suffixed
         /// <param name="hour"></param>
         /// <param name="minute"></param>
         /// <param name="second"></param>
-        public TimeStamp(double year, double day, double hour, double minute, double second) : this()
+        public TimeStamp(double year, double day, double hour, double minute, double second) : this(0)
         {
                 seconds =
                     (year - 1) * SecondsPerYear +
@@ -53,13 +45,6 @@ namespace kOS.Suffixed
                     hour * SecondsPerHour +
                     minute * SecondsPerMinute +
                     second;
-        }
-
-        public static TimeStamp CreateFromDump(SafeSharedObjects shared, Dump d)
-        {
-            var newObj = new TimeStamp();
-            newObj.LoadDump(d);
-            return newObj;
         }
 
         protected override void InitializeSuffixes()
@@ -181,21 +166,31 @@ namespace kOS.Suffixed
             return string.Format("TIMESTAMP({0})", seconds);
         }
 
-        public override Dump Dump()
+        public override Dump Dump(DumperState s)
         {
-            var dump = new Dump
-            {
-                {DumpName, seconds}
-            };
+            DumpDictionary dump = new DumpDictionary(this.GetType());
+
+            dump.Add(DumpName, seconds);
 
             return dump;
         }
 
-        public override void LoadDump(Dump dump)
+        [DumpDeserializer]
+        public static TimeStamp CreateFromDump(DumpDictionary d, SafeSharedObjects shared)
         {
-            seconds = Convert.ToDouble(dump[DumpName]);
+            double seconds = d.GetDouble(DumpName);
+
+            return new TimeStamp(seconds);
         }
-            
+
+        [DumpPrinter]
+        public static void Print(DumpDictionary d, IndentedStringBuilder sb)
+        {
+            double seconds = d.GetDouble(DumpName);
+
+            sb.Append(string.Format("TIMESTAMP({0})", seconds));
+        }
+        
         public int CompareTo(TimeStamp other)
         {
             return seconds.CompareTo(other.seconds);

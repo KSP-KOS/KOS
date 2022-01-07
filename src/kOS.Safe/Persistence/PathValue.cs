@@ -56,27 +56,11 @@ namespace kOS.Safe
             }
         }
 
-        // Only used by CreateFromDump() and other peer constructors.
-        // Don't make it public because it leaves fields
-        // unpopulated:
-        private PathValue()
+        public PathValue(GlobalPath path, SafeSharedObjects sharedObjects)
         {
             InitializeSuffixes();
-        }
-
-        public PathValue(GlobalPath path, SafeSharedObjects sharedObjects) : this()
-        {
             Path = path;
             this.sharedObjects = sharedObjects;
-        }
-
-        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
-        public static PathValue CreateFromDump(SafeSharedObjects shared, Dump d)
-        {
-            var newObj = new PathValue();
-            newObj.Shared = shared;
-            newObj.LoadDump(d);
-            return newObj;
         }
 
         public PathValue FromPath(GlobalPath path)

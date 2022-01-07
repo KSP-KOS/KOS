@@ -47,12 +47,6 @@ namespace kOS.Sound
         {
         }
 
-        // Only used by CreateFromDump()- don't make it public because it leaves fields
-        // unpopulated if not immediately followed up by LoadDump():
-        private NoteValue()
-        {
-        }
-
         private void InitializeSuffixes()
         {
             AddSuffix("FREQUENCY", new Suffix<ScalarDoubleValue>(() => Frequency));

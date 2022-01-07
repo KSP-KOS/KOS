@@ -25,12 +25,7 @@ namespace kOS.Suffixed
     /// </summary>
     [kOS.Safe.Utilities.KOSNomenclature("TimeBase")]
     public abstract class TimeBase : Structure
-    {
-        /// <summary>
-        /// For serializaation, how will it be named in the JSON output.
-        /// </summary>
-        public abstract string DumpName { get; }
-        
+    {   
         /// <summary>
         /// Override with either 0 or 1 for whether counting years and days starts counting at 0 or at 1.
         /// </summary>
@@ -43,17 +38,11 @@ namespace kOS.Suffixed
         protected int SecondsPerYear { get { return KSPUtil.dateTimeFormatter.Year; } }
         protected int SecondsPerMinute { get { return KSPUtil.dateTimeFormatter.Minute; } }
 
-        // Only used by CreateFromDump() and the other constructors.
-        // Don't make it public because it leaves fields
-        // unpopulated:
-        protected TimeBase()
-        {
-            InitializeSuffixes();
-        }
 
-        public TimeBase(double unixStyleTime) : this()
+        public TimeBase(double unixStyleTime)
         {
             seconds = unixStyleTime;
+            InitializeSuffixes();
         }
 
         // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:

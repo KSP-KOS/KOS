@@ -58,14 +58,6 @@ namespace kOS.Safe.Communication
             this.timeProvider = Activator.CreateInstance(typeof(TP)) as CurrentTimeProvider;
         }
 
-        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
-        public static GenericMessageQueue<M,TP> CreateFromDump(SafeSharedObjects shared, Dump d)
-        {
-            var newObj = new GenericMessageQueue<M,TP>();
-            newObj.LoadDump(d);
-            return newObj;
-        }
-
         private void RemoveMessage(KeyValuePair<double, List<M>> queueItem, M message)
         {
             queueItem.Value.Remove(message);
@@ -137,44 +129,32 @@ namespace kOS.Safe.Communication
             return "MESSAGE QUEUE";
         }
 
-        public Dump Dump()
+        public void LoadDump(DumpList dump)
         {
-            /*
-            DumpWithHeader dump = new DumpWithHeader();
-            dump.Header = "MESSAGE QUEUE";
-
-            int i = 0;
-
-            foreach (M message in Messages)
-            {
-                dump.Add(i, message);
-
-                i++;
-            }
-
-            return dump;*/
-            return null;
-        }
-
-        public void LoadDump(Dump dump)
-        {
-            /*
             queue.Clear();
 
-            foreach (KeyValuePair<object, object> entry in dump)
+            for(int i = 0; i < dump.Count; i++)
             {
-                M message = entry.Value as M;
+                M message = dump[i] as M;
 
                 if (message != null)
                 {
                     Push(message);
                 }
-            }*/
+            }
         }
 
         public Dump Dump(DumperState s)
         {
-            throw new NotImplementedException();
+            var dump = new DumpList(this.GetType());
+
+            foreach (M message in Messages)
+            {
+                using (var c = s.Context(this))
+                    dump.Add(message, c);
+            }
+
+            return dump;
         }
     }
 }

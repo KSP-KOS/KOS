@@ -46,14 +46,6 @@ namespace kOS.Suffixed
             }
         }
 
-        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
-        public static Direction CreateFromDump(SafeSharedObjects shared, Dump d)
-        {
-            var newObj = new Direction();
-            newObj.LoadDump(d);
-            return newObj;
-        }
-
         // The following two are effectively constructors, but because they have
         // identical signatures they couldn't be differentiated if they were
         // constructors (which is probably why Unity didn't make them constructors

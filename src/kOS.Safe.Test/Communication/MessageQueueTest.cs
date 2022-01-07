@@ -156,7 +156,7 @@ namespace kOS.Safe.Test.Communication
 
             GenericMessageQueue<BaseMessage,FakeCurrentTimeProvider> newQueue = new GenericMessageQueue<BaseMessage,FakeCurrentTimeProvider>();
 
-            newQueue.LoadDump(queue.Dump());
+            newQueue.LoadDump(queue.Dump(new DumperState()) as DumpList);
 
             newQueue.TimeProvider.SetTime(11);
 

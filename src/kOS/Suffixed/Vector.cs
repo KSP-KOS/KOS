@@ -52,14 +52,6 @@ namespace kOS.Suffixed
             Z = z;
         }
 
-        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
-        public static Vector CreateFromDump(SafeSharedObjects shared, Dump d)
-        {
-            var newObj = new Vector();
-            newObj.LoadDump(d);
-            return newObj;
-        }
-
         private void InitializeSuffixes()
         {
             AddSuffix("X", new SetSuffix<ScalarValue>(() => X, value => X = value));
@@ -234,9 +226,9 @@ namespace kOS.Suffixed
             return !(a == b);
         }
 
-        public override Dump Dump()
+        public override Dump Dump(DumperState s)
         {
-            DumpWithHeader dump = new DumpWithHeader();
+            DumpDictionary dump = new DumpDictionary(this.GetType());
 
             dump.Add(DumpX, X);
             dump.Add(DumpY, Y);
@@ -245,11 +237,30 @@ namespace kOS.Suffixed
             return dump;
         }
 
-        public override void LoadDump(Dump dump)
+        [DumpDeserializer]
+        public static Vector CreateFromDump(DumpDictionary d, SafeSharedObjects shared)
         {
-            X = Convert.ToDouble(dump[DumpX]);
-            Y = Convert.ToDouble(dump[DumpY]);
-            Z = Convert.ToDouble(dump[DumpZ]);
+            double x = d.GetDouble(DumpX);
+            double y = d.GetDouble(DumpY);
+            double z = d.GetDouble(DumpZ);
+
+            return new Vector(x, y, z);
+        }
+
+        [DumpPrinter]
+        public static void Print(DumpDictionary d, IndentedStringBuilder sb)
+        {
+            double x = d.GetDouble(DumpX);
+            double y = d.GetDouble(DumpY);
+            double z = d.GetDouble(DumpZ);
+
+            sb.Append("V(");
+            sb.Append(x.ToString());
+            sb.Append(", ");
+            sb.Append(y.ToString());
+            sb.Append(", ");
+            sb.Append(z.ToString());
+            sb.Append(")");
         }
     }
 }

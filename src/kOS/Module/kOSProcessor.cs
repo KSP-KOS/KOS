@@ -1002,7 +1002,6 @@ namespace kOS.Module
         {
             Opcode.InitMachineCodeData();
             CompiledObject.InitTypeData();
-            SafeSerializationMgr.CheckIDumperStatics();
         }
 
         private void ProcessElectricity(Part partObj, float time)
@@ -1163,7 +1162,7 @@ namespace kOS.Module
         public void Send(Structure content)
         {
             double sentAt = Planetarium.GetUniversalTime();
-            Messages.Push(Message.Create(content, sentAt, sentAt, VesselTarget.CreateOrGetExisting(shared), Tag));
+            Messages.Push(new Message(content, sentAt, sentAt, VesselTarget.CreateOrGetExisting(shared)));
         }
     }
 }

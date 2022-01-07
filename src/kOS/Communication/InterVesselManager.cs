@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Serialization;
@@ -14,15 +14,10 @@ namespace kOS.Communication
         private static string VesselQueue = "vesselQueue";
         private static string MessageQueue = "messageQueue";
 
+        private Dictionary<string, DumpList> vesselQueueDumps;
         private Dictionary<string, MessageQueue> vesselQueues;
 
         public static InterVesselManager Instance { get; private set; }
-
-        static InterVesselManager()
-        {
-            // normally we do this in SerializationMgr, but KSPScenarios run before we create any instances
-            SafeSerializationMgr.AddAssembly(typeof(SerializationMgr).Assembly.FullName);
-        }
 
         public InterVesselManager()
         {
@@ -31,6 +26,7 @@ namespace kOS.Communication
         public override void OnLoad(ConfigNode node)
         {
             Instance = this;
+            vesselQueueDumps = new Dictionary<string, DumpList>();
             vesselQueues = new Dictionary<string, MessageQueue>();
 
             foreach (ConfigNode subNode in node.GetNodes())
@@ -41,14 +37,8 @@ namespace kOS.Communication
 
                     ConfigNode queueNode = subNode.GetNode(MessageQueue);
 
-                    Dump queueDump = ConfigNodeFormatter.Instance.FromConfigNode(queueNode);
-
-                    MessageQueue queue = new SafeSerializationMgr(null).CreateFromDump(queueDump) as MessageQueue;
-
-                    if (queue.Count() > 0)
-                    {
-                        vesselQueues[id] = queue;
-                    }
+                    DumpList queueDump = ConfigNodeFormatter.FromConfigNode(queueNode);
+                    vesselQueueDumps[id] = queueDump;
                 }
             }
         }
@@ -63,7 +53,7 @@ namespace kOS.Communication
                     ConfigNode vesselEntry = new ConfigNode(VesselQueue);
                     vesselEntry.AddValue(Id, id);
 
-                    ConfigNode queueNode = ConfigNodeFormatter.Instance.ToConfigNode(new SafeSerializationMgr(null).Dump(vesselQueues[id]));
+                    ConfigNode queueNode = ConfigNodeFormatter.ToConfigNode(new SafeSerializationMgr(null).Dump(vesselQueues[id]));
                     queueNode.name = MessageQueue;
                     vesselEntry.AddNode(queueNode);
 
@@ -75,10 +65,19 @@ namespace kOS.Communication
         public MessageQueueStructure GetQueue(Vessel vessel, SharedObjects sharedObjects)
         {
             string vesselId = vessel.id.ToString();
+            var queue = new MessageQueue();
 
-            if (!vesselQueues.ContainsKey(vesselId))
+            if (vesselQueues.ContainsKey(vesselId))
             {
-                vesselQueues.Add(vesselId, new MessageQueue());
+                queue = vesselQueues[vesselId];
+            } else
+            {
+                if (vesselQueueDumps.ContainsKey(vesselId))
+                {
+                    queue = MessageQueue.;
+                    vesselQueueDumps.Remove(vesselId);
+                }
+                vesselQueues.Add(vesselId, queue);
             }
 
             return new MessageQueueStructure(vesselQueues[vesselId], sharedObjects);
