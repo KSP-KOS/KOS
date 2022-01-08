@@ -37,7 +37,7 @@ namespace kOS.Communication
 
                     ConfigNode queueNode = subNode.GetNode(MessageQueue);
 
-                    DumpList queueDump = ConfigNodeFormatter.FromConfigNode(queueNode);
+                    DumpList queueDump = (DumpList)DumpList.FromJson(ConfigNodeFormatter.FromConfigNode(queueNode));
                     vesselQueueDumps[id] = queueDump;
                 }
             }
@@ -48,17 +48,26 @@ namespace kOS.Communication
             foreach (Vessel vessel in FlightGlobals.Vessels)
             {
                 string id = vessel.id.ToString();
-                if (vesselQueues.ContainsKey(id) && vesselQueues[id].Count() > 0)
-                {
-                    ConfigNode vesselEntry = new ConfigNode(VesselQueue);
-                    vesselEntry.AddValue(Id, id);
+                if (vesselQueues.ContainsKey(id) && vesselQueues[id].Count() == 0)
+                    continue;
 
-                    ConfigNode queueNode = ConfigNodeFormatter.ToConfigNode(new SafeSerializationMgr(null).Dump(vesselQueues[id]));
-                    queueNode.name = MessageQueue;
-                    vesselEntry.AddNode(queueNode);
+                ConfigNode vesselEntry = new ConfigNode(VesselQueue);
+                vesselEntry.AddValue(Id, id);
 
-                    node.AddNode(vesselEntry);
-                }
+                Dump dump = null;
+                if (vesselQueueDumps.ContainsKey(id))
+                    dump = vesselQueueDumps[id];
+                if (vesselQueues.ContainsKey(id))
+                    dump = vesselQueues[id].Dump(new DumperState());
+
+                if (dump == null)
+                    continue;
+
+                ConfigNode queueNode = ConfigNodeFormatter.ToConfigNode(dump.ToJsonObject());
+                queueNode.name = MessageQueue;
+                vesselEntry.AddNode(queueNode);
+
+                node.AddNode(vesselEntry);
             }
         }
 
@@ -74,13 +83,13 @@ namespace kOS.Communication
             {
                 if (vesselQueueDumps.ContainsKey(vesselId))
                 {
-                    queue = MessageQueue.;
+                    queue.LoadDump(vesselQueueDumps[vesselId]);
                     vesselQueueDumps.Remove(vesselId);
                 }
                 vesselQueues.Add(vesselId, queue);
             }
 
-            return new MessageQueueStructure(vesselQueues[vesselId], sharedObjects);
+            return new MessageQueueStructure(queue, sharedObjects);
         }
     }
 }
