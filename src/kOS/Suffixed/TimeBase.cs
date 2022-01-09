@@ -250,11 +250,6 @@ namespace kOS.Suffixed
         }
         */
 
-        public override string ToString()
-        {
-            return string.Format("TIME({0:0})", seconds);
-        }
-
         /*
         public override Dump Dump()
         {

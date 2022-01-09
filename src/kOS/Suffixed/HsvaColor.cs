@@ -34,11 +34,6 @@ namespace kOS.Suffixed
             ReconcileHsvToRgb();
         }
 
-        public override string ToString()
-        {
-            return string.Format("HSVA({0}, {1}, {2}, {3})", hue, saturation, hsvValue, Alpha);
-        }
-
         protected override void Recalculate()
         {
             base.Recalculate();

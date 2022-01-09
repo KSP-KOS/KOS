@@ -56,14 +56,6 @@ namespace kOS.Sound
             AddSuffix("DURATION", new Suffix<ScalarDoubleValue>(() => Duration));
         }
 
-        public override string ToString()
-        {
-            if (Frequency == EndFrequency)
-                return String.Format("Note({0},{1},{2},{3})", Frequency, KeyDownLength, Duration, Volume);
-            else
-                return String.Format("SlideNote({0},{1},{2},{3},{4})", Frequency, EndFrequency, KeyDownLength, Duration, Volume);
-        }
-
         public override Dump Dump(DumperState s)
         {
             DumpDictionary result = new DumpDictionary(this.GetType());

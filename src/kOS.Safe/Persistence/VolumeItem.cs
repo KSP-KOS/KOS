@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using kOS.Safe.Persistence;
 using System.Linq;
 using kOS.Safe.Encapsulation;
@@ -52,10 +52,12 @@ namespace kOS.Safe.Persistence
             AddSuffix("ISFILE", new Suffix<BooleanValue>(() => this is VolumeFile));
         }
 
+        /*
         public override string ToString()
         {
             return string.IsNullOrEmpty(Path.Name) ? "Root directory" : Path.Name;
         }
+        */
 
         public abstract int Size { get; }
     }

@@ -34,11 +34,6 @@ namespace kOS.Safe.Encapsulation
             return Value;
         }
 
-        public override string ToString()
-        {
-            return Value.ToString();
-        }
-
         public override bool Equals(object obj)
         {
             if (obj == null) return false;

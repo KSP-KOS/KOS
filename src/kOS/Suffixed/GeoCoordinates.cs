@@ -323,11 +323,6 @@ namespace kOS.Suffixed
                                                      "This is the movement of that spot due to planetary rotation."));
         }
 
-        public override string ToString()
-        {
-            return string.Format("{0}:GEOPOSITIONLATLNG({1},{2})", Body.GetName(), Latitude, Longitude);
-        }
-
         public void SetSharedObjects(SharedObjects sharedObjects)
         {
             Shared = sharedObjects;

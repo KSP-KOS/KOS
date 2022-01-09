@@ -70,11 +70,6 @@ namespace kOS.Suffixed
             }
         }
 
-        public override string ToString()
-        {
-            return string.Format("RGBA({0}, {1}, {2}, {3})", Red, Green, Blue, Alpha);
-        }
-
         /// <summary>
         /// Returns a string representing the Hex color code "#rrggbb" format
         /// for the color.  (i.e. RED is "#ff0000").  Note that this cannot represent

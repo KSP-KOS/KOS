@@ -112,11 +112,6 @@ namespace kOS.Suffixed
             return new Vector3((float)X, (float)Y, (float)Z);
         }
 
-        public override string ToString()
-        {
-            return "V(" + X + ", " + Y + ", " + Z + ")";
-        }
-
         public override bool Equals(object obj)
         {
             Type compareType = typeof(Vector);

@@ -38,11 +38,6 @@ namespace kOS.Communication
             this.vessel = vessel;
         }
 
-        public override string ToString()
-        {
-            return "VESSEL CONNECTION(" + vessel.vesselName + ")";
-        }
-
         protected override BooleanValue SendMessage(Structure content)
         {
             if (!Connected)

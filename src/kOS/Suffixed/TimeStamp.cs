@@ -161,11 +161,6 @@ namespace kOS.Suffixed
             return !(a == b);
         }
 
-        public override string ToString()
-        {
-            return string.Format("TIMESTAMP({0})", seconds);
-        }
-
         public override Dump Dump(DumperState s)
         {
             DumpDictionary dump = new DumpDictionary(this.GetType());

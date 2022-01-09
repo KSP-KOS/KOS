@@ -133,12 +133,14 @@ namespace kOS.Safe.Encapsulation
         public abstract int GetIntValue();
         public abstract double GetDoubleValue();
 
+        /*
         public override string ToString()
         {
             if (IsInt) return GetIntValue().ToString();
             else if (IsDouble) return GetDoubleValue().ToString();
             return "NaN";
         }
+        */
 
         public override bool Equals(object obj)
         {

@@ -52,11 +52,6 @@ namespace kOS.Communication
                 messageQueue.Push(new Message(content, sentAt, sentAt, VesselTarget.CreateOrGetExisting(sharedObjects.Vessel, sharedObjects)));
             }
         }
-
-        public override string ToString()
-        {
-            return messageQueue.ToString();
-        }
     }
 }
 

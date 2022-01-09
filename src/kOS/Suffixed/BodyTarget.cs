@@ -263,16 +263,6 @@ namespace kOS.Suffixed
             return base.GetSuffix(suffixName, failOkay);
         }
 
-        public override string ToString()
-        {
-            if (Body != null)
-            {
-                return "BODY(\"" + Body.name + "\")";
-            }
-
-            return base.ToString();
-        }
-
         public ITargetable Target
         {
             get { return Body; }

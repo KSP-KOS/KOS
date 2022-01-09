@@ -83,11 +83,6 @@ namespace kOS.Safe
             return result;*/
             return null;
         }
-
-        public override string ToString()
-        {
-            return "RANGE(" + InnerEnumerable.Start + ", " + InnerEnumerable.Stop + ", " + InnerEnumerable.Step + ")";
-        }
     }
 
     public class Range : IEnumerable<ScalarValue>

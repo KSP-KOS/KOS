@@ -268,12 +268,6 @@ namespace kOS.Safe.Encapsulation
             LastSampleTime = double.MaxValue;
         }
 
-        public override string ToString()
-        {
-            return string.Format("PIDLoop(Kp:{0}, Ki:{1}, Kd:{2}, Min:{3}, Max:{4}, Setpoint:{5}, Error:{6}, Output:{7})",
-                Kp, Ki, Kd, MinOutput, MaxOutput, Setpoint, Error, Output);
-        }
-
         public string ToCSVString()
         {
             return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8}",

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using kOS.Safe.Execution;
 using kOS.Safe.Exceptions;
@@ -41,11 +41,6 @@ namespace kOS.Safe.Encapsulation
         public override Structure CallWithArgsPushedAlready()
         {
             throw new KOSCannotCallException();
-        }
-        
-        public override string ToString()
-        {
-            return string.Format("DoNothingDelegate");
         }
                 
         public override bool Equals(object o) 

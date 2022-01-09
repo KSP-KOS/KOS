@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Execution;
 using kOS.Safe.Compilation;
@@ -167,11 +167,13 @@ namespace kOS.Safe.Encapsulation
                 Closure = new List<VariableScope>(); // make sure it exists as an empty list so we don't have to have 'if null' checks everwywhere.
         }
         
+        /*
         public override string ToString()
         {
             return string.Format("UserDelegate(cpu={0}, entryPoint={1}, Closure={2},\n   {3})",
                 (Cpu == null ? "(No CPU)" : Cpu.ToString()), EntryPoint, Closure, base.ToString());
         }
+        */
         
         public override bool Equals(object obj)
         {

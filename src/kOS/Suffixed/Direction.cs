@@ -233,12 +233,6 @@ namespace kOS.Suffixed
             return new Direction(Quaternion.RotateTowards(fromDir.rotation, rotation, 99999.0f));
         }
 
-        public override string ToString()
-        {
-            return "R(" + Math.Round(euler.x, 3) + "," + Math.Round(euler.y, 3) + "," + Math.Round(euler.z, 3) + ")";
-        }
-
-
         public override Dump Dump(DumperState s)
         {
             DumpDictionary dump = new DumpDictionary(this.GetType());

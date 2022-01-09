@@ -29,10 +29,12 @@ namespace kOS.Safe.Persistence
 
         public abstract void Clear();
 
+        /*
         public override string ToString()
         {
             return Name;
         }
+        */
 
         private void InitializeSuffixes()
         {

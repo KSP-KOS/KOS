@@ -236,11 +236,6 @@ namespace kOS.Suffixed
             };
         }
 
-        public override string ToString()
-        {
-            return "VESSEL(\"" + Vessel.vesselName + "\")";
-        }
-
         private void InitializeSuffixes()
         {
             AddSuffix("PARTSNAMED", new OneArgsSuffix<ListValue, StringValue>(GetPartsNamed));

@@ -38,7 +38,7 @@ namespace kOS.Safe.Encapsulation
 
         public StringValue(StringValue stringValue)
         {
-            internalString = stringValue.ToString();
+            internalString = stringValue.internalString;
             RegisterInitializer(StringInitializeSuffixes);
         }
 
@@ -50,7 +50,7 @@ namespace kOS.Safe.Encapsulation
 
         public override object ToPrimitive()
         {
-            return ToString();
+            return internalString;
         }
 
         public ScalarValue Length
@@ -335,32 +335,34 @@ namespace kOS.Safe.Encapsulation
 
         public static StringValue operator +(StringValue val1, StringValue val2)
         {
-            return new StringValue(val1.ToString() + val2.ToString());
+            return new StringValue(val1.internalString + val2.internalString);
         }
 
         public static StringValue operator +(StringValue val1, Structure val2)
         {
-            return new StringValue(val1.ToString() + val2.ToString());
+            return new StringValue(val1.internalString + val2.ToString());
         }
 
         public static StringValue operator +(Structure val1, StringValue val2)
         {
-            return new StringValue(val1.ToString() + val2.ToString());
-        }
-
-        public override string ToString()
-        {
-            return this;
+            return new StringValue(val1.ToString() + val2.internalString);
         }
 
         public override bool Equals(object obj)
         {
             if (obj == null) return false;
-            if (obj is StringValue || obj is string)
+            if (obj is string)
+                return string.Equals(internalString, (string)obj, StringComparison.OrdinalIgnoreCase);
+            if (obj is StringValue)
             {
-                return string.Equals(internalString, obj.ToString(), StringComparison.OrdinalIgnoreCase);
+                return string.Equals(internalString, ((StringValue)obj).internalString, StringComparison.OrdinalIgnoreCase);
             }
             return false;
+        }
+
+        public override string ToString()
+        {
+            return internalString;
         }
 
         public override int GetHashCode()

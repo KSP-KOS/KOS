@@ -18,9 +18,9 @@ namespace kOS.Safe.Function
             object objectToPrint = PopValueAssert(shared);
 
             string textToPrint = null;
-            if (objectToPrint is string || objectToPrint is StringValue)
+            if (objectToPrint is StringValue)
             {
-                textToPrint = objectToPrint.ToString();
+                textToPrint = ((StringValue)objectToPrint).ToPrimitive().ToString();
             }
             else if (objectToPrint is Structure)
             {

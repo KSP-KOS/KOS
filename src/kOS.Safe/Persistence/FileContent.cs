@@ -153,10 +153,5 @@ namespace kOS.Safe.Persistence
         {
             return Bytes.GetHashCode();
         }
-
-        public override string ToString()
-        {
-            return "File content";
-        }
     }
 }

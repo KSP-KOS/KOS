@@ -66,11 +66,7 @@ namespace kOS.Communication
 
         public Structure DeserializeContent()
         {
-            return Message.Content;        }
-
-        public override string ToString()
-        {
-            return "Message(" + Message.Vessel.ToString() + ")";
+            return Message.Content;
         }
 
         [DumpDeserializer]
