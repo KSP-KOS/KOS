@@ -409,7 +409,9 @@ namespace kOS.Safe.Encapsulation
         {
             sb.Append("LEXICON of ");
             sb.Append(d.Count.ToString());
-            sb.Append("items: ");
+            sb.Append(" items");
+            if (d.Count > 0)
+                sb.Append(":");
 
             var kvpairs = d.GetItems();
             foreach (var kv in kvpairs)
