@@ -401,6 +401,11 @@ namespace kOS.Safe
             result.Add("$type", deserializer.FullName);
             return result;
         }
+
+        public override void WriteReadable(IndentedStringBuilder sb)
+        {
+            Print(this, sb);
+        }
     }
 
     public class DumpLexicon : DeserializableDump

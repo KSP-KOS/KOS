@@ -153,7 +153,9 @@ namespace kOS.Safe.Encapsulation
         {
             sb.Append("LIST of ");
             sb.Append(d.Count.ToString());
-            sb.Append("items: ");
+            sb.Append(" items");
+            if (d.Count > 0)
+                sb.Append(":");
 
             int maxwidth = (d.Count.ToString(CultureInfo.InvariantCulture) + ". ").Length;
 
@@ -198,13 +200,6 @@ namespace kOS.Safe.Encapsulation
         public ListValue(IEnumerable<Structure> toCopy) : base(toCopy)
         {
             RegisterInitializer(InitializeSuffixes);
-        }
-
-        public override Dump Dump(DumperState s)
-        {
-            var dump = new DumpList(typeof(ListValue));
-            PopulateDumpList(dump, s);
-            return dump;
         }
 
         private void InitializeSuffixes() =>
