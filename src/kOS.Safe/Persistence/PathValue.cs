@@ -16,7 +16,7 @@ namespace kOS.Safe
     /// Instances of this class are on the other hand created only for the user.
     /// </summary>
     [kOS.Safe.Utilities.KOSNomenclature("Path")]
-    public class PathValue : SerializableStructure
+    public class PathValue : Structure
     {
         [Function("path")]
         public class FunctionPath : SafeFunctionBase
@@ -56,27 +56,11 @@ namespace kOS.Safe
             }
         }
 
-        // Only used by CreateFromDump() and other peer constructors.
-        // Don't make it public because it leaves fields
-        // unpopulated:
-        private PathValue()
+        public PathValue(GlobalPath path, SafeSharedObjects sharedObjects)
         {
             InitializeSuffixes();
-        }
-
-        public PathValue(GlobalPath path, SafeSharedObjects sharedObjects) : this()
-        {
             Path = path;
             this.sharedObjects = sharedObjects;
-        }
-
-        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
-        public static PathValue CreateFromDump(SafeSharedObjects shared, Dump d)
-        {
-            var newObj = new PathValue();
-            newObj.Shared = shared;
-            newObj.LoadDump(d);
-            return newObj;
         }
 
         public PathValue FromPath(GlobalPath path)
@@ -119,19 +103,15 @@ namespace kOS.Safe
             return FromPath(Path.Combine(segments.Select(s => s.ToString()).ToArray()));
         }
 
-        public override Dump Dump()
+        public Dump Dump()
         {
-            return new Dump { { DumpPath, Path.ToString() } };
+            //return new Dump { { DumpPath, Path.ToString() } };
+            return null;
         }
 
-        public override void LoadDump(Dump dump)
+        public void LoadDump(Dump dump)
         {
-            Path = GlobalPath.FromString(dump[DumpPath] as string);
-        }
-
-        public override string ToString()
-        {
-            return Path.ToString();
+            //Path = GlobalPath.FromString(dump[DumpPath] as string);
         }
 
         public override bool Equals(object other)

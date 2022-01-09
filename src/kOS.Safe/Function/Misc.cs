@@ -15,7 +15,25 @@ namespace kOS.Safe.Function
     {
         public override void Execute(SafeSharedObjects shared)
         {
-            string textToPrint = PopValueAssert(shared).ToString();
+            object objectToPrint = PopValueAssert(shared);
+
+            string textToPrint = null;
+            if (objectToPrint is StringValue)
+            {
+                textToPrint = ((StringValue)objectToPrint).ToPrimitive().ToString();
+            }
+            else if (objectToPrint is Structure)
+            {
+                var dump = ((Structure)objectToPrint).Dump(new Serialization.DumperState());
+                var builder = new IndentedStringBuilder();
+                dump.WriteReadable(builder);
+                textToPrint = builder.ToString();
+            }
+            else
+            {
+                textToPrint = objectToPrint.ToString();
+            }
+
             AssertArgBottomAndConsume(shared);
             shared.Screen.Print(textToPrint);
         }

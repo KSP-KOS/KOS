@@ -13,7 +13,7 @@ using System.Linq;
 namespace kOS.Safe.Persistence
 {
     [kOS.Safe.Utilities.KOSNomenclature("FileContent")]
-    public class FileContent : SerializableStructure, IEnumerable<string>
+    public class FileContent : Structure, IEnumerable<string>
     {
         private static readonly Encoding fileEncoding = Encoding.UTF8;
         private const string DumpContent = "content";
@@ -70,13 +70,15 @@ namespace kOS.Safe.Persistence
             return new ListValue<ScalarIntValue>(Bytes.Select(x => new ScalarIntValue(x)));
         }
 
-        public override Dump Dump()
+        public Dump Dump()
         {
-            return new Dump { { DumpContent, PersistenceUtilities.EncodeBase64(Bytes) } };
+            //return new Dump { { DumpContent, PersistenceUtilities.EncodeBase64(Bytes) } };
+            return null;
         }
 
-        public override void LoadDump(Dump dump)
+        public void LoadDump(Dump dump)
         {
+            /*
             string contentString = dump[DumpContent] as string;
 
             if (contentString == null)
@@ -85,6 +87,7 @@ namespace kOS.Safe.Persistence
             }
 
             Bytes = PersistenceUtilities.DecodeBase64ToBinary(contentString);
+            */
         }
 
         public List<CodePart> AsParts(GlobalPath path, string prefix)
@@ -149,11 +152,6 @@ namespace kOS.Safe.Persistence
         public override int GetHashCode()
         {
             return Bytes.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return "File content";
         }
     }
 }

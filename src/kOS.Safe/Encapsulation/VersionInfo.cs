@@ -27,9 +27,11 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("BUILD", new StaticSuffix<ScalarValue>(() => build));
         }
 
+        /*
         public override string ToString()
         {
             return string.Format("{0}.{1}.{2}.{3}", major, minor, patch, build);
         }
+        */
     }
 }

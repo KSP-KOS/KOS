@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Callback;
+using kOS.Safe.Callback;
 using kOS.Safe.Execution;
 using kOS.Safe.Module;
 using kOS.Safe.Persistence;
@@ -8,7 +8,7 @@ namespace kOS.Safe.Test.Execution
 {
     internal class NoopLogger : ILogger
     {
-        public void Log(Exception e)
+        public virtual void Log(Exception e)
         {
             Console.WriteLine(e);
         }
@@ -17,12 +17,12 @@ namespace kOS.Safe.Test.Execution
         {
         }
 
-        public void LogError(string s)
+        public virtual void LogError(string s)
         {
             Console.WriteLine(s);
         }
 
-        public void LogException(Exception exception)
+        public virtual void LogException(Exception exception)
         {
             Console.WriteLine(exception);
         }

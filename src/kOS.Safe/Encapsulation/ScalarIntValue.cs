@@ -1,5 +1,6 @@
 using kOS.Safe.Serialization;
 using System;
+using System.Globalization;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -11,6 +12,8 @@ namespace kOS.Safe.Encapsulation
         public static ScalarIntValue One = new ScalarIntValue(1);
         public static ScalarIntValue Two = new ScalarIntValue(2);
 
+        public int Value { get; private set; }
+
         public override bool IsDouble
         {
             get { return false; }
@@ -21,16 +24,12 @@ namespace kOS.Safe.Encapsulation
             get { return true; }
         }
 
+        public override int GetIntValue() { return Value; }
+        public override double GetDoubleValue() { return Value; }
+
         public override bool BooleanMeaning
         {
-            get { return (int)Value != 0; }
-        }
-
-        // All serializable structures need a default constructor, but it can
-        // be private to prevent it from being used externally:
-        private ScalarIntValue()
-        {
-
+            get { return Value != 0; }
         }
 
         public ScalarIntValue(int value)
@@ -53,24 +52,30 @@ namespace kOS.Safe.Encapsulation
             return new ScalarIntValue(int.MaxValue);
         }
 
-        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
-        public static ScalarIntValue CreateFromDump(SafeSharedObjects shared, Dump d)
+        public override Dump Dump(DumperState s)
         {
-            var newObj = new ScalarIntValue();
-            newObj.LoadDump(d);
-            return newObj;
-        }
-        public override Dump Dump()
-        {
-            DumpWithHeader dump = new DumpWithHeader();
+            DumpDictionary dump = new DumpDictionary(typeof(ScalarIntValue));
 
             dump.Add("value", Value);
 
             return dump;
         }
-        public override void LoadDump(Dump dump)
+
+        [DumpDeserializer]
+        public static ScalarIntValue CreateFromDump(DumpDictionary d, SafeSharedObjects shared)
         {
-            Value = Convert.ToInt32(dump["value"]);
+            return new ScalarIntValue((int)d.GetDouble("value"));
+        }
+
+        [DumpPrinter]
+        public static void Print(DumpDictionary d, IndentedStringBuilder sb)
+        {
+            sb.Append(((int)d.GetDouble("value")).ToString(CultureInfo.InvariantCulture));
+        }
+
+        public override object ToPrimitive()
+        {
+            return Value;
         }
     }
 }

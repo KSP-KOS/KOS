@@ -213,10 +213,12 @@ namespace kOS.Safe.Persistence
             return Root.ListAsLexicon();
         }
 
+        /*
         public override string ToString()
         {
             return "Volume(" + Name + ", " + Capacity + ")";
         }
+        */
 
         private void InitializeVolumeSuffixes()
         {

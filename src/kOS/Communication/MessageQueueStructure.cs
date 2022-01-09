@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed;
@@ -49,14 +49,8 @@ namespace kOS.Communication
             } else
             {
                 double sentAt = Planetarium.GetUniversalTime();
-                messageQueue.Push(Message.Create(content, sentAt, sentAt, VesselTarget.CreateOrGetExisting(sharedObjects.Vessel, sharedObjects),
-                    sharedObjects.Processor.Tag));
+                messageQueue.Push(new Message(content, sentAt, sentAt, VesselTarget.CreateOrGetExisting(sharedObjects.Vessel, sharedObjects)));
             }
-        }
-
-        public override string ToString()
-        {
-            return messageQueue.ToString();
         }
     }
 }

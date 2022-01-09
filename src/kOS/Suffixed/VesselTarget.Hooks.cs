@@ -130,17 +130,6 @@ namespace kOS.Suffixed
             return newlyConstructed;
         }
 
-        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
-        public static VesselTarget CreateFromDump(SafeSharedObjects shared, Dump d)
-        {
-            var newObj = CreateOrGetExisting(VesselFromDump(d), (SharedObjects)shared);
-            // Uncomment the line below if LoadDump ever does more things in the future.
-            // Right now, LoadDump is redundant with CreateOrGetExisting's work.
-            //
-            // newObj.LoadDump(d);
-            return newObj;
-        }
-
         /// <summary>
         /// Dispose all VeselTarget instances - called by SceneChangeCleaner
         /// </summary>

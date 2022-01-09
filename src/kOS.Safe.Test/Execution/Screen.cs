@@ -1,12 +1,18 @@
-﻿using kOS.Safe.Screen;
+using kOS.Safe.Screen;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace kOS.Safe.Test
 {
     internal class Screen : IScreenBuffer
     {
         private List<String> output = new List<string>();
+
+        public override string ToString()
+        {
+            return string.Join(Environment.NewLine, output);
+        }
 
         public void ClearOutput()
         {

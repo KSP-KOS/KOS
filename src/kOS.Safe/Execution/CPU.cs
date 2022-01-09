@@ -95,6 +95,7 @@ namespace kOS.Safe.Execution
         }
 
         public double SessionTime { get { return currentTime; } }
+        public bool ShouldSwallowExceptions { get; set; }
         
         public List<string> ProfileResult { get; private set; }
 
@@ -115,6 +116,7 @@ namespace kOS.Safe.Execution
 
         public CPU(SafeSharedObjects shared)
         {
+            ShouldSwallowExceptions = true;
             this.shared = shared;
             this.shared.Cpu = this;
             stack = new Stack();
@@ -1417,6 +1419,8 @@ namespace kOS.Safe.Execution
                     PopFirstContext();
                     stack.Clear(); // If breaking all execution, get rid of the cruft here too.
                 }
+                if (!ShouldSwallowExceptions)
+                    throw;
             }
             updateWatch.Stop();
 

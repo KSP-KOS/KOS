@@ -12,11 +12,11 @@ namespace kOS.Suffixed
 {
     [kOS.Safe.Utilities.KOSNomenclature("GeoCoordinates")]
     [kOS.Safe.Utilities.KOSNomenclature("LatLng", CSharpToKOS = false)]
-    public class GeoCoordinates : SerializableStructure
+    public class GeoCoordinates : Structure
     {
-        private static string DumpLat = "lat";
-        private static string DumpLng = "lng";
-        private static string DumpBody = "body";
+        private const string DumpLat = "lat";
+        private const string DumpLng = "lng";
+        private const string DumpBody = "body";
 
         private double lat;
         private double lng;
@@ -47,14 +47,6 @@ namespace kOS.Suffixed
 
         private const int TERRAIN_MASK_BIT = 15;
 
-        // Only used by CreateFromDump() and the other constructors.
-        // Don't make it public because it leaves fields unpopulated if
-        // used by itself:
-        private GeoCoordinates()
-        {
-            GeoCoordsInitializeSuffixes();
-        }
-
         /// <summary>
         ///   Build a GeoCoordinates from the current lat/long of the orbitable
         ///   object passed in.  The object being checked for should be in the same
@@ -62,8 +54,9 @@ namespace kOS.Suffixed
         /// </summary>
         /// <param name="orb">object to take current coords of</param>
         /// <param name="sharedObj">to know the current CPU's running vessel</param>
-        public GeoCoordinates(Orbitable orb, SharedObjects sharedObj) : this()
+        public GeoCoordinates(Orbitable orb, SharedObjects sharedObj)
         {
+            GeoCoordsInitializeSuffixes();
             Shared = sharedObj;
             Vector p = orb.GetPosition();
             Latitude = orb.PositionToLatitude(p);
@@ -78,8 +71,9 @@ namespace kOS.Suffixed
         /// <param name="sharedObj">to know the current CPU's running vessel</param>
         /// <param name="latitude">latitude</param>
         /// <param name="longitude">longitude</param>
-        public GeoCoordinates(CelestialBody body, SharedObjects sharedObj, double latitude, double longitude) : this()
+        public GeoCoordinates(CelestialBody body, SharedObjects sharedObj, double latitude, double longitude)
         {
+            GeoCoordsInitializeSuffixes();
             Latitude = latitude;
             Longitude = longitude;
             Shared = sharedObj;
@@ -103,21 +97,13 @@ namespace kOS.Suffixed
         /// <param name="sharedObj">to know the current CPU's running vessel</param>
         /// <param name="latitude">latitude</param>
         /// <param name="longitude">longitude</param>
-        public GeoCoordinates(SharedObjects sharedObj, double latitude, double longitude) : this()
+        public GeoCoordinates(SharedObjects sharedObj, double latitude, double longitude)
         {
+            GeoCoordsInitializeSuffixes();
             Latitude = latitude;
             Longitude = longitude;
             Shared = sharedObj;
             Body = Shared.Vessel.GetOrbit().referenceBody;
-        }
-
-        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
-        public static GeoCoordinates CreateFromDump(SafeSharedObjects shared, Dump d)
-        {
-            var newObj = new GeoCoordinates();
-            newObj.Shared = (SharedObjects)shared;
-            newObj.LoadDump(d);
-            return newObj;
         }
 
         /// <summary>
@@ -337,33 +323,43 @@ namespace kOS.Suffixed
                                                      "This is the movement of that spot due to planetary rotation."));
         }
 
-        public override string ToString()
-        {
-            return string.Format("{0}:GEOPOSITIONLATLNG({1},{2})", Body.GetName(), Latitude, Longitude);
-        }
-
         public void SetSharedObjects(SharedObjects sharedObjects)
         {
             Shared = sharedObjects;
         }
 
-        public override Dump Dump()
-        {
-            var dictionary = new DumpWithHeader
-            {
-                {DumpLat, lat},
-                {DumpLng, lng},
-                {DumpBody, BodyTarget.CreateOrGetExisting(Body, Shared)}
-            };
 
-            return dictionary;
+        public override Dump Dump(DumperState s)
+        {
+            DumpDictionary dump = new DumpDictionary(this.GetType());
+
+            dump.Add(DumpLat, lat);
+            dump.Add(DumpLng, lng);
+            using(var c = s.Context(this))
+                dump.Add(DumpBody, BodyTarget.CreateOrGetExisting(Body, Shared), c);
+
+            return dump;
         }
 
-        public override void LoadDump(Dump dump)
+        [DumpDeserializer]
+        public static GeoCoordinates CreateFromDump(DumpDictionary d, SafeSharedObjects shared)
         {
-            Body = (dump[DumpBody] as BodyTarget).Body;
-            lat = Convert.ToDouble(dump[DumpLat]);
-            lng = Convert.ToDouble(dump[DumpLng]);
+
+            var body = (d.GetStructure(DumpBody, shared) as BodyTarget).Body;
+            double lat = d.GetDouble(DumpLat);
+            double lng = d.GetDouble(DumpLng);
+
+            return new GeoCoordinates(body, shared as SharedObjects, lat, lng);
+        }
+
+        [DumpPrinter]
+        public static void Print(DumpDictionary d, IndentedStringBuilder sb)
+        {
+            string name = (d.GetDump(DumpBody) as DumpDictionary)?.GetString("name") ?? "unknown";
+            double lat = d.GetDouble(DumpLat);
+            double lng = d.GetDouble(DumpLng);
+
+            sb.Append(string.Format("{0}:GEOPOSITIONLATLNG({1},{2})", name, lat, lng));
         }
     }
 }

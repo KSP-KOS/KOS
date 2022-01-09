@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Execution;
 using System.Collections.Generic;
@@ -169,6 +169,7 @@ namespace kOS.Safe.Encapsulation
             return preBoundDel;
         }
 
+        /*
         public override string ToString()
         {
             StringBuilder str = new StringBuilder();
@@ -179,6 +180,6 @@ namespace kOS.Safe.Encapsulation
             }
             str.Append(")");
             return str.ToString();
-        }
+        }*/
     }
 }

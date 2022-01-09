@@ -20,14 +20,7 @@ namespace kOS.Safe.Encapsulation
     [KOSNomenclature("String")]
     public class StringValue : PrimitiveStructure, IIndexable, IConvertible, IEnumerable<string>
     {
-        // internalString is *almost* immutable.
-        // It is supposed to be immutable (readonly keyword here) except that
-        // it can't be and also fit the design pattern kOS uses for Serializable structures.
-        // That pattern is to load from a dump by creating an instance with a dummy
-        // constructor first, then populate it with LoadDump().  To populate it with LoadDump(),
-        // the internal representation cannot be readonly.  Populating from a dump should be
-        // the only place the immutability rule is violated.
-        private string internalString;
+        private readonly string internalString;
 
         public static StringValue Empty { get; } = new StringValue();
         public static StringValue None { get; } = new StringValue("None");
@@ -45,7 +38,7 @@ namespace kOS.Safe.Encapsulation
 
         public StringValue(StringValue stringValue)
         {
-            internalString = stringValue.ToString();
+            internalString = stringValue.internalString;
             RegisterInitializer(StringInitializeSuffixes);
         }
 
@@ -57,7 +50,7 @@ namespace kOS.Safe.Encapsulation
 
         public override object ToPrimitive()
         {
-            return ToString();
+            return internalString;
         }
 
         public ScalarValue Length
@@ -342,32 +335,34 @@ namespace kOS.Safe.Encapsulation
 
         public static StringValue operator +(StringValue val1, StringValue val2)
         {
-            return new StringValue(val1.ToString() + val2.ToString());
+            return new StringValue(val1.internalString + val2.internalString);
         }
 
         public static StringValue operator +(StringValue val1, Structure val2)
         {
-            return new StringValue(val1.ToString() + val2.ToString());
+            return new StringValue(val1.internalString + val2.ToString());
         }
 
         public static StringValue operator +(Structure val1, StringValue val2)
         {
-            return new StringValue(val1.ToString() + val2.ToString());
-        }
-
-        public override string ToString()
-        {
-            return this;
+            return new StringValue(val1.ToString() + val2.internalString);
         }
 
         public override bool Equals(object obj)
         {
             if (obj == null) return false;
-            if (obj is StringValue || obj is string)
+            if (obj is string)
+                return string.Equals(internalString, (string)obj, StringComparison.OrdinalIgnoreCase);
+            if (obj is StringValue)
             {
-                return string.Equals(internalString, obj.ToString(), StringComparison.OrdinalIgnoreCase);
+                return string.Equals(internalString, ((StringValue)obj).internalString, StringComparison.OrdinalIgnoreCase);
             }
             return false;
+        }
+
+        public override string ToString()
+        {
+            return internalString;
         }
 
         public override int GetHashCode()
@@ -467,24 +462,30 @@ namespace kOS.Safe.Encapsulation
             throw new KOSCastException(typeof(StringValue), typeof(UInt64));
         }
 
-        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
-        public static StringValue CreateFromDump(SafeSharedObjects shared, Dump d)
+
+        #region Serialization
+        public override Dump Dump(DumperState s)
         {
-            var newObj = new StringValue();
-            newObj.LoadDump(d);
-            return newObj;
-        }
-        public override Dump Dump()
-        {
-            DumpWithHeader dump = new DumpWithHeader();
+            DumpDictionary dump = new DumpDictionary(this.GetType());
 
             dump.Add("value", internalString);
 
             return dump;
         }
-        public override void LoadDump(Dump dump)
+
+        [DumpDeserializer]
+        public static StringValue CreateFromDump(DumpDictionary d, SafeSharedObjects shared)
         {
-            internalString = Convert.ToString(dump["value"]);
+            return new StringValue(d.GetString("value"));
         }
+
+        [DumpPrinter]
+        public static void Print(DumpDictionary dump, IndentedStringBuilder sb)
+        {
+            sb.Append("\"");
+            sb.Append(dump.GetString("value").Replace("\"", "\"\""));
+            sb.Append("\"");
+        }
+        #endregion
     }
 }

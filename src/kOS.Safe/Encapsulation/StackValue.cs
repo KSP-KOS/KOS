@@ -42,8 +42,17 @@ namespace kOS.Safe.Encapsulation
             InnerEnumerable.Push(val);
         }
 
-        public override void LoadDump(Dump dump)
+        public Dump Dump()
         {
+            /*
+            Dump result = base.Dump();
+            result.Annotations.Add(0, "<-- top");
+            return result;*/
+            return null;
+        }
+        public void LoadDump(Dump dump)
+        {
+            /*
             InnerEnumerable.Clear();
 
             List<object> values = ((List<object>)dump[kOS.Safe.Dump.Items]);
@@ -53,7 +62,7 @@ namespace kOS.Safe.Encapsulation
             foreach (object item in values)
             {
                 InnerEnumerable.Push((T)Structure.FromPrimitive(item));
-            }
+            }*/
         }
 
         private void StackInitializeSuffixes()

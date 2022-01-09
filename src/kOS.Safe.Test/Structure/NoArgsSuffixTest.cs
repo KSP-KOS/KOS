@@ -1,12 +1,14 @@
-﻿using System;
+using System;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using NUnit.Framework;
 using kOS.Safe.Test.Opcode;
 using kOS.Safe.Execution;
+using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Test.Structure
 {
+    [KOSNomenclature("MockStructure")]
     public class MockStructure : Encapsulation.Structure
     {
          

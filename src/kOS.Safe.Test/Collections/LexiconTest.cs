@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe.Encapsulation;
@@ -227,26 +227,6 @@ namespace kOS.Safe.Test.Collections
             var copyHasKeyFirstAfterRemove = (BooleanValue)InvokeDelegate(mapCopy, "HASKEY" , new StringValue("first"));
             Assert.IsTrue(copyHasKeyFirstAfterRemove);
 
-        }
-
-        [Test]
-        public void CanFormatNumericKeys()
-        {
-            var map = MakeNestedExample();
-
-            var hasKeyInner = (BooleanValue)InvokeDelegate(map, "HASKEY" , new StringValue("inner"));
-            Assert.IsTrue(hasKeyInner);
-
-            var inner = (Lexicon) ((Lexicon)map)[new StringValue("inner")];
-            Assert.IsNotNull(inner);
-
-            var hasNumericKey = (BooleanValue)InvokeDelegate(inner, "HASKEY" , new ScalarIntValue(3));
-            Assert.IsTrue(hasNumericKey);
-
-            var innerString = inner.ToString();
-
-            Assert.IsTrue(innerString.Contains("[\"2\"]"));
-            Assert.IsTrue(innerString.Contains("[3]"));
         }
 
         [Test]

@@ -1,35 +1,71 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Serialization
 {
-    /// <summary>
-    /// Classes implementing this interface can dump their data to a dictionary.
-    ///
-    /// Dumps should only contain primitives, strings, lists and other Dumps.
-    /// SerializationMgr, for convenience, will handle any encapsulation types that implement
-    /// PrimitiveStructure when serializing.
-    ///
-    /// Types implementing IDumper should make sure that proper encapsulation types are created in LoadDump whenever
-    /// necessary.
-    /// </summary>
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    public class DumpDeserializer : Attribute { }
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    public class DumpPrinter : Attribute { }
+
+    public interface IDumperContext : IDisposable
+    {
+        Dump Convert(IDumper conversionTarget);
+    }
+
+    public class DumperState
+    {
+        private class DumperContext : IDumperContext
+        {
+            private DumperState state;
+            private object contextHolder;
+            private bool disposed = false;
+            public DumperContext(DumperState state, object contextHolder)
+            {
+                if (contextHolder == null)
+                    throw new ArgumentNullException("Context holder cannot be null", "contextHolder");
+
+                this.state = state;
+                this.contextHolder = contextHolder;
+
+                state.seenList.Add(contextHolder);
+            }
+
+            public void Dispose()
+            {
+                if (this.disposed)
+                    return;
+
+                var lastItem = state.seenList.Last();
+                if (lastItem != contextHolder)
+                    throw new KOSYouShouldNeverSeeThisException("Context accounting failure during serialization.");
+
+                state.seenList.RemoveAt(state.seenList.Count - 1);
+            }
+
+            public Dump Convert(IDumper conversionTarget)
+            {
+                if (state.seenList.Contains(conversionTarget))
+                    return new DumpRecursionPlaceholder();
+                return conversionTarget.Dump(state);
+            }
+        }
+        public DumperState()
+        {
+            seenList = new List<object>();
+        }
+
+        private List<object> seenList;
+        public IDumperContext Context(IDumper contextHolder)
+        {
+            return new DumperContext(this, contextHolder);
+        }
+    }
+
     public interface IDumper
     {
-        Dump Dump();
-        void LoadDump(Dump dump);
-
-        // Here is a limitation of C#'s inheritence model.  It would be good to force all
-        // implementers of IDumper (except abstract classes, as they cannot be "instanced")
-        // to have this method - but it's a static method, so we can't.  All IDumper's should implement
-        // this static method.  We may make some ad-hoc reflection walk to enforce this rule since
-        // the compiler cannot:
-        //
-        //   /// <summary> Creates an instance of <whatever_this_class_is_called> from the Dump
-        //   /// passed in.  If this object cares about needing the reference to Shared, it can use
-        //   /// the parameter for that, or it is free to throw that away if it doesn't care.
-        //   /// This method should essentially both construct the object and populate it with
-        //   /// the LoadDump() method above.
-        //   /// </summary>
-        //   static  <whatever_this_class_is_called> CreateFromDump(SafeSharedObjects shared, Dump d)
-        //
+        Dump Dump(DumperState s);
     }
 }

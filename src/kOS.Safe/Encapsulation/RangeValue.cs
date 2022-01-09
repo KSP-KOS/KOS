@@ -61,15 +61,17 @@ namespace kOS.Safe
             AddSuffix("STEP", new NoArgsSuffix<ScalarValue>(() => InnerEnumerable.Step));
         }
 
-        public override void LoadDump(Dump dump)
+        public void LoadDump(Dump dump)
         {
+            /*
             InnerEnumerable.Stop = Convert.ToDouble(dump[DumpStop]);
             InnerEnumerable.Start = Convert.ToDouble(dump[DumpStart]);
-            InnerEnumerable.Step = Convert.ToDouble(dump[DumpStep]);
+            InnerEnumerable.Step = Convert.ToDouble(dump[DumpStep]);*/
         }
 
-        public override Dump Dump()
+        public Dump Dump()
         {
+            /*
             DumpWithHeader result = new DumpWithHeader();
 
             result.Header = "RANGE";
@@ -78,12 +80,8 @@ namespace kOS.Safe
             result.Add(DumpStart, InnerEnumerable.Start);
             result.Add(DumpStep, InnerEnumerable.Step);
 
-            return result;
-        }
-
-        public override string ToString()
-        {
-            return "RANGE(" + InnerEnumerable.Start + ", " + InnerEnumerable.Stop + ", " + InnerEnumerable.Step + ")";
+            return result;*/
+            return null;
         }
     }
 

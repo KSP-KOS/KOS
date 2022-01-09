@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using kOS.Safe.Serialization;
 
 namespace kOS.Safe.Encapsulation
@@ -7,6 +8,8 @@ namespace kOS.Safe.Encapsulation
     public class ScalarDoubleValue : ScalarValue
     {
         public static ScalarDoubleValue Zero = new ScalarDoubleValue(0);
+
+        public double Value { get; private set; }
 
         public override bool IsDouble
         {
@@ -17,6 +20,9 @@ namespace kOS.Safe.Encapsulation
         {
             get { return false; }
         }
+
+        public override int GetIntValue() { return (int)Value; }
+        public override double GetDoubleValue() { return Value; }
 
         public override bool BooleanMeaning
         {
@@ -47,24 +53,30 @@ namespace kOS.Safe.Encapsulation
             return new ScalarDoubleValue(double.MaxValue);
         }
 
-        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
-        public static ScalarDoubleValue CreateFromDump(SafeSharedObjects shared, Dump d)
+        public override Dump Dump(DumperState s)
         {
-            var newObj = new ScalarDoubleValue();
-            newObj.LoadDump(d);
-            return newObj;
-        }
-        public override Dump Dump()
-        {
-            DumpWithHeader dump = new DumpWithHeader();
+            DumpDictionary dump = new DumpDictionary(typeof(ScalarDoubleValue));
 
             dump.Add("value", Value);
 
             return dump;
         }
-        public override void LoadDump(Dump dump)
+
+        [DumpDeserializer]
+        public static ScalarDoubleValue CreateFromDump(DumpDictionary d, SafeSharedObjects shared)
         {
-            Value = Convert.ToDouble(dump["value"]);
+            return new ScalarDoubleValue(d.GetDouble("value"));
+        }
+
+        [DumpPrinter]
+        public static void Print(DumpDictionary d, IndentedStringBuilder sb)
+        {
+            sb.Append(d.GetDouble("value").ToString(CultureInfo.InvariantCulture));
+        }
+
+        public override object ToPrimitive()
+        {
+            return Value;
         }
     }
 }

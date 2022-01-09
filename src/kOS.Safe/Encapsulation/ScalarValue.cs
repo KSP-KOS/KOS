@@ -37,17 +37,11 @@ namespace kOS.Safe.Encapsulation
             }
         }
 
-        public object Value { get; protected set; }
-
         protected ScalarValue()
         {
             InitializeSuffixes();
         }
 
-        public override object ToPrimitive ()
-        {
-            return Value;
-        }
 
         public void InitializeSuffixes()
         {
@@ -136,22 +130,17 @@ namespace kOS.Safe.Encapsulation
             return false;
         }
 
-        public int GetIntValue()
-        {
-            return Convert.ToInt32(Value);
-        }
+        public abstract int GetIntValue();
+        public abstract double GetDoubleValue();
 
-        public double GetDoubleValue()
-        {
-            return Convert.ToDouble(Value);
-        }
-
+        /*
         public override string ToString()
         {
             if (IsInt) return GetIntValue().ToString();
             else if (IsDouble) return GetDoubleValue().ToString();
             return "NaN";
         }
+        */
 
         public override bool Equals(object obj)
         {
@@ -174,7 +163,7 @@ namespace kOS.Safe.Encapsulation
                 if (converter != null)
                 {
                     var val = (ScalarValue)converter.Invoke(null, new[] { obj });
-                    if (Value == val.Value) return true;
+                    if (ToPrimitive() == val.ToPrimitive()) return true;
                 }
             }
             return false;
@@ -182,7 +171,7 @@ namespace kOS.Safe.Encapsulation
 
         public override int GetHashCode()
         {
-            return Value.GetHashCode();
+            return ToPrimitive().GetHashCode();
         }
 
         public static ScalarValue Add(ScalarValue val1, ScalarValue val2)
@@ -271,7 +260,7 @@ namespace kOS.Safe.Encapsulation
 
         public static ScalarValue operator +(ScalarValue val)
         {
-            return Create(val.Value);
+            return Create(val.ToPrimitive());
         }
 
         public static ScalarValue operator -(ScalarValue val)

@@ -143,10 +143,5 @@ namespace kOS.Suffixed
 
             SafeHouse.Logger.Log("StageValues: nd={0}, parts={1}", nextDecoupler, partHash.Count);
         }
-
-        public override string ToString()
-        {
-            return string.Format("{0} Stage", base.ToString());
-        }
     }
 }

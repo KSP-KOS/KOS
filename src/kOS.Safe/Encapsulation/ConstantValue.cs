@@ -93,11 +93,6 @@ namespace kOS.Safe.Encapsulation
             AddGlobalSuffix<ConstantValue>("BOLTZMANN", new StaticSuffix<ScalarValue>(() => BoltzmannConst));
             AddGlobalSuffix<ConstantValue>("IDEALGAS", new StaticSuffix<ScalarValue>(() => IdealGasConst));
         }
-
-        public override string ToString()
-        {
-            return string.Format("{0} Constants", base.ToString());
-        }
     }
 
 }

@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Compilation;
+using kOS.Safe.Compilation;
 using kOS.Safe.Execution;
 
 namespace kOS.Safe.Encapsulation
@@ -33,11 +33,13 @@ namespace kOS.Safe.Encapsulation
             return false; // builtins cannot be dead.
         }
         
+        /*
         public override string ToString()
         {
             return string.Format("BuiltinDelegate(cpu={0}, Name={1},\n  {2})",
                                  Cpu, Name, base.ToString());
         }
+        */
         
         public override void PushUnderArgs()
         {

@@ -9,12 +9,12 @@ using System;
 namespace kOS.Suffixed
 {
     [kOS.Safe.Utilities.KOSNomenclature("RGBA")]
-    public class RgbaColor : SerializableStructure
+    public class RgbaColor : Structure
     {
-        static string DumpR = "R";
-        static string DumpG = "G";
-        static string DumpB = "B";
-        static string DumpA = "A";
+        const string DumpR = "R";
+        const string DumpG = "G";
+        const string DumpB = "B";
+        const string DumpA = "A";
 
         protected float Red { get; set; }
 
@@ -48,14 +48,6 @@ namespace kOS.Suffixed
             Alpha = copyFrom.Alpha;
         }
 
-        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
-        public static RgbaColor CreateFromDump(SafeSharedObjects shared, Dump d)
-        {
-            var newObj = new RgbaColor();
-            newObj.LoadDump(d);
-            return newObj;
-        }
-
         private void InitializeSuffixColor()
         {
             AddSuffix(new[] { "R", "RED" }, new ClampSetSuffix<ScalarValue>(() => Red, value => { Red = value; Recalculate(); }, 0, 255));
@@ -78,11 +70,6 @@ namespace kOS.Suffixed
             }
         }
 
-        public override string ToString()
-        {
-            return string.Format("RGBA({0}, {1}, {2}, {3})", Red, Green, Blue, Alpha);
-        }
-
         /// <summary>
         /// Returns a string representing the Hex color code "#rrggbb" format
         /// for the color.  (i.e. RED is "#ff0000").  Note that this cannot represent
@@ -101,25 +88,38 @@ namespace kOS.Suffixed
             return string.Format("#{0:x2}{1:x2}{2:x2}", redByte, greenByte, blueByte);
         }
 
-        public override Dump Dump()
+        public override Dump Dump(DumperState s)
         {
-            DumpWithHeader dump = new DumpWithHeader
-            {
-                {DumpR, Red },
-                {DumpG, Green },
-                {DumpB, Blue },
-                {DumpA, Alpha }
-            };
+            DumpDictionary dump = new DumpDictionary(this.GetType());
+
+            dump.Add(DumpR, Red);
+            dump.Add(DumpG, Green);
+            dump.Add(DumpB, Blue);
+            dump.Add(DumpA, Alpha);
 
             return dump;
         }
 
-        public override void LoadDump(Dump dump)
+        [DumpDeserializer]
+        public static RgbaColor CreateFromDump(DumpDictionary d, SafeSharedObjects shared)
         {
-            Red = (float)Convert.ToDouble(dump[DumpR]);
-            Green = (float)Convert.ToDouble(dump[DumpG]);
-            Blue = (float)Convert.ToDouble(dump[DumpB]);
-            Alpha = (float)Convert.ToDouble(dump[DumpA]);
+            double r = d.GetDouble(DumpR);
+            double g = d.GetDouble(DumpG);
+            double b = d.GetDouble(DumpB);
+            double a = d.GetDouble(DumpA);
+
+            return new RgbaColor((float)r, (float)g, (float)b, (float)a);
+        }
+
+        [DumpPrinter]
+        public static void Print(DumpDictionary d, IndentedStringBuilder sb)
+        {
+            double r = d.GetDouble(DumpR);
+            double g = d.GetDouble(DumpG);
+            double b = d.GetDouble(DumpB);
+            double a = d.GetDouble(DumpA);
+
+            sb.Append(string.Format("RGBA({0}, {1}, {2}, {3})", r, g, b, a));
         }
     }
 }

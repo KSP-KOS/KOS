@@ -29,10 +29,5 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("INDEX", new NoArgsSuffix<ScalarValue>(() => index));
             AddSuffix("VALUE", new NoArgsSuffix<Structure>(() => FromPrimitiveWithAssert(enumerator.Current)));
         }
-
-        public override string ToString()
-        {
-            return string.Format("{0} Iterator", base.ToString());
-        }
     }
 }

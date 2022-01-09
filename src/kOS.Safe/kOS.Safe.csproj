@@ -61,6 +61,7 @@
     <Compile Include="Binding\BindingDelgate.cs" />
     <Compile Include="Binding\BoundVariable.cs" />
     <Compile Include="Binding\IBindingManager.cs" />
+    <Compile Include="Binding\BaseBindingManager.cs" />
     <Compile Include="Callback\IGameEventDispatchManager.cs" />
     <Compile Include="Compilation\Calculator.cs" />
     <Compile Include="Compilation\CalculatorBool.cs" />
@@ -222,6 +223,7 @@
     <Compile Include="Screen\ScreenSnapshot.cs" />
     <Compile Include="Screen\SubBuffer.cs" />
     <Compile Include="Screen\TextEditor.cs" />
+    <Compile Include="Serialization\IndentedStringBuilder.cs" />
     <Compile Include="Sound\IProceduralSoundWave.cs" />
     <Compile Include="Sound\ISoundMaker.cs" />
     <Compile Include="Sound\IVoice.cs" />
@@ -244,15 +246,10 @@
     <Compile Include="Encapsulation\RangeValue.cs" />
     <Compile Include="Encapsulation\CollectionValue.cs" />
     <Compile Include="Encapsulation\EnumerableValue.cs" />
-    <Compile Include="Serialization\Formatter.cs" />
     <Compile Include="Serialization\JSONFormatter.cs" />
-    <Compile Include="Serialization\TerminalFormatter.cs" />
     <Compile Include="SimpleJson.cs" />
     <Compile Include="Exceptions\KOSSerializationException.cs" />
-    <Compile Include="Serialization\SafeSerializationMgr.cs" />
     <Compile Include="Serialization\Dump.cs" />
-    <Compile Include="Serialization\DumpWithHeader.cs" />
-    <Compile Include="Serialization\SerializableStructure.cs" />
     <Compile Include="Persistence\FileContent.cs" />
     <Compile Include="Encapsulation\PrimitiveStructure.cs" />
     <Compile Include="Communication\Connection.cs" />

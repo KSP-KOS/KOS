@@ -12,7 +12,7 @@ namespace kOS.Sound
     /// </summary>
     [kOS.Safe.Utilities.KOSNomenclature("Note")]
     [kOS.Safe.Utilities.KOSNomenclature("SlideNote", CSharpToKOS = false)]
-    public class NoteValue : SerializableStructure
+    public class NoteValue : Structure
     {
         public float Frequency { get; set; }
         public float EndFrequency { get; set; }
@@ -47,20 +47,6 @@ namespace kOS.Sound
         {
         }
 
-        // Only used by CreateFromDump()- don't make it public because it leaves fields
-        // unpopulated if not immediately followed up by LoadDump():
-        private NoteValue()
-        {
-        }
-
-        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
-        public static NoteValue CreateFromDump(SafeSharedObjects shared, Dump d)
-        {
-            var newObj = new NoteValue();
-            newObj.LoadDump(d);
-            return newObj;
-        }
-
         private void InitializeSuffixes()
         {
             AddSuffix("FREQUENCY", new Suffix<ScalarDoubleValue>(() => Frequency));
@@ -70,19 +56,9 @@ namespace kOS.Sound
             AddSuffix("DURATION", new Suffix<ScalarDoubleValue>(() => Duration));
         }
 
-        public override string ToString()
+        public override Dump Dump(DumperState s)
         {
-            if (Frequency == EndFrequency)
-                return String.Format("Note({0},{1},{2},{3})", Frequency, KeyDownLength, Duration, Volume);
-            else
-                return String.Format("SlideNote({0},{1},{2},{3},{4})", Frequency, EndFrequency, KeyDownLength, Duration, Volume);
-        }
-
-        public override Dump Dump()
-        {
-            DumpWithHeader result = new DumpWithHeader();
-
-            result.Header = "NOTE";
+            DumpDictionary result = new DumpDictionary(this.GetType());
 
             result.Add("freq", Frequency);
             result.Add("endfreq", EndFrequency);
@@ -93,13 +69,42 @@ namespace kOS.Sound
             return result;
         }
 
-        public override void LoadDump(Dump dump)
+        [DumpDeserializer]
+        public static NoteValue CreateFromDump(DumpDictionary d, SafeSharedObjects shared)
         {
-            Frequency = Convert.ToSingle(dump["freq"]);
-            EndFrequency = Convert.ToSingle(dump["endfreq"]);
-            Volume = Convert.ToSingle(dump["vol"]);
-            KeyDownLength = Convert.ToSingle(dump["keydown"]);
-            Duration = Convert.ToSingle(dump["duration"]);
+            return new NoteValue(
+                (float)d.GetDouble("freq"),
+                (float)d.GetDouble("endfreq"),
+                (float)d.GetDouble("vol"),
+                (float)d.GetDouble("keydown"),
+                (float)d.GetDouble("duration")
+            );
+        }
+
+        [DumpPrinter]
+        public static void Print(DumpDictionary dump, IndentedStringBuilder sb)
+        {
+            double freq = dump.GetDouble("freq");
+            double endfreq = dump.GetDouble("endfreq");
+            bool staticNote = (freq == endfreq);
+
+            sb.Append(staticNote ? "Note(" : "SlideNote(");
+            sb.Append(freq.ToString());
+            sb.Append(",");
+            if (!staticNote)
+            {
+                sb.Append(endfreq.ToString());
+                sb.Append(",");
+            }
+
+            sb.Append(dump.GetDouble("keydown").ToString());
+            sb.Append(",");
+
+            sb.Append(dump.GetDouble("duration").ToString());
+            sb.Append(",");
+
+            sb.Append(dump.GetDouble("vol").ToString());
+            sb.Append(")");
         }
 
         /// <summary>

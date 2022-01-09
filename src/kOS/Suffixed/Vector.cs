@@ -10,7 +10,7 @@ using kOS.Safe;
 namespace kOS.Suffixed
 {
     [kOS.Safe.Utilities.KOSNomenclature("Vector")]
-    public class Vector : SerializableStructure
+    public class Vector : Structure
     {
         public const string DumpX = "x";
         public const string DumpY = "y";
@@ -50,14 +50,6 @@ namespace kOS.Suffixed
             X = x;
             Y = y;
             Z = z;
-        }
-
-        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
-        public static Vector CreateFromDump(SafeSharedObjects shared, Dump d)
-        {
-            var newObj = new Vector();
-            newObj.LoadDump(d);
-            return newObj;
         }
 
         private void InitializeSuffixes()
@@ -118,11 +110,6 @@ namespace kOS.Suffixed
         public Vector3 ToVector3() // Vector3 is the single-precision version of Vector3D.
         {
             return new Vector3((float)X, (float)Y, (float)Z);
-        }
-
-        public override string ToString()
-        {
-            return "V(" + X + ", " + Y + ", " + Z + ")";
         }
 
         public override bool Equals(object obj)
@@ -234,9 +221,9 @@ namespace kOS.Suffixed
             return !(a == b);
         }
 
-        public override Dump Dump()
+        public override Dump Dump(DumperState s)
         {
-            DumpWithHeader dump = new DumpWithHeader();
+            DumpDictionary dump = new DumpDictionary(this.GetType());
 
             dump.Add(DumpX, X);
             dump.Add(DumpY, Y);
@@ -245,11 +232,30 @@ namespace kOS.Suffixed
             return dump;
         }
 
-        public override void LoadDump(Dump dump)
+        [DumpDeserializer]
+        public static Vector CreateFromDump(DumpDictionary d, SafeSharedObjects shared)
         {
-            X = Convert.ToDouble(dump[DumpX]);
-            Y = Convert.ToDouble(dump[DumpY]);
-            Z = Convert.ToDouble(dump[DumpZ]);
+            double x = d.GetDouble(DumpX);
+            double y = d.GetDouble(DumpY);
+            double z = d.GetDouble(DumpZ);
+
+            return new Vector(x, y, z);
+        }
+
+        [DumpPrinter]
+        public static void Print(DumpDictionary d, IndentedStringBuilder sb)
+        {
+            double x = d.GetDouble(DumpX);
+            double y = d.GetDouble(DumpY);
+            double z = d.GetDouble(DumpZ);
+
+            sb.Append("V(");
+            sb.Append(x.ToString());
+            sb.Append(", ");
+            sb.Append(y.ToString());
+            sb.Append(", ");
+            sb.Append(z.ToString());
+            sb.Append(")");
         }
     }
 }

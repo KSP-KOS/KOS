@@ -3,11 +3,12 @@ using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Function;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Serialization;
+using System.Globalization;
 
 namespace kOS.Safe.Encapsulation
 {
     [kOS.Safe.Utilities.KOSNomenclature("PIDLoop")]
-    public class PIDLoop : SerializableStructure
+    public class PIDLoop : Structure
     {
         [Function("pidloop")]
         public class PIDLoopConstructor : SafeFunctionBase
@@ -267,12 +268,6 @@ namespace kOS.Safe.Encapsulation
             LastSampleTime = double.MaxValue;
         }
 
-        public override string ToString()
-        {
-            return string.Format("PIDLoop(Kp:{0}, Ki:{1}, Kd:{2}, Min:{3}, Max:{4}, Setpoint:{5}, Error:{6}, Output:{7})",
-                Kp, Ki, Kd, MinOutput, MaxOutput, Setpoint, Error, Output);
-        }
-
         public string ToCSVString()
         {
             return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8}",
@@ -284,37 +279,41 @@ namespace kOS.Safe.Encapsulation
             return string.Format("pidloop({0}, {1}, {2}, {3}, {4})", Ki, Kp, Kd, MaxOutput, ExtraUnwind);
         }
 
-        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
-        public static PIDLoop CreateFromDump(SafeSharedObjects shared, Dump d)
+        public override Dump Dump(DumperState s)
         {
-            var newObj = new PIDLoop();
-            newObj.LoadDump(d);
-            return newObj;
+            DumpDictionary dump = new DumpDictionary(typeof(ScalarDoubleValue));
+
+            dump.Add("Kp", Kp);
+            dump.Add("Ki", Ki);
+            dump.Add("Kd", Kd);
+            dump.Add("Setpoint", Setpoint);
+            dump.Add("MinOutput", MinOutput);
+            dump.Add("MaxOutput", MaxOutput);
+            dump.Add("ExtraUnwind", ExtraUnwind);
+
+            return dump;
         }
 
-        public override Dump Dump()
+        [DumpDeserializer]
+        public static PIDLoop CreateFromDump(DumpDictionary d, SafeSharedObjects shared)
         {
-            var result = new DumpWithHeader { Header = "PIDLoop" };
-            result.Add("Kp", Kp);
-            result.Add("Ki", Ki);
-            result.Add("Kd", Kd);
-            result.Add("Setpoint", Setpoint);
-            result.Add("MaxOutput", MaxOutput);
-            result.Add("MinOutput", MinOutput);
-            result.Add("ExtraUnwind", ExtraUnwind);
+            double Kp = d.GetDouble("Kp");
+            double Ki = d.GetDouble("Ki");
+            double Kd = d.GetDouble("Kd");
+            double Setpoint = d.GetDouble("Setpoint");
+            double MinOutput = d.GetDouble("MinOutput");
+            double MaxOutput = d.GetDouble("MaxOutput");
+            bool ExtraUnwind = d.GetBool("ExtraUnwind");
 
+            var result = new PIDLoop(Kp, Ki, Kd, MaxOutput, MinOutput, extraUnwind: ExtraUnwind);
+            result.Setpoint = Setpoint;
             return result;
-    }
+        }
 
-    public override void LoadDump(Dump dump)
+        [DumpPrinter]
+        public static void Print(DumpDictionary d, IndentedStringBuilder sb)
         {
-            Kp = Convert.ToDouble(dump["Kp"]);
-            Ki = Convert.ToDouble(dump["Ki"]);
-            Kd = Convert.ToDouble(dump["Kd"]);
-            Setpoint = Convert.ToDouble(dump["Setpoint"]);
-            MinOutput = Convert.ToDouble(dump["MinOutput"]);
-            MaxOutput = Convert.ToDouble(dump["MaxOutput"]);
-            ExtraUnwind = Convert.ToBoolean(dump["ExtraUnwind"]);
+            sb.Append(d.GetDouble("value").ToString(CultureInfo.InvariantCulture));
         }
     }
 }

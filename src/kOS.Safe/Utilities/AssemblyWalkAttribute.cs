@@ -91,7 +91,7 @@ namespace kOS.Safe.Utilities
 
         public static bool CheckMethodParameters(Type baseType, string methodName, params Type[] parameterTypes)
         {
-            var managerRegisterMethod = baseType.GetMethod(methodName, BindingFlags.Static | BindingFlags.Public);
+            var managerRegisterMethod = baseType.GetMethod(methodName, BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy);
             if (managerRegisterMethod != null)
             {
                 // Check the register method to make sure it supports both parameters.
@@ -212,7 +212,7 @@ namespace kOS.Safe.Utilities
                 if (!string.IsNullOrEmpty(walkAttribute.StaticWalkMethod))
                 {
                     Type managerType = AllWalkAttributes[walkAttribute];
-                    var walkMethod = managerType.GetMethod(walkAttribute.StaticWalkMethod, BindingFlags.Static | BindingFlags.Public);
+                    var walkMethod = managerType.GetMethod(walkAttribute.StaticWalkMethod, BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy);
                     walkMethod.Invoke(null, null);
                 }
                 SafeHouse.Logger.Log("Attribute " + walkAttribute.ToString() + " loaded " + walkAttribute.LoadedCount + " objects.");
@@ -229,7 +229,7 @@ namespace kOS.Safe.Utilities
                     if (!string.IsNullOrEmpty(walkAttribute.StaticRegisterMethod))
                     {
                         Type managerType = AllWalkAttributes[walkAttribute];
-                        var managerRegisterMethod = managerType.GetMethod(walkAttribute.StaticRegisterMethod, BindingFlags.Static | BindingFlags.Public);
+                        var managerRegisterMethod = managerType.GetMethod(walkAttribute.StaticRegisterMethod, BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy);
                         if (managerRegisterMethod != null)
                         {
                             if (walkAttribute.AttributeType != null)
