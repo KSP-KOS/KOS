@@ -828,6 +828,10 @@ namespace kOS.Screen
         /// </summary>
         void ProcessUnconsumedInput()
         {
+            if (!shared.Processor.HasBooted)
+            {
+                return; // Fix race condition (Github issue #2925) where Update() calls this before FixedUpdate() has set up the CPU.
+            }
             if (shared != null && shared.Interpreter != null && shared.Interpreter.IsWaitingForCommand())
             {
                 Queue<char> q = shared.Screen.CharInputQueue;
