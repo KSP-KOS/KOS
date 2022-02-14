@@ -5,7 +5,7 @@
     "$vref"          : "#/ckan/ksp-avc",
     "x_netkan_epoch" : 1,
     "name"           : "kOS: Scriptable Autopilot System",
-    "abstract"       : "kOS is a scriptable autopilot Mod for Kerbal Space Program. It allows you write small programs that automate specific tasks.",
+    "abstract"       : "kOS is a scriptable autopilot mod that allows you write small programs to automate specific tasks.",
     "author"         : "many KSP-KOS contributers, currently dunbaratu and hvacengi",
     "license"        : "GPL-3.0",
     "release_status" : "stable",
