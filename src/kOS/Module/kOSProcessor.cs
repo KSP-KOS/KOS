@@ -1137,8 +1137,8 @@ namespace kOS.Module
 
         public void SetAutopilotMode(int mode)
         {
-            UIStateToggleButton[] modeButtons = FindObjectOfType<VesselAutopilotUI>().modeButtons;
-            modeButtons.ElementAt(mode).SetState(true);
+            // First change the real setting underneath the UI:
+            FlightGlobals.ActiveVessel.Autopilot.SetMode((VesselAutopilot.AutopilotMode) mode);
         }
 
         public string BootFilename
