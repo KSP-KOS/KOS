@@ -168,6 +168,8 @@
     <Compile Include="Sound\TriangleSoundWave.cs" />
     <Compile Include="Sound\Voice.cs" />
     <Compile Include="Sound\VoiceValue.cs" />
+    <Compile Include="Suffixed\AttitudeController.cs" />
+    <Compile Include="Suffixed\AttitudeCorrectionResult.cs" />
     <Compile Include="Suffixed\BoundsValue.cs" />
     <Compile Include="Suffixed\ConsumedResourceValue.cs" />
     <Compile Include="Suffixed\ConsumedResourceValueRCS.cs" />

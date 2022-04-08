@@ -592,7 +592,7 @@ namespace kOS.Control
             // TODO: If stock vessel.MOI stops being so weird, we might be able to change the following line
             // into this instead.  (See the comment on FindMOI()'s header):
             //      momentOfInertia = shared.Vessel.MOI;
-            momentOfInertia = FindMoI(); 
+            momentOfInertia = SteeringManager.FindMoI(shared.Vessel); 
 
             adjustTorque = Vector3d.zero;
             measuredTorque = Vector3d.Scale(momentOfInertia, angularAcceleration);
@@ -681,7 +681,7 @@ namespace kOS.Control
         /// See https://github.com/KSP-KOS/KOS/issues/2814 for why this wrapper around KSP's API call exists.
         /// <para />
         /// </summary>
-        void CorrectedGetPotentialTorque(ITorqueProvider tp, out Vector3 pos, out Vector3 neg)
+        public void CorrectedGetPotentialTorque(ITorqueProvider tp, out Vector3 pos, out Vector3 neg)
         {
             if (tp is ModuleRCS)
             {
@@ -776,19 +776,23 @@ namespace kOS.Control
         /// would expect "control from here" to do.)
         /// </summary>   
         /// TODO: Check this again after each KSP stock release to see if it's been changed or not.
-        public Vector3 FindMoI()
+        public static Vector3 FindMoI(Vessel vessel)
         {
+            var vesTransform = vessel.ReferenceTransform;
+            var vesRotation = vesTransform.rotation * Quaternion.Euler(-90, 0, 0);
+            var vesCenterOfMass = vessel.CoMD;
+
             var tensor = Matrix4x4.zero;
             Matrix4x4 partTensor = Matrix4x4.identity;
             Matrix4x4 inertiaMatrix = Matrix4x4.identity;
             Matrix4x4 productMatrix = Matrix4x4.identity;
-            foreach (var part in Vessel.Parts)
+            foreach (var part in vessel.Parts)
             {
                 if (part.rb != null)
                 {
                     KSPUtil.ToDiagonalMatrix2(part.rb.inertiaTensor, ref partTensor);
 
-                    Quaternion rot = Quaternion.Inverse(vesselRotation) * part.transform.rotation * part.rb.inertiaTensorRotation;
+                    Quaternion rot = Quaternion.Inverse(vesRotation) * part.transform.rotation * part.rb.inertiaTensorRotation;
                     Quaternion inv = Quaternion.Inverse(rot);
 
                     Matrix4x4 rotMatrix = Matrix4x4.TRS(Vector3.zero, rot, Vector3.one);
@@ -797,7 +801,7 @@ namespace kOS.Control
                     // add the part inertiaTensor to the ship inertiaTensor
                     KSPUtil.Add(ref tensor, rotMatrix * partTensor * invMatrix);
 
-                    Vector3 position = vesselTransform.InverseTransformDirection(part.rb.position - centerOfMass);
+                    Vector3 position = vesTransform.InverseTransformDirection(part.rb.position - vesCenterOfMass);
 
                     // add the part mass to the ship inertiaTensor
                     KSPUtil.ToDiagonalMatrix2(part.rb.mass * position.sqrMagnitude, ref inertiaMatrix);

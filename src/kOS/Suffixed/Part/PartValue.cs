@@ -85,6 +85,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("PARTSTAGGED", new OneArgsSuffix<ListValue, StringValue>(GetPartsTagged));
             AddSuffix("PARTSTAGGEDPATTERN", new OneArgsSuffix<ListValue, StringValue>(GetPartsTaggedPattern));
             AddSuffix("ALLTAGGEDPARTS", new NoArgsSuffix<ListValue>(GetAllTaggedParts));
+            AddSuffix("ATTITUDECONTROLLERS", new NoArgsSuffix<ListValue>(() => new ListValue(GetAttitudeControllers())));
         }
 
         public BoundsValue GetBoundsValue()
@@ -433,6 +434,26 @@ namespace kOS.Suffixed.Part
         {
             return PartValueFactory.Construct(DynamicFindPartsInBranch(p => p.Modules.OfType<KOSNameTag>()
                 .Any(tag => !String.Equals(tag.nameTag, "", StringComparison.CurrentCultureIgnoreCase))), Shared);
+        }
+
+        public IEnumerable<AttitudeController> GetAttitudeControllers()
+        {
+            var result = new List<AttitudeController>();
+            bool foundEngine = false;
+            foreach (PartModule module in Part.Modules)
+            {
+                if (module is ModuleEngines)
+                {
+                    if (foundEngine)
+                        continue;
+                    foundEngine = true;
+                }
+                PartModuleFields moduleStructure = PartModuleFieldsFactory.Construct(module, Shared);
+                var controller = AttitudeController.FromModule(this, moduleStructure, module);
+                if (controller != null)
+                    result.Add(controller);
+            }
+            return result;
         }
 
         /// <summary>
