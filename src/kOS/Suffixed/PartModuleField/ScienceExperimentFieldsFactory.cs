@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using kOS.Safe.Utilities;
 using kOS.AddOns.OrbitalScience;
 
