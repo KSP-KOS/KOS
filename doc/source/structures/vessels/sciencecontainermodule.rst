@@ -21,6 +21,9 @@ The type of structures returned by kOS when querying a module that stores scienc
         * - :meth:`DUMPDATA(DATA)`
           -
           - Discard the experiment
+        * - :meth:`COLLECTALL()`
+          -
+          - Run the "collect all" action directly
         * - :attr:`HASDATA`
           - :ref:`Boolean <boolean>`
           - Does this part contain experiments
@@ -35,6 +38,10 @@ The type of structures returned by kOS when querying a module that stores scienc
 .. method:: ScienceContainerModule:DUMPDATA(DATA)
 
     Call this method to dump the particular experiment provided
+
+.. method:: ScienceContainerModule:COLLECTALL()
+
+    Call this method to run the unit's "collect all" action
 
 .. attribute:: ScienceExperimentModule:HASDATA
 
