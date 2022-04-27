@@ -11,8 +11,10 @@ namespace kOS.Suffixed.PartModuleField {
     public class ScienceContainerFields : PartModuleFields {
         protected global::Part part;
         protected IScienceDataContainer container;
+        protected ModuleScienceContainer scienceContainer;
         public ScienceContainerFields(PartModule module, SharedObjects shared) : base(module, shared) {
             this.container = module as IScienceDataContainer;
+            this.scienceContainer = container as ModuleScienceContainer;
             part = module.part;
 
             if (container == null) {
@@ -26,6 +28,11 @@ namespace kOS.Suffixed.PartModuleField {
             AddSuffix("HASDATA", new Suffix<BooleanValue>(() => HasData(), "Does this experiment have any data stored"));
             AddSuffix("DATA", new Suffix<ListValue>(Data, "Does this experiment have any data stored"));
             AddSuffix("DUMPDATA", new OneArgsSuffix<ScalarIntValue>(DumpData));
+            AddSuffix("COLLECTALL", new NoArgsVoidSuffix(CollectAll, "Collect all experiments"));
+        }
+
+        public virtual void CollectAll() {
+            scienceContainer.CollectAllAction(new KSPActionParam(new KSPActionGroup(), new KSPActionType()));
         }
 
         public virtual void DumpData(ScalarIntValue index) {
