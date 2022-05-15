@@ -30,6 +30,7 @@ namespace kOS.Safe.Compilation.KS
         private bool needImplicitReturn;
         private bool nextBraceIsFunction;
         private bool allowLazyGlobal;
+        private bool allowClobberBuiltIn;
         /// <summary>Used when you want to set the next opcode's label but there's many places the next AddOpcode call might happen in the code</summary>
         private string forcedNextLabel;
         private Int16 braceNestLevel;
@@ -46,6 +47,16 @@ namespace kOS.Safe.Compilation.KS
             GLOBAL,
             /// <summary>The storage will be whatever scope it happens to find the first hit, or global if not found.</summary>
             LAZYGLOBAL
+        };
+
+        private enum IdentifierType
+        {
+            OTHER,
+            SYSTEM_LOCK,
+            BUILTIN_FUNCTION,
+            BUILTIN_READONLY_VARIABLE,
+            BUILTIN_SETTABLE_VARIABLE
+            // More enum vals could be added here if future edits require it.
         };
         
         // Because the Compiler object can be re-used, with its Compile()
@@ -73,6 +84,7 @@ namespace kOS.Safe.Compilation.KS
             braceNestLevel = 0;
             nextBraceIsFunction = false;
             allowLazyGlobal = true;
+            allowClobberBuiltIn = options.AllowClobberBuiltins;
             forcedNextLabel = String.Empty;
             scopeStack.Clear();
             scopeMap.Clear();
@@ -82,14 +94,107 @@ namespace kOS.Safe.Compilation.KS
             boilerplateLoadAndRunEntryLabel = "@LR00";
         }
 
+        /// <summary>
+        /// Tests if this string is a built-in identifier used by kOS, and if so, which kind.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>IdentiferType.OTHER if it's not a built-in.  Otherwise it's a built-in ident of some kind.</returns>
+        private IdentifierType BuiltInIdentifierType(string name)
+        {
+            string lowerName = name.ToLower();
+            if (options.BuiltInFunctionExists(lowerName))
+                return IdentifierType.BUILTIN_FUNCTION;
+            if (UserFunction.IsSystemLock(lowerName))
+                return IdentifierType.SYSTEM_LOCK;
+
+            // Check Settable before Gettable, because if it's both settable and gettable, we want to return settable:
+            if (options.BoundSetVariableExists(lowerName))
+                return IdentifierType.BUILTIN_SETTABLE_VARIABLE;
+            if (options.BoundGetVariableExists(lowerName))
+                return IdentifierType.BUILTIN_READONLY_VARIABLE;
+
+            return IdentifierType.OTHER;
+        }
+
+        private void AssertNoSetBuiltinViolation(string name)
+        {
+            if (allowClobberBuiltIn)
+                return;
+
+            IdentifierType builtIn = BuiltInIdentifierType(name);
+            if (
+                /* Don't set things like PRINT() or HEADING() so they no longer call the built-ins. */
+                builtIn == IdentifierType.BUILTIN_FUNCTION ||
+                /* Don't use set to mask or clobber get-only builtins like SHIP or NORTH, but okay if it's settable like TARGET. */
+                builtIn == IdentifierType.BUILTIN_READONLY_VARIABLE ||
+                /* Don't set things like THROTTLE or STEERING. */
+                builtIn == IdentifierType.SYSTEM_LOCK
+                )
+            {
+                throw new KOSCompileException(new LineCol(lastLine, lastColumn),
+                    string.Format("Not allowed to SET a name that will clobber or hide the {0} called '{1}'.\nSee kOS documentation for CLOBBERBUILTINS for more information.",
+                        builtIn, name));
+            }
+            return;
+        }
+
+        private void AssertNoLockBuiltinViolation(string name)
+        {
+            if (allowClobberBuiltIn)
+                return;
+
+            IdentifierType builtIn = BuiltInIdentifierType(name);
+            if (
+                /* Don't lock things like PRINT() or HEADING() so they no longer call the built-ins. */
+                builtIn == IdentifierType.BUILTIN_FUNCTION ||
+                /* Don't use lock on any of the built-in vars that are meant for get or set. */
+                builtIn == IdentifierType.BUILTIN_READONLY_VARIABLE ||
+                builtIn == IdentifierType.BUILTIN_SETTABLE_VARIABLE
+
+                /* It's okay to lock things like THROTTLE or STEERING.
+                 * builtIn == IdentifierType.SYSTEM_LOCK
+                 */
+                )
+            {
+                throw new KOSCompileException(new LineCol(lastLine, lastColumn),
+                    string.Format("Not allowed to LOCK a name that will clobber or hide the {0} called '{1}'.\nSee kOS documentation for CLOBBERBUILTINS for more information.",
+                        builtIn, name));
+            }
+            return;
+        }
+
+        private void AssertNoFuncBuiltinViolation(string name)
+        {
+            if (allowClobberBuiltIn)
+                return;
+
+            IdentifierType builtIn = BuiltInIdentifierType(name);
+            if (
+                /* Don't define a function that hides things like PRINT() or HEADING() so they no longer call the built-ins. */
+                builtIn == IdentifierType.BUILTIN_FUNCTION ||
+                /* Don't define a function that hides any of the built-in vars that are meant for get or set. */
+                builtIn == IdentifierType.BUILTIN_READONLY_VARIABLE ||
+                builtIn == IdentifierType.BUILTIN_SETTABLE_VARIABLE ||
+
+                /* Don't change a SYSTEM LOCK into a function, although it's similar there's some relevant differences: */
+                builtIn == IdentifierType.SYSTEM_LOCK
+                )
+            {
+                throw new KOSCompileException(new LineCol(lastLine, lastColumn),
+                    string.Format("Not allowed to make a function name that will clobber or hide the {0} called '{1}'.\nSee kOS documentation for CLOBBERBUILTINS for more information.",
+                        builtIn, name));
+            }
+            return;
+        }
+
         public CodePart Compile(int startLineNum, ParseTree tree, Context context, CompilerOptions options)
         {
+            this.options = options;
+            this.context = context;
             InitCompileFlags();
+            this.startLineNum = startLineNum;
 
             part = new CodePart();
-            this.context = context;
-            this.options = options;
-            this.startLineNum = startLineNum;
             
             ++context.NumCompilesSoFar;
 
@@ -692,12 +797,14 @@ namespace kOS.Safe.Compilation.KS
             if (isLock)
             {
                 userFuncIdentifier = lastSubNode.Nodes[1].Token.Text; // The IDENT of: LOCK IDENT TO EXPR.
+                AssertNoLockBuiltinViolation(userFuncIdentifier);
                 bodyNode = lastSubNode.Nodes[3]; // The EXPR of: LOCK IDENT TO EXPR.
                 needImplicitArgBottom = true;
             }
             else if (isDefFunc)
             {
                 userFuncIdentifier = lastSubNode.Nodes[1].Token.Text; // The IDENT of: DEFINE FUNCTION IDENT INSTRUCTION_BLOCK.
+                AssertNoFuncBuiltinViolation(userFuncIdentifier);
                 bodyNode = lastSubNode.Nodes[2]; // The INSTRUCTION_BLOCK of: DEFINE FUNCTION IDENT INSTRUCTION_BLOCK.
             }
             else
@@ -1015,7 +1122,9 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.lazyglobal_directive:
                     VisitLazyGlobalDirective(node);
                     break;
-                    
+                case TokenType.clobberbuiltins_directive:
+                    VisitClobberBuiltinsDirective(node);
+                    break;
                 default:
                     foreach (ParseNode childNode in node.Nodes)
                           TraverseScopeBranch(childNode);
@@ -1644,7 +1753,7 @@ namespace kOS.Safe.Compilation.KS
 
             if (isDirect)
             {
-                if (options.FuncManager.Exists(directName)) // if the name is a built-in, then add the "()" after it.
+                if (options.BuiltInFunctionExists(directName)) // if the name is a built-in, then add the "()" after it.
                     directName += "()";
                 AddOpcode(new OpcodeCall(directName));
             }
@@ -1702,7 +1811,7 @@ namespace kOS.Safe.Compilation.KS
         {
             if (isDirect)
             {
-                if (options.FuncManager.Exists(directName)) // if the name is a built-in, then make a BuiltInDelegate
+                if (options.BuiltInFunctionExists(directName)) // if the name is a built-in, then make a BuiltInDelegate
                 {
                     AddOpcode(new OpcodePush(new KOSArgMarkerType()));
                     AddOpcode(new OpcodePush(directName));
@@ -1744,7 +1853,7 @@ namespace kOS.Safe.Compilation.KS
 
                 bool remember = identifierIsSuffix;
                 identifierIsSuffix = (nodeIndex > 0);
-
+                bool suffixTrailersExist = node.Nodes.Count > 1;
                 ParseNode suffixTerm;
                 if (nodeIndex == 0)
                     suffixTerm = node.Nodes[nodeIndex];
@@ -1764,7 +1873,7 @@ namespace kOS.Safe.Compilation.KS
                 {
                     firstIdentifier = GetIdentifierText(suffixTerm);
                     UserFunction userFuncObject = GetUserFunctionWithScopeWalk(firstIdentifier, node);
-                    if (userFuncObject != null && !compilingSetDestination)
+                    if (userFuncObject != null && (suffixTrailersExist || !compilingSetDestination))
                     {
                         firstIdentifier = userFuncObject.ScopelessPointerIdentifier;
                         isUserFunc = true;
@@ -2218,6 +2327,8 @@ namespace kOS.Safe.Compilation.KS
 
                 string identifier = GetIdentifierText(setThis);
 
+                AssertNoSetBuiltinViolation(identifier);
+
                 UserFunction userFuncObject = GetUserFunctionWithScopeWalk(identifier, setThis);
                 if (userFuncObject != null)
                 {
@@ -2541,6 +2652,9 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
             string lockIdentifier = node.Nodes[1].Token.Text;
+
+            AssertNoLockBuiltinViolation(lockIdentifier);
+        
             int expressionHash = ConcatenateNodes(node.Nodes[3]).GetHashCode();
             UserFunction lockObject = context.UserFunctions.GetUserFunction(
                 lockIdentifier, 
@@ -2693,7 +2807,9 @@ namespace kOS.Safe.Compilation.KS
             {
                 for (int i = 0; i < lastSubNode.Nodes.Count; i += 4) {
                     VisitNode(lastSubNode.Nodes[i + 2]);
-                    AddOpcode(CreateAppropriateStoreCode(whereToStore, true, "$" + GetIdentifierText(lastSubNode.Nodes[i])));
+                    string identifier = GetIdentifierText(lastSubNode.Nodes[i]);
+                    AssertNoSetBuiltinViolation(identifier);
+                    AddOpcode(CreateAppropriateStoreCode(whereToStore, true, "$" + identifier));
                 }
             }
             
@@ -2763,7 +2879,9 @@ namespace kOS.Safe.Compilation.KS
 
                 branchSkippingInit.DestinationLabel = GetNextLabel(false);
             }
-            AddOpcode(CreateAppropriateStoreCode(whereToStore, true, "$" + GetIdentifierText(identifierNode)));
+            string identifier = GetIdentifierText(identifierNode);
+            AssertNoSetBuiltinViolation(identifier);
+            AddOpcode(CreateAppropriateStoreCode(whereToStore, true, "$" + identifier));
         }
                 
         /// <summary>
@@ -2879,7 +2997,12 @@ namespace kOS.Safe.Compilation.KS
         private void VisitToggleStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            string varName = "$" + GetIdentifierText(node.Nodes[1]);
+
+            string identifier = GetIdentifierText(node.Nodes[1]);
+
+            AssertNoSetBuiltinViolation(identifier);
+
+            string varName = "$" + identifier;
             VisitVarIdentifier(node.Nodes[1]);
             AddOpcode(new OpcodeLogicToBool());
             AddOpcode(new OpcodeLogicNot());
@@ -3181,7 +3304,11 @@ namespace kOS.Safe.Compilation.KS
             if (hasIn)
             {
                 // destination variable
-                string varName = "$" + GetIdentifierText(node.Nodes[3]);
+                string identifier = GetIdentifierText(node.Nodes[3]);
+
+                AssertNoSetBuiltinViolation(identifier);
+
+                string varName = "$" + identifier;
                 // list type
                 AddOpcode(new OpcodePush(new KOSArgMarkerType()));
                 VisitNode(node.Nodes[1]);
@@ -3411,28 +3538,31 @@ namespace kOS.Safe.Compilation.KS
             // not the parser.  Therefore the parser treats it like a normal statement and here in
             // the compiler we'll decide per-directive which directives can go where:
 
-            ParseNode directiveNode = node.Nodes[0]; // a directive contains the exact directive node nested one step inside it.
+            ParseNode directiveNode = node.Nodes[1]; // a directive contains the exact directive node nested one step inside it.
             
             if (directiveNode.Nodes.Count < 2)
                 throw new KOSCompileException(new LineCol(lastLine, lastColumn), "Kerboscript compiler directive ('@') without a keyword after it.");
             
             
-            switch (directiveNode.Nodes[1].Token.Type)
+            switch (directiveNode.Nodes[0].Token.Type)
             {
                 case TokenType.LAZYGLOBAL:
                     VisitLazyGlobalDirective(directiveNode);
                     break;
-                    
+                case TokenType.CLOBBERBUILTINS:
+                    VisitClobberBuiltinsDirective(directiveNode);
+                    break;
+
                 // There is room for expansion here if we want to add more compiler directives.
                 
                 default:
-                    throw new KOSCompileException(new LineCol(lastLine, lastColumn), "Kerboscript compiler directive @"+directiveNode.Nodes[1].Text+" is unknown.");
+                    throw new KOSCompileException(new LineCol(lastLine, lastColumn), "Kerboscript compiler directive @"+directiveNode.Nodes[0].Text+" is unknown.");
             }
         }
         
         public void VisitLazyGlobalDirective(ParseNode node)
         {
-            if (node.Nodes.Count < 3 || node.Nodes[2].Token.Type != TokenType.onoff_trailer)
+            if (node.Nodes.Count < 2 || node.Nodes[1].Token.Type != TokenType.onoff_trailer)
                 throw new KOSCompileException(new LineCol(lastLine, lastColumn), "Kerboscript compiler directive @LAZYGLOBAL requires an ON or an OFF keyword.");
             
             // This particular directive is only allowed up at the top of a file, prior to any other non-directive statements.
@@ -3441,8 +3571,8 @@ namespace kOS.Safe.Compilation.KS
             bool validLocation = true; // will change to false if this isn't where a LazyGlobalDirective is allowed.
 
             // Check 1 - see if I'm nested in anything other than the outermost list of statements:
-            ParseNode ancestor = node.Parent;
-            ParseNode myInstructionContainer = node.Parent;
+            ParseNode ancestor = node.Parent?.Parent;
+            ParseNode myInstructionContainer = node.Parent?.Parent;
             while( ancestor != null && ancestor.Token.Type != TokenType.Start)
             {
                 switch (ancestor.Token.Type)
@@ -3470,11 +3600,12 @@ namespace kOS.Safe.Compilation.KS
                 int myInstructionIndex = ancestor.Nodes.IndexOf(myInstructionContainer); // would be an expensive walk - except this should only exist once, near the top.
                 for (int i = 0; validLocation && i < myInstructionIndex; ++i)
                 {
-                    // if a statement preceding me is anything other than another directive, it's wrong:
-                    if (ancestor.Nodes[i].Token.Type != TokenType.directive ||
+                    // The only thing allowed to preceed this directive is another directive or instruction containing a directive.
+                    bool isDirective = ancestor.Nodes[i].Token.Type == TokenType.directive;
+                    bool isDireciveInsideInstruction =
                             (ancestor.Nodes[i].Token.Type == TokenType.instruction &&
-                             ancestor.Nodes[i].Nodes[0].Token.Type != TokenType.directive)
-                       )
+                             ancestor.Nodes[i].Nodes[0].Token.Type == TokenType.directive);
+                    if (!isDirective && !isDireciveInsideInstruction)
                         validLocation = false;
                 }
             }
@@ -3484,11 +3615,74 @@ namespace kOS.Safe.Compilation.KS
                                                 "at the start of a script file, prior to any other statements");
 
             // Okay the location is fine - do the work:
-            ParseNode onOffValue = node.Nodes[2].Nodes[0];
+            ParseNode onOffValue = node.Nodes[1].Nodes[0];
             if (onOffValue.Token.Type == TokenType.ON)
                 allowLazyGlobal = true; // this is the default anyway, so this is just here for completeness in case we change the default.
             else if (onOffValue.Token.Type == TokenType.OFF)
                 allowLazyGlobal = false;
+            // else do nothing, which really should be an impossible case.
+        }
+
+        public void VisitClobberBuiltinsDirective(ParseNode node)
+        {
+            if (node.Nodes.Count < 2 || node.Nodes[1].Token.Type != TokenType.onoff_trailer)
+                throw new KOSCompileException(new LineCol(lastLine, lastColumn), "Kerboscript compiler directive @CLOBBERBUILTINS requires an ON or an OFF keyword.");
+
+            // This particular directive is only allowed up at the top of a file, prior to any other non-directive statements.
+            // ---------------------------------------------------------------------------------------------------------------
+
+            bool validLocation = true; // will change to false if this isn't where a LazyGlobalDirective is allowed.
+
+            // Check 1 - see if I'm nested in anything other than the outermost list of statements:
+            ParseNode ancestor = node.Parent?.Parent;
+            ParseNode myInstructionContainer = node.Parent?.Parent;
+            while (ancestor != null && ancestor.Token.Type != TokenType.Start)
+            {
+                switch (ancestor.Token.Type)
+                {
+                    case TokenType.instruction_block:
+                    case TokenType.if_stmt:
+                    case TokenType.until_stmt:
+                    case TokenType.when_stmt:
+                    case TokenType.for_stmt:
+                    case TokenType.on_stmt:
+                        validLocation = false;
+                        break;
+                    case TokenType.instruction:
+                        myInstructionContainer = ancestor;
+                        break;
+                    default:
+                        break;
+                }
+                ancestor = ancestor.Parent;
+            }
+            // Check 2 - see if I am at the top.  The only statements allowed to precede me are other directives:
+            if (validLocation && ancestor != null && ancestor.Token.Type == TokenType.Start)
+            {
+                // ancestor is now the Start node for the compile:
+                int myInstructionIndex = ancestor.Nodes.IndexOf(myInstructionContainer); // would be an expensive walk - except this should only exist once, near the top.
+                for (int i = 0; validLocation && i < myInstructionIndex; ++i)
+                {
+                    // The only thing allowed to preceed this directive is another directive or instruction containing a directive.
+                    bool isDirective = ancestor.Nodes[i].Token.Type == TokenType.directive;
+                    bool isDireciveInsideInstruction =
+                            (ancestor.Nodes[i].Token.Type == TokenType.instruction &&
+                             ancestor.Nodes[i].Nodes[0].Token.Type == TokenType.directive);
+                    if (!isDirective && !isDireciveInsideInstruction)
+                        validLocation = false;
+                }
+            }
+            if (!validLocation)
+                throw new KOSCommandInvalidHereException(new LineCol(node.Token.Line, node.Token.Column), "@CLOBBERBUILTINS",
+                                                "after the first command in the file",
+                                                "at the start of a script file, prior to any other statements");
+
+            // Okay the location is fine - do the work:
+            ParseNode onOffValue = node.Nodes[1].Nodes[0];
+            if (onOffValue.Token.Type == TokenType.ON)
+                allowClobberBuiltIn = true;
+            else if (onOffValue.Token.Type == TokenType.OFF)
+                allowClobberBuiltIn = false; // this is the default anyway, so this is just here for completeness in case we change the default.
             // else do nothing, which really should be an impossible case.
         }
     }

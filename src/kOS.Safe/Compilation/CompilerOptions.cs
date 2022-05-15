@@ -1,4 +1,6 @@
 using kOS.Safe.Function;
+using kOS.Safe.Binding;
+
 namespace kOS.Safe.Compilation
 {
     public class CompilerOptions
@@ -13,7 +15,9 @@ namespace kOS.Safe.Compilation
         /// will not be one.
         /// </summary>
         public bool IsCalledFromRun { get; set; }
+        public bool AllowClobberBuiltins { get; set; }
         public IFunctionManager FuncManager { get; set; }
+        public IBindingManager BindManager { get; set; }
         public CompilerOptions()
         {
             LoadDefaults();
@@ -23,12 +27,24 @@ namespace kOS.Safe.Compilation
         {
             LoadProgramsInSameAddressSpace = false;
             FuncManager = null;
+            BindManager = null;
             IsCalledFromRun = true;
+            AllowClobberBuiltins = false;
         }
         
-        public bool BuiltInExists(string identifier)
+        public bool BuiltInFunctionExists(string identifier)
         {
-            return (FuncManager == null ) ? false : FuncManager.Exists(identifier);
+            return FuncManager != null && FuncManager.Exists(identifier);
+        }
+
+        public bool BoundGetVariableExists(string identifier)
+        {
+            return BindManager != null && BindManager.HasGetter(identifier);
+        }
+
+        public bool BoundSetVariableExists(string identifier)
+        {
+            return BindManager != null && BindManager.HasSetter(identifier);
         }
     }
 }

@@ -190,6 +190,9 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.lazyglobal_directive:
                     Value = Evallazyglobal_directive(tree, paramlist);
                     break;
+                case TokenType.clobberbuiltins_directive:
+                    Value = Evalclobberbuiltins_directive(tree, paramlist);
+                    break;
                 case TokenType.directive:
                     Value = Evaldirective(tree, paramlist);
                     break;
@@ -407,6 +410,13 @@ namespace kOS.Safe.Compilation.KS
         }
 
         protected virtual object Evallazyglobal_directive(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalclobberbuiltins_directive(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);

@@ -97,6 +97,8 @@ EOI          -> @"\.";
 //Compiler Directives
 ATSIGN       -> @"@";
 LAZYGLOBAL   -> @"lazyglobal\b";
+CLOBBERBUILTINS -> @"clobberbuiltins\b";
+
 //Special
 EOF          -> @"$";
 [Skip]
@@ -149,8 +151,9 @@ instruction -> empty_stmt |
                directive; // allow directives anywhere for now, let the compiler decide if it's in the wrong place, not the parser.
 
 // ------------ directives --------------------
-lazyglobal_directive -> ATSIGN LAZYGLOBAL onoff_trailer EOI;
-directive            -> lazyglobal_directive; // Add to this list later if we make other directives.
+lazyglobal_directive      -> LAZYGLOBAL onoff_trailer EOI;
+clobberbuiltins_directive -> CLOBBERBUILTINS onoff_trailer EOI;
+directive                 -> ATSIGN (lazyglobal_directive | clobberbuiltins_directive);
 
 // ------------ statements --------------------
 

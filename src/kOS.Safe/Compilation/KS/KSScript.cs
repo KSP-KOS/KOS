@@ -35,7 +35,7 @@ namespace kOS.Safe.Compilation.KS
                 }
                 catch (KOSCompileException e)
                 {
-                    e.AddSourceText((short)startLineNum, scriptText);
+                    e.AddSourceText((short)startLineNum, scriptText, filePath.ToString());
                     throw;
                 }
 
