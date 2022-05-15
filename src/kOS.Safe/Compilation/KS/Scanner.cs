@@ -695,7 +695,8 @@ namespace kOS.Safe.Compilation.KS
             CLOBBERBUILTINS= 150,
             EOF     = 151,
             WHITESPACE= 152,
-            COMMENTLINE= 153
+            COMMENTLINE= 153,
+            COMMENTBLOCK= 154
     }
 
     public class Token
