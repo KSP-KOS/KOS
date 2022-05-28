@@ -9,6 +9,7 @@
     <RootNamespace>kOS.Safe.Test</RootNamespace>
     <AssemblyName>kOS.Safe.Test</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
