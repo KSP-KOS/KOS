@@ -21,6 +21,15 @@ For more information, check out the documentation for the :struct:`SteeringManag
 
 In this style of controlling the craft, you do not steer the craft directly, but instead select a goal direction and let kOS pick the way to steer toward that goal. This method of controlling the craft consists primarily of the following two commands:
 
+CONFIG:SUPPRESSAUTOPILOT
+------------------------
+
+If :attr:`Config:SUPPRESSAUTOPILOT` is true, then none of the controls
+on this page will have an effect.  That setting is there to provide
+the player with an emergency way to quickly click a toggle on the
+toolbar window to force kOS to stop taking control, letting the player
+move the controls manually.
+
 The special LOCK variables for cooked steering
 ----------------------------------------------
 
@@ -28,7 +37,6 @@ The special LOCK variables for cooked steering
 .. object:: LOCK THROTTLE TO expression. // value range [0.0 .. 1.0]
 
     This sets the main throttle of the ship to *expression*. Where *expression* is a floating point number between 0.0 and 1.0. A value of 0.0 means the throttle is idle, and a value of 1.0 means the throttle is at maximum. A value of 0.5 means the throttle is at the halfway point, and so on.
-
 
     The expression used in this statement can be any formula and can
     call your own user functions.  Just make sure it returns a value
@@ -43,6 +51,18 @@ The special LOCK variables for cooked steering
 
     It's a very bad idea to``WAIT`` during the execution of the expression in a
     LOCK THROTTLE.  See the note in the next section below.
+
+.. warning::
+
+    IF you have the *Breaking Ground DLC* for Kerbal Space Program, please
+    be aware that even though you can set up control groups to make parts
+    such as propellors and engines react to the throttle, they will not
+    react to ``lock throttle``.  This is because the DLC ignores the
+    autopilot API in using this feature.  It only pays attention to the
+    actual pilot controls, not the autopilot controls overriding them.
+    To affect a part that is defined to react to the throttle axis, you
+    will have to use ``set ship:control:pilotmainthrottle`` as described
+    by the :ref:`section on pilot controls<pilot>`.
 
 .. _LOCK STEERING:
 .. object:: LOCK STEERING TO expression.
@@ -184,17 +204,18 @@ Like all ``LOCK`` expressions, the steering and throttle continually update on t
     LOCK WHEELSTEERING.  See the note in the next section below.
 
 
-Don't 'WAIT' during cooked control calculation
-----------------------------------------------
+Don't 'WAIT' or run slow script code during cooked control calculation
+----------------------------------------------------------------------
 
 Be aware that because LOCK THROTTLE, LOCK STEERING, LOCK
-WHEELTHROTTLE, and LOCK WHEELSTEERING are actually
-:ref:`triggers <triggers>` that cause your expression
-to be calculated every single physics update tick behind
-the scenes, you should not execute a ``WAIT`` command
-in the code that performs the evaluation of the value
-used in them, as that will effectively cheat the entire
-script out of the full execution speed it deserves.
+WHEELTHROTTLE, and LOCK WHEELSTEERING are actually the
+highest priority types of :ref:`triggers <triggers>` that
+exist in kOS, they cause your expression to be calculated
+every single physics update tick behind the scenes.  So you
+should not execute a ``WAIT`` command in the code that
+performs the evaluation of the value used in them, as that
+will effectively cheat the entire script out of the full
+execution speed it deserves.
 
 For example, if you attempt this::
 
@@ -215,6 +236,13 @@ hits the wait inside the throttle expression, it will stop
 there, not resuming until the next update, effectively meaning
 it doesn't get around to running any of your main-line code
 until the next tick.)
+
+Again, note that the cooked steering LOCKS mentioned here are
+the *highest* priority triggers there are in kOS.  That means they
+can even interrupt other triggers like WHEN/THEN or GUI callbacks.
+Do not make them call complex functions that take a lot of instructions
+to return a value, or else you might find that there's not enough
+instructions per update left to run the rest of your program effectively.
 
 Normally when you use a LOCK command, the expression is only evaluated
 when it needs to be by some other part of the script that is trying
@@ -260,9 +288,45 @@ If you don't want to understand the intricate details of the cooked
 steering system, here's some quick suggestions for changes to the
 settings that might help solve some problems, in the list below:
 
+- **problem**: When rotating toward the target direction, ``lock steering``
+  is wiggling the controls back and forth trying to keep the exact
+  rotation rate even though it doesn't matter.  This is wasting RCS
+  fuel.  (NOTE: This problem is different from the problem where it
+  wiggles the controls *after* it arrives at the destination orientation.
+  This is specifically for when it wiggles the controls *during* its
+  rotation to the destination orientation.)
+
+  - **solution**: Increase :attr:`STEERINGMANAGER:TORQUEPSILONMAX` to make
+    it "not care" about the exact rotation rate until it gets closer to
+    the target orientation.
+    Increasing :attr:`STEERINGMANAGER:TORQUEPSILONMIN` can help also, but
+    making it too high could prevent the steering from holding the nose on
+    target once it does reach the desired direction.
+
+- **problem**: On a vessel with very very slow rotational acceleration
+  capabilities, kOS appears to be making no attempt at all to rotate
+  the vessel.  (Note, not just slowly, but literally never moving the
+  controls at all).
+
+  - **solution**: You might have to either decrease
+    :attr:`STEERINGMANAGER:TORQUEEPSILONMAX` or increase
+    :attr:`STEERINGMANAGER:MAXSTOPPINGTIME`.
+
+  - **explanation**: The problem may be that your vessel is so slow at
+    rotating that the rotation rate the SteeringManager is attempting
+    to achieve falls within its epsilon (null zone) that it ignores.
+    Refer to :ref:`this formula <rotationepsilonmax_math>` to see if
+    this is the problem.  kOS's has default values that attempt to be
+    good enough for most designs, but it's impossible to guess every
+    design that every player might try.  If you design a vessel that
+    takes quite a few minutes to rotate around, it might fall outside
+    the range of possibilities the default settings were made for.
+
 - **problem**: A large vessel with low torque doesn't seem to be even trying to
-  rotate very quickly.  The controls may be fluctuating around the zero point,
-  but it doesn't seem to want to even try to turn faster.
+  rotate very quickly.  It *does* turn, but very slowly.  Once it starts
+  turning, the controls may be fluctuating around the zero point, letting it
+  rotate slowly with momentum without trying to push its rotation any
+  faster.
 
   - **solution**: Increase `STEERINGMANAGER:MAXSTOPPINGTIME` to about 5 or
     10 seconds or so.  Also, slightly increase `STEERINGMANAGER:PITCHPID:KD`
@@ -270,24 +334,56 @@ settings that might help solve some problems, in the list below:
 
   - **explanation**: Once the steering manager gets such a ship rotating at
     a tiny rate, it stops trying to make it rotate any faster than that
-    because it's "afraid" of allowing it to obtain a larger momentum than it
-    thinks it could quickly stop.  It needs to be told that in this case
-    it's okay to build up more "seconds worth" of rotational velocity.  The
-    reason for increasing the Kd term as well is to tell it to anticipate
-    the need to starting slowing down rotation sooner than it normally
-    would.
+    because it's designed to optimize for less expended thrust rather than
+    for faster turning.  Every bit of angular momentum it builds up it's
+    just going to have to stop again later.  The setting it uses to
+    make this decision is :attr:`STEERINGMANAGER:MAXSTOPPINGTIME`.  It
+    tries not to build up an angular velocity that would take it more than
+    ``MAXSTOPPINGTIME`` seconds to stop again later.  Increasing this
+    setting tells it you'd rather err on the side of faster rotations
+    rather than err on the side of less expenditure of torque/RCS fuel.
+    The reason for increasing the Kd terms as well is to help it deal
+    with the need to be more proactive about the slowing down at the end
+    of the turn.
 
 - **problem**: A vessel seems to reasonably come to the desired direction
   sensibly, but once it's there the ship vibrates back and forth by about 1
   degree or less excessively around the setpoint.
 
-  - **solution**: Increase `STEERINGMANAGER:PITCHTS` and
+  - **solution 1**: Increase `STEERINGMANAGER:PITCHTS` and
     `STEERINGMANAGER:YAWTS` to several seconds.
+
+  - **solution 2**: If you don't care about the exact precision to
+    point the correct direction to tiny fractions of a degree, then
+    increase :attr:`SteeringManager:TORQUEEPSILONMIN` by a little bit.
 
   - **explanation**: Once it's
     at the desired orientation and it has mostly zeroed the rotational
     velocity, it's trying to hold it there with microadjustments to the
     controls, and those microadjustments are "too tight".
+
+- **problem**: The vessel is having a hard time holding on to its
+  ``lock steering`` direction during a burn when you have physics
+  warp on.  It keeps veering off and having to correct the steering
+  back again.  It may even show the rocket bending.
+
+  - **solution:** If this is happening specifically under physics warp,
+    and specifically during burns, chances are this is KSP's fault, not
+    kOS, and it can be fixed by turning on KSP's "Advanced Tweakables" and
+    autostrutting a few parts on the ship to root.
+    
+  - **explanation:** This happens because your
+    vessel has some of those springy joints in it that go haywire under
+    physics warp.  (You know the kind, where when you thrust the vessel
+    visibly compresses like a spring?) When you have a springy joint on
+    the ship, not only does it compress and stretch but it also flexes
+    side to side.  This flexing side to side can cause kOS to get false
+    information about which way the vessel is pointed. Because the
+    vessel's official orientation is the orientation of the 'control from
+    here' part, which is getting wiggled around by the physics warp,
+    the official orientation information is always a few degrees off.
+    kOS is believing that false information about which way the vessel
+    is pointed and trying to "correct" it.)
 
 - **problem**: The vessel's nose seems to be waving slowly back and forth
   across the set direction, taking too long to center on it, and you notice

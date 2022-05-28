@@ -35,6 +35,7 @@ Style
     :attr:`FOCUSED_ON`                    :struct:`StyleState`            Properties for when the widget has keyboard focus and is "on".
     :attr:`BG`                            :struct:`string`                The same as NORMAL:BG. Name of a "9-slice" image file.
     :attr:`TEXTCOLOR`                     :ref:`Color <colors>`           The same as NORMAL:TEXTCOLOR. The color of the text on the label.
+    :attr:`WORDWRAP`                      :struct:`Boolean`               Can labels be broken into multiple lines on word boundaries?
     ===================================== =============================== =============
 
     .. attribute:: HSTRETCH
@@ -114,6 +115,17 @@ Style
         :access: Get/Set
 
         The name of the font of the text on the content or "" if the default.
+        If you want to see the list of available font names, you can do
+        so with :ref:`List Fonts. <list_fonts>`.  Please note that just
+        because you see a font in that list on your computer,
+        that doesn't always mean that same font will exist on
+        someone else's computer.  KSP ships with a few fonts that it
+        does universally put on all platform installs, but other
+        fonts in that list might be installed locally on your computer
+        only by other mods (like kOS itself, which loads all your
+        monospaced fonts for optional use as the terminal font).
+        Fonts that we know KSP itself tends to install are:
+        Arial, CALIBRI, HEADINGFONT, calibri, calibrib, calibriz, calibril, and dotty
 
     .. attribute:: FONTSIZE
 
@@ -205,4 +217,9 @@ Style
         
         The same as NORMAL:TEXTCOLOR. The color of the text on the label.
 
+    .. attribute:: WORDWRAP
 
+        :type: :struct:`Boolean`
+        :access: Get/Set
+
+        Can labels be broken into multiple lines on word boundaries?

@@ -3,14 +3,20 @@
 Changes from version to version
 ===============================
 
-This is a slightly more verbose version of the new features
-mentioned in the CHANGELOG, specifically for new features and for
-users familiar with older versions of the documentation who want
-only a quick update to the docs without reading the entire set
-of documentation again from scratch.
+This is a place to mention important documentation changes that
+come with each version release.  Mostly it's here so you can
+have links to jump to where the changes are elsewhere in this
+documentation site.  The changes are not fully described here
+because the intention is to let you go through the list and click
+on the links to see the changes.
 
 This list is NOT a comprehensive list of everything.  Specifically,
-minor one-line changes, or bug fixes, are not mentioned here.
+minor one-line changes, or bug fixes that didn't alter the 
+documentation, are not mentioned here.
+
+Also changes that might alter the user visual interface but not
+change what a script does won't be mentioned here.  (For example,
+putting a new button on the toolbar dialog.)
 
 Most importantly, changes that might have broken previously working
 scripts are not always signposted here.  To be sure, you should read
@@ -23,6 +29,376 @@ release.
     :depth: 3
 
 ****
+
+Changes in 1.3
+--------------
+
+Nodes with ETA or Universal Time
+::::::::::::::::::::::::::::::::
+
+:func:`NODE(time, radial, normal, prograde)` now accepts time in
+:struct:`TimeStamp` and :struct:`TimeSpan` inputs, as well as
+the old practice of using scalar numbers of seconds.  If a
+:struct:`TimeSpan` is used, the time is an ETA time, else it's a
+UT time.  There is also a new suffix, :attr:`Node:TIME` to
+report the UT time.
+
+TimeSpan split into two types TimeStamp and TimeSpan
+::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+:ref:`What was TimeSpan is now two different types<timestamp_timespan_diff>`.
+
+Search on sub-branches of a vessel
+::::::::::::::::::::::::::::::::::
+
+Addition of :attr:`Part:PARTSTAGGED` and :attr:`Part:PARTSDUBBED` and
+:attr:`Part:PARTSNAMED`
+
+Can Set the RCS Deadband
+::::::::::::::::::::::::
+
+Addition on :attr:`RCS:DEADBAND`
+
+SteeringManager Epislon
+:::::::::::::::::::::::
+
+Addition of :attr:`SteeringManager:TORQUEEPSILONMIN` and
+:attr:`SteeringManager:TORQUEEPSILONMAX`
+
+Random seed
+:::::::::::
+
+Added :func:`RANDOMSEED(key, seed)`.
+
+Suppress Autopilot 
+::::::::::::::::::
+
+Added :attr:`Config:SUPPRESSAUTOPILOT`
+
+
+GET/SET Player's trim
+:::::::::::::::::::::
+
+Added :ref:`PILOTYAWTRIM <SHIP CONTROL PILOTYAWTRIM>`,
+:ref:`PILOTPITCHTRIM <SHIP CONTROL PILOTPITCHTRIM>`,
+:ref:`PILOROLLTRIM <SHIP CONTROL PILOTROLLTRIM>`,
+:ref:`PILOTWHEELSTEERTRIM <SHIP CONTROL PILOTWHEELSTEERTRIM>`, and
+:ref:`PILOTWHEELTHROTTLETRIM <SHIP CONTROL PILOTWHEELTHROTTLETRIM>`,
+which are set-able ways to control without locking out manual control.
+
+Addon Trajectories changes
+::::::::::::::::::::::::::
+
+To support Trajectories 2.4 and up, many new things
+are on the documentation page for :ref:`trajectories`.
+
+Launch craft picking the crew list
+::::::::::::::::::::::::::::::::::
+
+:meth:`KUniverse:LAUNCHCRAFTWITHCREWFROM(template, crewlist, site)`
+
+Asteroid-related vessel suffixes
+::::::::::::::::::::::::::::::::
+
+:meth:`Vessel:STOPTRACKING`, and :attr:`Vessel:SIZECLASS`.
+
+Stock Delta-V Info
+::::::::::::::::::
+
+:attr:`Vessel:DELTAV`, :attr:`Vessel:DELTAVASL`, :attr:`Vessel:DELTAVVACUUM`,
+:attr:`Vessel:BURNTIME`, :attr:`Stage:DELTAV`
+
+RCS Part type
+:::::::::::::
+
+:ref:`A new part type<rcs>` for when a part is an RCS thruster.
+
+Engine fuel info
+::::::::::::::::
+
+:attr:`Engine:CONSUMEDRESOURCE`, which returns a Lexicon of
+a new type, :struct:`ConsumedResource`.  This will show you
+what fuels an engine consumes and in what quantities.
+
+CreateOrbit from position and velocity
+::::::::::::::::::::::::::::::::::::::
+
+A new variant of CreateOrbit - :func:`CREATEORBIT(pos, vel, body, ut)`,
+that lets you make an orbit out of state vectors instead of
+Kepplerian values.
+
+Ranges take fractional numbers
+::::::::::::::::::::::::::::::
+
+:ref:`Ranges <range>` now accept fractional values for start, stop
+and step.  (Previously everthing had to be an integer.)
+
+Numerous mistake fixes
+::::::::::::::::::::::
+
+Not so much new documentation, but repairing typos and incorrect
+descriptions in the documentation.  Too numerous to mention
+in detail - see the associated Github issues:
+
+https://github.com/KSP-KOS/KOS/pull/2675
+https://github.com/KSP-KOS/KOS/pull/2680
+https://github.com/KSP-KOS/KOS/pull/2707
+https://github.com/KSP-KOS/KOS/pull/2712
+https://github.com/KSP-KOS/KOS/pull/2724
+https://github.com/KSP-KOS/KOS/pull/2751
+https://github.com/KSP-KOS/KOS/pull/2772
+https://github.com/KSP-KOS/KOS/pull/2775
+https://github.com/KSP-KOS/KOS/pull/2776
+https://github.com/KSP-KOS/KOS/pull/2777
+https://github.com/KSP-KOS/KOS/pull/2784
+https://github.com/KSP-KOS/KOS/pull/2788
+https://github.com/KSP-KOS/KOS/pull/2791
+https://github.com/KSP-KOS/KOS/pull/2800
+https://github.com/KSP-KOS/KOS/pull/2819
+https://github.com/KSP-KOS/KOS/pull/2833
+
+
+Changes in 1.2
+--------------
+
+FLOOR and CEILING by decimal place
+::::::::::::::::::::::::::::::::::
+
+:func:`FLOOR(a,b)` and :func:`CEILING(a,b)` now allow you to chose
+the decimal place where the cutoff happens.
+
+Added ROLL to HEADING()
+:::::::::::::::::::::::
+
+:func:`HEADING(dir,pitch,roll)` Now has a third parameter for roll.
+The new roll parameter is optional, so scripts using just the first
+two parameters should still work.
+
+Bodyexists
+::::::::::
+
+New Function, :func:`BODYEXISTS(name)`
+
+Wordwrap on Labels
+::::::::::::::::::
+
+You can set wordrap off for labels by the new suffx, :attr:`Style:WORDWRAP`.
+
+CreateOrbit
+:::::::::::
+
+:func:`CREATEORBIT(inc, e, sma, lan, argPe, mEp, t, body)` added.
+
+Docking port partner query
+::::::::::::::::::::::::::
+
+Two new suffixes:  :attr:`DockingPort:PARTNER` and 
+:attr:`DockingPort:HASPARTNER``.
+
+Waypoint ISSELECTED
+:::::::::::::::::::
+
+:attr:`WayPoint:ISSELECTED`
+
+Changes in 1.1.9.0
+------------------
+
+BOUNDING BOX
+::::::::::::
+
+Added the new :struct:`BOUNDS` structure for bounding box
+information, and made an :ref:`example using it <display_bounds>`
+on the tutorials page.
+
+TERNARY OPERATOR "CHOOSE"
+:::::::::::::::::::::::::
+
+A new expression ternary operator exists in kerboscript, called
+:ref:`CHOOSE <choose>`.  (Similar to C's "?" operator, but with
+different syntax.)
+
+New suffixes for Vecdraw
+::::::::::::::::::::::::
+
+New suffixes giving you more control over the appearance of
+vecdraws: :attr:`Vecdraw:POINTY` :attr:`Vecdraw:WIPING`
+
+Lexicon Suffixes
+::::::::::::::::
+
+:ref:`Describe using suffixes with lexicons. <lexicon_suffix>`
+
+Terminal default size
+:::::::::::::::::::::
+
+Two new config settings for a default terminal size for
+new terminals:
+
+:struct:`Config:DEFAULTWIDTH`, :struct:`Config:DEFAULTHEIGHT`
+
+Additional Atmospheric information
+:::::::::::::::::::::::::::::::::::
+
+Added some more information to the :struct:`atmosphere` structure,
+(mostly for people trying to perform drag calculations: 
+MOLARMASS, ADIABATICINDEX, ALTITUDETEMPERATURE).
+
+Also added the ability to read some more of the values the
+game uses for :ref:`mathematical constants <constants>`, to 
+work with this information: Avogadro, Boltzmann, and IdealGas.
+
+UNSET documentation
+:::::::::::::::::::
+
+Explicitly mention the :ref:`unset command <unset>`, which has existed
+for a long time but apparently wasn't in the documentation.
+
+LIST command
+::::::::::::
+
+Removed obsolete documentation about a no-longer-existing "FROM"
+variant of the LIST command that went like this:
+LIST *things* FROM *vessel* IN *variable*.
+
+DROPPRIORITY()
+::::::::::::::
+
+Described the new :func:`DROPPRIORITY()` built-in function that you
+can use when you want to write a long-lasting trigger body without
+it preventing other triggers from interrupting like it normally would.
+
+
+
+
+Changes in 1.1.8.0
+------------------
+
+Nothing but minor documentation error corrections - no new features
+documented.
+
+Changes in 1.1.7.0
+------------------
+
+IR Next
+:::::::
+
+Documented the change to using :ref:`IR Next instead of IR <IR>`.
+
+CORE:TAG
+::::::::
+
+Documented :attr:`CORE:TAG`.
+
+TIME
+::::
+
+Documented :func:`TIME(universal_time)`.
+
+PAUSE
+:::::
+
+Added ability to pause the game with :meth:`Kuniverse:PAUSE()`.
+
+List Fonts
+::::::::::
+
+Added :ref:`FONTS <list_fonts>` to the things you can LIST.
+
+Changes in 1.1.6.2
+------------------
+
+Nothing of significance changed in the docs.  This was a fix to
+switch files from PNG format to DDS format for GUI icons kOS uses.
+
+Changes in 1.1.6.1
+------------------
+
+The various thrust and ISP calculations that take pressure
+as a parameter prevent you from using negative values for
+pressure.  Now they are clamped to be no lower than zero.
+This change documents this fact.
+
+Changes in 1.1.6.0
+------------------
+
+GUI tooltips
+::::::::::::
+
+Described how to make GUI tooltips work.  See:
+
+- :attr:`Label:TOOLTIP`
+- :attr:`GuiWidgets:TOOLTIP`
+- :attr:`TIPDISPLAY`
+
+5% null zone
+::::::::::::
+
+Mentioned the stock :ref:`null zone<raw null zone>` issue with RCS
+translation.
+
+Part:CID
+::::::::
+
+Added new suffix, :attr:`Part:CID`
+
+An External Tutorial
+::::::::::::::::::::
+
+Added an external tutorial link to the :ref:`Tutorials <tutorials>` page.
+
+G and G0 constants
+::::::::::::::::::
+
+Added :attr:`constant:G` and :attr:`constant:G0`.
+
+Removed old notices
+:::::::::::::::::::
+
+Some "this changed in version ...." notices had aged beyond their usefulness
+and were removed.
+
+Document Simulate in BG
+:::::::::::::::::::::::
+
+Documented the need to have Simulate in BG enabled when playing in windwed mode,
+on the :ref:`Telnet <telnet>` page.
+
+Stage/decouple docs
+:::::::::::::::::::
+
+Many edits to the pages about :ref:`stages<stage>` and
+:ref:`decouplers<decoupler>` to clarify points.
+
+Vecdraw delegate
+::::::::::::::::
+
+Documented that the :ref:`Vecdraw constructor<vecdraw>` can
+now take delegates.
+
+Vector math link changes
+::::::::::::::::::::::::
+
+External links explaining vector operations such as dot product and
+cross product now link to different sites on the
+:ref:`Vectors<vectors>` page.
+
+New suffixes on Body page
+:::::::::::::::::::::::::
+
+:ref:`Body <body>` page now has more fleshed-out examples and documentation
+to go with the new :HASOCEAN, :HASSURFACE, and :CHILDREN suffixes
+
+New Basic tutoial
+:::::::::::::::::
+
+New Basic Tutorial page.
+
+Clarified CPU hardware page
+:::::::::::::::::::::::::::
+
+Much of the :ref:`CPU hardware<cpu hardware>` page has been re-done to reflect
+some of the refactors that have happened in this revision.
+
 
 Changes in 1.1.5.2
 ------------------

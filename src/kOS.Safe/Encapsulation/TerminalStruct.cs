@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Screen;
 using kOS.Safe.Execution;
@@ -14,14 +14,14 @@ namespace kOS.Safe.Encapsulation
 
         // Some sanity values to prevent the terminal display from getting garbled up:
         // They may have to change after experimentation.
-        protected const int MINROWS = 3;
+        public static int MINROWS = 3;
 
-        protected const int MAXROWS = 160;
-        protected const int MINCOLUMNS = 15;
-        protected const int MAXCOLUMNS = 255;
+        public static int MAXROWS = 160;
+        public static int MINCOLUMNS = 15;
+        public static int MAXCOLUMNS = 255;
 
-        protected const int MINCHARPIXELS = 4;
-        protected const int MAXCHARPIXELS = 24;
+        public static int MINCHARPIXELS = 4;
+        public static int MAXCHARPIXELS = 48;
 
         // TODO: To implement IsOpen, we'd have to make a kOS.Safe interface wrapper around TermWindow first.
         // That's more than I want to do in this update, I'm leaving it as a TODO for me or someone else:

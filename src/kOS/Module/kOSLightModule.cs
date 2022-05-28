@@ -5,25 +5,27 @@ namespace kOS.Module
 {
     internal class kOSLightModule : PartModule
     {
-        [KSPField(isPersistant = true, guiName = "Required Power for Lights", guiActive = true)]
+        private const string PAWGroup = "kOS";
+		
+        [KSPField(isPersistant = true, guiName = "Required Power for Lights", guiActive = true, groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public float resourceAmount = 0.001f;
 
-        [KSPField(isPersistant = true, guiActive = true, guiName = "Light R")]
+        [KSPField(isPersistant = true, guiActive = true, guiName = "Light R", groupName = PAWGroup, groupDisplayName = PAWGroup)]
         [UI_FloatRange(maxValue = 1, minValue = 0, scene = UI_Scene.Flight, stepIncrement = 0.01f)]
         protected float red = 1;
 
-        [KSPField(isPersistant = true, guiActive = true, guiName = "Light G")]
+        [KSPField(isPersistant = true, guiActive = true, guiName = "Light G", groupName = PAWGroup, groupDisplayName = PAWGroup)]
         [UI_FloatRange(maxValue = 1, minValue = 0, scene = UI_Scene.Flight, stepIncrement = 0.01f)]
         protected float green = 1;
 
-        [KSPField(isPersistant = true, guiActive = true, guiName = "Light B")]
+        [KSPField(isPersistant = true, guiActive = true, guiName = "Light B", groupName = PAWGroup, groupDisplayName = PAWGroup)]
         [UI_FloatRange(maxValue = 1, minValue = 0, scene = UI_Scene.Flight, stepIncrement = 0.01f)]
         protected float blue = 1;
 
-        [KSPField(isPersistant = true, guiActive = true, guiName = "Power Starved")]
+        [KSPField(isPersistant = true, guiActive = true, guiName = "Power Starved", groupName = PAWGroup, groupDisplayName = PAWGroup)]
         private bool powerStarved = false;
 
-        [KSPField(isPersistant = false, guiName = "Last requested power", guiActive = true)]
+        [KSPField(isPersistant = false, guiName = "Last requested power", guiActive = true, groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public float lastResource = 0.2f;
 
         [KSPField(isPersistant = false, guiActive = false)]

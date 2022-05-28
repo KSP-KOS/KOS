@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text;
 using System.Collections.Generic;
@@ -130,19 +130,28 @@ namespace kOS.Safe.Encapsulation
             }
         }
 
-        public virtual bool SetSuffix(string suffixName, object value)
+        /// <summary>
+        /// Set a suffix of this structure that has suffixName to the given value.
+        /// If failOkay is false then it will throw exception if it fails to find the suffix.
+        /// If failOkay is true then it will continue happily if it fails to find the suffix.
+        /// </summary>
+        /// <param name="suffixName"></param>
+        /// <param name="value"></param>
+        /// <param name="failOkay"></param>
+        /// <returns>false if failOkay was true and it failed to find the suffix</returns>
+        public virtual bool SetSuffix(string suffixName, object value, bool failOkay = false)
         {
             callInitializeSuffixes();
             var suffixes = GetStaticSuffixesForType(GetType());
 
-            if (!ProcessSetSuffix(suffixes, suffixName, value))
+            if (!ProcessSetSuffix(suffixes, suffixName, value, failOkay))
             {
-                return ProcessSetSuffix(instanceSuffixes, suffixName, value);
+                return ProcessSetSuffix(instanceSuffixes, suffixName, value, failOkay);
             }
             return false;
         }
 
-        private bool ProcessSetSuffix(IDictionary<string, ISuffix> suffixes, string suffixName, object value)
+        private bool ProcessSetSuffix(IDictionary<string, ISuffix> suffixes, string suffixName, object value, bool failOkay = false)
         {
             ISuffix suffix;
             if (suffixes.TryGetValue(suffixName, out suffix))
@@ -153,12 +162,22 @@ namespace kOS.Safe.Encapsulation
                     settable.Set(value);
                     return true;
                 }
-                throw new KOSSuffixUseException("set", suffixName, this);
+                if (failOkay)
+                    return false;
+                else
+                    throw new KOSSuffixUseException("set", suffixName, this);
             }
             return false;
         }
 
-        public virtual ISuffixResult GetSuffix(string suffixName)
+        /// <summary>
+        /// Get the suffix with this name, or if it fails to find it, then either
+        /// throw exception or merely return null.  (Will return null only if failOkay is true).
+        /// </summary>
+        /// <param name="suffixName"></param>
+        /// <param name="failOkay"></param>
+        /// <returns></returns>
+        public virtual ISuffixResult GetSuffix(string suffixName, bool failOkay = false)
         {
             callInitializeSuffixes();
             ISuffix suffix;
@@ -171,7 +190,10 @@ namespace kOS.Safe.Encapsulation
 
             if (!suffixes.TryGetValue(suffixName, out suffix))
             {
-                throw new KOSSuffixUseException("get",suffixName,this);
+                if (failOkay)
+                    return null;
+                else
+                    throw new KOSSuffixUseException("get",suffixName,this);
             }
             return suffix.Get();
         }

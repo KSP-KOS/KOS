@@ -9,9 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>kOS.Safe</RootNamespace>
     <AssemblyName>kOS.Safe</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Shell|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -40,6 +42,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib">
@@ -232,8 +235,8 @@
     <Compile Include="Utilities\KOSNomenclature.cs" />
     <Compile Include="Utilities\KOSNomenclatureAttribute.cs" />
     <Compile Include="Utilities\MovingAverage.cs" />
+    <Compile Include="Utilities\ReflectUtil.cs" />
     <Compile Include="Utilities\SafeHouse.cs" />
-    <Compile Include="Utilities\Flushable.cs" />
     <Compile Include="Utilities\kOSKeys.cs" />
     <Compile Include="Utilities\kosMath.cs" />
     <Compile Include="Utilities\TickGen.cs" />
@@ -270,7 +273,6 @@
     <Compile Include="Persistence\ArchiveFile.cs" />
     <Compile Include="Persistence\HarddiskFile.cs" />
     <Compile Include="Persistence\VolumeFile.cs" />
-    <Compile Include="Serialization\IHasSafeSharedObjects.cs" />
     <Compile Include="SafeSharedObjects.cs" />
     <Compile Include="Persistence\PathValue.cs" />
     <Compile Include="Execution\InternalPath.cs" />

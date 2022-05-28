@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Compilation;
+using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Linq;
 
 namespace kOS.Safe.Persistence
 {
@@ -46,13 +47,27 @@ namespace kOS.Safe.Persistence
             Bytes = CompiledObject.Pack(parts);
         }
 
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static FileContent CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new FileContent();
+            newObj.LoadDump(d);
+            return newObj;
+        }
+
         private void InitializeSuffixes()
         {
             AddSuffix("LENGTH", new Suffix<ScalarIntValue>(() => Size));
             AddSuffix("EMPTY", new Suffix<BooleanValue>(() => Size == 0));
             AddSuffix("TYPE", new Suffix<StringValue>(() => Category.ToString()));
             AddSuffix("STRING", new Suffix<StringValue>(() => String));
+            AddSuffix("BINARY", new Suffix<ListValue<ScalarIntValue>>(() => ContentAsIntList()));
             AddSuffix("ITERATOR", new Suffix<Enumerator>(() => new Enumerator(GetEnumerator())));
+        }
+
+        private ListValue<ScalarIntValue> ContentAsIntList()
+        {
+            return new ListValue<ScalarIntValue>(Bytes.Select(x => new ScalarIntValue(x)));
         }
 
         public override Dump Dump()

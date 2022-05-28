@@ -13,7 +13,7 @@ namespace kOS.Safe.Persistence
 {
     public static class PersistenceUtilities
     {
-        public static readonly byte[] GzipHeader = new byte[] { (GZipConstants.GZIP_MAGIC >> 8), (GZipConstants.GZIP_MAGIC & 0xff), Deflater.DEFLATED, 0 };
+        public static readonly byte[] GzipHeader = new byte[] { (byte)(GZipConstants.GZIP_MAGIC >> 8), (byte)(GZipConstants.GZIP_MAGIC & 0xff), (byte)Deflater.DEFLATED, 0 };
         public static bool IsBinary(FileCategory category)
         {
             return category == FileCategory.BINARY || category == FileCategory.KSM;

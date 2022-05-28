@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
@@ -11,7 +11,7 @@ namespace kOS.Suffixed
     {
         private static readonly Dictionary<ManeuverNode, Node> nodeLookup;
 
-        private ManeuverNode nodeRef;
+        public ManeuverNode NodeRef { get; private set; }
         private Vessel vesselRef;
         private readonly SharedObjects shared;
         private double time;
@@ -24,8 +24,8 @@ namespace kOS.Suffixed
             nodeLookup = new Dictionary<ManeuverNode, Node>();
         }
 
-        public Node(double time, double radialOut, double normal, double prograde, SharedObjects shareObj)
-            : this(shareObj)
+        public Node(double time, double radialOut, double normal, double prograde, SharedObjects sharedObj)
+            : this(sharedObj)
         {
             this.time = time;
             this.prograde = prograde;
@@ -33,10 +33,24 @@ namespace kOS.Suffixed
             this.normal = normal;
         }
 
-        private Node(Vessel v, ManeuverNode existingNode, SharedObjects shareObj)
-            : this(shareObj)
+        public Node(TimeStamp stamp, double radialOut, double normal, double prograde, SharedObjects sharedObj)
+            : this(stamp.ToUnixStyleTime(), radialOut, normal, prograde, sharedObj)
         {
-            nodeRef = existingNode;
+        }
+
+        public Node(kOS.Suffixed.TimeSpan span, double radialOut, double normal, double prograde, SharedObjects sharedObj)
+            : this(sharedObj)
+        {
+            this.time = Planetarium.GetUniversalTime() + span.ToUnixStyleTime();
+            this.prograde = prograde;
+            this.radialOut = radialOut;
+            this.normal = normal;
+        }
+
+        private Node(Vessel v, ManeuverNode existingNode, SharedObjects sharedObj)
+            : this(sharedObj)
+        {
+            NodeRef = existingNode;
             vesselRef = v;
 
             nodeLookup.Add(existingNode, this);
@@ -63,6 +77,19 @@ namespace kOS.Suffixed
                 value =>
                 {
                     time = value + Planetarium.GetUniversalTime();
+                    ToNodeRef();
+                }
+            ));
+
+            AddSuffix("TIME", new SetSuffix<ScalarValue>(
+                () =>
+                {
+                    FromNodeRef();
+                    return time;
+                },
+                value =>
+                {
+                    time = value;
                     ToNodeRef();
                 }
             ));
@@ -106,8 +133,8 @@ namespace kOS.Suffixed
 
             AddSuffix(new[] {"OBT", "ORBIT"}, new Suffix<OrbitInfo>(() =>
             {
-                if (nodeRef == null) throw new Exception("Node must be added to flight plan first");
-                return new OrbitInfo(nodeRef.nextPatch, shared);
+                if (NodeRef == null) throw new Exception("Node must be added to flight plan first");
+                return new OrbitInfo(NodeRef.nextPatch, shared);
             }));
 
         }
@@ -119,7 +146,7 @@ namespace kOS.Suffixed
 
         public void AddToVessel(Vessel v)
         {
-            if (nodeRef != null) throw new Exception("Node has already been added");
+            if (NodeRef != null) throw new Exception("Node has already been added");
 
             string careerReason;
             if (! Career.CanMakeNodes(out careerReason))
@@ -132,41 +159,41 @@ namespace kOS.Suffixed
                     "A KSP limitation makes it impossible to access the manuever nodes of this vessel at this time. " +
                     "(perhaps it's not the active vessel?)");
 
-            nodeRef = v.patchedConicSolver.AddManeuverNode(time);
+            NodeRef = v.patchedConicSolver.AddManeuverNode(time);
 
             UpdateNodeDeltaV();
 
             v.patchedConicSolver.UpdateFlightPlan();
 
-            nodeLookup.Add(nodeRef, this);
+            nodeLookup.Add(NodeRef, this);
         }
 
         public Vector GetBurnVector()
         {
             CheckNodeRef();
 
-            return new Vector(nodeRef.GetBurnVector(vesselRef.GetOrbit()));
+            return new Vector(NodeRef.GetBurnVector(vesselRef.GetOrbit()));
         }
 
 
         public void Remove()
         {
-            if (nodeRef == null) return;
+            if (NodeRef == null) return;
 
             string careerReason;
             if (! Career.CanMakeNodes(out careerReason))
                 throw new KOSLowTechException("use maneuver nodes", careerReason);
 
-            nodeLookup.Remove(nodeRef);
+            nodeLookup.Remove(NodeRef);
 
             if (vesselRef.patchedConicSolver == null)
                 throw new KOSSituationallyInvalidException(
                     "A KSP limitation makes it impossible to access the manuever nodes of this vessel at this time. " +
                     "(perhaps it's not the active vessel?)");
 
-            nodeRef.RemoveSelf();
+            NodeRef.RemoveSelf();
 
-            nodeRef = null;
+            NodeRef = null;
             vesselRef = null;
         }
 
@@ -178,31 +205,31 @@ namespace kOS.Suffixed
 
         private void ToNodeRef()
         {
-            if (nodeRef == null) return;
+            if (NodeRef == null) return;
 
-            if (nodeRef.attachedGizmo == null)
+            if (NodeRef.attachedGizmo == null)
             {
                 // Copy the logic from OnGizmoUpdated, excluding the two calls to attachedGizmo
-                nodeRef.DeltaV = new Vector3d(radialOut, normal, prograde);
-                nodeRef.UT = time;
-                nodeRef.solver.UpdateFlightPlan();
+                NodeRef.DeltaV = new Vector3d(radialOut, normal, prograde);
+                NodeRef.UT = time;
+                NodeRef.solver.UpdateFlightPlan();
             }
             else
             {
-                nodeRef.OnGizmoUpdated(new Vector3d(radialOut, normal, prograde), time);
+                NodeRef.OnGizmoUpdated(new Vector3d(radialOut, normal, prograde), time);
             }
         }
 
         private void UpdateNodeDeltaV()
         {
-            if (nodeRef == null) return;
+            if (NodeRef == null) return;
             var dv = new Vector3d(radialOut, normal, prograde);
-            nodeRef.DeltaV = dv;
+            NodeRef.DeltaV = dv;
         }
 
         private void CheckNodeRef()
         {
-            if (nodeRef == null)
+            if (NodeRef == null)
             {
                 throw new Exception("Must attach node first");
             }
@@ -211,12 +238,12 @@ namespace kOS.Suffixed
         private void FromNodeRef()
         {
             // If this node is attached, and the values on the attached node have changed, I need to reflect that
-            if (nodeRef == null) return;
+            if (NodeRef == null) return;
 
-            time = nodeRef.UT;
-            radialOut = nodeRef.DeltaV.x;
-            normal = nodeRef.DeltaV.y;
-            prograde = nodeRef.DeltaV.z;
+            time = NodeRef.UT;
+            radialOut = NodeRef.DeltaV.x;
+            normal = NodeRef.DeltaV.y;
+            prograde = NodeRef.DeltaV.z;
         }
     }
 }

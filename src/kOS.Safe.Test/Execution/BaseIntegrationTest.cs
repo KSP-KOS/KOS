@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Compilation;
+using kOS.Safe.Compilation;
 using kOS.Safe.Compilation.KS;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Execution;
@@ -17,7 +17,7 @@ namespace kOS.Safe.Test.Execution
         [SetUp]
         public void Setup()
         {
-            SafeHouse.Init(new Config(), new VersionInfo(0, 0, 0, 0), "", false, "");
+            SafeHouse.Init(new Config(), new VersionInfo(0, 0, 0, 0), "", false, "./");
             SafeHouse.Logger = new NoopLogger();
 
             try
@@ -84,7 +84,9 @@ namespace kOS.Safe.Test.Execution
             {
                 LoadProgramsInSameAddressSpace = false,
                 IsCalledFromRun = false,
-                FuncManager = shared.FunctionManager
+                FuncManager = shared.FunctionManager,
+                BindManager = shared.BindingMgr,
+                AllowClobberBuiltins = SafeHouse.Config.AllowClobberBuiltIns
             });
             cpu.Boot();
 

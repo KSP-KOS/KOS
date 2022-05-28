@@ -1,4 +1,4 @@
-﻿using kOS.Communication;
+using kOS.Communication;
 using kOS.Safe;
 using kOS.Safe.Screen;
 using kOS.Safe.UserIO;
@@ -189,7 +189,7 @@ namespace kOS.Screen
             if (progressBarSubBuffer.Enabled)
             {
                 var bars = Math.Max((int)((ColumnCount) * elapsed / total), 0);
-                var time = new DateTime(TimeSpan.FromSeconds(total - elapsed + 0.5).Ticks).ToString("H:mm:ss");
+                var time = new DateTime(System.TimeSpan.FromSeconds(total - elapsed + 0.5).Ticks).ToString("H:mm:ss");
                 string statusText = deploymentMessage + new string(' ', ColumnCount - time.Length - deploymentMessage.Length) + time;
                 var barsText = new string('|', bars);
                 DrawStatus(statusText);

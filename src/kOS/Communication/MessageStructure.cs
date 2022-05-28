@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed;
@@ -10,7 +10,7 @@ using kOS.Safe.Exceptions;
 namespace kOS.Communication
 {
     [kOS.Safe.Utilities.KOSNomenclature("Message")]
-    public class MessageStructure : SerializableStructure, IHasSharedObjects
+    public class MessageStructure : SerializableStructure
     {
         private static string DumpMessage = "message";
 
@@ -25,7 +25,9 @@ namespace kOS.Communication
             }
         }
 
-        public MessageStructure()
+        // Only used by CreateFromDump() - don't make it public because it leaves fields
+        // unpopulated if not immediately followed up by LoadDump():
+        private MessageStructure()
         {
             InitializeSuffixes();
         }
@@ -38,10 +40,19 @@ namespace kOS.Communication
             InitializeSuffixes();
         }
 
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static MessageStructure CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new MessageStructure();
+            newObj.Shared = (SharedObjects)shared;
+            newObj.LoadDump(d);
+            return newObj;
+        }
+
         private void InitializeSuffixes()
         {
-            AddSuffix("SENTAT", new Suffix<kOS.Suffixed.TimeSpan>(() => new kOS.Suffixed.TimeSpan(Message.SentAt)));
-            AddSuffix("RECEIVEDAT", new Suffix<kOS.Suffixed.TimeSpan>(() => new kOS.Suffixed.TimeSpan(Message.ReceivedAt)));
+            AddSuffix("SENTAT", new Suffix<kOS.Suffixed.TimeStamp>(() => new kOS.Suffixed.TimeStamp(Message.SentAt)));
+            AddSuffix("RECEIVEDAT", new Suffix<kOS.Suffixed.TimeStamp>(() => new kOS.Suffixed.TimeStamp(Message.ReceivedAt)));
             AddSuffix("SENDER", new Suffix<Structure>(GetVesselTarget));
             AddSuffix("HASSENDER", new Suffix<BooleanValue>(GetVesselExists));
             AddSuffix("CONTENT", new Suffix<Structure>(DeserializeContent));

@@ -19,6 +19,14 @@ namespace kOS.Safe.Encapsulation
             QueueInitializeSuffixes();
         }
 
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static QueueValue<T> CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new QueueValue<T>();
+            newObj.LoadDump(d);
+            return newObj;
+        }
+
         public T Pop()
         {
             return InnerEnumerable.Dequeue();
@@ -83,6 +91,14 @@ namespace kOS.Safe.Encapsulation
             : base(toCopy)
         {
             InitializeSuffixes();
+        }
+
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static new QueueValue CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new QueueValue();
+            newObj.LoadDump(d);
+            return newObj;
         }
 
         private void InitializeSuffixes()

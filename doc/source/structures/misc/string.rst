@@ -246,6 +246,11 @@ Structure
 
     Returns the index of the first occurrence of the given string in this string (starting from 0).
 
+    If the ``string`` passed in is not found, this returns -1.
+
+    If the ``string`` passed in is the empty string ``""``, this always claims to have
+    successfully "found" that empty string at the start of the search.
+
 .. method:: String:FINDAT(string, startAt)
 
     :parameter string: :struct:`String` to look for
@@ -254,12 +259,22 @@ Structure
 
     Returns the index of the first occurrence of the given string in this string (starting from startAt).
 
+    If the ``string`` passed in is not found, this returns -1.
+
+    If the ``string`` passed in is the empty string ``""``, this always claims to have
+    successfully "found" that empty string at the start of the search.
+
 .. method:: String:FINDLAST(string)
 
     :parameter string: :struct:`String` to look for
     :type: :struct:`String`
 
     Returns the index of the last occurrence of the given string in this string (starting from 0)
+
+    If the ``string`` passed in is not found, this returns -1.
+
+    If the ``string`` passed in is the empty string ``""``, this always claims to have
+    successfully "found" that empty string at the beginning of the search.
 
 .. method:: String:FINDLASTAT(string, startAt)
 
@@ -268,6 +283,11 @@ Structure
     :type: :struct:`String`
 
     Returns the index of the last occurrence of the given string in this string (starting from startAt)
+
+    If the ``string`` passed in is not found, this returns -1.
+
+    If the ``string`` passed in is the empty string ``""``, this always claims to have
+    successfully "found" that empty string at the beginning of the search.
 
 .. method:: String:INDEXOF(string)
 

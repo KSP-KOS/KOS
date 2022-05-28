@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Linq;
 using System.Collections.Generic;
@@ -310,7 +310,7 @@ namespace kOS.Safe.Compilation
             
             // List of all subclasses of Opcode:
             Type opcodeType = typeof(Opcode);
-            IEnumerable<Type> opcodeTypes = opcodeType.Assembly.GetTypes().Where( t => t.IsSubclassOf(opcodeType) );
+            IEnumerable<Type> opcodeTypes = ReflectUtil.GetLoadedTypes(opcodeType.Assembly).Where( t => t.IsSubclassOf(opcodeType) );
             foreach (Type opType in opcodeTypes)
             {
                 if (!opType.IsAbstract) // only the ones that can be instanced matter.
@@ -426,7 +426,7 @@ namespace kOS.Safe.Compilation
         }
         
         /// <summary>
-        /// Return the list of member Properties that are part of what gets stored to machine langauge
+        /// Return the list of member Properties that are part of what gets stored to machine language
         /// for this opcode.
         /// </summary>
         /// <returns></returns>
@@ -1253,7 +1253,7 @@ namespace kOS.Safe.Compilation
 
     /// <summary>
     /// <para>
-    /// Consumes 2 values from the stack, pushing back a boolean of if the second is not equal to the first.
+    /// Consumes 2 values from the stack, pushing back a boolean of if the second is equal to the first.
     /// </para>
     /// <para></para>
     /// <para>eq</para>
@@ -2196,7 +2196,7 @@ namespace kOS.Safe.Compilation
             cpu.PushArgumentStack(new BooleanValue((sr == null ? false : sr.IsCancelled)));
         }
     }
-    
+
     /// <summary>
     /// <para>
     /// Push the thing atop the stack onto the stack again so there are now two of it atop the stack.
@@ -2471,7 +2471,7 @@ namespace kOS.Safe.Compilation
         /// </summary>
         protected OpcodePushDelegateRelocateLater()
         {}
-        
+
         public override void PopulateFromMLFields(List<object> fields)
         {
             // Expect fields in the same order as the [MLField] properties of this class:
@@ -2489,14 +2489,17 @@ namespace kOS.Safe.Compilation
     /// <summary>
     /// <para>
     /// Pops a function pointer from the stack and adds a trigger that will be called each cycle.
-    /// These triggers get the priority InterruptPriority.Recurring
+    /// The argument (to the opcode, not on the stack) contains the Interrupt Priority level
+    /// of the trigger.  For one trigger to interrupt another, it needs a higher priority,
+    /// else it waits until the first trigger is completed before it will fire.
     /// </para>
     /// <para></para>
-    /// <para>addtrigger</para>
+    /// <para>addtrigger N</para>
     /// <para>... fp -- ...</para>
     /// </summary>
     public class OpcodeAddTrigger : Opcode
     {
+
         protected override string Name { get { return "addtrigger"; } }
         public override ByteCode Code { get { return ByteCode.ADDTRIGGER; } }
 
@@ -2505,17 +2508,42 @@ namespace kOS.Safe.Compilation
         /// that identifies this instance/entrypoint uniquely at runtime.
         /// (For example, ON triggers need this, but WHEN triggers do not).
         /// </summary>
-        [MLField(1,true)]
+        [MLField(1,false)]
         public bool Unique { get; set; }
+        /// <summary>
+        /// The interrupt priority level of the trigger.
+        /// (It's an Int32 type instead of InterruptPrioirity purely because MLFields
+        /// need to be one of the limited primitive types the system knows how to store.)
+        /// </summary>
+        [MLField(2, false)]
+        public Int32 Priority { get; set; }
 
-        public OpcodeAddTrigger(bool unique)
+        public OpcodeAddTrigger(bool unique, InterruptPriority priority)
         {
             Unique = unique;
+            Priority = (Int32)priority;
         }
 
-        public OpcodeAddTrigger() // Must have a defualt constructor for how KSM files work.
+        public OpcodeAddTrigger(InterruptPriority priority) // Must have a defualt constructor for how KSM files work.
         {
             Unique = true;
+            Priority = (Int32)priority;
+        }
+
+        /// <summary>Only here because the compile storage system requires a default constructor.
+        /// It's private because we want to force everyone ELSE to use one of the versions with args.
+        /// </summary>
+        private OpcodeAddTrigger()
+        {
+        }
+
+        public override void PopulateFromMLFields(List<object> fields)
+        {
+            // Expect fields in the same order as the [MLField] properties of this class:
+            if (fields == null || fields.Count < 2)
+                throw new Exception("Saved field in ML file for OpcodeAddTrigger seems to be missing.  Version mismatch?");
+            Unique = Convert.ToBoolean(fields[0]);
+            Priority = Convert.ToInt32(fields[1]);
         }
 
         public override void Execute(ICpu cpu)
@@ -2523,12 +2551,12 @@ namespace kOS.Safe.Compilation
             int functionPointer = Convert.ToInt32(cpu.PopValueArgument()); // in case it got wrapped in a ScalarIntValue
 
             List<Structure> args = new List<Structure>();
-            cpu.AddTrigger(functionPointer, InterruptPriority.Recurring, (Unique ? cpu.NextTriggerInstanceId : 0), false, cpu.GetCurrentClosure());
+            cpu.AddTrigger(functionPointer, (InterruptPriority) Priority, (Unique ? cpu.NextTriggerInstanceId : 0), false, cpu.GetCurrentClosure());
         }
 
         public override string ToString()
         {
-            return Name;
+            return string.Format("{0}{1}, Pri {2} ", Name, (Unique ? " unique" : ""), Priority );
         }
     }
 

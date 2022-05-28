@@ -39,10 +39,15 @@ These return predicted information about the future position and velocity of an 
     :param orbitable: A :struct:`Vessel`, :struct:`Body` or other :struct:`Orbitable` object
     :type orbitable:  :struct:`Orbitable`
     :param time:    Time of prediction
-    :type time:     :struct:`TimeSpan`
+    :type time:     :struct:`TimeStamp` or :struct:`Scalar` universal seconds
     :return:        A position :struct:`Vector` expressed as the coordinates in the :ref:`ship-center-raw-rotation <ship-raw>` frame
 
-    Returns a prediction of where the :struct:`Orbitable` will be at some :ref:`universal Timestamp <timestamp>`. If the :struct:`Orbitable` is a :struct:`Vessel`, and the :struct:`Vessel` has planned :ref:`maneuver nodes <maneuver node>`, the prediction assumes they will be executed exactly as planned.
+    Returns a prediction of where the :struct:`Orbitable` will be at some :ref:`universal Time <universal_time>`. If the :struct:`Orbitable` is a :struct:`Vessel`, and the :struct:`Vessel` has planned :ref:`maneuver nodes <maneuver node>`, the prediction assumes they will be executed exactly as planned.
+
+    *Refrence Frame:* The reference frame that the future position
+    gets returned in is the same reference frame as the current position
+    vectors use.  In other words it's in ship:raw coords where the origin
+    is the current ``SHIP``'s center of mass.
 
     *Prerequisite:*  If you are in a career mode game rather than a
     sandbox mode game, This function requires that you have your space
@@ -54,25 +59,49 @@ These return predicted information about the future position and velocity of an 
     :param orbitable: A :struct:`Vessel`, :struct:`Body` or other :struct:`Orbitable` object
     :type orbitable:  :struct:`Orbitable`
     :param time:    Time of prediction
-    :type time:     :struct:`TimeSpan`
+    :type time:     :struct:`TimeStamp` or :struct:`Scalar` universal seconds
     :return: An :ref:`ObitalVelocity <orbitablevelocity>` structure.
 
-    Returns a prediction of what the :ref:`Orbitable's <orbitable>` velocity will be at some :ref:`universal Timestamp <timestamp>`. If the :struct:`Orbitable` is a :struct:`Vessel`, and the :struct:`Vessel` has planned :struct:`maneuver nodes <Node>`, the prediction assumes they will be executed exactly as planned.
+    Returns a prediction of what the :ref:`Orbitable's <orbitable>` velocity will be at some :ref:`universal Time <universal_time>`. If the :struct:`Orbitable` is a :struct:`Vessel`, and the :struct:`Vessel` has planned :struct:`maneuver nodes <Node>`, the prediction assumes they will be executed exactly as planned.
 
     *Prerequisite:*  If you are in a career mode game rather than a
     sandbox mode game, This function requires that you have your space
     center's buildings advanced to the point where you can make manuever
     nodes on the map view, as described in :struct:`Career:CANMAKENODES`.
 
+    *Refrence Frame:* The reference frame that the future velocity gets
+    returned in is the same reference frame as the current velocity
+    vectors use.  In other words it's relative to the ship's CURRENT
+    body it's orbiting just like ``ship:velocity`` is.  For example,
+    if the ship is currently in orbit of Kerbin, but will be in the Mun's
+    SOI in the future, then the ``VELOCITYAT`` that future time will return
+    is still returned relative to Kerbin, not the Mun, because that's the
+    current reference for current velocities.  Here is an example
+    illustrating that::
+
+        // This example imagines you are on an orbit that is leaving
+        // the current body and on the way to transfer to another orbit:
+
+        // Later_time is 1 minute into the Mun orbit patch:
+        local later_time is time:seconds + ship:obt:NEXTPATCHETA + 60.
+        local later_ship_vel is VELOCITYAT(ship, later_time):ORBIT.
+        local later_body_vel is VELOCITYAT(ship:obt:NEXTPATCH:body, later_time):ORBIT.
+
+        local later_ship_vel_rel_to_later_body is later_ship_vel - later_body_vel.
+
+        print "My later velocity relative to this body is: " + later_ship_vel.
+        print "My later velocity relative to the body I will be around then is: " +
+          later_ship_vel_rel_to_later_body.
+
 .. function:: ORBITAT(orbitable,time)
 
     :param orbitable: A :Ref:`Vessel <vessel>`, :struct:`Body` or other :struct:`Orbitable` object
     :type orbitable:  :struct:`Orbitable`
     :param time:    Time of prediction
-    :type time:     :struct:`TimeSpan`
+    :type time:     :struct:`TimeStamp` or :struct:`Scalar` universal seconds
     :return: An :struct:`Orbit` structure.
 
-    Returns the :ref:`Orbit patch <orbit>` where the :struct:`Orbitable` object is predicted to be at some :ref:`universal Timestamp <timestamp>`. If the :struct:`Orbitable` is a :struct:`Vessel`, and the :struct:`Vessel` has planned :ref:`maneuver nodes <maneuver node>`, the prediction assumes they will be executed exactly as planned.
+    Returns the :ref:`Orbit patch <orbit>` where the :struct:`Orbitable` object is predicted to be at some :ref:`universal Time <universal_time>`. If the :struct:`Orbitable` is a :struct:`Vessel`, and the :struct:`Vessel` has planned :ref:`maneuver nodes <maneuver node>`, the prediction assumes they will be executed exactly as planned.
 
     *Prerequisite:*  If you are in a career mode game rather than a
     sandbox mode game, This function requires that you have your space

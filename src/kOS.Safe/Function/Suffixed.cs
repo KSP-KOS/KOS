@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Function
@@ -9,25 +9,25 @@ namespace kOS.Safe.Function
         public override void Execute(SafeSharedObjects shared)
         {
             // Default values for parameters
-            int from = RangeValue.DEFAULT_START;
-            int to = RangeValue.DEFAULT_STOP;
-            int step = RangeValue.DEFAULT_STEP;
+            double from = RangeValue.DEFAULT_START;
+            double to = RangeValue.DEFAULT_STOP;
+            double step = RangeValue.DEFAULT_STEP;
 
             int argCount = CountRemainingArgs(shared);
             // assign parameter values from the stack, pop them in reverse order
             switch (argCount)
             {
                 case 1:
-                    to = GetInt(PopStructureAssertEncapsulated(shared));
+                    to = GetDouble(PopStructureAssertEncapsulated(shared));
                     break;
                 case 2:
-                    to = GetInt(PopStructureAssertEncapsulated(shared));
-                    from = GetInt(PopStructureAssertEncapsulated(shared));
+                    to = GetDouble(PopStructureAssertEncapsulated(shared));
+                    from = GetDouble(PopStructureAssertEncapsulated(shared));
                     break;
                 case 3:
-                    step = GetInt(PopStructureAssertEncapsulated(shared));
-                    to = GetInt(PopStructureAssertEncapsulated(shared));
-                    from = GetInt(PopStructureAssertEncapsulated(shared));
+                    step = GetDouble(PopStructureAssertEncapsulated(shared));
+                    to = GetDouble(PopStructureAssertEncapsulated(shared));
+                    from = GetDouble(PopStructureAssertEncapsulated(shared));
                     break;
                 default:
                     throw new KOSArgumentMismatchException(new int[] { 1, 2, 3 }, argCount, "Thrown from function RANGE()");

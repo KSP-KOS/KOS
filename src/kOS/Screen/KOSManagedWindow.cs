@@ -45,6 +45,18 @@ namespace kOS.Screen
 
         private string lockIdName;
 
+        private bool optOutOfControlLocking;
+        /// <summary>
+        /// Fixes #2568 - If the window is one where Unity can handle doing the keyboard focus
+        /// properly itself, like a Unity IMGUI window, then it should set this to true so it
+        /// will avoid using KSP's more high level control locking scheme whcih is a bit flaky at times:
+        /// </summary>
+        public bool OptOutOfControlLocking
+        {
+            get { return optOutOfControlLocking; }
+            set { if (value) InputLockManager.RemoveControlLock(lockIdName); optOutOfControlLocking = value; }
+        }
+
         protected KOSManagedWindow(string lockIdName = "")
         {
             // multiply by 50 so there's a range for future expansion for other GUI objects inside the window:
@@ -144,6 +156,8 @@ namespace kOS.Screen
         /// </summary>
         public virtual void GetFocus()
         {
+            if (OptOutOfControlLocking)
+                return;
             if (HighLogic.LoadedSceneIsFlight || HighLogic.LoadedSceneHasPlanetarium)
                 InputLockManager.SetControlLock(ControlTypes.ALLBUTCAMERAS, lockIdName);
         }
@@ -156,6 +170,8 @@ namespace kOS.Screen
         /// </summary>
         public virtual void LoseFocus()
         {
+            if (OptOutOfControlLocking)
+                return;
             InputLockManager.RemoveControlLock(lockIdName);
         }
         

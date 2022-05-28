@@ -59,8 +59,8 @@ keys and values::
 Will have the same effect as::
 
     set mylexicon to lexicon().
-    mylexicon["key1"] = "value1".
-    mylexicon["key2"] = "value2".
+    set mylexicon["key1"] to "value1".
+    set mylexicon["key2"] to "value2".
 
 Obviously when this syntax is used an even number of arguments is expected.
 
@@ -73,6 +73,117 @@ the same effect as the previous code fragment::
 
 The keys and the values of a lexicon can be any type you feel like, and do not
 need to be of a homogeneous type.
+
+.. _lexicon_suffix:
+
+Lexicons can use suffix syntax
+------------------------------
+
+One special thing can be done with a :struct:`Lexicon` that cannot be done
+with other types of structures in kOS - a lexicon can use the "suffix
+syntax".
+
+By "suffix syntax", what is meant is things like the colons in these
+statements::
+
+    print SHIP:VELOCITY.
+    print MUN:RADIUS.
+
+There is a special extra step when looking up a suffix.  Normally
+kOS throws an error if the suffix name refers to a suffix that does
+not exist on the object.  But, if the item on the left side of the
+colon is a :struct:`LEXICON` type, then it also will check to see if
+the suffix matches any of the lexicon's keys, and if it does, that
+key's value will be retrieved.
+
+Here is an example::
+
+    local mylex is lexicon(
+      "key1", "value1", "key2", "value2", "key3", "value3").
+    print mylex:key1. // prints "value1".
+    print mylex:key2. // prints "value2".
+    print mylex:key3. // prints "value3".
+
+This is added as a convenient shortcut.  It literally means the same
+thing as looking up the key with the square-bracket syntax::
+
+    local mylex is lexicon(
+      "key1", "value1", "key2", "value2", "key3", "value3").
+    // These two lines are exactly the same:
+    print mylex["key1"].
+    print mylex:key1.
+
+**The key must follow the rules for a valid identifier to do this:**
+
+Lexicons can use keys that are not even strings at all, but if you
+want to use this suffix syntax, it will only work with string keys.
+Furthermore, in order to use this shortcut, you must make sure the
+string key you are trying to use is one that makes a valid identifier
+in the kerboscript language.  For example::
+
+    local mylex is lexicon(
+      "key_no_spaces", 100, "key with spaces", 200).
+    print mylex["key_no_spaces"].   // This works fine.
+    print mylex["key with spaces"]. // This works fine.
+    print mylex:key_no_spaces.      // This works fine.
+    print mylex:key with spaces.    // <-- BUT THIS IS AN ERROR.
+
+You cannot use a key as a suffix if that key has any characters in
+it that make it invalid as an identifier, like spaces.  This is
+because the parser has to be able to read the colon suffix syntax
+first before the system can start looking up the key value.
+
+This suffix syntax for lexicons only works because kerboscript is a
+"late binding" language, where it doesn't try to find identifier names
+until the moment it encounters them during the program run. Therefore
+it can look up the lexicon names on the spot as it encounters that
+line of code.
+
+In other words, this will cause an error::
+
+    local mylex is lexicon().
+    print mylex:mykey. // <--- Error: no such thing in the lexicon yet.
+    set mylex["mykey"] to "value". // here it gets added, but it's too late.
+
+While doing it in this order will work::
+
+    local mylex is lexicon().
+    set mylex["mykey"] to "value". // adding the value first
+    print mylex:mykey. // makes this line work.
+
+Clashes between built-in suffixes versus lexicon keys
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+kOS will always prefer to use the built-in suffix name first when
+trying to search for a suffix name in a lexicon.  Therefore
+if you make a key who's name matches an existing built-in suffix
+term for Lexicons, you will get the built-in value instead of
+your key's value.  Here's an example::
+
+    local mylex is lexicon().
+    set mylex["LENGTH"] to 20.
+
+    // prints 1.  LENGTH is already a suffix of Lexicons, so
+    // that's what this gets you, not the key called "length":
+    print mylex:length.
+
+    // This will print 20, as there's no ambiguity that you were
+    // definitely looking for the key called "length" in this
+    // case, not the built-in suffix called "length":
+    print mylex["length"].
+
+Suffix keys also work with HASSUFFIX and SUFFIXNAMES
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All values in kerboscript derive from :ref:`Structure`, and
+all such structures have :attr:`Structure:HASSUFFIX` and
+:attr:`Structure:SUFFIXNAMES` members.  Because a Lexicon has
+this special ability to use the suffix syntax with keys, kOS
+will add all the keys of a lexicon that are "suffix-able" to the
+output of that lexicon's ``SUFFIXNAMES`` call.  Also, when you
+test if a suffix exists for a lexicon with ``HASSUFFIX``, any
+key in that lexicon that could be used as a suffix will also
+return true, in addition to the normal built-in suffixes.
 
 Structure
 ---------
@@ -123,6 +234,13 @@ Structure
         * - :meth:`REMOVE(keyvalue)`
           - None
           - removes the pair with the given key
+        * - :attr:`HASSUFFIX(name)`
+          - :struct:`Boolean`
+          - True if the suffix OR a key with the name, exists.
+        * - :attr:`SUFFIXNAMES`
+          - :struct:`List <list>` of :struct:`strings <string>`
+          - Gives both the suffixes AND the keys that work as suffixes
+
 .. note::
 
     This type is serializable.
@@ -235,6 +353,28 @@ Structure
     :access: Get only
 
     Returns a List of the values stored in this lexicon.
+
+.. method:: Lexicon:HASSUFFIX(name)
+
+    :parameter name: :struct:`String` name of the suffix being tested for
+    :type: :struct:`Boolean`
+    :access: Get only
+
+    This is just like the base method :meth:`Structure:HASSUFFIX(name)` that
+    all structures have, but with one slight difference - it will also return
+    true if the name you pass in matches one of the keys of this lexicon that
+    could be used with the :ref:`lexicon suffix syntax <lexicon_suffix>`.
+
+.. attribute::  Lexicon:SUFFIXNAMES
+
+    :type: :struct:`List <list>` of :struct:`strings <string>`
+    :access: Get only
+
+    All structures in kerboscript have a :attr:`Structure:SUFFIXNAMES`
+    attribute that shows a list of all the suffixes on the structure,
+    but for Lexicons the SUFFIXNAMES attribute has been altered so
+    that it will additionally include any keys of the suffix that could
+    be callled using the :ref:`lexicon suffix syntax <lexicon_suffix>`.
 
 Access to Individual Elements
 -----------------------------

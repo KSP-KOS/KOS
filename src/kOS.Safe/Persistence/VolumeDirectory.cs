@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using kOS.Safe.Persistence;
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
@@ -42,7 +42,7 @@ namespace kOS.Safe
         private void InitializeSuffixes()
         {
             AddSuffix("ITERATOR", new NoArgsSuffix<Enumerator>(() => new Enumerator(GetEnumerator())));
-            AddSuffix("LIST", new Suffix<Lexicon>(ListAsLexicon));
+            AddSuffix(new string[] { "LIST","LEXICON","LEX"}, new Suffix<Lexicon>(ListAsLexicon));
         }
     }
 }

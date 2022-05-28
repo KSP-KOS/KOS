@@ -25,6 +25,7 @@ TextField
     :attr:`ONCHANGE`                      :struct:`KOSDelegate` (:struct:`String`)  Your function called whenever the :attr:`CHANGED` state changes.
     :attr:`CONFIRMED`                     :struct:`Boolean`                         Has the user pressed Return in the field?
     :attr:`ONCONFIRM`                     :struct:`KOSDelegate` (:struct:`String`)  Your function called whenever the :attr:`CONFIRMED` state changes.
+    :attr:`TOOLTIP`                       :struct:`String`                          Hint Text to appear in the field when it's empty.
     ===================================== ========================================= =============
 
     .. attribute:: CHANGED
@@ -121,6 +122,33 @@ TextField
         :ref:`callback technique <gui_callback_technique>` of widget
         interaction.
 
+    .. attribute:: TOOLTIP
+
+        :type: :struct:`String`
+        :access: Get/Set
+
+        (Technically this is inherited from :struct:`Label`, but it behaves
+        quite differently in :struct:`TEXTFIELD` "Labels" than it does for
+        other more "normal" types of label.)
+
+        Unity3d's IMGUI system cannot quite work with proper mouse hover
+        tooltips on typing text fields.  kOS can't help this.  It's a limit
+        of the Unity3d tool under the hood.  So instead, when you set a
+        Tooltip for a :struct:`TEXTFIELD`, kOS uses that field differently
+        than it does for other kinds of "label".
+
+        In the case of a :struct:`TEXTFIELD`, the TOOLTIP, instead of being
+        a string that is set when you hover the mouse over the widget, is 
+        the string that will appear inside the field as a hint in a
+        greyed-out way when the field is empty-string.  If the user empties
+        the value of the field, then kOS will show this TOOLTIP value inside
+        the field as the hint about what they should type there.  (The actual
+        value of the field's ``:TEXT`` attribute will still be ``""``, even
+        when the TOOLTIP is showing in the widget.)
+
+        Example::
+
+            set myTextField:TOOLTIP to "Type a Planet Name Here".
 
     .. note::
 

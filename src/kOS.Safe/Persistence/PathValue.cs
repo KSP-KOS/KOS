@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using kOS.Safe.Serialization;
 using kOS.Safe.Persistence;
 using kOS.Safe.Encapsulation.Suffixes;
@@ -16,7 +16,7 @@ namespace kOS.Safe
     /// Instances of this class are on the other hand created only for the user.
     /// </summary>
     [kOS.Safe.Utilities.KOSNomenclature("Path")]
-    public class PathValue : SerializableStructure, IHasSafeSharedObjects
+    public class PathValue : SerializableStructure
     {
         [Function("path")]
         public class FunctionPath : SafeFunctionBase
@@ -56,7 +56,10 @@ namespace kOS.Safe
             }
         }
 
-        public PathValue()
+        // Only used by CreateFromDump() and other peer constructors.
+        // Don't make it public because it leaves fields
+        // unpopulated:
+        private PathValue()
         {
             InitializeSuffixes();
         }
@@ -65,6 +68,15 @@ namespace kOS.Safe
         {
             Path = path;
             this.sharedObjects = sharedObjects;
+        }
+
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static PathValue CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new PathValue();
+            newObj.Shared = shared;
+            newObj.LoadDump(d);
+            return newObj;
         }
 
         public PathValue FromPath(GlobalPath path)

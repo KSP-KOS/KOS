@@ -1,5 +1,6 @@
 using kOS.Safe.Exceptions;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using kOS.Safe.Persistence;
 
 namespace kOS.Safe.Compilation.KS
@@ -34,7 +35,7 @@ namespace kOS.Safe.Compilation.KS
                 }
                 catch (KOSCompileException e)
                 {
-                    e.AddSourceText((short)startLineNum, scriptText);
+                    e.AddSourceText((short)startLineNum, scriptText, filePath.ToString());
                     throw;
                 }
 

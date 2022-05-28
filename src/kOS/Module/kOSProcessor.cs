@@ -4,6 +4,7 @@ using kOS.Execution;
 using kOS.Communication;
 using kOS.Persistence;
 using kOS.Safe;
+using kOS.Safe.Serialization;
 using kOS.Safe.Compilation;
 using kOS.Safe.Compilation.KS;
 using kOS.Safe.Module;
@@ -16,6 +17,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
+
 using kOS.Safe.Execution;
 using UnityEngine;
 using kOS.Safe.Encapsulation;
@@ -27,6 +30,8 @@ namespace kOS.Module
 {
     public class kOSProcessor : PartModule, IProcessor, IPartCostModifier, IPartMassModifier
     {
+        private const string PAWGroup = "kOS";
+
         public ProcessorModes ProcessorMode { get; private set; }
 
         public Harddisk HardDisk { get; private set; }
@@ -35,6 +40,8 @@ namespace kOS.Module
 
         public MessageQueue Messages { get; private set; }
 
+        private static bool bootListDirty;
+
         public string Tag
         {
             get
@@ -42,12 +49,20 @@ namespace kOS.Module
                 KOSNameTag tag = part.Modules.OfType<KOSNameTag>().FirstOrDefault();
                 return tag == null ? string.Empty : tag.nameTag;
             }
+            set
+            {
+                KOSNameTag tag = part.Modules.OfType<KOSNameTag>().FirstOrDefault();
+                // Really a null tag shouldn't ever happen.  It would mean kOS is installed but KOSNameTag's aren't on all the things.
+                // And that should only happen if someone has a bad ModuleManager config that's screwing with kOS.
+                if (tag != null)
+                    tag.nameTag = value;
+            }
         }
 
         private int vesselPartCount;
         private SharedObjects shared;
         private static readonly List<kOSProcessor> allMyInstances = new List<kOSProcessor>();
-        private bool firstUpdate = true;
+        public bool HasBooted { get; set; }
         private bool objectsInitialized = false;
 
         public float AdditionalMass { get; set; }
@@ -69,28 +84,28 @@ namespace kOS.Module
 
         private const string BootDirectoryName = "boot";
 
-        [KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Boot File"), UI_ChooseOption(scene = UI_Scene.Editor)]
+        [KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Boot File", groupName = PAWGroup, groupDisplayName = PAWGroup), UI_ChooseOption(scene = UI_Scene.Editor)]
         public string bootFile = "None";
 
-        [KSPField(isPersistant = true, guiName = "kOS Disk Space", guiActive = true)]
+        [KSPField(isPersistant = true, guiName = "kOS Disk Space", guiActive = true, groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public int diskSpace = 1024;
 
-        [KSPField(isPersistant = true, guiName = "kOS Base Disk Space", guiActive = false)]
+        [KSPField(isPersistant = true, guiName = "kOS Base Disk Space", guiActive = false, groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public int baseDiskSpace = 0;
 
-        [KSPField(isPersistant = false, guiName = "kOS Base Module Cost", guiActive = false)]
+        [KSPField(isPersistant = false, guiName = "kOS Base Module Cost", guiActive = false, groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public float baseModuleCost = 0F;  // this is the base cost added to a part for including the kOSProcessor, default to 0.
 
-        [KSPField(isPersistant = true, guiName = "kOS Base Module Mass", guiActive = false)]
+        [KSPField(isPersistant = true, guiName = "kOS Base Module Mass", guiActive = false, groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public float baseModuleMass = 0F;  // this is the base mass added to a part for including the kOSProcessor, default to 0.
 
-        [KSPField(isPersistant = false, guiName = "kOS Disk Space", guiActive = false, guiActiveEditor = true), UI_ChooseOption(scene = UI_Scene.Editor)]
+        [KSPField(isPersistant = false, guiName = "kOS Disk Space", guiActive = false, guiActiveEditor = true, groupName = PAWGroup, groupDisplayName = PAWGroup), UI_ChooseOption(scene = UI_Scene.Editor)]
         public string diskSpaceUI = "1024";
 
-        [KSPField(isPersistant = true, guiName = "CPU/Disk Upgrade Cost", guiActive = false, guiActiveEditor = true)]
+        [KSPField(isPersistant = true, guiName = "CPU/Disk Upgrade Cost", guiActive = false, guiActiveEditor = true, groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public float additionalCost = 0F;
 
-        [KSPField(isPersistant = false, guiName = "CPU/Disk Upgrade Mass", guiActive = false, guiActiveEditor = true, guiUnits = "Kg", guiFormat = "0.00")]
+        [KSPField(isPersistant = false, guiName = "CPU/Disk Upgrade Mass", guiActive = false, guiActiveEditor = true, guiUnits = "Kg", guiFormat = "0.00", groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public float additionalMassGui = 0F;
 
         [KSPField(isPersistant = false, guiActive = false, guiActiveEditor = false)]
@@ -112,7 +127,7 @@ namespace kOS.Module
         public float ECPerInstruction = 0.000004F;
 
         // This represents how much EC to consume per Byte of the current volume, per second.
-        // This would be the "continuous" compoenent of the processor's power (though it varies
+        // This would be the "continuous" component of the processor's power (though it varies
         // when you change to another volume).
         // IMPORTANT: The value defaults to zero and must be overriden in the module
         // definition for any given part (within the part.cfg file).
@@ -134,24 +149,24 @@ namespace kOS.Module
             }
         }
 
-        [KSPEvent(guiActive = true, guiName = "Open Terminal", category = "skip_delay;")]
+        [KSPEvent(guiActive = true, guiName = "Open Terminal", category = "skip_delay;", groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public void Activate()
         {
             SafeHouse.Logger.Log("Open Window by event");
             OpenWindow();
         }
 
-        [KSPEvent(guiActive = true, guiName = "Close Terminal", category = "skip_delay;")]
+        [KSPEvent(guiActive = true, guiName = "Close Terminal", category = "skip_delay;", groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public void Deactivate()
         {
             SafeHouse.Logger.Log("Close Window by event");
             CloseWindow();
         }
 
-        [KSPField(isPersistant = true, guiName = "kOS Average Power", guiActive = true, guiActiveEditor = true, guiUnits = "EC/s", guiFormat = "0.000")]
+        [KSPField(isPersistant = true, guiName = "kOS Average Power", guiActive = true, guiActiveEditor = true, guiUnits = "EC/s", guiFormat = "0.000", groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public float RequiredPower = 0;
 
-        [KSPEvent(guiActive = true, guiName = "Toggle Power")]
+        [KSPEvent(guiActive = true, guiName = "Toggle Power", groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public void TogglePower()
         {
             SafeHouse.Logger.Log("Toggle Power");
@@ -186,6 +201,28 @@ namespace kOS.Module
             SafeHouse.Logger.Log("Toggle Power from ActionGroup");
             TogglePower();
         }
+
+        [KSPAction("Suppress On", actionGroup = KSPActionGroup.None)]
+        public void StartSuppressAutopilot(KSPActionParam param)
+        {
+            SafeHouse.Logger.Log("Start Suppress Autopilot from ActionGroup");
+            SafeHouse.Config.SuppressAutopilot = true;
+        }
+
+        [KSPAction("Suppress Off", actionGroup = KSPActionGroup.None)]
+        public void StopSuppressAutopilot(KSPActionParam param)
+        {
+            SafeHouse.Logger.Log("Stop Suppress Autopilot from ActionGroup");
+            SafeHouse.Config.SuppressAutopilot = false;
+        }
+
+        [KSPAction("Toggle Suppression", actionGroup = KSPActionGroup.None)]
+        public void ToggleSuppressAutopilot(KSPActionParam param)
+        {
+            SafeHouse.Logger.Log("Toggle Suppress Autopilot from ActionGroup");
+            SafeHouse.Config.SuppressAutopilot = !SafeHouse.Config.SuppressAutopilot;
+        }
+
         public void OpenWindow()
         {
             shared.Window.Open();
@@ -258,10 +295,90 @@ namespace kOS.Module
 
         private void UpdateCostAndMass()
         {
-            float spaceDelta = diskSpace - baseDiskSpace;
+            // Clamp this to prevent negative cost and mass.
+            // (Can happen when people edit part.cfg data or
+            // use ModuleManager.)
+            float spaceDelta = Mathf.Max(diskSpace - baseDiskSpace, 0.0f);
             additionalCost = (float)System.Math.Round(spaceDelta * diskSpaceCostFactor, 0);
             AdditionalMass = spaceDelta * diskSpaceMassFactor;
             additionalMassGui = AdditionalMass * 1000;
+        }
+
+        private PartModule RP1AvionicsModule = null;
+
+        private void FindRP1Modules()
+        {
+            RP1AvionicsModule = null;
+            foreach (PartModule otherModule in part.Modules)
+            {
+                for (System.Type t = otherModule.GetType(); t != null; t = t.BaseType)
+                {
+                    if (t.Name.Contains("ModuleProceduralAvionics"))
+                    {
+                        RP1AvionicsModule = otherModule;
+                        break;
+                    }
+                }
+                if (RP1AvionicsModule != null)
+                    break;
+            }
+            SafeHouse.Logger.Log(string.Format("FindRP1Module: {0}", RP1AvionicsModule != null ? "Found" : "Not Found"));
+        }
+
+        private void UpdateRP1TechLevel(bool InEditor)
+        {
+            if (RP1AvionicsModule != null)
+            {
+                var techNodePropInfo = RP1AvionicsModule.GetType().GetProperty("CurrentProceduralAvionicsTechNode");
+                if (techNodePropInfo != null)
+                {
+                    var techNodeProp = techNodePropInfo.GetValue(RP1AvionicsModule);
+                    if (techNodeProp != null)
+                    {
+                        System.Type techNodeType = techNodeProp.GetType();
+                        System.Reflection.FieldInfo fieldInfo;
+
+                        if (InEditor)
+                        {
+                            fieldInfo = techNodeType.GetField("kosDiskSpace");
+                            int newDiskSpace = (fieldInfo != null) ? (int)fieldInfo.GetValue(techNodeProp) : 0;
+                            if (newDiskSpace != baseDiskSpace && newDiskSpace > 0)
+                            {
+                                SafeHouse.Logger.Log(string.Format("Changing base disk space for RP-1 config change: {0} -> {1}", baseDiskSpace, newDiskSpace));
+
+                                // Adjust disk space to be the same multiple of the new base disk space
+                                diskSpace = newDiskSpace * diskSpace / baseDiskSpace;
+                                baseDiskSpace = newDiskSpace;
+
+                                PopulateDiskSpaceUI();
+                            }
+                        }
+
+                        fieldInfo = techNodeType.GetField("kosSpaceCostFactor");
+                        if (fieldInfo != null)
+                            diskSpaceCostFactor = (float)fieldInfo.GetValue(techNodeProp);
+                        fieldInfo = techNodeType.GetField("kosSpaceMassFactor");
+                        if (fieldInfo != null)
+                            diskSpaceMassFactor = (float)fieldInfo.GetValue(techNodeProp);
+                        fieldInfo = techNodeType.GetField("kosECPerInstruction");
+                        if (fieldInfo != null)
+                            ECPerInstruction = (float)fieldInfo.GetValue(techNodeProp);
+                    }
+                }
+            }
+        }
+
+        private void PopulateDiskSpaceUI()
+        {
+            //populate diskSpaceUI selector
+            diskSpaceUI = diskSpace.ToString();
+            BaseField field = Fields["diskSpaceUI"];
+            UI_ChooseOption options = (UI_ChooseOption)field.uiControlEditor;
+            var sizeOptions = new string[3];
+            sizeOptions[0] = baseDiskSpace.ToString();
+            sizeOptions[1] = (baseDiskSpace * 2).ToString();
+            sizeOptions[2] = (baseDiskSpace * 4).ToString();
+            options.options = sizeOptions;
         }
 
         //implement IPartMassModifier component
@@ -281,6 +398,9 @@ namespace kOS.Module
         {
             try
             {
+                FindRP1Modules();
+                UpdateRP1TechLevel(state == StartState.Editor);
+
                 //if in Editor, populate boot script selector, diskSpace selector and etc.
                 if (state == StartState.Editor)
                 {
@@ -301,10 +421,16 @@ namespace kOS.Module
 
                 SafeHouse.Logger.Log(string.Format("OnStart: {0} {1}", state, ProcessorMode));
                 InitObjects();
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 SafeHouse.Logger.LogException(e);
             }
+        }
+
+        public static void SetBootListDirty()
+        {
+            bootListDirty = true;
         }
 
         private void InitUI()
@@ -379,15 +505,22 @@ namespace kOS.Module
             options.options = availableOptions.ToArray();
             options.display = availableDisplays.ToArray();
 
-            //populate diskSpaceUI selector
-            diskSpaceUI = diskSpace.ToString();
-            field = Fields["diskSpaceUI"];
-            options = (UI_ChooseOption)field.uiControlEditor;
-            var sizeOptions = new string[3];
-            sizeOptions[0] = baseDiskSpace.ToString();
-            sizeOptions[1] = (baseDiskSpace * 2).ToString();
-            sizeOptions[2] = (baseDiskSpace * 4).ToString();
-            options.options = sizeOptions;
+            bootListDirty = false;
+            ForcePAWRefresh();
+
+            PopulateDiskSpaceUI();
+        }
+
+        public void ForcePAWRefresh()
+        {
+            // Thanks to https://github.com/blowfishpro for finding this API call for me:
+            UIPartActionWindow paw = UIPartActionController.Instance?.GetItem(part, false);
+
+            if (paw != null)
+            {
+                paw.ClearList();
+                paw.displayDirty = true;
+            }
         }
 
         private IEnumerable<VolumePath> BootDirectoryFiles()
@@ -418,6 +551,8 @@ namespace kOS.Module
 
             return result;
         }
+
+        private static Regex VolumeNameRemoveChars = new Regex("[/\\\\<>:\"|?*]*", RegexOptions.Compiled);
 
         public void InitObjects()
         {
@@ -467,7 +602,13 @@ namespace kOS.Module
 
                 if (!string.IsNullOrEmpty(Tag))
                 {
-                    HardDisk.Name = Tag;
+                    // Tag could contain characters that are not allowed.
+                    var tmpTag = VolumeNameRemoveChars.Replace(Tag, "");
+
+                    if( !string.IsNullOrWhiteSpace(tmpTag))
+                    {
+                        HardDisk.Name = tmpTag.Replace(' ', '_');
+                    }
                 }
 
                 var path = BootFilePath;
@@ -539,6 +680,10 @@ namespace kOS.Module
                 SafeHouse.Logger.LogError("kOSProcessor: This game installation is badly broken.  It appears to have no planets in it.");
             else
                 ConstantValue.GravConst = anyBody.gravParameter / anyBody.Mass;
+
+            ConstantValue.AvogadroConst = PhysicsGlobals.AvogadroConstant;
+            ConstantValue.BoltzmannConst = PhysicsGlobals.BoltzmannConstant;
+            ConstantValue.IdealGasConst = PhysicsGlobals.IdealGasConstant;
         }
 
         private void InitProcessorTracking()
@@ -547,22 +692,59 @@ namespace kOS.Module
             if (!allMyInstances.Contains(this))
             {
                 allMyInstances.Add(this);
-                allMyInstances.Sort(delegate(kOSProcessor a, kOSProcessor b)
-                {
-                    // sort "nulls" first:
-                    if (a.part == null || a.part.vessel == null)
-                        return -1;
-                    if (b.part == null || b.part.vessel == null)
-                        return 1;
-                    // If on different vessels, sort by vessel name next:
-                    int compare = string.Compare(a.part.vessel.vesselName, b.part.vessel.vesselName,
-                        StringComparison.CurrentCultureIgnoreCase);
-                    // If on same vessel, sort by part UID last:
-                    if (compare != 0)
-                        return compare;
-                    return (a.part.uid() < b.part.uid()) ? -1 : (a.part.uid() > b.part.uid()) ? 1 : 0;
-                });
+                SortAllInstances();
             }
+        }
+
+        public static void SortAllInstances()
+        {
+            allMyInstances.Sort(delegate (kOSProcessor a, kOSProcessor b)
+            {
+                // THIS SORT IS EXPENSIVE BECAUSE IT KEEPS RECALCULATING THE CRITERIA
+                // (DISTANCE BETWEEN VESSELS, HOPS TO ROOT PART) ON EACH PAIRWISE
+                // COMPARISON OF TWO ITEMS DURING THE SORT, RATHER THAN REMEMBERING A
+                // PART'S SCORE AND RE-USING THAT ON SUBSEQUENT PAIRWISE COMPARISONS WITH THAT PART.
+                // I DON'T THINK OPTOMIZING IT IS WORTH IT WHEN THIS SORT WON"T BE DONE SUPER FREQUENTLY,
+                // MAYBE ONCE EVERY 1 or 2 SECONDS AT MOST.
+
+                // sort "nulls" to be last:
+                if (a.part == null || a.part.vessel == null)
+                    return 1;
+                if (b.part == null || b.part.vessel == null)
+                    return -1;
+
+                // If on diffrent vessels, sort by distance of vessel from active vessel - nearest vessels first:
+                if (a.part.vessel != b.part.vessel)
+                {
+                    Vector3d activePos = FlightGlobals.ActiveVessel.GetWorldPos3D();
+                    // May as well use square magnitude - it's faster and sorts things in the same order:
+                    double aSquareDistance = (activePos - a.part.vessel.GetWorldPos3D()).sqrMagnitude;
+                    double bSquareDistance = (activePos - b.part.vessel.GetWorldPos3D()).sqrMagnitude;
+                    return (aSquareDistance < bSquareDistance) ? -1 : 1;
+                }
+
+                // If it gets to here, they're on the same vessel.
+                // So sort by number of parent links to walk to get to root part (closest to root goes first).
+                int aCountParts = 0;
+                int bCountParts = 0;
+                for (Part p = a.part; p != null; p = p.parent)
+                    ++aCountParts;
+                for (Part p = b.part; p != null; p = p.parent)
+                    ++bCountParts;
+                if (aCountParts != bCountParts)
+                    return aCountParts - bCountParts;
+
+                // If it gets to here it's a tie so far - two parts were an equal number of parts away from root,
+                // which can easily happen if the kOS CPUs were attached with symmetry in the VAB/SPH.
+
+                // We CANNOT have a tie.  We need a deterministic order because differences in the list is
+                // how we discover the CPU list has chnaged.  So make one final arbitrary thing to break the
+                // tie with:
+                uint aUID = a.part.uid();
+                uint bUID = b.part.uid();
+                return (aUID < bUID ? -1 : 1);
+
+            });
         }
 
         public void OnDestroy()
@@ -570,6 +752,7 @@ namespace kOS.Module
             SafeHouse.Logger.SuperVerbose("kOSProcessor.OnDestroy()!");
 
             allMyInstances.RemoveAll(m => m == this);
+            SortAllInstances();
 
             if (shared != null)
             {
@@ -617,6 +800,11 @@ namespace kOS.Module
         {
             if (HighLogic.LoadedScene == GameScenes.EDITOR && EditorLogic.fetch != null)
             {
+                if (bootListDirty)
+                {
+                    InitUI();
+                }
+                UpdateRP1TechLevel(true);
                 if (diskSpace != Convert.ToInt32(diskSpaceUI))
                 {
                     diskSpace = Convert.ToInt32(diskSpaceUI);
@@ -636,11 +824,11 @@ namespace kOS.Module
 
             if (!vessel.HoldPhysics)
             {
-                if (firstUpdate)
+                if (!HasBooted)
                 {
                     SafeHouse.Logger.LogWarning("First Update()");
-                    firstUpdate = false;
                     shared.Cpu.Boot();
+                    HasBooted = true;
                 }
                 UpdateVessel();
                 UpdateFixedObservers();
@@ -814,6 +1002,7 @@ namespace kOS.Module
         {
             Opcode.InitMachineCodeData();
             CompiledObject.InitTypeData();
+            SafeSerializationMgr.CheckIDumperStatics();
         }
 
         private void ProcessElectricity(Part partObj, float time)
@@ -918,7 +1107,7 @@ namespace kOS.Module
                     {
                         shared.VolumeMgr.SwitchTo(HardDisk);
                     }
-                    firstUpdate = true; // handle booting the cpu on the next FixedUpdate
+                    HasBooted = false; // When FixedUpdate() first happesn, then the boot will happen.
                     if (shared.Interpreter != null) shared.Interpreter.SetInputLock(false);
                     if (shared.Window != null) shared.Window.IsPowered = true;
                     foreach (var w in shared.ManagedWindows) w.IsPowered = true;
@@ -948,8 +1137,8 @@ namespace kOS.Module
 
         public void SetAutopilotMode(int mode)
         {
-            UIStateToggleButton[] modeButtons = FindObjectOfType<VesselAutopilotUI>().modeButtons;
-            modeButtons.ElementAt(mode).SetState(true);
+            // First change the real setting underneath the UI:
+            FlightGlobals.ActiveVessel.Autopilot.SetMode((VesselAutopilot.AutopilotMode) mode);
         }
 
         public string BootFilename

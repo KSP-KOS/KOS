@@ -63,11 +63,13 @@ namespace kOS.Safe.Encapsulation
         }
 
         private IDictionary<Structure, Structure> internalDictionary;
+        private IDictionary<Structure, SetSuffix<Structure>> keySuffixes;
         private bool caseSensitive;
 
         public Lexicon()
         {
             internalDictionary = new Dictionary<Structure, Structure>(new LexiconComparer<Structure>());
+            keySuffixes = new Dictionary<Structure, SetSuffix<Structure>>(new LexiconComparer<Structure>());
             caseSensitive = false;
             InitalizeSuffixes();
         }
@@ -84,6 +86,14 @@ namespace kOS.Safe.Encapsulation
             {
                 internalDictionary.Add(u);
             }
+        }
+
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static Lexicon CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new Lexicon();
+            newObj.LoadDump(d);
+            return newObj;
         }
 
         private void FillWithEnumerableValues(IEnumerable<Structure> values)
@@ -129,6 +139,13 @@ namespace kOS.Safe.Encapsulation
             internalDictionary = newCase ?
                 new Dictionary<Structure, Structure>() :
             new Dictionary<Structure, Structure>(new LexiconComparer<Structure>());
+
+            // Regardless of whether or not the lexicon itself is case sensitive,
+            // the key Suffixes have to be IN-sensitive because they are getting
+            // values who's case got squashed by the compiler.  This needs to
+            // be documented well in the user docs (i.e. using the suffix syntax
+            // cannot detect the difference between keys that differ only in case).
+            keySuffixes = new Dictionary<Structure, SetSuffix<Structure>>(new LexiconComparer<Structure>());
         }
 
         private BooleanValue HasValue(Structure value)
@@ -285,6 +302,98 @@ namespace kOS.Safe.Encapsulation
             return new SafeSerializationMgr(null).ToString(this);
         }
 
+        // Try to call the normal SetSuffix that all structures do, but if that fails,
+        // then try to use this suffix name as a key and set the value in the lexicon
+        // at that key.  This can insert new key values in the lexicon, just like
+        // doing `set x["foo"] to y.` can.
+        public override bool SetSuffix(string suffixName, object value, bool failOkay = false)
+        {
+            if (base.SetSuffix(suffixName, value, true))
+                return true;
+
+            // If the above fails, then fallback on the key technique:
+            internalDictionary[new StringValue(suffixName)] = FromPrimitiveWithAssert(value);
+            return true;
+        }
+
+        // Try to get the suffix the normal way that all structures do, but if
+        // that fails, then try to get the value in the lexicon who's key is
+        // this suffix name. (This implements using keys with the "colon" suffix
+        // syntax for issue #2551.)
+        public override ISuffixResult GetSuffix(string suffixName, bool failOkay = false)
+        {
+            ISuffixResult baseResult = base.GetSuffix(suffixName, true);
+            if (baseResult != null)
+                return baseResult;
+
+            // If the above fails, but this suffix IS the name of a key in the
+            // dictionary, then try to use the key-suffix we made earlier
+            // (or make a new one and use it now)
+            // ---------------------------------------------------------------
+
+            StringValue suffixAsStruct = new StringValue(suffixName);
+
+            if (internalDictionary.ContainsKey(suffixAsStruct)) // even if keySuffixes has the value, it doesn't count if the key isn't there anymore.
+            {
+                SetSuffix<Structure> theSuffix;
+                if (keySuffixes.TryGetValue(suffixAsStruct, out theSuffix))
+                {
+                    return theSuffix.Get();
+                }
+                else // make a new suffix then since this is the first time it got mentioned this way:
+                {
+                    theSuffix = new SetSuffix<Structure>(() => internalDictionary[suffixAsStruct], value => internalDictionary[suffixAsStruct] = value);
+                    keySuffixes.Add(suffixAsStruct, theSuffix);
+                    return theSuffix.Get();
+                }
+            }
+            else
+            {
+                // This will error out, but we may as well also remove this key
+                // from the list of suffixes:
+                keySuffixes.Remove(suffixAsStruct);
+
+                if (failOkay)
+                    return null;
+                else
+                    throw new KOSSuffixUseException("get", suffixName, this);
+            }
+        }
+
+        public override BooleanValue HasSuffix(StringValue suffixName)
+        {
+            if (base.HasSuffix(suffixName))
+                return true;
+            if (internalDictionary.ContainsKey(suffixName))
+            {
+                // It can only be a suffix if it is a valid identifier pattern, else the
+                // parser won't let the colon suffix syntax see it to pass it to GetSuffix()
+                // or SetSuffix():
+                return StringUtil.IsValidIdentifier(suffixName);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Like normal Structure.GetSuffixNames except it also adds all
+        /// the keys that would validly work with the colon suffix syntax
+        /// to the list.
+        /// </summary>
+        /// <returns></returns>
+        public override ListValue<StringValue> GetSuffixNames()
+        {
+            ListValue<StringValue> theList = base.GetSuffixNames();
+
+            foreach (Structure key in internalDictionary.Keys)
+            {
+                StringValue keyStr = key as StringValue;
+                if (keyStr != null && StringUtil.IsValidIdentifier(keyStr))
+                {
+                    theList.Add(keyStr);
+                }
+            }
+            return new ListValue<StringValue>(theList.OrderBy(item => item.ToString()));
+        }
         public override Dump Dump()
         {
             var result = new DumpWithHeader

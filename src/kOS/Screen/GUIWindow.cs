@@ -41,6 +41,7 @@ namespace kOS.Screen
 
         public void Awake()
         {
+
             // Transparent - leave the widget inside it to draw background if it wants to.
             style = new GUIStyle(HighLogic.Skin.window);
             style.normal.background = null;
@@ -56,7 +57,7 @@ namespace kOS.Screen
             commDelayStyle.stretchHeight = true;
             commDelayStyle.fontSize = 10;
             commDelayStyle.fontStyle = FontStyle.Bold;
-            commDelayedTexture = GameDatabase.Instance.GetTexture("kOS/GFX/commDelay", false);
+            commDelayedTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_commDelay", false);
             var solidWhite = new Texture2D(1, 1);
             solidWhite.SetPixel(0, 0, Color.white);
             commDelayStyle.normal.background = solidWhite;
@@ -66,6 +67,10 @@ namespace kOS.Screen
 
             GameEvents.onHideUI.Add (OnHideUI);
 			GameEvents.onShowUI.Add (OnShowUI);
+
+            // Fixes #2568 - Unity IMGUI does its own individual input locking per field that needs it,
+            // so don't use KSP's more high-level control locking:
+            OptOutOfControlLocking = true;
         }
 
         public void OnDestroy()

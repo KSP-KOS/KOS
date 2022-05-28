@@ -3,6 +3,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed;
 using kOS.Suffixed.Part;
 using System.Linq;
+using System;
 
 namespace kOS.AddOns.RemoteTech
 {
@@ -30,31 +31,32 @@ namespace kOS.AddOns.RemoteTech
         private static ScalarValue RTGetDelay(VesselTarget tgtVessel)
         {
             double waitTotal = 0;
-
-            if (RemoteTechHook.IsAvailable(tgtVessel.Vessel.id) && tgtVessel.Vessel.GetVesselCrew().Count == 0)
+            if (RemoteTechHook.IsAvailable())
             {
                 waitTotal = RemoteTechHook.Instance.GetShortestSignalDelay(tgtVessel.Vessel.id);
             }
-
-            return waitTotal;
+            return Double.IsPositiveInfinity(waitTotal) ? -1 : waitTotal;
         }
 
         private static ScalarValue RTGetKSCDelay(VesselTarget tgtVessel)
         {
             double waitTotal = 0;
 
-            if (RemoteTechHook.IsAvailable(tgtVessel.Vessel.id) && tgtVessel.Vessel.GetVesselCrew().Count == 0)
+            if (RemoteTechHook.IsAvailable() && tgtVessel.Vessel.GetVesselCrew().Count == 0)
             {
                 waitTotal = RemoteTechHook.Instance.GetSignalDelayToKSC(tgtVessel.Vessel.id);
             }
 
-            return waitTotal;
+            return Double.IsPositiveInfinity(waitTotal) ? -1 : waitTotal;
         }
 
         private static BooleanValue RTAntennaHasConnection(PartValue part)
         {
             bool result = false;
 
+            // IsAvailable(Id) is only able to return True on loaded vessels, but this
+            // is a test for a specific PART on a vessel, and individual parts on
+            // vessels don't exist when the vessel is unloaded anyway.
             if (RemoteTechHook.IsAvailable(part.Part.vessel.id))
             {
                 result = RemoteTechHook.Instance.AntennaHasConnection(part.Part);
@@ -67,7 +69,7 @@ namespace kOS.AddOns.RemoteTech
         {
             bool result = false;
 
-            if (RemoteTechHook.IsAvailable(tgtVessel.Vessel.id))
+            if (RemoteTechHook.IsAvailable())
             {
                 result = RemoteTechHook.Instance.HasAnyConnection(tgtVessel.Vessel.id);
             }
@@ -79,11 +81,11 @@ namespace kOS.AddOns.RemoteTech
         {
             bool result = false;
 
-            if (RemoteTechHook.IsAvailable(tgtVessel.Vessel.id))
+            if (RemoteTechHook.IsAvailable())
             {
                 result = RemoteTechHook.Instance.HasLocalControl(tgtVessel.Vessel.id);
             }
-
+    
             return result;
         }
 
@@ -91,7 +93,7 @@ namespace kOS.AddOns.RemoteTech
         {
             bool result = false;
 
-            if (RemoteTechHook.IsAvailable(tgtVessel.Vessel.id))
+            if (RemoteTechHook.IsAvailable())
             {
                 result = RemoteTechHook.Instance.HasConnectionToKSC(tgtVessel.Vessel.id);
             }

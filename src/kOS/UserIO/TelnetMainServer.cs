@@ -51,7 +51,7 @@ namespace kOS.UserIO
         private Rect optInRect = new Rect( 200, 200, 500, 400);
         private Rect realIPRect = new Rect( 240, 140, 500, 400); // offset just in case multiples are up at the same time, to ensure visible bits to click on.  They aren't movable.
         private Rect bgSimRect = new Rect( 280, 100, 400, 300); // offset just in case multiples are up at the same time, to ensure visible bits to click on.  They aren't movable.
-        private const string HELP_URL = "http://ksp-kos.github.io/KOS_DOC/general/telnet.html";
+        private const string HELP_URL = "https://ksp-kos.github.io/KOS_DOC/general/telnet.html";
 
         public TelnetMainServer()
         {

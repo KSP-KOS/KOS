@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using kOS.Safe;
 using System.Collections.Generic;
 using kOS.Suffixed;

@@ -18,11 +18,11 @@ Obtaining kOS itself
       Github is where development of the mod occurs, and new releases will apear there
       first, without delays, and its where old obsolete releases can be found, if you
       need one for use with an older version of KSP.
-    - `Use SpaceDock <http://www.spacedock.info/mod/60/kOS:%20Scriptable%20Autopilot%20System>`__
+    - `Use SpaceDock <https://spacedock.info/mod/60/kOS:%20Scriptable%20Autopilot%20System>`__
       SpaceDock is a community supported Kerbal Space Program mod hosting site that behaves
       much like Curse, but without Curse's embedded advertisements all over the webpage.  It
       was designed as the successor to KerbalStuff.
-    - `Download from Curse <http://www.curse.com/ksp-mods/kerbal/220265-kos-scriptable-autopilot-system>`__
+    - `Download from Curse <https://www.curseforge.com/kerbal/ksp-mods/kos-scriptable-autopilot-system>`__
       Love it or Loathe it, Curse is the official place SQUAD points people to for KSP addons, so we
       make it available there too.
 
@@ -42,7 +42,7 @@ There are two good places to go for help and sharing of ideas with other
 users of kOS, and the developers of the mod frequent those locations too:
 
 - `/r/kos on reddit <https://www.reddit.com/r/kos>`__
-- `On Kerbal Space Program's forum <https://forum.kerbalspaceprogram.com/index.php?/topic/165628/>`__
+- `On Kerbal Space Program's forum <https://forum.kerbalspaceprogram.com/index.php?/topic/165628-*/>`__
 
 Of these two locations, the Reddit one tends to be more active because it
 allows multiple sub-threads about kOS.  On the Kerbal Space Program

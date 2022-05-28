@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Function;
 using kOS.Suffixed;
 using kOS.Utilities;
 using kOS.Suffixed.PartModuleField;
+using UnityEngine;
 
 namespace kOS.Function
 {
@@ -34,6 +35,7 @@ namespace kOS.Function
                 case "resources":
                 case "parts":
                 case "engines":
+                case "rcs":
                 case "sensors":
                 case "elements":
                 case "dockingports":
@@ -47,6 +49,12 @@ namespace kOS.Function
                     break;
                 case "processors":
                     list = ListValue.CreateList(shared.ProcessorMgr.processors.Values.ToList().Select(processor => PartModuleFieldsFactory.Construct(processor, shared)));
+                    break;
+                case "fonts":
+                    foreach(Font f in Resources.FindObjectsOfTypeAll<Font>())
+                    {
+                        list.Add(new StringValue(f.name));
+                    }
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

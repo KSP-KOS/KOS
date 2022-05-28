@@ -25,6 +25,8 @@ Core represents your ability to identify and interact directly with the running 
           - `Vessel`
         * - :attr:`ELEMENT`
           - `Element`
+        * - :attr:`TAG`
+          - `The kOS nametag on the part this CPU runs on`
         * - :attr:`VERSION`
           - `Version`
         * - :attr:`CURRENTVOLUME`
@@ -50,10 +52,18 @@ Core represents your ability to identify and interact directly with the running 
 
 .. attribute:: CORE:VERSION
 
-    :type: `VersionInfo`
+    :type: :struct:`VersionInfo`
     :access: Get only
 
     The kOS version currently running.
+
+.. attribute:: CORE:TAG
+
+    :type: :struct:`String`
+    :access: Get/Set
+
+    The kOS name tag currently assigned to the part this core is
+    inside.  This is the same thing as Core:part:tag.
 
 .. attribute:: CORE:CURRENTVOLUME
 

@@ -1,12 +1,14 @@
-﻿using kOS.Safe.Compilation.KS;
+using kOS.Safe.Compilation.KS;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Execution;
 using kOS.Safe.Utilities;
 using System;
 using System.IO;
 using System.Collections.Generic;
 using PreFlightTests;
+using System.Linq;
 
 namespace kOS.Suffixed
 {
@@ -30,6 +32,7 @@ namespace kOS.Suffixed
             AddSuffix("REVERTTOEDITOR", new NoArgsVoidSuffix(RevertToEditor));
             AddSuffix("REVERTTO", new OneArgsSuffix<StringValue>(RevertTo));
             AddSuffix("CANQUICKSAVE", new Suffix<BooleanValue>(CanQuicksave));
+            AddSuffix("PAUSE", new NoArgsVoidSuffix(PauseGame));
             AddSuffix("QUICKSAVE", new NoArgsVoidSuffix(QuickSave));
             AddSuffix("QUICKLOAD", new NoArgsVoidSuffix(QuickLoad));
             AddSuffix("QUICKSAVETO", new OneArgsSuffix<StringValue>(QuickSaveTo));
@@ -44,12 +47,13 @@ namespace kOS.Suffixed
             AddSuffix("GETCRAFT", new TwoArgsSuffix<CraftTemplate, StringValue, StringValue>(GetCraft));
             AddSuffix("LAUNCHCRAFT", new OneArgsSuffix<CraftTemplate>(LaunchShip));
             AddSuffix("LAUNCHCRAFTFROM", new TwoArgsSuffix<CraftTemplate, StringValue>(LaunchShip));
+            AddSuffix("LAUNCHCRAFTWITHCREWFROM", new ThreeArgsSuffix<CraftTemplate, ListValue, StringValue>(LaunchShip));
             AddSuffix("CRAFTLIST", new Suffix<ListValue>(CraftTemplate.GetAllTemplates));
             AddSuffix("SWITCHVESSELWATCHERS", new NoArgsSuffix<UniqueSetValue<UserDelegate>>(() => shared.DispatchManager.CurrentDispatcher.GetSwitchVesselNotifyees()));
             AddSuffix("TIMEWARP", new Suffix<TimeWarpValue>(() => TimeWarpValue.Instance));
             AddSuffix(new string[] { "REALWORLDTIME", "REALTIME" }, new Suffix<ScalarValue>(GetRealWorldTime));
         }
-
+        
 
         public void RevertToLaunch()
         {
@@ -144,7 +148,7 @@ namespace kOS.Suffixed
 
         public ScalarValue GetHoursPerDay()
         {
-            return GameSettings.KERBIN_TIME ? TimeSpan.HOURS_IN_KERBIN_DAY : TimeSpan.HOURS_IN_EARTH_DAY;
+            return KSPUtil.dateTimeFormatter.Day / KSPUtil.dateTimeFormatter.Hour;
         }
 
         public void DebugLog(StringValue message)
@@ -159,6 +163,19 @@ namespace kOS.Suffixed
                 return true;
             }
             return false;
+        }
+
+        public void PauseGame()
+        {
+            string textToHud = "kOS script has triggered a Pause Game.  Manual intervention needed to resume.";
+            ScreenMessages.PostScreenMessage("<color=#ffff80><size=20>" + textToHud + "</size></color>", 10, ScreenMessageStyle.UPPER_CENTER);
+
+            PauseMenu.Display();
+
+            // It would be weird to execute the rest of the IPU's instructions when the script said to pause the game.
+            // Presumably most users would expect calling Pause to make the script stop right there, not
+            // like 3 or 4 lines later.  Therefore stop this FixedUpdate tick here:
+            shared.Cpu.YieldProgram(new YieldFinishedNextTick());
         }
 
         public void QuickSave()
@@ -287,19 +304,81 @@ namespace kOS.Suffixed
 
         private void LaunchShip(CraftTemplate ship)
         {
-            LaunchShip(ship, ship.LaunchFacility);
+            var manifest = VesselCrewManifest.FromConfigNode(ship.InnerTemplate.config);
+            manifest = HighLogic.CurrentGame.CrewRoster.DefaultCrewForVessel(ship.InnerTemplate.config, manifest);
+            LaunchShipInternal(ship, ship.LaunchFacility, manifest);
         }
 
         public void LaunchShip(CraftTemplate ship, StringValue launchSiteName)
         {
-            LaunchShip(ship, launchSiteName.ToString());
-        }
-
-        private void LaunchShip(CraftTemplate ship, string launchSiteName)
-        {
-            // From EditorLogic, see launchVessel(), proceedWithVesselLaunch(), and goForLaunch()
             var manifest = VesselCrewManifest.FromConfigNode(ship.InnerTemplate.config);
             manifest = HighLogic.CurrentGame.CrewRoster.DefaultCrewForVessel(ship.InnerTemplate.config, manifest);
+            LaunchShipInternal(ship, launchSiteName.ToString(), manifest);
+        }
+
+        private VesselCrewManifest BuildCrewManifest(ShipTemplate shipTemplate, ListValue crew)
+        {
+            var manifest = VesselCrewManifest.FromConfigNode(shipTemplate.config);
+
+            KerbalRoster shipRoster = new KerbalRoster(HighLogic.CurrentGame.Mode);
+
+            foreach (var name in crew)
+            {
+                var protoCrewMember = HighLogic.CurrentGame.CrewRoster.Crew.FirstOrDefault(pcm => pcm.name == name.ToString());
+
+                if (protoCrewMember != null && protoCrewMember.rosterStatus == ProtoCrewMember.RosterStatus.Available)
+                {
+                    shipRoster.AddCrewMember(protoCrewMember);
+                }
+            }
+
+            // first pass: use auto-assignment to make sure pilots get command parts, etc
+            manifest = shipRoster.DefaultCrewForVessel(shipTemplate.config, manifest);
+
+            // add anyone missing
+            if (manifest.CrewCount < shipRoster.Count)
+            {
+                foreach (var pcm in shipRoster.Crew)
+                {
+                    if (!manifest.Contains(pcm))
+                    {
+                        bool AddCrewToManifest(ProtoCrewMember crewMember)
+                        {
+                            foreach (var pm in manifest.PartManifests)
+                            {
+                                for (int seatIndex = 0; seatIndex < pm.partCrew.Length; ++seatIndex)
+                                {
+                                    if (string.IsNullOrEmpty(pm.partCrew[seatIndex]))
+                                    {
+                                        pm.AddCrewToSeat(crewMember, seatIndex);
+                                        return true;
+                                    }
+                                }
+                            }
+
+                            return false;
+                        }
+
+                        if (!AddCrewToManifest(pcm))
+                        {
+                            SafeHouse.Logger.LogError(string.Format("failed to add {0} to a seat", pcm.name));
+                        }
+                    }
+                }
+            }
+
+            return manifest;
+        }
+
+        private void LaunchShip(CraftTemplate ship, ListValue crew, StringValue launchSiteName)
+        {
+            // From EditorLogic, see launchVessel(), proceedWithVesselLaunch(), and goForLaunch()
+            var manifest = BuildCrewManifest(ship.InnerTemplate, crew);
+            LaunchShipInternal(ship, launchSiteName.ToString(), manifest);
+        }
+
+        private void LaunchShipInternal(CraftTemplate ship, string launchSiteName, VesselCrewManifest manifest)
+        {
             PreFlightCheck preFlightCheck = new PreFlightCheck(
                 () =>
                 {
@@ -310,13 +389,13 @@ namespace kOS.Suffixed
                 {
                     SafeHouse.Logger.LogError("Could not launch vessel, did not pass preflight...");
                 });
-            if (launchSiteName.Equals("runway", System.StringComparison.OrdinalIgnoreCase))
+            if (launchSiteName.ToString().Equals("runway", System.StringComparison.OrdinalIgnoreCase))
             {
                 preFlightCheck.AddTest(new CraftWithinPartCountLimit(ship.InnerTemplate, SpaceCenterFacility.SpaceplaneHangar, GameVariables.Instance.GetPartCountLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.SpaceplaneHangar), false)));
                 preFlightCheck.AddTest(new CraftWithinSizeLimits(ship.InnerTemplate, SpaceCenterFacility.Runway, GameVariables.Instance.GetCraftSizeLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Runway), false)));
                 preFlightCheck.AddTest(new CraftWithinMassLimits(ship.InnerTemplate, SpaceCenterFacility.Runway, (double)GameVariables.Instance.GetCraftMassLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Runway), false)));
             }
-            else if (launchSiteName.Equals("launchpad", System.StringComparison.OrdinalIgnoreCase))
+            else if (launchSiteName.ToString().Equals("launchpad", System.StringComparison.OrdinalIgnoreCase))
             {
                 preFlightCheck.AddTest(new CraftWithinPartCountLimit(ship.InnerTemplate, SpaceCenterFacility.VehicleAssemblyBuilding, GameVariables.Instance.GetPartCountLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.VehicleAssemblyBuilding), true)));
                 preFlightCheck.AddTest(new CraftWithinSizeLimits(ship.InnerTemplate, SpaceCenterFacility.LaunchPad, GameVariables.Instance.GetCraftSizeLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.LaunchPad), true)));

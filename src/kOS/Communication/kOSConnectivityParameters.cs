@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using UnityEngine;
 
 namespace kOS.Communication
 {
@@ -185,11 +186,39 @@ namespace kOS.Communication
                     options.Add(new DialogGUIButton(text, () => { connectivityHandler = name; }, true));
                 }
                 Module.kOSSettingsChecker.QueueDialog(
+                    // (Justification for the following very long comment:
+                    //    KSP does not document how these anchor position arguments work, and
+                    //    they are utterly alien and weird, so having it explained in full
+                    //    is important since if we wait a while it will all get forgotten again.)
+                    //
+                    // Anchor positions represents the position in the dialog that will be anchored
+                    // The range is 0.0f-1.0f and for example (0.5f, 1.0f) represents the dialog
+                    // being anchored in the middle (x-direction) and at the top of the dialog (y-direction).
+                    // Whereas (0.5f, 0.0f) would do the same, but at the bottom of the dialog (y-direction).
+
+                    // The center position configured for the Dialog (first two parameters Rect) represents
+                    // the location on screen where the anchored position will appear.
+                    // The range is 0.0f-1.0f with (0.0f, 0.0f) representing lower left corner.
+
+                    // The part which is really hard to explain, other than emperically, is that
+                    // the anchor position and the center position on screen need to be the
+                    // same to produce a UI location that is mostly invariant for UI scaling.
+                    // For example, using an anchor of (0.5f, 0.5f) and center position (0.5, 1.0f)
+                    // correctly results in a dialog at the top of the screen, with the center
+                    // of the dialog at the edge of the screen. Decreasing the UI scaling to
+                    // 80% moves the dialog towards the center of the screen, while 120% moves
+                    // the dialog entirely offscreen.
+
+                    // Picking an anchor and a rect origin of 0.0, 0.1, should put the window at the left
+                    // edge of the screen, a little up from the bottom.
+                    0.0f, 0.1f,
                     new MultiOptionDialog(
                         "Select Dialog",
                         SELECT_DIALOG_TEXT,
                         "kOS",
                         HighLogic.UISkin,
+                        // when using Rect width must be specified, height is automatically determined
+                        new Rect(0.0f, 0.1f, 500.0f, 0.0f),
                         options.ToArray()));
             }
             availableConnectivityManagers.UnionWith(knownHandlers);

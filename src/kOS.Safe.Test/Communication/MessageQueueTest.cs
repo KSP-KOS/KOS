@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NUnit.Framework;
 using kOS.Safe.Communication;
 using kOS.Safe.Exceptions;
@@ -11,16 +11,14 @@ namespace kOS.Safe.Test.Communication
     [TestFixture]
     public class MessageQueueTest
     {
-        private GenericMessageQueue<BaseMessage> queue;
-        private FakeCurrentTimeProvider timeProvider;
+        private GenericMessageQueue<BaseMessage, FakeCurrentTimeProvider> queue;
 
         [SetUp]
         public void Setup()
         {
-            timeProvider = new FakeCurrentTimeProvider();
-            timeProvider.FakeTime = 0;
 
-            queue = new GenericMessageQueue<BaseMessage>(timeProvider);
+            queue = new GenericMessageQueue<BaseMessage, FakeCurrentTimeProvider>();
+            queue.TimeProvider.SetTime(0);
         }
 
         [Test]
@@ -41,7 +39,7 @@ namespace kOS.Safe.Test.Communication
             queue.Push(new BaseMessage(new StringValue("content4"), 4, 12));
             queue.Push(new BaseMessage(new StringValue("content5"), 5, 13));
 
-            timeProvider.FakeTime = 5;
+            queue.TimeProvider.SetTime(5);
 
             // time now is 5, no messages should be received
 
@@ -50,7 +48,7 @@ namespace kOS.Safe.Test.Communication
             Assert.Throws<KOSCommunicationException>(delegate { queue.Pop(); });
             Assert.Throws<KOSCommunicationException>(delegate { queue.Peek(); });
 
-            timeProvider.FakeTime = 10;
+            queue.TimeProvider.SetTime(10);
 
             // time now is 10, there should be 2 messages
             Assert.AreEqual(5, queue.Count());
@@ -61,7 +59,7 @@ namespace kOS.Safe.Test.Communication
             Assert.AreEqual(10, received.ReceivedAt);
             Assert.AreEqual(1, received.SentAt);
 
-            timeProvider.FakeTime = 13;
+            queue.TimeProvider.SetTime(13);
 
             // time now is 13, there should be 4 messages
             Assert.AreEqual(4, queue.Count());
@@ -78,7 +76,7 @@ namespace kOS.Safe.Test.Communication
             queue.Push(new BaseMessage(new StringValue("content1"), 1, 13));
             queue.Push(new BaseMessage(new StringValue("content2"), 2, 3));
 
-            timeProvider.FakeTime = 3;
+            queue.TimeProvider.SetTime(3);
 
             Assert.AreEqual(1, queue.ReceivedCount());
             Assert.AreEqual(new StringValue("content2"), queue.Pop().Content);
@@ -87,13 +85,13 @@ namespace kOS.Safe.Test.Communication
             queue.Push(new BaseMessage(new StringValue("content4"), 3, 14));
             queue.Push(new BaseMessage(new StringValue("content5"), 3, 5));
 
-            timeProvider.FakeTime = 9;
+            queue.TimeProvider.SetTime(9);
 
             Assert.AreEqual(2, queue.ReceivedCount());
             Assert.AreEqual(new StringValue("content5"), queue.Pop().Content);
             Assert.AreEqual(new StringValue("content3"), queue.Pop().Content);
 
-            timeProvider.FakeTime = 14;
+            queue.TimeProvider.SetTime(14);
 
             Assert.AreEqual(2, queue.ReceivedCount());
             Assert.AreEqual(new StringValue("content1"), queue.Pop().Content);
@@ -117,7 +115,7 @@ namespace kOS.Safe.Test.Communication
             Assert.AreEqual(0, queue.ReceivedCount());
 
 
-            timeProvider.FakeTime = 10;
+            queue.TimeProvider.SetTime(10);
 
             // this should remove two messages
             queue.Clear();
@@ -125,7 +123,7 @@ namespace kOS.Safe.Test.Communication
             Assert.AreEqual(3, queue.Count());
             Assert.AreEqual(0, queue.ReceivedCount());
 
-            timeProvider.FakeTime = 13;
+            queue.TimeProvider.SetTime(13);
             Assert.AreEqual(3, queue.Count());
             Assert.AreEqual(3, queue.ReceivedCount());
 
@@ -156,11 +154,11 @@ namespace kOS.Safe.Test.Communication
             queue.Push(new BaseMessage(new StringValue("content4"), 4, 12));
             queue.Push(new BaseMessage(new StringValue("content5"), 5, 13));
 
-            GenericMessageQueue<BaseMessage> newQueue = new GenericMessageQueue<BaseMessage>(timeProvider);
+            GenericMessageQueue<BaseMessage,FakeCurrentTimeProvider> newQueue = new GenericMessageQueue<BaseMessage,FakeCurrentTimeProvider>();
 
             newQueue.LoadDump(queue.Dump());
 
-            timeProvider.FakeTime = 11;
+            newQueue.TimeProvider.SetTime(11);
 
             // time now is 13, there should be 4 messages
             Assert.AreEqual(5, newQueue.Count());

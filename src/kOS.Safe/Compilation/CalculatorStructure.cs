@@ -226,19 +226,41 @@ namespace kOS.Safe.Compilation
             return string.Format("Cannot perform the operation: {0} On Structures {1} and {2}", op, t1, t2);
         }
 
+        /// <summary>
+        /// By default when you call MethodInfo.Invoke() it masks the exceptions
+        /// the invoked method throws so the kOS user wouldn't see the real message.
+        /// This fixes that for the operators we are trying to call here.
+        /// </summary>
+        private static object InvokeWithCorrectExceptions(MethodInfo meth, object obj, object [] parameters)
+        {
+            try
+            {
+                return meth.Invoke(obj, parameters);
+            }
+            catch (TargetInvocationException outerException)
+            {
+                // MethodInfo.Invoke() "helpfully" wraps the exceptions the method tries
+                // to throw inside a TargetInvocationException so you get THAT instead of
+                // the actual exception.  In order to let the user see the real exception
+                // message, we have to unwrap this wrapper around it and re-throw it:
+                throw outerException.InnerException;
+            }
+        }
+
         private bool TryInvokeExplicit(OperandPair pair, string methodName, out object result)
         {
             MethodInfo method1 = pair.LeftType.GetMethod(methodName, FLAGS, null, new[] { pair.LeftType, pair.RightType }, null);
             if (method1 != null)
             {
-                result = method1.Invoke(null, new[] {pair.Left, pair.Right});
+ 
+                result = InvokeWithCorrectExceptions(method1, null, new[] { pair.Left, pair.Right });
                 return true;
             }
             MethodInfo method2 = pair.RightType.GetMethod(methodName, FLAGS, null, new[] { pair.LeftType, pair.RightType }, null);
 
             if (method2 != null)
             {
-                result = method2.Invoke(null, new[] {pair.Left, pair.Right});
+                result = InvokeWithCorrectExceptions(method2, null, new[] {pair.Left, pair.Right});
                 return true;
             }
 
@@ -271,7 +293,7 @@ namespace kOS.Safe.Compilation
             if (convert2 != null)
             {
                 couldCoerce = true;
-                newRight = convert2.Invoke(null, new[] { pair.Right });
+                newRight = InvokeWithCorrectExceptions(convert2, null, new[] { pair.Right });
             }
             else
             {
@@ -282,7 +304,7 @@ namespace kOS.Safe.Compilation
             if (convert1 != null)
             {
                 couldCoerce = true;
-                newLeft = convert1.Invoke(null, new[] { pair.Left });
+                newLeft = InvokeWithCorrectExceptions(convert1, null, new[] { pair.Left });
             }
             else
             {

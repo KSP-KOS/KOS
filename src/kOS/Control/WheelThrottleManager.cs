@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
 using System;
@@ -13,6 +13,8 @@ namespace kOS.Control
 
         public bool Enabled { get; private set; }
         public double Value { get; set; }
+
+        public bool FightsWithSas { get { return false; } }
 
         public WheelThrottleManager(Vessel vessel)
         {
@@ -92,9 +94,17 @@ namespace kOS.Control
             return internalVessel.ctrlState.mainThrottle;
         }
 
-        void IFlightControlParameter.UpdateAutopilot(FlightCtrlState c)
+        void IFlightControlParameter.UpdateAutopilot(FlightCtrlState c, ControlTypes ctrlLock)
         {
-            c.wheelThrottle = (float)KOSMath.Clamp(Value, -1, 1);
+            if (Enabled)
+            {
+                c.wheelThrottle = (float)KOSMath.Clamp(Value, -1, 1);
+            }
+        }
+
+        bool IFlightControlParameter.SuppressAutopilot(FlightCtrlState c)
+        {
+            return Enabled;
         }
 
         void IFlightControlParameter.UpdateValue(object value, SharedObjects shared)

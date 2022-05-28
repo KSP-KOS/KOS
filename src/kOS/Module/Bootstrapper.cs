@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using kOS.Safe.Persistence;
@@ -25,22 +25,6 @@ namespace kOS.Module
                                                     "attempt to migrate your existing scripts?  See the warning regarding the boot " +
                                                     "directory at http://kos.github.io/KOS_DOC/general/volumes.html#special-handling-of-files-in-the-boot-directory " +
                                                     "for more details.";
-        private const string UNPICKED_FONT_DESC =
-            "<b><size=18>Terminal Font</size></b>\n" +
-            "\n" +
-            "By default, kOS will choose a font from a list of guesses, but this is less than ideal. " +
-            "You should pick a font choice yourself once you can during play.\n " +
-            "<b><color=#FFFFFF>You can choose a font using the kOS toolbar panel " +
-            "that appears during play <i>when you are in flight view</color></i></b>.\n" +
-            "\n" +
-            "<b><size=16>If you liked the old look:</size></b>\n" +
-            "\n" +
-            "If you liked the old look of kOS's terminal, with its very wide boxy characters, " +
-            "you can have that again by downloading and installing a Commodore(tm) 64 font onto your " +
-            "computer and re-launching KSP.  The old bitmap images were designed to mimic the " +
-            "character set of the old Commodore 64 computer.  (We (kOS developers) considered " +
-            "including a Commodore 64 font in the download of kOS, but licensing terms precluded " +
-            "redistributing any of the fonts we found.)\n";
 
         private bool backup = true;
         
@@ -64,7 +48,7 @@ namespace kOS.Module
             SafeHouse.Init(
                 Config.Instance, 
                 Core.VersionInfo,
-                "http://ksp-kos.github.io/KOS_DOC/",
+                "https://ksp-kos.github.io/KOS_DOC/",
                 Application.platform == RuntimePlatform.WindowsPlayer,
                 GameDatabase.Instance.PluginDataFolder + "/Ships/Script/"
                 );
@@ -140,21 +124,6 @@ namespace kOS.Module
         {
             if (SafeHouse.Config.TerminalFontName.Equals("_not_chosen_yet_"))
             {
-                PopupDialog.SpawnPopupDialog(
-                    new MultiOptionDialog(
-                        "UNPICKED_FONT_DESC",
-                        UNPICKED_FONT_DESC,
-                        "kOS",
-                        HighLogic.UISkin,
-                        new DialogGUIButton("Okay, got it!", () => {}, true)
-                    ),
-                    true,
-                    HighLogic.UISkin
-                );
-                // Still leave the user's chosen font name as a bogus value, but
-                // change it to one that looks more pleasing on the button in the
-                // toolbar dialog.  (This will also prevent this dialog box from
-                // ever firing off again once this value gets saved in config.xml).
                 SafeHouse.Config.TerminalFontName = "Choose Font";
             }
         }

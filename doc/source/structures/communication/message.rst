@@ -35,10 +35,10 @@ Structure
           - Description
 
         * - :attr:`SENTAT`
-          - :struct:`TimeSpan`
+          - :struct:`TimeStamp`
           - date this message was sent at
         * - :attr:`RECEIVEDAT`
-          - :struct:`TimeSpan`
+          - :struct:`TimeStamp`
           - date this message was received at
         * - :attr:`SENDER`
           - :struct:`Vessel` or :struct:`Boolean`
@@ -56,13 +56,13 @@ Structure
 
 .. attribute:: Message:SENTAT
 
-    :type: :struct:`TimeSpan`
+    :type: :struct:`TimeStamp`
 
     Date this message was sent at.
 
 .. attribute:: Message:RECEIVEDAT
 
-    :type: :struct:`TimeSpan`
+    :type: :struct:`TimeStamp`
 
     Date this message was received at.
 

@@ -39,7 +39,7 @@ namespace kOS.Suffixed.Widget
             popupStyle = FindStyle("popupWindow");
 
             list = new ListValue();
-            SetInitialContentImage(GameDatabase.Instance.GetTexture("kOS/GFX/popupmenu", false));
+            SetInitialContentImage(Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_popupmenu", false));
             RegisterInitializer(InitializeSuffixes);
         }
 
@@ -186,17 +186,26 @@ namespace kOS.Suffixed.Widget
 
         public Rect popupRect;
         private Vector2 rememberScrollSpot = new Vector2();
+        private string nameFmt = "{0}_{1}";
+        private string indexedName;
         public void DoPopupGUI()
         {
             rememberScrollSpot = GUILayout.BeginScrollView(rememberScrollSpot, popupStyle.ReadOnly);
             GUILayout.BeginVertical(popupStyle.ReadOnly);
             for (int i=0; i<list.Count; ++i) {
+
+                // Might be some time savings by storing these Id names and not recalculating them each GUI pass,
+                // but for now this is good enough to see if this idea works:
+                myId = GUIUtility.GetControlID(FocusType.Passive);
+                GUI.SetNextControlName(myId.ToString());
+
                 if (GUILayout.Button(GetItemString(list[i]), itemStyle.ReadOnly)) {
                     int newindex = i;
                     Communicate(() => Index = newindex);
                     SetVisibleText(GetItemString(list[i]));
                     PopDown();
                     Communicate(() => changed = true);
+                    GUI.FocusControl(indexedName);
                 }
             }
             GUILayout.EndVertical();

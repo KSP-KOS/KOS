@@ -8,9 +8,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>kOS</RootNamespace>
     <AssemblyName>kOS</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,6 +20,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,8 +30,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\Resources\Assembly-CSharp.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\..\Resources\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
@@ -42,14 +48,51 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>..\..\Resources\UnityEngine.AnimationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>..\..\Resources\UnityEngine.AudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>..\..\Resources\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>..\..\Resources\UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>..\..\Resources\UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>..\..\Resources\UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>..\..\Resources\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>..\..\Resources\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>..\..\Resources\UnityEngine.UI.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\Resources\Assembly-CSharp.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\..\Resources\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>..\..\Resources\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestAudioModule">
+      <HintPath>..\..\Resources\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule">
+      <HintPath>..\..\Resources\UnityEngine.UnityWebRequestModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestWWWModule">
+      <HintPath>..\..\Resources\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VehiclesModule">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Resources\UnityEngine.VehiclesModule.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -75,6 +118,7 @@
     <Compile Include="Binding\FlightControlManager.cs" />
     <Compile Include="Binding\FlightStats.cs" />
     <Compile Include="Binding\MissionSettings.cs" />
+    <Compile Include="Binding\CPUBinding.cs" />
     <Compile Include="Binding\RoverStats.cs" />
     <Compile Include="Callback\GameEventDispatcher.cs" />
     <Compile Include="Callback\KOSGameEventDispatcher.cs" />
@@ -98,6 +142,7 @@
     <Compile Include="Function\Suffixed.cs" />
     <Compile Include="KSPLogger.cs" />
     <Compile Include="Module\Bootstrapper.cs" />
+    <Compile Include="Module\AutopilotMsgManager.cs" />
     <Compile Include="Module\kOSCustomParameters.cs" />
     <Compile Include="Module\kOSLightModule.cs" />
     <Compile Include="Module\KOSNameTag.cs" />
@@ -123,11 +168,17 @@
     <Compile Include="Sound\TriangleSoundWave.cs" />
     <Compile Include="Sound\Voice.cs" />
     <Compile Include="Sound\VoiceValue.cs" />
+    <Compile Include="Suffixed\BoundsValue.cs" />
+    <Compile Include="Suffixed\ConsumedResourceValue.cs" />
+    <Compile Include="Suffixed\ConsumedResourceValueRCS.cs" />
     <Compile Include="Suffixed\CraftTemplate.cs" />
+    <Compile Include="Suffixed\DeltaVCalc.cs" />
     <Compile Include="Suffixed\KUniverseValue.cs" />
     <Compile Include="Suffixed\LoadDistanceValue.cs" />
     <Compile Include="Suffixed\Part\DecouplerValue.cs" />
+    <Compile Include="Suffixed\Part\SeparatorValue.cs" />
     <Compile Include="Suffixed\Part\LaunchClampValue.cs" />
+    <Compile Include="Suffixed\Part\RCSValue.cs" />
     <Compile Include="Suffixed\ResourceTransferValue.cs" />
     <Compile Include="Screen\DelegateDialog.cs" />
     <Compile Include="Screen\KOSManagedWindow.cs" />
@@ -165,14 +216,17 @@
     <Compile Include="Suffixed\AggregateResourceValue.cs" />
     <Compile Include="Suffixed\SingleResourceValue.cs" />
     <Compile Include="Suffixed\StageValues.cs" />
+    <Compile Include="Suffixed\TimeStamp.cs" />
+    <Compile Include="Suffixed\TimeSpan.cs" />
     <Compile Include="Suffixed\TimeWarpValue.cs" />
     <Compile Include="Suffixed\VectorRenderer.cs" />
     <Compile Include="Suffixed\VesselAlt.cs" />
-    <Compile Include="Suffixed\VesselEta.cs" />
+    <Compile Include="Suffixed\OrbitEta.cs" />
     <Compile Include="Suffixed\VesselTarget.Hooks.cs" />
     <Compile Include="Suffixed\VesselTarget.Parts.cs" />
     <Compile Include="Suffixed\WaypointValue.cs" />
     <Compile Include="Execution\TransferManager.cs" />
+    <Compile Include="Suffixed\Widget\TipDisplay.cs" />
     <Compile Include="Suffixed\Widget\Slider.cs" />
     <Compile Include="Suffixed\Widget\Spacing.cs" />
     <Compile Include="Suffixed\Widget\Label.cs" />
@@ -197,7 +251,7 @@
     <Compile Include="Utilities\BetaShim.cs" />
     <Compile Include="Utilities\PartUtilities.cs" />
     <Compile Include="Screen\TermWindow.cs" />
-    <Compile Include="Suffixed\Timespan.cs" />
+    <Compile Include="Suffixed\TimeBase.cs" />
     <Compile Include="Utilities\Utils.cs" />
     <Compile Include="Suffixed\Vector.cs" />
     <Compile Include="Suffixed\Direction.cs" />
@@ -228,7 +282,6 @@
     <Compile Include="Communication\PermitAllConnectivityManager.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechConnectivityManager.cs" />
     <Compile Include="Serialization\SerializationMgr.cs" />
-    <Compile Include="Serialization\IHasSharedObjects.cs" />
     <Compile Include="Suffixed\ScienceDataValue.cs" />
     <Compile Include="Suffixed\PartModuleField\ScienceExperimentFieldsFactory.cs" />
     <Compile Include="AddOns\OrbitalScience\DMModuleScienceAnimateFields.cs" />

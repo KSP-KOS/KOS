@@ -395,9 +395,9 @@ Usage example::
     L:ADD("key1", "value1").
     L:ADD("key2", NESTED).
 
-    NESTED:ADD("nestedvalue").
+    NESTED:PUSH("nestedvalue").
 
-    WRITEJSON(l, "output.json").
+    WRITEJSON(L, "output.json").
 
 READJSON(PATH)
 ~~~~~~~~~~~~~~

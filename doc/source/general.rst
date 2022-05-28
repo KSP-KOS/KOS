@@ -13,6 +13,8 @@ These topics discuss the interfacing between **kOS** and **Kerbal Space Program*
     CPU Vessel (SHIP)   <general/cpu_vessel>
     CPU Hardware        <general/cpu_hardware>
 
+    Booting             <general/boot>
+
     Game Part           <general/kospartmodule>
 
     Settings Windows    <general/settingsWindows>

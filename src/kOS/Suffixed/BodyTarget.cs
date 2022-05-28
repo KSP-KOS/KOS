@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Utilities;
 using UnityEngine;
 using System;
@@ -67,6 +67,17 @@ namespace kOS.Suffixed
             return newlyConstructed;
         }
 
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static Orbitable CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = CreateOrGetExisting(BodyFromDump(d), (SharedObjects)shared);
+            // Uncomment the line below if LoadDump ever does more things in the future.
+            // Right now, LoadDump is redundant with CreateOrGetExisting's work.
+            //
+            // newObj.LoadDump(d);
+            return newObj;
+        }
+
         public static void ClearInstanceCache()
         {
             if (instanceCache == null)
@@ -77,10 +88,12 @@ namespace kOS.Suffixed
 
         public static BodyTarget CreateOrGetExisting(string bodyName, SharedObjects shared)
         {
-            return CreateOrGetExisting(VesselUtils.GetBodyByName(bodyName), shared);
+            var bod = VesselUtils.GetBodyByName(bodyName);
+            if (bod == null)
+                throw new KOSInvalidArgumentException("BODY() constructor", bodyName, "Body not found in this solar system");
+
+            return CreateOrGetExisting(bod, shared);
         }
-
-
 
         private void BodyInitializeSuffixes()
         {
@@ -94,7 +107,7 @@ namespace kOS.Suffixed
             AddSuffix("RADIUS", new Suffix<ScalarValue>(() => Body.Radius));
             AddSuffix("MU", new Suffix<ScalarValue>(() => Body.gravParameter));
             AddSuffix("ROTATIONPERIOD", new Suffix<ScalarValue>(() => Body.rotationPeriod));
-            AddSuffix("ATM", new Suffix<BodyAtmosphere>(() => new BodyAtmosphere(Body)));
+            AddSuffix("ATM", new Suffix<BodyAtmosphere>(() => new BodyAtmosphere(Body, Shared)));
             AddSuffix("ANGULARVEL", new Suffix<Vector>(() => RawAngularVelFromRelative(Body.angularVelocity)));
             AddSuffix("SOIRADIUS", new Suffix<ScalarValue>(() => Body.sphereOfInfluence));
             AddSuffix("ROTATIONANGLE", new Suffix<ScalarValue>(() => Body.rotationAngle));
@@ -136,12 +149,12 @@ namespace kOS.Suffixed
             return new OrbitableVelocity(Body, Shared);
         }
 
-        public override Vector GetPositionAtUT(TimeSpan timeStamp)
+        public override Vector GetPositionAtUT(TimeStamp timeStamp)
         {
             return new Vector(Body.getPositionAtUT(timeStamp.ToUnixStyleTime()) - Shared.Vessel.CoMD);
         }
 
-        public override OrbitableVelocity GetVelocitiesAtUT(TimeSpan timeStamp)
+        public override OrbitableVelocity GetVelocitiesAtUT(TimeStamp timeStamp)
         {
             CelestialBody parent = Body.KOSExtensionGetParentBody();
             if (parent == null) // only if Body is Sun and therefore has no parent, then do more complex work instead because KSP didn't provide a way itself
@@ -218,6 +231,24 @@ namespace kOS.Suffixed
         }
 
         /// <summary>
+        /// Interpret the vector given as a 3D position, and return the altitude above terrain unless
+        /// that terrain is below sea level on a world that has a sea, in which case return the sea
+        /// level atitude instead, similar to how radar altitude is displayed to the player.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public ScalarValue RadarAltitudeFromPosition(Vector position)
+        {
+            GeoCoordinates geo = GeoCoordinatesFromPosition(position);
+            ScalarValue terrainHeight = geo.GetTerrainAltitude();
+            ScalarValue seaAlt = AltitudeFromPosition(position);
+            if (Body.ocean && terrainHeight < 0)
+                return seaAlt;
+            else
+                return seaAlt - terrainHeight;
+        }
+
+        /// <summary>
         /// Annoyingly, KSP returns CelestialBody.angularVelociy in a frame of reference 
         /// relative to the ship facing instead of the universe facing.  This would be
         /// wonderful if that was their philosophy everywhere, but it's not - its just a
@@ -237,10 +268,10 @@ namespace kOS.Suffixed
             return Vector3d.Distance(Shared.Vessel.CoMD, Body.position) - Body.Radius;
         }
 
-        public override ISuffixResult GetSuffix(string suffixName)
+        public override ISuffixResult GetSuffix(string suffixName, bool failOkay)
         {
             if (Target == null) throw new Exception("BODY structure appears to be empty!");
-            return base.GetSuffix(suffixName);
+            return base.GetSuffix(suffixName, failOkay);
         }
 
         public override string ToString()
@@ -305,6 +336,11 @@ namespace kOS.Suffixed
 
         public override void LoadDump(Dump dump)
         {
+            Body = BodyFromDump(dump);
+        }
+
+        private static CelestialBody BodyFromDump(Dump dump)
+        {
             string name = dump[DumpName] as string;
 
             if (name == null)
@@ -319,8 +355,7 @@ namespace kOS.Suffixed
                 throw new KOSSerializationException("Body with the given name does not exist");
             }
 
-            Body = body;
-
+            return body;
         }
 
         // The data that identifies a unique instance of this class, for use

@@ -8,13 +8,19 @@ Drawing Vectors on the Screen
     to a new location, make it appear or disappear, change its color,
     and label.  This page describes how to do that.
 
-.. function:: VECDRAW(start, vec, color, label, scale, show, width)
-.. function:: VECDRAWARGS(start, vec, color, label, scale, show, width)
+.. function:: VECDRAW(start, vec, color, label, scale, show, width, pointy, wiping)
+.. function:: VECDRAWARGS(start, vec, color, label, scale, show, width, pointy, wiping)
 
     Both these two function names do the same thing.  For historical
     reasons both names exist, but now they both do the same thing.
     They create a new ``vecdraw`` object that you can then manipulate
-    to show things on the screen::
+    to show things on the screen.
+
+    For an explanation what the parameters start, vec, color, label, scale, show,
+    width, pointy, and wiping mean, they correspond to the same suffix names
+    below in the table.
+
+    Here are some examples::
 
         SET anArrow TO VECDRAW(
               V(0,0,0),
@@ -23,7 +29,9 @@ Drawing Vectors on the Screen
               "See the arrow?",
               1.0,
               TRUE,
-              0.2
+              0.2,
+              TRUE,
+              TRUE
             ).
 
         SET anArrow TO VECDRAWARGS(
@@ -33,7 +41,9 @@ Drawing Vectors on the Screen
               "See the arrow?",
               1.0,
               TRUE,
-              0.2
+              0.2,
+              TRUE,
+              TRUE
             ).
 
     Vector arrows can also be created with dynamic positioning and color.  To do
@@ -52,7 +62,9 @@ Drawing Vectors on the Screen
           "Jumping arrow!",
           1.0,
           TRUE,
-          0.2
+          0.2,
+          TRUE,
+          TRUE
         ).
         wait 20. // Give user time to see it in motion.
         set anArrow:show to false. // Make it stop drawing.
@@ -94,6 +106,10 @@ Drawing Vectors on the Screen
               - false
             * - :attr:`WIDTH`
               - 0.2
+            * - :attr:`POINTY`
+              - true
+            * - :attr:`WIPING`
+              - true
 
     Examples::
 
@@ -102,7 +118,7 @@ Drawing Vectors on the Screen
         // paramters LABEL, SCALE, SHOW, and WIDTH.
         SET vd TO VECDRAW(V(0,0,0), 5*north:vector, red).
 
-    To make a :struct:`VecDraw` disappear, you can either set its :attr:`VecDraw:SHOW` to false or just UNSET the variable, or re-assign it. An example using :struct:`VecDraw` can be seen in the documentation for :func:`POSITIONAT()`.
+    To make a :struct:`VecDraw` disappear, you can either set its :attr:`VecDraw:SHOW` to false or just :ref:`UNSET <unset>` the variable, or re-assign it. An example using :struct:`VecDraw` can be seen in the documentation for :func:`POSITIONAT()`.
 
 .. _clearvecdraws:
 
@@ -119,6 +135,28 @@ Drawing Vectors on the Screen
     CLEARVECDRAWS() and it will have the same effect as if you had
     done ``SET varname:show to FALSE`` for all vecdraw varnames in the
     entire system.
+
+Very large Vecdraws only show up on map view, not flight view
+-------------------------------------------------------------
+
+If your vecdraw is very big, for example if you try to draw a
+vector going from your ship to the Sun, or from one planet to
+another, you may find that it won't appear at all in the flight
+view, but will still appear in the map view.  There isn't much that
+kOS can do about this, as it is a feature of the camera settings
+chosen by KSP for the flight view camera.
+
+The reason very long vecdraws only get drawn in map view and not the
+flight view is the same as the reason you can only see distant planets
+in the map view and not the flight view.  Duna should still take up a
+few pixels of your screen when seen from Kerbin and yet there's nothing
+there not even a dot.  This has to do with a feature of computer
+graphics called the "camera far clipping plane", but the short version
+is that KSP's flight camera is configured to be unable to render any
+polygons where one of that polygons' vertices is very far away.
+
+Suffixes of Vecdraw
+-------------------
 
 .. structure:: VecDraw
 
@@ -157,6 +195,9 @@ Drawing Vectors on the Screen
         * - :attr:`WIDTH`
           - :ref:`scalar <scalar>`
           - width of vector, default is 0.2
+        * - :attr:`POINTY`
+          - :ref:`boolean <boolean>`
+          - Will the pointy hat be drawn
         * - :attr:`STARTUPDATER`
           - :struct:`KosDelegate`
           - assigns a delegate to auto-update the START attribute.
@@ -195,7 +236,13 @@ Drawing Vectors on the Screen
     :access: Get/Set
     :type: :ref:`Color <color>`
 
-    Optional, defaults to white. This is the color to draw the vector. There is a hard-coded fade effect where the tail is a bit more transparent than the head.
+    Optional, defaults to white. This is the color to draw the vector.
+    If you leave the :attr:`VecDraw:WIPING` suffix at its default value
+    of True, then there will be a wipe effect such that the line will
+    fade-in as it goes, only becoming this color at the endpoint tip.
+
+    (You can pass in an RGBA with an alpha value less than 1.0 if you
+    would like the line to never be fully opaque even at the tip.)
 
 .. attribute:: VecDraw:COLOUR
 
@@ -236,6 +283,34 @@ Drawing Vectors on the Screen
     Define the width of the drawn line, in meters.  The deafult is 0.2 if
     left off.  Note, this also causes the font of the label to be enlarged
     to match if set to a value larger than 0.2.
+
+.. attribute:: VecDraw:POINTY
+
+    :access: Get/Set
+    :type: :ref:`boolean <boolean>`
+
+    (Defaults to True if left off.) Will this line be drawn with
+    a pointy arrowhead "hat" on the tip to show which end is the
+    start point and which is the end point? If this is false,
+    then Vecdraw draws just a thick line, instead of an arrow.
+
+.. attribute:: VecDraw:WIPING
+
+    :access: Get/Set
+    :type: :ref:`boolean <boolean>`
+
+    (Defaults to True if left off.) If true, this line will be drawn
+    with a "wipe" effect that varies how transparent it is.  At the
+    start point it will be a more transparent version of the color
+    you specified in :attr:`VecDraw:COLOR`.  It will only become the
+    full opacity you requested when it reaches the endpoint of the line.
+    This effect is to help show the direction the arrow is going as it
+    "fades in" to full opacity as it goes along.
+    
+    If false, then the opacity of the line will not vary.  It will draw
+    the whole line at the exact color you specified in the in the
+    :attr:`VecDraw:COLOR` SUFFIX. (Which can still be transparent if
+    you use an RGBA() and provide the alpha value.)
 
 .. attribute:: VecDraw:STARTUPDATER
 

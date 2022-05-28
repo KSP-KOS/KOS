@@ -40,11 +40,17 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
+            // TODO: TEST IF THIS IS BROKEN WHEN CPU VESSEL != ACTIVE VESSEL
+            // Some of these values come from StageManager, which is part of the UI and
+            // only refers to the "active vessel", while others come from shared.Vessel and
+            // thus refer to the CPU vessel.  Those aren't always the same thing:
+
             AddSuffix("NUMBER", new Suffix<ScalarValue>(() => StageManager.CurrentStage));
             AddSuffix("READY", new Suffix<BooleanValue>(() => shared.Vessel.isActiveVessel && StageManager.CanSeparate));
             AddSuffix("RESOURCES", new Suffix<ListValue<ActiveResourceValue>>(GetResourceManifest));
             AddSuffix("RESOURCESLEX", new Suffix<Lexicon>(GetResourceDictionary));
             AddSuffix(new string[] { "NEXTDECOUPLER", "NEXTSEPARATOR" }, new Suffix<Structure>(() => shared.VesselTarget.NextDecoupler ?? (Structure)StringValue.None));
+            AddSuffix("DELTAV", new Suffix<DeltaVCalc>(() => new DeltaVCalc(shared, shared.Vessel.VesselDeltaV.GetStage(shared.Vessel.currentStage))));
         }
 
         private ListValue<ActiveResourceValue> GetResourceManifest()
@@ -75,12 +81,12 @@ namespace kOS.Suffixed
             return resLex;
         }
 
-        public override ISuffixResult GetSuffix(string suffixName)
+        public override ISuffixResult GetSuffix(string suffixName, bool failOkay = false)
         {
             string fixedName;
             if (!Utils.IsResource(suffixName, out fixedName))
             {
-                return base.GetSuffix(suffixName);
+                return base.GetSuffix(suffixName, failOkay);
             }
 
             double resourceAmount = GetResourceOfCurrentStage(fixedName);

@@ -83,6 +83,12 @@ GUI display tools
     or to help show the player information.  The full description can be
     found on the `Vecdraw Page <../structures/misc/vecdraw.html>`__.
 
+    Note: Very large Vecdraws (for example if you try to draw a
+    vector pointing from your ship to another planet) might not get
+    drawn at all in the flight view, and only show up in the map
+    view.  A longer explanation as to why is on the
+    `Vecdraw Page <../structures/misc/vecdraw.html>`__.
+
 .. global:: HUDTEXT
 
     You can make text messages appear on the heads-up display, in the

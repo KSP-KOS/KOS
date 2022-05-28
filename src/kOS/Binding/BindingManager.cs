@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Binding;
+using kOS.Safe.Binding;
 using kOS.Safe.Utilities;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,18 @@ namespace kOS.Binding
         private readonly SharedObjects shared;
         private readonly List<kOS.Safe.Binding.SafeBindingBase> bindings = new List<kOS.Safe.Binding.SafeBindingBase>();
         private readonly Dictionary<string, BoundVariable> variables;
-        private static readonly Dictionary<BindingAttribute, Type> rawAttributes = new Dictionary<BindingAttribute, Type>();
+
+        // Note: When we were using .Net 3.5, This used to be a Dictionary rather than a HashSet of pairs.  But that had to
+        // change because of one .Net 4.x change to how reflection on Attributes works.  In .Net 3.5, an Attribute called
+        // [Foo(1,2)] attached to classA was considered un-equal to an attribute with the same values ([Foo(1,2)]) attached
+        // to classB.  But in .Net 4.0, which class the attribute is attached to is no longer part of its equality test,
+        // therefore both those examples would be "equal" classes because they are the same name Foo with the same paramters (1,2).
+        // This meant that when we had many classes decorated with exactly the same thing, [Binding("ksp")], these Attributes
+        // could be unique keys in a Dictionary in .Net 3.5 because they weren't attached to the same class, but in .Net 4.0
+        // they became key clashes because they were now considered "equal" and all such Attributes after the first were
+        // refusing to be stored in the dictionary.
+        private static readonly HashSet<KeyValuePair<BindingAttribute, Type>> rawAttributes = new HashSet<KeyValuePair<BindingAttribute, Type>>();
+
         private FlightControlManager flightControl;
 
         public BindingManager(SharedObjects shared)
@@ -31,15 +42,15 @@ namespace kOS.Binding
             variables.Clear();
             flightControl = null;
 
-            foreach (BindingAttribute attr in rawAttributes.Keys)
+            foreach (KeyValuePair<BindingAttribute, Type> attrTypePair in rawAttributes)
             {
-                var t = rawAttributes[attr];
-                if (attr.Contexts.Any() && !attr.Contexts.Intersect(contexts).Any()) continue;
-                var b = (SafeBindingBase)Activator.CreateInstance(t);
-                b.AddTo(shared);
-                bindings.Add(b);
+                var type = attrTypePair.Value;
+                if (attrTypePair.Key.Contexts.Any() && !attrTypePair.Key.Contexts.Intersect(contexts).Any()) continue;
+                var instanceWithABinding = (SafeBindingBase)Activator.CreateInstance(type);
+                instanceWithABinding.AddTo(shared);
+                bindings.Add(instanceWithABinding);
 
-                var manager = b as FlightControlManager;
+                var manager = instanceWithABinding as FlightControlManager;
                 if (manager != null)
                 {
                     flightControl = manager;
@@ -49,9 +60,10 @@ namespace kOS.Binding
 
         public static void RegisterMethod(BindingAttribute attr, Type type)
         {
-            if (attr != null && !rawAttributes.ContainsKey(attr))
+            KeyValuePair<BindingAttribute, Type> attrTypePair = new KeyValuePair<BindingAttribute, Type>(attr, type);
+            if (attr != null && !rawAttributes.Contains(attrTypePair))
             {
-                rawAttributes.Add(attr, type);
+                rawAttributes.Add(attrTypePair);
             }
         }
 
@@ -107,7 +119,29 @@ namespace kOS.Binding
         
         public bool HasGetter(string name)
         {
-            return variables.ContainsKey(name);
+            BoundVariable boundVar;
+            if (variables.TryGetValue(name, out boundVar))
+                if (boundVar.Get != null)
+                    return true;
+            return false;
+        }
+
+        public bool HasSetter(string name)
+        {
+            BoundVariable boundVar;
+            if (variables.TryGetValue(name, out boundVar))
+                if (boundVar.Set != null)
+                    return true;
+            return false;
+        }
+
+        /// <summary>
+        /// Indicates that the binding should not be cached during execution
+        /// </summary>
+        /// <param name="name">The binding to modify</param>
+        public void MarkVolatile(string name)
+        {
+            variables[name].Volatile = true;
         }
 
         public void PreUpdate()

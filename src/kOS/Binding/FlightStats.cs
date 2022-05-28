@@ -21,10 +21,14 @@ namespace kOS.Binding
             shared.BindingMgr.AddGetter("ALT", () => new VesselAlt(shared));
             shared.BindingMgr.AddGetter("ANGULARVELOCITY", () => shared.Vessel.transform.InverseTransformDirection(shared.Vessel.GetComponent<Rigidbody>().angularVelocity));
             shared.BindingMgr.AddGetter("ENCOUNTER", () => VesselUtils.TryGetEncounter(shared.Vessel,shared));
-            shared.BindingMgr.AddGetter("ETA", () => new VesselEta(shared));
+            shared.BindingMgr.AddGetter("ETA", () => new OrbitEta(shared.Vessel.orbit, shared));  // shortcut for SHIP:ORBIT:ETA
             shared.BindingMgr.AddGetter("MISSIONTIME", () => shared.Vessel.missionTime);
             shared.BindingMgr.AddGetter(new [] { "OBT" , "ORBIT"}, () => new OrbitInfo(shared.Vessel.orbit,shared));
-            shared.BindingMgr.AddGetter("TIME", () => new TimeSpan(Planetarium.GetUniversalTime()));
+            // Note: "TIME" is both a bound variable AND a built-in function now.
+            // While it would be cleaner to make it JUST a built -in function,
+            // the bound variable had to be retained for backward compatibility with scripts
+            // that call TIME without parentheses:
+            shared.BindingMgr.AddGetter("TIME", () => new TimeStamp(Planetarium.GetUniversalTime()));
             shared.BindingMgr.AddGetter("ACTIVESHIP", () => VesselTarget.CreateOrGetExisting(FlightGlobals.ActiveVessel, shared));
             shared.BindingMgr.AddGetter("STATUS", () => shared.Vessel.situation.ToString());
             shared.BindingMgr.AddGetter("STAGE", () => shared.VesselTarget.StageValues);

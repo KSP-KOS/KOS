@@ -1,8 +1,7 @@
-﻿using kOS.Safe.Exceptions;
+using kOS.Safe.Exceptions;
 using kOS.Safe.Function;
 using kOS.Suffixed;
 using System;
-using TimeSpan = kOS.Suffixed.TimeSpan;
 
 namespace kOS.Function
 {
@@ -25,6 +24,16 @@ namespace kOS.Function
             throw new KOSCastException(argument.GetType(), typeof(Vector));
         }
 
+        protected Direction GetDirection(object argument)
+        {
+            var direction = argument as Direction;
+            if (direction != null)
+            {
+                return direction;
+            }
+            throw new KOSCastException(argument.GetType(), typeof(Direction));
+        }
+
         protected RgbaColor GetRgba(object argument)
         {
             var rgba = argument as RgbaColor;
@@ -35,9 +44,9 @@ namespace kOS.Function
             throw new KOSCastException(argument.GetType(), typeof(RgbaColor));
         }
 
-        protected TimeSpan GetTimeSpan(object argument)
+        protected TimeStamp GetTimeStamp(object argument)
         {
-            var span = argument as TimeSpan;
+            var span = argument as TimeStamp;
             if (span != null)
             {
                 return span;
@@ -46,11 +55,11 @@ namespace kOS.Function
             {
                 // Convert to double instead of cast in case the identifier is stored
                 // as an encapsulated ScalarValue, preventing an unboxing collision.
-                return new TimeSpan(Convert.ToDouble(argument));
+                return new TimeStamp(Convert.ToDouble(argument));
             }
             catch
             {
-                throw new KOSCastException(argument.GetType(), typeof(TimeSpan));
+                throw new KOSCastException(argument.GetType(), typeof(TimeStamp));
             }
         }
 

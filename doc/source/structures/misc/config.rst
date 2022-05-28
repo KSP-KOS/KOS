@@ -1,4 +1,4 @@
-.. config:
+.. _config:
 
 Configuration of kOS
 ====================
@@ -60,10 +60,6 @@ Configuration of kOS
           - :struct:`Boolean`
           - False
           - Print statistics to screen
-        * - :attr:`RT`
-          - :struct:`Boolean`
-          - False
-          - Enable RemoteTech2 integration
         * - :attr:`ARCH`
           - :struct:`Boolean`
           - False
@@ -76,6 +72,9 @@ Configuration of kOS
           - :struct:`Boolean`
           - False
           - Enable safe mode
+        * - :attr:`CLOBBERBUILTINS`
+          - :struct:`Boolean`
+          - False
         * - :attr:`AUDIOERR`
           - :struct:`Boolean`
           - False
@@ -84,6 +83,10 @@ Configuration of kOS
           - :struct:`Boolean`
           - False
           - Enable verbose exceptions
+        * - :attr:`SUPPRESSAUTOPILOT`
+          - :struct:`Boolean`
+          - False
+          - If true, kOS's controls do nothing.
         * - :attr:`TELNET`
           - :struct:`Boolean`
           - False
@@ -104,6 +107,14 @@ Configuration of kOS
           - :struct:`Scalar`
           - 12 (from range [6 .. 20], integers only)
           - Default font size in pixel height for new instances of the in-game terminal
+        * - :attr:`DEFAULTWIDTH`
+          - :struct:`Scalar`
+          - 50 (from range [15 .. 255], integers only)
+          - Default width (in characters, not pixels) for  new instances of the in-game terminal.
+        * - :attr:`DEFAULTHEIGHT`
+          - :struct:`Scalar`
+          - 36 (from range [3 .. 160], integers only)
+          - Default height (in characters, not pixels) for  new instances of the in-game terminal.
         * - :attr:`DEBUGEACHOPCODE`
           - :struct:`Boolean`
           - false
@@ -116,7 +127,7 @@ Configuration of kOS
 
     Configures the ``InstructionsPerUpdate`` setting.
 
-    This is the number of kRISC psuedo-machine-langauge instructions that each kOS CPU will attempt to execute from the main program per :ref:`physics update tick <cpu hardware>`.
+    This is the number of kRISC psuedo-machine-language instructions that each kOS CPU will attempt to execute from the main program per :ref:`physics update tick <cpu hardware>`.
 
     This value is constrained to stay within the range [50..2000]. If you set it to a value outside that range, it will reset itself to remain in that range.
 
@@ -141,18 +152,6 @@ Configuration of kOS
     When this is set to true, it also makes the use of the
     :ref:`ProfileResult() <profileresult>` function available, for
     deep analysis of your program run, if you are so inclined.
-
-.. attribute:: Config:RT
-
-    :access: Get/Set
-    :type: :struct:`Boolean`
-
-    Configures the ``enableRTIntegration`` setting.
-
-    If true, then the kOS mod will attempt to interact with the Remote Tech 2 mod, letting RT2 make decisions about whether or not a vessel is within communications range rather than having kOS use its own more primitive algorithm for it.
-
-    Due to a long stall in the development of the RT2 mod, this setting should still be considered experimental at this point.
-
 
 .. attribute:: Config:ARCH
 
@@ -194,6 +193,40 @@ Configuration of kOS
 
 .. highlight:: kerboscript
 
+.. attribute:: Config:CLOBBERBUILTINS
+
+    :access: Get/Set
+    :type: :struct:`Boolean`
+
+    Setting this config option to TRUE will allow scripts to clobber
+    built-in idenifier names, re-enabling older behavior for backward
+    compatibility and disabling the compiler enforcement that was
+    introduced in kOS v 1.4.0.0 to stop this practice.
+
+    In kOS v1.4.0.0, the compiler started enforcing the rule that kerboscript
+    programs must never create a user variable, lock, or function with a
+    name that clashes with one of kOS's own built-in variable, lock, or
+    function names.  This rule was introduced to prevent common bugs where
+    a program masked over some vital kOS variable, rendering it inaccessible,
+    like for example ``SHIP``, or ``VELOCITY``.
+
+    Older scripts written before kOS 1.4.0.0 might need this config option
+    enabled to make the compiler accept them and not throw errors.
+
+    Before enabling this to make the error messages go away, first consider
+    going through the offeding script and editing it to rename the variable,
+    lock, or function that is causing the message.  That would be the better
+    solution.  This config option is only being presented as a dirty way
+    to make old scripts that are no longer being edited keep working on
+    newer versions of kOS.  In the long run, it's better to edit the scripts.
+
+    **Note: This can be over-ridden by @CLOBBERBUILTINS directive:**
+
+    Note that this config option can be over-ridden on a per-file basis by
+    using the compiler directive called :ref:`@CLOBBERBUILTINS <clobberbuiltins>`.
+    The Config value here is merely the default you get for files that lack a
+    :ref:`@CLOBBERBUILTINS <clobberbuiltins>` compiler directive.
+
 .. attribute:: Config:AUDIOERR
 
     :access: Get/Set
@@ -205,7 +238,7 @@ Configuration of kOS
     generte a sound effect of a short little warning bleep to remind you that
     an exception occurred.  This can be useful when you are flying
     hands-off and need to realize your autopilot script just died so
-    you can take over.
+    
 
 .. attribute:: Config:VERBOSE
 
@@ -215,6 +248,29 @@ Configuration of kOS
     Configures the ``verboseExceptions`` setting.
 
     If true, then it enables a mode in which errors coming from kOS are very long and verbose, trying to explain every detail of the problem.
+
+.. attribute:: Config:SUPPRESSAUTOPILOT
+
+    :access: Get/Set
+    :type: :struct:`Boolean`
+
+    *This is settable by use of the "Toggle Autopilot" Action Group too.*
+
+    When this is set to True, it suppresses all of kOS's attempts to
+    override the steering, throttle, or translation controls, leaving
+    them entirely under manual control.  It is intended to be a way
+    to let you take manual control in an emergency quickly (through
+    the toolbar window where this setting appears) without having to
+    quit the running program or figure out which terminal window has
+    the program causing the control lock.
+
+    You can also bind this setting to an action group for a kOS core part
+    in the VAB or SPH.  The action is called "Toggle Suppress".
+    (Or "Suppress On" and "Suppress Off" for one-way action groups
+    that don't toggle.)
+
+    While it does suppress steering, throttle, and translation, it cannot
+    suppress action groups or staging.
 
 .. attribute:: Config:TELNET
 
@@ -311,6 +367,34 @@ Configuration of kOS
     The value here must be at least 6 (nearly impossible to read)
     and no greater than 30 (very big).  It will be rounded to the
     nearest integer when setting the value.
+
+.. attribute:: Config:DEFAULTWIDTH
+
+    :access: Get/Set
+    :type: :struct:`Scalar` integer-only. range = [15,255]
+
+    Configures the ``TerminalDefaultWidth`` setting.
+
+    This is the default starting width (in number of character cells,
+    not number of pixels) for all newly created kOS in-game terminals.
+    This is just the default for new terminals.  Individual terminals
+    can have different settings, either by setting the value
+    :attr:`Terminal:WIDTH` in a script, or by manually dragging the
+    resize corner of the terminal with the mouse.
+
+.. attribute:: Config:DEFAULTHEIGHT
+
+    :access: Get/Set
+    :type: :struct:`Scalar` integer-only. range = [3,160]
+
+    Configures the ``TerminalDefaultHeight`` setting.
+
+    This is the default starting height (in number of character cells,
+    not number of pixels) for all newly created kOS in-game terminals.
+    This is just the default for new terminals.  Individual terminals
+    can have different settings, either by setting the value
+    :attr:`Terminal:HEIGHT` in a script, or by manually dragging the
+    resize corner of the terminal with the mouse.
 
 .. attribute:: Config:DEBUGEACHOPCODE
 

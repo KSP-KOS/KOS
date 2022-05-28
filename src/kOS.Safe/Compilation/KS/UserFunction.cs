@@ -178,5 +178,10 @@ namespace kOS.Safe.Compilation.KS
         {
             return systemLocks.Contains(ScopelessIdentifier.ToLower());
         }
+
+        static public bool IsSystemLock(string name)
+        {
+            return systemLocks.Contains(name.ToLower());
+        }
     }
 }

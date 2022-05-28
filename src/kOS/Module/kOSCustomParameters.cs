@@ -1,4 +1,4 @@
-﻿using KSP.IO;
+using KSP.IO;
 using System;
 using System.Reflection;
 
@@ -102,6 +102,14 @@ namespace kOS.Module
                                          "paragraph-length descriptions that this enables.")]
         public bool verboseExceptions = true;
 
+        [GameParameters.CustomParameterUI("Allow clobbering built-ins",
+                                         toolTip = "True if scripts' variable and function names are allowed to hide or clobber kOS's\n" +
+                                         "built-in variables and functions, like THROTTLE, SHIP, PRINT(), and so on. This setting\n " +
+                                         "can be overridden per-script with the @CLOBBERBUILTINS compiler directive.\n" +
+                                         "(This should only be turned on if you need it for backward compatibilty to run older\n" +
+                                         "scripts written prior to kOS v1.4.x, from before kOS was enforcing this check.)")]
+        public bool clobberBuiltIns = false;
+
         [GameParameters.CustomParameterUI("Only use Blizzy toolbar", 
                                          toolTip = "If you have the \"Blizzy Toolbar\" mod installed, only put the kOS\n" +
                                          "button on it instead of both it and the stock toolbar.")]
@@ -162,7 +170,7 @@ namespace kOS.Module
 
         public override bool Enabled(MemberInfo member, GameParameters parameters)
         {
-            if (member.Name == "migrated" || member.Name == "version")
+            if (member.Name == "migrated" || member.Name == "version" || member.Name == "passedClickThroughCheck")
             {
                 return false;
             }
@@ -181,7 +189,9 @@ namespace kOS.Module
                 // the new system, or that the user selected to prevent future migrations.
                 if (ipu > 0)
                 {
-                    kOSSettingsChecker.QueueDialog(new MultiOptionDialog(
+                    kOSSettingsChecker.QueueDialog(
+                        0.5f, 0.5f, // causes it to be centered (half of box's own width left and down from center is the corner).
+                        new MultiOptionDialog(
                             "Migration Dialog",
                             MIGRATION_DIALOG_TEXT,
                             "kOS",

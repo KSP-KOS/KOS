@@ -5,6 +5,7 @@ using kOS.Safe.Function;
 using kOS.Safe.Persistence;
 using kOS.Suffixed;
 using kOS.Suffixed.Part;
+using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -61,12 +62,20 @@ namespace kOS.Function
                     list = GetEngineList(shared);
                     break;
 
+                case "rcs":
+                    list = GetRCSList(shared);
+                    break;
+
                 case "sensors":
                     list = GetSensorList(shared);
                     break;
 
                 case "config":
                     list = GetConfigList();
+                    break;
+
+                case "fonts":
+                    list = GetFontList();
                     break;
 
                 default:
@@ -160,6 +169,19 @@ namespace kOS.Function
             return list;
         }
 
+        private kList GetFontList()
+        {
+            var list = new kList();
+            list.AddColumn("Font Name", 15, ColumnAlignment.Left);
+
+            foreach (Font f in Resources.FindObjectsOfTypeAll<Font>())
+            {
+                list.AddItem(f.name);
+            }
+
+            return list;
+        }
+
         private kList GetTargetList(SharedObjects shared)
         {
             var list = new kList();
@@ -244,6 +266,27 @@ namespace kOS.Function
             {
                 var part = (PartValue) structure;
                 list.AddItem(part.Part.uid(), part.Part.inverseStage, part.Part.partInfo.name);
+            }
+
+            return list;
+        }
+
+        private kList GetRCSList(SharedObjects shared)
+        {
+            var list = new kList();
+            list.AddColumn("ID", 12, ColumnAlignment.Left);
+            list.AddColumn("Name", 28, ColumnAlignment.Left);
+
+            foreach (Part part in shared.Vessel.Parts)
+            {
+                foreach (PartModule module in part.Modules)
+                {
+                    var rcs = module as ModuleRCS;
+                    if (rcs != null)
+                    {
+                        list.AddItem(part.ConstructID(), part.partInfo.name);
+                    }
+                }
             }
 
             return list;

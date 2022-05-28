@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.IO;
@@ -76,21 +76,20 @@ namespace kOS.Safe.Compilation
         }
         
         /// <summary>
-        /// Return the fewest number of bytes it would take
-        /// to hold the given integer value, assuming its stored
-        /// in an unsigned way.  Does not go higher than 8 bytes.
+        /// Given the need for a number to hold this many possible unique values, return how many bytes is has to be.
+        /// (i.e. it takes 1 byte to hold up to 256 different values, 2 bytes to hold up to 65536 values, etc).
         /// </summary>
-        /// <param name="maxValue">max value the bytes have to hold</param>
+        /// <param name="maxUniqueValues">max number of unique values the bytes have to store</param>
         /// <returns>number of bytes to hold it</returns>
-        public static int FewestBytesToHold(long maxValue)
+        public static int FewestBytesToHold(long maxUniqueValues)
         {
-            return  (maxValue <= 0x100) ? 1 :
-                    (maxValue <= 0x10000) ? 2 :
-                    (maxValue <= 0x1000000) ? 3 :
-                    (maxValue <= 0x100000000) ? 4 :
-                    (maxValue <= 0x10000000000) ? 5 :
-                    (maxValue <= 0x1000000000000) ? 6 :
-                    (maxValue <= 0x100000000000000) ? 7 : 8 ;
+            return  (maxUniqueValues <= 0x100) ? 1 :
+                    (maxUniqueValues <= 0x10000) ? 2 :
+                    (maxUniqueValues <= 0x1000000) ? 3 :
+                    (maxUniqueValues <= 0x100000000) ? 4 :
+                    (maxUniqueValues <= 0x10000000000) ? 5 :
+                    (maxUniqueValues <= 0x1000000000000) ? 6 :
+                    (maxUniqueValues <= 0x100000000000000) ? 7 : 8 ;
         }
         
         /// <summary>
@@ -197,13 +196,19 @@ namespace kOS.Safe.Compilation
                 PackArgs(codePart.MainCode);
             }
 
-            // Now that we've seen every argument, we know how many bytes are needed
-            // to store the argumentPack, and thus the largest possible index into it.
-            // This will be how many bytes our indeces will be in this packed ML file.
-            int numArgIndexBytes = FewestBytesToHold(argumentPackLogicalLength);
+            // Purpose of numArgIndexBytes calculated below:
+            // The first thing in the argument pack section after the "%A" idicator
+            // is a single byte that tells how big the addresses into the argment pack
+            // are.  The argument pack might address arguments using a single byte if
+            // the argument pack is small enough that you don't need addresses bigger than
+            // 255.  If you need addresses bigger than 255, then it might take two bytes
+            // to store addresses so it can cover values up to 65535, and so on.
+            int argSectionHeaderBytes = 3; // Adjust this if you add or subtract headBuf.Add() lines below:
+            int numArgIndexBytes = FewestBytesToHold(argumentPackLogicalLength + argSectionHeaderBytes);
             headBuff.Add((byte)'%');
             headBuff.Add((byte)'A');
             headBuff.Add(((byte)numArgIndexBytes));
+            // ^^^ IF YOU ADD OR REMOVE ANY headBuff.Add(...) LINES ABOVE YOU MUST ALSO CHANGE argSectionHeaderBytes.
 
             var truncatedArgumentPack = new byte[argumentPackLogicalLength];
             Array.Copy(argumentPack, 0, truncatedArgumentPack, 0, argumentPackLogicalLength);
@@ -858,8 +863,8 @@ namespace kOS.Safe.Compilation
         public void Add( int lineNum, IntRange addRange )
         {
             List<IntRange> ranges;
-            
-            int neededBytes = CompiledObject.FewestBytesToHold( Math.Max(addRange.Start, addRange.Stop) );
+
+            int neededBytes = CompiledObject.FewestBytesToHold(Math.Max(addRange.Start, addRange.Stop) );
             if (neededBytes > numDebugIndexBytes)
                 numDebugIndexBytes = neededBytes;
             

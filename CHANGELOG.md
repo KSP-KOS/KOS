@@ -1,6 +1,895 @@
 kOS Mod Changelog
 =================
 
+# v1.3.2.0 - Don't Steer Me wronger
+
+A quick patch to v1.3.0.0 that fixes issue #2857 that would
+zero controls for just a brief single physics frame if
+raw control neutralize had been previously used or if a
+reboot had occurred while raw controls were in use.  Most
+players won't notice a single physics frame of zeroed
+controls, but if you're using realism mods with limited
+engine ignitions, it would unfairly consume an engine
+ignition when the throttle zeroed for an instant. (Which
+was disasterous for those engines that only get one
+ignition.)
+
+Normally one bug fix wouldn't warrant a release, but this
+bug was caused by changes in v1.3.0.0, and the consumed
+ignition was unfair.
+ 
+# v1.3.1.0 - Don't Steer Me Wrong, this time
+
+A quick patch to v1.3.0.0 that fixed issue #2850 where
+one or two places in the code still used TimeSpan where
+they were supposed to have been changed to use TimeStamp.
+
+
+# v1.3.0.0 - Don't Steer Me Wrong
+
+There's a lot of small changes over the last year that have added
+up to a big release.  This release supports KSP 1.10 and KSP 1.11.
+
+The most important changes are probably in steering and control.
+Cooked steering shouldn't waste as much RCS as it used to, and if you
+are using raw control you now have the ability to set the player's trim
+settings for yaw, pitch, and roll so you can steer using those and
+not completely lock the player out of control.  There is also a
+panic button for telling kOS to suppress all of its controls if the
+player needs to take over the controls regardless of what the script
+is doing.
+
+As always, recompile KSM files with this release.  Especially as there
+was an important KSM bugfix.
+
+### BREAKING CHANGES
+
+- ``TimeSpan`` used to mean a fixed stamp in time (the name was not
+  really accurate).  Now there are two types, ``TimeStamp`` and
+  ``TimeSpan``, and the one that USED to be called ``TimeSpan``
+  is now called ``TimeStamp``, with ``TimeSpan`` now being a new
+  type that didn't exist before.  This could affect scripts if
+  you ever did a check for ``:istype("TimeSpan")`` (because of
+  the rename) but shouldn't affect anything else.
+- **Even more than usual it's important to recompile any KSM files.**
+  A major bug in how KSM files were written was discovered that this
+  release fixes.  There's a chance your existing KSM files may
+  already be wrong.  If you have any bug reports about a KSM file
+  not working right, please try testing again with this release by
+  recreating the KSM file.  There's a small chance you might have
+  had the bug this release fixes.  (Look for "KSM" in the bug section
+  below.)
+- If you are using the output of ``SteeringManager:WRITECSVFILES``,
+  be warned that output now has a new column in the second-to-last
+  position, the MinOutput column.  That means the MaxOutput column
+  has shifted one position to the right.  This should only affect
+  people who are analyzing that data with external software.
+- In order to support Kerbal Alarm Clock version 3.0.0.2 or higher
+  it was necessary to break compatibiltiy with versions of Kerbal
+  Alarm Clock that are older than that.  The API wrapper changed
+  enough that backward compatibility is too messy to maintain.
+- The ``:LIST`` suffix of ``VOLUME`` said in the documentation
+  that it returns a ``LIST`` when in reality it always returned
+  a ``LEXICON``.  If you relied on this and wanted the lexicon
+  not the list, you need to now use the new suffix ``:LEXICON``
+  because the old suffix ``:LIST`` has been changed to match the
+  documentation and be a real actual LIST now.
+- Temperature tolerance for the kOS parts was way too high, making
+  them effective heat shields when they shouldn't be. If you had been
+  taking advantage of this before that might not work anymore.
+- CREATEORBIT() used to take mean anomaly at epoch as a value in
+  radians, which didn't match how everything else in kOS works.
+  It is now expecting it in degrees as described in BUG FIXES
+  below.
+- If you ever happend to have a string literal with a backslash
+  followed by a quote mark (``\"``) that has now become a special
+  escaped quote char and is no longer literally a backslash and
+  quote mark.
+
+### NEW FEATURES
+
+- Maneuver Nodes can now be constructed with either ETA time or
+  with UT time, and you can read their time either as UT (``:TIME``)
+  or as ETA (``:ETA``).  They also can take in the new ``Timestamp``
+  or ``TimeSpan`` types instead of just a Scalar number of seconds if
+  you like.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2846)
+- There's a new button, "Reread Boot Folder", on the kOS toolbar
+  window when you're in the VAB or the SPH.  This button lets you
+  tell kOS to re-read the boot directory when you've just added
+  a new file to it, so you don't have to leave the VAB and come
+  back for it to show up in the list of boot files.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2839)
+- The old ``TimeSpan`` type has been renamed to ``TimeStamp`` and
+  a new ``TimeSpan`` type has been made in its place.  This is to
+  fit the design pattern where a "stamp" is a fixed point in time (a
+  date and a time of day) and a "span" is a time offset.  The main
+  difference in Kerbal is whether you count years and days
+  starting at 1 or at 0.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2837)
+- Suffixes ``:PARTSTAGGED``, ``:PARTSNAMED``, and ``:PARTSDUBBED``
+  can now be used with parts instead of with entire vessels. Doing
+  so searches just the sub-branch of the ship starting from that
+  part, instead of the whole ship.
+  [pull reqeust](https://github.com/KSP-KOS/KOS/pull/2821)
+- Added a new Suffix to RCS parts, ``:DEADBAND`` that lets you
+  finally override the game's enforced 5% deadband on RCS
+  controls. It turns out the deadband isn't in the *controls*,
+  but rather it's in the RCS Parts themselves and doesn't apply
+  to other torque sources like reaction wheels.  That's why
+  you notice it when translating (where only RCS works) and not
+  when rotating (where reaction wheels do something and take
+  up the slack left by the RCS thrusters not responding).
+  [pull request](https://github.com/KSP-KOS/KOS/issues/2811)
+- **Big overhaul to SteeringManager's internals**:
+  There's been some important refactoring in SteeringManager that
+  should reduce the control vibrations and consequently the
+  RCS fuel wastage especially in Realism Overhaul (which relies
+  more on RCS than stock does).  Also, there's some
+  user-settable epsilon values - if you want to change the tuning
+  you can adjust ``SteeringManger:ROTATIONEPSILONMIN`` and
+  ``SteeringManager:ROTATIPONEPSILONMAX``.
+  - Dynamic Epsilon logic to reduce control jitter: [pull request 2810](https://github.com/KSP-KOS/KOS/pull/2810) [pull request 2813](https://github.com/KSP-KOS/KOS/pull/2813)
+  - The stock KSP's available torque calculations are random wrong values for RCS parts.  kOS now replaces that with its own calculation instead: [pull request 2820](https://github.com/KSP-KOS/KOS/pull/2820)
+- The random number generator now can be fed a seed.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2801)
+- PIDLoop is now a serializable structure so you can save
+  your PID's settings and bring them back from a file. Also
+  PIDloop's CSV output now has a Minoutput column.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2795)
+- Enlarged max allowed terminal font size to 48, to benefit
+  people with tiny pixels (i.e. 4k monitors).
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2794)
+- Uses the changes to Kerbal Alarm Clock's API that started
+  with Kerbal Alarm Clock v3.0.0.2.  (This does break compatibility
+  with older versions of Kerbal Alarm Clock, though.)
+  [pull reqeust](https://github.com/KSP-KOS/KOS/pull/2790)
+- *On-Screen warning when SAS is fighting kOS*:  The message
+  appears when both SAS and lock stering have been active for a
+  few seconds and goes away when one or the other is turned off.
+  [pull request 2780](https://github.com/KSP-KOS/KOS/pull/2780)
+  [pull request 2783](https://github.com/KSP-KOS/KOS/pull/2783)
+- **Emergency Suppress Autopilot**: You can now click an emergency
+  toggle button on the kOS toolbar dialog window that will
+  temporarily suppress all of kOS's locked steering so you have
+  manual control.  If you use this, the script will still keep
+  running and *think* it's moving the controls, but the steering
+  manager will ignore the script's commands until you turn the
+  suppression toggle off.  *This can also be bound to an
+  action group for the kOS PartModule if you want a fast hotkey
+  for it.*
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2779)
+- ``Part`` suffixes that allow you to traverse the symmetrical
+  sets of parts.  (i.e. if you place 4 fins in radial symmetry,
+  and have a reference to one of the fins, you can find the other
+  3 fins that it is symmetrical with.)in the same symmetry set)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2771/files)
+- The player's own TRIM controls are now settable by script.
+  (Example use case: You want an autopilot to control an
+  airplane by moving the trim but not the main controls so
+  the player is still free to push the main control stick at
+  any time).
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2769)
+- ``ETA:NEXTNODE`` now an alias for ``NEXTNODE:ETA``
+  [pull request](https://github.com/KSP-KOS/KOS/issues/2648)
+- Trajectories Addon updated to support Trajectories v2.4 changes.
+  (Thanks PiezPiedPy)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2747)
+- Kuniverse:launchcraftwithcrewfrom()
+  (Thanks JonnyOThan)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2740)
+- New suffixes for the special case where a Vessel is really an
+  asteroid. (Thanks JonnyOThan)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2736)
+- Ability to read the stock game's Delta-V readouts for the vessel.
+  (Thanks ThunderousEcho)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2719)
+- New subtype for ``Part`` - the ``RCS`` part type, with information
+  about how its nozzles are aimed, what fuel it uses, the ISP,
+  max thrust, etc. (Thanks RCrockford)
+  [pull request 2678](https://github.com/KSP-KOS/KOS/pull/2678)
+  [pull request 2809](https://github.com/KSP-KOS/KOS/pull/2809)
+- Can now use ``\"`` in string literals for embedded quote marks.
+  Also can prepend the string with ``@`` to turn this off and keep
+  it literal. (thanks thexa4)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2673/)
+- New Engine value suffix ``:CONSUMEDRESOURCES``, and new
+  Type ``ConsumedResource`` it returns. These
+  give more information about fuels the engine uses.  Mostly
+  relevant when RealFuels mod is installed so every engine is a
+  bit different. (Thanks RCrockford)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2662)
+- Can CreateOrbit() from position and velocity (before
+  it only worked with Keplerian parameters).
+  (Thanks ThunderousEcho)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2650)
+
+### BUG FIXES
+
+- Fixed: Kerbal Alarm Clock alarms had no ToString() so when you
+  printed them you saw nothing.  Now they show the alarm info.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2845)
+- Fixed: The suffix ``Widget:HASPARENT`` was documented but didn't
+  actually exist.  It exists now.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2844)
+- Fixed: Primitives like Scalars, Strings, and Booleans previously
+  were not serializable with WRITEJSON() on their own as bare
+  variables.  They could only be written when inside containers like
+  LIST() or LEXICON().  Now they can be written directly.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2842)
+- Fixed: **KSM** files would corrupt one of the kRISC instruction
+  operands (leading to any number of random results when running the
+  program) if the size of the operand pack happened to be *just barely*
+  over 2^8, 2^16, or 2^24 bytes. (When calculating how many bytes
+  addresses need to be to access the enire operand pack, its count
+  of the size of the pack was off by 3. This could make the last
+  operand in the pack get garbled when it loaded into memory from
+  some random other part of the file instead of where it was supposed
+  to come from.)
+  (Thanks to newcomb-luke for discovering the problem and the cause)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2827)
+- Fixed how positions of packed vessels were off by one
+  physics frame from the positions of everything else.  This
+  is apparently how things are reported b the KSP API and this
+  had to be adjusted for.
+  (Thanks marianoapp)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2818)
+- Fix Vecdraw labels no longer showing up in flight view
+  [pull request 2799](https://github.com/KSP-KOS/KOS/pull/2799)
+  [pull request 2804](https://github.com/KSP-KOS/KOS/pull/2804)
+- Remove strange blank setting on the difficulty options
+  screen.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2797)
+- ``OPENPATH()`` now returns false on file not found rather
+  than bombing out with an exception.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2793)
+- RangeValue now allows use of bigger ranges and for ranges
+  that increment by fractional amounts.
+  (Before, it couldn't do floating point and couldn't do
+  anything bigger than 2^31.)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2792)
+- Fix raw control ``:NEUTRALIZE`` never having quite done
+  what it said it did right.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2770)
+- EVA Kerbals no longer have duplicate KOSNameTags when
+  you have the Breaking Ground DLC installed.  (The problem
+  came from how KSP mashes two kerbal templates together
+  into one kerbal to put the DLC science features into an
+  EVA Kerbal.)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2765)
+- VOLUME:LIST now actually returns a list like it says
+  in the documentation.  Use VOLUME:LEXICON to get
+  the lexicon you used to get from VOLUME:LIST.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2763)
+- UNSET now fails silently on non-existant variables as the
+  documentation claims it should, instead of crashing with
+  a nullref error.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2761)
+- Fixed a mistake that made it possible to process lines of
+  input out of order if they flood into the terminal very fast.
+  It was noticed in JonnyOThan's TwichPlaysKSP, which pastes
+  entire scripts of input into the interpreter in one big chunk.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2754)
+- ADDONS:KAC:ALARM[n]:NOTES now returns the right thing.
+  (It used to just return the same thing as :NAME.
+  (Thanks JonnyOThan)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2738/)
+- The ConnectionManager dialog box at the start of a career was
+  repositioned to where it is unlikely to appear secretly hidden
+  behind other mod's dialog boxes.  (Other mods putting their)
+  dialogs in front of kOS's and not blocking clickthroughs made
+  some users accidentally pick a ConnectionManager and dismiss
+  the dialog before they ever saw it.)
+  [pull request](https://github.com/KSP-KOS/KOS/issues/2733)
+- UI sound effects from kOS (error beep, SKID sounds) no longer
+  have an origin point in 3-D space inside the part.  They are
+  now "ambient".  This is to get sound mods to stop dampening
+  the volume the same way they'd dampen sounds from engine
+  parts, etc.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2717)
+- Parts no longer have excessive temperature tolerance.
+  (Thanks robopitek)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2699)
+- CREATEORBIT() now takes mean anomaly at epoch as degrees.  It
+  was in radians before which didn't match how other things worked.
+  (Thanks vzynev)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2689)
+- Better fuel stability (ullage in RealFuels) calculation.
+  (thanks RCrockford)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2677)
+- Documentation fixes.  Too numerous to mention each.  You can
+  click each of the links below to see them all:
+  [pull request 2675](https://github.com/KSP-KOS/KOS/pull/2675)
+  [pull request 2680](https://github.com/KSP-KOS/KOS/pull/2680)
+  [pull request 2707](https://github.com/KSP-KOS/KOS/pull/2707)
+  [pull request 2712](https://github.com/KSP-KOS/KOS/pull/2712)
+  [pull request 2724](https://github.com/KSP-KOS/KOS/pull/2724)
+  [pull request 2751](https://github.com/KSP-KOS/KOS/pull/2751)
+  [pull request 2772](https://github.com/KSP-KOS/KOS/pull/2772)
+  [pull request 2775](https://github.com/KSP-KOS/KOS/pull/2775)
+  [pull request 2776](https://github.com/KSP-KOS/KOS/pull/2776)
+  [pull request 2777](https://github.com/KSP-KOS/KOS/pull/2777)
+  [pull request 2784](https://github.com/KSP-KOS/KOS/pull/2784)
+  [pull request 2788](https://github.com/KSP-KOS/KOS/pull/2788)
+  [pull request 2791](https://github.com/KSP-KOS/KOS/pull/2791)
+  [pull request 2800](https://github.com/KSP-KOS/KOS/pull/2800)
+  [pull request 2819](https://github.com/KSP-KOS/KOS/pull/2819)
+  [pull request 2833](https://github.com/KSP-KOS/KOS/pull/2833)
+- kOS can now handle KSP's technique of having multiple KSPfields
+  of the same name that resolve the name clash by only having one
+  visible at a time.  KSP started doing this on a few fields
+  about a year ago and caused bugs like "authority limiter"
+  not working. (https://github.com/KSP-KOS/KOS/issues/2666)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2667)
+- kOS no longer allows ModuleManager configs to give it negative mass.
+  (Antimatter summons the Kraken.)
+  [pull reqeust](https://github.com/KSP-KOS/KOS/pull/2661)
+- ETA:APOAPSIS no longer returns Infinity on hyperbolic
+  orbits (While infinity is a correct answer, kOS scripts
+  would crash when they get infinity on the stack. So now
+  it says zero instead).
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2646)
+
+
+# v1.2.1 Pathsep fix
+
+v1.2'S DDS fix had a backslash path separator that broke it on UNIX
+platoforms.  This quick fix does nothing more than switch it to a
+normal slash, as that will work on all platforms.  Apparently the .Net
+file libraries convert the path names one way but not the other.
+(They will map things so Windows can work with the "wrong" separator,
+but not do a similar mapping to make UNIX work with the "wrong"
+separator, so UNIX separators are the only cross-platform path
+separator to use.)
+
+
+# v1.2 Unity Update
+
+This update is mostly to make kOS compatible with KSP 1.8.x, which
+started using a newer version of Unity, and a newer version of .Net,
+which have some consequent changes in the code and build process.
+
+### BREAKING CHANGES
+
+None that are known about, other than the usual reminder that
+KSM files need a recompile after every version update of kOS.
+
+### NEW FEATURES
+
+* Now forces both the toolbar window and the telnet welcome menu
+  to list the kOS CPUs in a consistent unchanging sort order.
+  Previously, it was pretty much random what order you would
+  see kOS CPU's listed in the menu, which made it hard for
+  JonnyOThan's Twitch-Plays-KSP chatbot to know which CPU it
+  was attaching to when it sent commands to kOS.  This has been
+  changed to a predictable sort order as follows: (1) Sort by
+  which vessel the CPU is on, starting from the active vessel,
+  and then for other vessels, sorting by distance from the active
+  vessel, closest first. (2) When the same vessel has more than
+  one CPU, break that tie by number of "hops" from the root part,
+  such that CPU's attached closer to the root come first.  This
+  is by "number of parts to walk through to reach root" rather
+  than by actual physical distance, since using physical distance
+  might have led to inconsistent sort order given that some ship
+  parts can hinge and extend, changing that distance.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2601)
+* New suffixes ``Dockingport:PARTNER`` and ``Dockingport:HASPARTER``
+  will tell you which docking port this docking port is docked with.
+  [issue](https://github.com/KSP-KOS/KOS/issues/2613)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2629)
+* HEADING() Now allows optional 3rd argument, "roll".
+  [issue](https://github.com/KSP-KOS/KOS/issues/2609)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2629)
+* Let user-made GUIs toggle IMGUI's wordwrap flag with a 
+  new suffix: ``Style:WORDWRAP``.  This should let you fix
+  that annoying problem where a GUI Label would insist on
+  wrapping even when it could have fit by making the window
+  wide enough.  Setting wordwrap to false will force the
+  GUI layout engine to keep the label's area wide enough
+  to not wrap the text.
+  [issue](https://github.com/KSP-KOS/KOS/issues/2599)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2629)
+* Add BODYEXISTS test
+  [issue](https://github.com/KSP-KOS/KOS/issues/2587)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2629)
+* Allow FLOOR() and CEILING() to specify a decimal place other
+  than the one's place, like ROUND() can do.
+  [issue](https://github.com/KSP-KOS/KOS/issues/2556)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2629)
+* Add a constructor, ``CREATEORBIT()`` that will make a new
+  ``Orbit`` object for any hypothetical orbit given Keplerian
+  parameters, without it coming from a vessel or a body that
+  already exists.
+  [issue](https://github.com/KSP-KOS/KOS/issues/2530)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2629)
+* Added new suffix to waypoint: ``:ISSELECTED``, which will
+  tell you if the waypoint is the one the user has selected
+  for their navball.
+  [issue](https://github.com/KSP-KOS/KOS/issues/2565)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2630)
+
+
+### BUG FIXES
+
+* Bound variables like SHIP, UP, VELOCITY, etc stopped existing
+  in the KSP 1.8.x update.  This was because kOS makes use of 
+  reflection techniques to store information about C# Attributes
+  that help it find the bound variables in its code, and .Net 4.x
+  changed the meaning of Attribute.Equals() in such a way that it
+  broke what kOS was doing to store this reflection information.
+  A Dictionary that kOS was using to track bound variables by Attributes
+  started having key clashes because of that change to what it means
+  for an Attribute to be Equal to another Attribute.
+  ((No link to a github issue because this was part of the general
+  KSP 1.8 update PR and didn't have an issue.))
+* Prevent waypoints with bogus body names.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2593)
+* Fix a problem that made the GUI terminal sometimes get stuck
+  refusing to repaint when resized to a size too small to
+  hold all the text it previously had showing.
+  [issue](https://github.com/KSP-KOS/KOS/issues/2611)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2612)
+* Several minor doc typos
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2628)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2638)
+* The startup message about default font and "if you want the old look" was
+  quite obsolete by now and needed to be removed.
+  [issue](https://github.com/KSP-KOS/KOS/issues/2606)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2629)
+* Changed the technique used to load DDS icons used in the
+  kOS GUI terminal and the kOS toolbars, to bypass KSP's
+  strange API and go directly to Unity.  This may or may
+  not help people who had the purple square icon problem.
+  ((No issue - SlimJimDodger contributed PR out of the blue.))
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2637)
+
+# v1.1.9.0 Breaking Bounds
+
+This update is a mix of new features, mostly
+
+### BREAKING CHANGES
+
+### NEW FEATURES
+
+- Bounding box information for parts and for the vessel as
+  a whole is now exposed for scripts to read.
+  [pull request 1](https://github.com/KSP-KOS/KOS/pull/2563).
+  [pull request 2](https://github.com/KSP-KOS/KOS/pull/2564).
+- The above bounding box feature also came with some new suffixes 
+  for Vecdraw so you can now draw plain lines (suppress the
+  arrowhead, suppress the opacity fade) with them.
+- Lexicons can now use the suffix syntax.  i.e. where you 
+  say ``mylex["key1"]`` you can now say ``mylex:key1``,
+  provided the key is something that works as a valid identifier
+  string (no spaces, etc).
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2553).
+- Can now set the default terminal Width and Height for all
+  newly spawned terminals.
+  [pull request 1](https://github.com/KSP-KOS/KOS/pull/2573).
+- A ternary conditional operator exists in kerboscript now,
+  using the syntax ``CHOOSE expr1 IF bool_expr ELSE expr2``.
+  If *bool_expr* is true, it returns expr1.  If it's false,
+  it returns expr2.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2549).
+- Added support to read more atmospheric values from KSP.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2557).
+
+### BUG FIXES
+
+- TimeSpan now peeks at the KSP game to learn its notion of
+  how long a day is, and how long a year is, rather than hardcoding
+  the values.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2582).
+- Fix cooked control triggers not working during a WHEN/ON trigger.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2534).
+- Fix mangled state if kOS is out of electricity when scenes switch
+  or the game is saved.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2521).
+- Obsolete list command documentation removed.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2520).
+- Allow part modules'd fields to work even when no GUI name is defined.
+  It seems that the main game allows the GUI name to be left out and if
+  so it inherits from the base name under tne hood.  Now kOS follows
+  this behaviour.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2519).
+- Prevent using UNSET on built-in variable names like SHIP, ALTITUDE,
+  and so on.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2510).
+- RP-1 used a different technique to lock out controls due to
+  insufficient avionics that kOS didn't know about.  kOS bypassed
+  this lockout and still controlled the vessel anyway.  This is no
+  longer the case.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2546).
+- PartModule:SETFIELD now works properly with the new type of slider
+  widget that robotic parts use in KSP 1.7.x.  KSP introduced a new
+  type of slider widget that presents false information when kOS tried
+  to obey its min, max, and detent values, those being only dummy
+  placeholders for these types of sliders, not actually populated with
+  the real values.  For these sliders, the real limit values come from
+  another field, requiring a more indirect method call to get the information.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2554).
+- GUI windows no longer use the KSP control lock system to emulate
+  keyboard focus, instead relying on the built-in Unity IMGUI
+  focus rules for widgets, thus they won't 'steal focus' as much.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2577).
+
+# v1.1.8.0 Engines and KSP 1.7 compatibility
+
+Mostly this was motivated by a need to get an officially
+recompiled-for-KSP-1.7 version out there (even though the previous
+version worked on KSP 1.7, it wasn't officially compiled for KSP
+1.7.)
+
+Along the way there were one or two bug fixes and documenation
+cleanups.
+
+### BREAKING CHANGES
+
+- Not that we know of, unless you were unaware that some of 
+  the bugs fixed were in fact bugs and had written a script
+  to expect that behaviour as normal.  (Read the bug fixes
+  below to be sure.)
+
+### NEW FEATURES
+
+- Support of multiple-at-the-same-time engines that exist in
+  some mods (but not in stock, as far as we can tell).  Stock
+  contains single engines in a part, and multi-mode engines
+  in a part (where only one of the engines in the part is
+  active at a time, i.e. wet/dry mode engines or jet/rocket
+  mode engines).  But some mods contain parts that have more
+  than one engine in them that are selected *at the same time*,
+  rather than toggle-switched like the stock multi-mode engines.
+  One example is the RD-108 engine that the RealEngines mod
+  provides.  Its main "straight" engines are one Engine Module,
+  and its smaller "gimbal" engines around the edge are a second
+  Engine Module.  Both modules are active at once and need their
+  information aggregated to work with kOS's "an engine part is
+  just one module" system.  This PR does so.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2498)
+  **Special thanks to first time contributer RCrockford for doing
+  all the legwork on this**.
+
+### BUG FIXES
+
+- The behaviour of ``LIST ENGINES`` in regards to multi-mode engines
+  was restored to what it was supposed to have been.  Becuase of a
+  small change KSP made, it's been wrong since KSP 1.5, apparently.
+  Prior to KSP 1.5 it worked correctly by giving a list that contains
+  one entry in the LIST ENGINES per engine. But since then it has been
+  returning 3 duplicate instances in the list per each multi-mode engine.
+  This release fixes it, and the previous correct behavior is restored
+  (just returning one, not three).
+  The problem was discovered during regression testing of
+  the [pull request](https://github.com/KSP-KOS/KOS/pull/2498),
+  so the fix is inside that same pull request.
+- kOS could be rendered completely inert and broken if other mods not
+  under kOS's control had broken DLL files.  Specifically, kOS would
+  abort partway through initializing itself if any other DLL file in the
+  entire KSP game had failed to load during the KSP loading screen.  kOS
+  has a "reflection" walk through all the classes that hadn't accounted
+  for the fact that .net apparently keeps a null stub of a class in memory
+  after a class fails to load, rather than it just not existing at all
+  like one would expect.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2492)
+  (This was discovered with KSP 1.7 because KSP 1.7 broke some other
+  mod's DLLs making them not load, but the problem was actually there
+  all along waiting for some DLL file to trigger it.)
+- Reworking the position of the Connectivity Manager Dialog box.
+  Our exploratory reverse-engineering of just what the undocumented
+  arguments to KSP's MultiOptionDialog mean, which was used to move the
+  box to fix [issue 2456](https://github.com/KSP-KOS/KOS/issues/2456)
+  were still wrong.  They didn't do exactly what we thought they did.
+  (The misinterpretation became relevant when the player has UI scaling
+  set higher than 100% and that pushed the dialog box off screen.)
+  **Thanks to contributor madman2003 for doing more reverse-engineering
+  on this and submitting the fix.**
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2493)
+- Fix to bug where kOS scripts could no longer ``SET TARGET`` to a
+  Celestial Body and could only set targets to vessels or parts.
+  This bug was introduced in the previous release of kOS by a
+  hamfisted typing error while fixing the fact that Body wasn't
+  serializable.  It was an error that unfortunately didn't result
+  in any noticable problem when compiling or testing, as it 
+  *only* removed the Body's declaration that "I am the kind of class
+  that knows how to be a target" and it affected nothing else.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2501)
+- Several small documentation edits:
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2503),
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2505),
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2506)
+- Trying to toggle the ``panels`` value on or off would result
+  in infinite log spam if the ship contained a fixed undeployable
+  solar panel like the OX-STAT.  kOS was watching for the existence
+  of ModuleDeployableSolarPanel to see if the part could be deployed
+  or not, but apparently at some point KSP started defining all
+  solar panels as having ModuleDeployableSolarPanel, even if they're
+  not actually deployable.  Now kOS doesn't treat the panel as
+  deployable unless it also has its animation property defined in
+  addition to claiming to be a ModuleDeployableSolarPanel.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2504)
+
+
+# v1.1.7.0 Lets get Serial
+
+Mostly fixes.  The motivation for this release is to get fixes
+out to the public before KSP 1.7 comes.
+
+Built for KSP 1.6.1
+
+### BREAKING CHANGES
+
+- Compatibility for the old Infernal Robotics is officially removed
+  in favor of support for the "IR Next" mod.
+
+### NEW FEATURES
+
+- Support for the "IR Next" mod. (The only infernal robotics
+  mod was no longer being updated anyway and didn't work on
+  KSP 1.6.1.  But IR Next, although not officially released yet,
+  does work on 1.6.1, so we switched to that.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2354)
+- More types are now serializable as messages or JSON files:
+  Notevalue, Direction, RGBAcolor, and HSVAcolor.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2466)
+- ``CORE:TAG`` is now settable
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2472)
+- ``KUNIVERSE:PAUSE`` suffix added.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2477)
+- Added a new ``TIME(seconds)`` Constructor to make a 
+  ``Timespan`` out of a Universal timestamp.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2478)
+- New ``LIST FONTS.`` feature so the user can see which font
+  names are loaded into Unity for use in user GUIs.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2481)
+
+### BUG FIXES
+
+- Several documentation alterations:
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2442)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2446)
+- kOS would throw a Nullref if a script tried to check for a CommNet
+  connection to a vessel that has been classified as type "debris".
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2447)
+- Sometimes kOS broke the Space Center, making the buildings impossible
+  to click on.  This was caused by input locks not letting go when the
+  terminal is open while the kOS physical part gets exploded.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2443)
+- Fix to the kOS icon being broken (showing just a purple square) in Blizzy
+  Toolbar mod.
+  [pull request(https://github.com/KSP-KOS/KOS/pull/2454)
+- GeoPosition was written improperly in messages or JSON files.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2460)
+- The "hue" part of HSV colors was never quite implemented properly from
+  when it was first introduced. (It was mapping all hue numbers down
+  into just 1/6th of the full range of hues, so greens and blues
+  were not available.)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2462)
+- When using the message queue system while Remote Tech is installed,
+  you could not send messages to vessels far away outside the load
+  distance bubble (i.e. 2.5km-ish).  This is fixed.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2457)
+- Vecdraws were incapable of drawing dark colors like black because they
+  were using an additive-only shader.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2468)
+- Fix a case where cooked steering from the terminal refused to let go if
+  a subsequent kerboscript error is typed into the same terminal.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2471)
+- If "run once" was used, and the system chose not to run the program
+  because it was already run, it was possible for the stack to get
+  corrupted in a way that confused defaulted parameters to programs.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2476)
+- Fixed Multimode engine bug that was introduced in v1.1.6.1.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2479)
+- Moved kOS dialog box to a new position to fix a clickthrough
+  problem that caused you to secretly pick a kOS connectivity
+  manager without realizing it when you click on things in the
+  Remote Tech dialog box.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2480)
+
+# v1.1.6.3 Folder Path Protection
+
+Built for KSP 1.6.1
+
+This is a patch for protecting against some kinds of file folder
+access that concerned us for those people using kOS to set up
+"Twitch Plays kOS" streams.
+
+### BUG FIX:
+
+If you currently have a "Twitch Plays kOS" stream, or plan to
+set up one in the future, PLEASE see this writup:
+
+    https://github.com/KSP-KOS/KOS/issues/2439
+
+
+# v1.1.6.2 Quickfix (Image Files to DDS)
+
+Built for KSP 1.6.1
+
+Nothing but a quick patch to v1.1.6.0.
+
+### BUG FIX
+
+The v1.1.6.0 update resized a few of the PNG images used
+in the GUI panels, which exposed a bug that only manifests
+on some graphics cards.  KSP converts PNGs to DDS format
+upon loading them, and appears to use the Direct3D graphics
+driver to do so.  Older graphics cards refuse to do that
+conversion on images that aren't exactly expected sizes.
+We were just "lucky" that this never happened in the past
+with the image sizes we were using.  Converting them to
+DDS ourselves and shipping them that way, we bypass this
+problem because the user's own graphics drivers aren't
+responsible for doing the conversion.
+
+# v1.1.6.1 Quickfix (MAXTHRUST air pressure)
+
+Built for KSP 1.6.1
+
+Nothing but a quick patch to v1.1.6.0.
+
+### BUG FIX
+
+v1.1.6.1 had a flaw in MAXTHRUST, AVAILABLETHRUST,
+and engine ISP calculations that always calculated them
+as if your ship was in vacuum even when it's not.  This
+was deemed an important enough problem to warrant a
+quick-fix release.
+
+# v1.1.6.0 It's been too long without a release.
+
+Built for KSP 1.6.1
+
+It's been a long time without a release.  We kept putting it off until
+"that one more thing" was merged in, and there was always "that one more
+thing", again and again, that kept putting off the release more and more.
+Eventually we decided to release what we had since there's so many fixes
+the public weren't getting.
+
+This release incorporates 50 separate Pull Requests from many individuals.
+As always, thanks to everyone who contributed over the last year.  (Has it
+really been that long?  Almost.)
+
+### BREAKING CHANGES:
+
+(None that we know of, but this is a big update so we could have missed
+something.)
+
+### BUG FIXES:
+
+- Was reading POSITIONAT() from the wrong orbit patch when getting a
+  prediction for the moment when a patch transition should occur.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2253)
+- Stage:resources gave wrong values in cases of stages without a decoupler.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2256)
+- Several documentation clarifications.  See individual links below for
+  more details:
+  - [dead links on Vector doc page](https://github.com/KSP-KOS/KOS/pull/2269)
+  - [a typo](https://github.com/KSP-KOS/KOS/pull/2300)
+  - [a spelling error](https://github.com/KSP-KOS/KOS/pull/2333)
+  - [sphinx old code deprecated](https://github.com/KSP-KOS/KOS/pull/2339)
+  - [HUDtext style corner documented wrong](https://github.com/KSP-KOS/KOS/pull/2340)
+  - [cleanup gh-pages branch having source in it](https://github.com/KSP-KOS/KOS/pull/2342)
+  - [Mention Simulate in BG needed](https://github.com/KSP-KOS/KOS/pull/2368)
+  - [SKID clarification](https://github.com/KSP-KOS/KOS/pull/2388)
+  - [Error in basic tutorial example](https://github.com/KSP-KOS/KOS/pull/2392)
+  - [Removed old obsolete notices](https://github.com/KSP-KOS/KOS/pull/2401)
+- Fixed error detecting VT100 terminals in telnet (used wrong substring compare).
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2273)
+- Fixed bug of multiple ON triggers melting their "prev value" trackers together
+  if the triggers came from the same line of source code.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2275)
+- Fix a bug with RemoteTech autopilot premissions getting lost.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2276)
+- WHEN/ON statements inside anonymous functions now working properly.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2291)
+- (attempt to?) Fix problem where bootfiles weren't copied in Mission Builder
+  missions.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2292)
+- Massive refactor of how trigger interrupts work, that allows them
+  to behave more consistently and allows more complex layering
+  of triggers.  (In this CHANGELOG, This is listed both under "new
+  features" and "bug fixes" since it's both.)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2296)
+- Fix stack alignment bug that happened when a bootfile runs a
+  KSM file that locks steering:
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2298)
+- Fix: Locked steering refusing to let go if the IPU boundary
+  lands right in the middle of kOS's steering trigger (kOS
+  not having "atomic sections", the ordering of the opcodes
+  mattered a lot). 
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2302)
+- Fix: Undocking/Decoupling while a kOS unit on the lower half
+  has locked steering used to cause the lower stage's kOS unit to spin
+  the upper stage's steering and never let go of it.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2315)
+- Fix: Hyperbolic orbits now allow negative anomaly angles to
+  represent measures "prior to periapsis" correctly.  (Previously
+  it represented a value like -10 degrees as +350 degrees, which
+  doesn't make sense if the orbit isn't closed and won't come back
+  around.)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2325)
+- Fix: E,S, and R keys now working right in text editor widget in
+  Linux port. kOS incorrectly prevented the E, S, and R keys from
+  passing through to other widgets before.  This error was only
+  noticed on Linux because Unity3d's event queue passes through
+  widgets in a different order on different OS ports.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2334)
+- kOS will now let go of the steering when the program dies
+  due to a lack of electricity.  This allows your vessel to get some
+  power recharging again when it starts getting sun on the solar panels
+  again.  (Previously the steering deflection was still present, meaning
+  the ship needed a recharge rate higher than the power the torque wheel
+  expended in order to actually get a net positive recharge.)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2336)
+- Fix: UTF-8 text files that contain a BOM (Byte Order Mark) are now
+  parse-able.  (Notepad.exe was really the only text editor that
+  triggered this problem.  No other editors put a BOM in UTF-8 files.)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2353)
+- Fix: If you lock steering from the interpreter, then also run
+  a program that locks steering, that program used to bomb with error
+  when it tried to exit and return to the interpreter.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2357)
+- Fix: Using the meta-key AltGr on some European keyboards was causing
+  garbage to appear in the terminal interactive prompt, but only on the
+  Linux port of Unity3d.  Again, Unity3d does weird things in its Linux
+  port for no apparent reason (they're not because of the OS itself),
+  that we have to accommodate.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2386)
+- Fix: Bulkhead profile added to part files.  It is required for the
+  new KSP 1.6.x filtering "by diameter" feature.  Without it, the VAB
+  could hang forever when a user clicks that tab.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2386)
+- Fix: Map View no longer rotates with the vessel when focus is on
+  the terminal window.  It's a stock bug that required a bit of 
+  trial and error to pin down, then an ugly kludge to keep it from
+  being triggered.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2403)
+- Fix: OrbitInfo:TOSTRING now prints the body name properly.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2408)
+
+
+### NEW FEATURES:
+
+- Made several of the string parameters to GUI widgets optional.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2293)
+- Massive refactor of how trigger interrupts work, that allows them
+  to behave more consistently and allows more complex layering
+  of triggers.  (In this CHANGELOG, This is listed both under "new
+  features" and "bug fixes" since it's both.)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2296)
+- Allow "close window" button to exist on the RMB menu.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2329)
+- New suffixes to read if Body has a surface, an ocean, or children.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2355)
+- Added KUNIVERSE:REALTIME and KUNIVERSE:REALWORLDTIME.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2362)
+- Vecdraw now can set updater delegates directly in its constructor.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2369)
+- All command codes in a script text file will be treated as whitespace
+  now, just in case there's any in there junking up the file.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2374)
+- Add a "CID" Craft-ID suffix to Parts.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2378)
+- Constant:G is now being calculated from the game itself instead of
+  being a manually typed constant in the kOS source.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2410)
+- New value, Constant:g0 - useful for ISP calculations.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2415)
+- Make terminal's "dim" unfocused mode stop being transparent, for extra
+  readability.  (It was never transparent enough to usefully see through,
+  but it was transparent enough to make it hard to see the letters.)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2417)
+- GUI tooltips now implemented.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2414)
+- Fix: All the image files and texture files are using .DDS format now,
+  and both X and Y resolutions for them have been resized to exact powers
+  of 2, which DDS requires.  (Unity loads DDS files faster, and they
+  form a smaller download ZIP).
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2389)
+
+
 # v1.1.5.2 Basic Compatibilty for KSP 1.4.1
 
 Built for KSP 1.4.1

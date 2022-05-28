@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace kOS.Safe.Execution
 {
@@ -23,9 +23,13 @@ namespace kOS.Safe.Execution
         Normal = 0,
         /// <summary>A one-shot callback such as is common with GUI code</summary>
         CallbackOnce = 10,
-        /// <summary>A trigger that tends to keep getting scheduled to happen
+        /// <summary>A user-made trigger that tends to keep getting scheduled to happen
         /// again as soon as the previous call to it is completed.</summary>
-        Recurring = 20
+        Recurring = 20,
+        /// <summary>These are recurring triggers too, but they absolutely MUST always fire
+        /// because they are used for the coooked controls like LOCK THROTTLLE and
+        /// LOCK STEERING</summary>
+        RecurringControl = 30
     }
 }
 

@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Compilation;
+using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Persistence;
@@ -322,11 +322,9 @@ namespace kOS.Safe.Function
             VolumeItem volumeItem = volume.Open(path);
 
             if (volumeItem == null)
-            {
-                throw new KOSException("File or directory does not exist: " + path);
-            }
-
-            ReturnValue = volumeItem;
+                ReturnValue = new BooleanValue(false);
+            else
+                ReturnValue = volumeItem;
         }
     }
 

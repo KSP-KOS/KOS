@@ -45,6 +45,10 @@ KUniverse 4th wall methods
           - :struct:`String`
           - Get
           - Returns the name of this vessel's editor, "SPH" or "VAB".
+        * - :meth:`PAUSE`
+          - None
+          - Method
+          - Pauses KSP, bringing up the "Escape Menu".
         * - :attr:`CANQUICKSAVE`
           - :struct:`Boolean`
           - Get
@@ -109,6 +113,10 @@ KUniverse 4th wall methods
           - None
           - Method
           - Launch a new instance of the given craft at the given site.
+        * - :meth:`LAUNCHCRAFTWITHCREWFROM(template, crewlist, site)`
+          - None
+          - Method
+          - Launch a new instance of the given craft with this crew list at the given site.
         * - :meth:`CRAFTLIST()`
           - :struct:`List` of :struct:`CraftTemplate`
           - Method
@@ -174,6 +182,36 @@ KUniverse 4th wall methods
     - "SPH" for things built in the space plane hangar,
     - "VAB" for things built in the vehicle assembly building.
     - "" (empty :struct:`String`) for cases where the vehicle cannot remember its editor (when KUniverse:CANREVERTTOEDITOR is false.)
+
+.. method:: KUniverse:PAUSE()
+
+    :access: Method
+    :type: None.
+
+    Pauses Kerbal Space Program, bringing up the same pause menu that would
+    normally appear when you hit the "Escape" key.
+
+    **Warning:** *NO lines of Kerboscript code can run while the game is
+    paused!!!  If you call this, you will be stopping your script there
+    until a human being clicks "resume" on the pause menu.*
+
+    kOS is designed to thematically act like a computer that lives *inside*
+    the game universe. That means it stops when the game clock stops, for
+    the same reason a bouncing ball stops when the game clock stops.
+
+    Until a human being resumes the game by clicking the Resume button
+    in the menu, your script will be stuck.  This makes it impossible
+    to have the program run code that decides when to un-pause the game.
+    Once the Resume button is clicked, then the program will
+    continue where it left off, just after the point where it called
+    ``KUniverse:PAUSE().``.
+
+    Note, if you use Control-C in the terminal to kill the program,
+    that *will* work while the game is paused like this.  If you make
+    the mistake of having your script keep re-pausing the game every
+    time the game resumes (i.e. you call ``Kuniverse:PAUSE()``
+    again and again in a loop), then using Control-C in the terminal
+    can be a way to break out of this problem.
 
 .. attribute:: KUniverse:CANQUICKSAVE
 
@@ -285,8 +323,9 @@ KUniverse 4th wall methods
     have passed (25 x 60 x 60).  It doesn't care how that translates into
     minutes, hours, days, and years until showing it on screen to the player.)
 
-    This setting also affects how values from :struct:Timespan calculate
-    the ``:hours``, ``:days``, and ``:years`` suffixes.
+    This setting also affects how values from :struct:`TimeSpan` and
+    :struct:`TimeStamp` calculate the ``:hours``, ``:days``, and ``:years``
+    suffixes.
 
     Note that this setting is not settable.  This decision was made because
     the main stock KSP game only ever changes the setting on the main
@@ -331,7 +370,26 @@ KUniverse 4th wall methods
 
     **NOTE:** The craft will be launched with the KSP default crew assignment,
     as if you had clicked launch from the editor without manually adjusting the
-    crew.
+    crew.  To pick which crew are on the craft use
+    :meth:`Kuniverse:LAUNCHCRAFTWITHCREWFROM()` instead.
+
+    **NOTE:** Due to how KSP handles launching a new craft, this will end the
+    current program even if the currently active vessel is located within
+    physics range of the launch site.
+
+.. method:: KUniverse:LAUNCHCRAFTWITHCREWFROM(template, crewlist, site)
+
+    :parameter template: :struct:`CraftTemplate` craft template object.
+    :parameter crewlist: :struct:`List` of :struct:`String` kerbal names.
+    :parameter site: :struct:`String` launch site name.
+
+    Launch a new instance of the given :struct:`CraftTemplate` with the given crew
+    manifest from the given launch site.
+    Valid values for site include ``"RUNWAY"`` and ``"LAUNCHPAD"``.
+
+    If any of the kerbal names you use in the ``crewlist`` parameter don't
+    exist in the game, there will be no error.  Instead that name just 
+    gets ignored in the list.
 
     **NOTE:** Due to how KSP handles launching a new craft, this will end the
     current program even if the currently active vessel is located within

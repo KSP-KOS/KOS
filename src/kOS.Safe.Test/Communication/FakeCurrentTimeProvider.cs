@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using kOS.Safe.Communication;
 
 namespace kOS.Safe.Test.Communication
@@ -10,6 +10,11 @@ namespace kOS.Safe.Test.Communication
         public double CurrentTime()
         {
             return FakeTime;
+        }
+
+        public void SetTime(double newTime)
+        {
+            FakeTime = newTime;
         }
 
     }

@@ -21,6 +21,10 @@ namespace kOS.Safe.Encapsulation
         int TerminalFontDefaultSize {get; set; }
         string TerminalFontName {get; set; }
         double TerminalBrightness {get; set; }
+        int TerminalDefaultWidth { get; set; }
+        int TerminalDefaultHeight { get; set; }
+        bool AllowClobberBuiltIns { get; set; }
+        bool SuppressAutopilot { get; set; }
 
 
         /// <summary>

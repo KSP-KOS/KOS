@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using UnityEngine;
 using kOS.Safe.Exceptions;
@@ -71,6 +71,8 @@ namespace kOS.Suffixed.Widget
             AddSuffix("FONTSIZE", new SetSuffix<ScalarIntValue>(() => ReadOnly.fontSize, value => Writable.fontSize = value));
             AddSuffix("RICHTEXT", new SetSuffix<BooleanValue>(() => ReadOnly.richText, value => Writable.richText = value));
             AddSuffix("ALIGN", new SetSuffix<StringValue>(GetAlignment, SetAlignment));
+
+            AddSuffix("WORDWRAP", new SetSuffix<BooleanValue>(() => ReadOnly.wordWrap, value => Writable.wordWrap = value));
         }
 
         StringValue GetFont()

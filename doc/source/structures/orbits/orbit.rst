@@ -15,7 +15,57 @@ Whenever you get the :struct:`Orbit` of a :struct:`Vessel`, be aware that its ju
 
 .. warning::
 
-    Some of the parameters listed here come directly from KSP's API and there is a bit of inconsistency with whether it uses radians or degrees for angles. As much as possible we have tried to present everything in kOS as degrees for consistency, but some of these may have slipped through. If you see any of these being reported in radians, please make a bug report.
+    **Radians vs Degrees**
+
+    Some of the parameters listed below come directly from KSP's API and there is a bit of inconsistency with whether it uses radians or degrees for angles. As much as possible we have tried to present everything in kOS as degrees for consistency, but some of these may have slipped through. If you see any of these being reported in radians, please make a bug report.
+
+
+Creation
+--------
+
+It is possible to make an :struct`Orbit` object without it coming from
+either a :struct:`Vessel` or a :struct:`Body`.  This could be useful when
+you want to be able to get information about a hypothetical orbit that
+an object may someday end up in, even when its not in that orbit now.  One
+case where this may be useful is when trying to place a satellite into a
+desired final orbit (say to fufill a contract).  You may wish to see some
+information about that destination orbit even though no particular objects
+are in that orbit at the moment.  To do this you can create an :struct`Orbit`
+object using the ``CREATEORBIT()`` function described below.  You pass in
+the Keplerian parameters that define the orbit (which are typically the
+values you will see on a contract parameter for putting satellites into
+desired orbits), and the orbit object you make can then be queried for things
+like its apoapsis, periapsis, etc.
+
+.. function:: CREATEORBIT(inc, e, sma, lan, argPe, mEp, t, body)
+
+    :parameter inc: (scalar) inclination, in degrees.
+    :parameter e: (scalar) eccentricity
+    :parameter sma: (scalar) semi-major axis
+    :parameter lan: (scalar) longitude of ascending node, in degrees.
+    :parameter argPe: (scalar) argument of periapsis
+    :parameter mEp: (scalar) mean anomaly at epoch, in degrees.
+    :parameter t: (scalar) epoch
+    :parameter body: (:struct:`Body`) body to orbit around
+    :return: :struct:`Orbit`
+
+    This creates a new orbit around the Mun::
+
+        SET myOrbit TO CREATEORBIT(0, 0, 270000, 0, 0, 0, 0, Mun).
+
+It is also possible to create an orbit from a position and a velocity using the ``CREATEORBIT()`` function described below:
+
+.. function:: CREATEORBIT(pos, vel, body, ut)
+
+    :parameter pos: (:struct:`Vector`) position (relative to center of body, NOT the usual relative to current ship most positions in kOS use.  Remember to offset a kOS position from the body's position when calculating what to pass in here.)
+    :parameter vel: (:struct:`Vector`) velocity
+    :parameter body: (:struct:`Body`) body to orbit around
+    :parameter ut: (scalar) time (universal)
+    :return: :struct:`Orbit`
+
+    This creates a new orbit around Kerbin::
+
+        SET myOrbit TO CREATEORBIT(V(2295.5, 0, 0), V(0, 0, 70000 + Kerbin:RADIUS), Kerbin, 0).
 
 Structure
 ---------
@@ -86,13 +136,16 @@ Structure
           - The current velocity
         * - :attr:`NEXTPATCH`
           - :struct:`Orbit`
-          - Next :struct:`Orbit`
+          - Next :struct:`Orbit` (building upgrade needed)
         * - :attr:`NEXTPATCHETA`
           - :struct:`Scalar`
-          - ETA to next :struct:`Orbit`
+          - ETA to next :struct:`Orbit` (building upgrade needed)
+        * - :attr:`ETA`
+          - :struct:`ORBITETA`
+          - ETA object showing time to Pe, Ap, and transition. (building upgrade needed)
         * - :attr:`HASNEXTPATCH`
           - :struct:`Boolean`
-          - Has a next :struct:`Orbit`
+          - Has a next :struct:`Orbit` (building upgrade needed)
 
 .. attribute:: Orbit:NAME
 
@@ -306,12 +359,20 @@ Structure
     :type: :struct:`Orbit`
     :access: Get only
 
+    *In career this requires a building upgrade* - In career mode where
+    buildings are not upgraded at the start, this suffix won't be allowed
+    until your tracking station is upgraded a level.
+
     When this orbit has a transition to another orbit coming up, this suffix returns the next Orbit patch after this one. For example, when escaping from a Mun orbit into a Kerbin orbit from which you will escape and hit a Solar orbit, then the current orbit's :attr:`:NEXTPATCH <Orbit:NEXTPATCH>` will show the Kerbin orbit, and ``:NEXTPATCH:NEXTPATCH`` will show the solar orbit. The number of patches into the future that you can peek depends on your conic patches setting in your **Kerbal Space Program** Settings.cfg file.
 
 .. attribute:: Orbit:NEXTPATCHETA
 
     :type: :struct:`Scalar`
     :access: Get only
+
+    *In career this requires a building upgrade* - In career mode where
+    buildings are not upgraded at the start, this suffix won't be allowed
+    until your tracking station is upgraded a level.
 
     When this orbit has a transition to another orbit coming up, this suffix
     returns the eta to that transition.  This is different from the value
@@ -320,10 +381,23 @@ Structure
     multiple patch transitions.  The number of patches depends on your conic
     patches setting in your **Kerbal Space Program** Settings.cfg file.
 
+.. attribute:: Orbit:ETA
+
+    :type: :struct:`OrbitEta`
+    :access: Get only
+
+    Returns the :struct:`OrbitEta` object that lets you access the number of
+    seconds to important events in this orbit (periapsis, apoapsis, and transition
+    to next orbit).
+
 .. attribute:: Orbit:HASNEXTPATCH
 
     :type: :struct:`Boolean`
     :access: Get only
+
+    *In career this requires a building upgrade* - In career mode where
+    buildings are not upgraded at the start, this suffix won't be allowed
+    until your tracking station is upgraded a level.
 
     If :attr:`:NEXTPATCH <Orbit:NEXTPATCH>` will return a valid patch, this is true. If :attr:`:NEXTPATCH <Orbit:NEXTPATCH>` will not return a valid patch because there are no transitions occurring in the future, then :attr:`HASNEXTPATCH <Orbit:HASNEXTPATCH` will be false.
 

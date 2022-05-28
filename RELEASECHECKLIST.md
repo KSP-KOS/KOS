@@ -5,11 +5,12 @@ older version of KSP instead of the most recent version.  Please
 note where it says "(*backport*)" below if you are doing a backport.
 
 ### Pre-Build
-- [ ] Update AssemblyInfo for kOS project
-- [ ] Update AssemblyInfo for kOS.Safe project
-- [ ] Update AssemblyInfo for kOS.Safe.Test project
+- [ ] Assign the new kOS version number to `AssemblyVersion` and `AssemblyFileVersion` in these C# files:
+  - [ ] In `src/kOS/Properties/AssemblyInfo.cs`
+  - [ ] In `src/kOS.Safe/Properties/AssemblyInfo.cs`
+  - [ ] In `src/kOS.Safe.Test/Properties/AssemblyInfo.cs`
 - [ ] Update `Resources\GameData\kOS\kOS.version`
-- [ ] Update `CHANGELOG.MD`
+- [ ] Update `CHANGELOG.MD``
 - [ ] If this is a normal release for the most recent KSP version supported:
   - [ ] Update `doc\source\conf.py`
   - [ ] Update `doc\source\changes.rst`
@@ -18,13 +19,15 @@ note where it says "(*backport*)" below if you are doing a backport.
   - [ ] Above changes merged into `backport-for-KSPversion.number.here` branch on repo instead of into `develop` branch.
 
 ### Build
-- [ ] Build kOS solution in release mode
+- [ ] Configure build for "Release" mode not Debug
+- [ ] Fully rebuild kOS solution (clean, then build) in release mode
 - [ ] Run all unit tests
 - [ ] Ensure that all required resources are in place (module manager) (*backport* : Note if this is a backport you may need to use an older modulemanager DLL here.)
-- [ ] Create zip file with a root starting in the `\Resources\` directory
-- [ ] The zip file should have the GameData folder in the root
+- [ ] Create a ZIP file that has only the `GameData` folder of the `\Resources\` directory in it.  Make sure the ZIP's folder structure starts with `GameData`.
+  - In other words, filenames like this: `GameData\kOS\kOS.version`, NOT this `\kOS\kOS.version`.)
 - [ ] Name the zip file with the following pattern `kOS-v<major>.<minor>.<patch>.<build>.zip` (eg kOS-v1.1.3.0.zip )
-- [ ] Build the documentation in `\docs\` (unless this is a *backport*)
+- [ ] Build the documentation (unless this is a *backport*) with:
+  - (if Linux or Mac: `cd docs ; make clean ; make html`)
 - [ ] Push the contents of `docs\gh-pages` to the gh-pages branch of KSP-KOS/KOS and verify correct rendering (unless this is a *backport*)
 
 ### Post-Build
@@ -41,8 +44,8 @@ note where it says "(*backport*)" below if you are doing a backport.
 - [ ] Update [Forum thread](https://forum.kerbalspaceprogram.com/index.php?/topic/165628-13-kos-v1130-kos-scriptable-autopilot-system/) with new change log, release date and version
 - [ ] Post update in the forum thread
 - [ ] Post update on [reddit board](http://www.reddit.com/r/kos)
-- [ ] Push the gh-pages branch to KSP-KOS/KOS_DOC (unless this is a *backport*)
+- [ ] Push the gh-pages branch to KSP-KOS/KOS_DOC (unless this is a *backport*). Note, if the previous push of gh-pages to KOS_DOC was done in a sloppy fashion, the attempt to do this push may result in a ridiculously large number of merge conflicts that are too much to handle.  It may be necessecary to force this push with ``git push -f``.  (The merge conflicts can happen because Sphinx re-numbers the HTML ID tags across all the HTML elements in all the files when you insert one thing.  Thus git thinks you've changed *everything* on each new commit of gh-pages.)
 
 ### CKAN FIX (Post-Post-Build)
 
-- [ ] If this is a *backport* it will generally be necessary to manually make a PR on the CKAN repo to fix up its .ckan file for kOS.  (CKAN's automated scanning of the version file only sees what's in our Master branch, and can't see backports that we keep out of the master branch.)
+- [ ] If this is a *backport* it will be important to check up on CKAN's database over the next day to ensure you didn't confuse it.  If all the version numbers were entered correctly in kOS.version in the branch from which you made the ZIP, it should be okay, but if not, there is potential to really mess it up.  Double check that the CKAN database is giving correct information.  (That is, that the backport is NOT being offered on new KSP installations, and is only being offered on older ones.)

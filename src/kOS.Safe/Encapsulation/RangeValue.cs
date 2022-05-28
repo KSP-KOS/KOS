@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Serialization;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace kOS.Safe
 {
     [kOS.Safe.Utilities.KOSNomenclature("Range")]
-    public class RangeValue : EnumerableValue<ScalarIntValue, Range>
+    public class RangeValue : EnumerableValue<ScalarValue, Range>
     {
         private const string DumpStart = "start";
         private const string DumpStop = "stop";
@@ -24,17 +24,17 @@ namespace kOS.Safe
         {
         }
 
-        public RangeValue(int stop)
+        public RangeValue(ScalarValue stop)
             : this(DEFAULT_START, stop)
         {
         }
 
-        public RangeValue(int start, int stop)
+        public RangeValue(ScalarValue start, ScalarValue stop)
             : this(start, stop, DEFAULT_STEP)
         {
         }
 
-        public RangeValue(int start, int stop, int step)
+        public RangeValue(ScalarValue start, ScalarValue stop, ScalarValue step)
             : base(Label, new Range(start, stop, step))
         {
             InitializeRangeSuffixes();
@@ -45,6 +45,15 @@ namespace kOS.Safe
             }
         }
 
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static RangeValue CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new RangeValue();
+            newObj.LoadDump(d);
+            return newObj;
+        }
+
+
         private void InitializeRangeSuffixes()
         {
             AddSuffix("START", new NoArgsSuffix<ScalarValue>(() => InnerEnumerable.Start));
@@ -54,9 +63,9 @@ namespace kOS.Safe
 
         public override void LoadDump(Dump dump)
         {
-            InnerEnumerable.Stop = Convert.ToInt32(dump[DumpStop]);
-            InnerEnumerable.Start = Convert.ToInt32(dump[DumpStart]);
-            InnerEnumerable.Step = Convert.ToInt32(dump[DumpStep]);
+            InnerEnumerable.Stop = Convert.ToDouble(dump[DumpStop]);
+            InnerEnumerable.Start = Convert.ToDouble(dump[DumpStart]);
+            InnerEnumerable.Step = Convert.ToDouble(dump[DumpStep]);
         }
 
         public override Dump Dump()
@@ -78,31 +87,31 @@ namespace kOS.Safe
         }
     }
 
-    public class Range : IEnumerable<ScalarIntValue>
+    public class Range : IEnumerable<ScalarValue>
     {
-        public int Start { get; set; }
-        public int Stop { get; set; }
-        public int Step { get; set; }
+        public ScalarValue Start { get; set; }
+        public ScalarValue Stop { get; set; }
+        public ScalarValue Step { get; set; }
 
-        public Range(int start, int stop, int step)
+        public Range(ScalarValue start, ScalarValue stop, ScalarValue step)
         {
             Start = start;
             Stop = stop;
             Step = step;
         }
 
-        IEnumerator<ScalarIntValue> IEnumerable<ScalarIntValue>.GetEnumerator()
+        IEnumerator<ScalarValue> IEnumerable<ScalarValue>.GetEnumerator()
         {
             if (Start < Stop)
             {
-                for (int i = Start; i < Stop; i += Step)
+                for (ScalarValue i = Start; i < Stop; i += Step)
                 {
                     yield return i;
                 }
             }
             else
             {
-                for (int i = Start; i > Stop; i -= Step)
+                for (ScalarValue i = Start; i > Stop; i -= Step)
                 {
                     yield return i;
                 }

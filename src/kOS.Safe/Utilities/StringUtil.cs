@@ -1,4 +1,6 @@
-﻿using System;
+using System;
+using System.Text.RegularExpressions;
+
 namespace kOS.Safe
 {
     /// <summary>
@@ -6,6 +8,11 @@ namespace kOS.Safe
     /// </summary>
     public static class StringUtil
     {
+        // The IDENTIFIER Regex Pattern is taken directly from kRISC.tpg - if it changes there, it should change here too.
+        // (It's messy to actually use the pattern directly from Scanner.cs because that requires an instance
+        // of SharedObjects to get an instance of the compiler.)
+        private static Regex identifierPattern = new Regex(@"\G(?:[_\p{L}]\w*)");
+
         public static bool EndsWith(string str, string suffix)
         {
             int strLen = str.Length;
@@ -47,6 +54,17 @@ namespace kOS.Safe
             }
 
             return true;
+        }
+
+        public static bool IsValidIdentifier(string str)
+        {
+            Match match = identifierPattern.Match(str);
+
+            // Only counts as a valid identifier if the entire string matched without
+            // any leftover characters at the end of it:
+            if (match.Success && match.Length == str.Length)
+                return true;
+            return false;
         }
     }
 }

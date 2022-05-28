@@ -1,4 +1,4 @@
-﻿using kOS.Execution;
+using kOS.Execution;
 using kOS.Safe.Compilation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Execution;

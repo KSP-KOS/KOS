@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Collections.Generic;
 using System.Text;
@@ -81,7 +81,7 @@ namespace kOS.UserIO
             // Regularly check to see if the CPU list has changed while the user was sitting
             // on the menu.  If so, reprint it:
             // Querying the list of CPU's can be a little expensive, so don't do it too often:
-            if (DateTime.Now > lastMenuQueryTime + TimeSpan.FromMilliseconds(1000))
+            if (DateTime.Now > lastMenuQueryTime + System.TimeSpan.FromMilliseconds(1000))
             {
                 if (forceMenuReprint)
                     telnetServer.Write((char)UnicodeCommand.CLEARSCREEN); // if we HAVE to reprint - do so on a clear screen.
@@ -168,6 +168,10 @@ namespace kOS.UserIO
         {
             localMenuBuffer.Remove(0,localMenuBuffer.Length); // Any time the menu is reprinted, clear out any previous buffer text.
             telnetServer.ReadAll(); // Consume and throw away any readahead typing that preceeded the printing of this menu.
+
+            kOSProcessor.SortAllInstances();
+            CPUListChanged();
+
 
             forceMenuReprint = false;
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 
@@ -34,9 +34,12 @@ namespace kOS.Safe.Function
     {
         public override void Execute(SafeSharedObjects shared)
         {
+            int argCount = CountRemainingArgs(shared);
+            double decimals = (argCount < 2) ? 0 : GetInt(PopValueAssert(shared));
             double argument = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
-            double result = Math.Floor(argument);
+            double pow10 = Math.Pow(10, decimals);
+            double result = Math.Floor(argument * pow10) / pow10;
             ReturnValue = result;
         }
     }
@@ -46,9 +49,12 @@ namespace kOS.Safe.Function
     {
         public override void Execute(SafeSharedObjects shared)
         {
+            int argCount = CountRemainingArgs(shared);
+            double decimals = (argCount < 2) ? 0 : GetInt(PopValueAssert(shared));
             double argument = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
-            double result = Math.Ceiling(argument);
+            double pow10 = Math.Pow(10, decimals);
+            double result = Math.Ceiling(argument * pow10) / pow10;
             ReturnValue = result;
         }
     }
@@ -184,8 +190,28 @@ namespace kOS.Safe.Function
 
         public override void Execute(SafeSharedObjects shared)
         {
+            int argCount = CountRemainingArgs(shared);
+            string key;
+            if (argCount == 0)
+                key = "\0\0\0"; // the default key is a value nobody would use for their own key
+            else
+                key = PopValueAssert(shared).ToString();
             AssertArgBottomAndConsume(shared);
-            ReturnValue = Structure.FromPrimitive(random.NextDouble());
+            ReturnValue = Structure.FromPrimitive(Utilities.KOSMath.GetRandom(key));
+        }
+    }
+
+    [Function("randomseed")]
+    public class FunctionRandomSeed : SafeFunctionBase
+    {
+        private readonly Random random = new Random();
+
+        public override void Execute(SafeSharedObjects shared)
+        {
+            int seed = GetInt(PopValueAssert(shared));
+            string key = PopValueAssert(shared).ToString();
+            AssertArgBottomAndConsume(shared);
+            Utilities.KOSMath.StartRandomFromSeed(key, seed);
         }
     }
 

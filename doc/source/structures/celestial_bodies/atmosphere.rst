@@ -36,6 +36,21 @@ A Structure closely tied to :struct:`Body` A variable of type :struct:`Atmospher
         * - :attr:`HEIGHT`
           - :ref:`scalar <scalar>` (m)
           - advertised atmospheric height
+        * - :attr:`MOLARMASS`
+          - :ref:`scalar <scalar>` (kg/mol)
+          - The molecular mass of the atmosphere's gas
+        * - :attr:`ADIABATICINDEX`
+          - :ref:`scalar <scalar>`
+          - The Adiabatic index of the atmosphere's gas
+        * - :attr:`ADBIDX`
+          - :ref:`scalar <scalar>`
+          - Short alias for :attr:`ADIABATICINDEX`
+        * - :meth:`ALTITUDETEMPERATURE(altitude)`
+          - :ref:`scalar <scalar>`
+          - Estimate of temperature at the given altitude.
+        * - :meth:`ALTTEMP(altitude)`
+          - :ref:`scalar <scalar>`
+          - Short alias for :attr:`ALTITUDETEMPERATURE`
 
 
 .. attribute:: Atmosphere:BODY
@@ -97,6 +112,42 @@ A Structure closely tied to :struct:`Body` A variable of type :struct:`Atmospher
 
     The altitude at which the atmosphere is "officially" advertised as ending. (actual ending value differs, see below).
 
+.. attribute:: Atmosphere:MOLARMASS
+
+    :type: :ref:`scalar <scalar>`
+    :acces: Get only
+
+    The Molecular Mass of the gas the atmosphere is composed of.
+    Units are in kg/mol.
+    `Wikipedia Molar Mass Explanation <https://en.wikipedia.org/wiki/Molar_mass>`_.
+
+.. attribute:: Atmosphere:ADIABATICINDEX
+
+    :type: :ref:`scalar <scalar>`
+    :access: Get only
+
+    The Adiabatic index of the gas the atmosphere is composed of.
+    `Wikipedia Adiabatic Index Explanation <https://en.wikipedia.org/wiki/Heat_capacity_ratio>`_.
+
+.. attribute:: Atmosphere:ADBIDX
+
+    :type: :ref:`scalar <scalar>`
+    :access: Get only
+
+    A shorthand alias for :attr:ADIABATICINDEX.
+
+.. method:: Atmosphere:ALTITUDETEMPERATURE(altitude)
+
+    :parameter: altitude (:ref:`scalar <scalar>`) the altitude to query temperature at.
+    :access: Get only
+
+    Returns an approximate atmosphere temperature on this world at the given altitude.
+    Note that this is only approximate because the temperature will vary depending
+    on the sun position in the sky (i.e. your latitude and what time of day it is).
+
+.. method:: Atmosphere:ALTTEMP(altitude)
+
+   A shorthand alias for :meth:ALTITUDETEMPERATURE(altitude).
 
 Deprecated Suffix
 -----------------

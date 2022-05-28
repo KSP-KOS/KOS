@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using UnityEngine;
 using kOS.Safe.Execution;
@@ -31,9 +31,13 @@ namespace kOS.Suffixed.Widget
         /// </summary>
         private static List<WeakReference> instances = new List<WeakReference>();
 
-        public GUIWidgets(int width, int height, SharedObjects shared) : base(Box.LayoutMode.Vertical,new WidgetStyle(new GUIStyle(HighLogic.Skin.window)))
+        public string RecentToolTip { get; private set; }
+
+        public GUIWidgets(int width, int height, SharedObjects shared) : base(Box.LayoutMode.Vertical, new WidgetStyle(new GUIStyle(HighLogic.Skin.window)))
         {
             instances.Add(new WeakReference(this));
+
+            RecentToolTip = "";
             var gskin = UnityEngine.Object.Instantiate(HighLogic.Skin);
 
             // Use Arial as that's what used in other KSP GUIs
@@ -47,12 +51,12 @@ namespace kOS.Suffixed.Widget
             gskin.toggle.padding = new RectOffset(27, 0, 3, 0);
             gskin.toggle.margin = new RectOffset(4, 4, 4, 4);
             gskin.toggle.border = new RectOffset(40, 0, 40, 0);
-            gskin.toggle.normal.background = GameDatabase.Instance.GetTexture("kOS/GFX/toggle_bg_normal", false);
-            gskin.toggle.onNormal.background = GameDatabase.Instance.GetTexture("kOS/GFX/toggle_bg_onnormal", false);
-            gskin.toggle.active.background = GameDatabase.Instance.GetTexture("kOS/GFX/toggle_bg_onactive", false);
-            gskin.toggle.onActive.background = GameDatabase.Instance.GetTexture("kOS/GFX/toggle_bg_active", false);
-            gskin.toggle.hover.background = GameDatabase.Instance.GetTexture("kOS/GFX/toggle_bg_hover", false);
-            gskin.toggle.onHover.background = GameDatabase.Instance.GetTexture("kOS/GFX/toggle_bg_onhover", false);
+            gskin.toggle.normal.background = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_toggle_bg_normal", false);
+            gskin.toggle.onNormal.background = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_toggle_bg_onnormal", false);
+            gskin.toggle.active.background = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_toggle_bg_onactive", false);
+            gskin.toggle.onActive.background = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_toggle_bg_active", false);
+            gskin.toggle.hover.background = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_toggle_bg_hover", false);
+            gskin.toggle.onHover.background = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_toggle_bg_onhover", false);
 
             // Get back the style we made in the base initializer.
             gskin.window = ReadOnlyStyle;
@@ -95,16 +99,21 @@ namespace kOS.Suffixed.Widget
             popupMenuItem.margin.top = 0;
             popupMenuItem.margin.bottom = 0;
             popupMenuItem.normal.background = null;
-            popupMenuItem.hover.background = GameDatabase.Instance.GetTexture("kOS/GFX/popupmenu_bg_hover", false);
+            popupMenuItem.hover.background = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_popupmenu_bg_hover", false);
             popupMenuItem.hover.textColor = Color.black;
             popupMenuItem.active.background = popupMenuItem.hover.background;
             popupMenuItem.stretchWidth = true;
             styles.Add(popupMenuItem);
 
-            var labelTipOverlay = new GUIStyle(gskin.label);
-            labelTipOverlay.name = "labelTipOverlay";
-            labelTipOverlay.normal.textColor = new Color(0.6f, 0.6f, 0.6f, 0.2f);
-            styles.Add(labelTipOverlay);
+            var emptyHintStyle = new GUIStyle(gskin.label);
+            emptyHintStyle.name = "emptyHintStyle";
+            emptyHintStyle.normal.textColor = new Color(0.6f, 0.6f, 0.6f, 0.8f);
+            styles.Add(emptyHintStyle);
+
+            var tipDisplayLabel = new GUIStyle(gskin.label);
+            tipDisplayLabel.name = "tipDisplay";
+            tipDisplayLabel.normal.textColor = new Color(1f, 1f, 1f, 1f);
+            styles.Add(tipDisplayLabel);
 
             gskin.customStyles = styles.ToArray();
 
@@ -112,7 +121,7 @@ namespace kOS.Suffixed.Widget
 
             var go = new GameObject("kOSGUIWindow");
             window = go.AddComponent<GUIWindow>();
-            window.AttachTo(width,height,"",shared,this);
+            window.AttachTo(width, height, "", shared, this);
             InitializeSuffixes();
         }
 
@@ -137,6 +146,15 @@ namespace kOS.Suffixed.Widget
             GUI.skin = Skin.Skin;
             base.DoGUI();
             GUI.skin = prevSkin;
+
+            // Unity3d calls the OnGui() hook in multiple passes, not all of which do all the work.
+            // The tooltip stuff only gets populated correctly in the "Repaint" pass of OnGUI().  On
+            // the other passes, don't trust what it says.  This technique means the tooltip will
+            // be populated one "pass" out of date (In the pass where the mouse is hovering over the
+            // widget, RecentToolTip will populate, and in the NEXT OnGUI Repaint it will actually
+            // be displayed.  But nobody should notice that delay.)
+            if (Event.current.type == EventType.Repaint && GUI.tooltip != null)
+                RecentToolTip = GUI.tooltip;
         }
 
         private void InitializeSuffixes()
@@ -146,6 +164,7 @@ namespace kOS.Suffixed.Widget
             AddSuffix("DRAGGABLE", new SetSuffix<BooleanValue>(() => window.draggable, value => window.draggable = value));
             AddSuffix("EXTRADELAY", new SetSuffix<ScalarValue>(() => window.extraDelay, value => window.extraDelay = value));
             AddSuffix("SKIN", new SetSuffix<WidgetSkin>(() => Skin, value => Skin = value));
+            AddSuffix("TOOLTIP", new Suffix<StringValue>(() => RecentToolTip));
         }
 
         public int LinkCount { get; set; }

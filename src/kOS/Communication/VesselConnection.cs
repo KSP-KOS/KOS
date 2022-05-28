@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Communication;
@@ -6,7 +6,6 @@ using UnityEngine;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Serialization;
 using kOS.Suffixed;
-using TimeSpan = kOS.Suffixed.TimeSpan;
 using kOS.Safe.Communication;
 
 namespace kOS.Communication

@@ -26,7 +26,46 @@ namespace kOS.Safe.Encapsulation
             get { return gravConstBeingUsed; }
             set { gravConstBeingUsed = value; }
         }
-        
+
+        private static double avogadroFromWIKI = 6.02214076 * Math.Pow(10, 23);
+        private static double avogadroBeingUsed = avogadroFromWIKI;
+
+        /// <summary>
+        /// This is a public property so that it can be overridden by KSP-aware code elsewhere:
+        /// (ConstantValue is in kOS.Safe, so we can't see KSP's G value from here.)
+        /// </summary>
+        public static double AvogadroConst
+        {
+            get { return avogadroBeingUsed; }
+            set { avogadroBeingUsed = value; }
+        }
+
+        private static double boltzmannFromWiki = 1.380649 * Math.Pow(10, -23);
+        private static double boltzmannBeingUsed = boltzmannFromWiki;
+
+        /// <summary>
+        /// This is a public property so that it can be overridden by KSP-aware code elsewhere:
+        /// (ConstantValue is in kOS.Safe, so we can't see KSP's G value from here.)
+        /// </summary>
+        public static double BoltzmannConst
+        {
+            get { return boltzmannBeingUsed; }
+            set { boltzmannBeingUsed = value; }
+        }
+
+        private static double idealGasFromWiki = 8.31446215324;
+        private static double idealGasBeingUsed = idealGasFromWiki;
+
+        /// <summary>
+        /// This is a public property so that it can be overridden by KSP-aware code elsewhere:
+        /// (ConstantValue is in kOS.Safe, so we can't see KSP's G value from here.)
+        /// </summary>
+        public static double IdealGasConst
+        {
+            get { return idealGasBeingUsed; }
+            set { idealGasBeingUsed = value; }
+        }
+
         private static double g0 = 9.80665; // Typically accepted Earth value. Will override with KSP game value.
         public static double G0
         {
@@ -49,6 +88,10 @@ namespace kOS.Safe.Encapsulation
             
             // 180/pi :
             AddGlobalSuffix<ConstantValue>("RADTODEG", new StaticSuffix<ScalarValue>(() => 57.295779513082320876798154814105, "radians to degrees"));
+
+            AddGlobalSuffix<ConstantValue>("AVOGADRO", new StaticSuffix<ScalarValue>(() => AvogadroConst));
+            AddGlobalSuffix<ConstantValue>("BOLTZMANN", new StaticSuffix<ScalarValue>(() => BoltzmannConst));
+            AddGlobalSuffix<ConstantValue>("IDEALGAS", new StaticSuffix<ScalarValue>(() => IdealGasConst));
         }
 
         public override string ToString()

@@ -23,7 +23,7 @@ constants about the universe that you may find handy in your math operations.  P
 
     * - :global:`G`
       - Newton's Gravitational Constant.
-    * - :global:`g0
+    * - :global:`g0`
       - gravity acceleration (m/s^2) at sea level on Earth.
     * - :global:`E`
       - Base of the natural log (Euler's number)
@@ -39,6 +39,12 @@ constants about the universe that you may find handy in your math operations.  P
       - Conversion constant: Degrees to Radians.
     * - :global:`RadToDeg`
       - Conversion constant: Radians to Degrees.
+    * - :global:`Avogadro`
+      - Avogadro's Constant
+    * - :global:`Boltzmann`
+      - Boltzmann's Constant
+    * - :global:`IdealGas`
+      - The Ideal Gas Constant
 
 
 .. global:: Constant:G
@@ -56,7 +62,7 @@ constants about the universe that you may find handy in your math operations.  P
     within that game universe, and instead varies from one sphere
     of influence to the next.  Such a universe would be breaking
     some laws of physics by a lot, but it is technically possible
-    in the game's data model.  Due to this strange misfeature in
+    in the game's data model.  Due to this strange feature in
     the game's data model, it is probably safer to always have
     your scripts use the body's Mu in your formulas instead of
     explicitly doing mass*G to derive it.
@@ -85,19 +91,19 @@ constants about the universe that you may find handy in your math operations.  P
     contains an inherent conversion from mass to weight
     that basically means, "what would this mass of fuel
     have weighed at g0?".  Some kind of official standard
-    value of g0 is needed to use ISP to predict truly
-    accurately how much fuel will be burned in a scenario.
+    value of g0 is needed to use ISP properly to predict
+    how much fuel will be burned in a scenario.
 
-    In pretty much any other calculation other than using
-    ISP in the Rocketry Equation, you should probably
-    not use g0 and instead calculate your local gravity
-    more precisely based on your actual radius to the body
-    center.  Not only because this is more accurate, but
-    because the g0 you see here is NOT the g0 you would
-    actually have on Kerbin's sea level.  It's the g0 on
-    Earth, which is what the game's ISP numbers are using.
-    Kerbin's sea level g0 is ever so slightly different
-    from Earth's g0 (but not by much.)
+    In pretty much any other calculation you do in your kOS
+    scripts, other than when using ISP in the Rocketry Equation,
+    you should probably not use g0 and instead calculate your
+    local gravity more precisely based on your actual radius to
+    the body center.  Not only because this is more accurate, but
+    because the g0 you see here is NOT the g0 you would actually
+    have on Kerbin's sea level.  It's the g0 on Earth, which is
+    what the game's ISP numbers are using.  Kerbin's sea level
+    g0 is ever so slightly different from Earth's g0 (but not
+    by much.)
 
     ::
 
@@ -199,6 +205,30 @@ constants about the universe that you may find handy in your math operations.  P
         PRINT "A radian is:".
         PRINT 1 * constant:RadToDeg + " degrees".
 
+.. global:: Constant:Avogadro
+
+    Avogadro's Constant.
+
+    This value can be used in calculating atmospheric properties for drag purposes,
+    which can be a rather advanced topic.
+    `(Avogadro's constant Wikipedia Page) <https://en.wikipedia.org/wiki/Avogadro_constant>`_.
+
+.. global:: Constant:Boltzmann
+
+    Boltzmann Constant.
+
+    This value can be used in calculating atmospheric properties for drag purposes,
+    which can be a rather advanced topic.
+    `(Boltzmann constant Wikipedia Page) <https://en.wikipedia.org/wiki/Boltzmann_constant>`_.
+
+.. global:: Constant:IdealGas
+
+    Ideal Gas Constant.
+
+    This value can be used in calculating atmospheric properties for drag purposes,
+    which can be a rather advanced topic.
+    `(Ideal Gas Constant Wikipedia Page) <https://en.wikipedia.org/wiki/Gas_constant>`_.
+
 .. _math functions:
 .. index:: Mathematical Functions
 
@@ -206,22 +236,25 @@ Mathematical Functions
 ----------------------
 
 ==================== ===================================================
- Function             Description
+ Function            Description
 ==================== ===================================================
- :func:`ABS(a)`       absolute value
- :func:`CEILING(a)`   round up
- :func:`FLOOR(a)`     round down
- :func:`LN(a)`        natural log
- :func:`LOG10(a)`     log base 10
- :func:`MOD(a,b)`     modulus
- :func:`MIN(a,b)`     minimum
- :func:`MAX(a,b)`     maximum
- :func:`RANDOM()`     random number
- :func:`ROUND(a)`     round to whole number
- :func:`ROUND(a,b)`   round to nearest place
- :func:`SQRT(a)`      square root
- :func:`CHAR(a)`      character from unicode
- :func:`UNCHAR(a)`    unicode from character
+:func:`ABS(a)`       absolute value
+:func:`CEILING(a)`   round up
+:func:`CEILING(a,b)` round up to nearest place
+:func:`FLOOR(a)`     round down
+:func:`FLOOR(a,b)`   round down to nearest place
+:func:`LN(a)`        natural log
+:func:`LOG10(a)`     log base 10
+:func:`MOD(a,b)`     modulus
+:func:`MIN(a,b)`     return a or b, whichever is lesser.
+:func:`MAX(a,b)`     return a or b, whichever is greater.
+:func:`RANDOM()`     random fractional number between 0 and 1.
+:func:`RANDOMSEED()` Start a new random sequence with a seed.
+:func:`ROUND(a)`     round to whole number
+:func:`ROUND(a,b)`   round to nearest place
+:func:`SQRT(a)`      square root
+:func:`CHAR(a)`      character from unicode
+:func:`UNCHAR(a)`    unicode from character
 ==================== ===================================================
 
 .. function:: ABS(a)
@@ -236,11 +269,23 @@ Mathematical Functions
 
         PRINT CEILING(1.887). // prints 2
 
+.. function:: CEILING(a,b)
+
+    Rounds up to the nearest place value::
+
+        PRINT CEILING(1.887,2). // prints 1.89
+
 .. function:: FLOOR(a)
 
     Rounds down to the nearest whole number::
 
         PRINT FLOOR(1.887). // prints 1
+
+.. function:: FLOOR(a,b)
+
+    Rounds down to the nearest place value::
+
+        PRINT CEILING(1.887,2). // prints 1.88
 
 .. function:: LN(a)
 
@@ -274,11 +319,137 @@ Mathematical Functions
 
         PRINT MAX(0,100). // prints 100
 
-.. function:: RANDOM()
+.. function:: RANDOM(key) // parameter 'key' is optional.
 
-    Returns a random floating point number in the range [0,1]::
+    Returns the next random floating point number from a random
+    number sequence.  The result is always in the range [0..1]
+
+    This uses what is called a `pseudo-random number generator
+    <https://en.wikipedia.org/wiki/Pseudorandom_number_generator>`_.
+
+    For basic usage you can leave the ``key`` parameter off and it
+    works fine, like so:
+
+    Example, basic usage::
 
         PRINT RANDOM(). //prints a random number
+        PRINT "Let's roll a 6-sided die 10 times:".
+        FOR n in range(0,10) {
+
+          // To make RANDOM give you an integer in the range [0..n-1], you do this:
+          // floor(n*RANDOM()).
+
+          // So for example : a die giving values from 1 to 6 is like this:
+          print (1 + floor(6*RANDOM())).
+        }
+
+    The parameter ``key`` is a string, and it's used when you want
+    to track separate psuedo-random number sequences by name and 
+    have them be deterministically repeatable. *Like other
+    string keys in kOS, this key is case-insensitive.*
+
+    * If you leave the parameter ``key`` off, you get the next number
+      from a default unnamed random number sequencer.
+    * If you supply the parameter ``key``, you get the next number
+      from a named random number sequencer.  You can invent however
+      many keys you like and each one is a new random number sequencer.
+      Supplying a key probably only means something if you have
+      previously used :func:`RANDOMSEED(key, seed)`.
+
+    The following example is more complex and shows the repeatability
+    of the "random" sequence using seeds.  For most simple uses you
+    probably don't need to bother with this.  If words like "random
+    number seed" are confusing, you can probably skip this part and 
+    get by just fine with the basic usage shown above.  (Explaining
+    how pseudorandom number generators work is a bit beyond this
+    page - check the wikipedia link above to learn more.)
+
+    Example, deterministic usage::
+
+        // create two different random number sequencers, both starting
+        // with seed 12345 so they should have the same exact values.
+        RANDOMSEED("sequence1",12345).
+        RANDOMSEED("sequence2",12345).
+
+        PRINT "5 coin flips from SEQUENCE 1:".
+        FOR n in range(0,5) {
+          print choose "heads" if RANDOM("sequence1") < 0.5 else "tails".
+        }
+
+        PRINT "5 coin flips from SEQUENCE 2, which should be the same:".
+        FOR n in range(0,5) {
+          print choose "heads" if RANDOM("sequence2") < 0.5 else "tails".
+        }
+
+        PRINT "5 more coin flips from SEQUENCE 1:".
+        FOR n in range(0,5) {
+          print choose "heads" if RANDOM("sequence1") < 0.5 else "tails".
+        }
+
+        PRINT "5 more coin flips from SEQUENCE 2, which should be the same:".
+        FOR n in range(0,5) {
+          print choose "heads" if RANDOM("sequence2") < 0.5 else "tails".
+        }
+
+
+.. function:: RANDOMSEED(key, seed)
+
+    No Return Value.
+
+    Initializes a new random number sequence from a seed, giving it a
+    key name you can use to refer to it in future calls to :func:`RANDOM(key)`
+
+    Using this you can make psuedo-random number sequences that can be
+    re-run using the same seed to get the same result a second time.
+
+    Parameter ``key`` is a string - a name you can use to refer to this
+    random series later.  Calls to ``RANDOMSEED`` that use different
+    keys actually cause different new random number sequences to be
+    created that are tracked separately from each other. *Like other
+    string keys in kOS, this key is case-insensitive.*
+
+    Parameter ``seed`` is an integer - an initial value to cause a
+    deterministic series of random numbers to come out of the random
+    function.
+
+    Whenever you call ``RANDOMSEED(key, seed)``, it starts a new
+    random number sequence using the integer seed you give it, and names
+    that sequence with a string key you can use later to retrive
+    values from that random number sequence.
+
+    Example::
+
+      RANDOMSEED("generator A",1000).
+      RANDOMSEED("generator B",1000).
+      PRINT "Generators A and B should emit identical ".
+      PRINT "sequences because they both started at seed 1000.".
+      PRINT "3 numbers from Generator A:".
+      PRINT floor(RANDOM("generator A")*100).
+      PRINT floor(RANDOM("generator A")*100).
+      PRINT floor(RANDOM("generator A")*100).
+      PRINT "3 numbers from Generator B - they should ".
+      PRINT "be the same as above:".
+      PRINT floor(RANDOM("generator B")*100).
+      PRINT floor(RANDOM("generator B")*100).
+      PRINT floor(RANDOM("generator B")*100).
+
+      PRINT "Resetting generator A but not Generator B:".
+      RANDOMSEED("generator A",1000).
+
+      PRINT "3 more numbers from Generator A which got reset".
+      PRINT "so they should match the first ones again:".
+      PRINT floor(RANDOM("generator A")*100).
+      PRINT floor(RANDOM("generator A")*100).
+      PRINT floor(RANDOM("generator A")*100).
+      PRINT "3 numbers from Generator B, which didn't get reset:".
+      PRINT floor(RANDOM("generator B")*100).
+      PRINT floor(RANDOM("generator B")*100).
+      PRINT floor(RANDOM("generator B")*100).
+
+    
+    If you call ``RANDOMSEED`` using the same key as a key you already used
+    before, it just forgets the previous random number sequence and starts
+    a new one using the new seed.  You can use this to reset the sequence.
 
 .. function:: ROUND(a)
 

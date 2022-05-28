@@ -10,7 +10,7 @@ A :struct:`List` is a type of :ref:`Structure <features structures>` that stores
 ``FOR`` Loop
 ------------
 
-Lists need to be iterated over sometimes, to help with this we have the :ref:`FOR loop, explained on the flow control page <for>`. The ``LIST`` Command comes in 4 forms:
+Lists need to be iterated over sometimes, to help with this we have the :ref:`FOR loop, explained on the flow control page <for>`. The ``LIST`` Command comes in 3 forms:
 
 1. ``LIST.``
     When no parameters are given, the LIST command is exactly equivalent to the command::
@@ -22,9 +22,6 @@ Lists need to be iterated over sometimes, to help with this we have the :ref:`FO
 
 3. ``LIST ListKeyword IN YourVariable.``
     This variant takes the items that would otherwise have been printed to the terminal screen, and instead makes a :struct:`List` of them in ``YourVariable``, that you can then iterate over with a :ref:`FOR loop <for>` if you like.
-
-4. ``LIST ListKeyword FROM SomeVessel IN YourVariable.``
-    This variant is just like variant (3), except that it gives a list of the items that exist on some other vessel that might not necessarily be the current :ref:`CPU_vessel <cpu vessel>`.
 
 Available Listable Keywords
 ---------------------------
@@ -43,6 +40,14 @@ These generate :struct:`lists <List>` that are not dependent on which :struct:`V
 ``Targets``
     :struct:`List` of possible target :struct:`Vessels <Vessel>`
 
+.. _list_fonts:
+
+``Fonts``
+    :struct:`List` of available font names for use with either
+    :attr:`Style:FONT` or :attr:`Skin:FONT`. This list includes
+    everything that has been loaded into the game engine by
+    either KSP itself or by one of the KSP mods you have installed.
+
 Vessel Lists
 ^^^^^^^^^^^^
 
@@ -56,6 +61,8 @@ These generate :struct:`lists <List>` of items on the :struct:`Vessel`:
     :struct:`List` of :struct:`Parts <Part>`
 ``Engines``
     :struct:`List` of :struct:`Engines <Engine>`
+``RCS``
+    :struct:`List` of :struct:`RCS <RCS>`
 ``Sensors``
     :struct:`List` of :struct:`Sensors <Sensor>`
 ``Elements``
@@ -110,8 +117,8 @@ Here are some more examples::
     PRINT "The mass of the whole solar system is " + totMass.
 
     // Adds variable foo that contains a list of
-    // resources for my currently target vessel
-    LIST RESOURCES FROM TARGET IN foo.
+    // resources for my current vessel
+    LIST RESOURCES IN foo.
     FOR res IN foo {
         PRINT res:NAME. // Will print the name of every
                         // resource in the vessel

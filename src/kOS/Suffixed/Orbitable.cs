@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Utilities;
 using UnityEngine;
@@ -13,7 +13,7 @@ namespace kOS.Suffixed
     /// or a moon.
     /// </summary>
     [kOS.Safe.Utilities.KOSNomenclature("Orbitable")]
-    public abstract class Orbitable : SerializableStructure, IHasSharedObjects
+    public abstract class Orbitable : SerializableStructure
     {
         protected Orbitable(SharedObjects shareObj) : this()
         {
@@ -40,7 +40,7 @@ namespace kOS.Suffixed
         /// </summary>
         /// <returns>
         ///   The coords of the object in the
-        ///   <a href='http://ksp-kos.github.io/KOS_DOC/summary_topics/coordframe/raw/'>
+        ///   <a href='https://ksp-kos.github.io/KOS_DOC/math/ref_frame.html#origin-position'>
         ///     raw (cpu-vessel-origin)
         ///   </a>
         ///   coordinate reference frame.
@@ -52,7 +52,7 @@ namespace kOS.Suffixed
         /// </summary>
         /// <returns>
         ///   A OrbitableVelocity object containing both the orbital and surface velocities of the object in the
-        ///   <a href='http://ksp-kos.github.io/KOS_DOC/summary_topics/coordframe/raw/'>
+        ///   <a href='https://ksp-kos.github.io/KOS_DOC/math/ref_frame.html#origin-position'>
         ///     raw (soi-body-origin)
         ///   </a>
         ///   coordinate reference frame.
@@ -69,12 +69,12 @@ namespace kOS.Suffixed
         /// <param name="timeStamp">The universal time of the future prediction</param>
         /// <returns>
         ///   The coords of the object in the
-        ///   <a href='http://ksp-kos.github.io/KOS_DOC/summary_topics/coordframe/raw/'>
+        ///   <a href='https://ksp-kos.github.io/KOS_DOC/structures/orbits/orbitablevelocity.html'>
         ///     raw (cpu-vessel-origin)
         ///   </a>
         ///   coordinate reference frame.
         /// </returns>
-        public abstract Vector GetPositionAtUT( TimeSpan timeStamp );
+        public abstract Vector GetPositionAtUT( TimeStamp timeStamp );
 
         /// <summary>
         ///   Subclasses must override this method to return the OrbitableVelocity of this object at some
@@ -86,12 +86,12 @@ namespace kOS.Suffixed
         /// <param name="timeStamp">The universal time of the future prediction</param>
         /// <returns>
         ///   A OrbitableVelocity object containing both the orbital and surface velocities of the object in the
-        ///   <a href='http://ksp-kos.github.io/KOS_DOC/summary_topics/coordframe/raw/'>
+        ///   <a href='https://ksp-kos.github.io/KOS_DOC/math/ref_frame.html#origin-position'>
         ///     raw (soi-body-origin)
         ///   </a>
         ///   coordinate reference frame.
         /// </returns>
-        public abstract OrbitableVelocity GetVelocitiesAtUT( TimeSpan timeStamp );
+        public abstract OrbitableVelocity GetVelocitiesAtUT( TimeStamp timeStamp );
 
         /// <summary>
         ///   Return the Orbit that the object will be in at some point in the future.

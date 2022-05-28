@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using kOS.Safe.Execution;
 using kOS.Safe.Encapsulation;
@@ -48,6 +48,11 @@ namespace kOS.Safe.Test.Opcode
         }
 
         public void PushNewScope(Int16 scopeId, Int16 parentScopeId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DropBackPriority()
         {
             throw new NotImplementedException();
         }

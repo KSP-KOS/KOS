@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using kOS.Safe.Binding;
 using kOS.Safe.Compilation;
@@ -251,15 +251,15 @@ namespace kOS.Safe.Execution
         }
 
         /// <summary>
-        /// Take all the pending triggers that have been added by AddPendingTrigger,
-        /// and finally make them become active.  To be called by the CPU when it
-        /// decides that enough mainline code has had a chance to happen that it's
-        /// okay to enable triggers again.
+        /// Take only those pending triggers that AddPendingTrigger added who's
+        /// Priority is higher than the given value, and make them become active.
+        /// ("active" here means "called on the callstack like a subroutine.")
         /// </summary>
-        public void ActivatePendingTriggers()
+        /// <param name="aboveThis"></param>
+        public void ActivatePendingTriggersAbovePriority(InterruptPriority aboveThis)
         {
-            Triggers.AddRange(TriggersToInsert);
-            TriggersToInsert.Clear();
+            Triggers.AddRange(TriggersToInsert.FindAll(t => t.Priority > aboveThis));
+            TriggersToInsert.RemoveAll(t => t.Priority > aboveThis);
         }
 
         public bool HasActiveTriggersAtLeastPriority(InterruptPriority pri)

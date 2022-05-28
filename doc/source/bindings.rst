@@ -220,16 +220,18 @@ Further details are found on the `ALT page <structures/vessels/alt.html>`__ .
 ETA ALIAS
 ---------
 
-The special variable `ETA <structures/vessels/eta.html>`__ gives you
+The special variable :ref:`ETA <eta>` gives you
 access to a few time predictions:
 
 ETA:APOAPSIS
 
 ETA:PERIAPSIS
 
+ETA:NEXTNODE
+
 ETA:TRANSITION
 
-Further details are found on the `ETA page <structures/vessels/eta.html>`__ .
+Further details are found on the :ref:`ETA page <eta>`.
 
 ENCOUNTER
 ---------
@@ -272,7 +274,7 @@ Variable Name                   Can Read     Can Set     Source    What it manag
 :global:`LEGS`                  yes          yes          kOS       The extended state of all landing legs
 :global:`CHUTES`                yes          yes          kOS       The armed state of all parachutes
 :global:`CHUTESSAFE`            yes          yes          kOS       The armed state of all "safe" parachutes
-:global:`PANELS`                yes          yes          kOS       The deployed state of solar panels
+:global:`PANELS`                yes          yes          kOS       The state of retractable solar panels
 :global:`RADIATORS`             yes          yes          kOS       The deployed state of radiators
 :global:`LADDERS`               yes          yes          kOS       The extended state of ladders
 :global:`BAYS`                  yes          yes          kOS       The opened state of payload/service bays
@@ -529,6 +531,35 @@ for this purpose.
 
 For Kerbals, it refers to a more arbitrary line in space, pointing at a fixed
 point in the firmament, also known as the "skybox".
+
+OPCODESLEFT
+---------
+
+This returns the amount of IPU that are left in this physics tick. This means
+that if you receive the value 20, you can run 20 more instructions. After this
+amount of instructions, other CPUs will run their instructions and then
+`TIME:SECONDS` will increase.
+
+OPCODESLEFT can be used to try to make sure you run a block of code in one
+physics tick. This is useful when working with vectors or when interacting
+with shared message queues. 
+
+To use:
+
+   // Will always wait the first time, becomes more accurate the second time.
+   GLOBAL OPCODESNEEDED TO 1000.
+   IF OPCODESLEFT < OPCODESNEEDED
+     WAIT 0.
+   LOCAL STARTIPU TO OPCODESLEFT.
+   LOCAL STARTTIME TO TIME:SECONDS.
+   
+   // your code here, make sure to keep the instruction count lower than your CONFIG:IPU
+   
+   IF STARTTIME = TIME:SECONDS {
+     SET OPCODESNEEDED TO STARTIPU - OPCODESLEFT.
+   } ELSE {
+     PRINT "Code is taking too long to execute. Please make the code shorter or raise the IPU.".
+   }
 
 Addons
 ------

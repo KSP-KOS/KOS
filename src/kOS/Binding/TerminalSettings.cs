@@ -1,9 +1,9 @@
-﻿using kOS.Safe.Binding;
+using kOS.Safe.Binding;
 using kOS.Safe.Encapsulation;
 
 namespace kOS.Binding
 {
-    [Binding]
+    [Binding("ksp")]
     public class TerminalSettings : Binding
     {
         private TerminalStruct terminalStructInstance = null;

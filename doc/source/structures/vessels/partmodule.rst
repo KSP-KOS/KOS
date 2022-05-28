@@ -140,6 +140,19 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
 
     WARNING: This suffix is only settable for parts attached to the :ref:`CPU Vessel <cpu vessel>`
 
+    SYMMETRY NOTE: There is one important difference between using
+    SETFIELD to set a field versus what happens when you use the mouse
+    to do it in the game's GUI.  In the GUI, often if the part is
+    in a 2x, 3x, 4x, 6x, or 8x symmetry group, setting a field on
+    one part will cause the other parts' fields to also change along
+    with it.  Generally that does NOT happen when you use kOS to set
+    the field.  If you want to set the same value to all the parts in
+    a symmetry group, you need to iterate over all the parts yourself
+    using the part's :attr:`Part::SYMMETRYCOUNT` suffix to see how
+    many symmetrical parts there are, and iterate over them with
+    :attr:`Part:SYMMETRYPARTNER(index)`, calling ``SETFIELD`` on
+    them one at a time.
+
 .. method:: PartModule:DOEVENT(name)
 
     :parameter name: (string) Name of the event

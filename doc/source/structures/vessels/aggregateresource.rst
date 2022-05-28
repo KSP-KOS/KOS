@@ -50,6 +50,9 @@ This is also the type returned by STAGE:RESOURCES ::
         * - :attr:`CAPACITY`
           - :ref:`scalar <scalar>`
           - Total amount when full
+        * - :attr:`DENSITY`
+          - :ref:`scalar <scalar>`
+          - Density of this resource
         * - :attr:`PARTS`
           - List
           - Parts containing this resource
@@ -75,6 +78,16 @@ This is also the type returned by STAGE:RESOURCES ::
     :type: :ref:`scalar <scalar>`
 
     What AMOUNT would be if the resource was filled to the top.
+
+.. attribute:: AggregateResource:DENSITY
+
+    :access: Get only
+    :type: :ref:`scalar <scalar>`
+
+    The density value of this resource, expressed in Megagrams f mass
+    per Unit of resource.  (i.e. a value of 0.005 would mean that each
+    unit of this resource is 5 kilograms.  Megagrams [metric tonnes] is
+    the usual unit that most mass in the game is represented in.)
 
 .. attribute:: AggregateResource:PARTS
 

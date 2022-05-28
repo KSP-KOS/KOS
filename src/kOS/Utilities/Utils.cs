@@ -1,9 +1,10 @@
-﻿using kOS.Safe.Utilities;
+using kOS.Safe.Utilities;
 using kOS.Suffixed;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Reflection;
+using System.IO;
 
 namespace kOS.Utilities
 {
@@ -300,6 +301,73 @@ namespace kOS.Utilities
                 true,
                 HighLogic.UISkin
                 );
+        }
+
+        /// <summary>
+        /// A wrapper around GameDatabase.Instance.GetTexture() that will
+        /// log an error to the Unity player log if the texture is not found.<br/>
+        /// (Without this wrapper GameDatabase.Instance.GetTexture() would just fail silently.)
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="normalMap"></param>
+        /// <returns>the texture if it worked, or null if it failed</returns>
+       public static Texture2D GetTextureWithErrorMsg(string path, bool asNormalMap)
+        {
+            // this whole thing may not be necessary, but it will work if the file exists
+            string myPath = Path.Combine(Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(Core).Assembly.Location), "../../")), path + ".dds");
+
+
+            // Texture2D result = GameDatabase.Instance.GetTexture(path, asNormalMap);
+
+            // I don't know what the hell KSP is doing, so use this instead
+            Texture2D result = LoadTextureDXT(myPath, TextureFormat.DXT5);
+
+            if (result == null)
+                SafeHouse.Logger.Log(string.Format(
+                    "Can't find or load texture called: {0}.dds or {0}.png", myPath));
+
+            return result;
+        }
+
+        // I don't know what the hell KSP is doing, so use this
+        // https://answers.unity.com/questions/555984/can-you-load-dds-textures-during-runtime.html
+        public static Texture2D LoadTextureDXT(string ddsFilePath, TextureFormat textureFormat)
+        {
+            Texture2D texture = null;
+            try
+            {
+                if(!File.Exists(ddsFilePath))
+                    SafeHouse.Logger.Log(string.Format(
+                        "File does not exist: ", ddsFilePath));
+
+                byte[] ddsBytes = System.IO.File.ReadAllBytes(ddsFilePath);
+
+                if (textureFormat != TextureFormat.DXT1 && textureFormat != TextureFormat.DXT5)
+                    SafeHouse.Logger.Log(string.Format(
+                        "Invalid TextureFormat.Only DXT1 and DXT5 formats are supported by this method at path: ", ddsFilePath));
+
+                byte ddsSizeCheck = ddsBytes[4];
+
+                if (ddsSizeCheck != 124)
+                    SafeHouse.Logger.Log(string.Format("Invalid DDS DXTn texture. Unable to read: {0}", ddsFilePath));  //this header byte should be 124 for DDS image files
+
+                int height = ddsBytes[13] * 256 + ddsBytes[12];
+                int width = ddsBytes[17] * 256 + ddsBytes[16];
+
+                int DDS_HEADER_SIZE = 128;
+                byte[] dxtBytes = new byte[ddsBytes.Length - DDS_HEADER_SIZE];
+                Buffer.BlockCopy(ddsBytes, DDS_HEADER_SIZE, dxtBytes, 0, ddsBytes.Length - DDS_HEADER_SIZE);
+
+                texture = new Texture2D(width, height, textureFormat, false);
+                texture.LoadRawTextureData(dxtBytes);
+                texture.Apply();
+            } 
+            catch (Exception ex)
+            {
+                SafeHouse.Logger.Log(string.Format("Exception in LoadTextureDXT: {0}", ex.ToString()));
+            }
+
+            return texture;
         }
     }
 }

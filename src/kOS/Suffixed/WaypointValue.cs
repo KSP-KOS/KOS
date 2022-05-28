@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using kOS.Utilities;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Exceptions;
 using FinePrint; // This is part of KSP's own DLL now.  The Waypoint info is in here.
 
 namespace kOS.Suffixed
@@ -15,11 +16,27 @@ namespace kOS.Suffixed
         protected SharedObjects Shared { get; set; }
         private static Dictionary<string,int> greekMap;
         
-        public WaypointValue(Waypoint wayPoint, SharedObjects shared)
+        private WaypointValue(Waypoint wayPoint, SharedObjects shared)
         {
             WrappedWaypoint = wayPoint;
             Shared = shared;
             InitializeSuffixes();
+        }
+
+        public static WaypointValue CreateWaypointValueWithCheck(Waypoint wayPoint, SharedObjects shared, bool failOkay)
+        {
+            string bodyName = wayPoint.celestialName;
+            CelestialBody bod = VesselUtils.GetBodyByName(bodyName);
+            if (bod == null)
+            {
+                if (failOkay)
+                    return null;
+                else
+                    throw new KOSInvalidArgumentException("WAYPOINT constructor", bodyName, "Body not found in this solar system");
+            }
+            WaypointValue wp = new WaypointValue(wayPoint, shared);
+            wp.CachedBody = bod;
+            return wp;
         }
 
         private void InitializeSuffixes()
@@ -35,6 +52,7 @@ namespace kOS.Suffixed
             AddSuffix("GROUNDED", new NoArgsSuffix<BooleanValue>(() => WrappedWaypoint.landLocked, "True if waypoint is actually glued to the ground.")); 
             AddSuffix("INDEX", new NoArgsSuffix<ScalarValue>(() => WrappedWaypoint.index, "Number of this waypoint if this is a grouped waypoint (i.e. alpha/beta/gamma..")); 
             AddSuffix("CLUSTERED", new NoArgsSuffix<BooleanValue>(() => WrappedWaypoint.isClustered, "True if this is a member of a cluster of waypoints (i.e. alpha/beta/gamma.."));
+            AddSuffix("ISSELECTED", new NoArgsSuffix<BooleanValue>(() => Shared.Vessel.navigationWaypoint == WrappedWaypoint, "True if navigation has been activated on this waypoint."));
         }
 
         private static void InitializeGreekMap()

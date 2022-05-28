@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Sound;
+using kOS.Safe.Sound;
 using UnityEngine;
 
 namespace kOS.Sound

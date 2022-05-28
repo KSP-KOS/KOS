@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
 using kOS.Suffixed;
@@ -16,6 +16,8 @@ namespace kOS.Control
 
         public bool Enabled { get; private set; }
         public float Value { get; set; }
+
+        public bool FightsWithSas { get { return false; } }
 
         public WheelSteeringManager(Vessel vessel)
         {
@@ -95,7 +97,7 @@ namespace kOS.Control
             return internalVessel.ctrlState.mainThrottle;
         }
 
-        void IFlightControlParameter.UpdateAutopilot(FlightCtrlState c)
+        void IFlightControlParameter.UpdateAutopilot(FlightCtrlState c, ControlTypes ctrlLock)
         {
             if (!Enabled) return;
 
@@ -109,6 +111,11 @@ namespace kOS.Control
             {
                 c.wheelSteer = -Mathf.Clamp(Value / -10, -1, 1);
             }
+        }
+
+        bool IFlightControlParameter.SuppressAutopilot(FlightCtrlState c)
+        {
+            return Enabled;
         }
 
         void IFlightControlParameter.UpdateValue(object value, SharedObjects shared)

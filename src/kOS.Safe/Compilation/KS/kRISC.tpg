@@ -2,6 +2,10 @@
 
 // Terminals
 // ===================================================
+
+// When these change, please also update the list of keywords and
+// operators in the documentation: doc/source/language/syntax.rst
+
 //Math
 PLUSMINUS    -> @"(\+|-)";
 MULT         -> @"\*";
@@ -65,6 +69,7 @@ REBOOT       -> @"reboot\b";
 SHUTDOWN     -> @"shutdown\b";
 FOR          -> @"for\b";
 UNSET        -> @"unset\b";
+CHOOSE       -> @"choose\b";
 
 //Generic
 BRACKETOPEN  -> @"\(";
@@ -78,7 +83,12 @@ COLON        -> @":";
 IN           -> @"in\b";
 ARRAYINDEX   -> @"#";
 ALL          -> @"all\b";
-IDENTIFIER   -> @"[_\p{L}]\w*";
+
+// WARNING - IF YOU EDIT THE REGEX FOR IDENTIFIER ON THE NEXT LINE,
+// THEN ALSO EDIT kOS.Safe.Utilities.StringUtil.IsValidIdentifier()
+// TO USE THE SAME REGEX !!!!!
+IDENTIFIER   -> @"[_\p{L}]\w*"; //<---- Important - see above Comment!!!!!
+
 FILEIDENT    -> @"[_\p{L}]\w*(\.[_\p{L}]\w*)*";
 INTEGER      -> @"\d[_\d]*";
 DOUBLE       -> @"(\d+(?:_\d*)*)?\.\d+(?:_\d*)*";
@@ -87,6 +97,8 @@ EOI          -> @"\.";
 //Compiler Directives
 ATSIGN       -> @"@";
 LAZYGLOBAL   -> @"lazyglobal\b";
+CLOBBERBUILTINS -> @"clobberbuiltins\b";
+
 //Special
 EOF          -> @"$";
 [Skip]
@@ -137,13 +149,14 @@ instruction -> empty_stmt |
                directive; // allow directives anywhere for now, let the compiler decide if it's in the wrong place, not the parser.
 
 // ------------ directives --------------------
-lazyglobal_directive -> ATSIGN LAZYGLOBAL onoff_trailer EOI;
-directive            -> lazyglobal_directive; // Add to this list later if we make other directives.
+lazyglobal_directive      -> LAZYGLOBAL onoff_trailer EOI;
+clobberbuiltins_directive -> CLOBBERBUILTINS onoff_trailer EOI;
+directive                 -> ATSIGN (lazyglobal_directive | clobberbuiltins_directive);
 
 // ------------ statements --------------------
 
 empty_stmt     -> EOI;
-set_stmt       -> SET varidentifier TO expr EOI;
+set_stmt       -> SET varidentifier TO expr (COMMA varidentifier TO expr)* EOI;
 if_stmt        -> IF expr instruction EOI? (ELSE instruction EOI?)?;
 until_stmt     -> UNTIL expr instruction EOI?;
 fromloop_stmt  -> FROM instruction_block UNTIL expr STEP instruction_block DO instruction EOI?;
@@ -162,7 +175,7 @@ remove_stmt    -> REMOVE expr EOI;
 log_stmt       -> LOG expr TO expr EOI;
 break_stmt     -> BREAK EOI;
 preserve_stmt  -> PRESERVE EOI;
-declare_identifier_clause -> IDENTIFIER (TO|IS) expr EOI;
+declare_identifier_clause -> IDENTIFIER (TO|IS) expr (COMMA IDENTIFIER (TO|IS) expr)* EOI;
 declare_parameter_clause  -> PARAMETER IDENTIFIER ((TO|IS) expr)? (COMMA IDENTIFIER ((TO|IS) expr)?)* EOI;
 declare_function_clause   -> FUNCTION IDENTIFIER instruction_block EOI?;
 declare_lock_clause       -> LOCK IDENTIFIER TO expr EOI;
@@ -207,7 +220,8 @@ unset_stmt     -> UNSET (IDENTIFIER | ALL) EOI;
 // ---------- expressions ---------------------------
 
 arglist            -> expr (COMMA expr)*;
-expr               -> (or_expr|instruction_block);
+expr               -> (ternary_expr|or_expr|instruction_block);
+ternary_expr       -> CHOOSE expr IF expr ELSE expr;
 or_expr            -> and_expr (OR and_expr)*;
 and_expr           -> compare_expr (AND compare_expr)*;
 compare_expr       -> arith_expr (COMPARATOR arith_expr)*;

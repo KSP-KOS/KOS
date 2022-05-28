@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using System;
 using UnityEngine;
@@ -22,6 +22,9 @@ namespace kOS.Suffixed
 
         public double Z { get; set; }
 
+        /// <summary>
+        /// Makes a vector of zero magnitude (V(0,0,0)).
+        /// </summary>
         public Vector()
         {
             RegisterInitializer(InitializeSuffixes);
@@ -47,6 +50,14 @@ namespace kOS.Suffixed
             X = x;
             Y = y;
             Z = z;
+        }
+
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static Vector CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new Vector();
+            newObj.LoadDump(d);
+            return newObj;
         }
 
         private void InitializeSuffixes()

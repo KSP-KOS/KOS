@@ -82,6 +82,10 @@ namespace kOS.Utilities
                     list = EngineValue.PartsToList(partList, sharedObj);
                     break;
 
+                case "RCS":
+                    list = RCSValue.PartsToList(partList, sharedObj);
+                    break;
+
                 case "SENSORS":
                     list = SensorValue.PartsToList(partList, sharedObj);
                     break;
@@ -102,7 +106,12 @@ namespace kOS.Utilities
             return list;
         }
 
-        public static double GetMaxThrust(Vessel vessel, double atmPressure = -1.0)
+        /// <summary>
+        /// Get current thrust (of operating engines)
+        /// </summary>
+        /// <param name="vessel">The vessel/ship</param>
+        /// <returns>Current thrust</returns>
+        public static double GetCurrentThrust(Vessel vessel)
         {
             var thrust = 0.0;
 
@@ -113,12 +122,50 @@ namespace kOS.Utilities
                     if (!module.isEnabled) continue;
                     var engine = module as ModuleEngines;
                     if (engine != null)
-                        thrust += engine.GetThrust(atmPressure: atmPressure);
+                        thrust += engine.finalThrust;
                 }
             }
 
             return thrust;
         }
+        /// <summary>
+        /// Get total thrust (of operational engines at full throttle,
+        /// not counting with thrust limits - assuming 100% unless useThrustLimit: true)
+        /// </summary>
+        /// <param name="vessel">The vessel/ship</param>
+        /// <param name="atmPressure">
+        ///   Atmospheric pressure (defaults to pressure at current location if omitted/null,
+        ///   1.0 means Earth/Kerbin sea level, 0.0 is vacuum)</param>
+        /// <param name="useThrustLimit">Use current thrust limit (assume 100% if false)</param>
+        /// <returns>Total thrust</returns>
+        public static double GetMaxThrust(Vessel vessel, double? atmPressure = null, bool useThrustLimit = false)
+        {
+            var thrust = 0.0;
+
+            foreach (var p in vessel.parts)
+            {
+                foreach (PartModule module in p.Modules)
+                {
+                    if (!module.isEnabled) continue;
+                    var engine = module as ModuleEngines;
+                    if (engine != null)
+                        thrust += engine.GetThrust(useThrustLimit: useThrustLimit, atmPressure: atmPressure);
+                }
+            }
+
+            return thrust;
+        }
+        /// <summary>
+        /// Get total available thrust (of operational engines at full throttle,
+        /// counting with thrust limits)
+        /// </summary>
+        /// <param name="vessel">The vessel/ship</param>
+        /// <param name="atmPressure">
+        ///   Atmospheric pressure (defaults to pressure at current location if omitted/null,
+        ///   1.0 means Earth/Kerbin sea level, 0.0 is vacuum)</param>
+        /// <returns>Total available thrust</returns>
+        public static double GetAvailableThrust(Vessel vessel, double? atmPressure = null)
+            => GetMaxThrust(vessel, atmPressure, useThrustLimit: true);
 
         private static Vessel TryGetVesselByName(string name, Vessel origin)
         {
@@ -384,10 +431,16 @@ namespace kOS.Utilities
                 {
                     atLeastOneSolarPanel = true;
 
-                    if (c.deployState == ModuleDeployablePart.DeployState.RETRACTED) // apparently this was "simplified"
+                    // To fix #2488 - KSP calls all solar panels "ModuleDeployableSolarPanel" even if
+                    // they aren't deployable.   The only way to tell if it's actually deployable
+                    // (versus fixed in place) is to see if it had an animation defined.
+                    if (c.useAnimation)
                     {
-                        // If just one panel is not deployed return false
-                        return false;
+                        if (c.deployState == ModuleDeployablePart.DeployState.RETRACTED) // apparently this was "simplified"
+                        {
+                            // If just one panel is not deployed return false
+                            return false;
+                        }
                     }
                 }
             }
@@ -401,8 +454,14 @@ namespace kOS.Utilities
             {
                 foreach (var c in p.FindModulesImplementing<ModuleDeployableSolarPanel>())
                 {
-                    if (state) { c.Extend(); }
-                    else { c.Retract(); }
+                    // To fix #2488 - KSP calls all solar panels "ModuleDeployableSolarPanel" even if
+                    // they aren't deployable.   The only way to tell if it's actually deployable
+                    // (versus fixed in place) is to see if it had an animation defined.
+                    if (c.useAnimation)
+                    {
+                        if (state) { c.Extend(); }
+                        else { c.Retract(); }
+                    }
                 }
             }
         }
@@ -756,23 +815,6 @@ namespace kOS.Utilities
         public static void UnsetTarget()
         {
             FlightGlobals.fetch.SetVesselTarget(null);
-        }
-
-        public static double GetAvailableThrust(Vessel vessel, double atmPressure = -1.0)
-        {
-            var thrust = 0.0;
-
-            foreach (var p in vessel.parts)
-            {
-                foreach (PartModule module in p.Modules)
-                {
-                    var engine = module as ModuleEngines;
-                    if (module.isEnabled && engine != null)
-                        thrust += engine.GetThrust(useThrustLimit: true, atmPressure: atmPressure);
-                }
-            }
-
-            return thrust;
         }
 
         public static Direction GetFacing(Vessel vessel)

@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Suffixed.Part;
@@ -64,29 +64,6 @@ namespace kOS.Suffixed.PartModuleField
         }
 
         /// <summary>
-        /// Return true if the field in question is editable in the KSP rightclick menu
-        /// as an in-game tweakable right now.
-        /// </summary>
-        /// <param name="field">the BaseField from the KSP API</param>
-        /// <returns>true if this has a GUI edit widget on it, false if it doesn't.</returns>
-        private bool IsEditable(BaseField field)
-        {
-            return GetFieldControls(field).Count > 0;
-        }
-
-        /// <summary>
-        /// Get the UI_Controls on a KSPField which are user editable.
-        /// </summary>
-        /// <param name="field"></param>
-        /// <returns></returns>
-        private List<UI_Control> GetFieldControls(BaseField field)
-        {
-            var attribs = new List<object>();
-            attribs.AddRange(field.FieldInfo.GetCustomAttributes(true));
-            return attribs.OfType<UI_Control>().Where(obj => (obj).controlEnabled).ToList();
-        }
-
-        /// <summary>
         /// Return true if the value given is allowed for the field given.  This uses the hints from the GUI
         /// system to decide what is and isn't allowed.  (For example if a GUI slider goes from 10 to 20 at
         /// increments of 2, then a value of 17 is not something you could achieve in the GUI, being only able
@@ -111,7 +88,19 @@ namespace kOS.Suffixed.PartModuleField
             Type fType = field.FieldInfo.FieldType;
             object convertedVal = newVal;
 
-            if (!IsEditable(field))
+            // Using TryGetFieldUIControl() to obtain the control that goes with this
+            // field is from advice from TriggerAU, who gave that advice in
+            // a forum post when I described the problems we were having with the servo
+            // parts in Breaking Ground DLC.  (There is some kind of work being done here
+            // that seems to allow one field's ranges to override another's as the servo
+            // parts need to do.  This is work which doesn't seem to happen if you look at
+            // the KSPField's control ranges directly):
+            UI_Control control;
+            if (!partModule.Fields.TryGetFieldUIControl(field.name, out control))
+            {
+                throw new KOSInvalidFieldValueException("Field appears to have no UI control attached so kOS refuses to let a script change it.");
+            }
+            if (!control.controlEnabled)
             {
                 except = new KOSInvalidFieldValueException("Field is read-only");
                 return false;
@@ -133,54 +122,58 @@ namespace kOS.Suffixed.PartModuleField
                     return false;
                 }
             }
-            List<UI_Control> controls = GetFieldControls(field);
 
-            // It's really normal for there to be only one control on a KSPField, but because
-            // it's technically possible to have more than one according to the structure of
-            // the API, this loop is here to check all of "them":
-            foreach (UI_Control control in controls)
+            // Some of these are subclasses of each other, so don't change this to an if/else.
+            // It's a series of if's on purpose so it checks all classes the control is derived from.
+            if (control is UI_Toggle)
             {
-                // Some of these are subclasses of each other, so don't change this to an if/else.
-                // It's a series of if's on purpose so it checks all classes the control is derived from.
-                if (control is UI_Toggle)
+                // Seems there's nothing to check here, but maybe later there will be?
+            }
+            if (control is UI_Label)
+            {
+                except = new KOSInvalidFieldValueException("Labels are read-only objects that can't be changed");
+                isLegal = false;
+            }
+            var vector2 = control as UI_Vector2;
+            if (vector2 != null)
+            {
+                // I have no clue what this actually looks like in the UI?  What is a
+                // user editable 2-D vector widget?  I've never seen this before.
+                if (convertedVal != null)
                 {
-                    // Seems there's nothing to check here, but maybe later there will be?
-                }
-                if (control is UI_Label)
-                {
-                    except = new KOSInvalidFieldValueException("Labels are read-only objects that can't be changed");
-                    isLegal = false;
-                }
-                var vector2 = control as UI_Vector2;
-                if (vector2 != null)
-                {
-                    // I have no clue what this actually looks like in the UI?  What is a
-                    // user editable 2-D vector widget?  I've never seen this before.
-                    if (convertedVal != null)
+                    var vec2 = (Vector2)convertedVal;
+                    if (vec2.x < vector2.minValueX || vec2.x > vector2.maxValueX ||
+                        vec2.y < vector2.minValueY || vec2.y > vector2.maxValueY)
                     {
-                        var vec2 = (Vector2)convertedVal;
-                        if (vec2.x < vector2.minValueX || vec2.x > vector2.maxValueX ||
-                            vec2.y < vector2.minValueY || vec2.y > vector2.maxValueY)
-                        {
-                            except = new KOSInvalidFieldValueException("Vector2 is outside of allowed range of values");
-                            isLegal = false;
-                        }
+                        except = new KOSInvalidFieldValueException("Vector2 is outside of allowed range of values");
+                        isLegal = false;
                     }
                 }
-                var range = control as UI_FloatRange;
-                if (range != null)
-                {
-                    float val = Convert.ToSingle(convertedVal);
-                    val = KOSMath.ClampToIndent(val, range.minValue, range.maxValue, range.stepIncrement);
-                    convertedVal = Convert.ToDouble(val);
-                }
-                if (!isLegal)
-                    break;
+            }
+            var range = control as UI_FloatRange;
+            if (range != null)
+            {
+                float val = Convert.ToSingle(convertedVal);
+                val = KOSMath.ClampToIndent(val, range.minValue, range.maxValue, range.stepIncrement);
+                convertedVal = Convert.ToDouble(val);
             }
             newVal = FromPrimitiveWithAssert(convertedVal);
             return isLegal;
         }
 
+        protected string GetFieldName(BaseField kspField)
+        {
+            return kspField.guiName.Length > 0 ? kspField.guiName : kspField.name;
+        }
+        // Note that BaseEvent has the GUIName property which effectively does this already.
+        protected string GetEventName(BaseEvent kspEvent)
+        {
+            return kspEvent.GUIName;
+        }
+        protected string GetActionName(BaseAction kspAction)
+        {
+            return kspAction.guiName.Length > 0 ? kspAction.guiName : kspAction.name;
+        }
         /// <summary>
         /// Return a list of all the strings of all KSPfields registered to this PartModule
         /// which are currently showing on the part's RMB menu.
@@ -194,10 +187,14 @@ namespace kOS.Suffixed.PartModuleField
 
             foreach (BaseField field in visibleFields)
             {
-                returnValue.Add(new StringValue(string.Format(formatter,
-                                              IsEditable(field) ? "settable" : "get-only",
-                                              field.guiName.ToLower(),
-                                              Utilities.Utils.KOSType(field.FieldInfo.FieldType))));
+                UI_Control control;
+                if ( partModule.Fields.TryGetFieldUIControl(field.name, out control))
+                {
+                    returnValue.Add(new StringValue(string.Format(formatter,
+                                                  control.controlEnabled ? "settable" : "get-only",
+                                                  GetFieldName(field).ToLower(),
+                                                  Utilities.Utils.KOSType(field.FieldInfo.FieldType))));
+                }
             }
             return returnValue;
         }
@@ -215,7 +212,7 @@ namespace kOS.Suffixed.PartModuleField
 
             foreach (BaseField field in visibleFields)
             {
-                returnValue.Add(new StringValue(field.guiName.ToLower()));
+                returnValue.Add(new StringValue(GetFieldName(field).ToLower()));
             }
             return returnValue;
         }
@@ -234,12 +231,28 @@ namespace kOS.Suffixed.PartModuleField
         /// <summary>
         /// Return the field itself that goes with the name (the BaseField, not the value).
         /// </summary>
-        /// <param name="cookedGuiName">The case-insensitive guiName of the field.</param>
+        /// <param name="cookedGuiName">The case-insensitive guiName (or name if guiname is empty) of the field.</param>
         /// <returns>a BaseField - a KSP type that can be used to get the value, or its GUI name or its reflection info.</returns>
         protected BaseField GetField(string cookedGuiName)
         {
-            return partModule.Fields.Cast<BaseField>().
-                FirstOrDefault(field => string.Equals(field.guiName, cookedGuiName, StringComparison.CurrentCultureIgnoreCase));
+            // Conceptually this should be a single hit using FirstOrDefault(), because there should only
+            // be one Field with the given GUI name.  But Issue #2666 forced kOS to change it to an array of hits
+            // because KSP started naming two fields with the same gui name, only one of which is visible
+            // at a time:
+            BaseField[] allMatches = partModule.Fields.Cast<BaseField>().
+                Where(field => string.Equals(GetFieldName(field), cookedGuiName, StringComparison.CurrentCultureIgnoreCase)).
+                ToArray<BaseField>();
+            // When KSP is *not* doing the weird thing of two fields with the same name, there's just one hit and it's simple:
+            if (allMatches.Count() == 1)
+                return allMatches.First();
+            if (allMatches.Count() == 0)
+                return null;
+
+            // Issue #2666 is handled here.  kOS should not return the invisible field when there's
+            // a visible one of the same name it could have picked instead.  Only return an invisible
+            // field if there's no visible one to pick.
+            BaseField preferredMatch = allMatches.FirstOrDefault(field => FieldIsVisible(field));
+            return preferredMatch ?? allMatches.First();
         }
 
         /// <summary>
@@ -257,7 +270,7 @@ namespace kOS.Suffixed.PartModuleField
             {
                 returnValue.Add(new StringValue(string.Format(formatter,
                                               "callable",
-                                              kspEvent.guiName.ToLower(),
+                                              GetEventName(kspEvent).ToLower(),
                                               "KSPEvent")));
             }
             return returnValue;
@@ -276,7 +289,7 @@ namespace kOS.Suffixed.PartModuleField
 
             foreach (BaseEvent kspEvent in visibleEvents)
             {
-                returnValue.Add(new StringValue(kspEvent.guiName.ToLower()));
+                returnValue.Add(new StringValue(GetEventName(kspEvent).ToLower()));
             }
             return returnValue;
         }
@@ -295,12 +308,12 @@ namespace kOS.Suffixed.PartModuleField
         /// <summary>
         /// Return the KSP BaseEvent going with the given name.
         /// </summary>
-        /// <param name="cookedGuiName">The event's case-insensitive guiname.</param>
+        /// <param name="cookedGuiName">The event's case-insensitive guiname (or name if guiname is empty).</param>
         /// <returns></returns>
         private BaseEvent GetEvent(string cookedGuiName)
         {
             return partModule.Events.
-                FirstOrDefault(kspEvent => string.Equals(kspEvent.guiName, cookedGuiName, StringComparison.CurrentCultureIgnoreCase));
+                FirstOrDefault(kspEvent => string.Equals(GetEventName(kspEvent), cookedGuiName, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
@@ -315,7 +328,7 @@ namespace kOS.Suffixed.PartModuleField
             {
                 returnValue.Add(new StringValue(string.Format(formatter,
                                               "callable",
-                                              kspAction.guiName.ToLower(),
+                                              GetActionName(kspAction).ToLower(),
                                               "KSPAction")));
             }
             return returnValue;
@@ -331,7 +344,7 @@ namespace kOS.Suffixed.PartModuleField
 
             foreach (BaseAction kspAction in partModule.Actions)
             {
-                returnValue.Add(new StringValue(kspAction.guiName.ToLower()));
+                returnValue.Add(new StringValue(GetActionName(kspAction).ToLower()));
             }
             return returnValue;
         }
@@ -344,17 +357,17 @@ namespace kOS.Suffixed.PartModuleField
         /// <returns>true if it is on the PartModule, false if it is not</returns>
         public BooleanValue HasAction(StringValue actionName)
         {
-            return partModule.Actions.Any(kspAction => string.Equals(kspAction.guiName, actionName, StringComparison.CurrentCultureIgnoreCase));
+            return partModule.Actions.Any(kspAction => string.Equals(GetActionName(kspAction), actionName, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
         /// Return the KSP BaseAction going with the given name.
         /// </summary>
-        /// <param name="cookedGuiName">The event's case-insensitive guiname.</param>
+        /// <param name="cookedGuiName">The event's case-insensitive guiname (or name if guiname is empty).</param>
         /// <returns></returns>
         private BaseAction GetAction(string cookedGuiName)
         {
-            return partModule.Actions.FirstOrDefault(kspAction => string.Equals(kspAction.guiName, cookedGuiName, StringComparison.CurrentCultureIgnoreCase));
+            return partModule.Actions.FirstOrDefault(kspAction => string.Equals(GetActionName(kspAction), cookedGuiName, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>

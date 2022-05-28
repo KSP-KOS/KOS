@@ -23,25 +23,73 @@ operator symbols:
 
 .. highlight:: none
 
-**Arithmetic Operators**::
+.. _operators:
 
-    +  -  *  /  ^  e  (  )
+**Arithmetic Operators**: These are listed in order of precedence from first to last:
 
-**Logic Operators**::
+    * ``(`` ..to.. ``)`` -> Grouping with brackets makes the expression evaluate first.
+    * ``e`` -> Scientific notation operator, for example: ``1.23e-4`` is ``0.000123``.
+    * ``^`` -> Exponent operator, for example: ``2^3`` is ``8``.
+    * ``*``, ``/`` -> Multiplication and Division, having equal precedence.  Note that
+      division never truncates remainders, even when given two integer operands.
+      (i.e. ``1 / 4`` will return ``0.25``, not ``0``).
+    * ``+``, ``-`` -> Addition and Subtraction, having equal precedence.
 
-    not  and  or  true  false  <>  >=  <=  =  >  <
+**Logic Operators**: These are listed in order of precedence from first to last:
 
-**Instructions and keywords**::
+    * ``(`` ..to.. ``)`` -> Grouping with brackets makes the expression evaluate first.
+    * ``not`` -> ``not A`` Logical inversion of A.  Due to the high precedence,
+      if A is some complex expression you may need to write this with brackets
+      as ``not(A)`` in kerboscript to make it parse right.
+    * ``=``, <>``, ``>=``, ``<=``, ``>``, ``<`` -> Comparitors.  Note
+      that equals and not-equals are different than in some common languages:
 
-    add all at batch break clearscreen compile copy declare delete
-    deploy do do edit else file for from from function global if
-    in list local lock log off on once parameter preserve print reboot
-    remove rename run set shutdown stage step switch then to toggle
-    unlock unset until volume wait when
+        * The equals comparitor is a single character ``=`` not a double-equal ``==``.
+        * The not-equal comparitor is ``<>`` not ``!=``.
 
-**Other symbols**::
+    * ``and`` -> Logical AND of two Boolean expresssions.
+    * ``or`` -> Logical OR of two Boolean expresssions.
+      
+** Logic constants**: all logic operators return one of these, and you may assign them to variables:
 
-    {  }  [  ]  ,  :  //
+    * ``false`` -> (case insensitive, so can be writtedn as False, FALSE, etc)
+    * ``true`` -> (case insensitive, so can be written as True, TRUE, etc)
+    * Although not a recommended programming style to use, numbers used in a
+      logic context get interpreted as Boolean values followng the typical
+      rule that zero is ``false`` and anything other than zero is ``true``.
+
+**Instructions and Keywords**::
+
+    add all at break choose clearscreen compile copy declare defined
+    delete do edit else file for from function global if in is list
+    local lock log off on once parameter preserve print reboot remove
+    rename return run runoncepath runpath set shutdown stage step
+    switch then to toggle unlock unset until volume wait when
+
+**Other Symbols**::
+
+    * ``//`` -> Comment indicator - starts a comment that runs until
+      the end of the line.
+    * ``( )`` -> Used either to group expressions to change the order of
+      operations (in the usual fashion), or to mark the parameters of
+      a function being called, like ``min(a, b)``.
+    * ``{  }`` -> Used to group a list of statements together into a
+      single block of statements.  Used to define the beginning and
+      ending of a function body, loop body, or conditional body.
+    * ``[  ]`` -> Denotes a list index or lexicon index.
+    * ``#`` -> An archaic way to index lists that is mostly supplanted by
+      the ``[ ]`` square bracket operator, but exists for backward
+      compatibility.
+    * ``,`` -> Separates arguments when calling a function, or parameters
+      when defining a function.
+    * ``:`` -> The suffix operator.  Indicates a suffix of an object is
+      coming next.  Similar to the dot operator in other languages for
+      denoting a member of an object.
+    * ``@`` -> Delegate operator.  Appended to a call-able identifier
+      such as a function name to suppress the usual compiler behavior
+      of trying to call the function as soon as the script mentions it.
+      "@" tells it to instead return a delegate of the function that
+      may be called later.
 
 .. highlight:: kerboscript
 
@@ -95,8 +143,10 @@ The rest may be letters, digits or underscores.
     the kOS developers cannot test every language and verify if
     this is correct or not.
 
-**Suffixes**
-    Some variable types are structures that contain sub-portions. The separator between the main variable and the item inside it is a colon character (``:``). When this symbol is used, the part on the right-hand side of the colon is called the "suffix"::
+Suffixes
+--------
+
+Some variable types are structures that contain sub-portions. The separator between the main variable and the item inside it is a colon character (``:``). When this symbol is used, the part on the right-hand side of the colon is called the "suffix"::
 
         list parts in mylist.
         print mylist:length. // length is a suffix of mylist
@@ -218,6 +268,22 @@ Some suffixes are actually functions you can call. When that is the case, these 
     print x:length().
     x:remove(0).
     x:clear().
+
+Suffixes as Lexicon keys
+------------------------
+
+The special type called a :struct:`Lexicon` can be used with this suffix syntax as
+an alternate way to get the value for a key, as in the example below::
+
+    // Given this setup...
+    set MyLex to Lexicon().
+    MyLex:ADD( "key1", "value1").
+    // ...these two lines have the same effect:
+    print MyLex["key1"]. // key used in the usual way as an "index".
+    print MyLex:key1.    // key used in an alternate way as a "suffix".
+
+There are some limits to using this syntax, as described in more detail
+:ref:`in the documentation for the Lexion type <lexicon_suffix>`.
 
 .. _syntax functions:
 

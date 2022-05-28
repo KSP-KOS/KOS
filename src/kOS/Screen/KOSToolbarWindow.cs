@@ -1,4 +1,4 @@
-﻿using kOS.Module;
+using kOS.Module;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Module;
 using kOS.Safe.Utilities;
@@ -55,6 +55,7 @@ namespace kOS.Screen
         private static GUIStyle vesselNameStyle;
         private static GUIStyle partNameStyle;
         private static GUIStyle tooltipLabelStyle;
+        private static GUIStyle smallLabelStyle;
         private static GUIStyle boxDisabledStyle;
         private static GUIStyle boxOffStyle;
         private static GUIStyle boxOnStyle;
@@ -77,6 +78,7 @@ namespace kOS.Screen
         private bool alreadyAwake;
         private bool firstTime = true;
         private bool isOpen;
+        private bool wasOpenLastPaint;
         private kOS.Screen.ListPickerDialog fontPicker;
         private kOS.Screen.ListPickerDialog ipAddrPicker;
 
@@ -86,17 +88,18 @@ namespace kOS.Screen
 
         private bool uiGloballyHidden = false;
 
+
         /// <summary>
         /// Unity hates it when a MonoBehaviour has a constructor,
         /// so all the construction work is here instead:
         /// </summary>
         public static void FirstTimeSetup()
         {
-            launcherButtonTexture = GameDatabase.Instance.GetTexture("kOS/GFX/launcher-button", false);
-            terminalOpenIconTexture = GameDatabase.Instance.GetTexture("kOS/GFX/terminal-icon-open", false);
-            terminalClosedIconTexture = GameDatabase.Instance.GetTexture("kOS/GFX/terminal-icon-closed", false);
-            terminalOpenTelnetIconTexture = GameDatabase.Instance.GetTexture("kOS/GFX/terminal-icon-open-telnet", false);
-            terminalClosedTelnetIconTexture = GameDatabase.Instance.GetTexture("kOS/GFX/terminal-icon-closed-telnet", false);
+            launcherButtonTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_launcher-button", false);
+            terminalOpenIconTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_terminal-icon-open", false);
+            terminalClosedIconTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_terminal-icon-closed", false);
+            terminalOpenTelnetIconTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_terminal-icon-open-telnet", false);
+            terminalClosedTelnetIconTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_terminal-icon-closed-telnet", false);
 
             windowRect = new Rect(0, 0, 1f, 1f); // this origin point will move when opened/closed.
             panelSkin = BuildPanelSkin();
@@ -130,7 +133,6 @@ namespace kOS.Screen
             // Prevent multiple calls of this:
             if (alreadyAwake) return;
             alreadyAwake = true;
-
             SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] Start succesful");
         }
 
@@ -189,7 +191,7 @@ namespace kOS.Screen
             if (!ToolbarManager.ToolbarAvailable) return;
 
             blizzyButton = ToolbarManager.Instance.add("kOS", "kOSButton");
-            blizzyButton.TexturePath = "kOS/GFX/launcher-button-blizzy";
+            blizzyButton.TexturePath = "kOS/GFX/dds_launcher-button-blizzy";
             blizzyButton.ToolTip = "kOS";
             blizzyButton.OnClick += e => CallbackOnClickBlizzy();
         }
@@ -426,7 +428,16 @@ namespace kOS.Screen
             horizontalSectionCount = 0;
             verticalSectionCount = 0;
 
-            if (!isOpen) return;
+            if (!isOpen)
+            {
+                wasOpenLastPaint = false;
+                return;
+            }
+
+            // Sorting the list is expensive.  Only do it when the window is first re-opened, not on every single repaint:
+            if (!wasOpenLastPaint)
+                kOSProcessor.SortAllInstances();
+            wasOpenLastPaint = true;
 
             if (uiGloballyHidden && kOS.Safe.Utilities.SafeHouse.Config.ObeyHideUI) return;
 
@@ -445,11 +456,11 @@ namespace kOS.Screen
 
             DrawActiveCPUsOnPanel();
 
-            CountBeginVertical("", 150);
+            CountBeginVertical("", 155);
             GUILayout.Label("CONFIG VALUES", headingLabelStyle);
-            GUILayout.Label("To access other settings, see the kOS section in KSP's difficulty settings.", tooltipLabelStyle);
+            GUILayout.Label("To access other settings, see the kOS section in KSP's difficulty settings.", smallLabelStyle);
             GUILayout.Label("Global VALUES", headingLabelStyle);
-            GUILayout.Label("Changes to these settings are saved and globally affect all saved games.", tooltipLabelStyle);
+            GUILayout.Label("Changes to these settings are saved and globally affect all saved games.", smallLabelStyle);
 
             int whichInt = 0; // increments only when an integer field is encountered in the config keys, else stays put.
 
@@ -457,14 +468,11 @@ namespace kOS.Screen
 
             foreach (ConfigKey key in SafeHouse.Config.GetConfigKeys())
             {
-                bool isFontField = false;
-                if (key.StringKey.Equals("TerminalFontName"))
-                    isFontField = true;
-                bool isIPAddrField = false;
-                if (key.StringKey.Equals("TelnetIPAddrString"))
-                    isIPAddrField = true;
+                bool isFontField = key.StringKey.Equals("TerminalFontName");
+                bool isIPAddrField = key.StringKey.Equals("TelnetIPAddrString");
+                bool isSuppressAutopilotField = key.StringKey.Equals("SuppressAutopilot");
 
-                if (isFontField)
+                if (isFontField || isSuppressAutopilotField)
                 {
                     CountBeginVertical();
                     GUILayout.Label("_____", panelSkin.label);
@@ -485,6 +493,10 @@ namespace kOS.Screen
                 {
                     toolTipText += " is: " + key.Value;
                     DrawIPAddrField(key);
+                }
+                else if (isSuppressAutopilotField)
+                {
+                    DrawSuppressAutopilotField(key);
                 }
                 else if (key.Value is bool)
                 {
@@ -514,11 +526,12 @@ namespace kOS.Screen
                 {
                     GUILayout.Label(key.Alias + " is a new type this dialog doesn't support.  Contact kOS devs.");
                 }
+
                 GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
                 GUILayout.Label(new GUIContent(labelText, toolTipText), panelSkin.label);
                 GUILayout.EndHorizontal();
 
-                if (isFontField || isIPAddrField)
+                if (isFontField || isSuppressAutopilotField)
                     CountEndVertical();
                 else
                     CountEndHorizontal();
@@ -619,7 +632,7 @@ namespace kOS.Screen
             string fieldValue = (backInt == 0) ? "" : backInt.ToString(); // this lets the user temporarily delete the whole value instead of having it become a zero.
 
             GUI.SetNextControlName(fieldName);
-            fieldValue = GUILayout.TextField(fieldValue, 6, panelSkin.textField, GUILayout.MinWidth(60));
+            fieldValue = GUILayout.TextField(fieldValue, 4, panelSkin.textField, GUILayout.MinWidth(60));
 
             fieldValue = fieldValue.Trim(' ');
             int newInt = -99; // Nonzero value to act as a flag to detect if the following line got triggered:
@@ -644,6 +657,22 @@ namespace kOS.Screen
                 backingConfigInts[whichInt] = keyVal;
 
             return returnValue;
+        }
+
+        private void DrawSuppressAutopilotField(ConfigKey key)
+        {
+            bool prevValue = (bool)key.Value;
+            key.Value = GUILayout.Toggle(
+                (bool)key.Value,
+                new GUIContent("Emergency Suppress", key.Name),
+                panelSkin.button);
+
+            // When the button just got pressed in this pass (went from false to true):
+            if ((bool)key.Value && !prevValue)
+            {
+                Close();
+                clickedOn = false;
+            }
         }
 
         private string TelnetStatusMessage()
@@ -690,6 +719,11 @@ namespace kOS.Screen
                                 "There are either no kOS CPU's\n" +
                                 "in this universe, or there are\n " +
                                 "but they are all \"on rails\".", panelSkin.label);
+
+            if (HighLogic.LoadedSceneIsEditor)
+            {
+                DrawRereadBootButton();
+            }
             CountEndVertical();
 
             GUILayout.EndScrollView();
@@ -771,6 +805,27 @@ namespace kOS.Screen
                                              ((partTag == null) ? "" : partTag.nameTag)
                                             );
             GUILayout.Box(new GUIContent(labelText, "This is the currently highlighted part on the vessel"), partNameStyle);
+        }
+
+        private void DrawRereadBootButton()
+        {
+            CountBeginVertical();
+            GUILayout.Box(" "); // just putting a bar above the button and text.
+            CountBeginHorizontal();
+            bool clicked = GUILayout.Button("Reread\nBoot\nFolder", panelSkin.button);
+            GUILayout.Label(
+                "If you added new files to the archive\n" +
+                "boot folder after entering this\n" +
+                "Editor scene, they won't show up in the\n" +
+                "part window unless you click here.\n", panelSkin.label);
+
+            if (clicked)
+            {
+                kOSProcessor.SetBootListDirty();
+            }
+            CountEndHorizontal();
+            GUILayout.Box(" "); // just putting a bar below the button and text.
+            CountEndVertical();
         }
 
         public void BeginHoverHousekeeping()
@@ -896,6 +951,8 @@ namespace kOS.Screen
             theSkin.textArea.margin = new RectOffset(1, 1, 1, 1);
             theSkin.toggle.fontSize = 10;
             theSkin.button.fontSize = 11;
+            theSkin.button.active.textColor = Color.yellow;
+            theSkin.button.normal.textColor = Color.white;
 
             // And these are new styles for our own use in special cases:
             //
@@ -913,7 +970,15 @@ namespace kOS.Screen
             {
                 fontSize = 11,
                 padding = new RectOffset(0, 2, 0, 2),
-                normal = { textColor = Color.white }
+                normal = { textColor = Color.white },
+                wordWrap = false
+            };
+            smallLabelStyle = new GUIStyle(theSkin.label)
+            {
+                fontSize = 11,
+                padding = new RectOffset(0, 2, 0, 2),
+                normal = { textColor = Color.white },
+                wordWrap = true
             };
             partNameStyle = new GUIStyle(theSkin.box)
             {

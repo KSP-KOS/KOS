@@ -42,11 +42,35 @@ namespace kOS.Suffixed.Part
 
             AddSuffix("DOCKWATCHERS", new NoArgsSuffix<UniqueSetValue<UserDelegate>>(() => Shared.DispatchManager.CurrentDispatcher.GetPartCoupleNotifyees(module.part)));
             AddSuffix("UNDOCKWATCHERS", new NoArgsSuffix<UniqueSetValue<UserDelegate>>(() => Shared.DispatchManager.CurrentDispatcher.GetPartUndockNotifyees(module.part)));
+
+            AddSuffix("PARTNER", new Suffix<Structure>(() => (Structure)GetPartner() ?? StringValue.None, "The docking port this docking port is attached to."));
+            AddSuffix("HASPARTNER", new Suffix<BooleanValue>(() => module.otherNode != null, "Whether or not this docking port is attached to another docking port."));
         }
 
         public override ITargetable Target
         {
             get { return module; }
+        }
+
+        public PartValue GetPartner()
+        {
+            var otherNode = module.otherNode;
+            
+            if (otherNode == null)
+            {
+                return null;
+            }
+
+            var otherVessel = VesselTarget.CreateOrGetExisting(otherNode.vessel, Shared);
+            foreach (var part in otherVessel.Parts)
+            {
+                if (part.Part == otherNode.part)
+                {
+                    return part;
+                }
+            }
+            
+            throw new Safe.Exceptions.KOSException("The docking port indicated that it was connected to another docking port, but that port could not be found. Tried to find: " + otherNode.GetModuleDisplayName());
         }
 
         public static new ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects sharedObj)

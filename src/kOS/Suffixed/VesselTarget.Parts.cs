@@ -114,59 +114,79 @@ namespace kOS.Suffixed
             if (part.State == PartStates.DEAD || part.transform == null)
                 return;
 
-            PartValue self = null;
+            // Modules can be in any order, so to enforce some sort of priority for parts which are multiple types,
+            // gather all potential modules and then select from those valid.
+            IEngineStatus engine = null;
+            ModuleRCS rcs = null;
+            DecouplerValue separator = null;
+            ModuleEnviroSensor sensor = null;
+
             foreach (var module in part.Modules)
             {
-                var engine = module as IEngineStatus;
-                if (engine != null)
+                if (module is IEngineStatus)
                 {
-                    self = new EngineValue(Shared, part, parent, decoupler);
-                    break;
+                    engine = module as IEngineStatus;
                 }
-                if (module is IStageSeparator)
+                else if (module is ModuleRCS)
+                {
+                    rcs = module as ModuleRCS;
+                }
+                else if (module is IStageSeparator)
                 {
                     var dock = module as ModuleDockingNode;
                     if (dock != null)
                     {
                         var port = new DockingPortValue(Shared, part, parent, decoupler, dock);
-                        self = port;
+                        separator = port;
                         dockingPorts.Add(port);
-                        if (!module.StagingEnabled())
-                            break;
+                        //if (!module.StagingEnabled())
+                        //    continue;
                         decoupler = port;
                         decouplers.Add(decoupler);
                     }
+                    // ignore anything with staging disabled and continue the search
+                    // this can e.g. be heat shield or some sensor with integrated decoupler
                     else
                     {
-                        // ignore anything with staging disabled and continue the search
-                        // this can e.g. be heat shield or some sensor with integrated decoupler
-                        if (!module.StagingEnabled())
-                            continue;
+                        DecouplerValue port;
                         if (module is LaunchClamp)
-                            self = decoupler = new LaunchClampValue(Shared, part, parent, decoupler);
+                            port = new LaunchClampValue(Shared, part, parent, decoupler);
                         else if (module is ModuleDecouple || module is ModuleAnchoredDecoupler)
-                            self = decoupler = new DecouplerValue(Shared, part, parent, decoupler);
+                            port = new SeparatorValue(Shared, part, parent, decoupler, module as ModuleDecouplerBase);
                         else // ModuleServiceModule ?
                             continue; // rather continue the search
+                        separator = port;
+                        //if (!module.StagingEnabled())
+                        //    continue;
+                        decoupler = port;
                         decouplers.Add(decoupler);
                     }
                     // ignore leftover decouplers
                     if (decoupler == null || decoupler.Part.inverseStage >= StageManager.CurrentStage)
-                        break;
+                        continue;
                     // check if we just created closer decoupler (see StageValues.CreatePartSet)
                     if (nextDecoupler == null || decoupler.Part.inverseStage > nextDecoupler.Part.inverseStage)
                         nextDecoupler = decoupler;
-                    break;
                 }
-                var sensor = module as ModuleEnviroSensor;
-                if (sensor != null)
+                else if (module is ModuleEnviroSensor)
                 {
-                    self = new SensorValue(Shared, part, parent, decoupler, sensor);
-                    break;
+                    sensor = module as ModuleEnviroSensor;
                 }
             }
-            if (self == null)
+
+            // Select part value in priority order
+            PartValue self;
+            if (engine != null)
+                self = new EngineValue(Shared, part, parent, decoupler);
+            else if (rcs != null)
+                self = new RCSValue(Shared, part, parent, decoupler, rcs);
+            else if (separator != null)
+                self = separator;
+            else if (sensor != null)
+                self = new SensorValue(Shared, part, parent, decoupler, sensor);
+            else
                 self = new PartValue(Shared, part, parent, decoupler);
+
             if (rootPart == null)
                 rootPart = self;
             partCache[part] = self;
@@ -178,106 +198,42 @@ namespace kOS.Suffixed
 
         private ListValue GetPartsDubbed(StringValue searchTerm)
         {
-            // Get the list of all the parts where the part's API name OR its GUI title or its tag name matches.
-            List<global::Part> kspParts = new List<global::Part>();
-            kspParts.AddRange(GetRawPartsNamed(searchTerm));
-            kspParts.AddRange(GetRawPartsTitled(searchTerm));
-            kspParts.AddRange(GetRawPartsTagged(searchTerm));
-
-            // The "Distinct" operation is there because it's possible for someone to use a tag name that matches the part name.
-            return PartValueFactory.Construct(kspParts.Distinct(), Shared);
+            return PartValueFactory.Construct(Vessel.rootPart, Shared).GetPartsDubbed(searchTerm);
         }
 
         private ListValue GetPartsDubbedPattern(StringValue searchPattern)
         {
-            // Prepare case-insensivie regex.
-            Regex r = new Regex(searchPattern, RegexOptions.IgnoreCase);
-            // Get the list of all the parts where the part's API name OR its GUI title or its tag name matches the pattern.
-            List<global::Part> kspParts = new List<global::Part>();
-            kspParts.AddRange(GetRawPartsNamedPattern(r));
-            kspParts.AddRange(GetRawPartsTitledPattern(r));
-            kspParts.AddRange(GetRawPartsTaggedPattern(r));
-
-            // The "Distinct" operation is there because it's possible for someone to use a tag name that matches the part name.
-            return PartValueFactory.Construct(kspParts.Distinct(), Shared);
+            return PartValueFactory.Construct(Vessel.rootPart, Shared).GetPartsDubbedPattern(searchPattern);
         }
 
         private ListValue GetPartsNamed(StringValue partName)
         {
-            return PartValueFactory.Construct(GetRawPartsNamed(partName), Shared);
-        }
-
-        private IEnumerable<global::Part> GetRawPartsNamed(string partName)
-        {
-            // Get the list of all the parts where the part's KSP API title matches:
-            return Vessel.parts.FindAll(
-                part => String.Equals(part.name, partName, StringComparison.CurrentCultureIgnoreCase));
+            return PartValueFactory.Construct(Vessel.rootPart, Shared).GetPartsNamed(partName);
         }
 
         private ListValue GetPartsNamedPattern(StringValue partNamePattern)
         {
-            // Prepare case-insensivie regex.
-            Regex r = new Regex(partNamePattern, RegexOptions.IgnoreCase);
-            return PartValueFactory.Construct(GetRawPartsNamedPattern(r), Shared);
-        }
-
-        private IEnumerable<global::Part> GetRawPartsNamedPattern(Regex partNamePattern)
-        {
-            // Get the list of all the parts where the part's KSP API title matches the pattern:
-            return Vessel.parts.FindAll(
-                part => partNamePattern.IsMatch(part.name));
+            return PartValueFactory.Construct(Vessel.rootPart, Shared).GetPartsNamedPattern(partNamePattern);
         }
 
         private ListValue GetPartsTitled(StringValue partTitle)
         {
-            return PartValueFactory.Construct(GetRawPartsTitled(partTitle), Shared);
-        }
-
-        private IEnumerable<global::Part> GetRawPartsTitled(string partTitle)
-        {
-            // Get the list of all the parts where the part's GUI title matches:
-            return Vessel.parts.FindAll(
-                part => String.Equals(part.partInfo.title, partTitle, StringComparison.CurrentCultureIgnoreCase));
+            return PartValueFactory.Construct(Vessel.rootPart, Shared).GetPartsTitled(partTitle);
         }
 
         private ListValue GetPartsTitledPattern(StringValue partTitlePattern)
         {
-            // Prepare case-insensivie regex.
-            Regex r = new Regex(partTitlePattern, RegexOptions.IgnoreCase);
-            return PartValueFactory.Construct(GetRawPartsTitledPattern(r), Shared);
-        }
-
-        private IEnumerable<global::Part> GetRawPartsTitledPattern(Regex partTitlePattern)
-        {
-            // Get the list of all the parts where the part's GUI title matches the pattern:
-            return Vessel.parts.FindAll(
-                part => partTitlePattern.IsMatch(part.partInfo.title));
+            return PartValueFactory.Construct(Vessel.rootPart, Shared).GetPartsTitledPattern(partTitlePattern);
         }
 
         private ListValue GetPartsTagged(StringValue tagName)
         {
-            return PartValueFactory.Construct(GetRawPartsTagged(tagName), Shared);
-        }
-
-        private IEnumerable<global::Part> GetRawPartsTagged(string tagName)
-        {
-            return Vessel.parts
-                .Where(p => p.Modules.OfType<KOSNameTag>()
-                .Any(tag => String.Equals(tag.nameTag, tagName, StringComparison.CurrentCultureIgnoreCase)));
+            return PartValueFactory.Construct(Vessel.rootPart, Shared).GetPartsTagged(tagName);
         }
 
         private ListValue GetPartsTaggedPattern(StringValue tagPattern)
         {
-            // Prepare case-insensivie regex.
-            Regex r = new Regex(tagPattern, RegexOptions.IgnoreCase);
-            return PartValueFactory.Construct(GetRawPartsTaggedPattern(r), Shared);
-        }
-
-        private IEnumerable<global::Part> GetRawPartsTaggedPattern(Regex tagPattern)
-        {
-            return Vessel.parts
-                .Where(p => p.Modules.OfType<KOSNameTag>()
-                .Any(tag => tagPattern.IsMatch(tag.nameTag)));
+            return PartValueFactory.Construct(Vessel.rootPart, Shared).GetPartsTaggedPattern(tagPattern);
         }
 
         /// <summary>
@@ -286,22 +242,12 @@ namespace kOS.Suffixed
         /// <returns></returns>
         private ListValue GetAllTaggedParts()
         {
-            IEnumerable<global::Part> partsWithName = Vessel.parts
-                .Where(p => p.Modules.OfType<KOSNameTag>()
-                .Any(tag => !String.Equals(tag.nameTag, "", StringComparison.CurrentCultureIgnoreCase)));
-
-            return PartValueFactory.Construct(partsWithName, Shared);
+            return PartValueFactory.Construct(Vessel.rootPart, Shared).GetAllTaggedParts();
         }
 
         private ListValue GetModulesNamed(StringValue modName)
         {
-            // This is slow - maybe there should be a faster lookup string hash, but
-            // KSP's data model seems to have not implemented it:
-            IEnumerable<PartModule> modules = Vessel.parts
-                .SelectMany(p => p.Modules.Cast<PartModule>()
-                .Where(pMod => String.Equals(pMod.moduleName, modName, StringComparison.CurrentCultureIgnoreCase)));
-
-            return PartModuleFieldsFactory.Construct(modules, Shared);
+            return PartValueFactory.Construct(Vessel.rootPart, Shared).GetModulesNamed(modName);
         }
 
         private ListValue GetPartsInGroup(StringValue groupName)

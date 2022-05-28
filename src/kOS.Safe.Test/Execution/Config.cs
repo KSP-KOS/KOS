@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using System;
 using System.Collections.Generic;
@@ -163,6 +163,41 @@ namespace kOS.Safe.Test
             }
         }
 
+        public int TerminalDefaultWidth
+        {
+            get
+            {
+                return 0;
+            }
+
+            set
+            {
+            }
+        }
+
+        public int TerminalDefaultHeight
+        {
+            get
+            {
+                return 0;
+            }
+
+            set
+            {
+            }
+        }
+
+        public bool SuppressAutopilot
+        {
+            get
+            {
+                return true;
+            }
+
+            set
+            {
+            }
+        }
         public DateTime TimeStamp
         {
             get
@@ -207,12 +242,24 @@ namespace kOS.Safe.Test
             }
         }
 
+        public bool AllowClobberBuiltIns
+        {
+            get
+            {
+                return false;
+            }
+
+            set
+            {
+            }
+        }
+
         public IList<ConfigKey> GetConfigKeys()
         {
             return new List<ConfigKey>();
         }
 
-        public ISuffixResult GetSuffix(string suffixName)
+        public ISuffixResult GetSuffix(string suffixName, bool failOkay = false)
         {
             throw new NotImplementedException();
         }
@@ -222,7 +269,7 @@ namespace kOS.Safe.Test
             throw new NotImplementedException();
         }
 
-        public bool SetSuffix(string suffixName, object value)
+        public bool SetSuffix(string suffixName, object value, bool failOkay = false)
         {
             throw new NotImplementedException();
         }

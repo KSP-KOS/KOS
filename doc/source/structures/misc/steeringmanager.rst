@@ -35,6 +35,8 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     :attr:`PITCHTS`                      :struct:`scalar` (s)      Settling time for the pitch torque calculation.
     :attr:`YAWTS`                        :struct:`scalar` (s)      Settling time for the yaw torque calculation.
     :attr:`ROLLTS`                       :struct:`scalar` (s)      Settling time for the roll torque calculation.
+    :attr:`TORQUEEPSILONMIN`             :struct:`scalar` (s)      Torque deadzone when not rotating at max rate
+    :attr:`TORQUEEPSILONMAX`             :struct:`scalar` (s)      Torquw deadzone when rotating at max roatation rate
     :attr:`MAXSTOPPINGTIME`              :struct:`scalar` (s)      The maximum amount of stopping time to limit angular turn rate.
     :attr:`ROLLCONTROLANGLERANGE`        :struct:`scalar` (deg)    The maximum value of :attr:`ANGLEERROR` for which to control roll.
     :attr:`ANGLEERROR`                   :struct:`scalar` (deg)    The angle between vessel:facing and target directions
@@ -161,6 +163,90 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     :access: Get/Set
 
     Represents the settling time for the :ref:`PID calculating roll torque based on target angular velocity <cooked_torque_pid>`.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the roll direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).
+
+.. attribute:: SteeringManager:TORQUEEPSILONMIN
+
+    :type: :ref:`scalar <scalar>`
+    :access: Get/Set
+
+    DEFAULT VALUE: 0.0002
+
+    Tweaking this value can help make the controls stop wiggling so fast.
+
+    You cannot set this value higher than
+    :attr:`SteeringManager:TORQUEEPSILONMAX`.
+    If you attempt to do so, then
+    :attr:`SteeringManager:TORQUEEPSILONMAX` will be increased to match
+    the value just set :attr:`SteeringManager:TORQUEEPSILONMIN` to.
+
+    To see how to use this value, look at the description of
+    :attr:`SteeringManager:TORQUEEPSILONMAX` below, which
+    has the full documentation about how these two values, Min and Max,
+    work together.
+
+.. attribute:: SteeringManager:TORQUEEPSILONMAX
+
+    :type: :ref:`scalar <scalar>`
+    :access: Get/Set
+
+    DEFAULT VALUE: 0.001
+
+    Tweaking this value can help make the controls stop wiggling so fast.
+    If you have problems wasting too much RCS propellant because kOS
+    "cares too much" about getting the rotation rate exactly right and is
+    wiggling the controls unnecessarily when rotating toward a new direction,
+    setting thie value a bit higher can help.
+
+    You cannot set this value lower than
+    :attr:`SteeringManager:TORQUEEPSILONMIN`.
+    If you attempt to do so, then
+    :attr:`SteeringManager:TORQUEEPSILONMIN` will be decreased to match
+    the value just set :attr:`SteeringManager:TORQUEEPSILONMAX` to.
+
+    **HOW IT WORKS:**
+    
+    If the error in the desired rotation rate is smaller than the current epsilon,
+    then the PID that calculates desired torque will ignore that error and not
+    bother correcting it until it gets bigger.  The actual epsilon value used
+    in the steering manager's internal PID controller is always something between 
+    :attr:`SteeringManager:TORQUEEPSILONMIN`.
+    and
+    :attr:`SteeringManager:TORQUEEPSILONMAX`.
+    It varies between these two values depending on whether the
+    vessel is currently rotating at near the maximum rotation rate
+    the SteeringManager allows (as determined by
+    :attr:`SteeringManager:MAXSTOPPINGTIME`) or whether it's quite far
+    from its maximum rotation rate.
+    :attr:`SteeringManager:TORQUEEPSILONMAX` is used when the vessel is
+    at it's maximum rotation rate (i.e. it's coasting around to a new
+    orientation and shouldn't pointlessly spend RCS fuel trying to hold
+    that angular velocity precisely).
+    :attr:`SteeringManager:TORQUEEPSILONMIN` is used when the vessel is
+    not trying to rotate at all and is supposed to be using the steering
+    just to hold the aim at a standstill.  In between these two states,
+    it uses a value partway between the two, linearly interpolated between
+    them.
+
+    If you desire a constant epsilon, set both the min and max values to the
+    same value.
+
+.. _rotationepsilonmax_math:
+
+    ** MIN VESSEL CAPABILITY: **
+
+    Warning: Setting :attr:`SteeringManager:ROTATIONEPSILONMAX` too large can
+    make the SteeringManager fail to try turning the craft at all.  Use this
+    formula to decide what is probably the maximum safe value you can set
+    it to without it causing this problem:
+
+    Let :math:`\omega = \text{rotational acceleration the vessel is
+    capable of, expressed in} \frac{\text{degrees}}{\text{second}^2}`
+
+    Then :math:`\epsilon`, the maximum safe ``RotationEpsilonMax``
+    to pick, is:
+
+    :math:`\epsilon = \omega \cdot {MAXSTOPPINGTIME}`
+    Where MAXSTOPPINGTIME is :attr:`SteeringManager:MAXSTOPPINGTIME`
 
 .. attribute:: SteeringManager:MAXSTOPPINGTIME
 

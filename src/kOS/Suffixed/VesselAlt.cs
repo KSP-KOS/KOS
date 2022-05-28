@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using System;
 using UnityEngine;
@@ -34,10 +34,19 @@ namespace kOS.Suffixed
         
         public ScalarValue GetRadar()
         {
-            return Convert.ToDouble(
-                shared.Vessel.heightFromTerrain > 0 ?
-                    Mathf.Min(shared.Vessel.heightFromTerrain, (float)shared.Vessel.altitude) :
-                    (float)shared.Vessel.altitude);
+            double seaAlt = shared.Vessel.altitude;
+
+            // Note, this is -1 when ground is too far away, which is why it needs the "> 0" checks you see below
+            // to fallback on sea level altitude when it isn't working.
+            double groundAlt = shared.Vessel.heightFromTerrain;
+            if (shared.Vessel.mainBody.ocean)
+            {
+                return Convert.ToDouble(groundAlt > 0 ? Math.Min(groundAlt, seaAlt) : seaAlt);
+            }
+            else
+            {
+                return Convert.ToDouble(groundAlt > 0 ? groundAlt : seaAlt);
+            }
         }
 
         public override string ToString()

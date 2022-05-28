@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+using UnityEngine;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Exceptions;
 using kOS.Utilities;
 using kOS.Serialization;
 using kOS.Safe.Serialization;
@@ -11,7 +12,7 @@ namespace kOS.Suffixed
 {
     [kOS.Safe.Utilities.KOSNomenclature("GeoCoordinates")]
     [kOS.Safe.Utilities.KOSNomenclature("LatLng", CSharpToKOS = false)]
-    public class GeoCoordinates : SerializableStructure, IHasSharedObjects
+    public class GeoCoordinates : SerializableStructure
     {
         private static string DumpLat = "lat";
         private static string DumpLng = "lng";
@@ -46,7 +47,10 @@ namespace kOS.Suffixed
 
         private const int TERRAIN_MASK_BIT = 15;
 
-        public GeoCoordinates()
+        // Only used by CreateFromDump() and the other constructors.
+        // Don't make it public because it leaves fields unpopulated if
+        // used by itself:
+        private GeoCoordinates()
         {
             GeoCoordsInitializeSuffixes();
         }
@@ -107,6 +111,15 @@ namespace kOS.Suffixed
             Body = Shared.Vessel.GetOrbit().referenceBody;
         }
 
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static GeoCoordinates CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new GeoCoordinates();
+            newObj.Shared = (SharedObjects)shared;
+            newObj.LoadDump(d);
+            return newObj;
+        }
+
         /// <summary>
         ///   The bearing from the current CPU vessel to the surface spot with the
         ///   given lat/long coords, relative to the current CPU vessel's heading.
@@ -164,9 +177,11 @@ namespace kOS.Suffixed
                 // a point a bit below it, to aim down to the terrain:
                 Vector3d worldRayCastStop = Body.GetWorldSurfacePosition( Latitude, Longitude, alt+POINT_AGL );
                 RaycastHit hit;
-                if (Physics.Raycast(worldRayCastStart, (worldRayCastStop - worldRayCastStart), out hit, float.MaxValue, 1<<TERRAIN_MASK_BIT ))
+                if (RaycastForTerrain(worldRayCastStart, worldRayCastStop, out hit))
                 {
                     // Ensure hit is on the topside of planet, near the worldRayCastStart, not on the far side.
+                    // Note this check is *probably* unnecessary but I'm not 100% sure.  (Probably unnecessary
+                    // because the other side of the planet isn't going to have colliders loaded).
                     if (Mathf.Abs(hit.distance) < 3000)
                     {
                         // Okay a hit was found, use it instead of PQS alt:
@@ -175,6 +190,49 @@ namespace kOS.Suffixed
                 }
             }
             return alt;
+        }
+
+        static double tinySkipDistance = 0.0001d;
+
+        /// <summary>Check to find terrain, adding extra masking logic to deal with KSP having put some
+        /// objects on the terrain layer which weren't really terrain.</summary>
+        private bool RaycastForTerrain(Vector3d worldRayCastStart, Vector3d worldRayCastStop, out RaycastHit hit)
+        {
+            Vector3d aimVector = worldRayCastStop - worldRayCastStart;
+            Vector3d originalStart = worldRayCastStart;
+
+            // The sane way to do this would be to just use a layermask that only hits terrain.
+            // The problem with trying to do that is KSP's Breaking Ground DLC's rover scanner arms have a
+            // phantom spherical collider on the terrain layer even though they're really not terrain.
+            // See my note on Squad bugtracker issue 26938, https://bugs.kerbalspaceprogram.com/issues/26938#note-3)
+            // To fix that, this contains some extra logic that says if a terrain layer hit turns out to really be
+            // a vessel part, it should skip past it and keep looking.
+            int remainingAttempts = 200;
+            while (Physics.Raycast(worldRayCastStart, aimVector, out hit, float.MaxValue, 1 << TERRAIN_MASK_BIT))
+            {
+                global::Part partHit = hit.collider?.transform?.root?.gameObject?.GetComponent<global::Part>();
+                if (partHit == null)
+                {
+                    // Not a Part, so let's assume its a genuine terrain hit.
+
+                    // Return the hit distance from the caller's original start spot, not the temporary one
+                    // we may have moved it to:
+                    hit.distance = (float)(hit.point - originalStart).magnitude;
+                    return true;
+                }
+                // Hit was a Part, so it doesn't count.  Go again starting from just past that hit:
+                worldRayCastStart = hit.point + tinySkipDistance * aimVector.normalized;
+                if (--remainingAttempts == 0)
+                {
+                    // The majority of the time this loop should only need one iteration. If the
+                    // scene contains any of the few offending parts that use terrain layermask, it will
+                    // need at most one more iteration per offending part in the scene.  Anything more than
+                    // just a few iterations you can count on one hand and the algorithm is probably failing.
+                    throw new KOSYouShouldNeverSeeThisException(
+                        "kOS's RaycastForTerrain() is probably stuck in an infinite loop. It's being aborted to prevent it from freezing KSP.");
+                }
+            }
+            return false;
         }
 
         /// <summary>

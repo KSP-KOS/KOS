@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using kOS.Safe.Communication;
 
 namespace kOS.Communication
@@ -8,6 +8,11 @@ namespace kOS.Communication
         public double CurrentTime()
         {
             return Planetarium.GetUniversalTime();
+        }
+
+        // a dummy call required by CurrentTimeProvider interface.
+        public void SetTime(double ignoreMe)
+        {
         }
     }
 }

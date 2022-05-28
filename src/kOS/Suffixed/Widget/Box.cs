@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Execution;
 using UnityEngine;
@@ -49,6 +49,7 @@ namespace kOS.Suffixed.Widget
             AddSuffix("ADDSCROLLBOX", new Suffix<ScrollBox>(AddScrollBox));
             AddSuffix("ADDSTACK", new Suffix<Box>(AddStack));
             AddSuffix("ADDSPACING", new OptionalArgsSuffix<Spacing>(AddSpace, new Structure [] { new ScalarIntValue(-1) }));
+            AddSuffix("ADDTIPDISPLAY", new OptionalArgsSuffix<Label>(AddTipDisplay, new Structure[] { new StringValue("") }));
             AddSuffix("WIDGETS", new Suffix<ListValue>(() => ListValue.CreateList(Widgets)));
             AddSuffix("RADIOVALUE", new Suffix<StringValue>(() => new StringValue(GetRadioValue())));
             AddSuffix("ONRADIOCHANGE", new SetSuffix<UserDelegate>(() => CallbackGetter(UserOnRadioChange), value => UserOnRadioChange = CallbackSetter(value)));
@@ -190,6 +191,13 @@ namespace kOS.Suffixed.Widget
         public Label AddLabel(params Structure [] args)
         {
             var w = new Label(this, (StringValue) args[0]);
+            Widgets.Add(w);
+            return w;
+        }
+
+        public Label AddTipDisplay(params Structure [] args)
+        {
+            var w = new TipDisplay(this, (args.Length == 0 ? (StringValue)"" : (StringValue) args[0]) );
             Widgets.Add(w);
             return w;
         }

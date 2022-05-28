@@ -23,6 +23,14 @@ namespace kOS.Safe.Encapsulation
             RegisterInitializer(ListInitializeSuffixes);
         }
 
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static ListValue<T> CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new ListValue<T>();
+            newObj.LoadDump(d);
+            return newObj;
+        }
+
         public int Count => Collection.Count;
         public void CopyTo(T[] array, int arrayIndex) =>
             Collection.CopyTo(array, arrayIndex);
@@ -164,6 +172,14 @@ namespace kOS.Safe.Encapsulation
         public ListValue(IEnumerable<Structure> toCopy) : base(toCopy)
         {
             RegisterInitializer(InitializeSuffixes);
+        }
+
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static new ListValue CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new ListValue();
+            newObj.LoadDump(d);
+            return newObj;
         }
 
         private void InitializeSuffixes() =>
