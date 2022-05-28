@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -44,8 +44,6 @@ namespace kOS.Safe.Screen
         public virtual int CursorColumnShow { get { return ScrollingOutput.CursorColumn; } }
 
         public int RowCount { get; private set; }
-
-        public bool CursorVisible { get { var row = CursorRowShow; return row >= 0 && row < RowCount; } }
 
         public int AbsoluteCursorRow
         {

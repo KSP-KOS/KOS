@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using kOS.Safe.UserIO;
@@ -13,8 +13,8 @@ namespace kOS.Safe.Screen
         public List<IScreenBufferLine> Buffer { get; private set;}
         public int TopRow {get; private set;}
         public int CursorColumn {get; private set;}
-        public int CursorRow {get; private set;}
-        public bool CursorVisible { get; private set; }
+        public int CursorRow {get; private set; }
+        public bool CursorVisible { get { var row = CursorRow; return row >= 0 && row < RowCount && CursorColumn < Buffer[row].Length; } }
         public int RowCount {get; private set;}
 
         // Tweakable setting:
@@ -41,7 +41,6 @@ namespace kOS.Safe.Screen
             TopRow = fromScreen.TopRow;
             CursorColumn = fromScreen.CursorColumnShow;
             CursorRow = fromScreen.CursorRowShow;
-            CursorVisible = fromScreen.CursorVisible;
             RowCount = fromScreen.RowCount;
         }
         
@@ -62,7 +61,6 @@ namespace kOS.Safe.Screen
             newThing.CursorColumn = fromScreen.CursorColumnShow;
             newThing.CursorRow = fromScreen.CursorRowShow;
             newThing.RowCount = fromScreen.RowCount;
-            newThing.CursorVisible = fromScreen.CursorVisible;
             newThing.Buffer = new List<IScreenBufferLine>();
             for (int i = 0; i < newThing.RowCount ; ++i)
                 newThing.Buffer.Add(new ScreenBufferLine(fromScreen.ColumnCount));

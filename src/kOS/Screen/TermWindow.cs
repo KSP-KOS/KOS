@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using kOS.Safe.Persistence;
@@ -1030,8 +1030,7 @@ namespace kOS.Screen
                     // Only if the cursor is within terminal bounds, to avoid throwing array bounds exceptions.
                     // (Cursor can be temporarily out of bounds if the up-arrow recalled a long cmdline, or if
                     // the terminal just got resized.)
-                    // TODO: move row length check into screen if possible, or reintegrate CursorVisible here
-                    screen.CursorVisible &&  cursorCol < buffer[cursorRow].Length &&
+                    mostRecentScreen.CursorVisible &&
                     // Only when the CPU has power
                     IsPowered &&
                     // Only when expecting input
