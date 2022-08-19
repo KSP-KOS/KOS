@@ -514,6 +514,89 @@ This follows the same rules as :ref:`SET <set>`, in that if the variable in
 question doesn't already exist, it will end up creating it as a global
 variable.
 
+.. _masking_builtins:
+
+Clobbering Built-in names:
+--------------------------
+
+kOS has several identifiers that are built-in and should never be
+used by programs for their own variable names and function names. Doing
+so has the potential to make the built-in things in kOS impossible to
+use after that.  Even if the :ref:`scoping masking <scope>` would normally
+differentiate them (making a local variable that only *temporarily*
+masks a built-in name until the local variable goes out of scope),
+that can still cause problems in kOS, so it's easier to just entirely
+disallow it.
+
+It used to be the case that kOS never checked for this condition, but
+that caused a lot of confusion and requests for help from users who
+don't know why a built-in thing doesn't work anymore after they overwrote
+it with their own variable.  kOS now enforces a rule where it will
+complain with an error message if you try to clobber a built-in name
+with one of your own names.
+
+.. warning::
+    .. versionadded:: 1.4.0.0
+    ** BREAKING CHANGE: **
+    kOS only started enforcing this rule in kOS 1.4.0.0 and up, so old
+    scripts you find on the internet might generate errors because of
+    this new enforcement.  See :attr:`Config:CLOBBERBUILTINS` or
+    :ref:`@CLOBBERBUILTINS <clobberbuiltins>` if you wish to disable
+    this check and get the old behavior back.
+
+For example, because kOS has the built-in function :func:`V(x,y,z)`,
+which makes a vector, you shouldn't make a user defined function
+or variable called `V`.  Because kOS has the built-in variable
+:ref:`alt <alt>`, you should never make your own variable called
+``alt``, etc.
+
+Here's an example of the kind of error message you might get for
+this error::
+
+   set altitude to 10.
+                   ^
+   Not allowed to SET a name that will clobber or hide the variable called 'ALTITUDE'.
+   See kOS documentation for CLOBBERBUILTINS for more information.
+
+If you get any of these errors, you should edit the script to change
+the name to something else.
+
+If you can't do that, and have to use scripts that contain these names
+that clobber built-ins, then you can re-enable clobbering
+built-ins using :ref:`the @CLOBBERBUILTINS directive <clobberbuiltins>`
+or the :attr:`Config:CLOBBERBUILTINS` configuration setting.
+
+.. _clobberbuiltins:
+
+``@CLOBBERBUILTINS`` directive
+::::::::::::::::::::::::::::::
+
+If you wish to turn off the enforcement that prevents clobbering
+over the top of built-in names, and allow a scripts to mask a
+built-in name with a variable of the same name, you can do so
+on a per-file basis by putting this line at the top of your
+program files::
+
+    @CLOBBERBUILTINS on.
+
+This is a compiler directive that *MUST* occur at the top of the file,
+and the only other things that are allowed to preceed it are
+comments, blanks, and other compiler directives such as
+:ref:`@LAZYGLOBAL <lazyglobal>`.
+
+This tells kOS to restore the same behavior it had prior to kOS 1.4.0.0.
+The intended use for this is to make kOS still work with older scripts
+that may have been written before this enforcement existed.
+
+Changing @CLOBBERBUILTINS globally in CONFIG
+::::::::::::::::::::::::::::::::::::::::::::
+
+If you don't want to have to put a ``@CLOBBERBUILTINS on.`` directive
+at the top of every program file, you can globally change the behavior
+for all of kOS by using the config option :attr:`Config:CLOBBERBUILTINS`,
+which is adjustable on KSP's "Difficulty Options" settings menu under
+kOS settings, or by directly changing it in a script command.
+
 .. _scope:
 
 Scoping terms

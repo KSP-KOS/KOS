@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Callback;
+using kOS.Safe.Callback;
 using kOS.Safe.Execution;
 using kOS.Safe.Module;
 using kOS.Safe.Persistence;
@@ -84,6 +84,14 @@ namespace kOS.Safe.Test.Execution
         public bool CheckCanBoot()
         {
             return true;
+        }
+
+        public bool HasBooted
+        {
+            get
+            {
+                return true;
+            }
         }
 
         public void SetMode(ProcessorModes newProcessorMode)

@@ -84,7 +84,9 @@ namespace kOS.Safe.Test.Execution
             {
                 LoadProgramsInSameAddressSpace = false,
                 IsCalledFromRun = false,
-                FuncManager = shared.FunctionManager
+                FuncManager = shared.FunctionManager,
+                BindManager = shared.BindingMgr,
+                AllowClobberBuiltins = SafeHouse.Config.AllowClobberBuiltIns
             });
             cpu.Boot();
 

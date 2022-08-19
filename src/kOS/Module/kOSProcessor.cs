@@ -62,7 +62,7 @@ namespace kOS.Module
         private int vesselPartCount;
         private SharedObjects shared;
         private static readonly List<kOSProcessor> allMyInstances = new List<kOSProcessor>();
-        private bool firstUpdate = true;
+        public bool HasBooted { get; set; }
         private bool objectsInitialized = false;
 
         public float AdditionalMass { get; set; }
@@ -824,11 +824,11 @@ namespace kOS.Module
 
             if (!vessel.HoldPhysics)
             {
-                if (firstUpdate)
+                if (!HasBooted)
                 {
                     SafeHouse.Logger.LogWarning("First Update()");
-                    firstUpdate = false;
                     shared.Cpu.Boot();
+                    HasBooted = true;
                 }
                 UpdateVessel();
                 UpdateFixedObservers();
@@ -1107,7 +1107,7 @@ namespace kOS.Module
                     {
                         shared.VolumeMgr.SwitchTo(HardDisk);
                     }
-                    firstUpdate = true; // handle booting the cpu on the next FixedUpdate
+                    HasBooted = false; // When FixedUpdate() first happesn, then the boot will happen.
                     if (shared.Interpreter != null) shared.Interpreter.SetInputLock(false);
                     if (shared.Window != null) shared.Window.IsPowered = true;
                     foreach (var w in shared.ManagedWindows) w.IsPowered = true;
@@ -1137,8 +1137,8 @@ namespace kOS.Module
 
         public void SetAutopilotMode(int mode)
         {
-            UIStateToggleButton[] modeButtons = FindObjectOfType<VesselAutopilotUI>().modeButtons;
-            modeButtons.ElementAt(mode).SetState(true);
+            // First change the real setting underneath the UI:
+            FlightGlobals.ActiveVessel.Autopilot.SetMode((VesselAutopilot.AutopilotMode) mode);
         }
 
         public string BootFilename

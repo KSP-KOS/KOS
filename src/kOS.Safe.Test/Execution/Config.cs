@@ -242,6 +242,18 @@ namespace kOS.Safe.Test
             }
         }
 
+        public bool AllowClobberBuiltIns
+        {
+            get
+            {
+                return false;
+            }
+
+            set
+            {
+            }
+        }
+
         public IList<ConfigKey> GetConfigKeys()
         {
             return new List<ConfigKey>();

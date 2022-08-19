@@ -24,6 +24,7 @@ namespace kOS.Suffixed
         public bool EnableSafeMode { get { return kOSCustomParameters.Instance.enableSafeMode; } set { kOSCustomParameters.Instance.enableSafeMode = value; } }
         public bool AudibleExceptions { get { return kOSCustomParameters.Instance.audibleExceptions; } set { kOSCustomParameters.Instance.audibleExceptions = value; } }
         public bool VerboseExceptions { get { return kOSCustomParameters.Instance.verboseExceptions; } set { kOSCustomParameters.Instance.verboseExceptions = value; } }
+        public bool AllowClobberBuiltIns { get { return kOSCustomParameters.Instance.clobberBuiltIns; } set { kOSCustomParameters.Instance.clobberBuiltIns = value; } }
         public bool EnableTelnet { get { return GetPropValue<bool>(PropId.EnableTelnet); } set { SetPropValue(PropId.EnableTelnet, value); } }
         public int TelnetPort { get { return GetPropValue<int>(PropId.TelnetPort); } set { SetPropValue(PropId.TelnetPort, value); } }
         public string TelnetIPAddrString { get { return GetPropValue<string>(PropId.TelnetIPAddrString); } set { SetPropValue(PropId.TelnetIPAddrString, value); } }        
@@ -60,6 +61,7 @@ namespace kOS.Suffixed
             AddSuffix("SAFE", new SetSuffix<BooleanValue>(() => EnableSafeMode, value => EnableSafeMode = value));
             AddSuffix("AUDIOERR", new SetSuffix<BooleanValue>(() => AudibleExceptions, value => AudibleExceptions = value));
             AddSuffix("VERBOSE", new SetSuffix<BooleanValue>(() => VerboseExceptions, value => VerboseExceptions = value));
+            AddSuffix("CLOBBERBUILTINS", new SetSuffix<BooleanValue>(() => AllowClobberBuiltIns, value => AllowClobberBuiltIns = value));
             AddSuffix("DEBUGEACHOPCODE", new SetSuffix<BooleanValue>(() => DebugEachOpcode, value => DebugEachOpcode = value));
             AddSuffix("BLIZZY", new SetSuffix<BooleanValue>(() => UseBlizzyToolbarOnly, value => UseBlizzyToolbarOnly = value));
             AddSuffix("BRIGHTNESS", new ClampSetSuffix<ScalarValue>(() => TerminalBrightness, value => TerminalBrightness = value, 0f, 1f, 0.01f));

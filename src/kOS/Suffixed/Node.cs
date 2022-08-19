@@ -84,6 +84,7 @@ namespace kOS.Suffixed
             AddSuffix("TIME", new SetSuffix<ScalarValue>(
                 () =>
                 {
+                    FromNodeRef();
                     return time;
                 },
                 value =>

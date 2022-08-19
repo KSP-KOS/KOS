@@ -203,6 +203,8 @@ namespace kOS.Safe.Execution
                     {
                         LoadProgramsInSameAddressSpace = true,
                         FuncManager = shared.FunctionManager,
+                        BindManager = shared.BindingMgr,
+                        AllowClobberBuiltins = SafeHouse.Config.AllowClobberBuiltIns,
                         IsCalledFromRun = false
                     };
 
