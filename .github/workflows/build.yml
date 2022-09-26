@@ -1,0 +1,68 @@
+# This is a basic workflow to help you get started with Actions
+
+name: build
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master, develop ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  check-secret:
+    uses: KSP-RO/BuildTools/.github/workflows/check-secret.yml@master
+    secrets:
+      KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}
+
+  validate-cfg-files:
+    uses: KSP-RO/BuildTools/.github/workflows/validate-cfg-files.yml@master
+
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: [check-secret]
+    if: needs.check-secret.outputs.has-password == 'true'
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 100
+
+      - name: Download required assemblies
+        id: download-assemblies
+        uses: KSP-RO/BuildTools/download-assemblies@master
+        with:
+          KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}
+
+      - name: Build mod solution
+        run: msbuild /p:Configuration=Release /p:ReferencePath="${{ steps.download-assemblies.outputs.ksp-dll-path }}" ${GITHUB_WORKSPACE}/src/kOS.sln
+
+      - name: Build metadata
+        uses: KSP-RO/BuildTools/update-version-file@master
+        with:
+          path: ${GITHUB_WORKSPACE}/GameData/RP-0/RP-1.version
+          tag: "v2.0.0.0"
+
+      - name: Assemble release
+        id: assemble-release
+        run: |
+          RELEASE_DIR="${RUNNER_TEMP}/release"
+          echo "Release dir: ${RELEASE_DIR}"
+          mkdir -v "${RELEASE_DIR}"
+          echo "::set-output name=release-dir::${RELEASE_DIR}"
+          cp -v -R "${GITHUB_WORKSPACE}/GameData" "${RELEASE_DIR}"
+          cp -v -R "${GITHUB_WORKSPACE}/LICENSE.md" "${RELEASE_DIR}/GameData/RP-0/LICENSE.md"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: RP-1
+          path: ${{ steps.assemble-release.outputs.release-dir }}
