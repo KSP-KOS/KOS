@@ -25,7 +25,6 @@ on an Orbit, and can be obtained one of two ways:
   .. structure:: OrbitEta
 
   .. list-table::
-
      :header-rows: 1
      :widths: 2 1 4
 
@@ -36,15 +35,12 @@ on an Orbit, and can be obtained one of two ways:
      * - :attr:`APOAPSIS`
        - :ref:`scalar <scalar>`, seconds
        - Seconds from now until apoapsis.
-
      * - :attr:`PERIAPSIS`
        - :ref:`scalar <scalar>`, seconds
        - Seconds from now until periapsis.
-
      * - :attr:`NEXTNODE`
        - :ref:`scalar <scalar>`, seconds
        - Seconds from now until the next maneuver node.
-
      * - :attr:`TRANSITION`
        - :ref:`scalar <scalar>`, seconds
        - Seconds from now until the next orbit patch starts.

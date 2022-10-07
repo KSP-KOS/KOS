@@ -533,7 +533,7 @@ For Kerbals, it refers to a more arbitrary line in space, pointing at a fixed
 point in the firmament, also known as the "skybox".
 
 OPCODESLEFT
----------
+-----------
 
 This returns the amount of IPU that are left in this physics tick. This means
 that if you receive the value 20, you can run 20 more instructions. After this
@@ -544,7 +544,7 @@ OPCODESLEFT can be used to try to make sure you run a block of code in one
 physics tick. This is useful when working with vectors or when interacting
 with shared message queues. 
 
-To use:
+To use::
 
    // Will always wait the first time, becomes more accurate the second time.
    GLOBAL OPCODESNEEDED TO 1000.

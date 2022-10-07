@@ -9,6 +9,7 @@ from pygments.lexer import RegexLexer, include, bygroups, using, \
 from pygments.util import get_bool_opt
 from pygments.token import Text, Comment, Operator, Keyword, Name, String, \
     Number, Punctuation, Error
+from sphinx.highlighting import lexers
 
 class KerboscriptLexer(RegexLexer):
    
@@ -66,4 +67,4 @@ class KerboscriptLexer(RegexLexer):
     }
 
 def setup(app):
-    app.add_lexer("kerboscript", KerboscriptLexer())
+    lexers['kerboscript'] = KerboscriptLexer()

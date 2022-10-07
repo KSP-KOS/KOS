@@ -537,12 +537,12 @@ with one of your own names.
 
 .. warning::
     .. versionadded:: 1.4.0.0
-    ** BREAKING CHANGE: **
-    kOS only started enforcing this rule in kOS 1.4.0.0 and up, so old
-    scripts you find on the internet might generate errors because of
-    this new enforcement.  See :attr:`Config:CLOBBERBUILTINS` or
-    :ref:`@CLOBBERBUILTINS <clobberbuiltins>` if you wish to disable
-    this check and get the old behavior back.
+        ** BREAKING CHANGE: **
+        kOS only started enforcing this rule in kOS 1.4.0.0 and up, so old
+        scripts you find on the internet might generate errors because of
+        this new enforcement.  See :attr:`Config:CLOBBERBUILTINS` or
+        :ref:`@CLOBBERBUILTINS <clobberbuiltins>` if you wish to disable
+        this check and get the old behavior back.
 
 For example, because kOS has the built-in function :func:`V(x,y,z)`,
 which makes a vector, you shouldn't make a user defined function

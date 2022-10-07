@@ -1,4 +1,4 @@
-.. _separator
+.. _separator:
 
 Separator
 =========
