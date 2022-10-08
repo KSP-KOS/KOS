@@ -202,6 +202,8 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     (Pressure must be greater than or equal to zero.  If you pass in a
     negative value, it will be treated as if you had given a zero instead.)
 
+.. _engine_THRUST:
+
 .. attribute:: Engine:THRUST
 
     :access: Get only
