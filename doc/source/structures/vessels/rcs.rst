@@ -53,49 +53,49 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type R
           -
           - Does this thruster always apply full thrust.
         * - :attr:`THRUSTLIMIT`
-          - :ref:`scalar <scalar>` (%)
+          - :struct:`Scalar` (%)
           - Tweaked thrust limit.
         * - :attr:`DEADBAND`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - The game's built-in RCS input null zone for this RCS thruster.
         * - :attr:`MAXTHRUST`
-          - :ref:`scalar <scalar>` (kN)
+          - :struct:`Scalar` (kN)
           - Untweaked thrust limit.
         * - :meth:`MAXTHRUSTAT(pressure)`
-          - :ref:`scalar <scalar>` (kN)
+          - :struct:`Scalar` (kN)
           - Max thrust at the specified pressure (in standard Kerbin atmospheres).
         * - :attr:`AVAILABLETHRUST`
-          - :ref:`scalar <scalar>` (kN)
+          - :struct:`Scalar` (kN)
           - Available thrust at full throttle accounting for thrust limiter.
         * - :meth:`AVAILABLETHRUSTAT(pressure)`
-          - :ref:`scalar <scalar>` (kN)
+          - :struct:`Scalar` (kN)
           - Available thrust at the specified pressure (in standard Kerbin atmospheres).
         * - :attr:`MAXFUELFLOW`
-          - :ref:`scalar <scalar>` (unit/s)
+          - :struct:`Scalar` (unit/s)
           - Untweaked maximum volumetric flow rate of fuel at full throttle.
         * - :attr:`MAXMASSFLOW`
-          - :ref:`scalar <scalar>` (Mg/s)
+          - :struct:`Scalar` (Mg/s)
           - Untweaked maximum mass flow rate of fuel at full throttle.
         * - :attr:`ISP`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_
         * - :meth:`ISPAT(pressure)`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at the given pressure (in standard Kerbin atmospheres).
         * - :attr:`VACUUMISP`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Vacuum `specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_
         * - :attr:`VISP`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Synonym for VACUUMISP
         * - :attr:`SEALEVELISP`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at Kerbin sealevel
         * - :attr:`SLISP`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Synonym for SEALEVELISP
         * - :attr:`FLAMEOUT`
-          - :ref:`Boolean <boolean>`
+          - :struct:`Boolean`
           - Check if no more fuel.
         * - :attr:`THRUSTVECTORS`
           - :struct:`List`
@@ -112,70 +112,70 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type R
 .. attribute:: RCS:ENABLED
 
     :access: Get/Set
-    :type: :ref:`Boolean <boolean>`
+    :type: :struct:`Boolean`
     
     Is this rcs thruster enabled.
     
 .. attribute:: RCS:YAWENABLED
 
     :access: Get/Set
-    :type: :ref:`Boolean <boolean>`
+    :type: :struct:`Boolean`
         
     Is yaw control enabled for this rcs thruster.
     
 .. attribute:: RCS:PITCHENABLED
 
     :access: Get/Set
-    :type: :ref:`Boolean <boolean>`
+    :type: :struct:`Boolean`
         
     Is pitch control enabled for this rcs thruster.
     
 .. attribute:: RCS:ROLLENABLED
 
     :access: Get/Set
-    :type: :ref:`Boolean <boolean>`
+    :type: :struct:`Boolean`
         
     Is roll control enabled for this rcs thruster.
     
 .. attribute:: RCS:FOREENABLED
 
     :access: Get/Set
-    :type: :ref:`Boolean <boolean>`
+    :type: :struct:`Boolean`
         
     Is fore/aft control enabled for this rcs thruster.
     
 .. attribute:: RCS:STARBOARDENABLED
 
     :access: Get/Set
-    :type: :ref:`Boolean <boolean>`
+    :type: :struct:`Boolean`
         
     Is port/starboard control enabled for this rcs thruster.
     
 .. attribute:: RCS:TOPENABLED
 
     :access: Get/Set
-    :type: :ref:`Boolean <boolean>`
+    :type: :struct:`Boolean`
         
     Is dorsal/ventral control enabled for this rcs thruster.
     
 .. attribute:: RCS:FOREBYTHROTTLE
 
     :access: Get/Set
-    :type: :ref:`Boolean <boolean>`
+    :type: :struct:`Boolean`
         
     Does this thruster apply fore thrust when the ship throttled up.
     
 .. attribute:: RCS:FULLTHRUST
 
     :access: Get/Set
-    :type: :ref:`Boolean <boolean>`
+    :type: :struct:`Boolean`
         
     Does this thruster always apply full thrust.
     
 .. attribute:: RCS:THRUSTLIMIT
 
     :access: Get/Set
-    :type: :ref:`scalar <scalar>` (%)
+    :type: :struct:`Scalar` (%)
 
     If this is a thruster with a thrust limiter (tweakable) enabled, what
     percentage is it limited to?  Note that this is expressed as a
@@ -198,7 +198,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type R
 .. attribute:: RCS:DEADBAND
 
     :access: Get/Set (but Note the Warning on SET below)
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     Default: 0.05.
 
@@ -265,7 +265,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type R
 .. attribute:: RCS:MAXTHRUST
 
     :access: Get only
-    :type: :ref:`scalar <scalar>` (kN)
+    :type: :struct:`Scalar` (kN)
 
     How much thrust would this rcs thruster give at its current atmospheric pressure if one of the control axes that activates it (yaw, pitch, roll, fore, aft, or top) was maxxed, and the thrust limiter was max at 100%.  Note this might not be the thruster's actual max thrust it could have under other air pressure conditions.  Some thrusters have a very different value for MAXTHRUST in vacuum as opposed to at sea level pressure.
 
@@ -274,7 +274,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type R
 .. method:: RCS:MAXTHRUSTAT(pressure)
 
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
-    :type: :ref:`scalar <scalar>` (kN)
+    :type: :struct:`Scalar` (kN)
 
     How much thrust would this rcs thruster give if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxxed and thrust limiter was max at the given atmospheric pressure.  Use a pressure of 0.0 for vacuum, and 1.0 for sea level (on Kerbin) (or more than 1 for thicker atmospheres like on Eve).
     (Pressure must be greater than or equal to zero.  If you pass in a
@@ -283,7 +283,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type R
 .. attribute:: RCS:THRUST
 
     :access: Get only
-    :type: :ref:`scalar <scalar>` (kN)
+    :type: :struct:`Scalar` (kN)
 
     How much thrust is this rcs thruster is giving at this very moment.
 
@@ -292,7 +292,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type R
 .. attribute:: RCS:AVAILABLETHRUST
 
     :access: Get only
-    :type: :ref:`scalar <scalar>` (kN)
+    :type: :struct:`Scalar` (kN)
 
     Taking into account the thrust limiter tweakable setting, how much thrust would this rcs thruster give at its current thrust limit setting and atmospheric pressure conditions, if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxxed .
 
@@ -301,7 +301,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type R
 .. method:: RCS:AVAILABLETHRUSTAT(pressure)
 
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
-    :type: :ref:`scalar <scalar>` (kN)
+    :type: :struct:`Scalar` (kN)
 
     Taking into account the thrust limiter tweakable setting, how much thrust at the given atmospheric pressure would this rcs thruster give at its current thrust limit setting if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxxed.   The pressure is measured in ATMs, meaning 0.0 is a vacuum, 1.0 is sea level at Kerbin.
     (Pressure must be greater than or equal to zero.  If you pass in a
@@ -310,28 +310,28 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type R
 .. attribute:: RCS:MAXFUELFLOW
 
     :access: Get only
-    :type: :ref:`scalar <scalar>` (units/s)
+    :type: :struct:`Scalar` (units/s)
 
     How much fuel volume would this rcs thruster consume at standard pressure and velocity if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxxed, and the thrust limiter was max at 100%.  Note this might not be the engine's actual max fuel flow it could have under other air pressure conditions.
 
 .. attribute:: RCS:MAXMASSFLOW
 
     :access: Get only
-    :type: :ref:`scalar <scalar>` (Mg/s)
+    :type: :struct:`Scalar` (Mg/s)
 
     How much fuel mass would this rcs thruster consume at standard pressure and velocity if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxxed, and the thrust limiter was max at 100%.  Note this might not be the engine's actual max fuel flow it could have under other air pressure conditions.
 
 .. attribute:: RCS:ISP
 
     :access: Get only
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_
 
 .. method:: RCS:ISPAT(pressure)
 
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
     (Pressure must be greater than or equal to zero.  If you pass in a
@@ -340,35 +340,35 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type R
 .. attribute:: RCS:VACUUMISP
 
     :access: Get only
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     Vacuum `specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_
 
 .. attribute:: RCS:VISP
 
     :access: Get only
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     Synonym for :VACUUMISP
 
 .. attribute:: RCS:SEALEVELISP
 
     :access: Get only
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at Kerbin sealevel.
 
 .. attribute:: RCS:SLISP
 
     :access: Get only
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     Synonym for :SEALEVELISP
 
 .. attribute:: RCS:FLAMEOUT
 
     :access: Get only
-    :type: :ref:`Boolean <boolean>`
+    :type: :struct:`Boolean`
 
     Is this rcs thruster failed because it is starved of a resource (monopropellant)?
 
@@ -385,4 +385,3 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type R
     :type: :struct:`Lexicon` of :struct:`CONSUMEDRESOURCERCS`
 
     This gives a lexicon of all the resources this rcs thruster consumes, keyed by resource name.
-

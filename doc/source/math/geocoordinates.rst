@@ -49,40 +49,40 @@ Structure
           - Description
 
         * - :attr:`BODY`
-          - :ref:`body <body>` (m)
+          - :struct:`Body` (m)
 	  - none
           - The celestial body this geocoordinates is on.
         * - :attr:`LAT`
-          - :ref:`scalar <scalar>` (deg)
+          - :struct:`Scalar` (deg)
 	  - none
           - Latitude
         * - :attr:`LNG`
-          - :ref:`scalar <scalar>` (deg)
+          - :struct:`Scalar` (deg)
 	  - none
           - Longitude
         * - :attr:`DISTANCE`
-          - :ref:`scalar <scalar>` (m)
+          - :struct:`Scalar` (m)
 	  - none
           - distance from :ref:`CPU Vessel <cpu vessel>`
         * - :attr:`TERRAINHEIGHT`
-          - :ref:`scalar <scalar>` (m)
+          - :struct:`Scalar` (m)
 	  - none
           - above or below sea level
         * - :attr:`HEADING`
-          - :ref:`scalar <scalar>` (deg)
+          - :struct:`Scalar` (deg)
 	  - none
           - *absolute* heading from :ref:`CPU Vessel <cpu vessel>`
         * - :attr:`BEARING`
-          - :ref:`scalar <scalar>` (deg)
+          - :struct:`Scalar` (deg)
 	  - none
           - *relative* direction from :ref:`CPU Vessel <cpu vessel>`
         * - :attr:`POSITION`
-          - `Vector` (3D Ship-Raw coords)
+          - :struct:`Vector` (3D Ship-Raw coords)
 	  - none
           - Position of the surface point.
         * - :attr:`ALTITUDEPOSITION`
-          - `Vector` (3D Ship-Raw coords)
-	  - :ref:`scalar <scalar>` (altitude above sea level)
+          - :struct:`Vector` (3D Ship-Raw coords)
+	  - :struct:`Scalar` (altitude above sea level)
           - Position of a point above (or below) the surface point, by giving the altitude number.
         * - :attr:`VELOCITY`
           - :struct:`OrbitableVelocity`
@@ -90,7 +90,7 @@ Structure
           - Velocity of the surface at this point (due to the rotation of the planet/moon).
         * - :attr:`ALTITUDEVELOCITY`
           - :struct:`OrbitableVelocity`
-	  - :ref:`scalar <scalar>` (altitude above sea level)
+	  - :struct:`Scalar` (altitude above sea level)
           - Velocity of a point above (or below) the surface point, by giving the altitude number.
 
 .. note::

@@ -202,10 +202,10 @@ Structure
           - None
           - append an item to the lexicon
         * - :attr:`CASESENSITIVE`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - changes the behaviour of string based keys. Which are by default case insensitive. Setting this will clear the lexicon.
         * - :attr:`CASE`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - A synonym for `CASESENSITIVE`
         * - :meth:`CLEAR`
           - None
@@ -213,14 +213,14 @@ Structure
         * - :meth:`COPY`
           - :struct:`Lexicon`
           - returns a (shallow) copy of the contents of the lexicon
-        * - :meth:`DUMP`
-          - :ref:`string <string>`
+        * - :attr:`DUMP`
+          - :struct:`String`
           - verbose dump of all contained elements
         * - :meth:`HASKEY(keyvalue)`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - does the lexicon have a key of the given value?
         * - :meth:`HASVALUE(value)`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - does the lexicon have a value of the given value?
         * - :attr:`KEYS`
           - :struct:`List`
@@ -229,12 +229,12 @@ Structure
           - :struct:`List`
           - gives a flat :struct:`List` of the values in the lexicon
         * - :attr:`LENGTH`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - number of pairs in the lexicon
         * - :meth:`REMOVE(keyvalue)`
           - None
           - removes the pair with the given key
-        * - :attr:`HASSUFFIX(name)`
+        * - :meth:`HASSUFFIX(name)`
           - :struct:`Boolean`
           - True if the suffix OR a key with the name, exists.
         * - :attr:`SUFFIXNAMES`
@@ -254,7 +254,7 @@ Structure
 
 .. attribute:: Lexicon:CASESENSITIVE
 
-    :type: :ref:`Boolean <boolean>`
+    :type: :struct:`Boolean`
     :access: Get or Set
     
     The case sensitivity behaviour of the lexicon when the keys are strings.
@@ -273,7 +273,7 @@ Structure
 
 .. attribute:: Lexicon:CASE
 
-    :type: :ref:`Boolean <boolean>`
+    :type: :struct:`Boolean`
     :access: Get or Set
      
     Synonym for CASESENSITIVE (see above).
@@ -290,7 +290,7 @@ Structure
     
 .. attribute:: Lexicon:LENGTH
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get only
 
     Returns the number of pairs in the lexicon.
@@ -309,20 +309,20 @@ Structure
 .. method:: Lexicon:HASKEY(key)
 
     :parameter key: (any type) 
-    :return: :ref:`boolean <boolean>`
+    :return: :struct:`Boolean`
 
     Returns true if the lexicon contains the provided key
     
 .. method:: Lexicon:HASVALUE(key)
 
     :parameter key: (any type) 
-    :return: :ref:`boolean <boolean>`
+    :return: :struct:`Boolean`
 
     Returns true if the lexicon contains the provided value
     
 .. attribute:: Lexicon:DUMP
 
-    :type: :ref:`string <string>`
+    :type: :struct:`String`
     :access: Get only
 
     Returns a string containing a verbose dump of the lexicon's contents.

@@ -1,7 +1,7 @@
 .. _structure:
 
-Structure:
-==========
+Structure
+=========
 
 The root of all kOS data types.
 
@@ -247,4 +247,3 @@ or ``42`` or ``"abc"``.  For example, you can do::
     Not all types can be saved using the built-in serialization function
     :ref:`WRITEJSON <writejson>`.  For those that can, values of that
     type will return ``True`` for this suffix, otherwise it returns ``False``.
-

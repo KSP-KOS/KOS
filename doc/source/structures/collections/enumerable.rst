@@ -26,16 +26,16 @@ Structure
           - :struct:`Iterator`
           - for iterating over the elements in the reverse order
         * - :attr:`LENGTH`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - number of elements in the enumerable
         * - :meth:`CONTAINS(item)`
-          - :ref:`Boolean <boolean>`
+          - :struct:`Boolean`
           - check if enumerable contains an item
         * - :attr:`EMPTY`
-          - :ref:`Boolean <boolean>`
+          - :struct:`Boolean`
           - check if enumerable is empty
         * - :attr:`DUMP`
-          - :ref:`string <string>`
+          - :struct:`String`
           - verbose dump of all contained elements
 
 
@@ -55,7 +55,7 @@ Structure
 
 .. attribute:: Enumerable:LENGTH
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get only
 
     Returns the number of elements in the enumerable.
@@ -63,21 +63,20 @@ Structure
 .. method:: Enumerable:CONTAINS(item)
 
     :parameter item: element whose presence in the enumerable should be checked
-    :return: :ref:`Boolean <boolean>`
+    :return: :struct:`Boolean`
 
     Returns true if the enumerable contains an item equal to the one passed as an argument
 
 .. attribute:: Enumerable:EMPTY
 
-    :type: :ref:`Boolean <boolean>`
+    :type: :struct:`Boolean`
     :access: Get only
 
     Returns true if the enumerable has zero items in it.
 
 .. attribute:: Enumerable:DUMP
 
-    :type: :ref:`string <string>`
+    :type: :struct:`String`
     :access: Get only
 
     Returns a string containing a verbose dump of the enumerable's contents.
-

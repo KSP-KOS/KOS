@@ -34,16 +34,16 @@ The type of structures returned by :ref:`LIST SENSORS IN SOMEVARIABLE <list comm
           -
           - :struct:`Sensor` objects are a type of :struct:`Part`
         * - :attr:`ACTIVE`
-          - :ref:`Boolean <boolean>`
+          - :struct:`Boolean`
           - Check if this sensor is active
         * - :attr:`TYPE`
           -
           -
         * - :attr:`DISPLAY`
-          - string
+          - :struct:`String`
           - Value of the readout
         * - :attr:`POWERCONSUMPTION`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Rate of required electric charge
         * - :meth:`TOGGLE()`
           -
@@ -56,7 +56,7 @@ The type of structures returned by :ref:`LIST SENSORS IN SOMEVARIABLE <list comm
 .. attribute:: Sensor:ACTIVE
 
     :access: Get only
-    :type: :ref:`Boolean <boolean>`
+    :type: :struct:`Boolean`
 
     True of the sensor is enabled. Can SET to cause the sensor to activate or de-activate.
 
@@ -67,19 +67,17 @@ The type of structures returned by :ref:`LIST SENSORS IN SOMEVARIABLE <list comm
 .. attribute:: Sensor:DISPLAY
 
     :access: Get only
-    :type: string
+    :type: :struct:`String`
 
     The value of the sensor's readout, usualy including the units.
 
 .. attribute:: Sensor:POWERCONSUMPTION
 
     :access: Get only
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     The rate at which this sensor drains ElectricCharge.
 
 .. method:: Sensor:TOGGLE()
 
     Call this method to cause the sensor to switch between active and deactivated or visa versa.
-
-

@@ -63,7 +63,7 @@ Structure
 .. attribute:: Terminal:WIDTH
 
     :access: Get/Set
-    :type: :struct:`Scalar`.
+    :type: :struct:`Scalar`
 
     If you read the width it will return a number of character cells wide the terminal
     is.  If you set this value, it will cause the terminal to resize.
@@ -78,7 +78,7 @@ Structure
 .. attribute:: Terminal:HEIGHT
 
     :access: Get/Set
-    :type: :struct:`Scalar`.
+    :type: :struct:`Scalar`
 
     If you read the height it will return a number of character cells tall the terminal
     is.  If you set this value, it will cause the terminal to resize.
@@ -93,7 +93,7 @@ Structure
 .. attribute:: Terminal:REVERSE
 
     :access: Get/Set
-    :type: :struct:`Boolean`.
+    :type: :struct:`Boolean`
 
     If true, then the terminal window is currently set to show
     the whole screen in reversed color - swapping the background
@@ -109,7 +109,7 @@ Structure
 .. attribute:: Terminal:VISUALBEEP
 
     :access: Get/Set
-    :type: :struct:`Boolean`.
+    :type: :struct:`Boolean`
 
     If true, then the terminal window is currently set to show any
     BEEP characters by silently flashing the screen for a moment

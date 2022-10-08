@@ -62,16 +62,16 @@ Method 1: Use one of these pre-arranged named colors:
           - Description
 
         * - :R or :RED
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - the red component of the color
         * - :G or :GREEN
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - the green component of the color
         * - :B or :BLUE
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - the blue component of the color
         * - :A or :ALPHA
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - the alpha (how opaque: 1 = opaque, 0 = transparent) component of the color
         * - :HTML or :HEX
           - string
@@ -137,13 +137,13 @@ Examples::
           - Description
 
         * - :H or :HUE
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - the hue component of the color. It is a value from 0.0 to 360.0
         * - :S or :SATURATION
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - the saturation component of the color. It has a value from 0.0 to 1.0
         * - :V or :VALUE
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - the value component of the color. It has a value from 0.0 to 1.0
                   
 

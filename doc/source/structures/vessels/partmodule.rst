@@ -57,13 +57,13 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
           -
           - Activate action by name with True or False
         * - :meth:`HASFIELD(name)`
-          - :ref:`Boolean <boolean>`
+          - :struct:`Boolean`
           - Check if field exists
         * - :meth:`HASEVENT(name)`
-          - :ref:`Boolean <boolean>`
+          - :struct:`Boolean`
           - Check if event exists
         * - :meth:`HASACTION(name)`
-          - :ref:`Boolean <boolean>`
+          - :struct:`Boolean`
           - Check if action exists
 
 
@@ -127,14 +127,14 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
      
 .. method:: PartModule:GETFIELD(name)
 
-    :parameter name: (string) Name of the field
+    :parameter name: (:struct:`String`) Name of the field
     :return: varies
 
     Get the value of one of the fields that this PartModule has placed onto the rightclick menu for the part. Note the Security comments below.
 
 .. method:: PartModule:SETFIELD(name,value)
 
-    :parameter name: (string) Name of the field
+    :parameter name: (:struct:`String`) Name of the field
 
     Set the value of one of the fields that this PartModule has placed onto the rightclick menu for the part. Note the Security comments below.
 
@@ -155,7 +155,7 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
 
 .. method:: PartModule:DOEVENT(name)
 
-    :parameter name: (string) Name of the event
+    :parameter name: (:struct:`String`) Name of the event
 
     Trigger an "event button" that is on the rightclick part menu at the moment. Note the Security comments below.
 
@@ -163,31 +163,31 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
 
 .. method:: PartModule:DOACTION(name,bool)
 
-    :parameter name: (string) Name of the action
-    :parameter bool: (:ref:`Boolean <boolean>`) Value to set: True or False
+    :parameter name: (:struct:`String`) Name of the action
+    :parameter bool: (:struct:`Boolean`) Value to set: True or False
 
-    Activate one of this PartModule's action-group-able actions, bypassing the action group system entirely by just activating it for this one part directly. The :ref:`Boolean <boolean>` value decides whether you are toggling the action ON or toggling it OFF. Note the Security comments below.
+    Activate one of this PartModule's action-group-able actions, bypassing the action group system entirely by just activating it for this one part directly. The :struct:`Boolean` value decides whether you are toggling the action ON or toggling it OFF. Note the Security comments below.
 
     WARNING: This suffix is only callable for parts attached to the :ref:`CPU Vessel <cpu vessel>`
 
 .. method:: PartModule:HASFIELD(name)
 
-    :parameter name: (string) Name of the field
-    :return: :ref:`Boolean <boolean>`
+    :parameter name: (:struct:`String`) Name of the field
+    :return: :struct:`Boolean`
 
     Return true if the given field name is currently available for use with :GETFIELD or :SETFIELD on this PartModule, false otherwise.
 
 .. method:: PartModule:HASEVENT(name)
 
-    :parameter name: (string) Name of the event
-    :return: :ref:`Boolean <boolean>`
+    :parameter name: (:struct:`String`) Name of the event
+    :return: :struct:`Boolean`
 
     Return true if the given event name is currently available for use with :DOEVENT on this PartModule, false otherwise.
 
 .. method:: PartModule:HASACTION(name)
 
-    :parameter name: (string) Name of the action
-    :return: :ref:`Boolean <boolean>`
+    :parameter name: (:struct:`String`) Name of the action
+    :return: :struct:`Boolean`
 
     Return true if the given action name is currently available for use with :DOACTION on this PartModule, false otherwise.
 

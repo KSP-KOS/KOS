@@ -39,13 +39,13 @@ like its apoapsis, periapsis, etc.
 
 .. function:: CREATEORBIT(inc, e, sma, lan, argPe, mEp, t, body)
 
-    :parameter inc: (scalar) inclination, in degrees.
-    :parameter e: (scalar) eccentricity
-    :parameter sma: (scalar) semi-major axis
-    :parameter lan: (scalar) longitude of ascending node, in degrees.
-    :parameter argPe: (scalar) argument of periapsis
-    :parameter mEp: (scalar) mean anomaly at epoch, in degrees.
-    :parameter t: (scalar) epoch
+    :parameter inc: (:struct:`Scalar`) inclination, in degrees.
+    :parameter e: (:struct:`Scalar`) eccentricity
+    :parameter sma: (:struct:`Scalar`) semi-major axis
+    :parameter lan: (:struct:`Scalar`) longitude of ascending node, in degrees.
+    :parameter argPe: (:struct:`Scalar`) argument of periapsis
+    :parameter mEp: (:struct:`Scalar`) mean anomaly at epoch, in degrees.
+    :parameter t: (:struct:`Scalar`) epoch
     :parameter body: (:struct:`Body`) body to orbit around
     :return: :struct:`Orbit`
 
@@ -60,7 +60,7 @@ It is also possible to create an orbit from a position and a velocity using the 
     :parameter pos: (:struct:`Vector`) position (relative to center of body, NOT the usual relative to current ship most positions in kOS use.  Remember to offset a kOS position from the body's position when calculating what to pass in here.)
     :parameter vel: (:struct:`Vector`) velocity
     :parameter body: (:struct:`Body`) body to orbit around
-    :parameter ut: (scalar) time (universal)
+    :parameter ut: (:struct:`Scalar`) time (universal)
     :return: :struct:`Orbit`
 
     This creates a new orbit around Kerbin::

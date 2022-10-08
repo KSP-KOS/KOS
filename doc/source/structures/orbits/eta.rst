@@ -33,21 +33,21 @@ on an Orbit, and can be obtained one of two ways:
        - Description
 
      * - :attr:`APOAPSIS`
-       - :ref:`scalar <scalar>`, seconds
+       - :struct:`Scalar` (s)
        - Seconds from now until apoapsis.
      * - :attr:`PERIAPSIS`
-       - :ref:`scalar <scalar>`, seconds
+       - :struct:`Scalar` (s)
        - Seconds from now until periapsis.
      * - :attr:`NEXTNODE`
-       - :ref:`scalar <scalar>`, seconds
+       - :struct:`Scalar` (s)
        - Seconds from now until the next maneuver node.
      * - :attr:`TRANSITION`
-       - :ref:`scalar <scalar>`, seconds
+       - :struct:`Scalar` (s)
        - Seconds from now until the next orbit patch starts.
 		  
 .. attribute:: ETA:APOAPSIS
 
-    :type: :ref:`scalar <scalar>`, seconds
+    :type: :struct:`Scalar` (s)
     :access: Get-only
 
     Seconds until the object in this orbit patch would hit its apoapsis.
@@ -77,7 +77,7 @@ on an Orbit, and can be obtained one of two ways:
 
 .. attribute:: ETA:PERIAPSIS
 
-    :type: :ref:`scalar <scalar>`, seconds
+    :type: :struct:`Scalar` (s)
     :access: Get only
 
     Seconds until the object in this orbit hits its periapsis.  If the
@@ -95,7 +95,7 @@ on an Orbit, and can be obtained one of two ways:
 
 .. attribute:: ETA:NEXTNODE
 
-    :type: :ref:`scalar <scalar>`, seconds
+    :type: :struct:`Scalar` (s)
     :access: Get only
 
     Seconds until the next manuever node's timestamp.  NOTE this is the
@@ -112,7 +112,7 @@ on an Orbit, and can be obtained one of two ways:
 
 .. attribute:: ETA:TRANSITION
 
-    :type: :ref:`scalar <scalar>`, seconds
+    :type: :struct:`Scalar` (s)
     :access: Get only
 
     Seconds until the transition from this orbit patch to the next one.
@@ -126,4 +126,3 @@ on an Orbit, and can be obtained one of two ways:
     point value (32-bit).  (For various reasons, kOS does not allow
     the value "Infinity" in its Scalars, so "a really big number"
     is used in its place.)
-

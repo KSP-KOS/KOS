@@ -20,10 +20,10 @@ Slider
     ===================================== ========================================= =============
                    Every suffix of :struct:`WIDGET`
     ---------------------------------------------------------------------------------------------
-    :attr:`VALUE`                         :struct:`scalar`                          The current value. Initially set to :attr:`MIN`.
+    :attr:`VALUE`                         :struct:`Scalar`                          The current value. Initially set to :attr:`MIN`.
     :attr:`ONCHANGE`                      :struct:`KOSDelegate` (:struct:`Scalar`)  Your function called whenever the :attr:`VALUE` changes.
-    :attr:`MIN`                           :struct:`scalar`                          The minimum value (leftmost on horizontal slider).
-    :attr:`MAX`                           :struct:`scalar`                          The maximum value (bottom on vertical slider).
+    :attr:`MIN`                           :struct:`Scalar`                          The minimum value (leftmost on horizontal slider).
+    :attr:`MAX`                           :struct:`Scalar`                          The maximum value (bottom on vertical slider).
     ===================================== ========================================= =============
 
     .. attribute:: VALUE
@@ -93,5 +93,3 @@ Slider
         (i.e. where numbers normally get larger when you slide to the right,
         inverting MIN and MAX causes the numbers to get larger when you
         slide to the left.)
-
-

@@ -138,4 +138,3 @@ not how many places after the decimal point.  You can't have more than
 roughly 15 significant decimal digits. (It's not exactly 15 because of
 differences between binary and decimal counting, but that gives you
 a rough estimate.)
-

@@ -16,42 +16,42 @@ Represents results of a :struct:`science experiment <ScienceExperimentModule>`.
           - Description
 
         * - :attr:`TITLE`
-          - string
+          - :struct:`String`
           - Experiment title
         * - :attr:`SCIENCEVALUE`
-          - scalar
+          - :struct:`Scalar`
           - Amount of science that would be gained by returning this data to KSC
         * - :attr:`TRANSMITVALUE`
-          - scalar
+          - :struct:`Scalar`
           - Amount of science that would be gained by transmitting this data to KSC
         * - :attr:`DATAAMOUNT`
-          - scalar
+          - :struct:`Scalar`
           - Amount of data
 
 .. attribute:: ScienceData:TITLE
 
     :access: Get only
-    :type: string
+    :type: :struct:`String`
 
     Experiment title
 
 .. attribute:: ScienceData:SCIENCEVALUE
 
     :access: Get only
-    :type: scalar
+    :type: :struct:`Scalar`
 
     Amount of science that would be gained by returning this data to KSC
 
 .. attribute:: ScienceData:TRANSMITVALUE
 
     :access: Get only
-    :type: scalar
+    :type: :struct:`Scalar`
 
     Amount of science that would be gained by transmitting this data to KSC
 
 .. attribute:: ScienceData:DATAAMOUNT
 
     :access: Get only
-    :type: scalar
+    :type: :struct:`Scalar`
 
     Amount of data
