@@ -20,7 +20,7 @@ function, or the built-in SlideNote() function:
 
     ``frequency``
         **Mandatory**: The frequency can be given as either a number or a
-        string.  If it is a number, then it is the frequency in Hertz.
+        string.  If it is a number, then it is the frequency in hertz (Hz).
         If it is a string, then it's using the letter notation
         :ref:`described here <skid_letter_frequency>`.
     ``duration``
@@ -76,12 +76,12 @@ function, or the built-in SlideNote() function:
 
     ``frequency``
         **Mandatory**: This is the frequency the sliding note begins at.
-        If it is a number, then it is the frequency in Hertz.
+        If it is a number, then it is the frequency in hertz (Hz).
         If it is a string, then it's using the letter notation
         :ref:`described here <skid_letter_frequency>`.
     ``endFrequency``
         **Mandatory**: This is the frequency the sliding note ends at.
-        If it is a number, then it is the frequency in Hertz.
+        If it is a number, then it is the frequency in hertz (Hz).
         If it is a string, then it's using the letter notation
         :ref:`described here <skid_letter_frequency>`.
     ``duration``
@@ -124,10 +124,10 @@ function, or the built-in SlideNote() function:
 
         * - :attr:`FREQUENCY`
           - :struct:`Scalar`
-          - initial frequency of the note in Hertz
+          - initial frequency of the note in hertz (Hz)
         * - :attr:`ENDFREQUENCY`
           - :struct:`Scalar`
-          - final frequency of the note in Hertz
+          - final frequency of the note in hertz (Hz)
         * - :attr:`KEYDOWNLENGTH`
           - :struct:`Scalar`
           - time to hold the "synthesizer key" down for
@@ -141,23 +141,23 @@ function, or the built-in SlideNote() function:
     .. attribute:: FREQUENCY
 
         :access: Get Only
-        :type: :struct:`Scalar` (Hertz)
+        :type: :struct:`Scalar` (Hz)
 
-        The initial frequency of the note in Hertz.
+        The initial frequency of the note in hertz (Hz).
 
     .. attribute:: ENDFREQUENCY
 
         :access: Get Only
-        :type: :struct:`Scalar` (Hertz)
+        :type: :struct:`Scalar` (Hz)
 
         If the note was created using :func:`SlideNote()` this is the final
-        frequency of the note, in Hertz.  Otherwise the value is identical to
+        frequency of the note, in hertz (Hz).  Otherwise the value is identical to
         :attr:`FREQUENCY`.
 
     .. attribute:: KEYDOWNLENGTH
 
         :access: Get Only
-        :type: :struct:`Scalar` (seconds)
+        :type: :struct:`Scalar` (s)
 
         The amount of time that the "synthesizer key" is held down for.  In the
         :ref:`ADSR Envelope<skid_envelope>` this represents the total of the
@@ -166,7 +166,7 @@ function, or the built-in SlideNote() function:
     .. attribute:: DURATION
 
         :access: Get Only
-        :type: :struct:`Scalar` (seconds)
+        :type: :struct:`Scalar` (s)
 
         The total time of the note, encompassing the entire
         :ref:`ADSR Envelope<skid_envelope>` including the "release" component.

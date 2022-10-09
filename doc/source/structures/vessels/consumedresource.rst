@@ -3,7 +3,7 @@
 ConsumedResource
 =================
 
-A single resource value an engine consumes (i.e. fuel, oxidizer, etc). This is the type returned by the :struct:`Engine`:CONSUMEDRESOURCES suffix
+A single resource value an engine consumes (i.e. fuel, oxidizer, etc). This is the type returned by the :attr:`Engine:CONSUMEDRESOURCES` suffix
 
 .. structure:: ConsumedResource
 
@@ -16,62 +16,62 @@ A single resource value an engine consumes (i.e. fuel, oxidizer, etc). This is t
           - Description
 
         * - :attr:`NAME`
-          - :ref:`string <string>`
+          - :struct:`String`
           - Resource name
         * - :attr:`AMOUNT`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Total amount remaining (only valid while engine is running)
         * - :attr:`CAPACITY`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Total amount when full (only valid while engine is running)
         * - :attr:`DENSITY`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Density of this resource
         * - :attr:`FUELFLOW`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Current volumetric flow rate of fuel
         * - :attr:`MAXFUELFLOW`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Untweaked maximum volumetric flow rate of fuel
         * - :attr:`REQUIREDFLOW`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Required volumetric flow rate of fuel for current throttle
         * - :attr:`MASSFLOW`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Current mass flow rate of fuel
         * - :attr:`MAXMASSFLOW`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Untweaked maximum mass flow rate of fuel
         * - :attr:`RATIO`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Volumetric flow ratio of this resource
 
 
 .. attribute:: ConsumedResource:NAME
 
     :access: Get only
-    :type: :ref:`string <string>`
+    :type: :struct:`String`
 
     The name of the resource, i.e. "LIQUIDFUEL", "ELECTRICCHARGE", "MONOPROP".
 
 .. attribute:: ConsumedResource:AMOUNT
 
     :access: Get only
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     The value of how much resource is left and accessible to this engine. Only valid while the engine is running.
 
 .. attribute:: ConsumedResource:CAPACITY
 
     :access: Get only
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     What AMOUNT would be if the resource was filled to the top. Only valid while the engine is running.
 
 .. attribute:: ConsumedResource:DENSITY
 
     :access: Get only
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     The density value of this resource, expressed in Megagrams f mass
     per Unit of resource.  (i.e. a value of 0.005 would mean that each
@@ -81,21 +81,21 @@ A single resource value an engine consumes (i.e. fuel, oxidizer, etc). This is t
 .. attribute:: ConsumedResource:FUELFLOW
 
     :access: Get only
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     How much volume of this fuel is this engine consuming at this very moment.
 
 .. attribute:: ConsumedResource:MAXFUELFLOW
 
     :access: Get only
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     How much volume of this fuel would this engine consume at standard pressure and velocity if the throttle was max at 1.0, and the thrust limiter was max at 100%.
     
 .. attribute:: ConsumedResource:REQUIREDFLOW
 
     :access: Get only
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     How much volume of this fuel does this require at this very moment for the current throttle setting.
     This will usually equal FUELFLOW but may be higher for INTAKEAIR for instance.
@@ -103,21 +103,20 @@ A single resource value an engine consumes (i.e. fuel, oxidizer, etc). This is t
 .. attribute:: ConsumedResource:MASSFLOW
 
     :access: Get only
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     How much mass of this fuel is this engine consuming at this very moment.
 
 .. attribute:: ConsumedResource:MAXMASSFLOW
 
     :access: Get only
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     How much mass of this fuel would this engine consume at standard pressure and velocity if the throttle was max at 1.0, and the thrust limiter was max at 100%.
     
 .. attribute:: ConsumedResource:RATIO
 
     :access: Get only
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     What is the volumetric ratio of this fuel as a proportion of the overall fuel mixture, e.g. if this is 0.5 then this fuel is half the required fuel for the engine.
-

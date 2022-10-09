@@ -60,32 +60,32 @@ Structure
           - Description
 
         * - :attr:`ATTACK`
-          - :struct:`scalar`
+          - :struct:`Scalar`
           - Get/Set
           - The *Attack* setting of the SKID voice's :ref:`ADSR Envelope <skid_envelope>`
 
         * - :attr:`DECAY`
-          - :struct:`scalar`
+          - :struct:`Scalar`
           - Get/Set
           - The *Decay* setting of the SKID voice's :ref:`ADSR Envelope <skid_envelope>`
 
         * - :attr:`SUSTAIN`
-          - :struct:`scalar`
+          - :struct:`Scalar`
           - Get/Set
           - The *Sustain* setting of the SKID voice's :ref:`ADSR Envelope <skid_envelope>`
 
         * - :attr:`RELEASE`
-          - :struct:`scalar`
+          - :struct:`Scalar`
           - Get/Set
           - The *Release* setting of the SKID voice's :ref:`ADSR Envelope <skid_envelope>`
 
         * - :attr:`VOLUME`
-          - :struct:`scalar`
+          - :struct:`Scalar`
           - Get/Set
           - The default volume to play the notes on this voice.
 
         * - :attr:`WAVE`
-          - :struct:`string`
+          - :struct:`String`
           - Get/Set
           - The name for the :ref:`waveform <skid_waveform>` you want this voice to use.
 
@@ -100,17 +100,17 @@ Structure
           - Stop playing note on this voice instance.
 
         * - :attr:`LOOP`
-          - :struct:`boolean`
+          - :struct:`Boolean`
           - Get/Set
           - Whether or not the voice should keep re-playing the song that was queued with PLAY().
 
         * - :attr:`ISPLAYING`
-          - :struct:`boolean`
+          - :struct:`Boolean`
           - Get/Set
           - The playing status of voice.
 
         * - :attr:`TEMPO`
-          - :struct:`scalar`
+          - :struct:`Scalar`
           - Get/Set
           - Stretches or shrinks the duration of the notes to speed up or slow down the song.
 
@@ -175,7 +175,7 @@ Structure
 .. attribute:: Voice:WAVE
 
     :access: Get/Set
-    :type: :struct:`string`
+    :type: :struct:`String`
 
     To select which of the SKID chip's
     :ref:`waveform generators <skid_waveform>` you want this voice
@@ -247,7 +247,7 @@ Structure
 .. attribute:: Voice:LOOP
 
     :access: Get/Set
-    :type: :struct:`boolean`
+    :type: :struct:`Boolean`
 
     If this is set to true, then the PLAY() method of this voice will
     keep on playing the same list of notes continually (starting over
@@ -259,7 +259,7 @@ Structure
 .. attribute:: Voice:ISPLAYING
 
     :access: Get/Set
-    :type: :struct:`boolean`
+    :type: :struct:`Boolean`
 
     **Get**: If this voice is currently playing a note or list of notes
     that was previously passed in to the ``PLAY()`` method, then this
@@ -276,7 +276,7 @@ Structure
 .. attribute:: Voice:TEMPO
 
     :access: Get/Set
-    :type: :struct:`scalar`
+    :type: :struct:`Scalar`
 
     When the voice is playing a :struct:`Note` or (more usefully) a
     :struct:`List` of :struct:`Note`'s, it will stretch or shrink the

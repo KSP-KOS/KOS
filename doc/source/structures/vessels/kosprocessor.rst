@@ -20,7 +20,7 @@ The type of structures returned by kOS when querying a module that contains a kO
           -
           - :struct:`kOSProcessor` objects are a type of :struct:`PartModule`
         * - :attr:`MODE`
-          - `:ref:`string <string>``
+          - :struct:`String`
           - `OFF`, `READY` or `STARVED`
         * - :meth:`ACTIVATE`
           - None
@@ -29,16 +29,16 @@ The type of structures returned by kOS when querying a module that contains a kO
           - None
           - Deactivates this processor
         * - :attr:`TAG`
-          - `:ref:`string <string>``
+          - :struct:`String`
           - This processor's name tag
         * - :attr:`VOLUME`
           - :struct:`Volume`
           - This processor's hard disk
         * - :attr:`BOOTFILENAME`
-          - `:ref:`string <string>``
+          - :struct:`String`
           - The filename for the boot file on this processor
         * - :attr:`CONNECTION`
-          - `:struct:`Connection`
+          - :struct:`Connection`
           - Returns your connection to this processor
 
 .. note::
@@ -48,7 +48,7 @@ The type of structures returned by kOS when querying a module that contains a kO
 .. attribute:: kOSProcessor:MODE
 
     :access: Get only
-    :type: `:ref:`string <string>``
+    :type: :struct:`String`
 
     Indicates the current state of this processor. `OFF` - deactivated, `READY` - active, or `STARVED` - no power.
 
@@ -67,7 +67,7 @@ The type of structures returned by kOS when querying a module that contains a kO
 .. attribute:: kOSProcessor:TAG
 
     :access: Get only
-    :type: `:ref:`string <string>``
+    :type: :struct:`String`
 
     This processor's name tag
 
@@ -81,7 +81,7 @@ The type of structures returned by kOS when querying a module that contains a kO
 .. attribute:: kOSProcessor:BOOTFILENAME
 
     :access: Get or Set
-    :type: `:ref:`string <string>``
+    :type: :struct:`String`
 
     The filename for the boot file on this processor. This may be set to an empty :ref:`string <string>` “” or to “None” to disable the use of a boot file.
 
@@ -90,4 +90,3 @@ The type of structures returned by kOS when querying a module that contains a kO
     :return: :struct:`Connection`
 
     Returns your connection to this processor.
-

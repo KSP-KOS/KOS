@@ -184,19 +184,19 @@ Suffixes of Vecdraw
           -
           - Same as :attr:`COLOR`
         * - :attr:`LABEL`
-          - :ref:`string <string>`
+          - :struct:`String`
           - Text to show next to vector
         * - :attr:`SCALE`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Scale :attr:`VEC` and :attr:`WIDTH` but not :attr:`START`
         * - :attr:`SHOW`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - True to enable display to screen
         * - :attr:`WIDTH`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - width of vector, default is 0.2
         * - :attr:`POINTY`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - Will the pointy hat be drawn
         * - :attr:`STARTUPDATER`
           - :struct:`KosDelegate`
@@ -254,7 +254,7 @@ Suffixes of Vecdraw
 .. attribute:: VecDraw:LABEL
 
     :access: Get/Set
-    :type: :ref:`string <string>`
+    :type: :struct:`String`
 
     Optional, defaults to "". Text to show on-screen at the midpoint of the vector.
     Note the font size the label is displayed in gets stretched when you
@@ -263,7 +263,7 @@ Suffixes of Vecdraw
 .. attribute:: VecDraw:SCALE
 
     :access: Get/Set
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     Optional, defaults to 1.0. Scalar to multiply the VEC by, and the WIDTH,
     but not the START.
@@ -271,14 +271,14 @@ Suffixes of Vecdraw
 .. attribute:: VecDraw:SHOW
 
     :access: Get/Set
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
     Set to true to make the arrow appear, false to hide it. Defaults to false until you're ready to set it to true.
 
 .. attribute:: VecDraw:WIDTH
 
     :access: Get/Set
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     Define the width of the drawn line, in meters.  The deafult is 0.2 if
     left off.  Note, this also causes the font of the label to be enlarged
@@ -287,7 +287,7 @@ Suffixes of Vecdraw
 .. attribute:: VecDraw:POINTY
 
     :access: Get/Set
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
     (Defaults to True if left off.) Will this line be drawn with
     a pointy arrowhead "hat" on the tip to show which end is the
@@ -297,7 +297,7 @@ Suffixes of Vecdraw
 .. attribute:: VecDraw:WIPING
 
     :access: Get/Set
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
     (Defaults to True if left off.) If true, this line will be drawn
     with a "wipe" effect that varies how transparent it is.  At the

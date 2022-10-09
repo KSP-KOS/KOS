@@ -24,8 +24,8 @@ elements and what they do.
     ===================================== ========================= =============
     Suffix                                Type                      Description
     ===================================== ========================= =============
-    :attr:`NAME`                          :struct:string            The name of the docked craft
-    :attr:`UID`                           :struct:string            Unique Identifier 
+    :attr:`NAME`                          :struct:`String`          The name of the docked craft
+    :attr:`UID`                           :struct:`String`          Unique Identifier 
     :attr:`PARTS`                         :struct:`List`            all :struct:`Parts <Part>`
     :attr:`DOCKINGPORTS`                  :struct:`List`            all :struct:`DockingPorts <DockingPort>`
     :attr:`VESSEL`                        :struct:`Vessel`          the parent :struct:`Vessel`
@@ -34,31 +34,31 @@ elements and what they do.
 
 .. attribute:: Element:UID
 
-    :type: :ref:`string <string>`
+    :type: :struct:`String`
     :access: Get only 
 
     A unique id
 
 .. attribute:: Element:NAME
 
-    :type: :ref:`string <string>`
+    :type: :struct:`String`
     :access: Get/Set
 
-    The name of the Element element, is an artifact from the vessel the element belonged to before docking. Cannot be set to an empty :ref:`string <string>`.
+    The name of the Element element, is an artifact from the vessel the element belonged to before docking. Cannot be set to an empty :struct:`String`.
 
 .. attribute:: Element:PARTS
 
     :type: :struct:`List` of :struct:`Part` objects
     :access: Get only
 
-    A List of all the :ref:`parts <part>` on the Element. ``SET FOO TO SHIP:PARTS.`` has exactly the same effect as ``LIST PARTS IN FOO.``. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
+    A List of all the :struct:`parts <Part>` on the Element. ``SET FOO TO SHIP:PARTS.`` has exactly the same effect as ``LIST PARTS IN FOO.``. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
 
 .. attribute:: Element:DOCKINGPORTS
 
     :type: :struct:`List` of :struct:`DockingPort` objects
     :access: Get only
 
-    A List of all the :ref:`docking ports <DockingPort>` on the Element. 
+    A List of all the :struct:`docking ports <DockingPort>` on the Element. 
 
 .. attribute:: Element:VESSEL
 
@@ -72,5 +72,4 @@ elements and what they do.
     :type: :struct:`List` of :struct:`AggregateResource` objects
     :access: Get only
 
-    A List of all the :ref:`AggregateResources <AggregateResource>` on the element.
-
+    A List of all the :struct:`AggregateResources <AggregateResource>` on the element.

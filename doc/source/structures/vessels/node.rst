@@ -36,7 +36,7 @@ Creation
 
 .. function:: NODE(time, radial, normal, prograde)
 
-    :parameter time: :ref:`TimeSpan` (ETA), :ref:`TimeStamp` (UT), or :ref:`Scalar` (UT)
+    :parameter time: :struct:`TimeSpan` (ETA), :struct:`TimeStamp` (UT), or :struct:`Scalar` (UT)
     :parameter radial: (m/s) Delta-V in radial-out direction
     :parameter normal: (m/s) Delta-V normal to orbital plane
     :parameter prograde: (m/s) Delta-V in prograde direction
@@ -195,23 +195,23 @@ Structure
           - Get only
           - Alias for :attr:`DELTAV`
         * - :attr:`ETA`
-          - :ref:`scalar <scalar>` (s)
+          - :struct:`Scalar` (s)
           - Get/Set
           - Time until this maneuver
         * - :attr:`TIME`
-          - :ref:`scalar <scalar>` (s)
+          - :struct:`Scalar` (s)
           - Get/Set
           - Universal Time of this maneuver
         * - :attr:`PROGRADE`
-          - :ref:`scalar <scalar>` (m/s)
+          - :struct:`Scalar` (m/s)
           - Get/Set
           - Delta-V along prograde
         * - :attr:`RADIALOUT`
-          - :ref:`scalar <scalar>` (m/s)
+          - :struct:`Scalar` (m/s)
           - Get/Set
           - Delta-V along radial to orbited :struct:`Body`
         * - :attr:`NORMAL`
-          - :ref:`scalar <scalar>` (m/s)
+          - :struct:`Scalar` (m/s)
           - Get/Set
           - Delta-V along normal to the :struct:`Vessel`'s :struct:`Orbit`
         * - :attr:`ORBIT`
@@ -234,14 +234,14 @@ Structure
 .. attribute:: ManeuverNode:ETA
 
     :access: Get/Set
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     The number of seconds until the expected burn time. If you SET this, it will actually move the maneuver node along the path in the map view, identically to grabbing the maneuver node and dragging it.
 
 .. attribute:: ManeuverNode:TIME
 
     :access: Get/Set
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     The time of the node in universal time, rather than ETA relative to the current
     time.  This should be the same as adding :attr:`ManeuverNode:ETA` to ``TIME:SECONDS``.
@@ -249,21 +249,21 @@ Structure
 .. attribute:: ManeuverNode:PROGRADE
 
     :access: Get/Set
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     The delta V in (meters/s) along just the prograde direction (the yellow and green 'knobs' of the maneuver node). A positive value is a prograde burn and a negative value is a retrograde burn.
 
 .. attribute:: ManeuverNode:RADIALOUT
 
     :access: Get/Set
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     The delta V in (meters/s) along just the radial direction (the cyan knobs' of the maneuver node). A positive value is a radial out burn and a negative value is a radial in burn.
 
 .. attribute:: ManeuverNode:NORMAL
 
     :access: Get/Set
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     The delta V in (meters/s) along just the normal direction (the purple knobs' of the maneuver node). A positive value is a normal burn and a negative value is an anti-normal burn.
 

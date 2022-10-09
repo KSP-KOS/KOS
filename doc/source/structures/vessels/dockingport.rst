@@ -26,31 +26,31 @@ Such part can also be retrieved from :global:`TARGET`, if docking port is select
           - A :struct:`DockingPort` is a kind of :struct:`Decoupler` (which is :struct:`Part`)
 
         * - :attr:`ACQUIRERANGE`
-          - scalar
+          - :struct:`Scalar`
           - active range of the port
         * - :attr:`ACQUIREFORCE`
-          - scalar
+          - :struct:`Scalar`
           - force experienced when docking
         * - :attr:`ACQUIRETORQUE`
-          - scalar
+          - :struct:`Scalar`
           - torque experienced when docking
         * - :attr:`REENGAGEDDISTANCE`
-          - scalar
+          - :struct:`Scalar`
           - distance at which the port is reset
         * - :attr:`DOCKEDSHIPNAME`
-          - :ref:`string <string>`
+          - :struct:`String`
           - name of vessel the port is docked to
         * - :attr:`NODEPOSITION`
-          - vector
+          - :struct:`Vector`
           - coords of where the docking node attachment point is in SHIP-RAW xyz
         * - :attr:`NODETYPE`
-          - :ref:`string <string>`
+          - :struct:`String`
           - two nodes are only dockable together if their NODETYPE strings match
         * - :attr:`PORTFACING`
           - :struct:`Direction`
           - facing of the port
         * - :attr:`STATE`
-          - :ref:`string <string>`
+          - :struct:`String`
           - current state of the port
         * - :meth:`UNDOCK`
           -
@@ -59,10 +59,10 @@ Such part can also be retrieved from :global:`TARGET`, if docking port is select
           - :struct:`DockingPort`
           - the docking port this docking port is attached to, or "None" if no such port
         * - :attr:`HASPARTNER`
-          - boolean
+          - :struct:`Boolean`
           - whether or not this docking port is attached to another docking port
         * - :attr:`TARGETABLE`
-          - boolean
+          - :struct:`Boolean`
           - check if this port can be targeted
 
 .. note::
@@ -100,7 +100,7 @@ Such part can also be retrieved from :global:`TARGET`, if docking port is select
 
 .. attribute:: DockingPort:DOCKEDSHIPNAME
 
-    :type: :ref:`string <string>`
+    :type: :struct:`String`
     :access: Get only
 
     name of vessel on the other side of the docking port.
@@ -118,7 +118,7 @@ Such part can also be retrieved from :global:`TARGET`, if docking port is select
 
 .. attribute:: DockingPort:NODETYPE
 
-    :type: :ref:`string <string>`
+    :type: :struct:`String`
     :access: Get only
 
     Each docking port has a node type string that specifies its
@@ -148,7 +148,7 @@ Such part can also be retrieved from :global:`TARGET`, if docking port is select
 
 .. attribute:: DockingPort:STATE
 
-    :type: :ref:`string <string>`
+    :type: :struct:`String`
     :access: Get only
 
     One of the following string values:
@@ -185,14 +185,14 @@ Such part can also be retrieved from :global:`TARGET`, if docking port is select
 
 .. attribute:: DockingPort:HASPARTNER
 
-    :type: :ref:`Boolean <boolean>`
+    :type: :struct:`Boolean`
     :access: Get only
 
     Whether or not this docking port is attached to another docking port.
 
 .. attribute:: DockingPort:TARGETABLE
 
-    :type: :ref:`Boolean <boolean>`
+    :type: :struct:`Boolean`
     :access: Get only
 
     True if this part can be picked with ``SET TARGET TO``.

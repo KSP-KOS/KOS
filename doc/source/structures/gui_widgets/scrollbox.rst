@@ -25,7 +25,7 @@ Scrollbox
     ===================================== =============================== =============
     Suffix                                Type                            Description
     ===================================== =============================== =============
-                   Every suffix of :struct:`BOX`.  :attr:
+                   Every suffix of :struct:`BOX`.
     -----------------------------------------------------------------------------------
     :attr:`HALWAYS`                       :struct:`Boolean`               Always show the horizontal scrollbar.
     :attr:`VALWAYS`                       :struct:`Boolean`               Always show the vertical scrollbar.
@@ -62,4 +62,3 @@ Scrollbox
         an X/Y pair stored inside a 3D vector).
 
         You can set this value to force the window to scroll to a new position.
-

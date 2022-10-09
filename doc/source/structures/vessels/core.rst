@@ -22,13 +22,13 @@ Core represents your ability to identify and interact directly with the running 
           - :struct:`CORE` objects are a type of :struct:`kOSProcessor`
 
         * - :attr:`VESSEL`
-          - `Vessel`
+          - :struct:`Vessel`
         * - :attr:`ELEMENT`
-          - `Element`
+          - :struct:`Element`
         * - :attr:`TAG`
-          - `The kOS nametag on the part this CPU runs on`
+          - :struct:`String`
         * - :attr:`VERSION`
-          - `Version`
+          - :struct:`VersionInfo`
         * - :attr:`CURRENTVOLUME`
           - :struct:`Volume`
         * - :attr:`MESSAGES`
@@ -63,7 +63,7 @@ Core represents your ability to identify and interact directly with the running 
     :access: Get/Set
 
     The kOS name tag currently assigned to the part this core is
-    inside.  This is the same thing as Core:part:tag.
+    inside.  This is the same thing as :attr:`CORE:PART:TAG`.
 
 .. attribute:: CORE:CURRENTVOLUME
 
@@ -78,4 +78,3 @@ Core represents your ability to identify and interact directly with the running 
     :access: Get only
 
     Returns this processsor's message queue.
-

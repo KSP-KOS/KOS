@@ -39,7 +39,7 @@ PopupMenu
                    Every suffix of :struct:`BUTTON`
     ---------------------------------------------------------------------------------------------
     :attr:`OPTIONS`                       :struct:`List`                            List of options to display.
-    :attr:`OPTIONSUFFIX`                  :struct:`string`                          Name of the suffix used for display names. Default = TOSTRING.
+    :attr:`OPTIONSUFFIX`                  :struct:`String`                          Name of the suffix used for display names. Default = TOSTRING.
     :meth:`ADDOPTION(value)`                                                        Add a value to the end of the list of options.
     :attr:`VALUE`                         Any                                       Returns the current selected value.
     :attr:`INDEX`                         :struct:`Scalar`                          Returns the index of the current selected value.
@@ -165,5 +165,3 @@ PopupMenu
         If this is set too large, it can become possible to make
         the popup menu so large it won't fit on the screen, if you
         give it a lot of items in the options list.
-
-

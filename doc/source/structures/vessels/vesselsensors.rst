@@ -22,16 +22,16 @@ If you store this in a variable and wait, the numbers are frozen in time and won
           - :struct:`Vector`
           - Acceleration experienced by the :struct:`Vessel`
         * - :attr:`PRES`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Atmospheric Pressure outside this :struct:`Vessel`
         * - :attr:`TEMP`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Temperature outside this :struct:`Vessel`
         * - :attr:`GRAV`
           - :struct:`Vector` (g's)
           - Gravitational acceleration
         * - :attr:`LIGHT`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Sun exposure on the solar panels of this :struct:`Vessel`
 
 
@@ -45,14 +45,14 @@ If you store this in a variable and wait, the numbers are frozen in time and won
 .. attribute:: VesselSensors:PRES
 
     :access: Get only
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     The current pressure of this ship.
 
 .. attribute:: VesselSensors:TEMP
 
     :access: Get only
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     The current temperature.
 
@@ -66,7 +66,6 @@ If you store this in a variable and wait, the numbers are frozen in time and won
 .. attribute:: VesselSensors:LIGHT
 
     :access: Get only
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     The total amount of sun exposure that exists here - only readable if there are solar panels on the vessel.
-

@@ -3,18 +3,15 @@
 import sys
 import re
 
-from docutils import nodes
-from docutils.parsers.rst import directives
-
 from sphinx import addnodes, version_info
 from sphinx.roles import XRefRole
 from sphinx.locale import _
-from sphinx.domains import Domain, ObjType, Index
+from sphinx.domains import Domain, ObjType
 from sphinx.directives import ObjectDescription
 from sphinx.util.nodes import make_refnode
 # ### Next line is deprecated, and it seems to work without it, as per kOS PR #2339 ###
 # from sphinx.util.compat import Directive
-from sphinx.util.docfields import Field, GroupedField, TypedField
+from sphinx.util.docfields import Field, TypedField
 
 ks_sig_re = re.compile(r'''
     (?:

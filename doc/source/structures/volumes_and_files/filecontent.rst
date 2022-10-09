@@ -31,10 +31,10 @@ Instances of this class can be iterated over. In each iteration step a single li
 
 
         * - :attr:`LENGTH`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - File length (in bytes)
         * - :attr:`EMPTY`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - True if the file is empty
         * - :attr:`TYPE`
           - :struct:`String`
@@ -55,14 +55,14 @@ Instances of this class can be iterated over. In each iteration step a single li
 
 .. attribute:: FileContent:LENGTH
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get only
 
     Length of the file.
 
 .. attribute:: FileContent:EMPTY
 
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
     :access: Get only
 
     True if the file is empty
