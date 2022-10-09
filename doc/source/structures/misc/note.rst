@@ -159,7 +159,7 @@ function, or the built-in SlideNote() function:
         :access: Get Only
         :type: :struct:`Scalar` (s)
 
-        The amount of time that the "synthesizer key" is held down for.  In the
+        The seconds that the "synthesizer key" is held down for.  In the
         :ref:`ADSR Envelope<skid_envelope>` this represents the total of the
         "attack", "decay", and "sustain" components.
 
@@ -168,7 +168,7 @@ function, or the built-in SlideNote() function:
         :access: Get Only
         :type: :struct:`Scalar` (s)
 
-        The total time of the note, encompassing the entire
+        The total seconds of the note, encompassing the entire
         :ref:`ADSR Envelope<skid_envelope>` including the "release" component.
 
     .. attribute:: VOLUME
