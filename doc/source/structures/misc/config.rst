@@ -75,7 +75,7 @@ Configuration of kOS
         * - :attr:`CLOBBERBUILTINS`
           - :struct:`Boolean`
           - False
-          - Disallow builtin variable names to be re-declared
+          - If true, built-in identifiers can be masked with user identifiers.
         * - :attr:`AUDIOERR`
           - :struct:`Boolean`
           - False
