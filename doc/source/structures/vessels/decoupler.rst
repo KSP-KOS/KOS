@@ -22,8 +22,6 @@ of the suffixes for them are found.
         * - All suffixes of :struct:`Part`
           -
           - A :struct:`Decoupler` is a kind of :struct:`Part`
-
-.. structure:: Separator
-
+          
     Most :struct:`Decoupler` parts are also :struct:`Separator` parts, and most of
     the useful suffixes for them are in :struct:`Separator`.

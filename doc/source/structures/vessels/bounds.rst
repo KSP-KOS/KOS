@@ -345,7 +345,7 @@ illustrate what is being talked about:
           - Get/Set
           - origin point of box, in absolute ship-raw coords.
         * - :attr:`FACING`
-          - :struct:`Direction``
+          - :struct:`Direction`
           - Get/Set
           - The orientation of the box's own reference frame.
         * - :attr:`RELMIN`
@@ -385,11 +385,11 @@ illustrate what is being talked about:
           - Get only
           - Position (in absolute ship-raw coords) of the box corner most "that-a-way".
         * - :attr:`BOTTOMALT`
-          - :ref:`Scalar`
+          - :struct:`Scalar`
           - Get Only
           - Sea-level altitude of bottom-most corner of box.
         * - :attr:`BOTTOMALTRADAR`
-          - :ref:`Scalar`
+          - :struct:`Scalar`
           - Get Only
           - Radar altitude of bottom-most corner of box.
         * - RELORIGIN is missing
@@ -692,7 +692,7 @@ illustrate what is being talked about:
     
 .. attribute:: Bounds:BOTTOMALT
 
-    :type: :ref:`Scalar`
+    :type: :struct:`Scalar`
     :access: Get-only
 
     The above-sea-level altitude reading from the bottom-most corner of
@@ -726,7 +726,7 @@ illustrate what is being talked about:
 
 .. attribute:: Bounds:BOTTOMALTRADAR
 
-    :type: :ref:`Scalar`
+    :type: :struct:`Scalar`
     :access: Get-only
 
     The radar-altitude reading from the bottom-most corner of

@@ -19,9 +19,9 @@ Label
     ===================================== =============================== =============
 		   Every suffix of :struct:`WIDGET`
     -----------------------------------------------------------------------------------
-    :attr:`TEXT`                          :struct:`string`                The text on the label.
-    :attr:`IMAGE`                         :struct:`string`                Filename of an image for the label.
-    :attr:`TOOLTIP`                       :struct:`string`                A tooltip for the label.
+    :attr:`TEXT`                          :struct:`String`                The text on the label.
+    :attr:`IMAGE`                         :struct:`String`                Filename of an image for the label.
+    :attr:`TOOLTIP`                       :struct:`String`                A tooltip for the label.
     ===================================== =============================== =============
 
     .. attribute:: TEXT
@@ -39,7 +39,7 @@ Label
 
     .. attribute:: IMAGE
 
-        :type: :struct:`string`
+        :type: :struct:`String`
         :access: Get/Set
 
         This is the filename of an image file to use in the label's background.
@@ -122,5 +122,3 @@ Examples of usage::
     set mylabel5:text to "This is <color=#ffaa00FF>important</color>.". // orange by hex code, opaque
     set mylabel6:text to "This is <color=#ffaa0080>important</color>.". // orange by hex code, halfway transparent
     
-
-

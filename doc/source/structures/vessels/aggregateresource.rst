@@ -42,47 +42,47 @@ This is also the type returned by STAGE:RESOURCES ::
           - Description
 
         * - :attr:`NAME`
-          - :ref:`string <string>`
+          - :struct:`String`
           - Resource name
         * - :attr:`AMOUNT`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Total amount remaining
         * - :attr:`CAPACITY`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Total amount when full
         * - :attr:`DENSITY`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Density of this resource
         * - :attr:`PARTS`
-          - List
+          - :struct:`List`
           - Parts containing this resource
 
 
 .. attribute:: AggregateResource:NAME
 
     :access: Get only
-    :type: :ref:`string <string>`
+    :type: :struct:`String`
 
     The name of the resource, i.e. "LIQUIDFUEL", "ELECTRICCHARGE", "MONOPROP".
 
 .. attribute:: AggregateResource:AMOUNT
 
     :access: Get only
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     The value of how much resource is left.
 
 .. attribute:: AggregateResource:CAPACITY
 
     :access: Get only
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     What AMOUNT would be if the resource was filled to the top.
 
 .. attribute:: AggregateResource:DENSITY
 
     :access: Get only
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
 
     The density value of this resource, expressed in Megagrams f mass
     per Unit of resource.  (i.e. a value of 0.005 would mean that each
@@ -92,6 +92,6 @@ This is also the type returned by STAGE:RESOURCES ::
 .. attribute:: AggregateResource:PARTS
 
     :access: Get only
-    :type: List
+    :type: :struct:`List`
 
     Because this is a summation of the resources from many parts. kOS gives you the list of all parts that do or could contain the resource.

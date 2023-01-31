@@ -186,28 +186,28 @@ Each of the above
         - Description
 
       * - :attr:`LOAD`
-        - :ref:`scalar <scalar>`, in meters
+        - :struct:`Scalar` (m)
         - Get/Set
         - The load distance
       * - :attr:`UNLOAD`
-        - :ref:`scalar <scalar>`, in meters
+        - :struct:`Scalar` (m)
         - Get/Set
         - The unload distance
       * - :attr:`UNPACK`
-        - :ref:`scalar <scalar>`, in meters
+        - :struct:`Scalar` (m)
         - Get/Set
         - The unpack distance
       * - :attr:`PACK`
-        - :ref:`scalar <scalar>`, in meters
+        - :struct:`Scalar` (m)
         - Get/Set
         - The pack distance
 
 .. attribute:: SituationLoadDistance:LOAD
 
     :access: Get/Set
-    :type: :ref:`scalar <scalar>`, in meters
+    :type: :struct:`Scalar` (m)
 
-    Get or set the load distance.  When another vessel is getting closer
+    Get or set the load distance in meters.  When another vessel is getting closer
     to you, because you are moving toward it or it is moving toward you,
     when that vessel becomes this distance *or closer* to the active
     vessel, it will transition from being *unloaded* to being *loaded*.
@@ -219,9 +219,9 @@ Each of the above
 .. attribute:: SituationLoadDistance:UNLOAD
 
     :access: Get/Set
-    :type: :ref:`scalar <scalar>`, in meters
+    :type: :struct:`Scalar` (m)
 
-    Get or set the unload distance.  When another vessel is becoming more
+    Get or set the unload distance in meters.  When another vessel is becoming more
     distant as you move away from it, or it moves away from you,
     when that vessel becomes this distance *or greater* from the active
     vessel, it will transition from being *loaded* to being *unloaded*.
@@ -233,9 +233,9 @@ Each of the above
 .. attribute:: SituationLoadDistance:UNPACK
 
     :access: Get/Set
-    :type: :ref:`scalar <scalar>`, in meters
+    :type: :struct:`Scalar` (m)
 
-    Get or set the unpack distance.  When another vessel is getting closer
+    Get or set the unpack distance in meters.  When another vessel is getting closer
     to you, because you are moving toward it or it is moving toward you,
     when that vessel becomes this distance *or closer* to the active
     vessel, it will transition from being *packed* to being *unpacked*.
@@ -246,9 +246,9 @@ Each of the above
 .. attribute:: SituationLoadDistance:PACK
 
     :access: Get/Set
-    :type: :ref:`scalar <scalar>`, in meters
+    :type: :struct:`Scalar` (m)
 
-    Get or set the pack distance.  When another vessel is getting farther
+    Get or set the pack distance in meters.  When another vessel is getting farther
     away from you, because you are moving away from it or it is moving
     away from you, when that vessel becomes this distance *or greater*
     from the active vessel, it will transition from being *unpacked* to

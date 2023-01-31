@@ -202,65 +202,65 @@ Structure
     ===================================== ========================= =============
      Suffix                                Type                      Description
     ===================================== ========================= =============
-    :attr:`LASTSAMPLETIME`                :struct:`scalar`          decimal value of the last sample time
-    :attr:`KP`                            :struct:`scalar`          The proportional gain factor
-    :attr:`KI`                            :struct:`scalar`          The integral gain factor
-    :attr:`KD`                            :struct:`scalar`          The derivative gain factor
-    :attr:`INPUT`                         :struct:`scalar`          The most recent input value
-    :attr:`SETPOINT`                      :struct:`scalar`          The current setpoint
-    :attr:`ERROR`                         :struct:`scalar`          The most recent error value
-    :attr:`OUTPUT`                        :struct:`scalar`          The most recent output value
-    :attr:`MAXOUTPUT`                     :struct:`scalar`          The maximum output value
-    :attr:`MINOUTPUT`                     :struct:`scalar`          The maximum output value
-    :attr:`EPSILON`                       :struct:`scalar`          The "don't care" tolerance of error
-    :attr:`IGNOREERROR`                   :struct:`scalar`          Alias for :attr:`EPSILON`.
-    :attr:`ERRORSUM`                      :struct:`scalar`          The time weighted sum of error
-    :attr:`PTERM`                         :struct:`scalar`          The proportional component of output
-    :attr:`ITERM`                         :struct:`scalar`          The integral component of output
-    :attr:`DTERM`                         :struct:`scalar`          The derivative component of output
-    :attr:`CHANGERATE`                    :struct:`scalar` (/s)     The most recent input rate of change
+    :attr:`LASTSAMPLETIME`                :struct:`Scalar`          decimal value of the last sample time
+    :attr:`KP`                            :struct:`Scalar`          The proportional gain factor
+    :attr:`KI`                            :struct:`Scalar`          The integral gain factor
+    :attr:`KD`                            :struct:`Scalar`          The derivative gain factor
+    :attr:`INPUT`                         :struct:`Scalar`          The most recent input value
+    :attr:`SETPOINT`                      :struct:`Scalar`          The current setpoint
+    :attr:`ERROR`                         :struct:`Scalar`          The most recent error value
+    :attr:`OUTPUT`                        :struct:`Scalar`          The most recent output value
+    :attr:`MAXOUTPUT`                     :struct:`Scalar`          The maximum output value
+    :attr:`MINOUTPUT`                     :struct:`Scalar`          The maximum output value
+    :attr:`EPSILON`                       :struct:`Scalar`          The "don't care" tolerance of error
+    :attr:`IGNOREERROR`                   :struct:`Scalar`          Alias for :attr:`EPSILON`.
+    :attr:`ERRORSUM`                      :struct:`Scalar`          The time weighted sum of error
+    :attr:`PTERM`                         :struct:`Scalar`          The proportional component of output
+    :attr:`ITERM`                         :struct:`Scalar`          The integral component of output
+    :attr:`DTERM`                         :struct:`Scalar`          The derivative component of output
+    :attr:`CHANGERATE`                    :struct:`Scalar` (/s)     The most recent input rate of change
     :meth:`RESET`                         none                      Reset the integral and derivative components
-    :meth:`UPDATE(time, input)`           :struct:`scalar`          Returns output based on time and input
+    :meth:`UPDATE(time, input)`           :struct:`Scalar`          Returns output based on time and input
     ===================================== ========================= =============
 
 .. attribute:: PIDLoop:LASTSAMPLETIME
 
-    :type: :struct:`scalar`
+    :type: :struct:`Scalar`
     :access: Get only
 
     The value representing the time of the last sample.  This value is equal to the time parameter of the :meth:`UPDATE` method.
 
 .. attribute:: PIDLoop:KP
 
-    :type: :struct:`scalar`
+    :type: :struct:`Scalar`
     :access: Get/Set
 
     The proportional gain factor.
 
 .. attribute:: PIDLoop:KI
 
-    :type: :struct:`scalar`
+    :type: :struct:`Scalar`
     :access: Get/Set
 
     The integral gain factor.
 
 .. attribute:: PIDLoop:KD
 
-    :type: :struct:`scalar`
+    :type: :struct:`Scalar`
     :access: Get/Set
 
     The derivative gain factor.
 
 .. attribute:: PIDLoop:INPUT
 
-    :type: :struct:`scalar`
+    :type: :struct:`Scalar`
     :access: Get only
 
     The value representing the input of the last sample.  This value is equal to the input parameter of the :meth:`UPDATE` method.
 
 .. attribute:: PIDLoop:SETPOINT
 
-    :type: :struct:`scalar`
+    :type: :struct:`Scalar`
     :access: Get/Set
 
     The current setpoint.  This is the value to which input is compared when :meth:`UPDATE` is called.  It may not be synced with the last sample.
@@ -271,28 +271,28 @@ Structure
 
 .. attribute:: PIDLoop:ERROR
 
-    :type: :struct:`scalar`
+    :type: :struct:`Scalar`
     :access: Get only
 
     The calculated error from the last sample (setpoint - input).
 
 .. attribute:: PIDLoop:OUTPUT
 
-    :type: :struct:`scalar`
+    :type: :struct:`Scalar`
     :access: Get only
 
     The calculated output from the last sample.
 
 .. attribute:: PIDLoop:MAXOUTPUT
 
-    :type: :struct:`scalar`
+    :type: :struct:`Scalar`
     :access: Get/Set
 
     The current maximum output value.  This value also helps with regulating integral wind up mitigation.
 
 .. attribute:: PIDLoop:MINOUTPUT
 
-    :type: :struct:`scalar`
+    :type: :struct:`Scalar`
     :access: Get/Set
 
     The current minimum output value.  This value also helps with regulating integral wind up mitigation.
@@ -300,7 +300,7 @@ Structure
 
 .. attribute:: PIDLoop:EPSILON
 
-    :type: :struct:`scalar`
+    :type: :struct:`Scalar`
     :access: Get/Set
 
     Default = 0.
@@ -326,42 +326,42 @@ Structure
 
 .. attribute:: PIDLoop:IGNOREERROR
 
-    :type: :struct:`scalar`
+    :type: :struct:`Scalar`
     :access: Get/Set
 
     This is just an alias that is the same thing as :attr:`EPSILON`.
 
 .. attribute:: PIDLoop:ERRORSUM
 
-    :type: :struct:`scalar`
+    :type: :struct:`Scalar`
     :access: Get only
 
     The value representing the time weighted sum of all errrors.  It will be equal to :attr:`ITERM` / :attr:`KI`.  This value is adjusted by the integral windup mitigation logic.
 
 .. attribute:: PIDLoop:PTERM
 
-    :type: :struct:`scalar`
+    :type: :struct:`Scalar`
     :access: Get only
 
     The value representing the proportional component of :attr:`OUTPUT`.
 
 .. attribute:: PIDLoop:ITERM
 
-    :type: :struct:`scalar`
+    :type: :struct:`Scalar`
     :access: Get only
 
     The value representing the integral component of :attr:`OUTPUT`.  This value is adjusted by the integral windup mitigation logic.
 
 .. attribute:: PIDLoop:DTERM
 
-    :type: :struct:`scalar`
+    :type: :struct:`Scalar`
     :access: Get only
 
     The value representing the derivative component of :attr:`OUTPUT`.
 
 .. attribute:: PIDLoop:CHANGERATE
 
-    :type: :struct:`scalar`
+    :type: :struct:`Scalar`
     :access: Get only
 
     The rate of change of the :attr:`INPUT` during the last sample.  It will be equal to (input - last input) / (change in time).
@@ -374,9 +374,9 @@ Structure
 
 .. method:: PIDLoop:UPDATE(time, input)
 
-    :parameter time: (:struct:`scalar`) the decimal time in seconds
-    :parameter input: (:struct:`scalar`) the input variable to compare to the setpoint
-    :return: :struct:`scalar` representing the calculated output
+    :parameter time: (:struct:`Scalar`) the decimal time in seconds
+    :parameter input: (:struct:`Scalar`) the input variable to compare to the setpoint
+    :return: :struct:`Scalar` representing the calculated output
 
     Upon calling this method, the PIDLoop will calculate the output based on this this basic framework (see below for detailed derivation): output = error * kp + errorsum * ki + (change in input) / (change in time) * kd.  This method is usually called with the current time in seconds (`TIME:SECONDS`), however it may be called using whatever rate measurement you prefer.  Windup mitigation is included, based on :attr:`MAXOUTPUT` and :attr:`MINOUTPUT`.  Both integral components and derivative components are guarded against a change in time greater than 1s, and will not be calculated on the first iteration.
 

@@ -16,7 +16,7 @@ Spacing
     ===================================== =============================== =============
 		   Every suffix of :struct:`WIDGET`
     -----------------------------------------------------------------------------------
-    :attr:`AMOUNT`                        :struct:`scalar`                The amount of space, or -1 for flexible spacing.
+    :attr:`AMOUNT`                        :struct:`Scalar`                The amount of space, or -1 for flexible spacing.
     ===================================== =============================== =============
 
     .. attribute:: AMOUNT
@@ -27,5 +27,3 @@ Spacing
         The number of pixels for this spacing to take up.  Whether this
         is horizontal or vertial space depends on whether this is being
         added to a horizontal-layout box or a vertical-layout box.
-
-

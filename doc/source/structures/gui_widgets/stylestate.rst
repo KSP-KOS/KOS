@@ -14,7 +14,7 @@ StyleState
     ===================================== =============================== =============
     Suffix                                Type                            Description
     ===================================== =============================== =============
-    :attr:`BG`                            :struct:`string`                Name of a "9-slice" image file. See note below.
+    :attr:`BG`                            :struct:`String`                Name of a "9-slice" image file. See note below.
     :attr:`TEXTCOLOR`                     :ref:`Color <colors>`           The color of the text on the label.
     ===================================== =============================== =============
 
@@ -67,5 +67,3 @@ StyleState
         :access: Get/Set
 
         The color of foreground text within this widget when it is in this state.
-
-

@@ -3,18 +3,15 @@
 import sys
 import re
 
-from docutils import nodes
-from docutils.parsers.rst import directives
-
 from sphinx import addnodes, version_info
 from sphinx.roles import XRefRole
-from sphinx.locale import l_, _
-from sphinx.domains import Domain, ObjType, Index
+from sphinx.locale import _
+from sphinx.domains import Domain, ObjType
 from sphinx.directives import ObjectDescription
 from sphinx.util.nodes import make_refnode
 # ### Next line is deprecated, and it seems to work without it, as per kOS PR #2339 ###
 # from sphinx.util.compat import Directive
-from sphinx.util.docfields import Field, GroupedField, TypedField
+from sphinx.util.docfields import Field, TypedField
 
 ks_sig_re = re.compile(r'''
     (?:
@@ -68,8 +65,8 @@ class KOSObject(ObjectDescription):
 
 class KOSGlobal(KOSObject):
     doc_field_types = [
-        Field('access', label=l_('Access'), has_arg=False),
-        Field('type'  , label=l_('Type'  ), has_arg=False),
+        Field('access', label=_('Access'), has_arg=False),
+        Field('type'  , label=_('Type'  ), has_arg=False),
     ]
 
     def handle_signature(self, sig, signode):
@@ -86,13 +83,13 @@ class KOSGlobal(KOSObject):
 
 class KOSFunction(KOSObject):
     doc_field_types = [
-        Field('access', label=l_('Access'), has_arg=False),
-        TypedField('parameter', label=l_('Parameters'),
+        Field('access', label=_('Access'), has_arg=False),
+        TypedField('parameter', label=_('Parameters'),
                    names=('param', 'parameter', 'arg', 'argument'),
                    typerolename='struct', typenames=('paramtype', 'type')),
-        Field('returnvalue', label=l_('Returns'), has_arg=False,
+        Field('returnvalue', label=_('Returns'), has_arg=False,
               names=('returns', 'return')),
-        Field('returntype', label=l_('Return type'), has_arg=False,
+        Field('returntype', label=_('Return type'), has_arg=False,
               names=('rtype','type')),
     ]
 
@@ -114,7 +111,7 @@ class KOSFunction(KOSObject):
 
 class KOSKeyword(KOSObject):
     doc_field_types = [
-        TypedField('parameter', label=l_('Parameters'),
+        TypedField('parameter', label=_('Parameters'),
                    names=('param', 'parameter', 'arg', 'argument'),
                    typerolename='struct', typenames=('paramtype', 'type')),
     ]
@@ -148,8 +145,8 @@ class KOSStructure(KOSObject):
 class KOSAttribute(KOSObject):
 
     doc_field_types = [
-        Field('access', label=l_('Access'), has_arg=False),
-        Field('type'  , label=l_('Type'  ), has_arg=False),
+        Field('access', label=_('Access'), has_arg=False),
+        Field('type'  , label=_('Type'  ), has_arg=False),
     ]
 
     def handle_signature(self, sig, signode):
@@ -185,13 +182,13 @@ class KOSAttribute(KOSObject):
 class KOSMethod(KOSObject):
 
     doc_field_types = [
-        Field('access', label=l_('Access'), has_arg=False),
-        TypedField('parameter', label=l_('Parameters'),
+        Field('access', label=_('Access'), has_arg=False),
+        TypedField('parameter', label=_('Parameters'),
                    names=('param', 'parameter', 'arg', 'argument'),
                    typerolename='obj', typenames=('paramtype', 'type')),
-        Field('returnvalue', label=l_('Returns'), has_arg=False,
+        Field('returnvalue', label=_('Returns'), has_arg=False,
               names=('returns', 'return')),
-        Field('returntype', label=l_('Return type'), has_arg=False,
+        Field('returntype', label=_('Return type'), has_arg=False,
               names=('rtype','type')),
     ]
 
@@ -267,12 +264,12 @@ class KOSDomain(Domain):
     }
 
     object_types = {
-        'global'   : ObjType(l_('global'   ), 'global'),
-        'function' : ObjType(l_('function' ), 'func'  ),
-        'keyword'  : ObjType(l_('keyword'  ), 'key'   ),
-        'structure': ObjType(l_('structure'), 'struct'),
-        'attribute': ObjType(l_('attribure'), 'attr'  ),
-        'method'   : ObjType(l_('method'   ), 'meth'  ),
+        'global'   : ObjType(_('global'   ), 'global'),
+        'function' : ObjType(_('function' ), 'func'  ),
+        'keyword'  : ObjType(_('keyword'  ), 'key'   ),
+        'structure': ObjType(_('structure'), 'struct'),
+        'attribute': ObjType(_('attribure'), 'attr'  ),
+        'method'   : ObjType(_('method'   ), 'meth'  ),
     }
     directives = {
         'global'   : KOSGlobal,

@@ -91,7 +91,7 @@ Widget
     .. attribute:: ENABLED
 
         :type: :struct:`Boolean`
-        :access: get/set
+        :access: Get/Set
 
         (This is true by default for all newly created widgets.)
 
@@ -140,7 +140,7 @@ Widget
     .. attribute:: PARENT
 
 	:type: :struct:`Box`
-	:access: :Get-only
+	:access: Get-only
 
 	Widgets can be contained inside Boxes that are contained inside
 	other Boxes, etc.  This suffix tells you which :struct:`Box` contains
@@ -153,10 +153,8 @@ Widget
     .. attribute:: HASPARENT
 
 	:type: :struct:`Boolean`
-	:access: :Get-only
+	:access: Get-only
 
 	If trying to use :attr:`Widget:PARENT` would generate an error because
 	this widget has no parent, then :attr:`HASPARENT` will be false.
 	Otherwise it will be true.
-
-

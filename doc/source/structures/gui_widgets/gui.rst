@@ -22,10 +22,10 @@ GUI structure
     ===================================== =============================== =============
        Every suffix of :struct:`BOX`.  Note, to add widgets to this window, see the BOX suffixes.
     -----------------------------------------------------------------------------------
-    :attr:`X`                             :struct:`scalar` (pixels)       X-position of the window. Negative values measure from the right.
-    :attr:`Y`                             :struct:`scalar` (pixels)       Y-position of the window. Negative values measure from the bottom.
+    :attr:`X`                             :struct:`Scalar` (pixels)       X-position of the window. Negative values measure from the right.
+    :attr:`Y`                             :struct:`Scalar` (pixels)       Y-position of the window. Negative values measure from the bottom.
     :attr:`DRAGGABLE`                     :struct:`Boolean`               True = user can move window.
-    :attr:`EXTRADELAY`                    :struct:`scalar` (seconds)      Add artificial delay to all communication with this GUI (good for testing before you get into deep space)
+    :attr:`EXTRADELAY`                    :struct:`Scalar` (seconds)      Add artificial delay to all communication with this GUI (good for testing before you get into deep space)
     :attr:`SKIN`                          :struct:`Skin`                  The skin defining the default style of widgets in this GUI.
     :attr:`TOOLTIP`                       :struct:`String`                Current value of hovertext
     :meth:`SHOW`                          none                            Call to make the gui appear
@@ -34,7 +34,7 @@ GUI structure
 
     .. attribute:: X
 
-        :type: :struct:`scalar`
+        :type: :struct:`Scalar`
         :access: Get/Set
 
         This is the X position of upper-left corner of window, in pixels.
@@ -47,7 +47,7 @@ GUI structure
 
     .. attribute:: Y
 
-        :type: :struct:`scalar`
+        :type: :struct:`Scalar`
         :access: Get/Set
 
         This is the Y position of upper-left corner of window, in pixels.
@@ -69,7 +69,7 @@ GUI structure
 
     .. attribute:: EXTRADELAY
 
-        :type: :struct:`scalar`
+        :type: :struct:`Scalar`
         :access: Get/Set
 
         This is the number of extra seconds of delay to add to
@@ -134,4 +134,3 @@ GUI structure
 
         Call this suffix to make the GUI disappear.  (Note this is really just
         :meth:`Widget:Show` but it's mentioned again here.)
-

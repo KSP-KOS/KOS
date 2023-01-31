@@ -24,31 +24,31 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     :attr:`PITCHPID`                     :struct:`PIDLoop`         The PIDLoop for the pitch :ref:`rotational velocity PID <cooked_omega_pid>`.
     :attr:`YAWPID`                       :struct:`PIDLoop`         The PIDLoop for the yaw :ref:`rotational velocity PID <cooked_omega_pid>`.
     :attr:`ROLLPID`                      :struct:`PIDLoop`         The PIDLoop for the roll :ref:`rotational velocity PID <cooked_omega_pid>`.
-    :attr:`ENABLED`                      :struct:`boolean`         Returns true if the `SteeringManager` is currently controlling the vessel
+    :attr:`ENABLED`                      :struct:`Boolean`         Returns true if the `SteeringManager` is currently controlling the vessel
     :attr:`TARGET`                       :struct:`Direction`       The direction that the vessel is currently steering towards
     :meth:`RESETPIDS()`                  none                      Called to call `RESET` on all steering PID loops.
     :meth:`RESETTODEFAULT()`             none                      Called to reset all steering tuning parameters.
-    :attr:`SHOWFACINGVECTORS`            :struct:`boolean`         Enable/disable display of ship facing, target, and world coordinates vectors.
-    :attr:`SHOWANGULARVECTORS`           :struct:`boolean`         Enable/disable display of angular rotation vectors
-    :attr:`SHOWSTEERINGSTATS`            :struct:`boolean`         Enable/disable printing of the steering information on the terminal
-    :attr:`WRITECSVFILES`                :struct:`boolean`         Enable/disable logging steering to csv files.
-    :attr:`PITCHTS`                      :struct:`scalar` (s)      Settling time for the pitch torque calculation.
-    :attr:`YAWTS`                        :struct:`scalar` (s)      Settling time for the yaw torque calculation.
-    :attr:`ROLLTS`                       :struct:`scalar` (s)      Settling time for the roll torque calculation.
-    :attr:`TORQUEEPSILONMIN`             :struct:`scalar` (s)      Torque deadzone when not rotating at max rate
-    :attr:`TORQUEEPSILONMAX`             :struct:`scalar` (s)      Torquw deadzone when rotating at max roatation rate
-    :attr:`MAXSTOPPINGTIME`              :struct:`scalar` (s)      The maximum amount of stopping time to limit angular turn rate.
-    :attr:`ROLLCONTROLANGLERANGE`        :struct:`scalar` (deg)    The maximum value of :attr:`ANGLEERROR` for which to control roll.
-    :attr:`ANGLEERROR`                   :struct:`scalar` (deg)    The angle between vessel:facing and target directions
-    :attr:`PITCHERROR`                   :struct:`scalar` (deg)    The angular error in the pitch direction
-    :attr:`YAWERROR`                     :struct:`scalar` (deg)    The angular error in the yaw direction
-    :attr:`ROLLERROR`                    :struct:`scalar` (deg)    The angular error in the roll direction
-    :attr:`PITCHTORQUEADJUST`            :struct:`scalar` (kN)     Additive adjustment to pitch torque (calculated)
-    :attr:`YAWTORQUEADJUST`              :struct:`scalar` (kN)     Additive adjustment to yaw torque (calculated)
-    :attr:`ROLLTORQUEADJUST`             :struct:`scalar` (kN)     Additive adjustment to roll torque (calculated)
-    :attr:`PITCHTORQUEFACTOR`            :struct:`scalar`          Multiplicative adjustment to pitch torque (calculated)
-    :attr:`YAWTORQUEFACTOR`              :struct:`scalar`          Multiplicative adjustment to yaw torque (calculated)
-    :attr:`ROLLTORQUEFACTOR`             :struct:`scalar`          Multiplicative adjustment to roll torque (calculated)
+    :attr:`SHOWFACINGVECTORS`            :struct:`Boolean`         Enable/disable display of ship facing, target, and world coordinates vectors.
+    :attr:`SHOWANGULARVECTORS`           :struct:`Boolean`         Enable/disable display of angular rotation vectors
+    :attr:`SHOWSTEERINGSTATS`            :struct:`Boolean`         Enable/disable printing of the steering information on the terminal
+    :attr:`WRITECSVFILES`                :struct:`Boolean`         Enable/disable logging steering to csv files.
+    :attr:`PITCHTS`                      :struct:`Scalar` (s)      Settling time for the pitch torque calculation.
+    :attr:`YAWTS`                        :struct:`Scalar` (s)      Settling time for the yaw torque calculation.
+    :attr:`ROLLTS`                       :struct:`Scalar` (s)      Settling time for the roll torque calculation.
+    :attr:`TORQUEEPSILONMIN`             :struct:`Scalar` (s)      Torque deadzone when not rotating at max rate
+    :attr:`TORQUEEPSILONMAX`             :struct:`Scalar` (s)      Torquw deadzone when rotating at max roatation rate
+    :attr:`MAXSTOPPINGTIME`              :struct:`Scalar` (s)      The maximum amount of stopping time to limit angular turn rate.
+    :attr:`ROLLCONTROLANGLERANGE`        :struct:`Scalar` (deg)    The maximum value of :attr:`ANGLEERROR` for which to control roll.
+    :attr:`ANGLEERROR`                   :struct:`Scalar` (deg)    The angle between vessel:facing and target directions
+    :attr:`PITCHERROR`                   :struct:`Scalar` (deg)    The angular error in the pitch direction
+    :attr:`YAWERROR`                     :struct:`Scalar` (deg)    The angular error in the yaw direction
+    :attr:`ROLLERROR`                    :struct:`Scalar` (deg)    The angular error in the roll direction
+    :attr:`PITCHTORQUEADJUST`            :struct:`Scalar` (kN)     Additive adjustment to pitch torque (calculated)
+    :attr:`YAWTORQUEADJUST`              :struct:`Scalar` (kN)     Additive adjustment to yaw torque (calculated)
+    :attr:`ROLLTORQUEADJUST`             :struct:`Scalar` (kN)     Additive adjustment to roll torque (calculated)
+    :attr:`PITCHTORQUEFACTOR`            :struct:`Scalar`          Multiplicative adjustment to pitch torque (calculated)
+    :attr:`YAWTORQUEFACTOR`              :struct:`Scalar`          Multiplicative adjustment to yaw torque (calculated)
+    :attr:`ROLLTORQUEFACTOR`             :struct:`Scalar`          Multiplicative adjustment to roll torque (calculated)
     ==================================== ========================= =============
 
 .. warning::
@@ -89,7 +89,7 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
 
 .. attribute:: SteeringManager:ENABLED
 
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
     :access: Get only
 
     Returns true if the SteeringManager is currently controlling the vessel steering.
@@ -117,56 +117,56 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
 
 .. attribute:: SteeringManager:SHOWFACINGVECTORS
 
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
     :access: Get/Set
 
     Setting this suffix to true will cause the steering manager to display graphical vectors (see :struct:`VecDraw`) representing the forward, top, and starboard of the facing direction, as well as the world x, y, and z axis orientation (centered on the vessel).  Setting to false will hide the vectors, as will disabling locked steering.
 
 .. attribute:: SteeringManager:SHOWANGULARVECTORS
 
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
     :access: Get/Set
 
     Setting this suffix to true will cause the steering manager to display graphical vectors (see :struct:`VecDraw`) representing the current and target angular velocities in the pitch, yaw, and roll directions.  Setting to false will hide the vectors, as will disabling locked steering.
 
 .. attribute:: SteeringManager:SHOWSTEERINGSTATS
 
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
     :access: Get/Set
 
     Setting this suffix to true will cause the steering manager to clear the terminal screen and print steering data each update.
 
 .. attribute:: SteeringManager:WRITECSVFILES
 
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
     :access: Get/Set
 
     Setting this suffix to true will cause the steering manager log the data from all 6 PIDLoops calculating target angular velocity and target torque.  The files are stored in the `[KSP Root]\GameData\kOS\Plugins\PluginData\kOS` folder, with one file per loop and a new file created for each new manager instance (i.e. every launch, every revert, and every vessel load).  These files can grow quite large, and add up quickly, so it is recommended to only set this value to true for testing or debugging and not normal operation.
 
 .. attribute:: SteeringManager:PITCHTS
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get/Set
 
     Represents the settling time for the :ref:`PID calculating pitch torque based on target angular velocity <cooked_torque_pid>`.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the pitch direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).
 
 .. attribute:: SteeringManager:YAWTS
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get/Set
 
     Represents the settling time for the :ref:`PID calculating yaw torque based on target angular velocity <cooked_torque_pid>`.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the yaw direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).
 
 .. attribute:: SteeringManager:ROLLTS
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get/Set
 
     Represents the settling time for the :ref:`PID calculating roll torque based on target angular velocity <cooked_torque_pid>`.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the roll direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).
 
 .. attribute:: SteeringManager:TORQUEEPSILONMIN
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get/Set
 
     DEFAULT VALUE: 0.0002
@@ -186,7 +186,7 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
 
 .. attribute:: SteeringManager:TORQUEEPSILONMAX
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get/Set
 
     DEFAULT VALUE: 0.001
@@ -250,7 +250,7 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
 
 .. attribute:: SteeringManager:MAXSTOPPINGTIME
 
-    :type: :ref:`scalar <scalar>` (s)
+    :type: :struct:`Scalar` (s)
     :access: Get/Set
 
     This value is used to limit the turning rate when :ref:`calculating target angular velocity <cooked_omega_pid>`.  The ship will not turn faster than what it can stop in this amount of time.  The maximum angular velocity about each axis is calculated as: (max angular velocity) = MAXSTOPPINGTIME * (available torque) / (moment of inertia).
@@ -261,7 +261,7 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
 
 .. attribute:: SteeringManager:ROLLCONTROLANGLERANGE
 
-    :type: :ref:`scalar <scalar>` (deg)
+    :type: :struct:`Scalar` (deg)
     :access: Get/Set
 
     The maximum value of :attr:`ANGLEERROR<SteeringManager:ANGLEERROR>` for
@@ -275,70 +275,70 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
 
 .. attribute:: SteeringManager:ANGLEERROR
 
-    :type: :ref:`scalar <scalar>` (deg)
+    :type: :struct:`Scalar` (deg)
     :access: Get only
 
     The angle between the ship's facing direction forward vector and the target direction's forward.  This is the combined pitch and yaw error.
 
 .. attribute:: SteeringManager:PITCHERROR
 
-    :type: :ref:`scalar <scalar>` (deg)
+    :type: :struct:`Scalar` (deg)
     :access: Get only
 
     The pitch angle between the ship's facing direction and the target direction.
 
 .. attribute:: SteeringManager:YAWERROR
 
-    :type: :ref:`scalar <scalar>` (deg)
+    :type: :struct:`Scalar` (deg)
     :access: Get only
 
     The yaw angle between the ship's facing direction and the target direction.
 
 .. attribute:: SteeringManager:ROLLERROR
 
-    :type: :ref:`scalar <scalar>` (deg)
+    :type: :struct:`Scalar` (deg)
     :access: Get only
 
     The roll angle between the ship's facing direction and the target direction.
 
 .. attribute:: SteeringManager:PITCHTORQUEADJUST
 
-    :type: :ref:`scalar <scalar>` (kNm)
+    :type: :struct:`Scalar` (kNm)
     :access: Get/Set
 
     You can set this value to provide an additive bias to the calculated available pitch torque used in the pitch :ref:`torque PID <cooked_torque_pid>`. (available torque) = ((calculated torque) + PITCHTORQUEADJUST) * PITCHTORQUEFACTOR.
 
 .. attribute:: SteeringManager:YAWTORQUEADJUST
 
-    :type: :ref:`scalar <scalar>` (kNm)
+    :type: :struct:`Scalar` (kNm)
     :access: Get/Set
 
     You can set this value to provide an additive bias to the calculated available yaw torque used in the yaw :ref:`torque PID <cooked_torque_pid>`. (available torque) = ((calculated torque) + YAWTORQUEADJUST) * YAWTORQUEFACTOR.
 
 .. attribute:: SteeringManager:ROLLTORQUEADJUST
 
-    :type: :ref:`scalar <scalar>` (kNm)
+    :type: :struct:`Scalar` (kNm)
     :access: Get/Set
 
     You can set this value to provide an additive bias to the calculated available roll torque used in the roll :ref:`torque PID <cooked_torque_pid>`. (available torque) = ((calculated torque) + ROLLTORQUEADJUST) * ROLLTORQUEFACTOR.
 
 .. attribute:: SteeringManager:PITCHTORQUEFACTOR
 
-    :type: :ref:`scalar <scalar>` (kNm)
+    :type: :struct:`Scalar` (kNm)
     :access: Get/Set
 
     You can set this value to provide an multiplicative factor bias to the calculated available pitch torque used in the :ref:`torque PID <cooked_torque_pid>`. (available torque) = ((calculated torque) + PITCHTORQUEADJUST) * PITCHTORQUEFACTOR.
 
 .. attribute:: SteeringManager:YAWTORQUEFACTOR
 
-    :type: :ref:`scalar <scalar>` (kNm)
+    :type: :struct:`Scalar` (kNm)
     :access: Get/Set
 
     You can set this value to provide an multiplicative factor bias to the calculated available yaw torque used in the :ref:`torque PID <cooked_torque_pid>`. (available torque) = ((calculated torque) + YAWTORQUEADJUST) * YAWTORQUEFACTOR.
 
 .. attribute:: SteeringManager:ROLLTORQUEFACTOR
 
-    :type: :ref:`scalar <scalar>` (kNm)
+    :type: :struct:`Scalar` (kNm)
     :access: Get/Set
 
     You can set this value to provide an multiplicative factor bias to the calculated available roll torque used in the :ref:`torque PID <cooked_torque_pid>`. (available torque) = ((calculated torque) + ROLLTORQUEADJUST) * ROLLTORQUEFACTOR.

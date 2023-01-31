@@ -62,19 +62,19 @@ Structure
           - :struct:`List`
           - new list of given length starting with index
         * - :meth:`JOIN(separator)`
-          - :ref:`string <string>`
+          - :struct:`String`
           - joins all list elements into a string
         * - :meth:`FIND(item)`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - returns the first index of the item within the list
         * - :meth:`INDEXOF(item)`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Alias for :meth:`FIND(item)`
         * - :meth:`FINDLAST(item)`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - returns the last index of the item within the list
         * - :meth:`LASTINDEXOF(item)`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Alias for :meth:`FINDLAST(item)`
 
 .. note::
@@ -125,7 +125,7 @@ Structure
 .. method:: List:JOIN(separator)
 
     :parameter separator: (string) separator that will be inserted between the list items
-    :return: :ref:`string <string>`
+    :return: :struct:`String`
 
     Returns a string created by converting each element of the array to a string, separated by the given separator.
 

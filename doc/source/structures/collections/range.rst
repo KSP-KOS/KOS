@@ -72,13 +72,13 @@ Structure
           -
           - :struct:`Range` objects are a type of :struct:`Enumerable`
         * - :attr:`START`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - initial element of the range
         * - :attr:`STOP`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - range limit
         * - :attr:`STEP`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - step size
 
 .. note::
@@ -88,21 +88,21 @@ Structure
 
 .. attribute:: Range:START
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get only
 
     Returns the initial element of the range.  Must be a round number.
 
 .. attribute:: Range:STOP
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get only
 
     Returns the range limit.  Must be a round number.
 
 .. attribute:: Range:STEP
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get only
 
     Returns the step size.  Must be a round number.
