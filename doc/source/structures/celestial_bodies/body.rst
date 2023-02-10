@@ -129,7 +129,7 @@ All of the main celestial bodies in the game are reserved variable names. The fo
 .. attribute:: Body:ROTATIONPERIOD
 
     The number of seconds it takes the body to rotate around its own axis.
-    This is the sedereal rotation period which can differ from the length
+    This is the sidereal rotation period which can differ from the length
     of a day due to the fact that the body moves a bit further around the
     Sun while it's rotating around its own axis.
 
@@ -203,7 +203,7 @@ All of the main celestial bodies in the game are reserved variable names. The fo
 
     The rotation angle is the number of degrees between the
     :ref:`Solar Prime Vector <solarprimevector>` and the
-    current positon of the body's prime meridian (body longitude
+    current position of the body's prime meridian (body longitude
     of zero).
 
     The value is in constant motion, and once per body's rotation
