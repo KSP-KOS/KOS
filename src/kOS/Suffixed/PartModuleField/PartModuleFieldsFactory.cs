@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.AddOns.RemoteTech;
@@ -31,6 +31,10 @@ namespace kOS.Suffixed.PartModuleField
 
             if (mod.moduleName.Equals(RemoteTechAntennaModuleFields.RTAntennaModule)) {
                 return new RemoteTechAntennaModuleFields(mod, shared);
+            }
+
+            if (mod.moduleName.Equals("ModuleScienceContainer")) {
+                return new ScienceContainerFields(mod, shared);
             }
 
             var scienceExperimentFields = ScienceExperimentFieldsFactory.Construct(mod, shared);
