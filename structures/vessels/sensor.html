@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Sensor &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sensor &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../../about.html"/>
-        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
-        <link rel="next" title="Stage" href="stage.html"/>
-        <link rel="prev" title="ScienceExperimentModule" href="scienceexperiment.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Separator" href="separator.html" />
+    <link rel="prev" title="ScienceExperimentModule" href="scienceexperiment.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
@@ -126,9 +77,11 @@
 <li class="toctree-l3"><a class="reference internal" href="partmodule.html">PartModule</a></li>
 <li class="toctree-l3"><a class="reference internal" href="rcs.html">RCS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="resource.html">Resource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sciencecontainermodule.html">ScienceContainerModule</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sciencedatavalue.html">ScienceData</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scienceexperiment.html">ScienceExperimentModule</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Sensor</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="separator.html">Separator</a></li>
 <li class="toctree-l3"><a class="reference internal" href="stage.html">Stage</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vessel.html">Vessel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vesselsensors.html">VesselSensors</a></li>
@@ -149,56 +102,36 @@
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
-      
           <li><a href="../vessels.html">Vessels and Parts</a> &raquo;</li>
-      
-    <li>Sensor</li>
+      <li>Sensor</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/structures/vessels/sensor.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../../_sources/structures/vessels/sensor.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="sensor">
-<span id="id1"></span><h1>Sensor<a class="headerlink" href="#sensor" title="Permalink to this headline">¶</a></h1>
-<p>The type of structures returned by <a class="reference internal" href="../../commands/list.html#list-command"><span>LIST SENSORS IN SOMEVARIABLE</span></a>. This is not fully understood because the type of <a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></code></a> in the KSP API called <code class="docutils literal"><span class="pre">ModuleEnviroSensor</span></code>, which all Sensors are a kind of, is not well documented. Here is an example of using <a class="reference internal" href="#structure:SENSOR" title="SENSOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Sensor</span></code></a>:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;Full Sensor Dump:&quot;</span><span class="p">.</span>
+             
+  <section id="sensor">
+<span id="id1"></span><h1>Sensor<a class="headerlink" href="#sensor" title="Permalink to this heading">¶</a></h1>
+<p>The type of structures returned by <a class="reference internal" href="../../commands/list.html#list-command"><span class="std std-ref">LIST SENSORS IN SOMEVARIABLE</span></a>. This is not fully understood because the type of <a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">PartModule</span></code></a> in the KSP API called <code class="docutils literal notranslate"><span class="pre">ModuleEnviroSensor</span></code>, which all Sensors are a kind of, is not well documented. Here is an example of using <a class="reference internal" href="#structure:SENSOR" title="SENSOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Sensor</span></code></a>:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;Full Sensor Dump:&quot;</span><span class="p">.</span>
 <span class="k">LIST</span> <span class="nv">SENSORS</span> <span class="nv">IN</span> <span class="nv">SENSELIST</span><span class="p">.</span>
 
 <span class="c1">// TURN EVERY SINGLE SENSOR ON</span>
@@ -214,190 +147,143 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<dl class="structure">
-<dt id="structure:SENSOR">
-<em class="property">structure </em><code class="descname">Sensor</code><a class="headerlink" href="#structure:SENSOR" title="Permalink to this definition">¶</a></dt>
-<dd><table border="1" class="docutils">
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:SENSOR">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">Sensor</span></span><a class="headerlink" href="#structure:SENSOR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils align-default">
 <colgroup>
-<col width="29%" />
-<col width="14%" />
-<col width="57%" />
+<col style="width: 28.6%" />
+<col style="width: 14.3%" />
+<col style="width: 57.1%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type</th>
-<th class="head">Description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>All suffixes of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a></td>
-<td>&nbsp;</td>
-<td><a class="reference internal" href="#structure:SENSOR" title="SENSOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Sensor</span></code></a> objects are a type of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a></td>
+<tbody>
+<tr class="row-even"><td><p>All suffixes of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a></p></td>
+<td></td>
+<td><p><a class="reference internal" href="#structure:SENSOR" title="SENSOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Sensor</span></code></a> objects are a type of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:SENSOR:ACTIVE" title="SENSOR:ACTIVE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ACTIVE</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
-<td>Check if this sensor is active</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:SENSOR:ACTIVE" title="SENSOR:ACTIVE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ACTIVE</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Check if this sensor is active</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:SENSOR:TYPE" title="SENSOR:TYPE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TYPE</span></code></a></td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:SENSOR:TYPE" title="SENSOR:TYPE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">TYPE</span></code></a></p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:SENSOR:DISPLAY" title="SENSOR:DISPLAY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DISPLAY</span></code></a></td>
-<td>string</td>
-<td>Value of the readout</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:SENSOR:DISPLAY" title="SENSOR:DISPLAY attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">DISPLAY</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>Value of the readout</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:SENSOR:POWERCONSUMPTION" title="SENSOR:POWERCONSUMPTION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">POWERCONSUMPTION</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-<td>Rate of required electric charge</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:SENSOR:POWERCONSUMPTION" title="SENSOR:POWERCONSUMPTION attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">POWERCONSUMPTION</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Rate of required electric charge</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:SENSOR:TOGGLE" title="SENSOR:TOGGLE method"><code class="xref ks ks-meth docutils literal"><span class="pre">TOGGLE()</span></code></a></td>
-<td>&nbsp;</td>
-<td>Call to activate/deactivate</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:SENSOR:TOGGLE" title="SENSOR:TOGGLE method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">TOGGLE()</span></code></a></p></td>
+<td></td>
+<td><p>Call to activate/deactivate</p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">A <a class="reference internal" href="#structure:SENSOR" title="SENSOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Sensor</span></code></a> is a type of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a>, and therefore can use all the suffixes of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a>.</p>
+<p class="admonition-title">Note</p>
+<p>A <a class="reference internal" href="#structure:SENSOR" title="SENSOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Sensor</span></code></a> is a type of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a>, and therefore can use all the suffixes of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a>.</p>
 </div>
-<dl class="attribute">
-<dt id="attribute:SENSOR:ACTIVE">
-Sensor:<code class="descname">ACTIVE</code><a class="headerlink" href="#attribute:SENSOR:ACTIVE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:SENSOR:ACTIVE">
+<span class="pre">Sensor:</span><span class="sig-name descname"><span class="pre">ACTIVE</span></span><a class="headerlink" href="#attribute:SENSOR:ACTIVE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>True of the sensor is enabled. Can SET to cause the sensor to activate or de-activate.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:SENSOR:TYPE">
-Sensor:<code class="descname">TYPE</code><a class="headerlink" href="#attribute:SENSOR:TYPE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:SENSOR:TYPE">
+<span class="pre">Sensor:</span><span class="sig-name descname"><span class="pre">TYPE</span></span><a class="headerlink" href="#attribute:SENSOR:TYPE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:SENSOR:DISPLAY">
-Sensor:<code class="descname">DISPLAY</code><a class="headerlink" href="#attribute:SENSOR:DISPLAY" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">string</td>
-</tr>
-</tbody>
-</table>
-<p>The value of the sensor&#8217;s readout, usualy including the units.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:SENSOR:DISPLAY">
+<span class="pre">Sensor:</span><span class="sig-name descname"><span class="pre">DISPLAY</span></span><a class="headerlink" href="#attribute:SENSOR:DISPLAY" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+</dl>
+<p>The value of the sensor’s readout, usualy including the units.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:SENSOR:POWERCONSUMPTION">
-Sensor:<code class="descname">POWERCONSUMPTION</code><a class="headerlink" href="#attribute:SENSOR:POWERCONSUMPTION" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:SENSOR:POWERCONSUMPTION">
+<span class="pre">Sensor:</span><span class="sig-name descname"><span class="pre">POWERCONSUMPTION</span></span><a class="headerlink" href="#attribute:SENSOR:POWERCONSUMPTION" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+</dl>
 <p>The rate at which this sensor drains ElectricCharge.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:SENSOR:TOGGLE">
-Sensor:<code class="descname">TOGGLE</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:SENSOR:TOGGLE" title="Permalink to this definition">¶</a></dt>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:SENSOR:TOGGLE">
+<span class="pre">Sensor:</span><span class="sig-name descname"><span class="pre">TOGGLE</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:SENSOR:TOGGLE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call this method to cause the sensor to switch between active and deactivated or visa versa.</p>
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="stage.html" class="btn btn-neutral float-right" title="Stage" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="scienceexperiment.html" class="btn btn-neutral" title="ScienceExperimentModule" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="scienceexperiment.html" class="btn btn-neutral float-left" title="ScienceExperimentModule" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="separator.html" class="btn btn-neutral float-right" title="Separator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

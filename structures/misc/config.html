@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Configuration of kOS &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuration of kOS &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../../about.html"/>
-        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
-        <link rel="next" title="Part Highlighting" href="highlight.html"/>
-        <link rel="prev" title="Colors" href="colors.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Part Highlighting" href="highlight.html" />
+    <link rel="prev" title="Colors" href="colors.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
@@ -112,7 +63,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../misc.html">Miscellaneous</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="boolean.html">Boolean</a></li>
 <li class="toctree-l3"><a class="reference internal" href="colors.html">Colors</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Configuration of kOS</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Configuration of kOS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="highlight.html">Part Highlighting</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kosdelegate.html">KOSDelegate</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kuniverse.html">KUniverse 4th wall methods</a></li>
@@ -146,361 +97,363 @@
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
-      
           <li><a href="../misc.html">Configurations and Miscellany</a> &raquo;</li>
-      
-    <li>Configuration of kOS</li>
+      <li>Configuration of kOS</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/structures/misc/config.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../../_sources/structures/misc/config.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="configuration-of-kos">
-<span id="config"></span><h1>Configuration of kOS<a class="headerlink" href="#configuration-of-kos" title="Permalink to this headline">¶</a></h1>
-<dl class="structure">
-<dt id="structure:CONFIG">
-<em class="property">structure </em><code class="descname">Config</code><a class="headerlink" href="#structure:CONFIG" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#structure:CONFIG" title="CONFIG structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Config</span></code></a> is a special structure that allows your kerboscript
-programs to set or get the values stored in the kOS plugin&#8217;s configuration.
+             
+  <section id="configuration-of-kos">
+<span id="config"></span><h1>Configuration of kOS<a class="headerlink" href="#configuration-of-kos" title="Permalink to this heading">¶</a></h1>
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:CONFIG">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">Config</span></span><a class="headerlink" href="#structure:CONFIG" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#structure:CONFIG" title="CONFIG structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Config</span></code></a> is a special structure that allows your kerboscript
+programs to set or get the values stored in the kOS plugin’s configuration.
 Some of the global values are stored in an external file, while save game
 specific values are stored in that save file.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<div class="last versionadded">
-<p><span class="versionmodified">New in version v1.0.2: </span>Prior to this version of kOS, all settings were stored globally in
+<p class="admonition-title">Note</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version v1.0.2: </span>Prior to this version of kOS, all settings were stored globally in
 a single external file.  KSP version 1.2.0 introduced a new way to
 store settings within the save file itself, and most settings were
 migrated to this system.</p>
 </div>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">If your save file has not yet migrated to the new settings storage
+<p class="admonition-title">Note</p>
+<p>If your save file has not yet migrated to the new settings storage
 system and an old config file is present, you will be prompted with a
 dialog box offering to migrate the old settings or use the defaults.
 You may also choose to prevent further attempts to migrate settings.
-If you do so, kOS will set the <code class="docutils literal"><span class="pre">InstructionsPerUpdate</span></code> to a
+If you do so, kOS will set the <code class="docutils literal notranslate"><span class="pre">InstructionsPerUpdate</span></code> to a
 negative value in the old config file, as a flag to indicate no
 further migrations should happen.  (Note the old config file is
 still actively used for global settings such as the telnet settings,
-even after you&#8217;ve done this, so don&#8217;t delete it.)</p>
+even after you’ve done this, so don’t delete it.)</p>
 </div>
-<p>The options here can also be set by using the <a class="reference internal" href="../../general/settingsWindows.html#applauncher"><span>App Control Panel</span></a>
-or the <a class="reference internal" href="../../general/settingsWindows.html#settingswindow"><span>kOS section of KSP&#8217;s Difficulty Settings</span></a></p>
+<p>The options here can also be set by using the <a class="reference internal" href="../../general/settingsWindows.html#applauncher"><span class="std std-ref">App Control Panel</span></a>
+or the <a class="reference internal" href="../../general/settingsWindows.html#settingswindow"><span class="std std-ref">kOS section of KSP’s Difficulty Settings</span></a></p>
 <p>Because the Telnet server runs as a global instance for KSP, the telnet
-specific settings are stored globally in kOS&#8217;s external config file.  These
+specific settings are stored globally in kOS’s external config file.  These
 values are noted as <strong>global</strong> below, but all other values may be presumed
 to be local to the current save file.</p>
-<p>The config file may be found at <code class="file docutils literal"><em><span class="pre">[KSP</span> <span class="pre">Directory]</span></em><span class="pre">/GameData/kOS/Plugins/PluginData/kOS/</span></code></p>
-<table border="1" class="docutils" id="id1">
+<p>The config file may be found at <code class="file docutils literal notranslate"><em><span class="pre">[KSP</span> <span class="pre">Directory]</span></em><span class="pre">/GameData/kOS/Plugins/PluginData/kOS/</span></code></p>
+<table class="docutils align-default" id="id1">
 <caption><span class="caption-text">Members (all Gettable and Settable)</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="25%" />
-<col width="13%" />
-<col width="13%" />
-<col width="50%" />
+<col style="width: 25.0%" />
+<col style="width: 12.5%" />
+<col style="width: 12.5%" />
+<col style="width: 50.0%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type</th>
-<th class="head">Default</th>
-<th class="head">Description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:IPU" title="CONFIG:IPU attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">IPU</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (integer)</td>
-<td>150</td>
-<td>Instructions per update</td>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:CONFIG:IPU" title="CONFIG:IPU attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">IPU</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer)</p></td>
+<td><p>150</p></td>
+<td><p>Instructions per update</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:UCP" title="CONFIG:UCP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">UCP</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>False</td>
-<td>Use compressed persistence</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:CONFIG:UCP" title="CONFIG:UCP attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">UCP</span></code></a></p></td>
+<td><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>False</p></td>
+<td><p>Use compressed persistence</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:STAT" title="CONFIG:STAT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">STAT</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>False</td>
-<td>Print statistics to screen</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:CONFIG:STAT" title="CONFIG:STAT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">STAT</span></code></a></p></td>
+<td><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>False</p></td>
+<td><p>Print statistics to screen</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:ARCH" title="CONFIG:ARCH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ARCH</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>False</td>
-<td>Start on archive (instead of volume 1)</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:CONFIG:ARCH" title="CONFIG:ARCH attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ARCH</span></code></a></p></td>
+<td><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>False</p></td>
+<td><p>Start on archive (instead of volume 1)</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:OBEYHIDEUI" title="CONFIG:OBEYHIDEUI attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">OBEYHIDEUI</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>True</td>
-<td>Obey the KSP Hide user interface key (usually mapped to F2).</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:CONFIG:OBEYHIDEUI" title="CONFIG:OBEYHIDEUI attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">OBEYHIDEUI</span></code></a></p></td>
+<td><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>True</p></td>
+<td><p>Obey the KSP Hide user interface key (usually mapped to F2).</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:SAFE" title="CONFIG:SAFE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SAFE</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>False</td>
-<td>Enable safe mode</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:CONFIG:SAFE" title="CONFIG:SAFE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">SAFE</span></code></a></p></td>
+<td><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>False</p></td>
+<td><p>Enable safe mode</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:AUDIOERR" title="CONFIG:AUDIOERR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">AUDIOERR</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>False</td>
-<td>Enable sound effect on kOS error</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:CONFIG:CLOBBERBUILTINS" title="CONFIG:CLOBBERBUILTINS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">CLOBBERBUILTINS</span></code></a></p></td>
+<td><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>False</p></td>
+<td><p>If true, built-in identifiers can be masked with user identifiers.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:VERBOSE" title="CONFIG:VERBOSE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VERBOSE</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>False</td>
-<td>Enable verbose exceptions</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:CONFIG:AUDIOERR" title="CONFIG:AUDIOERR attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">AUDIOERR</span></code></a></p></td>
+<td><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>False</p></td>
+<td><p>Enable sound effect on kOS error</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:SUPPRESSAUTOPILOT" title="CONFIG:SUPPRESSAUTOPILOT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SUPPRESSAUTOPILOT</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>False</td>
-<td>If true, kOS&#8217;s controls do nothing.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:CONFIG:VERBOSE" title="CONFIG:VERBOSE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VERBOSE</span></code></a></p></td>
+<td><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>False</p></td>
+<td><p>Enable verbose exceptions</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:TELNET" title="CONFIG:TELNET attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TELNET</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>False</td>
-<td>activate the telnet server</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:CONFIG:SUPPRESSAUTOPILOT" title="CONFIG:SUPPRESSAUTOPILOT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">SUPPRESSAUTOPILOT</span></code></a></p></td>
+<td><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>False</p></td>
+<td><p>If true, kOS’s controls do nothing.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:TPORT" title="CONFIG:TPORT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TPORT</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (integer)</td>
-<td>5410</td>
-<td>set the port the telnet server will run on</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:CONFIG:TELNET" title="CONFIG:TELNET attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">TELNET</span></code></a></p></td>
+<td><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>False</p></td>
+<td><p>activate the telnet server</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:IPADDRESS" title="CONFIG:IPADDRESS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">IPADDRESS</span></code></a></td>
-<td><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-<td>&#8220;127.0.0.1&#8221;</td>
-<td>The IP address the telnet server will try to use.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:CONFIG:TPORT" title="CONFIG:TPORT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">TPORT</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer)</p></td>
+<td><p>5410</p></td>
+<td><p>set the port the telnet server will run on</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:BRIGHTNESS" title="CONFIG:BRIGHTNESS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">BRIGHTNESS</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-<td>0.7 (from range [0.0 .. 1.0])</td>
-<td>Default brightness setting of new instances of the in-game terminal</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:CONFIG:IPADDRESS" title="CONFIG:IPADDRESS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">IPADDRESS</span></code></a></p></td>
+<td><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>“127.0.0.1”</p></td>
+<td><p>The IP address the telnet server will try to use.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:DEFAULTFONTSIZE" title="CONFIG:DEFAULTFONTSIZE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DEFAULTFONTSIZE</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-<td>12 (from range [6 .. 20], integers only)</td>
-<td>Default font size in pixel height for new instances of the in-game terminal</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:CONFIG:BRIGHTNESS" title="CONFIG:BRIGHTNESS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">BRIGHTNESS</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>0.7 (from range [0.0 .. 1.0])</p></td>
+<td><p>Default brightness setting of new instances of the in-game terminal</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:DEFAULTWIDTH" title="CONFIG:DEFAULTWIDTH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DEFAULTWIDTH</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-<td>50 (from range [15 .. 255], integers only)</td>
-<td>Default width (in characters, not pixels) for  new instances of the in-game terminal.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:CONFIG:DEFAULTFONTSIZE" title="CONFIG:DEFAULTFONTSIZE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">DEFAULTFONTSIZE</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>12 (from range [6 .. 20], integers only)</p></td>
+<td><p>Default font size in pixel height for new instances of the in-game terminal</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:DEFAULTHEIGHT" title="CONFIG:DEFAULTHEIGHT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DEFAULTHEIGHT</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-<td>36 (from range [3 .. 160], integers only)</td>
-<td>Default height (in characters, not pixels) for  new instances of the in-game terminal.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:CONFIG:DEFAULTWIDTH" title="CONFIG:DEFAULTWIDTH attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">DEFAULTWIDTH</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>50 (from range [15 .. 255], integers only)</p></td>
+<td><p>Default width (in characters, not pixels) for  new instances of the in-game terminal.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:DEBUGEACHOPCODE" title="CONFIG:DEBUGEACHOPCODE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DEBUGEACHOPCODE</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>false</td>
-<td>Unholy debug spam used by the kOS developers</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:CONFIG:DEFAULTHEIGHT" title="CONFIG:DEFAULTHEIGHT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">DEFAULTHEIGHT</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>36 (from range [3 .. 160], integers only)</p></td>
+<td><p>Default height (in characters, not pixels) for  new instances of the in-game terminal.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:CONFIG:DEBUGEACHOPCODE" title="CONFIG:DEBUGEACHOPCODE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">DEBUGEACHOPCODE</span></code></a></p></td>
+<td><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>false</p></td>
+<td><p>Unholy debug spam used by the kOS developers</p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:CONFIG:IPU">
-Config:<code class="descname">IPU</code><a class="headerlink" href="#attribute:CONFIG:IPU" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> integer. range = [50,2000]</td>
-</tr>
-</tbody>
-</table>
-<p>Configures the <code class="docutils literal"><span class="pre">InstructionsPerUpdate</span></code> setting.</p>
-<p>This is the number of kRISC psuedo-machine-langauge instructions that each kOS CPU will attempt to execute from the main program per <a class="reference internal" href="../../general/cpu_hardware.html#cpu-hardware"><span>physics update tick</span></a>.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:CONFIG:IPU">
+<span class="pre">Config:</span><span class="sig-name descname"><span class="pre">IPU</span></span><a class="headerlink" href="#attribute:CONFIG:IPU" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> integer. range = [50,2000]</p>
+</dd>
+</dl>
+<p>Configures the <code class="docutils literal notranslate"><span class="pre">InstructionsPerUpdate</span></code> setting.</p>
+<p>This is the number of kRISC psuedo-machine-language instructions that each kOS CPU will attempt to execute from the main program per <a class="reference internal" href="../../general/cpu_hardware.html#cpu-hardware"><span class="std std-ref">physics update tick</span></a>.</p>
 <p>This value is constrained to stay within the range [50..2000]. If you set it to a value outside that range, it will reset itself to remain in that range.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:CONFIG:UCP">
-Config:<code class="descname">UCP</code><a class="headerlink" href="#attribute:CONFIG:UCP" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>Configures the <code class="docutils literal"><span class="pre">useCompressedPersistence</span></code> setting.</p>
-<p>If true, then the contents of the kOS local volume &#8216;files&#8217; stored inside the campaign save&#8217;s persistence file will be stored using a compression algorithm that has the advantage of making them take less space, but at the cost of making the data impossible to decipher with the naked human eye when looking at the persistence file.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:CONFIG:UCP">
+<span class="pre">Config:</span><span class="sig-name descname"><span class="pre">UCP</span></span><a class="headerlink" href="#attribute:CONFIG:UCP" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
+<p>Configures the <code class="docutils literal notranslate"><span class="pre">useCompressedPersistence</span></code> setting.</p>
+<p>If true, then the contents of the kOS local volume ‘files’ stored inside the campaign save’s persistence file will be stored using a compression algorithm that has the advantage of making them take less space, but at the cost of making the data impossible to decipher with the naked human eye when looking at the persistence file.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:CONFIG:STAT">
-Config:<code class="descname">STAT</code><a class="headerlink" href="#attribute:CONFIG:STAT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>Configures the <code class="docutils literal"><span class="pre">showStatistics</span></code> setting.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:CONFIG:STAT">
+<span class="pre">Config:</span><span class="sig-name descname"><span class="pre">STAT</span></span><a class="headerlink" href="#attribute:CONFIG:STAT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
+<p>Configures the <code class="docutils literal notranslate"><span class="pre">showStatistics</span></code> setting.</p>
 <p>If true, then executing a program will log numbers to the screen showing execution speed statistics.</p>
 <p>When this is set to true, it also makes the use of the
-<a class="reference internal" href="../../bindings.html#profileresult"><span>ProfileResult()</span></a> function available, for
+<a class="reference internal" href="../../bindings.html#profileresult"><span class="std std-ref">ProfileResult()</span></a> function available, for
 deep analysis of your program run, if you are so inclined.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:CONFIG:ARCH">
-Config:<code class="descname">ARCH</code><a class="headerlink" href="#attribute:CONFIG:ARCH" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>Configures the <code class="docutils literal"><span class="pre">startOnArchive</span></code> setting.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:CONFIG:ARCH">
+<span class="pre">Config:</span><span class="sig-name descname"><span class="pre">ARCH</span></span><a class="headerlink" href="#attribute:CONFIG:ARCH" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
+<p>Configures the <code class="docutils literal notranslate"><span class="pre">startOnArchive</span></code> setting.</p>
 <p>If true, then when a vessel is first loaded onto the launchpad or runway, the initial default volume will be set to volume 0, the archive, instead of volume 1, the local drive.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:CONFIG:OBEYHIDEUI">
-Config:<code class="descname">OBEYHIDEUI</code><a class="headerlink" href="#attribute:CONFIG:OBEYHIDEUI" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>Configures the <code class="docutils literal"><span class="pre">obeyHideUI</span></code> setting.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:CONFIG:OBEYHIDEUI">
+<span class="pre">Config:</span><span class="sig-name descname"><span class="pre">OBEYHIDEUI</span></span><a class="headerlink" href="#attribute:CONFIG:OBEYHIDEUI" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
+<p>Configures the <code class="docutils literal notranslate"><span class="pre">obeyHideUI</span></code> setting.</p>
 <p>If true, then the kOS terminals will all hide when you toggle the user
-interface widgets with Kerbal Space Program&#8217;s Hide UI key (it is
+interface widgets with Kerbal Space Program’s Hide UI key (it is
 set to F2 by default key bindings).</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:CONFIG:SAFE">
-Config:<code class="descname">SAFE</code><a class="headerlink" href="#attribute:CONFIG:SAFE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>Configures the <code class="docutils literal"><span class="pre">enableSafeMode</span></code> setting.
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:CONFIG:SAFE">
+<span class="pre">Config:</span><span class="sig-name descname"><span class="pre">SAFE</span></span><a class="headerlink" href="#attribute:CONFIG:SAFE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
+<p>Configures the <code class="docutils literal notranslate"><span class="pre">enableSafeMode</span></code> setting.
 If true, then it enables the following error messages:</p>
-<div class="highlight-none"><div class="highlight"><pre><span></span>Tried to push NaN into the stack.
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Tried to push NaN into the stack.
 Tried to push Infinity into the stack.
 </pre></div>
 </div>
 <p>They will be triggered any time any mathematical operation would result in something that is not a real number, such as dividing by zero, or trying to take the square root of a negative number, or the arccos of a number larger than 1. Performing such an operation will immediately terminate the program with one of the error messages shown above.</p>
-<p>If false, then these operations are permitted, but the result may lead to code that does not function correctly if you are not careful about how you use it. Using a value that is not a real number may result in freezing Kerbal Space Program itself if that value is used in a variable that is passed into Kerbal Space Program&#8217;s API routines. KSP&#8217;s own API interface does not seem to have any protective checks in place and will faithfully try to use whatever values its given.</p>
+<p>If false, then these operations are permitted, but the result may lead to code that does not function correctly if you are not careful about how you use it. Using a value that is not a real number may result in freezing Kerbal Space Program itself if that value is used in a variable that is passed into Kerbal Space Program’s API routines. KSP’s own API interface does not seem to have any protective checks in place and will faithfully try to use whatever values its given.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:CONFIG:AUDIOERR">
-Config:<code class="descname">AUDIOERR</code><a class="headerlink" href="#attribute:CONFIG:AUDIOERR" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>Configures the <code class="docutils literal"><span class="pre">audibleExceptions</span></code> setting.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:CONFIG:CLOBBERBUILTINS">
+<span class="pre">Config:</span><span class="sig-name descname"><span class="pre">CLOBBERBUILTINS</span></span><a class="headerlink" href="#attribute:CONFIG:CLOBBERBUILTINS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
+<p>Setting this config option to TRUE will allow scripts to clobber
+built-in idenifier names, re-enabling older behavior for backward
+compatibility and disabling the compiler enforcement that was
+introduced in kOS v 1.4.0.0 to stop this practice.</p>
+<p>In kOS v1.4.0.0, the compiler started enforcing the rule that kerboscript
+programs must never create a user variable, lock, or function with a
+name that clashes with one of kOS’s own built-in variable, lock, or
+function names.  This rule was introduced to prevent common bugs where
+a program masked over some vital kOS variable, rendering it inaccessible,
+like for example <code class="docutils literal notranslate"><span class="pre">SHIP</span></code>, or <code class="docutils literal notranslate"><span class="pre">VELOCITY</span></code>.</p>
+<p>Older scripts written before kOS 1.4.0.0 might need this config option
+enabled to make the compiler accept them and not throw errors.</p>
+<p>Before enabling this to make the error messages go away, first consider
+going through the offeding script and editing it to rename the variable,
+lock, or function that is causing the message.  That would be the better
+solution.  This config option is only being presented as a dirty way
+to make old scripts that are no longer being edited keep working on
+newer versions of kOS.  In the long run, it’s better to edit the scripts.</p>
+<p><strong>Note: This can be over-ridden by &#64;CLOBBERBUILTINS directive:</strong></p>
+<p>Note that this config option can be over-ridden on a per-file basis by
+using the compiler directive called <a class="reference internal" href="../../language/variables.html#clobberbuiltins"><span class="std std-ref">&#64;CLOBBERBUILTINS</span></a>.
+The Config value here is merely the default you get for files that lack a
+<a class="reference internal" href="../../language/variables.html#clobberbuiltins"><span class="std std-ref">&#64;CLOBBERBUILTINS</span></a> compiler directive.</p>
+</dd></dl>
+
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:CONFIG:AUDIOERR">
+<span class="pre">Config:</span><span class="sig-name descname"><span class="pre">AUDIOERR</span></span><a class="headerlink" href="#attribute:CONFIG:AUDIOERR" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
+<p>Configures the <code class="docutils literal notranslate"><span class="pre">audibleExceptions</span></code> setting.</p>
 <p>If true, then it enables a mode in which errors coming from kOS will
 generte a sound effect of a short little warning bleep to remind you that
 an exception occurred.  This can be useful when you are flying
-hands-off and need to realize your autopilot script just died so
-you can take over.</p>
+hands-off and need to realize your autopilot script just died so</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:CONFIG:VERBOSE">
-Config:<code class="descname">VERBOSE</code><a class="headerlink" href="#attribute:CONFIG:VERBOSE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>Configures the <code class="docutils literal"><span class="pre">verboseExceptions</span></code> setting.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:CONFIG:VERBOSE">
+<span class="pre">Config:</span><span class="sig-name descname"><span class="pre">VERBOSE</span></span><a class="headerlink" href="#attribute:CONFIG:VERBOSE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
+<p>Configures the <code class="docutils literal notranslate"><span class="pre">verboseExceptions</span></code> setting.</p>
 <p>If true, then it enables a mode in which errors coming from kOS are very long and verbose, trying to explain every detail of the problem.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:CONFIG:SUPPRESSAUTOPILOT">
-Config:<code class="descname">SUPPRESSAUTOPILOT</code><a class="headerlink" href="#attribute:CONFIG:SUPPRESSAUTOPILOT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p><em>This is settable by use of the &#8220;Toggle Autopilot&#8221; Action Group too.</em></p>
-<p>When this is set to True, it suppresses all of kOS&#8217;s attempts to
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:CONFIG:SUPPRESSAUTOPILOT">
+<span class="pre">Config:</span><span class="sig-name descname"><span class="pre">SUPPRESSAUTOPILOT</span></span><a class="headerlink" href="#attribute:CONFIG:SUPPRESSAUTOPILOT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
+<p><em>This is settable by use of the “Toggle Autopilot” Action Group too.</em></p>
+<p>When this is set to True, it suppresses all of kOS’s attempts to
 override the steering, throttle, or translation controls, leaving
 them entirely under manual control.  It is intended to be a way
 to let you take manual control in an emergency quickly (through
@@ -508,28 +461,26 @@ the toolbar window where this setting appears) without having to
 quit the running program or figure out which terminal window has
 the program causing the control lock.</p>
 <p>You can also bind this setting to an action group for a kOS core part
-in the VAB or SPH.  The action is called &#8220;Toggle Suppress&#8221;.
-(Or &#8220;Suppress On&#8221; and &#8220;Suppress Off&#8221; for one-way action groups
-that don&#8217;t toggle.)</p>
+in the VAB or SPH.  The action is called “Toggle Suppress”.
+(Or “Suppress On” and “Suppress Off” for one-way action groups
+that don’t toggle.)</p>
 <p>While it does suppress steering, throttle, and translation, it cannot
 suppress action groups or staging.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:CONFIG:TELNET">
-Config:<code class="descname">TELNET</code><a class="headerlink" href="#attribute:CONFIG:TELNET" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:CONFIG:TELNET">
+<span class="pre">Config:</span><span class="sig-name descname"><span class="pre">TELNET</span></span><a class="headerlink" href="#attribute:CONFIG:TELNET" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p><strong>GLOBAL SETTING</strong></p>
-<p>Configures the <code class="docutils literal"><span class="pre">EnableTelnet</span></code> setting.</p>
+<p>Configures the <code class="docutils literal notranslate"><span class="pre">EnableTelnet</span></code> setting.</p>
 <p>When set to true, it activates a
 <a class="reference external" href="../../general/telnet.html">kOS telnet server in game</a> that allows you to
 connect external terminal programs like Putty and Xterm to it.
@@ -537,8 +488,8 @@ Turning the option off or on immediately toggles the server.  (When
 you change it from false to true, it will start the server right then.
 When you change it from true to false, it will stop the server right
 then.)  Therefore <strong>to restart the server</strong> after changing a setting like
-<code class="xref ks ks-attr docutils literal"><span class="pre">TPORT</span></code>, DO this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Restart telnet server:</span>
+<code class="xref ks ks-attr docutils literal notranslate"><span class="pre">TPORT</span></code>, DO this:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// Restart telnet server:</span>
 <span class="k">SET</span> <span class="nv">CONFIG</span><span class="p">:</span><span class="nv">TELNET</span> <span class="ow">TO</span> <span class="nb">FALSE</span><span class="p">.</span>
 <span class="k">WAIT</span> <span class="mf">0</span><span class="p">.</span><span class="mf">5</span><span class="p">.</span> <span class="c1">// important to give kOS a moment to notice and kill the old server.</span>
 <span class="k">SET</span> <span class="nv">CONFIG</span><span class="p">:</span><span class="nv">TELNET</span> <span class="ow">TO</span> <span class="nb">TRUE</span><span class="p">.</span>
@@ -548,21 +499,19 @@ then.)  Therefore <strong>to restart the server</strong> after changing a settin
 clicking the button off then clicking it on.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:CONFIG:TPORT">
-Config:<code class="descname">TPORT</code><a class="headerlink" href="#attribute:CONFIG:TPORT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (integer)</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:CONFIG:TPORT">
+<span class="pre">Config:</span><span class="sig-name descname"><span class="pre">TPORT</span></span><a class="headerlink" href="#attribute:CONFIG:TPORT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer)</p>
+</dd>
+</dl>
 <p><strong>GLOBAL SETTING</strong></p>
-<p>Configures the <code class="docutils literal"><span class="pre">TelnetPort</span></code> setting.</p>
+<p>Configures the <code class="docutils literal notranslate"><span class="pre">TelnetPort</span></code> setting.</p>
 <p>Changes the TCP/IP port number that the
 <a class="reference external" href="../../general/telnet.html">kOS telnet server in game</a>
 will listen to.</p>
@@ -570,138 +519,126 @@ will listen to.</p>
 stop, then restart the telnet server, as described above.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:CONFIG:IPADDRESS">
-Config:<code class="descname">IPADDRESS</code><a class="headerlink" href="#attribute:CONFIG:IPADDRESS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:CONFIG:IPADDRESS">
+<span class="pre">Config:</span><span class="sig-name descname"><span class="pre">IPADDRESS</span></span><a class="headerlink" href="#attribute:CONFIG:IPADDRESS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+</dl>
 <p><strong>GLOBAL SETTING</strong></p>
-<p>Configures the <code class="docutils literal"><span class="pre">TelnetIPAddrString</span></code> setting.</p>
+<p>Configures the <code class="docutils literal notranslate"><span class="pre">TelnetIPAddrString</span></code> setting.</p>
 <p>This is the IP address the telnet server will attempt to use when
 it is enabled.  By default it will use the loopback address of
-&#8220;127.0.0.1&#8221; unless you change this setting to the computer&#8217;s
-actual IP address.  Because most modern PC&#8217;s have multiple IP
-addresses, no attempt is made by kOS to guess which of them is &#8220;the&#8221;
-right one.  You must tell kOS which one to use if you don&#8217;t want it
+“127.0.0.1” unless you change this setting to the computer’s
+actual IP address.  Because most modern PC’s have multiple IP
+addresses, no attempt is made by kOS to guess which of them is “the”
+right one.  You must tell kOS which one to use if you don’t want it
 to use the loopback address.</p>
 <p>To make the change take effect you may have to
 stop, then restart the telnet server, as described above.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:CONFIG:BRIGHTNESS">
-Config:<code class="descname">BRIGHTNESS</code><a class="headerlink" href="#attribute:CONFIG:BRIGHTNESS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a>. range = [0,1]</td>
-</tr>
-</tbody>
-</table>
-<p>Configures the <code class="docutils literal"><span class="pre">Brightness</span></code> setting.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:CONFIG:BRIGHTNESS">
+<span class="pre">Config:</span><span class="sig-name descname"><span class="pre">BRIGHTNESS</span></span><a class="headerlink" href="#attribute:CONFIG:BRIGHTNESS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>. range = [0,1]</p>
+</dd>
+</dl>
+<p>Configures the <code class="docutils literal notranslate"><span class="pre">Brightness</span></code> setting.</p>
 <p>This is the default starting brightness setting a new
 kOS in-game terminal will have when it is invoked.  This
 is just the default for new terminals.  Individual terminals
 can have different settings, either by setting the value
-<a class="reference internal" href="terminal.html#attribute:TERMINAL:BRIGHTNESS" title="TERMINAL:BRIGHTNESS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Terminal:BRIGHTNESS</span></code></a> in a script, or by manually moving the
+<a class="reference internal" href="terminal.html#attribute:TERMINAL:BRIGHTNESS" title="TERMINAL:BRIGHTNESS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Terminal:BRIGHTNESS</span></code></a> in a script, or by manually moving the
 brightness slider widget on that terminal.</p>
 <p>The value here must be between 0 (invisible) and 1 (Max brightness).</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:CONFIG:DEFAULTFONTSIZE">
-Config:<code class="descname">DEFAULTFONTSIZE</code><a class="headerlink" href="#attribute:CONFIG:DEFAULTFONTSIZE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> integer-only. range = [6,20]</td>
-</tr>
-</tbody>
-</table>
-<p>Configures the <code class="docutils literal"><span class="pre">TerminalFontDefaultSize</span></code> setting.</p>
-<p>This is the default starting font height (in pixels. not &#8220;points&#8221;)
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:CONFIG:DEFAULTFONTSIZE">
+<span class="pre">Config:</span><span class="sig-name descname"><span class="pre">DEFAULTFONTSIZE</span></span><a class="headerlink" href="#attribute:CONFIG:DEFAULTFONTSIZE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> integer-only. range = [6,20]</p>
+</dd>
+</dl>
+<p>Configures the <code class="docutils literal notranslate"><span class="pre">TerminalFontDefaultSize</span></code> setting.</p>
+<p>This is the default starting font height (in pixels. not “points”)
 for all newly created kOS in-game terminals.  This
 is just the default for new terminals.  Individual terminals
 can have different settings, either by setting the value
-<a class="reference internal" href="terminal.html#attribute:TERMINAL:CHARHEIGHT" title="TERMINAL:CHARHEIGHT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Terminal:CHARHEIGHT</span></code></a> in a script, or by manually clicking
+<a class="reference internal" href="terminal.html#attribute:TERMINAL:CHARHEIGHT" title="TERMINAL:CHARHEIGHT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Terminal:CHARHEIGHT</span></code></a> in a script, or by manually clicking
 the font adjustment buttons on that terminal.</p>
 <p>The value here must be at least 6 (nearly impossible to read)
 and no greater than 30 (very big).  It will be rounded to the
 nearest integer when setting the value.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:CONFIG:DEFAULTWIDTH">
-Config:<code class="descname">DEFAULTWIDTH</code><a class="headerlink" href="#attribute:CONFIG:DEFAULTWIDTH" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> integer-only. range = [15,255]</td>
-</tr>
-</tbody>
-</table>
-<p>Configures the <code class="docutils literal"><span class="pre">TerminalDefaultWidth</span></code> setting.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:CONFIG:DEFAULTWIDTH">
+<span class="pre">Config:</span><span class="sig-name descname"><span class="pre">DEFAULTWIDTH</span></span><a class="headerlink" href="#attribute:CONFIG:DEFAULTWIDTH" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> integer-only. range = [15,255]</p>
+</dd>
+</dl>
+<p>Configures the <code class="docutils literal notranslate"><span class="pre">TerminalDefaultWidth</span></code> setting.</p>
 <p>This is the default starting width (in number of character cells,
 not number of pixels) for all newly created kOS in-game terminals.
 This is just the default for new terminals.  Individual terminals
 can have different settings, either by setting the value
-<a class="reference internal" href="terminal.html#attribute:TERMINAL:WIDTH" title="TERMINAL:WIDTH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Terminal:WIDTH</span></code></a> in a script, or by manually dragging the
+<a class="reference internal" href="terminal.html#attribute:TERMINAL:WIDTH" title="TERMINAL:WIDTH attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Terminal:WIDTH</span></code></a> in a script, or by manually dragging the
 resize corner of the terminal with the mouse.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:CONFIG:DEFAULTHEIGHT">
-Config:<code class="descname">DEFAULTHEIGHT</code><a class="headerlink" href="#attribute:CONFIG:DEFAULTHEIGHT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> integer-only. range = [3,160]</td>
-</tr>
-</tbody>
-</table>
-<p>Configures the <code class="docutils literal"><span class="pre">TerminalDefaultHeight</span></code> setting.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:CONFIG:DEFAULTHEIGHT">
+<span class="pre">Config:</span><span class="sig-name descname"><span class="pre">DEFAULTHEIGHT</span></span><a class="headerlink" href="#attribute:CONFIG:DEFAULTHEIGHT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> integer-only. range = [3,160]</p>
+</dd>
+</dl>
+<p>Configures the <code class="docutils literal notranslate"><span class="pre">TerminalDefaultHeight</span></code> setting.</p>
 <p>This is the default starting height (in number of character cells,
 not number of pixels) for all newly created kOS in-game terminals.
 This is just the default for new terminals.  Individual terminals
 can have different settings, either by setting the value
-<a class="reference internal" href="terminal.html#attribute:TERMINAL:HEIGHT" title="TERMINAL:HEIGHT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Terminal:HEIGHT</span></code></a> in a script, or by manually dragging the
+<a class="reference internal" href="terminal.html#attribute:TERMINAL:HEIGHT" title="TERMINAL:HEIGHT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Terminal:HEIGHT</span></code></a> in a script, or by manually dragging the
 resize corner of the terminal with the mouse.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:CONFIG:DEBUGEACHOPCODE">
-Config:<code class="descname">DEBUGEACHOPCODE</code><a class="headerlink" href="#attribute:CONFIG:DEBUGEACHOPCODE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>Configures the <code class="docutils literal"><span class="pre">debugEachOpcode</span></code> setting.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:CONFIG:DEBUGEACHOPCODE">
+<span class="pre">Config:</span><span class="sig-name descname"><span class="pre">DEBUGEACHOPCODE</span></span><a class="headerlink" href="#attribute:CONFIG:DEBUGEACHOPCODE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
+<p>Configures the <code class="docutils literal notranslate"><span class="pre">debugEachOpcode</span></code> setting.</p>
 <p>NOTE: This makes the game VERY slow, use with caution.</p>
 <p>If true, each opcode that is executed by the CPU will be accompanied by
 an entry in the KSP log. This is a debugging tool for those who are very
@@ -710,75 +647,37 @@ the kOS dev team.</p>
 <p>This change takes effect immediately.</p>
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="highlight.html" class="btn btn-neutral float-right" title="Part Highlighting" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="colors.html" class="btn btn-neutral" title="Colors" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="colors.html" class="btn btn-neutral float-left" title="Colors" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="highlight.html" class="btn btn-neutral float-right" title="Part Highlighting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

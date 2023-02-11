@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>KOSDelegate &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KOSDelegate &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../../about.html"/>
-        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
-        <link rel="next" title="KUniverse 4th wall methods" href="kuniverse.html"/>
-        <link rel="prev" title="Part Highlighting" href="highlight.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="KUniverse 4th wall methods" href="kuniverse.html" />
+    <link rel="prev" title="Part Highlighting" href="highlight.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
@@ -114,9 +65,7 @@
 <li class="toctree-l3"><a class="reference internal" href="colors.html">Colors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="config.html">Configuration of kOS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="highlight.html">Part Highlighting</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">KOSDelegate</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">KOSDelegate</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kuniverse.html">KUniverse 4th wall methods</a></li>
 <li class="toctree-l3"><a class="reference internal" href="loaddistance.html">Vessel Load Distance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="loaddistance.html#situation-load-distance">Situation Load Distance</a></li>
@@ -148,66 +97,46 @@
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
-      
           <li><a href="../misc.html">Configurations and Miscellany</a> &raquo;</li>
-      
-    <li>KOSDelegate</li>
+      <li>KOSDelegate</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/structures/misc/kosdelegate.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../../_sources/structures/misc/kosdelegate.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="kosdelegate">
-<span id="id1"></span><h1>KOSDelegate<a class="headerlink" href="#kosdelegate" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="kosdelegate">
+<span id="id1"></span><h1>KOSDelegate<a class="headerlink" href="#kosdelegate" title="Permalink to this heading">¶</a></h1>
 <p>The structure <cite>KOSDelegate</cite> is what you get when you use the
-<a class="reference internal" href="../../language/delegates.html#kosdelegate-atsign"><span>Delegate at-sign syntax</span></a>, as in
+<a class="reference internal" href="../../language/delegates.html#kosdelegate-atsign"><span class="std std-ref">Delegate at-sign syntax</span></a>, as in
 this example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">myfunc</span> <span class="p">{</span> <span class="k">print</span> <span class="s">&quot;hello, there&quot;</span><span class="p">.</span> <span class="p">}</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">myfunc</span> <span class="p">{</span> <span class="k">print</span> <span class="s">&quot;hello, there&quot;</span><span class="p">.</span> <span class="p">}</span>
 
 <span class="k">local</span> <span class="nv">print_a_thing</span> <span class="ow">is</span> <span class="nv">myfunc</span><span class="p">@.</span> <span class="c1">// &lt;--- Note the at-sign &#39;@&#39;.</span>
 <span class="c1">// print_a_thing is now a KOSDelegate of myfunc.</span>
 </pre></div>
 </div>
 <p>You also get a <cite>KOSDelegate</cite> when you use the
-<a class="reference internal" href="../../language/anonymous.html#anonymous-functions"><span>Anonymous function</span></a> syntax like so:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">del1</span> <span class="ow">to</span> <span class="p">{</span> <span class="k">print</span> <span class="s">&quot;hello, there&quot;</span><span class="p">.</span> <span class="p">}.</span>
+<a class="reference internal" href="../../language/anonymous.html#anonymous-functions"><span class="std std-ref">Anonymous function</span></a> syntax like so:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">del1</span> <span class="ow">to</span> <span class="p">{</span> <span class="k">print</span> <span class="s">&quot;hello, there&quot;</span><span class="p">.</span> <span class="p">}.</span>
 <span class="c1">// del1 is now a KOSDelegate.</span>
 </pre></div>
 </div>
@@ -215,88 +144,86 @@ this example:</p>
 call the function later elsewhere in the code.</p>
 <p>Be aware, however, that it will not let you call the function
 after the program is gone and you are back at the interactive
-prompt again.  (See <code class="xref ks ks-attr docutils literal"><span class="pre">ISDEAD</span></code>).</p>
+prompt again.  (See <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ISDEAD</span></code>).</p>
 <p>The full explanation of the delegate feature
-<a class="reference internal" href="../../language/delegates.html#delegates"><span>is explained elsewhere</span></a>.  This page just
+<a class="reference internal" href="../../language/delegates.html#delegates"><span class="std std-ref">is explained elsewhere</span></a>.  This page just
 documents the members of the KOSDelegate structure for completeness.
-The full explanation of how this structure works and what it&#8217;s
-for can be found on the <a class="reference internal" href="../../language/delegates.html#delegates"><span>delegate page</span></a>.</p>
-<div class="section" id="structure">
-<h2>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
-<dl class="structure">
-<dt id="structure:KOSDELEGATE">
-<em class="property">structure </em><code class="descname">KOSDelegate</code><a class="headerlink" href="#structure:KOSDELEGATE" title="Permalink to this definition">¶</a></dt>
-<dd><table border="1" class="docutils" id="id2">
+The full explanation of how this structure works and what it’s
+for can be found on the <a class="reference internal" href="../../language/delegates.html#delegates"><span class="std std-ref">delegate page</span></a>.</p>
+<section id="structure">
+<h2>Structure<a class="headerlink" href="#structure" title="Permalink to this heading">¶</a></h2>
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:KOSDELEGATE">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">KOSDelegate</span></span><a class="headerlink" href="#structure:KOSDELEGATE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils align-default" id="id2">
 <caption><span class="caption-text">Members</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="29%" />
-<col width="14%" />
-<col width="57%" />
+<col style="width: 28.6%" />
+<col style="width: 14.3%" />
+<col style="width: 57.1%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type</th>
-<th class="head">Description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#method:KOSDELEGATE:CALL" title="KOSDELEGATE:CALL method"><code class="xref ks ks-meth docutils literal"><span class="pre">CALL(varying</span> <span class="pre">arguments)</span></code></a></td>
-<td>same as the function this is a delegate for.</td>
-<td>calls the function this delegate wraps.</td>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#method:KOSDELEGATE:CALL" title="KOSDELEGATE:CALL method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">CALL(varying</span> <span class="pre">arguments)</span></code></a></p></td>
+<td><p>same as the function this is a delegate for.</p></td>
+<td><p>calls the function this delegate wraps.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:KOSDELEGATE:BIND" title="KOSDELEGATE:BIND method"><code class="xref ks ks-meth docutils literal"><span class="pre">BIND(varying</span> <span class="pre">arguments)</span></code></a></td>
-<td>another KOSDelegate</td>
-<td>creates a new KOSDelegate with some arguments predefined.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:KOSDELEGATE:BIND" title="KOSDELEGATE:BIND method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">BIND(varying</span> <span class="pre">arguments)</span></code></a></p></td>
+<td><p>another KOSDelegate</p></td>
+<td><p>creates a new KOSDelegate with some arguments predefined.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:KOSDELEGATE:ISDEAD" title="KOSDELEGATE:ISDEAD attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ISDEAD</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>True if the delegate refers to a program that&#8217;s gone.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:KOSDELEGATE:ISDEAD" title="KOSDELEGATE:ISDEAD attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ISDEAD</span></code></a></p></td>
+<td><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>True if the delegate refers to a program that’s gone.</p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:KOSDELEGATE:CALL">
-KOSDelegate:<code class="descname">CALL</code><span class="sig-paren">(</span>varying arguments<span class="sig-paren">)</span><a class="headerlink" href="#method:KOSDELEGATE:CALL" title="Permalink to this definition">¶</a></dt>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:KOSDELEGATE:CALL">
+<span class="pre">KOSDelegate:</span><span class="sig-name descname"><span class="pre">CALL</span></span><span class="sig-paren">(</span><span class="pre">varying</span> <span class="pre">arguments</span><span class="sig-paren">)</span><a class="headerlink" href="#method:KOSDELEGATE:CALL" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calls the function this KOSDelegate is set up to call.</p>
 <p>The varying arguments you pass in to this are passed on to the
 function this KOSDelegate is calling.  The exact number of
 arguments you pass should match the number the function expects,
-minus any that you have pre-set with the <code class="docutils literal"><span class="pre">:BIND</span></code> suffix.</p>
-<p>This is <a class="reference internal" href="../../language/delegates.html#kosdelegate-call"><span>further explained elsewhere</span></a>.</p>
+minus any that you have pre-set with the <code class="docutils literal notranslate"><span class="pre">:BIND</span></code> suffix.</p>
+<p>This is <a class="reference internal" href="../../language/delegates.html#kosdelegate-call"><span class="std std-ref">further explained elsewhere</span></a>.</p>
 <p>Note that in some cases you can omit the use of the explicit suffix
-<code class="docutils literal"><span class="pre">:CALL</span></code> and just use parentheses abutted against the
+<code class="docutils literal notranslate"><span class="pre">:CALL</span></code> and just use parentheses abutted against the
 KOSDelegate variable itself to indicate that you wish to call the
 function.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:KOSDELEGATE:BIND">
-KOSDelegate:<code class="descname">BIND</code><span class="sig-paren">(</span>varying arguments<span class="sig-paren">)</span><a class="headerlink" href="#method:KOSDELEGATE:BIND" title="Permalink to this definition">¶</a></dt>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:KOSDELEGATE:BIND">
+<span class="pre">KOSDelegate:</span><span class="sig-name descname"><span class="pre">BIND</span></span><span class="sig-paren">(</span><span class="pre">varying</span> <span class="pre">arguments</span><span class="sig-paren">)</span><a class="headerlink" href="#method:KOSDELEGATE:BIND" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new KOSDelegate from the current one, which will call the
 same function, but in which some or all of the parameters
 the function will be passed are pre-set.  The arguments you
 pass in will be bound to the leftmost parameters of the function.
 When using this new KOSDelegate to call the function, you pass in
 only the remaining arguments that were not designated in the
-call to <code class="docutils literal"><span class="pre">:BIND</span></code>.</p>
-<p>This is <a class="reference internal" href="../../language/delegates.html#kosdelegate-bind"><span>further explained elsewhere</span></a>.</p>
+call to <code class="docutils literal notranslate"><span class="pre">:BIND</span></code>.</p>
+<p>This is <a class="reference internal" href="../../language/delegates.html#kosdelegate-bind"><span class="std std-ref">further explained elsewhere</span></a>.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:KOSDELEGATE:ISDEAD">
-KOSDelegate:<code class="descname">ISDEAD</code><a class="headerlink" href="#attribute:KOSDELEGATE:ISDEAD" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:KOSDELEGATE:ISDEAD">
+<span class="pre">KOSDelegate:</span><span class="sig-name descname"><span class="pre">ISDEAD</span></span><a class="headerlink" href="#attribute:KOSDELEGATE:ISDEAD" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>It is possible for a KOSDelegate to refer to some
 user code that no longer exists in memory because that
 program completed and exited.  If so, then ISDEAD will
@@ -304,7 +231,7 @@ be true.</p>
 <p>This can happen because kOS lets global variables
 continue to live past the end of the program that
 made them.  So you can do something like this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">some_function</span> <span class="p">{</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">some_function</span> <span class="p">{</span>
     <span class="k">print</span> <span class="s">&quot;hello&quot;</span><span class="p">.</span>
 <span class="p">}</span>
 <span class="c1">// NOTE: my_delegate is global so it keeps existing</span>
@@ -315,137 +242,94 @@ made them.  So you can do something like this:</p>
 <p>If you run that program and get back to the interactive
 terminal prompt, then my_delegate is still a KOSDelegate,
 but now it refers to some code that is gone.  The body
-of some_function isn&#8217;t there anymore.</p>
+of some_function isn’t there anymore.</p>
 <p>If you attempt to call my_delegate() at this point from
 the interpreter, it will complain with an error message
-because it knows the function it&#8217;s trying to call isn&#8217;t
+because it knows the function it’s trying to call isn’t
 there.</p>
 </dd></dl>
 
-</div>
-<div class="section" id="donothing-nodelegate">
-<span id="donothing"></span><h2>DONOTHING (NODELEGATE)<a class="headerlink" href="#donothing-nodelegate" title="Permalink to this headline">¶</a></h2>
-<dl class="structure">
-<dt id="structure:NODELEGATE">
-<em class="property">structure </em><code class="descname">NoDelegate</code><a class="headerlink" href="#structure:NODELEGATE" title="Permalink to this definition">¶</a></dt>
-<dd><table border="1" class="docutils">
-<colgroup>
-<col width="23%" />
-<col width="23%" />
-<col width="54%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type</th>
-<th class="head">Description</th>
+</section>
+<section id="donothing-nodelegate">
+<span id="donothing"></span><h2>DONOTHING (NODELEGATE)<a class="headerlink" href="#donothing-nodelegate" title="Permalink to this heading">¶</a></h2>
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:NODELEGATE">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">NoDelegate</span></span><a class="headerlink" href="#structure:NODELEGATE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td colspan="3">Every suffix of <a class="reference internal" href="#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a></td>
+<tbody>
+<tr class="row-even"><td colspan="3"><p>Every suffix of <a class="reference internal" href="#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegate</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td>&nbsp;</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:DONOTHING">
-<code class="descname">DONOTHING</code><a class="headerlink" href="#global:DONOTHING" title="Permalink to this definition">¶</a></dt>
-<dd><p>There is a special keyword <code class="docutils literal"><span class="pre">DONOTHING</span></code> that refers to a special
-kind of <a class="reference internal" href="#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KosDelegate</span></code></a> called a <a class="reference internal" href="#structure:NODELEGATE" title="NODELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">NoDelegate</span></code></a>.</p>
-<p>The type string returned by <code class="docutils literal"><span class="pre">DONOTHING:TYPENAME</span></code> is <code class="docutils literal"><span class="pre">&quot;NoDelegate&quot;</span></code>.
-Otherwise an instance of <a class="reference internal" href="#structure:NODELEGATE" title="NODELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">NoDelegate</span></code></a> has the same suffixes as one
-of <a class="reference internal" href="#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a>, although you&#8217;re not usually
-expected to ever use them, except maybe <code class="docutils literal"><span class="pre">TYPENAME</span></code> to discover
-that it is a <a class="reference internal" href="#structure:NODELEGATE" title="NODELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">NoDelegate</span></code></a>.</p>
-<p><code class="docutils literal"><span class="pre">DONOTHING</span></code> is used when you&#8217;re in a situation where you had
-previously assigned a <a class="reference internal" href="#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KosDelegate</span></code></a> to some callback hook
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:DONOTHING">
+<span class="sig-name descname"><span class="pre">DONOTHING</span></span><a class="headerlink" href="#global:DONOTHING" title="Permalink to this definition">¶</a></dt>
+<dd><p>There is a special keyword <code class="docutils literal notranslate"><span class="pre">DONOTHING</span></code> that refers to a special
+kind of <a class="reference internal" href="#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KosDelegate</span></code></a> called a <a class="reference internal" href="#structure:NODELEGATE" title="NODELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">NoDelegate</span></code></a>.</p>
+<p>The type string returned by <code class="docutils literal notranslate"><span class="pre">DONOTHING:TYPENAME</span></code> is <code class="docutils literal notranslate"><span class="pre">&quot;NoDelegate&quot;</span></code>.
+Otherwise an instance of <a class="reference internal" href="#structure:NODELEGATE" title="NODELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">NoDelegate</span></code></a> has the same suffixes as one
+of <a class="reference internal" href="#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegate</span></code></a>, although you’re not usually
+expected to ever use them, except maybe <code class="docutils literal notranslate"><span class="pre">TYPENAME</span></code> to discover
+that it is a <a class="reference internal" href="#structure:NODELEGATE" title="NODELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">NoDelegate</span></code></a>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">DONOTHING</span></code> is used when you’re in a situation where you had
+previously assigned a <a class="reference internal" href="#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KosDelegate</span></code></a> to some callback hook
 the kOS system provides, but now you want the kOS system to stop
 calling it.  To do so, you assign that callback hook to the value
-<code class="docutils literal"><span class="pre">DONOTHING</span></code>.</p>
-<p><code class="docutils literal"><span class="pre">DONOTHING</span></code> is similar to making a <a class="reference internal" href="#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KosDelegate</span></code></a> that
-consists of just <code class="docutils literal"><span class="pre">{return.}</span></code>.  If you attempt to call it from
-your own code, that&#8217;s how it will behave.  But the one extra
+<code class="docutils literal notranslate"><span class="pre">DONOTHING</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">DONOTHING</span></code> is similar to making a <a class="reference internal" href="#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KosDelegate</span></code></a> that
+consists of just <code class="docutils literal notranslate"><span class="pre">{return.}</span></code>.  If you attempt to call it from
+your own code, that’s how it will behave.  But the one extra
 feature it has is that it allows kOS to understand your intent
 that you wish to disable a callback hook.  kOS can detect when
-the <code class="docutils literal"><span class="pre">KosDelegate</span></code> you assign to something happens to be the
-<code class="docutils literal"><span class="pre">DONOTHING</span></code> delegate.  When it is, kOS knows to not even
+the <code class="docutils literal notranslate"><span class="pre">KosDelegate</span></code> you assign to something happens to be the
+<code class="docutils literal notranslate"><span class="pre">DONOTHING</span></code> delegate.  When it is, kOS knows to not even
 bother calling the delegate at all anymore.</p>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="kuniverse.html" class="btn btn-neutral float-right" title="KUniverse 4th wall methods" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="highlight.html" class="btn btn-neutral" title="Part Highlighting" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="highlight.html" class="btn btn-neutral float-left" title="Part Highlighting" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="kuniverse.html" class="btn btn-neutral float-right" title="KUniverse 4th wall methods" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

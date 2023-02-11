@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Button &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Button &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../../about.html"/>
-        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Creating GUIs" href="../gui.html"/>
-        <link rel="next" title="GUI structure" href="gui.html"/>
-        <link rel="prev" title="Box" href="box.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="GUI structure" href="gui.html" />
+    <link rel="prev" title="Box" href="box.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
@@ -110,7 +61,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../gui.html">GUI Widgets</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="box.html">Box</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Button</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Button</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#example">Example</a></li>
 <li class="toctree-l3"><a class="reference internal" href="gui.html">GUI structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="label.html">Label</a></li>
@@ -139,278 +90,241 @@
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
-      
           <li><a href="../gui.html">Creating GUIs</a> &raquo;</li>
-      
-    <li>Button</li>
+      <li>Button</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/structures/gui_widgets/button.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../../_sources/structures/gui_widgets/button.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="button">
-<span id="gui-button"></span><h1>Button<a class="headerlink" href="#button" title="Permalink to this headline">¶</a></h1>
-<dl class="structure">
-<dt id="structure:BUTTON">
-<em class="property">structure </em><code class="descname">Button</code><a class="headerlink" href="#structure:BUTTON" title="Permalink to this definition">¶</a></dt>
-<dd><p>A <code class="docutils literal"><span class="pre">Button</span></code> is a widget that can have script activity occur when the user
+             
+  <section id="button">
+<span id="gui-button"></span><h1>Button<a class="headerlink" href="#button" title="Permalink to this heading">¶</a></h1>
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:BUTTON">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">Button</span></span><a class="headerlink" href="#structure:BUTTON" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <code class="docutils literal notranslate"><span class="pre">Button</span></code> is a widget that can have script activity occur when the user
 presses it.</p>
-<p><code class="docutils literal"><span class="pre">Button</span></code> widgets are created inside Box objects via one of these three methods:</p>
+<p><code class="docutils literal notranslate"><span class="pre">Button</span></code> widgets are created inside Box objects via one of these three methods:</p>
 <ul class="simple">
-<li><a class="reference internal" href="box.html#method:BOX:ADDBUTTON" title="BOX:ADDBUTTON method"><code class="xref ks ks-meth docutils literal"><span class="pre">Box:ADDBUTTON</span></code></a> - for a button that pops back out again on its own after being clicked.</li>
-<li><a class="reference internal" href="box.html#method:BOX:ADDCHECKBOX" title="BOX:ADDCHECKBOX method"><code class="xref ks ks-meth docutils literal"><span class="pre">Box:ADDCHECKBOX</span></code></a> - for a toggle button that stays on when
-clicked and doesn&#8217;t turn off until clicked again.</li>
-<li><a class="reference internal" href="box.html#method:BOX:ADDRADIOBUTTON" title="BOX:ADDRADIOBUTTON method"><code class="xref ks ks-meth docutils literal"><span class="pre">Box:ADDRADIOBUTTON</span></code></a> - A kind of checkbox that forms part of
-a set of checkboxes that only allow one of themselves to be on at a time.</li>
+<li><p><a class="reference internal" href="box.html#method:BOX:ADDBUTTON" title="BOX:ADDBUTTON method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">Box:ADDBUTTON</span></code></a> - for a button that pops back out again on its own after being clicked.</p></li>
+<li><p><a class="reference internal" href="box.html#method:BOX:ADDCHECKBOX" title="BOX:ADDCHECKBOX method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">Box:ADDCHECKBOX</span></code></a> - for a toggle button that stays on when
+clicked and doesn’t turn off until clicked again.</p></li>
+<li><p><a class="reference internal" href="box.html#method:BOX:ADDRADIOBUTTON" title="BOX:ADDRADIOBUTTON method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">Box:ADDRADIOBUTTON</span></code></a> - A kind of checkbox that forms part of
+a set of checkboxes that only allow one of themselves to be on at a time.</p></li>
 </ul>
 <p>The differences between how these types of button behave come from how
-they will have their default <a class="reference internal" href="#attribute:BUTTON:TOGGLE" title="BUTTON:TOGGLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TOGGLE</span></code></a> and <a class="reference internal" href="#attribute:BUTTON:EXCLUSIVE" title="BUTTON:EXCLUSIVE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">EXCLUSIVE</span></code></a>
+they will have their default <a class="reference internal" href="#attribute:BUTTON:TOGGLE" title="BUTTON:TOGGLE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">TOGGLE</span></code></a> and <a class="reference internal" href="#attribute:BUTTON:EXCLUSIVE" title="BUTTON:EXCLUSIVE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">EXCLUSIVE</span></code></a>
 suffixes set when they are created.</p>
-<p>Buttons are a special case of <a class="reference internal" href="label.html#structure:LABEL" title="LABEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Label</span></code></a>, and can use all the features
-of <a class="reference internal" href="label.html#structure:LABEL" title="LABEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Label</span></code></a> to define how their text looks.</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="26%" />
-<col width="29%" />
-<col width="45%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type</th>
-<th class="head">Description</th>
+<p>Buttons are a special case of <a class="reference internal" href="label.html#structure:LABEL" title="LABEL structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Label</span></code></a>, and can use all the features
+of <a class="reference internal" href="label.html#structure:LABEL" title="LABEL structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Label</span></code></a> to define how their text looks.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td colspan="3">Every suffix of <a class="reference internal" href="label.html#structure:LABEL" title="LABEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">LABEL</span></code></a></td>
+<tbody>
+<tr class="row-even"><td colspan="3"><p>Every suffix of <a class="reference internal" href="label.html#structure:LABEL" title="LABEL structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">LABEL</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:BUTTON:PRESSED" title="BUTTON:PRESSED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PRESSED</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>Is the button currently down?</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:BUTTON:PRESSED" title="BUTTON:PRESSED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">PRESSED</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Is the button currently down?</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:BUTTON:TAKEPRESS" title="BUTTON:TAKEPRESS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TAKEPRESS</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>Return the PRESSED value AND release the button if it&#8217;s down.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:BUTTON:TAKEPRESS" title="BUTTON:TAKEPRESS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">TAKEPRESS</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Return the PRESSED value AND release the button if it’s down.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:BUTTON:TOGGLE" title="BUTTON:TOGGLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TOGGLE</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>Is this button into a toggle-style button?</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:BUTTON:TOGGLE" title="BUTTON:TOGGLE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">TOGGLE</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Is this button into a toggle-style button?</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:BUTTON:EXCLUSIVE" title="BUTTON:EXCLUSIVE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">EXCLUSIVE</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>Does turning this button on cause other buttons to turn off?</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:BUTTON:EXCLUSIVE" title="BUTTON:EXCLUSIVE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">EXCLUSIVE</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Does turning this button on cause other buttons to turn off?</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:BUTTON:ONCLICK" title="BUTTON:ONCLICK attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ONCLICK</span></code></a></td>
-<td><a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a> (no args)</td>
-<td>Your function called whenever the button gets clicked.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:BUTTON:ONCLICK" title="BUTTON:ONCLICK attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ONCLICK</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegate</span></code></a> (no args)</p></td>
+<td><p>Your function called whenever the button gets clicked.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:BUTTON:ONTOGGLE" title="BUTTON:ONTOGGLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ONTOGGLE</span></code></a></td>
-<td><a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a> (<a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a>)</td>
-<td>Your function called whenever the button&#8217;s PRESSED state changes.</td>
-</tr>
-</tbody>
-</table>
-<dl class="attribute">
-<dt id="attribute:BUTTON:PRESSED">
-Button:<code class="descname">PRESSED</code><a class="headerlink" href="#attribute:BUTTON:PRESSED" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:BUTTON:ONTOGGLE" title="BUTTON:ONTOGGLE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ONTOGGLE</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegate</span></code></a> (<a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a>)</p></td>
+<td><p>Your function called whenever the button’s PRESSED state changes.</p></td>
 </tr>
 </tbody>
 </table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:BUTTON:PRESSED">
+<span class="pre">Button:</span><span class="sig-name descname"><span class="pre">PRESSED</span></span><a class="headerlink" href="#attribute:BUTTON:PRESSED" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
 <p>You can read this value to see if the button is currently on (true)
 or off (false).  You can set this value to cause the button to become
 on or off.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:BUTTON:TAKEPRESS">
-Button:<code class="descname">TAKEPRESS</code><a class="headerlink" href="#attribute:BUTTON:TAKEPRESS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get-only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:BUTTON:TAKEPRESS">
+<span class="pre">Button:</span><span class="sig-name descname"><span class="pre">TAKEPRESS</span></span><a class="headerlink" href="#attribute:BUTTON:TAKEPRESS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get-only</p>
+</dd>
+</dl>
 <p>You can read this value to see if the button is currently on (true)
 or off (false), however reading this value has a side-effect.
 When you read this value, if it said the button was on (pressed in),
 then reading it will cause the button to become off (popped out).</p>
-<p>This is useful only for normal buttons (buttons that have <a class="reference internal" href="#attribute:BUTTON:TOGGLE" title="BUTTON:TOGGLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TOGGLE</span></code></a>
+<p>This is useful only for normal buttons (buttons that have <a class="reference internal" href="#attribute:BUTTON:TOGGLE" title="BUTTON:TOGGLE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">TOGGLE</span></code></a>
 set to false).  It allows you to use the
-<a class="reference internal" href="../gui.html#gui-polling-technique"><span>polling technique</span></a> to repeatedly check to
-see if the button is on, and as soon as your script notices that it&#8217;s on,
+<a class="reference internal" href="../gui.html#gui-polling-technique"><span class="std std-ref">polling technique</span></a> to repeatedly check to
+see if the button is on, and as soon as your script notices that it’s on,
 it will pop it back out again so the user sees the proper visual feedback.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:BUTTON:TOGGLE">
-Button:<code class="descname">TOGGLE</code><a class="headerlink" href="#attribute:BUTTON:TOGGLE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:BUTTON:TOGGLE">
+<span class="pre">Button:</span><span class="sig-name descname"><span class="pre">TOGGLE</span></span><a class="headerlink" href="#attribute:BUTTON:TOGGLE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
 <p>This suffix determines whether this button has toggle behavior or button
 behaviour.  (Whether it stays pressed in until pressed a second time).
-By default, :meth`BOX:ADDBUTTON` will create a button with <code class="docutils literal"><span class="pre">TOGGLE</span></code> set
-to false, while <a class="reference internal" href="box.html#method:BOX:ADDCHECKBOX" title="BOX:ADDCHECKBOX method"><code class="xref ks ks-meth docutils literal"><span class="pre">BOX:ADDCHECKBOX</span></code></a> and <a class="reference internal" href="box.html#method:BOX:ADDRADIOBUTTON" title="BOX:ADDRADIOBUTTON method"><code class="xref ks ks-meth docutils literal"><span class="pre">BOX:ADDRADIOBUTTON</span></code></a> will
-create buttons which have their <code class="docutils literal"><span class="pre">TOGGLE</span></code> suffixes set to true.</p>
+By default, :meth`BOX:ADDBUTTON` will create a button with <code class="docutils literal notranslate"><span class="pre">TOGGLE</span></code> set
+to false, while <a class="reference internal" href="box.html#method:BOX:ADDCHECKBOX" title="BOX:ADDCHECKBOX method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">BOX:ADDCHECKBOX</span></code></a> and <a class="reference internal" href="box.html#method:BOX:ADDRADIOBUTTON" title="BOX:ADDRADIOBUTTON method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">BOX:ADDRADIOBUTTON</span></code></a> will
+create buttons which have their <code class="docutils literal notranslate"><span class="pre">TOGGLE</span></code> suffixes set to true.</p>
 <p><strong>Behaviour when TOGGLE is false (the default):</strong></p>
-<p>The conditions under which a button will automatically release itself when <a class="reference internal" href="#attribute:BUTTON:TOGGLE" title="BUTTON:TOGGLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TOGGLE</span></code></a> is
+<p>The conditions under which a button will automatically release itself when <a class="reference internal" href="#attribute:BUTTON:TOGGLE" title="BUTTON:TOGGLE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">TOGGLE</span></code></a> is
 set to <cite>False</cite> are:</p>
 <ul class="simple">
-<li>When the script calls the <a class="reference internal" href="#attribute:BUTTON:TAKEPRESS" title="BUTTON:TAKEPRESS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TAKEPRESS</span></code></a> suffix method.  When this is done, the
-button will become false even if it was was previously true.</li>
-<li>If the script defines an <a class="reference internal" href="#attribute:BUTTON:ONCLICK" title="BUTTON:ONCLICK attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ONCLICK</span></code></a> user delegate.
-(Then when the <a class="reference internal" href="#attribute:BUTTON:PRESSED" title="BUTTON:PRESSED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PRESSED</span></code></a> value becomes true, kOS will immediately set it
+<li><p>When the script calls the <a class="reference internal" href="#attribute:BUTTON:TAKEPRESS" title="BUTTON:TAKEPRESS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">TAKEPRESS</span></code></a> suffix method.  When this is done, the
+button will become false even if it was was previously true.</p></li>
+<li><p>If the script defines an <a class="reference internal" href="#attribute:BUTTON:ONCLICK" title="BUTTON:ONCLICK attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ONCLICK</span></code></a> user delegate.
+(Then when the <a class="reference internal" href="#attribute:BUTTON:PRESSED" title="BUTTON:PRESSED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">PRESSED</span></code></a> value becomes true, kOS will immediately set it
 back to false (too fast for the kerboscript to see it) and instead call the
-<code class="docutils literal"><span class="pre">ONCLICK</span></code> callback delegate you gave it.)</li>
+<code class="docutils literal notranslate"><span class="pre">ONCLICK</span></code> callback delegate you gave it.)</p></li>
 </ul>
 <p><strong>Behaviour when TOGGLE is true:</strong></p>
 <p>If TOGGLE is set to True, then the button will <strong>not</strong> automatically release after it is
 read by the script.  Instead it will need to be clicked by the user a second time to make
-it pop back out.  In this mode, the button&#8217;s <a class="reference internal" href="#attribute:BUTTON:PRESSED" title="BUTTON:PRESSED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PRESSED</span></code></a> value will never automatically
+it pop back out.  In this mode, the button’s <a class="reference internal" href="#attribute:BUTTON:PRESSED" title="BUTTON:PRESSED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">PRESSED</span></code></a> value will never automatically
 reset to false on its own.</p>
-<p>If the Button is created by <code class="xref ks ks-meth docutils literal"><span class="pre">Button:ADDCHECKBOX</span></code>, or by
-<code class="xref ks ks-meth docutils literal"><span class="pre">Button:ADDRADIOBUTTON</span></code>, it will have a different visual
-style (the style called &#8220;toggle&#8221;) and it will start already in TOGGLE mode.</p>
+<p>If the Button is created by <code class="xref ks ks-meth docutils literal notranslate"><span class="pre">Button:ADDCHECKBOX</span></code>, or by
+<code class="xref ks ks-meth docutils literal notranslate"><span class="pre">Button:ADDRADIOBUTTON</span></code>, it will have a different visual
+style (the style called “toggle”) and it will start already in TOGGLE mode.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:BUTTON:EXCLUSIVE">
-Button:<code class="descname">EXCLUSIVE</code><a class="headerlink" href="#attribute:BUTTON:EXCLUSIVE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
-<p>If the Button is created by <code class="xref ks ks-meth docutils literal"><span class="pre">Button:ADDRADIOBUTTON</span></code>, it will have
-its <code class="docutils literal"><span class="pre">EXCLUSIVE</span></code> suffix set to true by default.</p>
-<p>If <code class="docutils literal"><span class="pre">EXCLUSIVE</span></code> is set to True, when the button is clicked (or changed programmatically),
-other buttons with the same parent <a class="reference internal" href="box.html#structure:BOX" title="BOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Box</span></code></a> will be set to False (regardless of
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:BUTTON:EXCLUSIVE">
+<span class="pre">Button:</span><span class="sig-name descname"><span class="pre">EXCLUSIVE</span></span><a class="headerlink" href="#attribute:BUTTON:EXCLUSIVE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
+<p>If the Button is created by <code class="xref ks ks-meth docutils literal notranslate"><span class="pre">Button:ADDRADIOBUTTON</span></code>, it will have
+its <code class="docutils literal notranslate"><span class="pre">EXCLUSIVE</span></code> suffix set to true by default.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">EXCLUSIVE</span></code> is set to True, when the button is clicked (or changed programmatically),
+other buttons with the same parent <a class="reference internal" href="box.html#structure:BOX" title="BOX structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Box</span></code></a> will be set to False (regardless of
 if they are EXCLUSIVE).</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:BUTTON:ONCLICK">
-Button:<code class="descname">ONCLICK</code><a class="headerlink" href="#attribute:BUTTON:ONCLICK" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
-<p>This is a <a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a> that takes no parameters and returns nothing.</p>
-<p><code class="docutils literal"><span class="pre">ONCLICK</span></code> is what is known as a &#8220;callback hook&#8221;.  This suffix allows
-you to use the <a class="reference internal" href="../gui.html#gui-callback-technique"><span>callback technique</span></a> of widget
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:BUTTON:ONCLICK">
+<span class="pre">Button:</span><span class="sig-name descname"><span class="pre">ONCLICK</span></span><a class="headerlink" href="#attribute:BUTTON:ONCLICK" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegate</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
+<p>This is a <a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegate</span></code></a> that takes no parameters and returns nothing.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ONCLICK</span></code> is what is known as a “callback hook”.  This suffix allows
+you to use the <a class="reference internal" href="../gui.html#gui-callback-technique"><span class="std std-ref">callback technique</span></a> of widget
 interaction.</p>
-<p>You can assign <code class="docutils literal"><span class="pre">ONCLICK</span></code> to a <a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a> of one of your
+<p>You can assign <code class="docutils literal notranslate"><span class="pre">ONCLICK</span></code> to a <a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegate</span></code></a> of one of your
 functions (named or anonymous) and from then on kOS will call that
 function whenever the button becomes clicked by the user.</p>
-<p>The <a class="reference internal" href="#attribute:BUTTON:ONCLICK" title="BUTTON:ONCLICK attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ONCLICK</span></code></a> suffix is intended to be used for non-toggle buttons.</p>
+<p>The <a class="reference internal" href="#attribute:BUTTON:ONCLICK" title="BUTTON:ONCLICK attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ONCLICK</span></code></a> suffix is intended to be used for non-toggle buttons.</p>
 <p>Example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">mybutton</span><span class="p">:</span><span class="nv">ONCLICK</span> <span class="ow">to</span> <span class="p">{</span> <span class="k">print</span> <span class="s">&quot;Do something here.&quot;</span><span class="p">.</span> <span class="p">}.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">mybutton</span><span class="p">:</span><span class="nv">ONCLICK</span> <span class="ow">to</span> <span class="p">{</span> <span class="k">print</span> <span class="s">&quot;Do something here.&quot;</span><span class="p">.</span> <span class="p">}.</span>
 </pre></div>
 </div>
-<p><a class="reference internal" href="#attribute:BUTTON:ONCLICK" title="BUTTON:ONCLICK attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ONCLICK</span></code></a> is called with no parameters.  To use it, your function must be
+<p><a class="reference internal" href="#attribute:BUTTON:ONCLICK" title="BUTTON:ONCLICK attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ONCLICK</span></code></a> is called with no parameters.  To use it, your function must be
 written to expect no parameters.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:BUTTON:ONTOGGLE">
-Button:<code class="descname">ONTOGGLE</code><a class="headerlink" href="#attribute:BUTTON:ONTOGGLE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
-<p>This is a <a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a> taking one parameter (new boolean state) and returning nothing</p>
-<p><code class="docutils literal"><span class="pre">ONTOGGLE</span></code> is what is known as a &#8220;callback hook&#8221;.  This suffix allows
-you to use the <a class="reference internal" href="../gui.html#gui-callback-technique"><span>callback technique</span></a> of widget
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:BUTTON:ONTOGGLE">
+<span class="pre">Button:</span><span class="sig-name descname"><span class="pre">ONTOGGLE</span></span><a class="headerlink" href="#attribute:BUTTON:ONTOGGLE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegate</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
+<p>This is a <a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegate</span></code></a> taking one parameter (new boolean state) and returning nothing</p>
+<p><code class="docutils literal notranslate"><span class="pre">ONTOGGLE</span></code> is what is known as a “callback hook”.  This suffix allows
+you to use the <a class="reference internal" href="../gui.html#gui-callback-technique"><span class="std std-ref">callback technique</span></a> of widget
 interaction.</p>
-<p>The <code class="docutils literal"><span class="pre">ONTOGGLE</span></code> delegate you assign will get called whenver kOS notices
+<p>The <code class="docutils literal notranslate"><span class="pre">ONTOGGLE</span></code> delegate you assign will get called whenver kOS notices
 that this button has changed from false to true or from true to false.</p>
-<p>To use <code class="docutils literal"><span class="pre">ONTOGGLE</span></code>, your function must be written to expect a single boolean parameter,
+<p>To use <code class="docutils literal notranslate"><span class="pre">ONTOGGLE</span></code>, your function must be written to expect a single boolean parameter,
 which is the new state the button has just be changed to.</p>
 <p>Example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">mybutton</span><span class="p">:</span><span class="nv">ONTOGGLE</span> <span class="ow">to</span> <span class="p">{</span> <span class="kd">parameter</span> <span class="nv">val</span><span class="p">.</span> <span class="k">print</span> <span class="s">&quot;Button value just became &quot;</span> <span class="o">+</span> <span class="nv">val</span><span class="p">.</span> <span class="p">}.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">mybutton</span><span class="p">:</span><span class="nv">ONTOGGLE</span> <span class="ow">to</span> <span class="p">{</span> <span class="kd">parameter</span> <span class="nv">val</span><span class="p">.</span> <span class="k">print</span> <span class="s">&quot;Button value just became &quot;</span> <span class="o">+</span> <span class="nv">val</span><span class="p">.</span> <span class="p">}.</span>
 </pre></div>
 </div>
-<p><code class="docutils literal"><span class="pre">ONTOGGLE</span></code> is really only useful with buttons where <a class="reference internal" href="#attribute:BUTTON:TOGGLE" title="BUTTON:TOGGLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TOGGLE</span></code></a> is true.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ONTOGGLE</span></code> is really only useful with buttons where <a class="reference internal" href="#attribute:BUTTON:TOGGLE" title="BUTTON:TOGGLE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">TOGGLE</span></code></a> is true.</p>
 </dd></dl>
 
 </dd></dl>
 
-</div>
-<div class="section" id="example">
-<h1>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h1>
+</section>
+<section id="example">
+<h1>Example<a class="headerlink" href="#example" title="Permalink to this heading">¶</a></h1>
 <p>Here is a longer example of buttons using the button callback hooks:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LOCAL</span> <span class="nv">doneYet</span> <span class="ow">is</span> <span class="nb">FALSE</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">LOCAL</span> <span class="nv">doneYet</span> <span class="ow">is</span> <span class="nb">FALSE</span><span class="p">.</span>
 <span class="k">LOCAL</span> <span class="nv">g</span> <span class="ow">IS</span> <span class="nv">GUI</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span>
 
 <span class="c1">// b1 is a normal button that auto-releases itself:</span>
@@ -454,75 +368,37 @@ which is the new state the button has just be changed to.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="gui.html" class="btn btn-neutral float-right" title="GUI structure" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="box.html" class="btn btn-neutral" title="Box" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="box.html" class="btn btn-neutral float-left" title="Box" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gui.html" class="btn btn-neutral float-right" title="GUI structure" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

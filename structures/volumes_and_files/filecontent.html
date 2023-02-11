@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>FileContent &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FileContent &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../../about.html"/>
-        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Volumes and files" href="../volumes_and_files.html"/>
-        <link rel="next" title="Path" href="path.html"/>
-        <link rel="prev" title="Volumes and files" href="../volumes_and_files.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Path" href="path.html" />
+    <link rel="prev" title="Volumes and files" href="../volumes_and_files.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
@@ -104,7 +55,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../reflection.html">Generic Structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../collections.html">Collections</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../volumes_and_files.html">Volumes &amp; Files</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="">FileContent</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">FileContent</a></li>
 <li class="toctree-l3"><a class="reference internal" href="path.html">Path</a></li>
 <li class="toctree-l3"><a class="reference internal" href="volume.html">Volume</a></li>
 <li class="toctree-l3"><a class="reference internal" href="volumedirectory.html">VolumeDirectory</a></li>
@@ -128,272 +79,222 @@
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
-      
           <li><a href="../volumes_and_files.html">Volumes and files</a> &raquo;</li>
-      
-    <li>FileContent</li>
+      <li>FileContent</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/structures/volumes_and_files/filecontent.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../../_sources/structures/volumes_and_files/filecontent.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="filecontent">
-<span id="id1"></span><h1>FileContent<a class="headerlink" href="#filecontent" title="Permalink to this headline">¶</a></h1>
-<p>Represents the contents of a file. You can obtain an instance of this class using <a class="reference internal" href="volumefile.html#method:VOLUMEFILE:READALL" title="VOLUMEFILE:READALL method"><code class="xref ks ks-meth docutils literal"><span class="pre">VolumeFile:READALL</span></code></a>.</p>
+             
+  <section id="filecontent">
+<span id="id1"></span><h1>FileContent<a class="headerlink" href="#filecontent" title="Permalink to this heading">¶</a></h1>
+<p>Represents the contents of a file. You can obtain an instance of this class using <a class="reference internal" href="volumefile.html#method:VOLUMEFILE:READALL" title="VOLUMEFILE:READALL method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">VolumeFile:READALL</span></code></a>.</p>
 <p>Internally this class stores raw data (a byte array). It can be passed around as is, for example this will copy a file:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">CONTENTS</span> <span class="ow">TO</span> <span class="nv">OPEN</span><span class="p">(</span><span class="s">&quot;filename&quot;</span><span class="p">):</span><span class="nv">READALL</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">CONTENTS</span> <span class="ow">TO</span> <span class="nv">OPEN</span><span class="p">(</span><span class="s">&quot;filename&quot;</span><span class="p">):</span><span class="nv">READALL</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">NEWFILE</span> <span class="ow">TO</span> <span class="nv">CREATE</span><span class="p">(</span><span class="s">&quot;newfile&quot;</span><span class="p">).</span>
 <span class="nv">NEWFILE</span><span class="p">:</span><span class="nv">WRITE</span><span class="p">(</span><span class="nv">CONTENTS</span><span class="p">).</span>
 </pre></div>
 </div>
 <p>You can parse the contents to read them as a string:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">CONTENTS_AS_STRING</span> <span class="ow">TO</span> <span class="nv">OPEN</span><span class="p">(</span><span class="s">&quot;filename&quot;</span><span class="p">):</span><span class="nv">READALL</span><span class="p">:</span><span class="nv">STRING</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">CONTENTS_AS_STRING</span> <span class="ow">TO</span> <span class="nv">OPEN</span><span class="p">(</span><span class="s">&quot;filename&quot;</span><span class="p">):</span><span class="nv">READALL</span><span class="p">:</span><span class="nv">STRING</span><span class="p">.</span>
 <span class="c1">// do something with a string:</span>
 <span class="k">PRINT</span> <span class="nv">CONTENTS_AS_STRING</span><span class="p">:</span><span class="nv">CONTAINS</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">).</span>
 </pre></div>
 </div>
 <p>Instances of this class can be iterated over. In each iteration step a single line of the file will be read.</p>
-<dl class="structure">
-<dt id="structure:FILECONTENT">
-<em class="property">structure </em><code class="descname">FileContent</code><a class="headerlink" href="#structure:FILECONTENT" title="Permalink to this definition">¶</a></dt>
-<dd><table border="1" class="docutils" id="id2">
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:FILECONTENT">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">FileContent</span></span><a class="headerlink" href="#structure:FILECONTENT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils align-default" id="id2">
 <caption><span class="caption-text">Members</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="17%" />
-<col width="17%" />
-<col width="67%" />
+<col style="width: 16.7%" />
+<col style="width: 16.7%" />
+<col style="width: 66.7%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type</th>
-<th class="head">Description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#attribute:FILECONTENT:LENGTH" title="FILECONTENT:LENGTH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LENGTH</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-<td>File length (in bytes)</td>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:FILECONTENT:LENGTH" title="FILECONTENT:LENGTH attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">LENGTH</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>File length (in bytes)</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:FILECONTENT:EMPTY" title="FILECONTENT:EMPTY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">EMPTY</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>boolean</span></a></td>
-<td>True if the file is empty</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:FILECONTENT:EMPTY" title="FILECONTENT:EMPTY attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">EMPTY</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>True if the file is empty</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:FILECONTENT:TYPE" title="FILECONTENT:TYPE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TYPE</span></code></a></td>
-<td><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-<td>Type of the content</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:FILECONTENT:TYPE" title="FILECONTENT:TYPE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">TYPE</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>Type of the content</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:FILECONTENT:STRING" title="FILECONTENT:STRING attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">STRING</span></code></a></td>
-<td><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-<td>Contents of the file decoded using UTF-8 encoding</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:FILECONTENT:STRING" title="FILECONTENT:STRING attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">STRING</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>Contents of the file decoded using UTF-8 encoding</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:FILECONTENT:ITERATOR" title="FILECONTENT:ITERATOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ITERATOR</span></code></a></td>
-<td><a class="reference internal" href="../collections/iterator.html#structure:ITERATOR" title="ITERATOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></code></a></td>
-<td>Iterates over the lines of a file</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:FILECONTENT:BINARY" title="FILECONTENT:BINARY attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">BINARY</span></code></a></p></td>
+<td><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a></p></td>
+<td><p>Contents of the file as a list of bytes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:FILECONTENT:ITERATOR" title="FILECONTENT:ITERATOR attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ITERATOR</span></code></a></p></td>
+<td><p><a class="reference internal" href="../collections/iterator.html#structure:ITERATOR" title="ITERATOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Iterator</span></code></a></p></td>
+<td><p>Iterates over the lines of a file</p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">This type is serializable.</p>
+<p class="admonition-title">Note</p>
+<p>This type is serializable.</p>
 </div>
-<dl class="attribute">
-<dt id="attribute:FILECONTENT:LENGTH">
-FileContent:<code class="descname">LENGTH</code><a class="headerlink" href="#attribute:FILECONTENT:LENGTH" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:FILECONTENT:LENGTH">
+<span class="pre">FileContent:</span><span class="sig-name descname"><span class="pre">LENGTH</span></span><a class="headerlink" href="#attribute:FILECONTENT:LENGTH" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>Length of the file.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:FILECONTENT:EMPTY">
-FileContent:<code class="descname">EMPTY</code><a class="headerlink" href="#attribute:FILECONTENT:EMPTY" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>boolean</span></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:FILECONTENT:EMPTY">
+<span class="pre">FileContent:</span><span class="sig-name descname"><span class="pre">EMPTY</span></span><a class="headerlink" href="#attribute:FILECONTENT:EMPTY" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>True if the file is empty</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:FILECONTENT:TYPE">
-FileContent:<code class="descname">TYPE</code><a class="headerlink" href="#attribute:FILECONTENT:TYPE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:FILECONTENT:TYPE">
+<span class="pre">FileContent:</span><span class="sig-name descname"><span class="pre">TYPE</span></span><a class="headerlink" href="#attribute:FILECONTENT:TYPE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+</dl>
 <p>Type of the content as a string. Can be one of the following:</p>
-<dl class="docutils">
-<dt>TOOSHORT</dt>
-<dd>Content too short to establish a type</dd>
-<dt>ASCII</dt>
-<dd>A file containing ASCII text, like the result of a LOG command.</dd>
-<dt>KSM</dt>
-<dd>A type of file containing KerboMachineLanguage compiled code, that was created from the <a class="reference internal" href="../../general/compiling.html#compiling"><span>COMPILE command</span></a>.</dd>
-<dt>BINARY</dt>
-<dd>Any other type of file.</dd>
+<dl class="simple">
+<dt>TOOSHORT</dt><dd><p>Content too short to establish a type</p>
+</dd>
+<dt>ASCII</dt><dd><p>A file containing ASCII text, like the result of a LOG command.</p>
+</dd>
+<dt>KSM</dt><dd><p>A type of file containing KerboMachineLanguage compiled code, that was created from the <a class="reference internal" href="../../general/compiling.html#compiling"><span class="std std-ref">COMPILE command</span></a>.</p>
+</dd>
+<dt>BINARY</dt><dd><p>Any other type of file.</p>
+</dd>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:FILECONTENT:STRING">
-FileContent:<code class="descname">STRING</code><a class="headerlink" href="#attribute:FILECONTENT:STRING" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:FILECONTENT:STRING">
+<span class="pre">FileContent:</span><span class="sig-name descname"><span class="pre">STRING</span></span><a class="headerlink" href="#attribute:FILECONTENT:STRING" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+</dl>
 <p>Contents of the file decoded using UTF-8 encoding</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:FILECONTENT:ITERATOR">
-FileContent:<code class="descname">ITERATOR</code><a class="headerlink" href="#attribute:FILECONTENT:ITERATOR" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../collections/iterator.html#structure:ITERATOR" title="ITERATOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:FILECONTENT:BINARY">
+<span class="pre">FileContent:</span><span class="sig-name descname"><span class="pre">BINARY</span></span><a class="headerlink" href="#attribute:FILECONTENT:BINARY" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a></p>
+</dd>
+</dl>
+<p>Contents of the file as a list of bytes. Each item in the list is a number between 0 and 255 representing a single byte from the file.</p>
+</dd></dl>
+
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:FILECONTENT:ITERATOR">
+<span class="pre">FileContent:</span><span class="sig-name descname"><span class="pre">ITERATOR</span></span><a class="headerlink" href="#attribute:FILECONTENT:ITERATOR" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../collections/iterator.html#structure:ITERATOR" title="ITERATOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Iterator</span></code></a></p>
+</dd>
+</dl>
 <p>Iterates over the lines of a file</p>
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="path.html" class="btn btn-neutral float-right" title="Path" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="../volumes_and_files.html" class="btn btn-neutral" title="Volumes and files" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../volumes_and_files.html" class="btn btn-neutral float-left" title="Volumes and files" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="path.html" class="btn btn-neutral float-right" title="Path" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

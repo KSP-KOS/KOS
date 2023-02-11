@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>KerboScript Machine Code &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KerboScript Machine Code &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../about.html"/>
-        <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../index.html"/>
-        <link rel="up" title="General Topics" href="../general.html"/>
-        <link rel="next" title="Using the Sound/Kerbal Interface Device (SKID)" href="skid.html"/>
-        <link rel="prev" title="Files and Volumes" href="volumes.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="next" title="Using the Sound/Kerbal Interface Device (SKID)" href="skid.html" />
+    <link rel="prev" title="Files and Volumes" href="volumes.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
@@ -106,9 +57,7 @@
 <li class="toctree-l2"><a class="reference internal" href="gui.html">Making User GUIs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="telnet.html">Telnet Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="volumes.html">Files &amp; Volumes</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Machine Code</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="skid.html">Sound Chip (SKID)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parts_and_partmodules.html">Parts &amp; PartModules</a></li>
@@ -126,142 +75,117 @@
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../general.html">General Topics</a> &raquo;</li>
-      
-    <li>KerboScript Machine Code</li>
+      <li>KerboScript Machine Code</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../_sources/general/compiling.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../_sources/general/compiling.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="kerboscript-machine-code">
-<span id="compiling"></span><h1>KerboScript Machine Code<a class="headerlink" href="#kerboscript-machine-code" title="Permalink to this headline">¶</a></h1>
-<div class="contents local topic" id="contents">
+             
+  <section id="kerboscript-machine-code">
+<span id="compiling"></span><h1>KerboScript Machine Code<a class="headerlink" href="#kerboscript-machine-code" title="Permalink to this heading">¶</a></h1>
+<nav class="contents local" id="contents">
 <ul class="simple">
-<li><a class="reference internal" href="#compiling-to-a-ksm-file" id="id1">Compiling to a KSM File</a></li>
-<li><a class="reference internal" href="#how-to-use-ksm-files" id="id2">How to Use KSM Files</a></li>
-<li><a class="reference internal" href="#default-file-naming-conventions" id="id3">Default File Naming Conventions</a></li>
-<li><a class="reference internal" href="#downsides-to-using-ksm-files" id="id4">Downsides to Using KSM Files</a></li>
-<li><a class="reference internal" href="#more-reading-and-fiddling-with-your-bits" id="id5">More Reading and Fiddling with Your Bits</a></li>
+<li><p><a class="reference internal" href="#compiling-to-a-ksm-file" id="id1">Compiling to a KSM File</a></p></li>
+<li><p><a class="reference internal" href="#how-to-use-ksm-files" id="id2">How to Use KSM Files</a></p></li>
+<li><p><a class="reference internal" href="#default-file-naming-conventions" id="id3">Default File Naming Conventions</a></p></li>
+<li><p><a class="reference internal" href="#downsides-to-using-ksm-files" id="id4">Downsides to Using KSM Files</a></p></li>
+<li><p><a class="reference internal" href="#more-reading-and-fiddling-with-your-bits" id="id5">More Reading and Fiddling with Your Bits</a></p></li>
 </ul>
-</div>
-<div class="section" id="compiling-to-a-ksm-file">
-<h2><a class="toc-backref" href="#id1">Compiling to a KSM File</a><a class="headerlink" href="#compiling-to-a-ksm-file" title="Permalink to this headline">¶</a></h2>
-<p>When you run your Kerboscript programs, behind the scenes they get compiled into a form in memory that runs much smoother but at the same time is quite hard for a Kerbal to read and understand. The actual computer hardware built by your friends at Compotronix incorporated actually run the program using these tiny instructions called &#8220;opcodes&#8221;. In the early days of room-sized computers before we were able to get them down to the compact size of just a meter or so across, all programmers had to use this difficult system, referred to as &#8220;machine language&#8221;. Ah, those were heady days, but they were hard.</p>
-<p>The commands you actually write when you say something like <code class="docutils literal"><span class="pre">SET</span> <span class="pre">X</span> <span class="pre">TO</span> <span class="pre">1.0.</span></code> are really a euphemism for these &#8220;machine language&#8221; opcodes under the surface.</p>
-<p>When you try to run your script, the first thing that kOS does is transform your script into this ancient and arcane &#8220;machine language&#8221; form, storing it in its memory, and from then on it runs using that.</p>
-<p>This process of transforming your script into Machine Language, or &#8220;ML&#8221; is called &#8220;Compiling&#8221;.</p>
-<p>The <a class="reference internal" href="../commands/runprogram.html#keyword:RUN" title="RUN keyword"><code class="xref ks ks-key docutils literal"><span class="pre">RUN</span></code></a> and <a class="reference internal" href="../commands/runprogram.html#function:RUNPATH" title="RUNPATH function"><code class="xref ks ks-func docutils literal"><span class="pre">RUNPATH</span></code></a> commands do this silently, without telling
-you.  The <a class="reference internal" href="#keyword:COMPILE" title="COMPILE keyword"><code class="xref ks ks-key docutils literal"><span class="pre">COMPILE</span></code></a> command explicitly compiles the file and saves it for
+</nav>
+<section id="compiling-to-a-ksm-file">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Compiling to a KSM File</a><a class="headerlink" href="#compiling-to-a-ksm-file" title="Permalink to this heading">¶</a></h2>
+<p>When you run your Kerboscript programs, behind the scenes they get compiled into a form in memory that runs much smoother but at the same time is quite hard for a Kerbal to read and understand. The actual computer hardware built by your friends at Compotronix incorporated actually run the program using these tiny instructions called “opcodes”. In the early days of room-sized computers before we were able to get them down to the compact size of just a meter or so across, all programmers had to use this difficult system, referred to as “machine language”. Ah, those were heady days, but they were hard.</p>
+<p>The commands you actually write when you say something like <code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">X</span> <span class="pre">TO</span> <span class="pre">1.0.</span></code> are really a euphemism for these “machine language” opcodes under the surface.</p>
+<p>When you try to run your script, the first thing that kOS does is transform your script into this ancient and arcane “machine language” form, storing it in its memory, and from then on it runs using that.</p>
+<p>This process of transforming your script into Machine Language, or “ML” is called “Compiling”.</p>
+<p>The <a class="reference internal" href="../commands/runprogram.html#keyword:RUN" title="RUN keyword"><code class="xref ks ks-key docutils literal notranslate"><span class="pre">RUN</span></code></a> and <a class="reference internal" href="../commands/runprogram.html#function:RUNPATH" title="RUNPATH function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">RUNPATH</span></code></a> commands do this silently, without telling
+you.  The <a class="reference internal" href="#keyword:COMPILE" title="COMPILE keyword"><code class="xref ks ks-key docutils literal notranslate"><span class="pre">COMPILE</span></code></a> command explicitly compiles the file and saves it for
 future use.</p>
 <div class="admonition note" id="threaded-compile">
-<p class="first admonition-title">Note</p>
+<p class="admonition-title">Note</p>
 <p>Compiling scripts takes time, and while the compiler is working it pauses
-execution much like the <a class="reference internal" href="../language/flow.html#wait-mainline-trigger"><span>wait command</span></a>.  As such
+execution much like the <a class="reference internal" href="../language/flow.html#wait-mainline-trigger"><span class="std std-ref">wait command</span></a>.  As such
 compiling from mainline code will pause mainline code but allow triggers to
 continue to execute. Compiling from within a trigger will pause both the
 mainline code and all trigger code. Also be aware that the universe will
 continue to move during the compilation, so you should not assume that any
 values for mass, position, velocity, or similar physical properties will
 remain constant through compilation.</p>
-<div class="last versionchanged">
-<p><span class="versionmodified">Changed in version 1.1.0: </span>The universe continues to update during compilation.  Previous versions
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 1.1.0: </span>The universe continues to update during compilation.  Previous versions
 would freeze the universe while scripts were compiled, effectively
 making them instantaneous in the universe.</p>
 </div>
 </div>
-<div class="section" id="the-compile-keyword">
-<h3>The Compile Keyword<a class="headerlink" href="#the-compile-keyword" title="Permalink to this headline">¶</a></h3>
-<dl class="keyword">
-<dt id="keyword:COMPILE">
-<code class="descname">COMPILE sourcePath [TO destinationPath]</code><a class="headerlink" href="#keyword:COMPILE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>sourcePath</strong> &#8211; Path information pointing to the source script file</li>
-<li><strong>destinationPath</strong> &#8211; Path information pointing to the destination
-compiled machine language file</li>
+<section id="the-compile-keyword">
+<h3>The Compile Keyword<a class="headerlink" href="#the-compile-keyword" title="Permalink to this heading">¶</a></h3>
+<dl class="ks keyword">
+<dt class="sig sig-object ks" id="keyword:COMPILE">
+<span class="sig-name descname"><span class="pre">COMPILE</span> <span class="pre">sourcePath</span> <span class="pre">[TO</span> <span class="pre">destinationPath]</span></span><a class="headerlink" href="#keyword:COMPILE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sourcePath</strong> – Path information pointing to the source script file</p></li>
+<li><p><strong>destinationPath</strong> – Path information pointing to the destination
+compiled machine language file</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Parametertype sourcePath:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><p class="first"><a class="reference internal" href="../structures/misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> or bare word string</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">Parametertype destinationPath:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><p class="first last"><em>Optional</em> <a class="reference internal" href="../structures/misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> or bare word string</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Parametertype sourcePath<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../structures/misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> or bare word string</p>
+</dd>
+<dt class="field-odd">Parametertype destinationPath<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Optional</em> <a class="reference internal" href="../structures/misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> or bare word string</p>
+</dd>
+</dl>
 <p>This command will compile the source script file, transforming it from raw
 text into machine language opcodes.  These opcodes are then encoded,
 compressed, and saved in the destination file.</p>
 </dd></dl>
 
-</div>
-<div class="section" id="why-do-i-care">
-<h3>Why Do I Care?<a class="headerlink" href="#why-do-i-care" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="why-do-i-care">
+<h3>Why Do I Care?<a class="headerlink" href="#why-do-i-care" title="Permalink to this heading">¶</a></h3>
 <div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">This is an experimental feature.</p>
+<p class="admonition-title">Warning</p>
+<p>This is an experimental feature.</p>
 </div>
-<p>The reason it matters is this: Although once it&#8217;s loaded into memory and running, these opcodes actually have a lot of baggage and take up a lot of space, when they&#8217;re stored passively on the disk not doing anything, they can be smaller than your script programs are. For one thing, they don&#8217;t care about your comments (only other Kerbals reading your script do), and they don&#8217;t care about your indenting (only other Kerbals reading your script do).</p>
-<p>So, given that the compiled &#8220;ML&#8221; codes are the only thing your program really needs to be run, why not just store THAT instead of storing the entire script, and then you can put the ML files on your remote probes instead of putting the larger script files on them.</p>
-<p>And THAT is the purpose of the <a class="reference internal" href="#keyword:COMPILE" title="COMPILE keyword"><code class="xref ks ks-key docutils literal"><span class="pre">COMPILE</span></code></a> command.</p>
+<p>The reason it matters is this: Although once it’s loaded into memory and running, these opcodes actually have a lot of baggage and take up a lot of space, when they’re stored passively on the disk not doing anything, they can be smaller than your script programs are. For one thing, they don’t care about your comments (only other Kerbals reading your script do), and they don’t care about your indenting (only other Kerbals reading your script do).</p>
+<p>So, given that the compiled “ML” codes are the only thing your program really needs to be run, why not just store THAT instead of storing the entire script, and then you can put the ML files on your remote probes instead of putting the larger script files on them.</p>
+<p>And THAT is the purpose of the <a class="reference internal" href="#keyword:COMPILE" title="COMPILE keyword"><code class="xref ks ks-key docutils literal notranslate"><span class="pre">COMPILE</span></code></a> command.</p>
 <p>It does some, but not all, of the compiling work that the RUN (or RUNPATH) command does, and then stores the results in a file that you can run instead of running the original script.</p>
-<p>The output of the <a class="reference internal" href="#keyword:COMPILE" title="COMPILE keyword"><code class="xref ks ks-key docutils literal"><span class="pre">COMPILE</span></code></a> command is a file in what we call KSM format.</p>
-<p>KSM stands for &#8220;KerboScript Machine code&#8221;, and it has nearly the same information the program will have when it&#8217;s loaded and running, minus a few extra steps about relocating it in memory.</p>
-</div>
-</div>
-<div class="section" id="how-to-use-ksm-files">
-<h2><a class="toc-backref" href="#id2">How to Use KSM Files</a><a class="headerlink" href="#how-to-use-ksm-files" title="Permalink to this headline">¶</a></h2>
-<p>Let&#8217;s say that you have 3 programs your probe needs, called:</p>
+<p>The output of the <a class="reference internal" href="#keyword:COMPILE" title="COMPILE keyword"><code class="xref ks ks-key docutils literal notranslate"><span class="pre">COMPILE</span></code></a> command is a file in what we call KSM format.</p>
+<p>KSM stands for “KerboScript Machine code”, and it has nearly the same information the program will have when it’s loaded and running, minus a few extra steps about relocating it in memory.</p>
+</section>
+</section>
+<section id="how-to-use-ksm-files">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">How to Use KSM Files</a><a class="headerlink" href="#how-to-use-ksm-files" title="Permalink to this heading">¶</a></h2>
+<p>Let’s say that you have 3 programs your probe needs, called:</p>
 <ul class="simple">
-<li>myprog1.ks</li>
-<li>myprog2.ks</li>
-<li>myprog3.ks</li>
+<li><p>myprog1.ks</p></li>
+<li><p>myprog2.ks</p></li>
+<li><p>myprog3.ks</p></li>
 </ul>
 <p>And that myprog1 calls myprog2 and myprog3, and you normally would call the progam this way:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SWITCH</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SWITCH</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
 <span class="nv">COPYPATH</span><span class="p">(</span> <span class="s">&quot;0:/myprog1&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span> <span class="p">).</span>
 <span class="nv">COPYPATH</span><span class="p">(</span> <span class="s">&quot;0:/myprog2&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span> <span class="p">).</span>
 <span class="nv">COPYPATH</span><span class="p">(</span> <span class="s">&quot;0:/myprog3&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span> <span class="p">).</span>
@@ -269,7 +193,7 @@ compressed, and saved in the destination file.</p>
 </pre></div>
 </div>
 <p>Then you can put just the compiled KSM versions of them on your vessel and run it this way:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SWITCH</span> <span class="ow">TO</span> <span class="nv">ARCHIVE</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SWITCH</span> <span class="ow">TO</span> <span class="nv">ARCHIVE</span><span class="p">.</span>
 
 <span class="k">COMPILE</span> <span class="s">&quot;myprog1.ks&quot;</span> <span class="ow">to</span> <span class="s">&quot;myprog1.ksm&quot;</span><span class="p">.</span>
 <span class="nv">COPYPATH</span><span class="p">(</span> <span class="s">&quot;0:/myprog1.ksm&quot;</span><span class="p">,</span> <span class="s">&quot;1:/&quot;</span> <span class="p">).</span>
@@ -284,11 +208,11 @@ compressed, and saved in the destination file.</p>
 <span class="nv">RUNPATH</span><span class="p">(</span><span class="s">&quot;myprog1&quot;</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">2</span><span class="p">,</span> <span class="s">&quot;hello&quot;</span><span class="p">).</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="default-file-naming-conventions">
-<h2><a class="toc-backref" href="#id3">Default File Naming Conventions</a><a class="headerlink" href="#default-file-naming-conventions" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="default-file-naming-conventions">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Default File Naming Conventions</a><a class="headerlink" href="#default-file-naming-conventions" title="Permalink to this heading">¶</a></h2>
 <p>When you have both a .ks and a .ksm file, the RUN (or RUNPATH) command allows you to specify which one you meant explicitly, like so:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">RUNPATH</span><span class="p">(</span><span class="s">&quot;myprog1.ks&quot;</span><span class="p">).</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">RUNPATH</span><span class="p">(</span><span class="s">&quot;myprog1.ks&quot;</span><span class="p">).</span>
 <span class="c1">// or this alternate way to say it:</span>
 <span class="k">RUN</span> <span class="nv">myprog1</span><span class="p">.</span><span class="nv">ks</span><span class="p">.</span>
 
@@ -298,95 +222,57 @@ compressed, and saved in the destination file.</p>
 </pre></div>
 </div>
 <p>But if you just leave the file extension off, and do this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">RUNPATH</span><span class="p">(</span><span class="s">&quot;myprog1&quot;</span><span class="p">).</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">RUNPATH</span><span class="p">(</span><span class="s">&quot;myprog1&quot;</span><span class="p">).</span>
 <span class="c1">// or this alternate way to say it:</span>
 <span class="k">RUN</span> <span class="nv">myprog1</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>Then the <a class="reference internal" href="../commands/runprogram.html#keyword:RUN" title="RUN keyword"><code class="xref ks ks-key docutils literal"><span class="pre">RUN</span></code></a> command will first try to run a file called &#8220;myprog1.ksm&#8221; and if it cannot find such a file, then it will try to run one called &#8220;myprog1.ks&#8221;.</p>
-<p>In this way, if you decide to take the plunge and attempt the use of KSM files, you shouldn&#8217;t have to change the way any of your scripts call each other, provided you just used versions of the filenames without mentioning the file extensions.</p>
-</div>
-<div class="section" id="downsides-to-using-ksm-files">
-<h2><a class="toc-backref" href="#id4">Downsides to Using KSM Files</a><a class="headerlink" href="#downsides-to-using-ksm-files" title="Permalink to this headline">¶</a></h2>
+<p>Then the <a class="reference internal" href="../commands/runprogram.html#keyword:RUN" title="RUN keyword"><code class="xref ks ks-key docutils literal notranslate"><span class="pre">RUN</span></code></a> command will first try to run a file called “myprog1.ksm” and if it cannot find such a file, then it will try to run one called “myprog1.ks”.</p>
+<p>In this way, if you decide to take the plunge and attempt the use of KSM files, you shouldn’t have to change the way any of your scripts call each other, provided you just used versions of the filenames without mentioning the file extensions.</p>
+</section>
+<section id="downsides-to-using-ksm-files">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Downsides to Using KSM Files</a><a class="headerlink" href="#downsides-to-using-ksm-files" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic simple">
-<li>Be aware that if you use this feature, you do lose the ability to have the line of code printed out for you when the kOS computer finds an error in your program. It will still tell you what line number the error happened on, but it cannot show you the line of code. Just the number.</li>
-<li>Know that you cannot view the program inside the in-game editor anymore when you do this. A KSM file will not appear right in the editor. It requires a magic tool called a &#8220;hex editor&#8221; to properly see what&#8217;s happening inside the file.</li>
-<li><strong>The file isn&#8217;t always smaller</strong>. There&#8217;s a threshold at which the KSM file is actually bigger than the source KS file. For large KS files, the KSM file will be smaller, but for short KS files, the KSM file will be bigger, because there&#8217;s a small amount of overhead they have to store that is only efficient if the data was large enough.</li>
+<li><p>Be aware that if you use this feature, you do lose the ability to have the line of code printed out for you when the kOS computer finds an error in your program. It will still tell you what line number the error happened on, but it cannot show you the line of code. Just the number.</p></li>
+<li><p>Know that you cannot view the program inside the in-game editor anymore when you do this. A KSM file will not appear right in the editor. It requires a magic tool called a “hex editor” to properly see what’s happening inside the file.</p></li>
+<li><p><strong>The file isn’t always smaller</strong>. There’s a threshold at which the KSM file is actually bigger than the source KS file. For large KS files, the KSM file will be smaller, but for short KS files, the KSM file will be bigger, because there’s a small amount of overhead they have to store that is only efficient if the data was large enough.</p></li>
 </ol>
-</div>
-<div class="section" id="more-reading-and-fiddling-with-your-bits">
-<h2><a class="toc-backref" href="#id5">More Reading and Fiddling with Your Bits</a><a class="headerlink" href="#more-reading-and-fiddling-with-your-bits" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="more-reading-and-fiddling-with-your-bits">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">More Reading and Fiddling with Your Bits</a><a class="headerlink" href="#more-reading-and-fiddling-with-your-bits" title="Permalink to this heading">¶</a></h2>
 <p>So, if you are intrigued by all this and want to see how it all <em>REALLY</em> works under the hood, Computronix has deciced to make <a class="reference external" href="https://github.com/KSP-KOS/KOS/blob/develop/src/kOS.Safe/Compilation/CompiledObject-doc.md">internal document MLfile-zx1/a</a> on the basic plan of the ML file system open for public viewing, if you are one of those rare Kerbals that enjoys fiddling with your bits. No, not THOSE kind of bits, the computery kind!</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="skid.html" class="btn btn-neutral float-right" title="Using the Sound/Kerbal Interface Device (SKID)" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="volumes.html" class="btn btn-neutral" title="Files and Volumes" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="volumes.html" class="btn btn-neutral float-left" title="Files and Volumes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="skid.html" class="btn btn-neutral float-right" title="Using the Sound/Kerbal Interface Device (SKID)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

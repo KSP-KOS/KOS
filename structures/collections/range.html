@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Range &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Range &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../../about.html"/>
-        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Collections" href="../collections.html"/>
-        <link rel="next" title="Stack" href="stack.html"/>
-        <link rel="prev" title="Queue" href="queue.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Stack" href="stack.html" />
+    <link rel="prev" title="Queue" href="queue.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
@@ -108,9 +59,7 @@
 <li class="toctree-l3"><a class="reference internal" href="lexicon.html">Lexicon</a></li>
 <li class="toctree-l3"><a class="reference internal" href="list.html">List</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">Queue</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Range</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Range</a></li>
 <li class="toctree-l3"><a class="reference internal" href="stack.html">Stack</a></li>
 <li class="toctree-l3"><a class="reference internal" href="uniqueset.html">UniqueSet</a></li>
 </ul>
@@ -132,87 +81,67 @@
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
-      
           <li><a href="../collections.html">Collections</a> &raquo;</li>
-      
-    <li>Range</li>
+      <li>Range</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/structures/collections/range.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../../_sources/structures/collections/range.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="range">
-<span id="id1"></span><h1>Range<a class="headerlink" href="#range" title="Permalink to this headline">¶</a></h1>
-<p><a class="reference internal" href="#structure:RANGE" title="RANGE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Range</span></code></a> is a type that represents a sequence of scalar whole numbers. The sequence can start and finish at any whole number, can be either descending or ascending and can skip numbers.</p>
+             
+  <section id="range">
+<span id="id1"></span><h1>Range<a class="headerlink" href="#range" title="Permalink to this heading">¶</a></h1>
+<p><a class="reference internal" href="#structure:RANGE" title="RANGE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Range</span></code></a> is a type that represents a sequence of scalar whole numbers. The sequence can start and finish at any whole number, can be either descending or ascending and can skip numbers.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">This is one of the few places in kOS where there is a distinction between
+<p class="admonition-title">Note</p>
+<p>This is one of the few places in kOS where there is a distinction between
 decimal (floating point, or fractional) scalar numbers and whole (integer,
 or round) scalar numbers.  Using a decimal scalar will not throw an error,
 however it may give unexpected results due to rounding.</p>
 </div>
-<p>There are 3 ways of constructing a <a class="reference internal" href="#structure:RANGE" title="RANGE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Range</span></code></a>:</p>
+<p>There are 3 ways of constructing a <a class="reference internal" href="#structure:RANGE" title="RANGE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Range</span></code></a>:</p>
 <ul>
-<li><p class="first"><code class="code docutils literal"><span class="pre">RANGE(START,</span> <span class="pre">STOP,</span> <span class="pre">STEP)</span></code></p>
+<li><p><code class="code docutils literal notranslate"><span class="pre">RANGE(START,</span> <span class="pre">STOP,</span> <span class="pre">STEP)</span></code></p>
 <p>Will create a sequence of numbers that starts counting with <cite>START</cite>,
 and stops counting just before <em>but not including</em> <cite>STOP</cite>, counting
 by increments of size <cite>STEP</cite>.  In formal mathematics terms, the bounds are
 [<cite>START</cite>,`STOP`), rather than [<cite>START</cite>,`STOP`].</p>
-<p><code class="code docutils literal"><span class="pre">RANGE(3,8,1)</span></code> will contain numbers 3, 4, 5, 6, and 7.</p>
-<p><code class="code docutils literal"><span class="pre">RANGE(3,8,2)</span></code> will contain numbers 3, 5 and 7.</p>
+<p><code class="code docutils literal notranslate"><span class="pre">RANGE(3,8,1)</span></code> will contain numbers 3, 4, 5, 6, and 7.</p>
+<p><code class="code docutils literal notranslate"><span class="pre">RANGE(3,8,2)</span></code> will contain numbers 3, 5 and 7.</p>
 <p><em>Will count backward automatically if need be</em>: If <cite>START</cite> &gt; <cite>STOP</cite> then
 the sequence will be descending.  <cite>STEP</cite> should always be &gt; 0 even when
 the sequence counts backward like this.</p>
-<p><code class="code docutils literal"><span class="pre">RANGE(2,-9,3)</span></code> will contain numbers 2, -1, -4 and -7.</p>
+<p><code class="code docutils literal notranslate"><span class="pre">RANGE(2,-9,3)</span></code> will contain numbers 2, -1, -4 and -7.</p>
 </li>
-<li><p class="first"><code class="code docutils literal"><span class="pre">RANGE(START,</span> <span class="pre">STOP)</span></code></p>
+<li><p><code class="code docutils literal notranslate"><span class="pre">RANGE(START,</span> <span class="pre">STOP)</span></code></p>
 <p>Same as above but <cite>STEP</cite> is assumed to be 1.</p>
 </li>
-<li><p class="first"><code class="code docutils literal"><span class="pre">RANGE(STOP)</span></code></p>
+<li><p><code class="code docutils literal notranslate"><span class="pre">RANGE(STOP)</span></code></p>
 <p>Same as above but <cite>STEP</cite> is assumed to be 1, and <cite>START</cite> is assumed to
 be 0.</p>
 </li>
 </ul>
-<div class="section" id="code-examples">
-<h2>Code examples<a class="headerlink" href="#code-examples" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">FOR</span> <span class="nv">I</span> <span class="nv">IN</span> <span class="nv">RANGE</span><span class="p">(</span><span class="mf">5</span><span class="p">)</span> <span class="p">{</span>
+<section id="code-examples">
+<h2>Code examples<a class="headerlink" href="#code-examples" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">FOR</span> <span class="nv">I</span> <span class="nv">IN</span> <span class="nv">RANGE</span><span class="p">(</span><span class="mf">5</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">PRINT</span> <span class="nv">I</span><span class="p">.</span>
 <span class="p">}</span>
 <span class="c1">// will print numbers 0,1,2,3,4</span>
@@ -223,168 +152,124 @@ be 0.</p>
 <span class="c1">// will print 4, 9 and 16</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="structure">
-<h2>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
-<dl class="structure">
-<dt id="structure:RANGE">
-<em class="property">structure </em><code class="descname">Range</code><a class="headerlink" href="#structure:RANGE" title="Permalink to this definition">¶</a></dt>
-<dd><table border="1" class="docutils" id="id2">
+</section>
+<section id="structure">
+<h2>Structure<a class="headerlink" href="#structure" title="Permalink to this heading">¶</a></h2>
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:RANGE">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">Range</span></span><a class="headerlink" href="#structure:RANGE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils align-default" id="id2">
 <caption><span class="caption-text">Members</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="29%" />
-<col width="14%" />
-<col width="57%" />
+<col style="width: 28.6%" />
+<col style="width: 14.3%" />
+<col style="width: 57.1%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type</th>
-<th class="head">Description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>All suffixes of <a class="reference internal" href="enumerable.html#structure:ENUMERABLE" title="ENUMERABLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Enumerable</span></code></a></td>
-<td>&nbsp;</td>
-<td><a class="reference internal" href="#structure:RANGE" title="RANGE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Range</span></code></a> objects are a type of <a class="reference internal" href="enumerable.html#structure:ENUMERABLE" title="ENUMERABLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Enumerable</span></code></a></td>
+<tbody>
+<tr class="row-even"><td><p>All suffixes of <a class="reference internal" href="enumerable.html#structure:ENUMERABLE" title="ENUMERABLE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Enumerable</span></code></a></p></td>
+<td></td>
+<td><p><a class="reference internal" href="#structure:RANGE" title="RANGE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Range</span></code></a> objects are a type of <a class="reference internal" href="enumerable.html#structure:ENUMERABLE" title="ENUMERABLE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Enumerable</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:RANGE:START" title="RANGE:START attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">START</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-<td>initial element of the range</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:RANGE:START" title="RANGE:START attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">START</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>initial element of the range</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RANGE:STOP" title="RANGE:STOP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">STOP</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-<td>range limit</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:RANGE:STOP" title="RANGE:STOP attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">STOP</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>range limit</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:RANGE:STEP" title="RANGE:STEP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">STEP</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-<td>step size</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:RANGE:STEP" title="RANGE:STEP attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">STEP</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>step size</p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">This type is serializable.</p>
+<p class="admonition-title">Note</p>
+<p>This type is serializable.</p>
 </div>
-<dl class="attribute">
-<dt id="attribute:RANGE:START">
-Range:<code class="descname">START</code><a class="headerlink" href="#attribute:RANGE:START" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RANGE:START">
+<span class="pre">Range:</span><span class="sig-name descname"><span class="pre">START</span></span><a class="headerlink" href="#attribute:RANGE:START" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>Returns the initial element of the range.  Must be a round number.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:RANGE:STOP">
-Range:<code class="descname">STOP</code><a class="headerlink" href="#attribute:RANGE:STOP" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RANGE:STOP">
+<span class="pre">Range:</span><span class="sig-name descname"><span class="pre">STOP</span></span><a class="headerlink" href="#attribute:RANGE:STOP" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>Returns the range limit.  Must be a round number.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:RANGE:STEP">
-Range:<code class="descname">STEP</code><a class="headerlink" href="#attribute:RANGE:STEP" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RANGE:STEP">
+<span class="pre">Range:</span><span class="sig-name descname"><span class="pre">STEP</span></span><a class="headerlink" href="#attribute:RANGE:STEP" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>Returns the step size.  Must be a round number.</p>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="stack.html" class="btn btn-neutral float-right" title="Stack" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="queue.html" class="btn btn-neutral" title="Queue" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="queue.html" class="btn btn-neutral float-left" title="Queue" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="stack.html" class="btn btn-neutral float-right" title="Stack" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Terminal and game environment &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terminal and game environment &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../about.html"/>
-        <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../index.html"/>
-        <link rel="up" title="Command Reference" href="../commands.html"/>
-        <link rel="next" title="Serialization" href="serialization.html"/>
-        <link rel="prev" title="File I/O" href="files.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="next" title="Serialization" href="serialization.html" />
+    <link rel="prev" title="File I/O" href="files.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
@@ -106,9 +57,7 @@
 <li class="toctree-l2"><a class="reference internal" href="list.html">Listing Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="files.html">File I/O</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Terminal and GUI</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Terminal and GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialization.html">Serialization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="communication.html">Communication</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resource_transfer.html">Resource Transfer</a></li>
@@ -122,124 +71,99 @@
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../commands.html">Command Reference</a> &raquo;</li>
-      
-    <li>Terminal and game environment</li>
+      <li>Terminal and game environment</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../_sources/commands/terminalgui.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../_sources/commands/terminalgui.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="terminal-and-game-environment">
-<span id="terminalgui"></span><h1>Terminal and game environment<a class="headerlink" href="#terminal-and-game-environment" title="Permalink to this headline">¶</a></h1>
-<dl class="global">
-<dt id="global:CLEARSCREEN">
-<code class="descname">CLEARSCREEN</code><a class="headerlink" href="#global:CLEARSCREEN" title="Permalink to this definition">¶</a></dt>
+             
+  <section id="terminal-and-game-environment">
+<span id="terminalgui"></span><h1>Terminal and game environment<a class="headerlink" href="#terminal-and-game-environment" title="Permalink to this heading">¶</a></h1>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:CLEARSCREEN">
+<span class="sig-name descname"><span class="pre">CLEARSCREEN</span></span><a class="headerlink" href="#global:CLEARSCREEN" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clears the screen and places the cursor at the top left:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">CLEARSCREEN</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">CLEARSCREEN</span><span class="p">.</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:PRINT">
-<code class="descname">PRINT</code><a class="headerlink" href="#global:PRINT" title="Permalink to this definition">¶</a></dt>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:PRINT">
+<span class="sig-name descname"><span class="pre">PRINT</span></span><a class="headerlink" href="#global:PRINT" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints the selected text to the screen. Can print strings, or the result of an expression:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;Hello&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;Hello&quot;</span><span class="p">.</span>
 <span class="k">PRINT</span> <span class="mf">4</span><span class="o">+</span><span class="mf">1</span><span class="p">.</span>
 <span class="k">PRINT</span> <span class="s">&quot;4 times 8 is: &quot;</span> <span class="o">+</span> <span class="p">(</span><span class="mf">4</span><span class="o">*</span><span class="mf">8</span><span class="p">).</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:SET TERMINAL:WIDTH. GET TERMINAL:WIDTH">
-<code class="descname">SET TERMINAL:WIDTH. GET TERMINAL:WIDTH</code><a class="headerlink" href="#global:SET TERMINAL:WIDTH. GET TERMINAL:WIDTH" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets or sets the terminal&#8217;s width in characters.
-For more information see <a class="reference internal" href="../structures/misc/terminal.html#terminal"><span>terminal struct</span></a>.</p>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:SET TERMINAL:WIDTH. GET TERMINAL:WIDTH">
+<span class="sig-name descname"><span class="pre">SET</span> <span class="pre">TERMINAL:WIDTH.</span> <span class="pre">GET</span> <span class="pre">TERMINAL:WIDTH</span></span><a class="headerlink" href="#global:SET TERMINAL:WIDTH. GET TERMINAL:WIDTH" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets or sets the terminal’s width in characters.
+For more information see <a class="reference internal" href="../structures/misc/terminal.html#terminal"><span class="std std-ref">terminal struct</span></a>.</p>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:SET TERMINAL:HEIGHT. GET TERMINAL:HEIGHT">
-<code class="descname">SET TERMINAL:HEIGHT. GET TERMINAL:HEIGHT</code><a class="headerlink" href="#global:SET TERMINAL:HEIGHT. GET TERMINAL:HEIGHT" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets or sets the terminal&#8217;s height in characters.
-For more information see <a class="reference internal" href="../structures/misc/terminal.html#terminal"><span>terminal struct</span></a>.</p>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:SET TERMINAL:HEIGHT. GET TERMINAL:HEIGHT">
+<span class="sig-name descname"><span class="pre">SET</span> <span class="pre">TERMINAL:HEIGHT.</span> <span class="pre">GET</span> <span class="pre">TERMINAL:HEIGHT</span></span><a class="headerlink" href="#global:SET TERMINAL:HEIGHT. GET TERMINAL:HEIGHT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets or sets the terminal’s height in characters.
+For more information see <a class="reference internal" href="../structures/misc/terminal.html#terminal"><span class="std std-ref">terminal struct</span></a>.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="function:AT">
-<code class="descname">AT</code><span class="sig-paren">(</span>col,line<span class="sig-paren">)</span><a class="headerlink" href="#function:AT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>col</strong> &#8211; (integer) column starting with zero (left)</li>
-<li><strong>line</strong> &#8211; (integer) line starting with zero (top)</li>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:AT">
+<span class="sig-name descname"><span class="pre">AT</span></span><span class="sig-paren">(</span><span class="pre">col,line</span><span class="sig-paren">)</span><a class="headerlink" href="#function:AT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>col</strong> – (integer) column starting with zero (left)</p></li>
+<li><p><strong>line</strong> – (integer) line starting with zero (top)</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>Used in combination with <a class="reference internal" href="#global:PRINT" title="PRINT global"><code class="xref ks ks-global docutils literal"><span class="pre">PRINT</span></code></a>. Prints the selected text to the screen at specified location. Can print strings, or the result of an expression:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;Hello&quot;</span> <span class="k">AT</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">10</span><span class="p">).</span>
+</dd>
+</dl>
+<p>Used in combination with <a class="reference internal" href="#global:PRINT" title="PRINT global"><code class="xref ks ks-global docutils literal notranslate"><span class="pre">PRINT</span></code></a>. Prints the selected text to the screen at specified location. Can print strings, or the result of an expression:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;Hello&quot;</span> <span class="k">AT</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">10</span><span class="p">).</span>
 <span class="k">PRINT</span> <span class="mf">4</span><span class="o">+</span><span class="mf">1</span> <span class="k">AT</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">10</span><span class="p">).</span>
 <span class="k">PRINT</span> <span class="s">&quot;4 times 8 is: &quot;</span> <span class="o">+</span> <span class="p">(</span><span class="mf">4</span><span class="o">*</span><span class="mf">8</span><span class="p">)</span> <span class="k">AT</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">10</span><span class="p">).</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:MAPVIEW">
-<code class="descname">MAPVIEW</code><a class="headerlink" href="#global:MAPVIEW" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:MAPVIEW">
+<span class="sig-name descname"><span class="pre">MAPVIEW</span></span><a class="headerlink" href="#global:MAPVIEW" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+</dl>
 <p>A variable that controls or queries whether or not the game is in map view:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">IF</span> <span class="nv">MAPVIEW</span> <span class="p">{</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">IF</span> <span class="nv">MAPVIEW</span> <span class="p">{</span>
     <span class="k">PRINT</span> <span class="s">&quot;You are looking at the map.&quot;</span><span class="p">.</span>
 <span class="p">}</span> <span class="k">ELSE</span> <span class="p">{</span>
     <span class="k">PRINT</span> <span class="s">&quot;You are looking at the flight view.&quot;</span><span class="p">.</span>
@@ -247,35 +171,35 @@ For more information see <a class="reference internal" href="../structures/misc/
 </pre></div>
 </div>
 <p>You can switch between map and flight views by setting this variable:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">MAPVIEW</span> <span class="ow">TO</span> <span class="nb">TRUE</span><span class="p">.</span>  <span class="c1">// to map view</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">MAPVIEW</span> <span class="ow">TO</span> <span class="nb">TRUE</span><span class="p">.</span>  <span class="c1">// to map view</span>
 <span class="k">SET</span> <span class="nv">MAPVIEW</span> <span class="ow">TO</span> <span class="nb">FALSE</span><span class="p">.</span> <span class="c1">// to flight view</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:REBOOT">
-<code class="descname">REBOOT</code><a class="headerlink" href="#global:REBOOT" title="Permalink to this definition">¶</a></dt>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:REBOOT">
+<span class="sig-name descname"><span class="pre">REBOOT</span></span><a class="headerlink" href="#global:REBOOT" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stops the script here, and reboots the kOS module.</p>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:SHUTDOWN">
-<code class="descname">SHUTDOWN</code><a class="headerlink" href="#global:SHUTDOWN" title="Permalink to this definition">¶</a></dt>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:SHUTDOWN">
+<span class="sig-name descname"><span class="pre">SHUTDOWN</span></span><a class="headerlink" href="#global:SHUTDOWN" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stops the script here, and causes kOS module to turn the power off.</p>
 </dd></dl>
 
-<div class="section" id="gui-display-tools">
-<h2>GUI display tools<a class="headerlink" href="#gui-display-tools" title="Permalink to this headline">¶</a></h2>
-<dl class="global">
-<dt id="global:VECDRAW">
-<code class="descname">VECDRAW</code><a class="headerlink" href="#global:VECDRAW" title="Permalink to this definition">¶</a></dt>
+<section id="gui-display-tools">
+<h2>GUI display tools<a class="headerlink" href="#gui-display-tools" title="Permalink to this heading">¶</a></h2>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:VECDRAW">
+<span class="sig-name descname"><span class="pre">VECDRAW</span></span><a class="headerlink" href="#global:VECDRAW" title="Permalink to this definition">¶</a></dt>
 <dd><p>See VECDRAWARGS, below</p>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:VECDRAWARGS">
-<code class="descname">VECDRAWARGS</code><a class="headerlink" href="#global:VECDRAWARGS" title="Permalink to this definition">¶</a></dt>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:VECDRAWARGS">
+<span class="sig-name descname"><span class="pre">VECDRAWARGS</span></span><a class="headerlink" href="#global:VECDRAWARGS" title="Permalink to this definition">¶</a></dt>
 <dd><p>You can <strong>draw visual vectors on the screen</strong> in kOS to help debugging
 or to help show the player information.  The full description can be
 found on the <a class="reference external" href="../structures/misc/vecdraw.html">Vecdraw Page</a>.</p>
@@ -286,13 +210,13 @@ view.  A longer explanation as to why is on the
 <a class="reference external" href="../structures/misc/vecdraw.html">Vecdraw Page</a>.</p>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:HUDTEXT">
-<code class="descname">HUDTEXT</code><a class="headerlink" href="#global:HUDTEXT" title="Permalink to this definition">¶</a></dt>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:HUDTEXT">
+<span class="sig-name descname"><span class="pre">HUDTEXT</span></span><a class="headerlink" href="#global:HUDTEXT" title="Permalink to this definition">¶</a></dt>
 <dd><p>You can make text messages appear on the heads-up display, in the
 same way that the in-game stock messages appear, by calling the
 HUDTEXT function, as follows:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">HUDTEXT</span><span class="p">(</span> <span class="nv">string</span> <span class="nv">Message</span><span class="p">,</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">HUDTEXT</span><span class="p">(</span> <span class="nv">string</span> <span class="nv">Message</span><span class="p">,</span>
          <span class="nv">integer</span> <span class="nv">delaySeconds</span><span class="p">,</span>
          <span class="nv">integer</span> <span class="nv">style</span><span class="p">,</span>
          <span class="nv">integer</span> <span class="nv">size</span><span class="p">,</span>
@@ -300,108 +224,70 @@ HUDTEXT function, as follows:</p>
          <span class="nv">boolean</span> <span class="nv">doEcho</span><span class="p">).</span>
 </pre></div>
 </div>
-<dl class="docutils">
-<dt>Message</dt>
-<dd>The message to show to the user on screen</dd>
-<dt>delaySeconds</dt>
-<dd>How long to make the message remain onscreen before it goes away.
+<dl class="simple">
+<dt>Message</dt><dd><p>The message to show to the user on screen</p>
+</dd>
+<dt>delaySeconds</dt><dd><p>How long to make the message remain onscreen before it goes away.
 If another message is drawn while an old message is still displaying,
-both messages remain, the new message scrolls up the old message.</dd>
-<dt>style</dt>
-<dd>Where to show the message on the screen:
+both messages remain, the new message scrolls up the old message.</p>
+</dd>
+<dt>style</dt><dd><p>Where to show the message on the screen:
 - 1 = upper left
 - 2 = upper center
 - 3 = upper right
 - 4 = lower center
 Note that all these locations have their own defined slightly
-different fonts and default sizes, enforced by the stock KSP game.</dd>
-<dt>size</dt>
-<dd>A number describing the font point size: NOTE that the actual size
-varies depending on which of the above styles you&#8217;re using.  Some
-of the locations have a magnifying factor attached to their fonts.</dd>
-<dt>colour</dt>
-<dd>The colour to show the text in, using <a class="reference external" href="../structures/misc/colors.html">one of the built-in colour names
-or the RGB constructor to make one up</a></dd>
-<dt>doEcho</dt>
-<dd>If true, then the message is also echoed to the terminal as &#8220;HUD: message&#8221;.</dd>
+different fonts and default sizes, enforced by the stock KSP game.</p>
+</dd>
+<dt>size</dt><dd><p>A number describing the font point size: NOTE that the actual size
+varies depending on which of the above styles you’re using.  Some
+of the locations have a magnifying factor attached to their fonts.</p>
+</dd>
+<dt>colour</dt><dd><p>The colour to show the text in, using <a class="reference external" href="../structures/misc/colors.html">one of the built-in colour names
+or the RGB constructor to make one up</a></p>
+</dd>
+<dt>doEcho</dt><dd><p>If true, then the message is also echoed to the terminal as “HUD: message”.</p>
+</dd>
 </dl>
 <p>Examples:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">HUDTEXT</span><span class="p">(</span><span class="s">&quot;Warning: Vertical Speed too High&quot;</span><span class="p">,</span> <span class="mf">5</span><span class="p">,</span> <span class="mf">2</span><span class="p">,</span> <span class="mf">15</span><span class="p">,</span> <span class="nv">red</span><span class="p">,</span> <span class="nb">false</span><span class="p">).</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">HUDTEXT</span><span class="p">(</span><span class="s">&quot;Warning: Vertical Speed too High&quot;</span><span class="p">,</span> <span class="mf">5</span><span class="p">,</span> <span class="mf">2</span><span class="p">,</span> <span class="mf">15</span><span class="p">,</span> <span class="nv">red</span><span class="p">,</span> <span class="nb">false</span><span class="p">).</span>
 <span class="nv">HUDTEXT</span><span class="p">(</span><span class="s">&quot;docking mode begun&quot;</span><span class="p">,</span> <span class="mf">8</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">12</span><span class="p">,</span> <span class="nv">rgb</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">.</span><span class="mf">5</span><span class="p">),</span> <span class="nb">false</span><span class="p">).</span>
 </pre></div>
 </div>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="serialization.html" class="btn btn-neutral float-right" title="Serialization" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="files.html" class="btn btn-neutral" title="File I/O" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="files.html" class="btn btn-neutral float-left" title="File I/O" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="serialization.html" class="btn btn-neutral float-right" title="Serialization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

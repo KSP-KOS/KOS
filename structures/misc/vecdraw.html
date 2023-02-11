@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Drawing Vectors on the Screen &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Drawing Vectors on the Screen &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../../about.html"/>
-        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
-        <link rel="next" title="Structure" href="versioninfo.html"/>
-        <link rel="prev" title="WARP" href="timewarp.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Structure" href="versioninfo.html" />
+    <link rel="prev" title="WARP" href="timewarp.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
@@ -131,9 +82,7 @@
 <li class="toctree-l3"><a class="reference internal" href="time.html#constructing">Constructing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="time.html#time-operators">Time Operators</a></li>
 <li class="toctree-l3"><a class="reference internal" href="timewarp.html">WARP</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Drawing Vectors on the Screen</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Drawing Vectors on the Screen</a></li>
 <li class="toctree-l3"><a class="reference internal" href="versioninfo.html">Structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="voice.html">Voice</a></li>
 </ul>
@@ -148,72 +97,57 @@
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
-      
           <li><a href="../misc.html">Configurations and Miscellany</a> &raquo;</li>
-      
-    <li>Drawing Vectors on the Screen</li>
+      <li>Drawing Vectors on the Screen</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/structures/misc/vecdraw.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../../_sources/structures/misc/vecdraw.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="drawing-vectors-on-the-screen">
-<span id="vecdraw"></span><h1>Drawing Vectors on the Screen<a class="headerlink" href="#drawing-vectors-on-the-screen" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="drawing-vectors-on-the-screen">
+<span id="vecdraw"></span><h1>Drawing Vectors on the Screen<a class="headerlink" href="#drawing-vectors-on-the-screen" title="Permalink to this heading">¶</a></h1>
 <blockquote>
-<div>You can create an object that represents a vector drawn in the
+<div><p>You can create an object that represents a vector drawn in the
 flight view, as a holographic image in flight.  You may move it
 to a new location, make it appear or disappear, change its color,
-and label.  This page describes how to do that.</div></blockquote>
-<dl class="function">
-<dt id="function:VECDRAW">
-<code class="descname">VECDRAW</code><span class="sig-paren">(</span>start, vec, color, label, scale, show, width, pointy<span class="sig-paren">)</span><a class="headerlink" href="#function:VECDRAW" title="Permalink to this definition">¶</a></dt>
+and label.  This page describes how to do that.</p>
+</div></blockquote>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:VECDRAW">
+<span class="sig-name descname"><span class="pre">VECDRAW</span></span><span class="sig-paren">(</span><span class="pre">start,</span> <span class="pre">vec,</span> <span class="pre">color,</span> <span class="pre">label,</span> <span class="pre">scale,</span> <span class="pre">show,</span> <span class="pre">width,</span> <span class="pre">pointy,</span> <span class="pre">wiping</span><span class="sig-paren">)</span><a class="headerlink" href="#function:VECDRAW" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="function:VECDRAWARGS">
-<code class="descname">VECDRAWARGS</code><span class="sig-paren">(</span>start, vec, color, label, scale, show, width, pointy<span class="sig-paren">)</span><a class="headerlink" href="#function:VECDRAWARGS" title="Permalink to this definition">¶</a></dt>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:VECDRAWARGS">
+<span class="sig-name descname"><span class="pre">VECDRAWARGS</span></span><span class="sig-paren">(</span><span class="pre">start,</span> <span class="pre">vec,</span> <span class="pre">color,</span> <span class="pre">label,</span> <span class="pre">scale,</span> <span class="pre">show,</span> <span class="pre">width,</span> <span class="pre">pointy,</span> <span class="pre">wiping</span><span class="sig-paren">)</span><a class="headerlink" href="#function:VECDRAWARGS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Both these two function names do the same thing.  For historical
 reasons both names exist, but now they both do the same thing.
-They create a new <code class="docutils literal"><span class="pre">vecdraw</span></code> object that you can then manipulate
-to show things on the screen:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">anArrow</span> <span class="ow">TO</span> <span class="nv">VECDRAW</span><span class="p">(</span>
+They create a new <code class="docutils literal notranslate"><span class="pre">vecdraw</span></code> object that you can then manipulate
+to show things on the screen.</p>
+<p>For an explanation what the parameters start, vec, color, label, scale, show,
+width, pointy, and wiping mean, they correspond to the same suffix names
+below in the table.</p>
+<p>Here are some examples:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">anArrow</span> <span class="ow">TO</span> <span class="nv">VECDRAW</span><span class="p">(</span>
       <span class="nv">V</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">),</span>
       <span class="nv">V</span><span class="p">(</span><span class="nv">a</span><span class="p">,</span><span class="nv">b</span><span class="p">,</span><span class="nv">c</span><span class="p">),</span>
       <span class="nv">RGB</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">),</span>
@@ -240,12 +174,12 @@ to show things on the screen:</p>
 </div>
 <p>Vector arrows can also be created with dynamic positioning and color.  To do
 this, instead of passing static values for the first three arguments of
-<code class="docutils literal"><span class="pre">VECDRAW()</span></code> or <code class="docutils literal"><span class="pre">VECDRAWARGS()</span></code>, you can pass a
-<a class="reference internal" href="../../language/delegates.html#delegates"><span>Delegate</span></a> for any of them, which returns a value of the
-correct type.  Here&#8217;s an example where the Start, Vec, and Color are all
+<code class="docutils literal notranslate"><span class="pre">VECDRAW()</span></code> or <code class="docutils literal notranslate"><span class="pre">VECDRAWARGS()</span></code>, you can pass a
+<a class="reference internal" href="../../language/delegates.html#delegates"><span class="std std-ref">Delegate</span></a> for any of them, which returns a value of the
+correct type.  Here’s an example where the Start, Vec, and Color are all
 dynamically adjusted by anonymous delegates that kOS will frequently call
 for you as it draws the arrow:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Small dynamically moving vecdraw example:</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// Small dynamically moving vecdraw example:</span>
 <span class="k">SET</span> <span class="nv">anArrow</span> <span class="ow">TO</span> <span class="nv">VECDRAW</span><span class="p">(</span>
   <span class="p">{</span> <span class="k">return</span> <span class="p">(</span><span class="mf">6</span><span class="o">-</span><span class="mf">4</span><span class="o">*</span><span class="nv">cos</span><span class="p">(</span><span class="mf">100</span><span class="o">*</span><span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span><span class="p">))</span> <span class="o">*</span> <span class="nv">up</span><span class="p">:</span><span class="nv">vector</span><span class="p">.</span> <span class="p">},</span>
   <span class="p">{</span> <span class="k">return</span> <span class="p">(</span><span class="mf">4</span><span class="o">*</span><span class="nv">sin</span><span class="p">(</span><span class="mf">100</span><span class="o">*</span><span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span><span class="p">))</span> <span class="o">*</span> <span class="nv">up</span><span class="p">:</span><span class="nv">vector</span><span class="p">.</span>  <span class="p">},</span>
@@ -261,390 +195,368 @@ for you as it draws the arrow:</p>
 <span class="k">set</span> <span class="nv">anArrow</span><span class="p">:</span><span class="nv">show</span> <span class="ow">to</span> <span class="nb">false</span><span class="p">.</span> <span class="c1">// Make it stop drawing.</span>
 </pre></div>
 </div>
-<p>In the above example, <code class="docutils literal"><span class="pre">VECDRAW()</span></code> detects that the first argument
+<p>In the above example, <code class="docutils literal notranslate"><span class="pre">VECDRAW()</span></code> detects that the first argument
 is a delegate, and it uses this information to decide to assign
-it into <a class="reference internal" href="#attribute:VECDRAW:STARTUPDATER" title="VECDRAW:STARTUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VecDraw:STARTUPDATER</span></code></a>, instead of into <a class="reference internal" href="#attribute:VECDRAW:START" title="VECDRAW:START attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VecDraw:START</span></code></a>.
+it into <a class="reference internal" href="#attribute:VECDRAW:STARTUPDATER" title="VECDRAW:STARTUPDATER attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VecDraw:STARTUPDATER</span></code></a>, instead of into <a class="reference internal" href="#attribute:VECDRAW:START" title="VECDRAW:START attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VecDraw:START</span></code></a>.
 Similarly it detects that the second argument is a delegate, so it
-assigns it into <a class="reference internal" href="#attribute:VECDRAW:VECUPDATER" title="VECDRAW:VECUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VecDraw:VECUPDATER</span></code></a> instead of into <a class="reference internal" href="#attribute:VECDRAW:VEC" title="VECDRAW:VEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VecDraw:VEC</span></code></a>.
+assigns it into <a class="reference internal" href="#attribute:VECDRAW:VECUPDATER" title="VECDRAW:VECUPDATER attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VecDraw:VECUPDATER</span></code></a> instead of into <a class="reference internal" href="#attribute:VECDRAW:VEC" title="VECDRAW:VEC attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VecDraw:VEC</span></code></a>.
 And it does the same thing with the third argument, assigning it into
-<a class="reference internal" href="#attribute:VECDRAW:COLORUPDATER" title="VECDRAW:COLORUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VecDraw:COLORUPDATER</span></code></a>, instead of <a class="reference internal" href="#attribute:VECDRAW:COLOR" title="VECDRAW:COLOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VecDraw:COLOR</span></code></a>.</p>
-<p>All the parameters of the <code class="docutils literal"><span class="pre">VECDRAW()</span></code> and <code class="docutils literal"><span class="pre">VECDRAWARGS()</span></code> are
+<a class="reference internal" href="#attribute:VECDRAW:COLORUPDATER" title="VECDRAW:COLORUPDATER attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VecDraw:COLORUPDATER</span></code></a>, instead of <a class="reference internal" href="#attribute:VECDRAW:COLOR" title="VECDRAW:COLOR attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VecDraw:COLOR</span></code></a>.</p>
+<p>All the parameters of the <code class="docutils literal notranslate"><span class="pre">VECDRAW()</span></code> and <code class="docutils literal notranslate"><span class="pre">VECDRAWARGS()</span></code> are
 optional.  You can leave any of the lastmost parameters off and they
 will be given a default:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">Set</span> <span class="nv">anArrow</span> <span class="ow">TO</span> <span class="nv">VECDRAW</span><span class="p">().</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">Set</span> <span class="nv">anArrow</span> <span class="ow">TO</span> <span class="nv">VECDRAW</span><span class="p">().</span>
 </pre></div>
 </div>
 <p>Causes it to have these defaults:</p>
-<table border="1" class="docutils" id="id1">
+<table class="docutils align-default" id="id1">
 <caption><span class="caption-text">Defaults</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="25%" />
-<col width="75%" />
+<col style="width: 25.0%" />
+<col style="width: 75.0%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Default</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Default</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><code class="xref ks ks-attr docutils literal"><span class="pre">START</span></code></td>
-<td>V(0,0,0)  (center of the ship is the origin)</td>
+<tbody>
+<tr class="row-even"><td><p><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">START</span></code></p></td>
+<td><p>V(0,0,0)  (center of the ship is the origin)</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref ks ks-attr docutils literal"><span class="pre">VEC</span></code></td>
-<td>V(0,0,0)  (no length, so nothing appears)</td>
+<tr class="row-odd"><td><p><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VEC</span></code></p></td>
+<td><p>V(0,0,0)  (no length, so nothing appears)</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref ks ks-attr docutils literal"><span class="pre">COLO[U]R</span></code></td>
-<td>White</td>
+<tr class="row-even"><td><p><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">COLO[U]R</span></code></p></td>
+<td><p>White</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref ks ks-attr docutils literal"><span class="pre">LABEL</span></code></td>
-<td>Empty string &#8220;&#8221;</td>
+<tr class="row-odd"><td><p><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">LABEL</span></code></p></td>
+<td><p>Empty string “”</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref ks ks-attr docutils literal"><span class="pre">SCALE</span></code></td>
-<td>1.0</td>
+<tr class="row-even"><td><p><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">SCALE</span></code></p></td>
+<td><p>1.0</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref ks ks-attr docutils literal"><span class="pre">SHOW</span></code></td>
-<td>false</td>
+<tr class="row-odd"><td><p><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">SHOW</span></code></p></td>
+<td><p>false</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref ks ks-attr docutils literal"><span class="pre">WIDTH</span></code></td>
-<td>0.2</td>
+<tr class="row-even"><td><p><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">WIDTH</span></code></p></td>
+<td><p>0.2</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref ks ks-attr docutils literal"><span class="pre">POINTY</span></code></td>
-<td>true</td>
+<tr class="row-odd"><td><p><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">POINTY</span></code></p></td>
+<td><p>true</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref ks ks-attr docutils literal"><span class="pre">WIPING</span></code></td>
-<td>true</td>
+<tr class="row-even"><td><p><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">WIPING</span></code></p></td>
+<td><p>true</p></td>
 </tr>
 </tbody>
 </table>
 <p>Examples:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Makes a red vecdraw at the origin, pointing 5 meters north,</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// Makes a red vecdraw at the origin, pointing 5 meters north,</span>
 <span class="c1">// with defaults for the un-mentioned</span>
 <span class="c1">// paramters LABEL, SCALE, SHOW, and WIDTH.</span>
 <span class="k">SET</span> <span class="nv">vd</span> <span class="ow">TO</span> <span class="nv">VECDRAW</span><span class="p">(</span><span class="nv">V</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">),</span> <span class="mf">5</span><span class="o">*</span><span class="nv">north</span><span class="p">:</span><span class="nv">vector</span><span class="p">,</span> <span class="nv">red</span><span class="p">).</span>
 </pre></div>
 </div>
-<p>To make a <a class="reference internal" href="#structure:VECDRAW" title="VECDRAW structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VecDraw</span></code></a> disappear, you can either set its <a class="reference internal" href="#attribute:VECDRAW:SHOW" title="VECDRAW:SHOW attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VecDraw:SHOW</span></code></a> to false or just <a class="reference internal" href="../../language/variables.html#unset"><span>UNSET</span></a> the variable, or re-assign it. An example using <a class="reference internal" href="#structure:VECDRAW" title="VECDRAW structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VecDraw</span></code></a> can be seen in the documentation for <a class="reference internal" href="../../commands/prediction.html#function:POSITIONAT" title="POSITIONAT function"><code class="xref ks ks-func docutils literal"><span class="pre">POSITIONAT()</span></code></a>.</p>
+<p>To make a <a class="reference internal" href="#structure:VECDRAW" title="VECDRAW structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">VecDraw</span></code></a> disappear, you can either set its <a class="reference internal" href="#attribute:VECDRAW:SHOW" title="VECDRAW:SHOW attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VecDraw:SHOW</span></code></a> to false or just <a class="reference internal" href="../../language/variables.html#unset"><span class="std std-ref">UNSET</span></a> the variable, or re-assign it. An example using <a class="reference internal" href="#structure:VECDRAW" title="VECDRAW structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">VecDraw</span></code></a> can be seen in the documentation for <a class="reference internal" href="../../commands/prediction.html#function:POSITIONAT" title="POSITIONAT function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">POSITIONAT()</span></code></a>.</p>
 </dd></dl>
 
-<span class="target" id="clearvecdraws"></span><dl class="function">
-<dt id="function:CLEARVECDRAWS">
-<code class="descname">CLEARVECDRAWS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#function:CLEARVECDRAWS" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="clearvecdraws"></span><dl class="ks function">
+<dt class="sig sig-object ks" id="function:CLEARVECDRAWS">
+<span class="sig-name descname"><span class="pre">CLEARVECDRAWS</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#function:CLEARVECDRAWS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets all visible vecdraws to invisible, everywhere in this kOS CPU.
-This is useful if you have lost track of the handles to them and can&#8217;t
-turn them off one by one, or if you don&#8217;t have the variable scopes
+This is useful if you have lost track of the handles to them and can’t
+turn them off one by one, or if you don’t have the variable scopes
 present anymore to access the variables that hold them.  The system
-does attempt to clear any vecdraws that go &#8220;out of scope&#8221;, however
-the &#8220;closures&#8221; that keep local variables alive for LOCK statements
+does attempt to clear any vecdraws that go “out of scope”, however
+the “closures” that keep local variables alive for LOCK statements
 and for other reasons can keep them from every truely going away
 in some circumstances.  To make the arrow drawings all go away, just call
 CLEARVECDRAWS() and it will have the same effect as if you had
-done <code class="docutils literal"><span class="pre">SET</span> <span class="pre">varname:show</span> <span class="pre">to</span> <span class="pre">FALSE</span></code> for all vecdraw varnames in the
+done <code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">varname:show</span> <span class="pre">to</span> <span class="pre">FALSE</span></code> for all vecdraw varnames in the
 entire system.</p>
 </dd></dl>
 
-<div class="section" id="very-large-vecdraws-only-show-up-on-map-view-not-flight-view">
-<h2>Very large Vecdraws only show up on map view, not flight view<a class="headerlink" href="#very-large-vecdraws-only-show-up-on-map-view-not-flight-view" title="Permalink to this headline">¶</a></h2>
+<section id="very-large-vecdraws-only-show-up-on-map-view-not-flight-view">
+<h2>Very large Vecdraws only show up on map view, not flight view<a class="headerlink" href="#very-large-vecdraws-only-show-up-on-map-view-not-flight-view" title="Permalink to this heading">¶</a></h2>
 <p>If your vecdraw is very big, for example if you try to draw a
 vector going from your ship to the Sun, or from one planet to
-another, you may find that it won&#8217;t appear at all in the flight
-view, but will still appear in the map view.  There isn&#8217;t much that
+another, you may find that it won’t appear at all in the flight
+view, but will still appear in the map view.  There isn’t much that
 kOS can do about this, as it is a feature of the camera settings
 chosen by KSP for the flight view camera.</p>
 <p>The reason very long vecdraws only get drawn in map view and not the
 flight view is the same as the reason you can only see distant planets
 in the map view and not the flight view.  Duna should still take up a
-few pixels of your screen when seen from Kerbin and yet there&#8217;s nothing
+few pixels of your screen when seen from Kerbin and yet there’s nothing
 there not even a dot.  This has to do with a feature of computer
-graphics called the &#8220;camera far clipping plane&#8221;, but the short version
-is that KSP&#8217;s flight camera is configured to be unable to render any
-polygons where one of that polygons&#8217; vertices is very far away.</p>
-</div>
-<div class="section" id="suffixes-of-vecdraw">
-<h2>Suffixes of Vecdraw<a class="headerlink" href="#suffixes-of-vecdraw" title="Permalink to this headline">¶</a></h2>
-<dl class="structure">
-<dt id="structure:VECDRAW">
-<em class="property">structure </em><code class="descname">VecDraw</code><a class="headerlink" href="#structure:VECDRAW" title="Permalink to this definition">¶</a></dt>
+graphics called the “camera far clipping plane”, but the short version
+is that KSP’s flight camera is configured to be unable to render any
+polygons where one of that polygons’ vertices is very far away.</p>
+</section>
+<section id="suffixes-of-vecdraw">
+<h2>Suffixes of Vecdraw<a class="headerlink" href="#suffixes-of-vecdraw" title="Permalink to this heading">¶</a></h2>
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:VECDRAW">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">VecDraw</span></span><a class="headerlink" href="#structure:VECDRAW" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is a structure that allows you to make a drawing of a vector on the screen in map view or in flight view.</p>
-<table border="1" class="docutils" id="id2">
+<table class="docutils align-default" id="id2">
 <caption><span class="caption-text">Members</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="17%" />
-<col width="17%" />
-<col width="67%" />
+<col style="width: 16.7%" />
+<col style="width: 16.7%" />
+<col style="width: 66.7%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type</th>
-<th class="head">Description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VECDRAW:START" title="VECDRAW:START attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">START</span></code></a></td>
-<td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
-<td>Start position of the vector</td>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:VECDRAW:START" title="VECDRAW:START attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">START</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p></td>
+<td><p>Start position of the vector</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VECDRAW:VEC" title="VECDRAW:VEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VEC</span></code></a></td>
-<td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
-<td>The vector to draw</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:VECDRAW:VEC" title="VECDRAW:VEC attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VEC</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p></td>
+<td><p>The vector to draw</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VECDRAW:COLOR" title="VECDRAW:COLOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">COLOR</span></code></a></td>
-<td><a class="reference internal" href="colors.html#colors"><span>Color</span></a></td>
-<td>Color of the vector</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:VECDRAW:COLOR" title="VECDRAW:COLOR attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">COLOR</span></code></a></p></td>
+<td><p><a class="reference internal" href="colors.html#colors"><span class="std std-ref">Color</span></a></p></td>
+<td><p>Color of the vector</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VECDRAW:COLOUR" title="VECDRAW:COLOUR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">COLOUR</span></code></a></td>
-<td>&nbsp;</td>
-<td>Same as <a class="reference internal" href="#attribute:VECDRAW:COLOR" title="VECDRAW:COLOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">COLOR</span></code></a></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:VECDRAW:COLOUR" title="VECDRAW:COLOUR attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">COLOUR</span></code></a></p></td>
+<td></td>
+<td><p>Same as <a class="reference internal" href="#attribute:VECDRAW:COLOR" title="VECDRAW:COLOR attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">COLOR</span></code></a></p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VECDRAW:LABEL" title="VECDRAW:LABEL attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LABEL</span></code></a></td>
-<td><a class="reference internal" href="string.html#string"><span>string</span></a></td>
-<td>Text to show next to vector</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:VECDRAW:LABEL" title="VECDRAW:LABEL attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">LABEL</span></code></a></p></td>
+<td><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>Text to show next to vector</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VECDRAW:SCALE" title="VECDRAW:SCALE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SCALE</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-<td>Scale <a class="reference internal" href="#attribute:VECDRAW:VEC" title="VECDRAW:VEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VEC</span></code></a> and <a class="reference internal" href="#attribute:VECDRAW:WIDTH" title="VECDRAW:WIDTH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">WIDTH</span></code></a> but not <a class="reference internal" href="#attribute:VECDRAW:START" title="VECDRAW:START attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">START</span></code></a></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:VECDRAW:SCALE" title="VECDRAW:SCALE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">SCALE</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Scale <a class="reference internal" href="#attribute:VECDRAW:VEC" title="VECDRAW:VEC attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VEC</span></code></a> and <a class="reference internal" href="#attribute:VECDRAW:WIDTH" title="VECDRAW:WIDTH attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">WIDTH</span></code></a> but not <a class="reference internal" href="#attribute:VECDRAW:START" title="VECDRAW:START attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">START</span></code></a></p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VECDRAW:SHOW" title="VECDRAW:SHOW attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SHOW</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
-<td>True to enable display to screen</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:VECDRAW:SHOW" title="VECDRAW:SHOW attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">SHOW</span></code></a></p></td>
+<td><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>True to enable display to screen</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VECDRAW:WIDTH" title="VECDRAW:WIDTH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">WIDTH</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-<td>width of vector, default is 0.2</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:VECDRAW:WIDTH" title="VECDRAW:WIDTH attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">WIDTH</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>width of vector, default is 0.2</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VECDRAW:POINTY" title="VECDRAW:POINTY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">POINTY</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
-<td>Will the pointy hat be drawn</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:VECDRAW:POINTY" title="VECDRAW:POINTY attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">POINTY</span></code></a></p></td>
+<td><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Will the pointy hat be drawn</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VECDRAW:STARTUPDATER" title="VECDRAW:STARTUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">STARTUPDATER</span></code></a></td>
-<td><a class="reference internal" href="kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KosDelegate</span></code></a></td>
-<td>assigns a delegate to auto-update the START attribute.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:VECDRAW:STARTUPDATER" title="VECDRAW:STARTUPDATER attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">STARTUPDATER</span></code></a></p></td>
+<td><p><a class="reference internal" href="kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KosDelegate</span></code></a></p></td>
+<td><p>assigns a delegate to auto-update the START attribute.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VECDRAW:VECUPDATER" title="VECDRAW:VECUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VECUPDATER</span></code></a></td>
-<td><a class="reference internal" href="kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KosDelegate</span></code></a></td>
-<td>assigns a delegate to auto-update the VEC attribute.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:VECDRAW:VECUPDATER" title="VECDRAW:VECUPDATER attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VECUPDATER</span></code></a></p></td>
+<td><p><a class="reference internal" href="kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KosDelegate</span></code></a></p></td>
+<td><p>assigns a delegate to auto-update the VEC attribute.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VECDRAW:VECTORUPDATER" title="VECDRAW:VECTORUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VECTORUPDATER</span></code></a></td>
-<td>&nbsp;</td>
-<td>Same as <a class="reference internal" href="#attribute:VECDRAW:VECUPDATER" title="VECDRAW:VECUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VECUPDATER</span></code></a></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:VECDRAW:VECTORUPDATER" title="VECDRAW:VECTORUPDATER attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VECTORUPDATER</span></code></a></p></td>
+<td></td>
+<td><p>Same as <a class="reference internal" href="#attribute:VECDRAW:VECUPDATER" title="VECDRAW:VECUPDATER attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VECUPDATER</span></code></a></p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VECDRAW:COLORUPDATER" title="VECDRAW:COLORUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">COLORUPDATER</span></code></a></td>
-<td><a class="reference internal" href="kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KosDelegate</span></code></a></td>
-<td>assigns a delegate to auto-update the COLOR attribute.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:VECDRAW:COLORUPDATER" title="VECDRAW:COLORUPDATER attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">COLORUPDATER</span></code></a></p></td>
+<td><p><a class="reference internal" href="kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KosDelegate</span></code></a></p></td>
+<td><p>assigns a delegate to auto-update the COLOR attribute.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VECDRAW:COLOURUPDATER" title="VECDRAW:COLOURUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">COLOURUPDATER</span></code></a></td>
-<td>&nbsp;</td>
-<td>Same as <a class="reference internal" href="#attribute:VECDRAW:COLORUPDATER" title="VECDRAW:COLORUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">COLORUPDATER</span></code></a></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:VECDRAW:COLOURUPDATER" title="VECDRAW:COLOURUPDATER attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">COLOURUPDATER</span></code></a></p></td>
+<td></td>
+<td><p>Same as <a class="reference internal" href="#attribute:VECDRAW:COLORUPDATER" title="VECDRAW:COLORUPDATER attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">COLORUPDATER</span></code></a></p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:VECDRAW:START">
-VecDraw:<code class="descname">START</code><a class="headerlink" href="#attribute:VECDRAW:START" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:VECDRAW:START">
+<span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">START</span></span><a class="headerlink" href="#attribute:VECDRAW:START" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
+</dd>
+</dl>
 <p>Optional, defaults to V(0,0,0) - position of the tail of the vector to draw in SHIP-RAW coords. V(0,0,0) means the ship Center of Mass.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:VECDRAW:VEC">
-VecDraw:<code class="descname">VEC</code><a class="headerlink" href="#attribute:VECDRAW:VEC" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:VECDRAW:VEC">
+<span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">VEC</span></span><a class="headerlink" href="#attribute:VECDRAW:VEC" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
+</dd>
+</dl>
 <p>Mandatory - The vector to draw, SHIP-RAW Coords.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:VECDRAW:COLOR">
-VecDraw:<code class="descname">COLOR</code><a class="headerlink" href="#attribute:VECDRAW:COLOR" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="colors.html#color"><span>Color</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:VECDRAW:COLOR">
+<span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">COLOR</span></span><a class="headerlink" href="#attribute:VECDRAW:COLOR" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="colors.html#color"><span class="std std-ref">Color</span></a></p>
+</dd>
+</dl>
 <p>Optional, defaults to white. This is the color to draw the vector.
-If you leave the <a class="reference internal" href="#attribute:VECDRAW:WIPING" title="VECDRAW:WIPING attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VecDraw:WIPING</span></code></a> suffix at its default value
+If you leave the <a class="reference internal" href="#attribute:VECDRAW:WIPING" title="VECDRAW:WIPING attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VecDraw:WIPING</span></code></a> suffix at its default value
 of True, then there will be a wipe effect such that the line will
 fade-in as it goes, only becoming this color at the endpoint tip.</p>
 <p>(You can pass in an RGBA with an alpha value less than 1.0 if you
 would like the line to never be fully opaque even at the tip.)</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:VECDRAW:COLOUR">
-VecDraw:<code class="descname">COLOUR</code><a class="headerlink" href="#attribute:VECDRAW:COLOUR" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="colors.html#color"><span>Color</span></a></td>
-</tr>
-</tbody>
-</table>
-<p>Alias for <a class="reference internal" href="#attribute:VECDRAW:COLOR" title="VECDRAW:COLOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VecDraw:COLOR</span></code></a></p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:VECDRAW:COLOUR">
+<span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">COLOUR</span></span><a class="headerlink" href="#attribute:VECDRAW:COLOUR" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="colors.html#color"><span class="std std-ref">Color</span></a></p>
+</dd>
+</dl>
+<p>Alias for <a class="reference internal" href="#attribute:VECDRAW:COLOR" title="VECDRAW:COLOR attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VecDraw:COLOR</span></code></a></p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:VECDRAW:LABEL">
-VecDraw:<code class="descname">LABEL</code><a class="headerlink" href="#attribute:VECDRAW:LABEL" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="string.html#string"><span>string</span></a></td>
-</tr>
-</tbody>
-</table>
-<p>Optional, defaults to &#8220;&#8221;. Text to show on-screen at the midpoint of the vector.
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:VECDRAW:LABEL">
+<span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">LABEL</span></span><a class="headerlink" href="#attribute:VECDRAW:LABEL" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+</dl>
+<p>Optional, defaults to “”. Text to show on-screen at the midpoint of the vector.
 Note the font size the label is displayed in gets stretched when you
-change the <code class="xref ks ks-attr docutils literal"><span class="pre">SCALE</span></code> or the <code class="xref ks ks-attr docutils literal"><span class="pre">WIDTH</span></code> values.</p>
+change the <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">SCALE</span></code> or the <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">WIDTH</span></code> values.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:VECDRAW:SCALE">
-VecDraw:<code class="descname">SCALE</code><a class="headerlink" href="#attribute:VECDRAW:SCALE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:VECDRAW:SCALE">
+<span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">SCALE</span></span><a class="headerlink" href="#attribute:VECDRAW:SCALE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+</dl>
 <p>Optional, defaults to 1.0. Scalar to multiply the VEC by, and the WIDTH,
 but not the START.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:VECDRAW:SHOW">
-VecDraw:<code class="descname">SHOW</code><a class="headerlink" href="#attribute:VECDRAW:SHOW" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
-</tr>
-</tbody>
-</table>
-<p>Set to true to make the arrow appear, false to hide it. Defaults to false until you&#8217;re ready to set it to true.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:VECDRAW:SHOW">
+<span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">SHOW</span></span><a class="headerlink" href="#attribute:VECDRAW:SHOW" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
+<p>Set to true to make the arrow appear, false to hide it. Defaults to false until you’re ready to set it to true.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:VECDRAW:WIDTH">
-VecDraw:<code class="descname">WIDTH</code><a class="headerlink" href="#attribute:VECDRAW:WIDTH" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:VECDRAW:WIDTH">
+<span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">WIDTH</span></span><a class="headerlink" href="#attribute:VECDRAW:WIDTH" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+</dl>
 <p>Define the width of the drawn line, in meters.  The deafult is 0.2 if
 left off.  Note, this also causes the font of the label to be enlarged
 to match if set to a value larger than 0.2.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:VECDRAW:POINTY">
-VecDraw:<code class="descname">POINTY</code><a class="headerlink" href="#attribute:VECDRAW:POINTY" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:VECDRAW:POINTY">
+<span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">POINTY</span></span><a class="headerlink" href="#attribute:VECDRAW:POINTY" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>(Defaults to True if left off.) Will this line be drawn with
-a pointy arrowhead &#8220;hat&#8221; on the tip to show which end is the
+a pointy arrowhead “hat” on the tip to show which end is the
 start point and which is the end point? If this is false,
 then Vecdraw draws just a thick line, instead of an arrow.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:VECDRAW:WIPING">
-VecDraw:<code class="descname">WIPING</code><a class="headerlink" href="#attribute:VECDRAW:WIPING" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:VECDRAW:WIPING">
+<span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">WIPING</span></span><a class="headerlink" href="#attribute:VECDRAW:WIPING" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>(Defaults to True if left off.) If true, this line will be drawn
-with a &#8220;wipe&#8221; effect that varies how transparent it is.  At the
+with a “wipe” effect that varies how transparent it is.  At the
 start point it will be a more transparent version of the color
-you specified in <a class="reference internal" href="#attribute:VECDRAW:COLOR" title="VECDRAW:COLOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VecDraw:COLOR</span></code></a>.  It will only become the
+you specified in <a class="reference internal" href="#attribute:VECDRAW:COLOR" title="VECDRAW:COLOR attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VecDraw:COLOR</span></code></a>.  It will only become the
 full opacity you requested when it reaches the endpoint of the line.
 This effect is to help show the direction the arrow is going as it
-&#8220;fades in&#8221; to full opacity as it goes along.</p>
+“fades in” to full opacity as it goes along.</p>
 <p>If false, then the opacity of the line will not vary.  It will draw
 the whole line at the exact color you specified in the in the
-<a class="reference internal" href="#attribute:VECDRAW:COLOR" title="VECDRAW:COLOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VecDraw:COLOR</span></code></a> SUFFIX. (Which can still be transparent if
+<a class="reference internal" href="#attribute:VECDRAW:COLOR" title="VECDRAW:COLOR attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VecDraw:COLOR</span></code></a> SUFFIX. (Which can still be transparent if
 you use an RGBA() and provide the alpha value.)</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:VECDRAW:STARTUPDATER">
-VecDraw:<code class="descname">STARTUPDATER</code><a class="headerlink" href="#attribute:VECDRAW:STARTUPDATER" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KosDelegate</span></code></a> with no parameters, returning a <a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>This allows you to tell the VecDraw that you&#8217;d like it to update the START position
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:VECDRAW:STARTUPDATER">
+<span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">STARTUPDATER</span></span><a class="headerlink" href="#attribute:VECDRAW:STARTUPDATER" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KosDelegate</span></code></a> with no parameters, returning a <a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
+</dd>
+</dl>
+<p>This allows you to tell the VecDraw that you’d like it to update the START position
 of the vector regularly every update, according to your own scripted code.</p>
-<p>You create a <a class="reference internal" href="kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KosDelegate</span></code></a> that takes no parameters, and returns a vector,
-which the system will automatically assign to the <code class="xref ks ks-attr docutils literal"><span class="pre">START</span></code> suffix every update.
+<p>You create a <a class="reference internal" href="kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KosDelegate</span></code></a> that takes no parameters, and returns a vector,
+which the system will automatically assign to the <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">START</span></code> suffix every update.
 Be aware that this system does eat into the instructions available per update, so if
-you make this delegate do too much work, it will slow down your script&#8217;s performance.</p>
+you make this delegate do too much work, it will slow down your script’s performance.</p>
 <p>To make the system stop calling your delegate, set this suffix to the magic
-keyword <a class="reference internal" href="kosdelegate.html#global:DONOTHING" title="DONOTHING global"><code class="xref ks ks-global docutils literal"><span class="pre">DONOTHING</span></code></a>.</p>
+keyword <a class="reference internal" href="kosdelegate.html#global:DONOTHING" title="DONOTHING global"><code class="xref ks ks-global docutils literal notranslate"><span class="pre">DONOTHING</span></code></a>.</p>
 <p>Example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// This example will bounce the arrow up and down over time for a few seconds,</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// This example will bounce the arrow up and down over time for a few seconds,</span>
 <span class="c1">// moving the location of the vector&#39;s start according to a sine wave over time:</span>
 <span class="k">set</span> <span class="nv">vd</span> <span class="ow">to</span> <span class="nv">vecdraw</span><span class="p">(</span><span class="nv">v</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">),</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">north</span><span class="p">:</span><span class="nv">vector</span><span class="o">*</span><span class="mf">5</span><span class="p">,</span> <span class="nv">green</span><span class="p">,</span> <span class="s">&quot;bouncing arrow&quot;</span><span class="p">,</span> <span class="mf">1</span><span class="p">.</span><span class="mf">0</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">2</span><span class="p">).</span>
 <span class="k">print</span> <span class="s">&quot;Moving the arrow up and down for a few seconds.&quot;</span><span class="p">.</span>
@@ -658,33 +570,31 @@ keyword <a class="reference internal" href="kosdelegate.html#global:DONOTHING" t
 </pre></div>
 </div>
 <div class="versionadded">
-<p><span class="versionmodified">New in version 1.1.0: </span>scripted Delegate callbacks such as this did not exist prior to kOS version 1.1.0</p>
+<p><span class="versionmodified added">New in version 1.1.0: </span>scripted Delegate callbacks such as this did not exist prior to kOS version 1.1.0</p>
 </div>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:VECDRAW:VECUPDATER">
-VecDraw:<code class="descname">VECUPDATER</code><a class="headerlink" href="#attribute:VECDRAW:VECUPDATER" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KosDelegate</span></code></a> with no parameters, returning a <a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>This allows you to tell the VecDraw that you&#8217;d like it to update the <code class="docutils literal"><span class="pre">VEC</span></code> suffix
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:VECDRAW:VECUPDATER">
+<span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">VECUPDATER</span></span><a class="headerlink" href="#attribute:VECDRAW:VECUPDATER" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KosDelegate</span></code></a> with no parameters, returning a <a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
+</dd>
+</dl>
+<p>This allows you to tell the VecDraw that you’d like it to update the <code class="docutils literal notranslate"><span class="pre">VEC</span></code> suffix
 of the vector regularly every update, according to your own scripted code.</p>
-<p>You create a <a class="reference internal" href="kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KosDelegate</span></code></a> that takes no parameters, and returns a vector,
-which the system will automatically assign to the <code class="xref ks ks-attr docutils literal"><span class="pre">VEC</span></code> suffix every update.
+<p>You create a <a class="reference internal" href="kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KosDelegate</span></code></a> that takes no parameters, and returns a vector,
+which the system will automatically assign to the <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VEC</span></code> suffix every update.
 Be aware that this system does eat into the instructions available per update, so if
-you make this delegate do too much work, it will slow down your script&#8217;s performance.</p>
+you make this delegate do too much work, it will slow down your script’s performance.</p>
 <p>To make the system stop calling your delegate, set this suffix to the magic
-keyword <a class="reference internal" href="kosdelegate.html#global:DONOTHING" title="DONOTHING global"><code class="xref ks ks-global docutils literal"><span class="pre">DONOTHING</span></code></a>.</p>
+keyword <a class="reference internal" href="kosdelegate.html#global:DONOTHING" title="DONOTHING global"><code class="xref ks ks-global docutils literal notranslate"><span class="pre">DONOTHING</span></code></a>.</p>
 <p>Example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// This example will spin the arrow around in a circle by leaving the start</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// This example will spin the arrow around in a circle by leaving the start</span>
 <span class="c1">// where it is but moving the tip by trig functions:</span>
 <span class="k">set</span> <span class="nv">vd</span> <span class="ow">to</span> <span class="nv">vecdraw</span><span class="p">(</span><span class="nv">v</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">),</span> <span class="nv">v</span><span class="p">(</span><span class="mf">5</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">),</span> <span class="nv">green</span><span class="p">,</span> <span class="s">&quot;spinning arrow&quot;</span><span class="p">,</span> <span class="mf">1</span><span class="p">.</span><span class="mf">0</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">2</span><span class="p">).</span>
 <span class="k">print</span> <span class="s">&quot;Moving the arrow in a circle for a few seconds.&quot;</span><span class="p">.</span>
@@ -699,39 +609,37 @@ keyword <a class="reference internal" href="kosdelegate.html#global:DONOTHING" t
 </pre></div>
 </div>
 <div class="versionadded">
-<p><span class="versionmodified">New in version 1.1.0: </span>scripted Delegate callbacks such as this did not exist prior to kOS version 1.1.0</p>
+<p><span class="versionmodified added">New in version 1.1.0: </span>scripted Delegate callbacks such as this did not exist prior to kOS version 1.1.0</p>
 </div>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:VECDRAW:VECTORUPDATER">
-VecDraw:<code class="descname">VECTORUPDATER</code><a class="headerlink" href="#attribute:VECDRAW:VECTORUPDATER" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is just an alias for <a class="reference internal" href="#attribute:VECDRAW:VECUPDATER" title="VECDRAW:VECUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VecDraw:VECUPDATER</span></code></a>.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:VECDRAW:VECTORUPDATER">
+<span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">VECTORUPDATER</span></span><a class="headerlink" href="#attribute:VECDRAW:VECTORUPDATER" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is just an alias for <a class="reference internal" href="#attribute:VECDRAW:VECUPDATER" title="VECDRAW:VECUPDATER attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VecDraw:VECUPDATER</span></code></a>.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:VECDRAW:COLORUPDATER">
-VecDraw:<code class="descname">COLORUPDATER</code><a class="headerlink" href="#attribute:VECDRAW:COLORUPDATER" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KosDelegate</span></code></a> with no parameters, returning a <code class="xref ks ks-struct docutils literal"><span class="pre">Color</span></code></td>
-</tr>
-</tbody>
-</table>
-<p>This allows you to tell the VecDraw that you&#8217;d like it to update the <code class="docutils literal"><span class="pre">COLOR</span></code>/<code class="docutils literal"><span class="pre">COLOUR</span></code>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:VECDRAW:COLORUPDATER">
+<span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">COLORUPDATER</span></span><a class="headerlink" href="#attribute:VECDRAW:COLORUPDATER" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KosDelegate</span></code></a> with no parameters, returning a <code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Color</span></code></p>
+</dd>
+</dl>
+<p>This allows you to tell the VecDraw that you’d like it to update the <code class="docutils literal notranslate"><span class="pre">COLOR</span></code>/<code class="docutils literal notranslate"><span class="pre">COLOUR</span></code>
 suffix of the vector regularly every update, according to your own scripted code.</p>
-<p>You create a <a class="reference internal" href="kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KosDelegate</span></code></a> that takes no parameters, and returns a Color,
-which the system will automatically assign to the <code class="xref ks ks-attr docutils literal"><span class="pre">COLOR</span></code> suffix every update.
+<p>You create a <a class="reference internal" href="kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KosDelegate</span></code></a> that takes no parameters, and returns a Color,
+which the system will automatically assign to the <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">COLOR</span></code> suffix every update.
 Be aware that this system does eat into the instructions available per update, so if
-you make this delegate do too much work, it will slow down your script&#8217;s performance.</p>
+you make this delegate do too much work, it will slow down your script’s performance.</p>
 <p>To make the system stop calling your delegate, set this suffix to the magic
-keyword <a class="reference internal" href="kosdelegate.html#global:DONOTHING" title="DONOTHING global"><code class="xref ks ks-global docutils literal"><span class="pre">DONOTHING</span></code></a>.</p>
+keyword <a class="reference internal" href="kosdelegate.html#global:DONOTHING" title="DONOTHING global"><code class="xref ks ks-global docutils literal notranslate"><span class="pre">DONOTHING</span></code></a>.</p>
 <p>Example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// This example will change how opaque the arrow is over time by changing</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// This example will change how opaque the arrow is over time by changing</span>
 <span class="c1">// the &#39;alpha&#39; of its color:</span>
 <span class="k">set</span> <span class="nv">vd</span> <span class="ow">to</span> <span class="nv">vecdraw</span><span class="p">(</span><span class="nv">v</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">),</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">north</span><span class="p">:</span><span class="nv">vector</span><span class="o">*</span><span class="mf">5</span><span class="p">,</span> <span class="nv">green</span><span class="p">,</span> <span class="s">&quot;fading arrow&quot;</span><span class="p">,</span> <span class="mf">1</span><span class="p">.</span><span class="mf">0</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">2</span><span class="p">).</span>
 <span class="k">print</span> <span class="s">&quot;Fading the arrow in and out for a few seconds.&quot;</span><span class="p">.</span>
@@ -745,86 +653,48 @@ keyword <a class="reference internal" href="kosdelegate.html#global:DONOTHING" t
 </pre></div>
 </div>
 <div class="versionadded">
-<p><span class="versionmodified">New in version 1.1.0: </span>scripted Delegate callbacks such as this did not exist prior to kOS version 1.1.0</p>
+<p><span class="versionmodified added">New in version 1.1.0: </span>scripted Delegate callbacks such as this did not exist prior to kOS version 1.1.0</p>
 </div>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:VECDRAW:COLOURUPDATER">
-VecDraw:<code class="descname">COLOURUPDATER</code><a class="headerlink" href="#attribute:VECDRAW:COLOURUPDATER" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is just an alias for <a class="reference internal" href="#attribute:VECDRAW:COLORUPDATER" title="VECDRAW:COLORUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VecDraw:COLORUPDATER</span></code></a>.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:VECDRAW:COLOURUPDATER">
+<span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">COLOURUPDATER</span></span><a class="headerlink" href="#attribute:VECDRAW:COLOURUPDATER" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is just an alias for <a class="reference internal" href="#attribute:VECDRAW:COLORUPDATER" title="VECDRAW:COLORUPDATER attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VecDraw:COLORUPDATER</span></code></a>.</p>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="versioninfo.html" class="btn btn-neutral float-right" title="Structure" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="timewarp.html" class="btn btn-neutral" title="WARP" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="timewarp.html" class="btn btn-neutral float-left" title="WARP" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="versioninfo.html" class="btn btn-neutral float-right" title="Structure" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

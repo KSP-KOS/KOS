@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>The kOS Telnet Server &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The kOS Telnet Server &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../about.html"/>
-        <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../index.html"/>
-        <link rel="up" title="General Topics" href="../general.html"/>
-        <link rel="next" title="Files and Volumes" href="volumes.html"/>
-        <link rel="prev" title="Making GUIs in kOS" href="gui.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="next" title="Files and Volumes" href="volumes.html" />
+    <link rel="prev" title="Making GUIs in kOS" href="gui.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
@@ -104,9 +55,7 @@
 <li class="toctree-l2"><a class="reference internal" href="kospartmodule.html">Game Part</a></li>
 <li class="toctree-l2"><a class="reference internal" href="settingsWindows.html">Settings Windows</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gui.html">Making User GUIs</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Telnet Server</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Telnet Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="volumes.html">Files &amp; Volumes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="skid.html">Sound Chip (SKID)</a></li>
@@ -126,64 +75,45 @@
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../general.html">General Topics</a> &raquo;</li>
-      
-    <li>The kOS Telnet Server</li>
+      <li>The kOS Telnet Server</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../_sources/general/telnet.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../_sources/general/telnet.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="the-kos-telnet-server">
-<span id="telnet"></span><h1>The kOS Telnet Server<a class="headerlink" href="#the-kos-telnet-server" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="the-kos-telnet-server">
+<span id="telnet"></span><h1>The kOS Telnet Server<a class="headerlink" href="#the-kos-telnet-server" title="Permalink to this heading">¶</a></h1>
 <p>kOS now supports the ability to enable a <a class="reference external" href="http://www.telnet.org/htm/faq.htm">telnet server</a>
 inside Kerbal Space Program.</p>
 <div style="margin-top:10px;">
     <iframe width="560" height="315" src="https://www.youtube.com/embed/CgwRY-OrPhI?list=PLdXwd2JlyAvo_pH1tS3P7elVTYjvmIh-m" frameborder="0" allowfullscreen></iframe>
 </div><div class="admonition warning">
-<p class="first admonition-title">Warning</p>
+<p class="admonition-title">Warning</p>
 <p>To use this feature you <strong>must</strong> make sure you have the main game
-option &#8220;Simulate in Background&#8221; turned <strong>on</strong>.  It can be found in
-Kerbal Space Program&#8217;s main menu settings screen, under
-&#8220;General&#8221; settings.</p>
-<p class="last">More explanation can be found further down this page in the
-section titled &#8220;Simulate in Background&#8221;.</p>
+option “Simulate in Background” turned <strong>on</strong>.  It can be found in
+Kerbal Space Program’s main menu settings screen, under
+“General” settings.</p>
+<p>More explanation can be found further down this page in the
+section titled “Simulate in Background”.</p>
 </div>
 <p>Telnet is an old network protocol designed in the early days of the Internet, long
 before World Wide Web.  Its purpose was (is) to allow you to get access to the
@@ -197,90 +127,88 @@ in the section called <a class="reference internal" href="#telnet-clients">Telne
 <p>There are some <em>security implications</em> of enabling the kOS telnet server, and the
 first time you turn it on you will see some warning messages to this effect.
 If you want to read further about these concerns before deciding to turn it
-on, see the section called &#8220;<a class="reference internal" href="#security">Security</a>&#8221; at the bottom of this page.</p>
-<div class="contents local topic" id="contents">
+on, see the section called “<a class="reference internal" href="#security">Security</a>” at the bottom of this page.</p>
+<nav class="contents local" id="contents">
 <ul class="simple">
-<li><a class="reference internal" href="#telnet-clients" id="id4">Telnet clients</a></li>
-<li><a class="reference internal" href="#simulate-in-background" id="id5">Simulate in Background</a></li>
-<li><a class="reference internal" href="#using-it" id="id6">Using it</a></li>
-<li><a class="reference internal" href="#special-keys" id="id7">Special Keys</a></li>
-<li><a class="reference internal" href="#howto-putty-client" id="id8">HOWTO: Putty client</a></li>
-<li><a class="reference internal" href="#howto-command-line-client" id="id9">HOWTO: Command-line client</a></li>
-<li><a class="reference internal" href="#howto-other-client" id="id10">HOWTO: Other client</a></li>
-<li><a class="reference internal" href="#security" id="id11">Security</a></li>
-<li><a class="reference internal" href="#homemade-telnet-clients" id="id12">Homemade telnet clients</a></li>
+<li><p><a class="reference internal" href="#telnet-clients" id="id4">Telnet clients</a></p></li>
+<li><p><a class="reference internal" href="#simulate-in-background" id="id5">Simulate in Background</a></p></li>
+<li><p><a class="reference internal" href="#using-it" id="id6">Using it</a></p></li>
+<li><p><a class="reference internal" href="#special-keys" id="id7">Special Keys</a></p></li>
+<li><p><a class="reference internal" href="#howto-putty-client" id="id8">HOWTO: Putty client</a></p></li>
+<li><p><a class="reference internal" href="#howto-command-line-client" id="id9">HOWTO: Command-line client</a></p></li>
+<li><p><a class="reference internal" href="#howto-other-client" id="id10">HOWTO: Other client</a></p></li>
+<li><p><a class="reference internal" href="#security" id="id11">Security</a></p></li>
+<li><p><a class="reference internal" href="#homemade-telnet-clients" id="id12">Homemade telnet clients</a></p></li>
 </ul>
-</div>
-<div class="figure">
+</nav>
+<figure class="align-default">
 <a class="reference internal image-reference" href="../_images/telnet.png"><img alt="../_images/telnet.png" src="../_images/telnet.png" style="width: 95%;" /></a>
-</div>
-<div class="section" id="telnet-clients">
-<h2><a class="toc-backref" href="#id4">Telnet clients</a><a class="headerlink" href="#telnet-clients" title="Permalink to this headline">¶</a></h2>
+</figure>
+<section id="telnet-clients">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Telnet clients</a><a class="headerlink" href="#telnet-clients" title="Permalink to this heading">¶</a></h2>
 <p>The telnet server for kOS requires the use of a
 <a class="reference external" href="http://www.telnet.org/htm/applications.htm">telnet client program</a>. We
 recommend the following programs, although you can use others:</p>
-<dl class="docutils">
-<dt>For Windows</dt>
-<dd>We recommend <a class="reference external" href="http://www.putty.org/">Putty</a>, the free terminal emulator
+<dl class="simple">
+<dt>For Windows</dt><dd><p>We recommend <a class="reference external" href="http://www.putty.org/">Putty</a>, the free terminal emulator
 for Windows, although any good terminal emulator should do the job,
-provided it is capable of operating in an &#8220;XTERM - compatible&#8221; mode.</dd>
-<dt>For Mac</dt>
-<dd>You shouldn&#8217;t have to install anything.  There should be a telnet client
+provided it is capable of operating in an “XTERM - compatible” mode.</p>
+</dd>
+<dt>For Mac</dt><dd><p>You shouldn’t have to install anything.  There should be a telnet client
 already installed, which you can access by opening up your command terminal,
 and then running it as a command-line tool.  To see how to use it, read
-below in the section titled &#8220;<a class="reference internal" href="#howto-command-line-client">HOWTO: Command-line client</a>&#8221;.  The built-in
+below in the section titled “<a class="reference internal" href="#howto-command-line-client">HOWTO: Command-line client</a>”.  The built-in
 Terminal.app for OSX understands the XTERM command sequences that kOS uses
 and in fact identifies itself as a type of XTERM when used with a telnet
-client.</dd>
-<dt>For Linux</dt>
-<dd>You shouldn&#8217;t have to install anything.  There should be a telnet client
+client.</p>
+</dd>
+<dt>For Linux</dt><dd><p>You shouldn’t have to install anything.  There should be a telnet client
 already installed, and an xterm program already installed in most any Linux
 distribution.  Open an xterm window, and in that window type the telnet
-command, as described by the section titled &#8220;<a class="reference internal" href="#howto-command-line-client">HOWTO: Command-line client</a>&#8220;</dd>
+command, as described by the section titled “<a class="reference internal" href="#howto-command-line-client">HOWTO: Command-line client</a>”</p>
+</dd>
 </dl>
-</div>
-<div class="section" id="simulate-in-background">
-<h2><a class="toc-backref" href="#id5">Simulate in Background</a><a class="headerlink" href="#simulate-in-background" title="Permalink to this headline">¶</a></h2>
-<p>To use the kOS telnet feature, you must have the stock KSP game&#8217;s
-option called &#8220;Simulate in Background&#8221; turned on.  This option
-is found on Kerbal Space Program&#8217;s &#8220;General&#8221; settings screen
+</section>
+<section id="simulate-in-background">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Simulate in Background</a><a class="headerlink" href="#simulate-in-background" title="Permalink to this heading">¶</a></h2>
+<p>To use the kOS telnet feature, you must have the stock KSP game’s
+option called “Simulate in Background” turned on.  This option
+is found on Kerbal Space Program’s “General” settings screen
 (Note, this is the settings screen you find on the
 <em>title screen</em> of the game, NOT the smaller subset of settings
-you find on the &#8220;escape&#8221; menu in-game.)</p>
+you find on the “escape” menu in-game.)</p>
 <p><strong>Why?</strong> Because when that option is turned off, the entire KSP
 game is paused any time you switch focus to a different program
 on your computer other than KSP.  When the game is thusly paused,
-the kOS telnet server inside the game is frozen and can&#8217;t respond
+the kOS telnet server inside the game is frozen and can’t respond
 to anything the telnet client sends it.  (If you are typing into a
 telnet client program on your computer, then <em>that</em> will be the
 the focussed window instead of the KSP game, so this issue will
 come up the majority of the time.)</p>
-</div>
-<div class="section" id="using-it">
-<h2><a class="toc-backref" href="#id6">Using it</a><a class="headerlink" href="#using-it" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="using-it">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Using it</a><a class="headerlink" href="#using-it" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic">
-<li><p class="first">Turn on the telnet server by going into the app control panel and clicking
-on the green circle next to the word &#8220;Telnet&#8221;.  Alternatively, you can
+<li><p>Turn on the telnet server by going into the app control panel and clicking
+on the green circle next to the word “Telnet”.  Alternatively, you can
 issue the command:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">CONFIG</span><span class="p">:</span><span class="nv">TELNET</span> <span class="ow">TO</span> <span class="nb">TRUE</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">CONFIG</span><span class="p">:</span><span class="nv">TELNET</span> <span class="ow">TO</span> <span class="nb">TRUE</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>from any terminal window in kOS.</p>
 </li>
-<li><p class="first">The very first time you do this, you will get a warning message, as per
-<a class="reference external" href="http://forum.kerbalspaceprogram.com/threads/87843-Forum-Rules-Add-on-Posting-Rules-August-21st-2014">SQUAD&#8217;s rule number 5 about mods that run network services</a>.
-After accepting and clicking &#8220;yes&#8221;, the server will be running on loopback
+<li><p>The very first time you do this, you will get a warning message, as per
+<a class="reference external" href="http://forum.kerbalspaceprogram.com/threads/87843-Forum-Rules-Add-on-Posting-Rules-August-21st-2014">SQUAD’s rule number 5 about mods that run network services</a>.
+After accepting and clicking “yes”, the server will be running on loopback
 127.0.0.1 (if you want to make it run on a non-loopback address, you will
-get a secondary warning message about that too.)</p>
-</li>
-<li><p class="first">Launch your telnet client (there is a list of telnet clients that are known
-to work listed below.</p>
-</li>
+get a secondary warning message about that too.)</p></li>
+<li><p>Launch your telnet client (there is a list of telnet clients that are known
+to work listed below.</p></li>
 </ol>
 <ol class="arabic" start="4">
-<li><p class="first">When you first log in to the server you should see the &#8220;Welcome menu&#8221;, which is a
+<li><p>When you first log in to the server you should see the “Welcome menu”, which is a
 screen looking like this:</p>
-<div class="highlight-none"><div class="highlight"><pre><span></span>Terminal: type = XTERM, size = 80x24
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Terminal: type = XTERM, size = 80x24
 ________________________________________________________________________________
               Menu GUI   Other
               Pick Open Telnets  Vessel Name (CPU tagname)
@@ -301,8 +229,8 @@ as the first character on a new command line.)
 &gt;_
 </pre></div>
 </div>
-<p>Or, if there are no CPU&#8217;s within range, it will look like this:</p>
-<div class="highlight-none"><div class="highlight"><pre><span></span>Terminal: type = XTERM, size = 80x24
+<p>Or, if there are no CPU’s within range, it will look like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Terminal: type = XTERM, size = 80x24
 ________________________________________________________________________________
               Menu GUI   Other
               Pick Open Telnets  Vessel Name (CPU tagname)
@@ -312,224 +240,228 @@ ________________________________________________________________________________
 </div>
 <p>At any moment you can force a redraw of the menu by entering any gibberish non-
 numeric data and hitting enter.</p>
-<p>This menu should match 1:1 with the list of CPU&#8217;s you see on the kOS applauncher
+<p>This menu should match 1:1 with the list of CPU’s you see on the kOS applauncher
 control panel.</p>
 </li>
 </ol>
-<div class="figure" id="id1">
+<figure class="align-default" id="id1">
 <a class="reference internal image-reference" href="../_images/telnet_welcomemenu.png"><img alt="../_images/telnet_welcomemenu.png" src="../_images/telnet_welcomemenu.png" style="width: 75%;" /></a>
-<p class="caption"><span class="caption-text">The welcome menu, shown here in a Mac OSX terminal.</span></p>
-</div>
+<figcaption>
+<p><span class="caption-text">The welcome menu, shown here in a Mac OSX terminal.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <ol class="arabic simple" start="5">
-<li><strong>Pick a CPU.</strong>  Pick one of the CPU&#8217;s listed by typing its number and hitting enter.</li>
-<li>Your telnet is now connected to the server and should behave as the terminal for
+<li><p><strong>Pick a CPU.</strong>  Pick one of the CPU’s listed by typing its number and hitting enter.</p></li>
+<li><p>Your telnet is now connected to the server and should behave as the terminal for
 that CPU.  You can type commands and do what you like, the same as if you had been
-directly on its window.</li>
-<li>See the section labeled <a class="reference internal" href="#special-keys">Special Keys</a> to see how to use the keyboard from your
-telnet client.</li>
-<li>It is possible to have multiple terminals hooked up to the same in-game CPU.  They
-will all behave as clones of each other, each being an equal &#8220;first citizen&#8221;.
-(For example a pair of people could execute the &#8220;stage.&#8221; command by having one
-of them type &#8220;st&#8221;, then the other types &#8220;age&#8221;, followed by the first person
-typing &#8221;.&#8221; and the return key.)  All the keyboards and all the screens are
+directly on its window.</p></li>
+<li><p>See the section labeled <a class="reference internal" href="#special-keys">Special Keys</a> to see how to use the keyboard from your
+telnet client.</p></li>
+<li><p>It is possible to have multiple terminals hooked up to the same in-game CPU.  They
+will all behave as clones of each other, each being an equal “first citizen”.
+(For example a pair of people could execute the “stage.” command by having one
+of them type “st”, then the other types “age”, followed by the first person
+typing “.” and the return key.)  All the keyboards and all the screens are
 slaved together to be equal.  You can view the in-game gui terminal while
-somebody is typing on a telnet temrinal.</li>
-<li>In order to make the terminals act as clones of each other, the game will attempt
+somebody is typing on a telnet temrinal.</p></li>
+<li><p>In order to make the terminals act as clones of each other, the game will attempt
 to keep them all the same size.  If you resize your telnet client window, it should
 cause the in-game window to change size to match.  (If your terminal type is XTERM,
-then the same thing works in reverse.  If it&#8217;s VT100 then it doesn&#8217;t.)</li>
+then the same thing works in reverse.  If it’s VT100 then it doesn’t.)</p></li>
 </ol>
 <div class="admonition warning">
-<p class="first admonition-title">Warning</p>
+<p class="admonition-title">Warning</p>
 <p>Certain implementations of the xterm terminal emulation and the telnet client have
 created a strange unending cascade of terminal resizes when you have two different
 telnet clients connected to the same GUI terminal and one of them is dragged to a
-new size.  Because some implementations don&#8217;t wait until they&#8217;re done resizing to
+new size.  Because some implementations don’t wait until they’re done resizing to
 report their new size through telnet and instead report their intermediate sizes as
 they are being stretched, the attempt to keep them the same size causes them to
-effectively &#8220;argue&#8221; back and forth with each other, constantly changing each
-other&#8217;s size.   If you experience this problem (your terminal window will be
+effectively “argue” back and forth with each other, constantly changing each
+other’s size.   If you experience this problem (your terminal window will be
 flipping back and forth between two different sizes, resizing itself over and over
 again in a neverending loop), you can try to get out of it by issuing a hardcoded
 command to set the terminal size, such as:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">TERMINAL</span><span class="p">:</span><span class="nv">WIDTH</span> <span class="ow">TO</span> <span class="mf">50</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">TERMINAL</span><span class="p">:</span><span class="nv">WIDTH</span> <span class="ow">TO</span> <span class="mf">50</span><span class="p">.</span>
 </pre></div>
 </div>
-<p class="last">Doing this should force all the connected telnet XTERM windows to stop arguing with
+<p>Doing this should force all the connected telnet XTERM windows to stop arguing with
 each other about what the size is, and get them synced up again.</p>
 </div>
 <ol class="arabic simple" start="10">
-<li>At any time you may disconnect your telnet client from the terminal by hitting
+<li><p>At any time you may disconnect your telnet client from the terminal by hitting
 control-D as the first character of a new line.  This will bring you back to
-the telnet welcome menu again.</li>
+the telnet welcome menu again.</p></li>
 </ol>
-</div>
-<div class="section" id="special-keys">
-<h2><a class="toc-backref" href="#id7">Special Keys</a><a class="headerlink" href="#special-keys" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="special-keys">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Special Keys</a><a class="headerlink" href="#special-keys" title="Permalink to this heading">¶</a></h2>
 <p>The following keys have special meaning in the telnet session:</p>
-<dl class="docutils">
-<dt>Control-L</dt>
-<dd><strong>Force refresh</strong> Pressing Control-L forces the kOS telnet server to
+<dl class="simple">
+<dt>Control-L</dt><dd><p><strong>Force refresh</strong> Pressing Control-L forces the kOS telnet server to
 redraw your whole screen for you from scratch.  This is useful if
 you encounter strange line noise, interrupted messages, or for
-just any occasion where you suspect the screen isn&#8217;t being drawn
+just any occasion where you suspect the screen isn’t being drawn
 correctly.  Pressing control-L will ensure your display gets
-fully re-synced with what&#8217;s in the buffer in memory for the
-terminal.</dd>
-<dt>Control-C</dt>
-<dd><strong>interrupt process</strong> This is the same meaning as control-C in the normal
+fully re-synced with what’s in the buffer in memory for the
+terminal.</p>
+</dd>
+<dt>Control-C</dt><dd><p><strong>interrupt process</strong> This is the same meaning as control-C in the normal
 GUI terminal - it breaks the program execution.  The reason it gets a special
 mention here is that it also causes a flush of all the pending input you may
-have typed ahead in the queue.  If you&#8217;ve been typing blindly ahead, and then
+have typed ahead in the queue.  If you’ve been typing blindly ahead, and then
 hit Control-C, it will erase your typed-ahead keys as it sends the interrupt
 to the server.  This is deliberate, and typical practice for an interrupt
-character sent over a remote shell setting.</dd>
-<dt>Control-D</dt>
-<dd><strong>detach</strong> If you hit control-D as the first character of a new line, it will
-detach your telnet session from the CPU and return you to the welcome menu.</dd>
-<dt>Cursor Keys</dt>
-<dd><strong>should be mapped</strong> If your terminal has identified itself as one of the known
+character sent over a remote shell setting.</p>
+</dd>
+<dt>Control-D</dt><dd><p><strong>detach</strong> If you hit control-D as the first character of a new line, it will
+detach your telnet session from the CPU and return you to the welcome menu.</p>
+</dd>
+<dt>Cursor Keys</dt><dd><p><strong>should be mapped</strong> If your terminal has identified itself as one of the known
 types that kOS supports, it should understand your arrow keys as arrow keys.
-If you see the text &#8220;[A&#8221; when you type up-arrow, or &#8220;[C&#8221; when you type right-arrow,
-this is a clue that kOS didn&#8217;t recognize your terminal type properly.</dd>
-<dt>Other Keys</dt>
-<dd><strong>might be mapped</strong> Some keys like the Del (to the right), Home, and End keys are
+If you see the text “[A” when you type up-arrow, or “[C” when you type right-arrow,
+this is a clue that kOS didn’t recognize your terminal type properly.</p>
+</dd>
+<dt>Other Keys</dt><dd><p><strong>might be mapped</strong> Some keys like the Del (to the right), Home, and End keys are
 often not mapped correctly in some terminal emulator programs.  If you have
 trouble using HOME and END, you can try Control-A and Control-E as alternates for
-Home and End.</dd>
-<dt>Control-A</dt>
-<dd><strong>home</strong> This is an alternate way to press the &#8220;home&#8221; key, just in case your terminal
-emulation isn&#8217;t sending the officially understood terminal code for it.</dd>
-<dt>Control-E</dt>
-<dd><strong>end</strong> This is an alternate way to press the &#8220;end&#8221; key, just in case your terminal
-emulation isn&#8217;t sending the officially understood terminal code for it.</dd>
-<dt>Control-H</dt>
-<dd><strong>backspace</strong> This is an alternate way to press the &#8220;backspace&#8221; key, just
-in case your terminal emulation isn&#8217;t sending the officially understood
-terminal code for it.</dd>
-<dt>Control-M</dt>
-<dd><strong>Return</strong> This is an alternate way to press the &#8220;enter&#8221; or &#8220;return&#8221; key,
-just in case your terminal emulation isn&#8217;t sending the officially understood
-terminal code for it.</dd>
+Home and End.</p>
+</dd>
+<dt>Control-A</dt><dd><p><strong>home</strong> This is an alternate way to press the “home” key, just in case your terminal
+emulation isn’t sending the officially understood terminal code for it.</p>
+</dd>
+<dt>Control-E</dt><dd><p><strong>end</strong> This is an alternate way to press the “end” key, just in case your terminal
+emulation isn’t sending the officially understood terminal code for it.</p>
+</dd>
+<dt>Control-H</dt><dd><p><strong>backspace</strong> This is an alternate way to press the “backspace” key, just
+in case your terminal emulation isn’t sending the officially understood
+terminal code for it.</p>
+</dd>
+<dt>Control-M</dt><dd><p><strong>Return</strong> This is an alternate way to press the “enter” or “return” key,
+just in case your terminal emulation isn’t sending the officially understood
+terminal code for it.</p>
+</dd>
 </dl>
-</div>
-<div class="section" id="howto-putty-client">
-<h2><a class="toc-backref" href="#id8">HOWTO: Putty client</a><a class="headerlink" href="#howto-putty-client" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="howto-putty-client">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">HOWTO: Putty client</a><a class="headerlink" href="#howto-putty-client" title="Permalink to this heading">¶</a></h2>
 <p>(These instructions assume you use the default kOS Telnet server settings, of
-the loopback address 127.0.0.1, and port number 5410.  If you&#8217;ve changed those
+the loopback address 127.0.0.1, and port number 5410.  If you’ve changed those
 settings then alter the numbers you see here accordingly.)</p>
 <ol class="arabic simple">
-<li>Run KSP, and get it into a scene where there exists a vessel
-with at least one kOS CPU loaded into it.</li>
-<li>Run Putty.</li>
-<li>On the first dialog you see, click the <em>Telnet</em> radio-button selection.</li>
-<li>Type in the number 127.0.0.1 in the large blank above the radio
-buttons that is labeled <em>&#8220;Host Name (or IP address)&#8221;</em>.</li>
-<li>Type in the number 5410 in the smaller blank to the right of it
-that is labeled <em>&#8220;Port&#8221;</em>.</li>
-<li>At the bottom of the screen, select the radio button labeled
-<em>&#8220;Never&#8221;</em> under <em>&#8220;Close window on exit&#8221;</em>.</li>
-<li>Click the <em>Open</em> button to connect to the server.</li>
+<li><p>Run KSP, and get it into a scene where there exists a vessel
+with at least one kOS CPU loaded into it.</p></li>
+<li><p>Run Putty.</p></li>
+<li><p>On the first dialog you see, click the <em>Telnet</em> radio-button selection.</p></li>
+<li><p>Type in the number 127.0.0.1 in the large blank above the radio
+buttons that is labeled <em>“Host Name (or IP address)”</em>.</p></li>
+<li><p>Type in the number 5410 in the smaller blank to the right of it
+that is labeled <em>“Port”</em>.</p></li>
+<li><p>At the bottom of the screen, select the radio button labeled
+<em>“Never”</em> under <em>“Close window on exit”</em>.</p></li>
+<li><p>Click the <em>Open</em> button to connect to the server.</p></li>
 </ol>
 <p>(You can also save these settings under a name for later re-use.)</p>
 <p>Step 6 is important.  Without it, Putty would just make the window disappear any
-time there&#8217;s a problem, making it very hard to diagnose because you can&#8217;t see what
+time there’s a problem, making it very hard to diagnose because you can’t see what
 message the server was sending back to you just before the window went away.</p>
-</div>
-<div class="section" id="howto-command-line-client">
-<h2><a class="toc-backref" href="#id9">HOWTO: Command-line client</a><a class="headerlink" href="#howto-command-line-client" title="Permalink to this headline">¶</a></h2>
-<div class="figure" id="id2">
+</section>
+<section id="howto-command-line-client">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">HOWTO: Command-line client</a><a class="headerlink" href="#howto-command-line-client" title="Permalink to this heading">¶</a></h2>
+<figure class="align-default" id="id2">
 <a class="reference internal image-reference" href="../_images/telnet_xterm.png"><img alt="../_images/telnet_xterm.png" src="../_images/telnet_xterm.png" style="width: 75%;" /></a>
-<p class="caption"><span class="caption-text">Showing the use of telnet in an x-term window.</span></p>
-</div>
-<div class="figure" id="id3">
+<figcaption>
+<p><span class="caption-text">Showing the use of telnet in an x-term window.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id3">
 <a class="reference internal image-reference" href="../_images/telnet_macterminal.png"><img alt="../_images/telnet_macterminal.png" src="../_images/telnet_macterminal.png" style="width: 75%;" /></a>
-<p class="caption"><span class="caption-text">Showing the use of telnet in a Mac OSX terminal.</span></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Showing the use of telnet in a Mac OSX terminal.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>(These instructions assume you use the default kOS Telnet server settings, of
-the loopback address 127.0.0.1, and port number 5410.  If you&#8217;ve changed those
+the loopback address 127.0.0.1, and port number 5410.  If you’ve changed those
 settings then alter the numbers you see here accordingly.)</p>
 <ol class="arabic">
-<li><p class="first">Run KSP, and get it into a scene where there exists a vessel with
+<li><p>Run KSP, and get it into a scene where there exists a vessel with
 at least one
-kOS CPU loaded into it.</p>
-</li>
-<li><p class="first">Open a command shell window that either <em>IS</em> xterm, or emulates xterm.  For
+kOS CPU loaded into it.</p></li>
+<li><p>Open a command shell window that either <em>IS</em> xterm, or emulates xterm.  For
 OSX, the default command shell should work fine.  For Linux, you should
-actually have the xterm program itself installed that you can use.</p>
-</li>
-<li><p class="first">At the shell prompt in that window, enter the command:</p>
-<div class="highlight-none"><div class="highlight"><pre><span></span>telnet 127.0.0.1 5410
+actually have the xterm program itself installed that you can use.</p></li>
+<li><p>At the shell prompt in that window, enter the command:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>telnet 127.0.0.1 5410
 </pre></div>
 </div>
 </li>
 </ol>
-</div>
-<div class="section" id="howto-other-client">
-<h2><a class="toc-backref" href="#id10">HOWTO: Other client</a><a class="headerlink" href="#howto-other-client" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="howto-other-client">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">HOWTO: Other client</a><a class="headerlink" href="#howto-other-client" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic simple">
-<li>Set the IP address to 127.0.0.1 using whatever means the program has for it.</li>
-<li>Set the port number to 5410 using whatever means the program has for it.</li>
-<li>Set the terminal to XTERM emulation mode if it has it, or VT100 mode as a
-less good, but still perhaps workable option.</li>
-<li>Run the terminal.</li>
+<li><p>Set the IP address to 127.0.0.1 using whatever means the program has for it.</p></li>
+<li><p>Set the port number to 5410 using whatever means the program has for it.</p></li>
+<li><p>Set the terminal to XTERM emulation mode if it has it, or VT100 mode as a
+less good, but still perhaps workable option.</p></li>
+<li><p>Run the terminal.</p></li>
 </ol>
-</div>
-<div class="section" id="security">
-<h2><a class="toc-backref" href="#id11">Security</a><a class="headerlink" href="#security" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="security">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">Security</a><a class="headerlink" href="#security" title="Permalink to this heading">¶</a></h2>
 <p>The telnet protocol performs no encryption of its data, and as such any attempt
 at securing the system using a name/password combination would have been
-utterly pointless.  Rather than provide a false sense of security that&#8217;s not
-really there, we decided to make it obvious that there&#8217;s no security by not
+utterly pointless.  Rather than provide a false sense of security that’s not
+really there, we decided to make it obvious that there’s no security by not
 even implementing a name and password for connecting to the kOS telnet server.</p>
 <p>The purpose is to make it clear that if you want to open up your kOS telnet
 server, you need to be careful about how you do it.</p>
 <p>The default settings that kOS ships with sets your kOS telnet server to
-operate on the loopback address (127.0.0.1) so that you won&#8217;t accidentally
+operate on the loopback address (127.0.0.1) so that you won’t accidentally
 open anything up to the public without thinking about it and making a conscious
-decision to do so.  If you don&#8217;t know what that means, it means this:
-Any server that runs on the magic special address 127.0.0.1, known as &#8220;loopback&#8221;,
+decision to do so.  If you don’t know what that means, it means this:
+Any server that runs on the magic special address 127.0.0.1, known as “loopback”,
 is incapable of taking connections from other computers besides itself.</p>
 <p>In order to allow your kOS telnet server to take connections from other
 computers, you will typically need to do one of two things:</p>
 <p>Either set the CONFIG:IPADDRESS option to the address of your computer and then
 restart your telnet server (turn it off and on again using the button on the
 control panel), or (much better), set up a remote ssh tunnel that will map
-from your current machine&#8217;s loopback address on the port number of your server to
+from your current machine’s loopback address on the port number of your server to
 some remote other computer you want to connect from, to a port on it.  The ssh
 tunnel is the preferred method, but describing how to set one up is beyond the
 scope of this document.  You can read more
 <a class="reference external" href="http://realprogrammers.com/how_to/set_up_an_ssh_tunnel_with_putty.html">For windows</a> or
 <a class="reference external" href="http://www.cyberciti.biz/faq/set-up-ssh-tunneling-on-a-linux-unix-bsd-server-to-bypass-nat/">For UNIX (both Mac and Linux)</a>.</p>
-<p>Example: Let&#8217;s say you have a remote Unix machine you&#8217;d like to enable logins from,
-from there and nowhere else.  You can forward from your own machine&#8217;s
-127.0.0.1, port 5410, to the remote machine&#8217;s, oh let&#8217;s say 127.0.0.1, port 54100.
+<p>Example: Let’s say you have a remote Unix machine you’d like to enable logins from,
+from there and nowhere else.  You can forward from your own machine’s
+127.0.0.1, port 5410, to the remote machine’s, oh let’s say 127.0.0.1, port 54100.
 Then anyone on the remote machine could telnet to ITS 127.0.0.1, port 54100 and
-end up talking to your machine&#8217;s port 5410 on its loopback address.</p>
+end up talking to your machine’s port 5410 on its loopback address.</p>
 <p><strong>Port forwarding</strong></p>
 <p>If you opt to use a non-loopback address on your kOS telnet server, then you
 will probably also, if you have a typical home network setup, need to enable
 port forwarding on your router if you want people from outside your house to
 connect to it.  (Again, think about the implications of doing so before you do it).
 This is a topic beyond the scope of this document, but help can be found out on
-the web for it.  Search for &#8220;port forward home router&#8221;.  (It is probably also a
+the web for it.  Search for “port forward home router”.  (It is probably also a
 good idea to include the make &amp; model number of your router device in your search
-terms, to get a nicely narrowed result that&#8217;s exactly what you need.)</p>
+terms, to get a nicely narrowed result that’s exactly what you need.)</p>
 <p><strong>Why not ssh?</strong></p>
 <p>The original plan for kOS was to include an ssh server
 instead of a telnet server.  However this proved problematic as open source
-solutions in C# for the server-side of ssh were hard to come by (there&#8217;s several
-for the client side only, and plenty of server-side code that&#8217;s not in C#), and
+solutions in C# for the server-side of ssh were hard to come by (there’s several
+for the client side only, and plenty of server-side code that’s not in C#), and
 implementing the entire server side of the ssh protocol from scratch is a
 daunting task that would have taken too much time away from other development
 of kOS.  (While implementing from scratch the server side of the older, simpler
 telnet protocol, while still work, was more doable).</p>
-</div>
-<div class="section" id="homemade-telnet-clients">
-<h2><a class="toc-backref" href="#id12">Homemade telnet clients</a><a class="headerlink" href="#homemade-telnet-clients" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="homemade-telnet-clients">
+<h2><a class="toc-backref" href="#id12" role="doc-backlink">Homemade telnet clients</a><a class="headerlink" href="#homemade-telnet-clients" title="Permalink to this heading">¶</a></h2>
 <p>This section is only of interest to hobbyists making Kerbal console hardware rigs
 and software developers trying to make interface mods that pretend to be
-kOS terminals.  If you are neither of those two, then don&#8217;t worry if this section
+kOS terminals.  If you are neither of those two, then don’t worry if this section
 looks like gibberish to you.  It can be skipped.</p>
 <p><strong>TELNET PROTOCOL</strong></p>
 <p>If you wish to make your own homemade telnet client and connect it up to the
@@ -537,38 +469,38 @@ kOS telnet server, the following is the required subset of the telnet protocol
 that your telnet client must speak, and the terminal requirements it must
 fulfill:</p>
 <ol class="arabic simple">
-<li>It must suppress local character echoing, and enter character-at-a-time mode,
+<li><p>It must suppress local character echoing, and enter character-at-a-time mode,
 by implementing both the ECHO negotiation
 <a class="reference external" href="http://www.networksorcery.com/enp/rfc/rfc857.txt">described by RFC857</a>, and
 the SUPPRESS GO AHEAD negotiation
 <a class="reference external" href="http://www.networksorcery.com/enp/rfc/rfc858.txt">described by RFC858</a>. These are
 used in the following way:  Your client must NOT ECHo (letting the server do it),
-and your client must suppress go-ahead messages (allowing real-time back-and-forth).</li>
-<li>It must implement the underlying DO/DONT and WILL/WONT, and SB/SE infrastructure of
+and your client must suppress go-ahead messages (allowing real-time back-and-forth).</p></li>
+<li><p>It must implement the underlying DO/DONT and WILL/WONT, and SB/SE infrastructure of
 the main <a class="reference external" href="http://www.networksorcery.com/enp/rfc/rfc854.txt">telnet RFC854</a>.  It must
 send break (ctrl-C) as the IP interrupt process command (byte 255 followed by 244).
 kOS does not use much of the negotiations of the protocol mentioned on RFC854, other
-than those that are necessary to enable the other ones mentioned here.</li>
-<li>It must implement the Terminal-Type option
+than those that are necessary to enable the other ones mentioned here.</p></li>
+<li><p>It must implement the Terminal-Type option
 <a class="reference external" href="http://www.networksorcery.com/enp/rfc/rfc1091.txt">described by RFC1091</a>.
 Furthermore, as of this writing, kOS only knows how to understand two terminal types,
-&#8220;XTERM&#8221;, and &#8220;VT100&#8221;.  If your terminal type is identified as anything else, kOS
+“XTERM”, and “VT100”.  If your terminal type is identified as anything else, kOS
 may deny your connection, or at the very least just not work right.  Even terminals
-that are capable of emulating XTERM or VT100 commands won&#8217;t work right if they
-don&#8217;t identify themselves as XTERM or VT100.  kOS does not know how to guess what
-emulation mode to enter if it doesn&#8217;t recognize your terminal type string.</li>
-<li>It must implement the NAWS, Negotiate About Terminal Size option, as
+that are capable of emulating XTERM or VT100 commands won’t work right if they
+don’t identify themselves as XTERM or VT100.  kOS does not know how to guess what
+emulation mode to enter if it doesn’t recognize your terminal type string.</p></li>
+<li><p>It must implement the NAWS, Negotiate About Terminal Size option, as
 <a class="reference external" href="http://www.networksorcery.com/enp/rfc/rfc1073.txt">described by RFC1073</a>.
 kOS uses this to decide how to size its mental image of your terminal to match
-your terminal&#8217;s real size.  Note that this negotiation is one-way.  Your client
-can use it to tell the server about its size, but the server can&#8217;t use it to
+your terminal’s real size.  Note that this negotiation is one-way.  Your client
+can use it to tell the server about its size, but the server can’t use it to
 tell your client to change its size.  Instead if your client can respond to changing
 sizes at the behest of the server, it must do so through terminal escape code
 characters sent back to it on the stream, above the telnet protocol layer itself.
 (For example, if you identify as XTERM, you will be sent the XTERM escape code
 pattern ESC [ 8 ; <em>height</em> ; <em>width</em> t, which is the XTERM escape code for setting
 the terminal size.)  This is because the telnet protocol was never written to
-accommodate the concept of server-initiated resizes.</li>
+accommodate the concept of server-initiated resizes.</p></li>
 </ol>
 <p>Making a telnet client from scratch that actually follows protocol may be a complex
 enough task that the smarter solution is to just use an existing telnet program, if
@@ -579,147 +511,109 @@ telnet client installed in it for very little storage cost.</p>
 <p>As of right now, the terminal emulation of kOS only really supports XTERM
 or VT100 well, however the infrastructure is in place to support modifications
 to map to other terminal types.  If you want to try a hand at adding the
-terminal emulation for a currently unsupported terminal, you&#8217;d do it
+terminal emulation for a currently unsupported terminal, you’d do it
 by subclassing the kOS.UserIO.TerminalUnicodeMapper class.  You can
 look at kOS.UserIO.TerminalXtermMapper as a sample to see what you need
 to do.</p>
 <p>If you have a project where you want to just work with the terminal
 codes already supported, then these are the subset you need to support:</p>
-<dl class="docutils">
-<dt><em>ASCII</em></dt>
-<dd>The following terms should have their normal ASCII meaning:</dd>
-<dt>0x08 (control-H)</dt>
-<dd>backspace key</dd>
-<dt>0x0d (control-M)</dt>
-<dd>Return key.  On output it means go to left edge but don&#8217;t go down a line.
+<dl class="simple">
+<dt><em>ASCII</em></dt><dd><p>The following terms should have their normal ASCII meaning:</p>
+</dd>
+<dt>0x08 (control-H)</dt><dd><p>backspace key</p>
+</dd>
+<dt>0x0d (control-M)</dt><dd><p>Return key.  On output it means go to left edge but don’t go down a line.
 A typical eoln needs to occur using its ASCII standard of both a
-return character 0x0d AND a linefeed character 0x0a</dd>
-<dt>0x0a (control-J)</dt>
-<dd>On output it means go to go down a line but don&#8217;t go to the left edge
+return character 0x0d AND a linefeed character 0x0a</p>
+</dd>
+<dt>0x0a (control-J)</dt><dd><p>On output it means go to go down a line but don’t go to the left edge
 A typical eoln needs to occur using its ASCII standard of both a
-return character 0x0d AND a linefeed character 0x0a</dd>
+return character 0x0d AND a linefeed character 0x0a</p>
+</dd>
 </dl>
 <p><strong>Terminal codes:</strong> <em>The following terms should have their VT100/XTERM meaning</em></p>
-<dl class="docutils">
-<dt>Left-Arrow</dt>
-<dd>ESC [ D  <em>&#8211; both on input and on output</em></dd>
-<dt>Right-Arrow</dt>
-<dd>ESC [ C  <em>&#8211; both on input and on output</em></dd>
-<dt>Up-Arrow</dt>
-<dd>ESC [ A  <em>&#8211; both on input and on output</em></dd>
-<dt>Down-Arrow</dt>
-<dd>ESC [ B  <em>&#8211; both on input and on output</em></dd>
-<dt>Home-key</dt>
-<dd>ESC [ 1 ~  <em>&#8211; input only</em></dd>
-<dt>End-key</dt>
-<dd>ESC [ 4 ~  <em>&#8211; input only</em></dd>
-<dt>Delete-to-the-right-key</dt>
-<dd>ESC [ 3 ~  <em>&#8211; input only</em></dd>
-<dt>PageUp-key</dt>
-<dd>ESC [ 5 ~  <em>&#8211; input only</em></dd>
-<dt>PageDown-key</dt>
-<dd>ESC [ 6 ~  <em>&#8211; input only</em></dd>
-<dt>Move-to-home-of-screen-upper-left</dt>
-<dd>ESC [ H  <em>&#8211; output only</em></dd>
-<dt>Move-to-end-of-line</dt>
-<dd>ESC [ F  <em>&#8211; output only</em></dd>
-<dt>Teleport-cursor-to-coordinate</dt>
-<dd>ESC [ <em>row</em> ; <em>col</em> H   <em>&#8211; output only: rows and cols start counting at 1, not 0</em></dd>
-<dt>Clearscreen</dt>
-<dd>ESC [ 2 J  <em>&#8211; output only</em></dd>
-<dt>Scroll-screen-up-one-line-keeping-cursor-where-it-is</dt>
-<dd>ESC [ S  <em>&#8211; output only</em></dd>
-<dt>Scroll-screen-down-one-line-keeping-cursor-where-it-is</dt>
-<dd>ESC [ T  <em>&#8211; output only</em></dd>
-<dt>Delete-to-the-left-of-cursor-ie-backspace</dt>
-<dd>ESC [ K  <em>&#8211; output only</em></dd>
-<dt>Delete-at-the-cursor-toward-the-right</dt>
-<dd>ESC [ 1 K  <em>&#8211; output only</em></dd>
+<dl class="simple">
+<dt>Left-Arrow</dt><dd><p>ESC [ D  <em>– both on input and on output</em></p>
+</dd>
+<dt>Right-Arrow</dt><dd><p>ESC [ C  <em>– both on input and on output</em></p>
+</dd>
+<dt>Up-Arrow</dt><dd><p>ESC [ A  <em>– both on input and on output</em></p>
+</dd>
+<dt>Down-Arrow</dt><dd><p>ESC [ B  <em>– both on input and on output</em></p>
+</dd>
+<dt>Home-key</dt><dd><p>ESC [ 1 ~  <em>– input only</em></p>
+</dd>
+<dt>End-key</dt><dd><p>ESC [ 4 ~  <em>– input only</em></p>
+</dd>
+<dt>Delete-to-the-right-key</dt><dd><p>ESC [ 3 ~  <em>– input only</em></p>
+</dd>
+<dt>PageUp-key</dt><dd><p>ESC [ 5 ~  <em>– input only</em></p>
+</dd>
+<dt>PageDown-key</dt><dd><p>ESC [ 6 ~  <em>– input only</em></p>
+</dd>
+<dt>Move-to-home-of-screen-upper-left</dt><dd><p>ESC [ H  <em>– output only</em></p>
+</dd>
+<dt>Move-to-end-of-line</dt><dd><p>ESC [ F  <em>– output only</em></p>
+</dd>
+<dt>Teleport-cursor-to-coordinate</dt><dd><p>ESC [ <em>row</em> ; <em>col</em> H   <em>– output only: rows and cols start counting at 1, not 0</em></p>
+</dd>
+<dt>Clearscreen</dt><dd><p>ESC [ 2 J  <em>– output only</em></p>
+</dd>
+<dt>Scroll-screen-up-one-line-keeping-cursor-where-it-is</dt><dd><p>ESC [ S  <em>– output only</em></p>
+</dd>
+<dt>Scroll-screen-down-one-line-keeping-cursor-where-it-is</dt><dd><p>ESC [ T  <em>– output only</em></p>
+</dd>
+<dt>Delete-to-the-left-of-cursor-ie-backspace</dt><dd><p>ESC [ K  <em>– output only</em></p>
+</dd>
+<dt>Delete-at-the-cursor-toward-the-right</dt><dd><p>ESC [ 1 K  <em>– output only</em></p>
+</dd>
 </dl>
 <p><strong>XTERM codes:</strong> <em>The following codes are for the XTERM emulation only</em></p>
-<dl class="docutils">
-<dt>Server-telling-client-to-resize-screen</dt>
-<dd>ESC [ 8 ; <em>newheight</em> ; <em>newwidth</em> t  <em>&#8211; The height/width are in chars</em></dd>
-<dt>Server-telling-client-to-change-window-title</dt>
-<dd>ESC ] 2 ; <em>title string</em> BEL  <em>&#8211; where BEL is the character normally
+<dl class="simple">
+<dt>Server-telling-client-to-resize-screen</dt><dd><p>ESC [ 8 ; <em>newheight</em> ; <em>newwidth</em> t  <em>– The height/width are in chars</em></p>
+</dd>
+<dt>Server-telling-client-to-change-window-title</dt><dd><p>ESC ] 2 ; <em>title string</em> BEL  <em>– where BEL is the character normally
 used to mean beep: control-G or 0x07.  But in this context it just marks
-the end of the title and shouldn&#8217;t cause a beep.</em>
-Note this is NOT a typo that it uses a right-square-bracket (&#8220;]&#8221;) here where
-all the other codes used a left-square-bracket (&#8220;[&#8221;).  That&#8217;s actually
-how the xterm control sequence for this really looks.</dd>
+the end of the title and shouldn’t cause a beep.</em>
+Note this is NOT a typo that it uses a right-square-bracket (“]”) here where
+all the other codes used a left-square-bracket (“[“).  That’s actually
+how the xterm control sequence for this really looks.</p>
+</dd>
 </dl>
 <p>Any value not mentioned in the list above might still get sent, but you
 should be able to capture and ignore it.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="volumes.html" class="btn btn-neutral float-right" title="Files and Volumes" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="gui.html" class="btn btn-neutral" title="Making GUIs in kOS" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gui.html" class="btn btn-neutral float-left" title="Making GUIs in kOS" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="volumes.html" class="btn btn-neutral float-right" title="Files and Volumes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

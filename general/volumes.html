@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Files and Volumes &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Files and Volumes &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../about.html"/>
-        <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../index.html"/>
-        <link rel="up" title="General Topics" href="../general.html"/>
-        <link rel="next" title="KerboScript Machine Code" href="compiling.html"/>
-        <link rel="prev" title="The kOS Telnet Server" href="telnet.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="next" title="KerboScript Machine Code" href="compiling.html" />
+    <link rel="prev" title="The kOS Telnet Server" href="telnet.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
@@ -105,9 +56,7 @@
 <li class="toctree-l2"><a class="reference internal" href="settingsWindows.html">Settings Windows</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gui.html">Making User GUIs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="telnet.html">Telnet Server</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Files &amp; Volumes</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Files &amp; Volumes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="skid.html">Sound Chip (SKID)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nametag.html">Name Tags</a></li>
@@ -126,94 +75,76 @@
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../general.html">General Topics</a> &raquo;</li>
-      
-    <li>Files and Volumes</li>
+      <li>Files and Volumes</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../_sources/general/volumes.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../_sources/general/volumes.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="files-and-volumes">
-<span id="volumes"></span><h1>Files and Volumes<a class="headerlink" href="#files-and-volumes" title="Permalink to this headline">¶</a></h1>
-<p>Using the COPYPATH, SWITCH, DELETEPATH, and RENAMEPATH commands, you can manipulate the archive and the volumes as described in the <a class="reference internal" href="../commands/files.html#files"><span>File I/O page</span></a>. But before you do that, it&#8217;s useful to know how kOS manages the archive and the volumes, and what they mean.</p>
-<div class="contents local topic" id="contents">
+             
+  <section id="files-and-volumes">
+<span id="volumes"></span><h1>Files and Volumes<a class="headerlink" href="#files-and-volumes" title="Permalink to this heading">¶</a></h1>
+<p>Using the COPYPATH, SWITCH, DELETEPATH, and RENAMEPATH commands, you can manipulate the archive and the volumes as described in the <a class="reference internal" href="../commands/files.html#files"><span class="std std-ref">File I/O page</span></a>. But before you do that, it’s useful to know how kOS manages the archive and the volumes, and what they mean.</p>
+<nav class="contents local" id="contents">
 <ul class="simple">
-<li><a class="reference internal" href="#script-files" id="id1">Script Files</a></li>
-<li><a class="reference internal" href="#file-storage-behind-the-scenes" id="id2">File Storage Behind the Scenes</a></li>
-<li><a class="reference internal" href="#you-can-get-more-space-by-paying-extra-cost-in-money-and-mass" id="id3">You can get more space by paying extra cost in money and mass</a></li>
-<li><a class="reference internal" href="#multiple-volumes-on-one-vessel" id="id4">Multiple Volumes on One Vessel</a></li>
-<li><a class="reference internal" href="#naming-volumes" id="id5">Naming Volumes</a></li>
-<li><a class="reference internal" href="#archive" id="id6">Archive</a></li>
-<li><a class="reference internal" href="#special-handling-of-files-in-the-boot-directory" id="id7">Special handling of files in the &#8220;boot&#8221; directory</a></li>
+<li><p><a class="reference internal" href="#script-files" id="id1">Script Files</a></p></li>
+<li><p><a class="reference internal" href="#file-storage-behind-the-scenes" id="id2">File Storage Behind the Scenes</a></p></li>
+<li><p><a class="reference internal" href="#you-can-get-more-space-by-paying-extra-cost-in-money-and-mass" id="id3">You can get more space by paying extra cost in money and mass</a></p></li>
+<li><p><a class="reference internal" href="#multiple-volumes-on-one-vessel" id="id4">Multiple Volumes on One Vessel</a></p></li>
+<li><p><a class="reference internal" href="#naming-volumes" id="id5">Naming Volumes</a></p></li>
+<li><p><a class="reference internal" href="#volume-name-inherits-from-tag-name" id="id6">Volume Name inherits from Tag Name</a></p></li>
+<li><p><a class="reference internal" href="#archive" id="id7">Archive</a></p></li>
+<li><p><a class="reference internal" href="#special-handling-of-files-in-the-boot-directory" id="id8">Special handling of files in the “boot” directory</a></p></li>
 </ul>
-</div>
-<div class="section" id="script-files">
-<h2><a class="toc-backref" href="#id1">Script Files</a><a class="headerlink" href="#script-files" title="Permalink to this headline">¶</a></h2>
-<p>There is one file per program. You can use the words &#8220;file&#8221; and &#8220;program&#8221; interchangeably in your thinking for the most part. Files are stored in volumes and there can be more than one file in a volume provided there&#8217;s enough room. Volumes have small storage and there&#8217;s no way to span a file across two volumes, so the limit to the size of a volume is also effectively a limit to the size of a program.</p>
-</div>
-<div class="section" id="file-storage-behind-the-scenes">
-<h2><a class="toc-backref" href="#id2">File Storage Behind the Scenes</a><a class="headerlink" href="#file-storage-behind-the-scenes" title="Permalink to this headline">¶</a></h2>
+</nav>
+<section id="script-files">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Script Files</a><a class="headerlink" href="#script-files" title="Permalink to this heading">¶</a></h2>
+<p>There is one file per program. You can use the words “file” and “program” interchangeably in your thinking for the most part. Files are stored in volumes and there can be more than one file in a volume provided there’s enough room. Volumes have small storage and there’s no way to span a file across two volumes, so the limit to the size of a volume is also effectively a limit to the size of a program.</p>
+</section>
+<section id="file-storage-behind-the-scenes">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">File Storage Behind the Scenes</a><a class="headerlink" href="#file-storage-behind-the-scenes" title="Permalink to this heading">¶</a></h2>
 <p>In the Archive:</p>
 <ul class="simple">
-<li>If a file is stored on the volume called &#8220;Archive&#8221; (or volume number
-zero to put it another way), then behind the scenes it&#8217;s really
-stored as an actual file, with the extension <code class="docutils literal"><span class="pre">.ks</span></code>, on your
-computer (As of right now it&#8217;s located in <code class="docutils literal"><span class="pre">Ships/Script</span></code> but that
+<li><p>If a file is stored on the volume called “Archive” (or volume number
+zero to put it another way), then behind the scenes it’s really
+stored as an actual file, with the extension <code class="docutils literal notranslate"><span class="pre">.ks</span></code>, on your
+computer (As of right now it’s located in <code class="docutils literal notranslate"><span class="pre">Ships/Script</span></code> but that
 location is likely to change to somewhere in GameData in a future
 version.) Each program is a simple text file you can edit with any
 text editor, and your edits will be seen immediately by KOS the next
-time it tries running that program from the archive volume.</li>
-<li>Historical note: older versions of kOS (0.14 and earlier) used the
-directory <code class="docutils literal"><span class="pre">Plugins/PluginData/Archive</span></code> for the archive.</li>
+time it tries running that program from the archive volume.</p></li>
+<li><p>Historical note: older versions of kOS (0.14 and earlier) used the
+directory <code class="docutils literal notranslate"><span class="pre">Plugins/PluginData/Archive</span></code> for the archive.</p></li>
 </ul>
 <p>In any other volume besides Archive:</p>
 <ul class="simple">
-<li>If a file is stored on any volume other than archive, then behind the
-scenes it&#8217;s stored actually inside the saved game&#8217;s persistence file
+<li><p>If a file is stored on any volume other than archive, then behind the
+scenes it’s stored actually inside the saved game’s persistence file
 in the section for the KOS part on the vessel.
-What&#8217;s a Volume</li>
+What’s a Volume</p></li>
 </ul>
 <p>A Volume is a small unit of disk storage that contains a single hard
 drive with very limited storage capacity. It can store more than one
 program on it. To simulate the sense that this game takes place at the
-dawn of the space race with 1960&#8217;s and 1970&#8217;s technology, the storage
+dawn of the space race with 1960’s and 1970’s technology, the storage
 capacity of a volume is very limited.</p>
 <p>For example, the CX-4181 Scriptable Control System part defaults to only
 allowing 1000 bytes of storage.</p>
@@ -222,226 +153,196 @@ count of the characters in the source code text. Writing programs with
 short cryptic variable names instead of long descriptive ones does save
 space, although you can also save space by compiling your programs to
 KSM files where the variable names are only stored once in the file, but
-that&#8217;s another topic for another page.</p>
+that’s another topic for another page.</p>
 <p>Each of the computer parts that kOS supports have their own different default
 storage capacity limits for their local volume.  As you get better parts
 higher up the tech tree, they come with bigger default size limits.</p>
-</div>
-<div class="section" id="you-can-get-more-space-by-paying-extra-cost-in-money-and-mass">
-<h2><a class="toc-backref" href="#id3">You can get more space by paying extra cost in money and mass</a><a class="headerlink" href="#you-can-get-more-space-by-paying-extra-cost-in-money-and-mass" title="Permalink to this headline">¶</a></h2>
-<div class="figure">
+</section>
+<section id="you-can-get-more-space-by-paying-extra-cost-in-money-and-mass">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">You can get more space by paying extra cost in money and mass</a><a class="headerlink" href="#you-can-get-more-space-by-paying-extra-cost-in-money-and-mass" title="Permalink to this heading">¶</a></h2>
+<figure class="align-default">
 <img alt="../_images/disk_space_slider.png" src="../_images/disk_space_slider.png" />
-</div>
+</figure>
 <p>If you wish to have more disk space on your local volume, and are willing to
 pay a little extra cost in money and in mass, you can use the disk space
 slider in the vehicle assembly building to increase the limit.</p>
 <p>Every part comes with 3 different multiplier options:</p>
 <blockquote>
 <div><ul class="simple">
-<li>1x default size,</li>
-<li>2x default size,</li>
-<li>4x default size</li>
+<li><p>1x default size,</p></li>
+<li><p>2x default size,</p></li>
+<li><p>4x default size</p></li>
 </ul>
 </div></blockquote>
 <p>The higher the multiplier the more mass it will
-cost you, to represent that you&#8217;re using old storage technology,
+cost you, to represent that you’re using old storage technology,
 so it costs a lot of mass to have more storage.</p>
 <p>The disk size is only settable like this in the assembly building.  Once
 you launch a vessel, its volume size is stuck the way it was when you
 launched it.</p>
-</div>
-<div class="section" id="multiple-volumes-on-one-vessel">
-<h2><a class="toc-backref" href="#id4">Multiple Volumes on One Vessel</a><a class="headerlink" href="#multiple-volumes-on-one-vessel" title="Permalink to this headline">¶</a></h2>
-<p>Each kOS CX-4181 Scriptable Control System part contains &#8216;&#8217;&#8216;one&#8217;&#8216;&#8217; such
+</section>
+<section id="multiple-volumes-on-one-vessel">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Multiple Volumes on One Vessel</a><a class="headerlink" href="#multiple-volumes-on-one-vessel" title="Permalink to this heading">¶</a></h2>
+<p>Each kOS CX-4181 Scriptable Control System part contains ‘’’one’’’ such
 volume inside it.</p>
 <p>If you have multiple CX-4181 parts on the same craft, they are assumed
 to be networked together on the same system, and capable of reading each
-other&#8217;s hard drives. Their disk drives each have a different Volume, and
+other’s hard drives. Their disk drives each have a different Volume, and
 by default they are simply numbered 1,2,3, … unless you rename them.</p>
-<p>For example, if you have two CX-4181&#8217;s on the same craft, called 1 and
+<p>For example, if you have two CX-4181’s on the same craft, called 1 and
 2, with volumes on them called 1 and 2, respectively, it is possible for
 CPU 1 to run code stored on volume 2 by just having CPU number 1 issue
-the command &#8216;&#8217;SWITCH TO 2.&#8217;&#8216;</p>
-</div>
-<div class="section" id="naming-volumes">
-<h2><a class="toc-backref" href="#id5">Naming Volumes</a><a class="headerlink" href="#naming-volumes" title="Permalink to this headline">¶</a></h2>
-<p>It&#8217;s important to note that if you have multiple volumes on the same
+the command ‘’SWITCH TO 2.’’</p>
+</section>
+<section id="naming-volumes">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Naming Volumes</a><a class="headerlink" href="#naming-volumes" title="Permalink to this heading">¶</a></h2>
+<p>It’s important to note that if you have multiple volumes on the same
 vessel, the numbering conventions for the volumes will differ on
-different CPUs. The same volume which was called &#8216;2&#8217; when one CPU was
-looking at it might instead be called &#8216;1&#8217; when a different CPU is
-looking at it. Each CPU thinks of its OWN volume as number &#8216;1&#8217;.</p>
+different CPUs. The same volume which was called ‘2’ when one CPU was
+looking at it might instead be called ‘1’ when a different CPU is
+looking at it. Each CPU thinks of its OWN volume as number ‘1’.</p>
 <p>Therefore using the SET command on the volumes is useful when dealing
-with multiple CX-4181&#8217;s on the same vessel, so they all will refer to
+with multiple CX-4181’s on the same vessel, so they all will refer to
 the volumes using the same names:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="k">VOLUME</span><span class="p">(</span><span class="s">&quot;0&quot;</span><span class="p">):</span><span class="nv">NAME</span> <span class="ow">TO</span> <span class="s">&quot;newname&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="k">VOLUME</span><span class="p">(</span><span class="s">&quot;0&quot;</span><span class="p">):</span><span class="nv">NAME</span> <span class="ow">TO</span> <span class="s">&quot;newname&quot;</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>If a kOS processor has a name tag set, then that processor&#8217;s volume
-will have its name initially set to the value of the name tag.</p>
-</div>
-<div class="section" id="archive">
-<h2><a class="toc-backref" href="#id6">Archive</a><a class="headerlink" href="#archive" title="Permalink to this headline">¶</a></h2>
-<p>The &#8220;archive&#8221; is a special volume that behaves much like any other
+</section>
+<section id="volume-name-inherits-from-tag-name">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Volume Name inherits from Tag Name</a><a class="headerlink" href="#volume-name-inherits-from-tag-name" title="Permalink to this heading">¶</a></h2>
+<p>If the part that contains the Volume (a kOS processor core part
+typically) has a kOS nametag set, then the Volume will have its
+name initially set to the value of the name tag.</p>
+<p>When doing this, if the tag contains characters that are not
+allowed in a volume name, the volume name will have those characters
+deleted, except for spaces which get replaced with underscores
+rather than being deleted.</p>
+</section>
+<section id="archive">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Archive</a><a class="headerlink" href="#archive" title="Permalink to this heading">¶</a></h2>
+<p>The “archive” is a special volume that behaves much like any other
 volume but with the following exceptions:</p>
 <ul class="simple">
-<li>It is globally the same even across save games.</li>
-<li>The archive represents the large bank of disk storage back at mission
-control&#8217;s mainframe, rather than the storage on an indivdual craft.
-While &#8220;Volume 1&#8221; on one vessel might be a different disk than &#8220;Volume
-1&#8221; on another vessel, there is only one volume called &#8220;archive&#8221; in the
-entire solar system. Also, there&#8217;s only one &#8220;archive&#8221; across all
+<li><p>It is globally the same even across save games.</p></li>
+<li><p>The archive represents the large bank of disk storage back at mission
+control’s mainframe, rather than the storage on an indivdual craft.
+While “Volume 1” on one vessel might be a different disk than “Volume
+1” on another vessel, there is only one volume called “archive” in the
+entire solar system. Also, there’s only one “archive” across all
 saved universes. If you play a new campaign from scratch, your
 archive in that new game will still have all the files in it from
-your previous saved game. This is because behid the scenes it&#8217;s
-stored in the <code class="docutils literal"><span class="pre">Ships/Script</span></code> directory, not the save game directory.</li>
-<li>It is infinitely large.</li>
-<li>Unlike the other volumes, the archive volume does not have a byte
+your previous saved game. This is because behid the scenes it’s
+stored in the <code class="docutils literal notranslate"><span class="pre">Ships/Script</span></code> directory, not the save game directory.</p></li>
+<li><p>It is infinitely large.</p></li>
+<li><p>Unlike the other volumes, the archive volume does not have a byte
 limit. This is because the mainframe back at home base can store a
 lot more than the special drives sent on the vessels - so much so
-that it may as well be infinite by comparison.</li>
-<li>Files saved there do not revert when you &#8220;revert flight&#8221;.</li>
-<li>When you revert a flight, you are going back to a previous saved
+that it may as well be infinite by comparison.</p></li>
+<li><p>Files saved there do not revert when you “revert flight”.</p></li>
+<li><p>When you revert a flight, you are going back to a previous saved
 state of the game, and therefore any disk data on the vessels
 themselves also reverts to what it was at the time of the saved game.
 Because the archive is saved outside the normal game save, changes
-made there are retained even when reverting a flight.</li>
-<li>Files in Archive are editable with a text editor directly and they
-will have the <code class="docutils literal"><span class="pre">.ks</span></code> extension.</li>
-<li>Files in the Archive are stored on your computer in the subdirectory:
-<code class="docutils literal"><span class="pre">Ships/Script</span></code>. You can pull them up in a text editor of your
+made there are retained even when reverting a flight.</p></li>
+<li><p>Files in Archive are editable with a text editor directly and they
+will have the <code class="docutils literal notranslate"><span class="pre">.ks</span></code> extension.</p></li>
+<li><p>Files in the Archive are stored on your computer in the subdirectory:
+<code class="docutils literal notranslate"><span class="pre">Ships/Script</span></code>. You can pull them up in a text editor of your
 choice and edit them directly, and the KOS Mod will see those changes
 in its archive immediately. Files stored in other volumes, on the
-other hand, are stored inside the vessel&#8217;s data in the persistence
+other hand, are stored inside the vessel’s data in the persistence
 file of the saved game and are quite a bit harder to edit there.
 Editing the files in the Archive directory is allowed and in fact is
 an officially accepted way to use the plugin. Editing the section in
 a persistence file, on the other hand, is a bad idea and probably
 constitutes a form of cheating similar to any other edit of the
-persistence file.</li>
+persistence file.</p></li>
 </ul>
-</div>
-<div class="section" id="special-handling-of-files-in-the-boot-directory">
-<span id="boot-directory"></span><h2><a class="toc-backref" href="#id7">Special handling of files in the &#8220;boot&#8221; directory</a><a class="headerlink" href="#special-handling-of-files-in-the-boot-directory" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="special-handling-of-files-in-the-boot-directory">
+<span id="boot-directory"></span><h2><a class="toc-backref" href="#id8" role="doc-backlink">Special handling of files in the “boot” directory</a><a class="headerlink" href="#special-handling-of-files-in-the-boot-directory" title="Permalink to this heading">¶</a></h2>
 <p>For users requiring even more automation, the feature of custom boot scripts
-was introduced. If you have at least 1 file in the <code class="code docutils literal"><span class="pre">boot</span></code> directory on
+was introduced. If you have at least 1 file in the <code class="code docutils literal notranslate"><span class="pre">boot</span></code> directory on
 your Archive volume, you will be presented with the option to choose one of
 those files as a boot script for your kOS CPU.  (As with any other kerboscript
-file, the filename extension has to be <code class="docutils literal"><span class="pre">.ks</span></code> for text file scripts, or
-<code class="docutils literal"><span class="pre">.ksm</span></code> for compiled scripts.</p>
+file, the filename extension has to be <code class="docutils literal notranslate"><span class="pre">.ks</span></code> for text file scripts, or
+<code class="docutils literal notranslate"><span class="pre">.ksm</span></code> for compiled scripts.</p>
 <img alt="http://i.imgur.com/05kp7Sy.jpg" src="http://i.imgur.com/05kp7Sy.jpg" />
 <p>The first time that you load kOS without a directory named
-<code class="code docutils literal"><span class="pre">boot</span></code> in the archive root, kOS will prompt you for automatic
+<code class="code docutils literal notranslate"><span class="pre">boot</span></code> in the archive root, kOS will prompt you for automatic
 migration.</p>
 <div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<div class="last versionadded">
-<p><span class="versionmodified">New in version v1.0.0: </span>Older versions of kOS used file names starting with the word &#8220;boot&#8221; to
+<p class="admonition-title">Warning</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version v1.0.0: </span>Older versions of kOS used file names starting with the word “boot” to
 determine which files should be considered as boot files.  When support
 was added for directories, it made sense to instead use a directory
-named <code class="code docutils literal"><span class="pre">boot</span></code>.  Care was taken to maximize backwards compatibility:
+named <code class="code docutils literal notranslate"><span class="pre">boot</span></code>.  Care was taken to maximize backwards compatibility:
 if an existing craft file is opened in the editor, kOS will first look
 for the saved boot file name in the boot directory, then it will check
 the archive root, and finally it will check the boot directory again
-after stripping <code class="code docutils literal"><span class="pre">boot</span></code> or <code class="code docutils literal"><span class="pre">boot_</span></code> from the beginning of the name.
+after stripping <code class="code docutils literal notranslate"><span class="pre">boot</span></code> or <code class="code docutils literal notranslate"><span class="pre">boot_</span></code> from the beginning of the name.
 Vessels in flight will continue to work with the existing structure, so
-long as <a class="reference internal" href="../structures/misc/config.html#attribute:CONFIG:ARCH" title="CONFIG:ARCH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CONFIG:ARCH</span></code></a> is set to false.  If <a class="reference internal" href="../structures/misc/config.html#attribute:CONFIG:ARCH" title="CONFIG:ARCH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CONFIG:ARCH</span></code></a> is
+long as <a class="reference internal" href="../structures/misc/config.html#attribute:CONFIG:ARCH" title="CONFIG:ARCH attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">CONFIG:ARCH</span></code></a> is set to false.  If <a class="reference internal" href="../structures/misc/config.html#attribute:CONFIG:ARCH" title="CONFIG:ARCH attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">CONFIG:ARCH</span></code></a> is
 set to true, you will need to leave copies of the originally named boot
 files in your archive root for ships already in flight to access.</p>
 </div>
 </div>
 <p>As soon as you vessel leaves VAB/SPH and is being initialised on the launchpad
-(e.g. its status is PRELAUNCH) the assigned script will be copied to CPU&#8217;s
+(e.g. its status is PRELAUNCH) the assigned script will be copied to CPU’s
 local hard disk with the same name.  If kOS is configured to start on the
 archive, the file will not be copied locally automatically. This script will
 be run as soon as CPU boots, e.g. as soon as you bring your CPU in physics
 range or power on your CPU if it was turned off.  You may get or set the name
-of the boot file using the <a class="reference internal" href="../structures/vessels/kosprocessor.html#attribute:KOSPROCESSOR:BOOTFILENAME" title="KOSPROCESSOR:BOOTFILENAME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">kOSProcessor:BOOTFILENAME</span></code></a> suffix.</p>
+of the boot file using the <a class="reference internal" href="../structures/vessels/kosprocessor.html#attribute:KOSPROCESSOR:BOOTFILENAME" title="KOSPROCESSOR:BOOTFILENAME attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">kOSProcessor:BOOTFILENAME</span></code></a> suffix.</p>
 <p>Important things to consider:</p>
 <blockquote>
 <div><ul class="simple">
-<li>kOS CPU hard disk space is limited, avoid using complex boot scripts or increase disk space using MM config.</li>
-<li>Boot script runs immediately on initialisation, it should avoid interaction with parts/modules until physics fully load. It is best to wait for couple seconds or until certain trigger.</li>
+<li><p>kOS CPU hard disk space is limited, avoid using complex boot scripts or increase disk space using MM config.</p></li>
+<li><p>Boot script runs immediately on initialisation, it should avoid interaction with parts/modules until physics fully load. It is best to wait for couple seconds or until certain trigger.</p></li>
 </ul>
 </div></blockquote>
 <p>Possible uses for boot scripts:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Automatically activate sleeper/background scripts which will run on CPU until triggered by certain condition.</li>
-<li>Create basic station-keeping scripts - you will only have to focus your probes once in a while and let the boot script do the orbit adjustment automatically.</li>
-<li>Create multi-CPU vessels with certain cores dedicated to specific tasks, triggered by user input or external events (Robotic-heavy Vessels)</li>
-<li>Anything else you can come up with</li>
+<li><p>Automatically activate sleeper/background scripts which will run on CPU until triggered by certain condition.</p></li>
+<li><p>Create basic station-keeping scripts - you will only have to focus your probes once in a while and let the boot script do the orbit adjustment automatically.</p></li>
+<li><p>Create multi-CPU vessels with certain cores dedicated to specific tasks, triggered by user input or external events (Robotic-heavy Vessels)</p></li>
+<li><p>Anything else you can come up with</p></li>
 </ul>
 </div></blockquote>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="compiling.html" class="btn btn-neutral float-right" title="KerboScript Machine Code" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="telnet.html" class="btn btn-neutral" title="The kOS Telnet Server" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="telnet.html" class="btn btn-neutral float-left" title="The kOS Telnet Server" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compiling.html" class="btn btn-neutral float-right" title="KerboScript Machine Code" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

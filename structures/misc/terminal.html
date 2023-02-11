@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Terminal &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terminal &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../../about.html"/>
-        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
-        <link rel="next" title="Terminal Input" href="terminalinput.html"/>
-        <link rel="prev" title="String" href="string.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Terminal Input" href="terminalinput.html" />
+    <link rel="prev" title="String" href="string.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
@@ -123,9 +74,7 @@
 <li class="toctree-l3"><a class="reference internal" href="resource_transfer.html">Resource Transfer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="steeringmanager.html">SteeringManager</a></li>
 <li class="toctree-l3"><a class="reference internal" href="string.html">String</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Terminal</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Terminal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="terminalinput.html">Terminal Input</a></li>
 <li class="toctree-l3"><a class="reference internal" href="time.html">Time</a></li>
 <li class="toctree-l3"><a class="reference internal" href="time.html#timestamp">TimeStamp</a></li>
@@ -148,180 +97,154 @@
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
-      
           <li><a href="../misc.html">Configurations and Miscellany</a> &raquo;</li>
-      
-    <li>Terminal</li>
+      <li>Terminal</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/structures/misc/terminal.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../../_sources/structures/misc/terminal.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="terminal">
-<span id="id1"></span><h1>Terminal<a class="headerlink" href="#terminal" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="terminal">
+<span id="id1"></span><h1>Terminal<a class="headerlink" href="#terminal" title="Permalink to this heading">¶</a></h1>
 <p>The TERMINAL identifier refers to a special structure that lets you access
 some of the information about the screen you are running on.</p>
-<div class="section" id="structure">
-<h2>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
-<dl class="structure">
-<dt id="structure:TERMINAL">
-<em class="property">structure </em><code class="descname">Terminal</code><a class="headerlink" href="#structure:TERMINAL" title="Permalink to this definition">¶</a></dt>
-<dd><table border="1" class="docutils" id="id2">
+<section id="structure">
+<h2>Structure<a class="headerlink" href="#structure" title="Permalink to this heading">¶</a></h2>
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:TERMINAL">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">Terminal</span></span><a class="headerlink" href="#structure:TERMINAL" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils align-default" id="id2">
 <caption><span class="caption-text">Members</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="25%" />
-<col width="13%" />
-<col width="13%" />
-<col width="50%" />
+<col style="width: 25.0%" />
+<col style="width: 12.5%" />
+<col style="width: 12.5%" />
+<col style="width: 50.0%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type</th>
-<th class="head">Get/Set</th>
-<th class="head">Description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Get/Set</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#attribute:TERMINAL:WIDTH" title="TERMINAL:WIDTH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">WIDTH</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-<td>get and set</td>
-<td>Terminal width in characters.</td>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:TERMINAL:WIDTH" title="TERMINAL:WIDTH attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">WIDTH</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>get and set</p></td>
+<td><p>Terminal width in characters.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:TERMINAL:HEIGHT" title="TERMINAL:HEIGHT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HEIGHT</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-<td>get and set</td>
-<td>Terminal height in characters.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:TERMINAL:HEIGHT" title="TERMINAL:HEIGHT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">HEIGHT</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>get and set</p></td>
+<td><p>Terminal height in characters.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:TERMINAL:REVERSE" title="TERMINAL:REVERSE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">REVERSE</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>get and set</td>
-<td>Determines if the screen is displayed with foreground and background colors swapped.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:TERMINAL:REVERSE" title="TERMINAL:REVERSE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">REVERSE</span></code></a></p></td>
+<td><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>get and set</p></td>
+<td><p>Determines if the screen is displayed with foreground and background colors swapped.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:TERMINAL:VISUALBEEP" title="TERMINAL:VISUALBEEP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VISUALBEEP</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>get and set</td>
-<td>Turns beeps into silent visual screen flashes instead.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:TERMINAL:VISUALBEEP" title="TERMINAL:VISUALBEEP attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VISUALBEEP</span></code></a></p></td>
+<td><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>get and set</p></td>
+<td><p>Turns beeps into silent visual screen flashes instead.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:TERMINAL:BRIGHTNESS" title="TERMINAL:BRIGHTNESS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">BRIGHTNESS</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-<td>get and set</td>
-<td>Adjusts brightness slider of the terminal between 0.0 (min) and 1.0 (max).</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:TERMINAL:BRIGHTNESS" title="TERMINAL:BRIGHTNESS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">BRIGHTNESS</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>get and set</p></td>
+<td><p>Adjusts brightness slider of the terminal between 0.0 (min) and 1.0 (max).</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:TERMINAL:CHARWIDTH" title="TERMINAL:CHARWIDTH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CHARWIDTH</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-<td>get</td>
-<td>Width of a character cell in pixels.  Get-only because the font chooses it based on CHARHEIGHT.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:TERMINAL:CHARWIDTH" title="TERMINAL:CHARWIDTH attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">CHARWIDTH</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>get</p></td>
+<td><p>Width of a character cell in pixels.  Get-only because the font chooses it based on CHARHEIGHT.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:TERMINAL:CHARHEIGHT" title="TERMINAL:CHARHEIGHT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CHARHEIGHT</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-<td>get and set</td>
-<td>Height of a character cell in pixels.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:TERMINAL:CHARHEIGHT" title="TERMINAL:CHARHEIGHT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">CHARHEIGHT</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>get and set</p></td>
+<td><p>Height of a character cell in pixels.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:TERMINAL:INPUT" title="TERMINAL:INPUT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">INPUT</span></code></a></td>
-<td><a class="reference internal" href="terminalinput.html#structure:TERMINALINPUT" title="TERMINALINPUT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TerminalInput</span></code></a></td>
-<td>get</td>
-<td>Used to read user&#8217;s input into the terminal.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:TERMINAL:INPUT" title="TERMINAL:INPUT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">INPUT</span></code></a></p></td>
+<td><p><a class="reference internal" href="terminalinput.html#structure:TERMINALINPUT" title="TERMINALINPUT structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">TerminalInput</span></code></a></p></td>
+<td><p>get</p></td>
+<td><p>Used to read user’s input into the terminal.</p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:TERMINAL:WIDTH">
-Terminal:<code class="descname">WIDTH</code><a class="headerlink" href="#attribute:TERMINAL:WIDTH" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a>.</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:TERMINAL:WIDTH">
+<span class="pre">Terminal:</span><span class="sig-name descname"><span class="pre">WIDTH</span></span><a class="headerlink" href="#attribute:TERMINAL:WIDTH" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+</dl>
 <p>If you read the width it will return a number of character cells wide the terminal
 is.  If you set this value, it will cause the terminal to resize.
-If there&#8217;s multiple terminals connected to the same CPU part via telnet clients,
+If there’s multiple terminals connected to the same CPU part via telnet clients,
 then kOS will attempt to keep them all the same size, and one terminal being resized
 will resize them all.  (caveat: Some terminal types cannot be resized from the
-server side, and therefore this doesn&#8217;t always work in both directions).</p>
+server side, and therefore this doesn’t always work in both directions).</p>
 <p>This setting is different per kOS CPU part.  Different terminal
 windows can have different settings for this value.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:TERMINAL:HEIGHT">
-Terminal:<code class="descname">HEIGHT</code><a class="headerlink" href="#attribute:TERMINAL:HEIGHT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a>.</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:TERMINAL:HEIGHT">
+<span class="pre">Terminal:</span><span class="sig-name descname"><span class="pre">HEIGHT</span></span><a class="headerlink" href="#attribute:TERMINAL:HEIGHT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+</dl>
 <p>If you read the height it will return a number of character cells tall the terminal
 is.  If you set this value, it will cause the terminal to resize.
-If there&#8217;s multiple terminals connected to the same CPU part via telnet clients,
+If there’s multiple terminals connected to the same CPU part via telnet clients,
 then kOS will attempt to keep them all the same size, and one terminal being resized
 will resize them all.  (caveat: Some terminal types cannot be resized from the
-server side, and therefore this doesn&#8217;t always work in both directions).</p>
+server side, and therefore this doesn’t always work in both directions).</p>
 <p>This setting is different per kOS CPU part.  Different terminal
 windows can have different settings for this value.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:TERMINAL:REVERSE">
-Terminal:<code class="descname">REVERSE</code><a class="headerlink" href="#attribute:TERMINAL:REVERSE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a>.</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:TERMINAL:REVERSE">
+<span class="pre">Terminal:</span><span class="sig-name descname"><span class="pre">REVERSE</span></span><a class="headerlink" href="#attribute:TERMINAL:REVERSE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>If true, then the terminal window is currently set to show
 the whole screen in reversed color - swapping the background
 and foreground colors.   Both the telnet terminals and the in-game
@@ -332,19 +255,17 @@ in-game GUI terminal window.</p>
 windows can have different settings for this value.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:TERMINAL:VISUALBEEP">
-Terminal:<code class="descname">VISUALBEEP</code><a class="headerlink" href="#attribute:TERMINAL:VISUALBEEP" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a>.</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:TERMINAL:VISUALBEEP">
+<span class="pre">Terminal:</span><span class="sig-name descname"><span class="pre">VISUALBEEP</span></span><a class="headerlink" href="#attribute:TERMINAL:VISUALBEEP" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>If true, then the terminal window is currently set to show any
 BEEP characters by silently flashing the screen for a moment
 (inverting the background/foreground for a fraction of a second),
@@ -352,164 +273,118 @@ instead of making a sound.</p>
 <p>Note, this setting can also be toggled with a radio-button on the
 in-game GUI terminal window.</p>
 <p>This will only typically affect the in-game GUI terminal window,
-and <strong>not a telnet client&#8217;s</strong> terminal window.</p>
+and <strong>not a telnet client’s</strong> terminal window.</p>
 <p>To affect the window you are using in a telnet session, you will
-have to use whatever your terminal or terminal emulator&#8217;s local
+have to use whatever your terminal or terminal emulator’s local
 settings panel has for it.  Most do have some sort of visual
 beep setting, but it is usually not settable via a control character
 sequence sent across the connection.  The terminals are designed to
-assume it&#8217;s a local user preference that isn&#8217;t overridable
+assume it’s a local user preference that isn’t overridable
 by the software you are running.</p>
 <p>This setting is different per kOS CPU part.  Different terminal
 windows can have different settings for this value.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:TERMINAL:BRIGHTNESS">
-Terminal:<code class="descname">BRIGHTNESS</code><a class="headerlink" href="#attribute:TERMINAL:BRIGHTNESS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:TERMINAL:BRIGHTNESS">
+<span class="pre">Terminal:</span><span class="sig-name descname"><span class="pre">BRIGHTNESS</span></span><a class="headerlink" href="#attribute:TERMINAL:BRIGHTNESS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+</dl>
 <p>The same thing as the brightness slider on the terminal GUI.
 The values range from 0.0 (minimum) to 1.0 (maximum).  At
 zero, the effect is to entirely hide the letters altogether.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:TERMINAL:CHARWIDTH">
-Terminal:<code class="descname">CHARWIDTH</code><a class="headerlink" href="#attribute:TERMINAL:CHARWIDTH" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:TERMINAL:CHARWIDTH">
+<span class="pre">Terminal:</span><span class="sig-name descname"><span class="pre">CHARWIDTH</span></span><a class="headerlink" href="#attribute:TERMINAL:CHARWIDTH" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+</dl>
 <p>Width of a character cell in the display terminal, in pixels.</p>
 <p>Please note that this value is not settable anymore.  It
 can only be changed as a side-effect of changing the
-<code class="xref ks ks-attr docutils literal"><span class="pre">CHARHEIGHT</span></code>.  This is because the font is in
-charge of choosing the ratio between a letter&#8217;s height and
-its width.  You can&#8217;t force the font to render a letter
+<code class="xref ks ks-attr docutils literal notranslate"><span class="pre">CHARHEIGHT</span></code>.  This is because the font is in
+charge of choosing the ratio between a letter’s height and
+its width.  You can’t force the font to render a letter
 at a different aspect ratio than it wants to.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:TERMINAL:CHARHEIGHT">
-Terminal:<code class="descname">CHARHEIGHT</code><a class="headerlink" href="#attribute:TERMINAL:CHARHEIGHT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:TERMINAL:CHARHEIGHT">
+<span class="pre">Terminal:</span><span class="sig-name descname"><span class="pre">CHARHEIGHT</span></span><a class="headerlink" href="#attribute:TERMINAL:CHARHEIGHT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+</dl>
 <p>Height of a character cell in the display terminal, in pixels.
 The value is forced to remain in the range [4..24] and be
 divisible by 2.  If you try to set it to any other value, it
 will snap to the allowed range and increment.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:TERMINAL:INPUT">
-Terminal:<code class="descname">INPUT</code><a class="headerlink" href="#attribute:TERMINAL:INPUT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="terminalinput.html#structure:TERMINALINPUT" title="TERMINALINPUT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TerminalInput</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>This gives you a <a class="reference internal" href="terminalinput.html#structure:TERMINALINPUT" title="TERMINALINPUT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TerminalInput</span></code></a> structure, which can be
-used to read user&#8217;s input into the kOS terminal.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:TERMINAL:INPUT">
+<span class="pre">Terminal:</span><span class="sig-name descname"><span class="pre">INPUT</span></span><a class="headerlink" href="#attribute:TERMINAL:INPUT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="terminalinput.html#structure:TERMINALINPUT" title="TERMINALINPUT structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">TerminalInput</span></code></a></p>
+</dd>
+</dl>
+<p>This gives you a <a class="reference internal" href="terminalinput.html#structure:TERMINALINPUT" title="TERMINALINPUT structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">TerminalInput</span></code></a> structure, which can be
+used to read user’s input into the kOS terminal.</p>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="terminalinput.html" class="btn btn-neutral float-right" title="Terminal Input" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="string.html" class="btn btn-neutral" title="String" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="string.html" class="btn btn-neutral float-left" title="String" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="terminalinput.html" class="btn btn-neutral float-right" title="Terminal Input" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

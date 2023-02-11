@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Boot Files &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boot Files &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../about.html"/>
-        <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../index.html"/>
-        <link rel="up" title="General Topics" href="../general.html"/>
-        <link rel="next" title="KOS Processor PartModule Configuration Fields" href="kospartmodule.html"/>
-        <link rel="prev" title="The kOS CPU hardware" href="cpu_hardware.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="next" title="KOS Processor PartModule Configuration Fields" href="kospartmodule.html" />
+    <link rel="prev" title="The kOS CPU hardware" href="cpu_hardware.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
@@ -100,9 +51,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cpu_hardware.html">CPU Hardware</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Booting</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Booting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kospartmodule.html">Game Part</a></li>
 <li class="toctree-l2"><a class="reference internal" href="settingsWindows.html">Settings Windows</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gui.html">Making User GUIs</a></li>
@@ -126,73 +75,54 @@
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../general.html">General Topics</a> &raquo;</li>
-      
-    <li>Boot Files</li>
+      <li>Boot Files</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../_sources/general/boot.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../_sources/general/boot.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="boot-files">
-<span id="boot"></span><h1>Boot Files<a class="headerlink" href="#boot-files" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="boot-files">
+<span id="boot"></span><h1>Boot Files<a class="headerlink" href="#boot-files" title="Permalink to this heading">¶</a></h1>
 <p>There is a boot system you can use in kOS to have a kOS computer
 automatically load a kerboscript file and run it when the computer
 boots up.</p>
-<div class="section" id="short-version-and-example">
-<h2>Short version and example<a class="headerlink" href="#short-version-and-example" title="Permalink to this headline">¶</a></h2>
-<p>Here&#8217;s the tl;dr version of how to use a boot file:</p>
+<section id="short-version-and-example">
+<h2>Short version and example<a class="headerlink" href="#short-version-and-example" title="Permalink to this heading">¶</a></h2>
+<p>Here’s the tl;dr version of how to use a boot file:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li>Place a kerboscript program file in the archive <code class="docutils literal"><span class="pre">&quot;0:/boot/&quot;</span></code>
-directory.  For example, <code class="docutils literal"><span class="pre">&quot;0:/boot/myboot.ks&quot;</span></code>.  Make sure
-the file ends in <code class="docutils literal"><span class="pre">.ks</span></code>.</li>
-<li>Bring up the vessel into the VAB or SPH.  Rightclick the
+<li><p>Place a kerboscript program file in the archive <code class="docutils literal notranslate"><span class="pre">&quot;0:/boot/&quot;</span></code>
+directory.  For example, <code class="docutils literal notranslate"><span class="pre">&quot;0:/boot/myboot.ks&quot;</span></code>.  Make sure
+the file ends in <code class="docutils literal notranslate"><span class="pre">.ks</span></code>.</p></li>
+<li><p>Bring up the vessel into the VAB or SPH.  Rightclick the
 kOS computer part, and use the slider widget to select your
-file from step 1 above.</li>
-<li>When you save and launch this vessel, it should copy that
+file from step 1 above.</p></li>
+<li><p>When you save and launch this vessel, it should copy that
 file to the local drive and run it once the ship is loaded
-onto the launchpad.</li>
+onto the launchpad.</p></li>
 </ol>
 </div></blockquote>
 <p>Example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Place this file in your archive and call it &quot;boot/myboot.ks&quot;.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// Place this file in your archive and call it &quot;boot/myboot.ks&quot;.</span>
 <span class="k">wait</span> <span class="k">until</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">unpacked</span><span class="p">.</span>
 <span class="k">clearscreen</span><span class="p">.</span>
 <span class="k">print</span> <span class="s">&quot;Hello. I am the boot file.&quot;</span><span class="p">.</span>
@@ -202,32 +132,32 @@ onto the launchpad.</li>
 <p>Then do steps 2 and 3 above.  Launch the vessel and you should
 see the message in the boot script was run if you open the
 terminal.</p>
-<p>There&#8217;s a lot more you should learn about how the booting
-system works before you use it - but that&#8217;s the short version.</p>
+<p>There’s a lot more you should learn about how the booting
+system works before you use it - but that’s the short version.</p>
 <p>Read on to learn more.</p>
-</div>
-<div class="section" id="telling-kos-which-file-is-the-boot-file">
-<h2>Telling kOS which file is the boot file<a class="headerlink" href="#telling-kos-which-file-is-the-boot-file" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="telling-kos-which-file-is-the-boot-file">
+<h2>Telling kOS which file is the boot file<a class="headerlink" href="#telling-kos-which-file-is-the-boot-file" title="Permalink to this heading">¶</a></h2>
 <p>There are two ways to tell the kOS mod which file is the one
 you wish to have be your boot file - one is through the
 VAB or SPH editor building when creating the vessel,
 and the other is through kerboscript code itself once the
 vessel is loaded and on screen.</p>
-<div class="section" id="in-the-vab-or-sph">
-<h3>In the VAB or SPH<a class="headerlink" href="#in-the-vab-or-sph" title="Permalink to this headline">¶</a></h3>
-<div class="figure align-right">
+<section id="in-the-vab-or-sph">
+<h3>In the VAB or SPH<a class="headerlink" href="#in-the-vab-or-sph" title="Permalink to this heading">¶</a></h3>
+<figure class="align-right">
 <a class="reference internal image-reference" href="../_images/bootVAB.png"><img alt="Figure of selecting a boot file" src="../_images/bootVAB.png" style="width: 50%;" /></a>
-</div>
+</figure>
 <p>You may select a boot file from the Vehicle Assembly Building
 or Spaceplane Hangar.  To do this you must have placed the
-file(s) you wish to be available for booting into the <code class="docutils literal"><span class="pre">boot/</span></code>
+file(s) you wish to be available for booting into the <code class="docutils literal notranslate"><span class="pre">boot/</span></code>
 directory of your archive folder.  For a reminder, this means it
 is located here on your computer:</p>
-<p><code class="docutils literal"><span class="pre">[Kerbal</span> <span class="pre">Space</span> <span class="pre">Program's</span> <span class="pre">Folder]/Ships/Script/boot/</span></code></p>
-<p>where &#8220;[Kerbal Space Program&#8217;s Folder]&#8221; is wherever your kerbal
+<p><code class="docutils literal notranslate"><span class="pre">[Kerbal</span> <span class="pre">Space</span> <span class="pre">Program's</span> <span class="pre">Folder]/Ships/Script/boot/</span></code></p>
+<p>where “[Kerbal Space Program’s Folder]” is wherever your kerbal
 space program game is installed.</p>
 <p><strong>Files placed here MUST end in ``.ks``</strong>.  The files will not be
-seen in the VAB or SPH if they don&#8217;t have a .ks ending.</p>
+seen in the VAB or SPH if they don’t have a .ks ending.</p>
 <p>When you have files available there in the archive boot folder,
 then they will appear in the VAB or SPH when you right-click on
 a part that contains a kOS computer, as shown in the figure here.</p>
@@ -235,19 +165,19 @@ a part that contains a kOS computer, as shown in the figure here.</p>
 entered the VAB/SPH will be in the list.</strong> <em>If you add a new file
 to the ``boot/`` folder, you must exit and re-enter the VAB/SPH
 to make that file appear in the list.</em></p>
-<p>Please pay attention to the topic below, &#8220;Booting When Spawning
-to launchpad&#8221;, to see exactly when and how the files get copied
+<p>Please pay attention to the topic below, “Booting When Spawning
+to launchpad”, to see exactly when and how the files get copied
 to the computer when you use this method of selecting the boot
 file (from the VAB or SPH).</p>
-</div>
-<div class="section" id="from-script-code">
-<h3>From Script Code<a class="headerlink" href="#from-script-code" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="from-script-code">
+<h3>From Script Code<a class="headerlink" href="#from-script-code" title="Permalink to this heading">¶</a></h3>
 <p>Kerboscript code can also alter the boot file on the fly with this
 command:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">core</span><span class="p">:</span><span class="nv">bootfilename</span> <span class="ow">to</span> <span class="s">&quot;any_filename_here&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">core</span><span class="p">:</span><span class="nv">bootfilename</span> <span class="ow">to</span> <span class="s">&quot;any_filename_here&quot;</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>When you do this, then &#8220;any_filename_here&#8221; becomes the new
+<p>When you do this, then “any_filename_here” becomes the new
 boot file for that kOS computer, and it will be what gets
 booted on that kOS computer in the future, instead of
 whatever may have been selected for it in the VAB/SPH.</p>
@@ -255,55 +185,55 @@ whatever may have been selected for it in the VAB/SPH.</p>
 using the VAB/SPH method, the file will not automatically
 get copied from the archive to your local drive on the kOS
 computer.  It must be a file that <em>already</em> exists on the
-kOS computer&#8217;s local drive when the booting occurs.  You
+kOS computer’s local drive when the booting occurs.  You
 can use a file from any folder of the local volume you like
-(it does not have to have <code class="docutils literal"><span class="pre">boot/</span></code> in the pathname), but it
+(it does not have to have <code class="docutils literal notranslate"><span class="pre">boot/</span></code> in the pathname), but it
 <em>must</em> be from the local volume and not from the archive. In
-fact if you use a drive indicator such as &#8220;0:&#8221; or &#8220;1:&#8221; in the
-filename, it won&#8217;t work.</p>
-</div>
-</div>
-<div class="section" id="when-do-boot-files-run">
-<h2>When do boot files run<a class="headerlink" href="#when-do-boot-files-run" title="Permalink to this headline">¶</a></h2>
+fact if you use a drive indicator such as “0:” or “1:” in the
+filename, it won’t work.</p>
+</section>
+</section>
+<section id="when-do-boot-files-run">
+<h2>When do boot files run<a class="headerlink" href="#when-do-boot-files-run" title="Permalink to this heading">¶</a></h2>
 <p>If a boot file is set, then the boot file gets run under any
 of the following conditions:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li>Whenever the kOS computer is turned on after having been turned off.</li>
-<li>When electric charge is depleted but gets restored later.  (This is
+<li><p>Whenever the kOS computer is turned on after having been turned off.</p></li>
+<li><p>When electric charge is depleted but gets restored later.  (This is
 just a special case of case (1) above, since losing power turns the
-computer off and regaining power turns it back on.)</li>
-<li>When you leave the scene, then return to the scene later.  The kOS
-computer reboots when you reload the scene.</li>
-<li>When you first launch the vessel to the launchpad or runway.  See
+computer off and regaining power turns it back on.)</p></li>
+<li><p>When you leave the scene, then return to the scene later.  The kOS
+computer reboots when you reload the scene.</p></li>
+<li><p>When you first launch the vessel to the launchpad or runway.  See
 below to see the exact sequence of events that gets the file copied
-to the ship when you do this.</li>
-<li>When the <code class="docutils literal"><span class="pre">REBOOT.</span></code> command is run by a script or at the terminal.</li>
+to the ship when you do this.</p></li>
+<li><p>When the <code class="docutils literal notranslate"><span class="pre">REBOOT.</span></code> command is run by a script or at the terminal.</p></li>
 </ol>
 </div></blockquote>
 <p>Because boot files are run whenever the scene is reloaded, they can
 be a useful way to make your probe do things even when they have no
 antenna contact from home.</p>
-<div class="section" id="warning-about-ship-unpacked">
-<h3>Warning about ship:unpacked<a class="headerlink" href="#warning-about-ship-unpacked" title="Permalink to this headline">¶</a></h3>
+<section id="warning-about-ship-unpacked">
+<h3>Warning about ship:unpacked<a class="headerlink" href="#warning-about-ship-unpacked" title="Permalink to this heading">¶</a></h3>
 <p>Because the boot file begins the instant the scene loads, there can
 be a problem.  Kerbal Space Program loads the scene immediately,
 starts up the kOS modules, and then a second or two later it
-&#8220;unpacks&#8221; the vessel.  Without going into too much detail about
-what &#8220;unpacks&#8221; means here, the short version is that for the few
+“unpacks” the vessel.  Without going into too much detail about
+what “unpacks” means here, the short version is that for the few
 seconds the vessel is loaded but not yet unpacked, half the stuff
-on the vessel <em>doesn&#8217;t work yet</em>.  You try to move the throttle and
+on the vessel <em>doesn’t work yet</em>.  You try to move the throttle and
 nothing happens.  You try to press spacebar to stage and nothing
 happens.  You try to steer with WASD keys and nothing happens.  This
-also affects kOS&#8217;s own attempts to control the ship.  If you run
-a boot script and let&#8217;s say the very first thing the boot script
+also affects kOS’s own attempts to control the ship.  If you run
+a boot script and let’s say the very first thing the boot script
 tries to do is throttle up and turn on the engine, it might not
 actually work because Kerbal Space Program still has the ship
-in its &#8220;packed&#8221; state when you tried to do that.  The command
+in its “packed” state when you tried to do that.  The command
 executes without complaint, but has no effect.</p>
 <p>To avoid this problem, you can put this line at the top of your
 boot file:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// put at the top of most boot files:</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// put at the top of most boot files:</span>
 <span class="k">print</span> <span class="s">&quot;Waiting for ship to unpack.&quot;</span><span class="p">.</span>
 <span class="k">wait</span> <span class="k">until</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">unpacked</span><span class="p">.</span>
 <span class="k">print</span> <span class="s">&quot;Ship is now unpacked.&quot;</span><span class="p">.</span>
@@ -312,125 +242,87 @@ boot file:</p>
 <span class="c1">//</span>
 </pre></div>
 </div>
-<p><strong>Then why doesn&#8217;t kOS itself just wait until the ship is unpacked
+<p><strong>Then why doesn’t kOS itself just wait until the ship is unpacked
 before it starts booting the computer?</strong> The reason this is not
 done is because of the following three things taken in combination:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li>If the vessel is not the current active vessel, but it <em>IS</em>
+<li><p>If the vessel is not the current active vessel, but it <em>IS</em>
 within 2.5 km of the active vessel, then it will be loaded
 but still packed, and stay packed until you get close to it
 with the active vessel.  Waiting until ship:unpacked would mean
 the boot script on that vessel will never run at all until you
-bring the active vessel close enough to it to unpack it.</li>
-<li>There are still valid things a kOS script can accomplish while
-the vessel is in a packed state.  It just can&#8217;t make the ship move.</li>
-<li>The ship also becomes packed when under time warp.  You might
+bring the active vessel close enough to it to unpack it.</p></li>
+<li><p>There are still valid things a kOS script can accomplish while
+the vessel is in a packed state.  It just can’t make the ship move.</p></li>
+<li><p>The ship also becomes packed when under time warp.  You might
 still want a script to be running while in time warp, especially
-if what it&#8217;s doing is waiting for the right conditions where it
-will choose to stop the time warp.</li>
+if what it’s doing is waiting for the right conditions where it
+will choose to stop the time warp.</p></li>
 </ol>
 </div></blockquote>
-<p>More information on what &#8220;packed&#8221; and &#8220;loaded&#8221; actually mean can
-<a class="reference internal" href="../structures/misc/loaddistance.html#loaddistance"><span>be found here</span></a>, but be warned, it can be a complex
+<p>More information on what “packed” and “loaded” actually mean can
+<a class="reference internal" href="../structures/misc/loaddistance.html#loaddistance"><span class="std std-ref">be found here</span></a>, but be warned, it can be a complex
 topic.</p>
-</div>
-</div>
-<div class="section" id="booting-when-spawning-to-launchpad">
-<h2>Booting when spawning to launchpad<a class="headerlink" href="#booting-when-spawning-to-launchpad" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="booting-when-spawning-to-launchpad">
+<h2>Booting when spawning to launchpad<a class="headerlink" href="#booting-when-spawning-to-launchpad" title="Permalink to this heading">¶</a></h2>
 <p>When you first spawn a new vessel on the launchapd from the VAB (or when
 you spawn it to the runway from the SPH), kOS performs the following
 initial steps to get the boot file copied from archive to the ship:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li>Creates a folder called <code class="docutils literal"><span class="pre">boot/</span></code> on the kOS computer&#8217;s local volume
-(<code class="docutils literal"><span class="pre">1:/</span></code>).</li>
-<li>Copies the boot file from the archive&#8217;s <code class="docutils literal"><span class="pre">boot/</span></code> folder to the
-local volume&#8217;s boot folder.</li>
-<li><strong>Important</strong>: NOW is the point where Kerbal Space Program saves
-the game for the purpose of being able to &#8220;revert to launch&#8221;.</li>
-<li>kOS begins running that local copy of the boot file.</li>
+<li><p>Creates a folder called <code class="docutils literal notranslate"><span class="pre">boot/</span></code> on the kOS computer’s local volume
+(<code class="docutils literal notranslate"><span class="pre">1:/</span></code>).</p></li>
+<li><p>Copies the boot file from the archive’s <code class="docutils literal notranslate"><span class="pre">boot/</span></code> folder to the
+local volume’s boot folder.</p></li>
+<li><p><strong>Important</strong>: NOW is the point where Kerbal Space Program saves
+the game for the purpose of being able to “revert to launch”.</p></li>
+<li><p>kOS begins running that local copy of the boot file.</p></li>
 </ol>
 </div></blockquote>
 <p>Please make note of when during those steps Kerbal Space Program saved
 the game for the sake of doing a <em>revert to launch</em>.  If you edit
 the boot file on the archive, and then <em>revert to launch</em>, then your
 vessel will not have the newly edited boot file copied to it because
-it doesn&#8217;t go all the way back to do step 1 and 2 from the above list
+it doesn’t go all the way back to do step 1 and 2 from the above list
 again.  To force it to use the new version of the boot file you will
 either have to revert it all the way to the assembly building and
 re-launch it from there, or stop the boot file with ctrl-C and manually
 copy the new file and reboot.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="kospartmodule.html" class="btn btn-neutral float-right" title="KOS Processor PartModule Configuration Fields" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="cpu_hardware.html" class="btn btn-neutral" title="The kOS CPU hardware" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cpu_hardware.html" class="btn btn-neutral float-left" title="The kOS CPU hardware" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="kospartmodule.html" class="btn btn-neutral float-right" title="KOS Processor PartModule Configuration Fields" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

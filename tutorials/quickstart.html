@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Quick Start Tutorial &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quick Start Tutorial &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../about.html"/>
-        <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../index.html"/>
-        <link rel="up" title="Tutorials" href="../tutorials.html"/>
-        <link rel="next" title="KOS and programming introduction" href="basictutorial.html"/>
-        <link rel="prev" title="Tutorials" href="../tutorials.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="next" title="KOS and programming introduction" href="basictutorial.html" />
+    <link rel="prev" title="Tutorials" href="../tutorials.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,22 +40,13 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="">Quick Start</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Quick Start</a></li>
 <li class="toctree-l2"><a class="reference internal" href="basictutorial.html">Basic Explanation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="designpatterns.html">Design Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pidloops.html">PID Loops</a></li>
@@ -119,176 +68,159 @@
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../tutorials.html">Tutorials</a> &raquo;</li>
-      
-    <li>Quick Start Tutorial</li>
+      <li>Quick Start Tutorial</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../_sources/tutorials/quickstart.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../_sources/tutorials/quickstart.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="quick-start-tutorial">
-<span id="quickstart"></span><h1>Quick Start Tutorial<a class="headerlink" href="#quick-start-tutorial" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="quick-start-tutorial">
+<span id="quickstart"></span><h1>Quick Start Tutorial<a class="headerlink" href="#quick-start-tutorial" title="Permalink to this heading">¶</a></h1>
 <p>This is a quick start guide for the <strong>Kerbal Operating System</strong> (<strong>kOS</strong>). It is intended for those who are just starting with using <strong>kOS</strong>. It does presume you have played <strong>Kerbal Space Program</strong> before and know the basics of how to fly a rocket under manual control. It does <em>NOT</em> assume you know a lot about computer programming, and it will walk you through some basic first steps.</p>
-<div class="contents local topic" id="contents">
-<p class="topic-title first">Contents</p>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#first-example-hello-world" id="id1">First example: Hello World</a><ul>
-<li><a class="reference internal" href="#step-1-start-a-new-sandbox-mode-game" id="id2">Step 1: Start a new sandbox-mode game</a></li>
-<li><a class="reference internal" href="#step-2-make-a-vessel-in-the-vehicle-assembly-bay" id="id3">Step 2: Make a vessel in the Vehicle Assembly Bay</a></li>
-<li><a class="reference internal" href="#step-3-put-the-vessel-on-the-launchpad" id="id4">Step 3: Put the vessel on the launchpad</a></li>
-<li><a class="reference internal" href="#step-4-invoke-the-terminal" id="id5">Step 4: Invoke the terminal</a></li>
-<li><a class="reference internal" href="#step-5-see-what-an-interactive-command-is-like" id="id6">Step 5: See what an interactive command is like</a></li>
-<li><a class="reference internal" href="#step-6-okay-that-s-great-but-how-can-you-make-that-happen-in-a-program-script-instead" id="id7">Step 6: Okay that&#8217;s great, but how can you make that happen in a program script instead?</a></li>
-<li><a class="reference internal" href="#step-7-okay-but-where-is-this-program" id="id8">Step 7: Okay, but where is this program?</a></li>
-<li><a class="reference internal" href="#step-8-i-don-t-like-the-idea-that-the-program-is-stored-only-on-this-vessel-can-t-i-save-it-somewhere-better-more-permanent" id="id9">Step 8: I don&#8217;t like the idea that the program is stored only on this vessel. Can&#8217;t I save it somewhere better? More permanent?</a></li>
+<li><p><a class="reference internal" href="#first-example-hello-world" id="id1">First example: Hello World</a></p>
+<ul>
+<li><p><a class="reference internal" href="#step-1-start-a-new-sandbox-mode-game" id="id2">Step 1: Start a new sandbox-mode game</a></p></li>
+<li><p><a class="reference internal" href="#step-2-make-a-vessel-in-the-vehicle-assembly-bay" id="id3">Step 2: Make a vessel in the Vehicle Assembly Bay</a></p></li>
+<li><p><a class="reference internal" href="#step-3-put-the-vessel-on-the-launchpad" id="id4">Step 3: Put the vessel on the launchpad</a></p></li>
+<li><p><a class="reference internal" href="#step-4-invoke-the-terminal" id="id5">Step 4: Invoke the terminal</a></p></li>
+<li><p><a class="reference internal" href="#step-5-see-what-an-interactive-command-is-like" id="id6">Step 5: See what an interactive command is like</a></p></li>
+<li><p><a class="reference internal" href="#step-6-okay-that-s-great-but-how-can-you-make-that-happen-in-a-program-script-instead" id="id7">Step 6: Okay that’s great, but how can you make that happen in a program script instead?</a></p></li>
+<li><p><a class="reference internal" href="#step-7-okay-but-where-is-this-program" id="id8">Step 7: Okay, but where is this program?</a></p></li>
+<li><p><a class="reference internal" href="#step-8-i-don-t-like-the-idea-that-the-program-is-stored-only-on-this-vessel-can-t-i-save-it-somewhere-better-more-permanent" id="id9">Step 8: I don’t like the idea that the program is stored only on this vessel. Can’t I save it somewhere better? More permanent?</a></p></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#second-example-doing-something-real" id="id10">Second Example: Doing something real</a><ul>
-<li><a class="reference internal" href="#step-1-make-a-vessel" id="id11">Step 1: Make a vessel</a></li>
-<li><a class="reference internal" href="#step-2-make-the-start-of-the-script" id="id12">Step 2: Make the start of the script</a></li>
-<li><a class="reference internal" href="#step-3-make-the-script-actually-do-something" id="id13">Step 3: Make the script actually do something</a></li>
-<li><a class="reference internal" href="#step-4-make-the-script-actually-control-steering" id="id14">Step 4: Make the script actually control steering</a></li>
-<li><a class="reference internal" href="#step-5-add-staging-logic" id="id15">Step 5: Add staging logic</a></li>
-<li><a class="reference internal" href="#step-6-now-to-make-it-turn" id="id16">Step 6: Now to make it turn</a></li>
-<li><a class="reference internal" href="#step-7-putting-it-all-together" id="id17">Step 7: Putting it all together</a></li>
+<li><p><a class="reference internal" href="#second-example-doing-something-real" id="id10">Second Example: Doing something real</a></p>
+<ul>
+<li><p><a class="reference internal" href="#step-1-make-a-vessel" id="id11">Step 1: Make a vessel</a></p></li>
+<li><p><a class="reference internal" href="#step-2-make-the-start-of-the-script" id="id12">Step 2: Make the start of the script</a></p></li>
+<li><p><a class="reference internal" href="#step-3-make-the-script-actually-do-something" id="id13">Step 3: Make the script actually do something</a></p></li>
+<li><p><a class="reference internal" href="#step-4-make-the-script-actually-control-steering" id="id14">Step 4: Make the script actually control steering</a></p></li>
+<li><p><a class="reference internal" href="#step-5-add-staging-logic" id="id15">Step 5: Add staging logic</a></p></li>
+<li><p><a class="reference internal" href="#step-6-now-to-make-it-turn" id="id16">Step 6: Now to make it turn</a></p></li>
+<li><p><a class="reference internal" href="#step-7-putting-it-all-together" id="id17">Step 7: Putting it all together</a></p></li>
 </ul>
 </li>
 </ul>
-</div>
-<div class="section" id="first-example-hello-world">
-<h2><a class="toc-backref" href="#id1">First example: Hello World</a><a class="headerlink" href="#first-example-hello-world" title="Permalink to this headline">¶</a></h2>
-<p>In the grand tradition of programming tutorials, the first example will be how to make a script that does nothing more than print the words &#8220;Hello World&#8221; on the screen. The purpose of this example is to show where you should put the files, how to move them about, and how to get one to run on the vessel.</p>
-<div class="section" id="step-1-start-a-new-sandbox-mode-game">
-<h3><a class="toc-backref" href="#id2">Step 1: Start a new sandbox-mode game</a><a class="headerlink" href="#step-1-start-a-new-sandbox-mode-game" title="Permalink to this headline">¶</a></h3>
-<p>(You can use <strong>kOS</strong> in a career mode game, but it requires a part that you have to research which isn&#8217;t available at the start of the tech tree, so this example will just use sandbox mode to keep it simple.)</p>
-</div>
-<div class="section" id="step-2-make-a-vessel-in-the-vehicle-assembly-bay">
-<h3><a class="toc-backref" href="#id3">Step 2: Make a vessel in the Vehicle Assembly Bay</a><a class="headerlink" href="#step-2-make-a-vessel-in-the-vehicle-assembly-bay" title="Permalink to this headline">¶</a></h3>
-<p>Make the vessel contain any unmanned command core, a few hundred units of battery power, a means of recharging the battery such as a solar panel array, and the &#8220;Comptronix CX-4181 Scriptable Control System&#8221;. (From this point onward the CX-4181 Scriptable Control System part will be referred to by the acronym &#8220;SCS&#8221;.) The SCS part is located in the parts bin under the &#8220;Control&#8221; tab (the same place where RCS thrusters and Torque Wheels are found.)</p>
-<div class="figure">
+</nav>
+<section id="first-example-hello-world">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">First example: Hello World</a><a class="headerlink" href="#first-example-hello-world" title="Permalink to this heading">¶</a></h2>
+<p>In the grand tradition of programming tutorials, the first example will be how to make a script that does nothing more than print the words “Hello World” on the screen. The purpose of this example is to show where you should put the files, how to move them about, and how to get one to run on the vessel.</p>
+<section id="step-1-start-a-new-sandbox-mode-game">
+<h3><a class="toc-backref" href="#id2" role="doc-backlink">Step 1: Start a new sandbox-mode game</a><a class="headerlink" href="#step-1-start-a-new-sandbox-mode-game" title="Permalink to this heading">¶</a></h3>
+<p>(You can use <strong>kOS</strong> in a career mode game, but it requires a part that you have to research which isn’t available at the start of the tech tree, so this example will just use sandbox mode to keep it simple.)</p>
+</section>
+<section id="step-2-make-a-vessel-in-the-vehicle-assembly-bay">
+<h3><a class="toc-backref" href="#id3" role="doc-backlink">Step 2: Make a vessel in the Vehicle Assembly Bay</a><a class="headerlink" href="#step-2-make-a-vessel-in-the-vehicle-assembly-bay" title="Permalink to this heading">¶</a></h3>
+<p>Make the vessel contain any unmanned command core, a few hundred units of battery power, a means of recharging the battery such as a solar panel array, and the “Comptronix CX-4181 Scriptable Control System”. (From this point onward the CX-4181 Scriptable Control System part will be referred to by the acronym “SCS”.) The SCS part is located in the parts bin under the “Control” tab (the same place where RCS thrusters and Torque Wheels are found.)</p>
+<figure class="align-default">
 <img alt="../_images/SCS_parts_bin.png" src="../_images/SCS_parts_bin.png" />
-</div>
-</div>
-<div class="section" id="step-3-put-the-vessel-on-the-launchpad">
-<h3><a class="toc-backref" href="#id4">Step 3: Put the vessel on the launchpad</a><a class="headerlink" href="#step-3-put-the-vessel-on-the-launchpad" title="Permalink to this headline">¶</a></h3>
-<p>Put the vessel on the launchpad. For this first example it doesn&#8217;t matter if the vessel can actually liftoff or even has engines at all.</p>
-</div>
-<div class="section" id="step-4-invoke-the-terminal">
-<h3><a class="toc-backref" href="#id5">Step 4: Invoke the terminal</a><a class="headerlink" href="#step-4-invoke-the-terminal" title="Permalink to this headline">¶</a></h3>
-<p>Right click for the SCS part on the vessel and then click the button that says &#8220;Open Terminal&#8221;.</p>
-<p>Note that if the terminal is semi-transparent, this means it&#8217;s not currently selected. If you click on the terminal, then your keyboard input is directed to the terminal INSTEAD of to piloting. In other words if you type <code class="docutils literal"><span class="pre">W</span></code> <code class="docutils literal"><span class="pre">A</span></code> <code class="docutils literal"><span class="pre">S</span></code> <code class="docutils literal"><span class="pre">D</span></code>, you&#8217;ll actually get the word &#8220;wasd&#8221; to appear on the terminal, rather than the <code class="docutils literal"><span class="pre">W</span></code> <code class="docutils literal"><span class="pre">A</span></code> <code class="docutils literal"><span class="pre">S</span></code> <code class="docutils literal"><span class="pre">D</span></code> keys steering the ship. To switch back to manual control of the game instead of typing into the terminal, click outside the terminal window anywhere on the background of the screen.</p>
-</div>
-<div class="section" id="step-5-see-what-an-interactive-command-is-like">
-<h3><a class="toc-backref" href="#id6">Step 5: See what an interactive command is like</a><a class="headerlink" href="#step-5-see-what-an-interactive-command-is-like" title="Permalink to this headline">¶</a></h3>
+</figure>
+</section>
+<section id="step-3-put-the-vessel-on-the-launchpad">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">Step 3: Put the vessel on the launchpad</a><a class="headerlink" href="#step-3-put-the-vessel-on-the-launchpad" title="Permalink to this heading">¶</a></h3>
+<p>Put the vessel on the launchpad. For this first example it doesn’t matter if the vessel can actually liftoff or even has engines at all.</p>
+</section>
+<section id="step-4-invoke-the-terminal">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">Step 4: Invoke the terminal</a><a class="headerlink" href="#step-4-invoke-the-terminal" title="Permalink to this heading">¶</a></h3>
+<p>Right click for the SCS part on the vessel and then click the button that says “Open Terminal”.</p>
+<p>Note that if the terminal is semi-transparent, this means it’s not currently selected. If you click on the terminal, then your keyboard input is directed to the terminal INSTEAD of to piloting. In other words if you type <code class="docutils literal notranslate"><span class="pre">W</span></code> <code class="docutils literal notranslate"><span class="pre">A</span></code> <code class="docutils literal notranslate"><span class="pre">S</span></code> <code class="docutils literal notranslate"><span class="pre">D</span></code>, you’ll actually get the word “wasd” to appear on the terminal, rather than the <code class="docutils literal notranslate"><span class="pre">W</span></code> <code class="docutils literal notranslate"><span class="pre">A</span></code> <code class="docutils literal notranslate"><span class="pre">S</span></code> <code class="docutils literal notranslate"><span class="pre">D</span></code> keys steering the ship. To switch back to manual control of the game instead of typing into the terminal, click outside the terminal window anywhere on the background of the screen.</p>
+</section>
+<section id="step-5-see-what-an-interactive-command-is-like">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">Step 5: See what an interactive command is like</a><a class="headerlink" href="#step-5-see-what-an-interactive-command-is-like" title="Permalink to this heading">¶</a></h3>
 <p>You should now see an old-school looking text terminal like the one shown below. Type the line:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">CLEARSCREEN</span><span class="p">.</span> <span class="k">PRINT</span> <span class="s">&quot;==HELLO WORLD==&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">CLEARSCREEN</span><span class="p">.</span> <span class="k">PRINT</span> <span class="s">&quot;==HELLO WORLD==&quot;</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>into the terminal (make sure to actually type the periods (&#8221;.&#8221;) as shown) and hit <code class="docutils literal"><span class="pre">ENTER</span></code>. Note that you can type it in uppercase or lowercase. <strong>kOS</strong> doesn&#8217;t care.</p>
-<div class="figure">
+<p>into the terminal (make sure to actually type the periods (“.”) as shown) and hit <code class="docutils literal notranslate"><span class="pre">ENTER</span></code>. Note that you can type it in uppercase or lowercase. <strong>kOS</strong> doesn’t care.</p>
+<figure class="align-default">
 <a class="reference internal image-reference" href="../_images/terminal_open_1.png"><img alt="../_images/terminal_open_1.png" src="../_images/terminal_open_1.png" style="width: 80%;" /></a>
-</div>
+</figure>
 <p>The terminal will respond by showing you this:</p>
-<div class="figure">
+<figure class="align-default">
 <img alt="../_images/terminal_open_2.png" src="../_images/terminal_open_2.png" />
-</div>
-</div>
-<div class="section" id="step-6-okay-that-s-great-but-how-can-you-make-that-happen-in-a-program-script-instead">
-<h3><a class="toc-backref" href="#id7">Step 6: Okay that&#8217;s great, but how can you make that happen in a program script instead?</a><a class="headerlink" href="#step-6-okay-that-s-great-but-how-can-you-make-that-happen-in-a-program-script-instead" title="Permalink to this headline">¶</a></h3>
+</figure>
+</section>
+<section id="step-6-okay-that-s-great-but-how-can-you-make-that-happen-in-a-program-script-instead">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">Step 6: Okay that’s great, but how can you make that happen in a program script instead?</a><a class="headerlink" href="#step-6-okay-that-s-great-but-how-can-you-make-that-happen-in-a-program-script-instead" title="Permalink to this heading">¶</a></h3>
 <p>Like so: Enter this command:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">EDIT</span> <span class="nv">HELLO</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">EDIT</span> <span class="nv">HELLO</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>(Don&#8217;t forget the period (&#8221;.&#8221;). All commands in <strong>kOS</strong> are ended with a period. Again, you can type it in uppercase or lowercase. <strong>kOS</strong> doesn&#8217;t care.)</p>
-<p>You should see an editor window appear, looking something like this (without the text inside because you&#8217;re starting a blank new file):</p>
-<div class="figure">
+<p>(Don’t forget the period (“.”). All commands in <strong>kOS</strong> are ended with a period. Again, you can type it in uppercase or lowercase. <strong>kOS</strong> doesn’t care.)</p>
+<p>You should see an editor window appear, looking something like this (without the text inside because you’re starting a blank new file):</p>
+<figure class="align-default">
 <img alt="../_images/editor.png" src="../_images/editor.png" />
-</div>
+</figure>
 <p>Type this text into the window:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;=========================================&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;=========================================&quot;</span><span class="p">.</span>
 <span class="k">PRINT</span> <span class="s">&quot;      HELLO WORLD&quot;</span><span class="p">.</span>
 <span class="k">PRINT</span> <span class="s">&quot;THIS IS THE FIRST SCRIPT I WROTE IN kOS.&quot;</span><span class="p">.</span>
 <span class="k">PRINT</span> <span class="s">&quot;=========================================&quot;</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>Click &#8220;Save&#8221; then &#8220;Exit&#8221; in the editor pop-up window.</p>
+<p>Click “Save” then “Exit” in the editor pop-up window.</p>
 <ul class="simple">
-<li><em>Side Note: The editor font</em> - Experienced programmers may have noticed that the editor&#8217;s font is proportional width rather than monospaced and that this is not ideal for programming work. You are right, but there is little that can be done about it for a variety of technical reasons that are too complex to go into right now.</li>
+<li><p><em>Side Note: The editor font</em> - Experienced programmers may have noticed that the editor’s font is proportional width rather than monospaced and that this is not ideal for programming work. You are right, but there is little that can be done about it for a variety of technical reasons that are too complex to go into right now.</p></li>
 </ul>
 <p>Then on the main text terminal Enter:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">RUN</span> <span class="nv">HELLO</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">RUN</span> <span class="nv">HELLO</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>And you will see the program run, showing the text on the screen like so.</p>
-<div class="figure">
+<figure class="align-default">
 <img alt="../_images/hello_world1.png" src="../_images/hello_world1.png" />
-</div>
+</figure>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">You can also type <code class="docutils literal"><span class="pre">RUNPATH(&quot;hello&quot;)</span></code> instead of <code class="docutils literal"><span class="pre">RUN</span> <span class="pre">HELLO</span></code>.  The
+<p class="admonition-title">Note</p>
+<p>You can also type <code class="docutils literal notranslate"><span class="pre">RUNPATH(&quot;hello&quot;)</span></code> instead of <code class="docutils literal notranslate"><span class="pre">RUN</span> <span class="pre">HELLO</span></code>.  The
 commands are slightly different but should have the same effect.  You can
-learn about the specific difference between them later <a class="reference internal" href="../commands/runprogram.html#running"><span>here</span></a>.</p>
+learn about the specific difference between them later <a class="reference internal" href="../commands/runprogram.html#running"><span class="std std-ref">here</span></a>.</p>
 </div>
-</div>
-<div class="section" id="step-7-okay-but-where-is-this-program">
-<h3><a class="toc-backref" href="#id8">Step 7: Okay, but where is this program?</a><a class="headerlink" href="#step-7-okay-but-where-is-this-program" title="Permalink to this headline">¶</a></h3>
-<p>To see where the &#8220;HELLO&#8221; program has been saved, Issue the command <code class="docutils literal"><span class="pre">LIST</span> <span class="pre">FILES</span></code> like this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LIST</span> <span class="nv">FILES</span><span class="p">.</span>
+</section>
+<section id="step-7-okay-but-where-is-this-program">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">Step 7: Okay, but where is this program?</a><a class="headerlink" href="#step-7-okay-but-where-is-this-program" title="Permalink to this heading">¶</a></h3>
+<p>To see where the “HELLO” program has been saved, Issue the command <code class="docutils literal notranslate"><span class="pre">LIST</span> <span class="pre">FILES</span></code> like this:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">LIST</span> <span class="nv">FILES</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>(Note, that the default for the <code class="docutils literal"><span class="pre">LIST</span></code> command is to list <code class="docutils literal"><span class="pre">FILES</span></code>, so you can leave the word &#8220;FILES&#8221; off if you like.)</p>
+<p>(Note, that the default for the <code class="docutils literal notranslate"><span class="pre">LIST</span></code> command is to list <code class="docutils literal notranslate"><span class="pre">FILES</span></code>, so you can leave the word “FILES” off if you like.)</p>
 <p>It should look like this, showing you the HELLO program you just wrote:</p>
-<div class="figure">
+<figure class="align-default">
 <img alt="../_images/hello_list.png" src="../_images/hello_list.png" />
-</div>
-<p>This is a list of all the files on the currently selected VOLUME. By default, when you launch a new vessel, the currently selected VOLUME is called &#8220;1&#8221; and it&#8217;s the volume that&#8217;s stored on THAT SCS part that you are running all these commands in.</p>
+</figure>
+<p>This is a list of all the files on the currently selected VOLUME. By default, when you launch a new vessel, the currently selected VOLUME is called “1” and it’s the volume that’s stored on THAT SCS part that you are running all these commands in.</p>
 <p>This is the local volume of that SCS part. Local volumes such at this tend to have very small limited storage, as you can see when you look at the space remaining in the list printout.</p>
-<p>If you&#8217;re wondering where the file is stored <em>physically</em> on your computer, it&#8217;s represented by a section inside the persistence file for your saved game, as a piece of data associated with the SCS part. This is important because it means you can&#8217;t access the program from another vessel, and if this vessel ever crashes and the SCS part explodes, then you&#8217;ve lost the program.</p>
-</div>
-<div class="section" id="step-8-i-don-t-like-the-idea-that-the-program-is-stored-only-on-this-vessel-can-t-i-save-it-somewhere-better-more-permanent">
-<h3><a class="toc-backref" href="#id9">Step 8: I don&#8217;t like the idea that the program is stored only on this vessel. Can&#8217;t I save it somewhere better? More permanent?</a><a class="headerlink" href="#step-8-i-don-t-like-the-idea-that-the-program-is-stored-only-on-this-vessel-can-t-i-save-it-somewhere-better-more-permanent" title="Permalink to this headline">¶</a></h3>
+<p>If you’re wondering where the file is stored <em>physically</em> on your computer, it’s represented by a section inside the persistence file for your saved game, as a piece of data associated with the SCS part. This is important because it means you can’t access the program from another vessel, and if this vessel ever crashes and the SCS part explodes, then you’ve lost the program.</p>
+</section>
+<section id="step-8-i-don-t-like-the-idea-that-the-program-is-stored-only-on-this-vessel-can-t-i-save-it-somewhere-better-more-permanent">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">Step 8: I don’t like the idea that the program is stored only on this vessel. Can’t I save it somewhere better? More permanent?</a><a class="headerlink" href="#step-8-i-don-t-like-the-idea-that-the-program-is-stored-only-on-this-vessel-can-t-i-save-it-somewhere-better-more-permanent" title="Permalink to this heading">¶</a></h3>
 <p>Yes. Yes you can.</p>
 <p>There is another VOLUME that always exists called the <em>Archive</em>, which is also referred to as volume 0. (either name can be used in commands). The archive is conceptually stored somewhere back at Kerbin home base in the Space Center rather than on your vessel. It has infinite storage space, and does not disappear when your vessel is gone. ALSO, it actually exists across saved games - if you launch one saved game, put a new file in the Archive, and then later launch a different saved game, that file will be there in that game too.</p>
-<p>To use the Archive, first we&#8217;ll have to introduce you to a new command, called <code class="docutils literal"><span class="pre">SWITCH</span> <span class="pre">TO</span></code>. The <code class="docutils literal"><span class="pre">SWITCH</span> <span class="pre">TO</span></code> command changes which VOLUME is the one that you are doing your work with.</p>
-<p>To work with the archive, and create a second &#8220;hello world&#8221; file there, you issue these commands and see what they do:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SWITCH</span> <span class="ow">TO</span> <span class="mf">0</span><span class="p">.</span>
+<p>To use the Archive, first we’ll have to introduce you to a new command, called <code class="docutils literal notranslate"><span class="pre">SWITCH</span> <span class="pre">TO</span></code>. The <code class="docutils literal notranslate"><span class="pre">SWITCH</span> <span class="pre">TO</span></code> command changes which VOLUME is the one that you are doing your work with.</p>
+<p>To work with the archive, and create a second “hello world” file there, you issue these commands and see what they do:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SWITCH</span> <span class="ow">TO</span> <span class="mf">0</span><span class="p">.</span>
 <span class="k">EDIT</span> <span class="nv">HELLO2</span><span class="p">.</span> <span class="c1">// Make a new file here that just says: PRINT &quot;hi again&quot;.</span>
 <span class="k">LIST</span> <span class="nv">FILES</span><span class="p">.</span>
 <span class="k">RUN</span> <span class="nv">HELLO2</span><span class="p">.</span>
@@ -297,44 +229,44 @@ learn about the specific difference between them later <a class="reference inter
 <span class="k">RUN</span> <span class="nv">HELLO</span><span class="p">.</span>
 </pre></div>
 </div>
-<p><em>But where is it stored behind the scenes?</em> The archive is currently slightly violating the design of <strong>KSP</strong> mods that puts everything in the GameData folder. The kSP Archive is actually stored in the <code class="docutils literal"><span class="pre">Ships/Script</span></code> folder of your MAIN <strong>KSP</strong> home, not inside GameData.</p>
-<p>If a file is stored inside the archive, it can actually be edited <em>by an external text editor of your choice</em> instead of using <strong>kOS</strong>&#8216;s in-game editor. This is usually a much better practice once you start doing more complex things with <strong>kOS</strong>. You can also make new files in the archive folder. Just make sure that all the files end with a <code class="docutils literal"><span class="pre">.ks</span></code> file name suffix or <strong>kOS</strong> won&#8217;t use them.</p>
+<p><em>But where is it stored behind the scenes?</em> The archive is currently slightly violating the design of <strong>KSP</strong> mods that puts everything in the GameData folder. The kSP Archive is actually stored in the <code class="docutils literal notranslate"><span class="pre">Ships/Script</span></code> folder of your MAIN <strong>KSP</strong> home, not inside GameData.</p>
+<p>If a file is stored inside the archive, it can actually be edited <em>by an external text editor of your choice</em> instead of using <strong>kOS</strong>’s in-game editor. This is usually a much better practice once you start doing more complex things with <strong>kOS</strong>. You can also make new files in the archive folder. Just make sure that all the files end with a <code class="docutils literal notranslate"><span class="pre">.ks</span></code> file name suffix or <strong>kOS</strong> won’t use them.</p>
 <p>Further reading about files and volumes:</p>
 <ul class="simple">
-<li><a class="reference internal" href="../general/volumes.html#volumes"><span>Volumes</span></a></li>
-<li><a class="reference internal" href="../commands/files.html#files"><span>File Control</span></a></li>
-<li><a class="reference internal" href="../structures/volumes_and_files/volumefile.html#volumefile"><span>VolumeFile structure</span></a></li>
+<li><p><a class="reference internal" href="../general/volumes.html#volumes"><span class="std std-ref">Volumes</span></a></p></li>
+<li><p><a class="reference internal" href="../commands/files.html#files"><span class="std std-ref">File Control</span></a></p></li>
+<li><p><a class="reference internal" href="../structures/volumes_and_files/volumefile.html#volumefile"><span class="std std-ref">VolumeFile structure</span></a></p></li>
 </ul>
-<div class="section" id="step-9-but-can-i-make-it-boot-automatically-when-i-launch-the-vessel">
-<h4>Step 9: But can I make it boot automatically when I launch the vessel?<a class="headerlink" href="#step-9-but-can-i-make-it-boot-automatically-when-i-launch-the-vessel" title="Permalink to this headline">¶</a></h4>
+<section id="step-9-but-can-i-make-it-boot-automatically-when-i-launch-the-vessel">
+<h4>Step 9: But can I make it boot automatically when I launch the vessel?<a class="headerlink" href="#step-9-but-can-i-make-it-boot-automatically-when-i-launch-the-vessel" title="Permalink to this heading">¶</a></h4>
 <p>Yes. It is possible to create a boot file and have kOS automatically
 copy it to the vessel, then run it, when the vessel is first put on
-the launchpad.  You don&#8217;t have to do so right now to follow this
-tutorial, but be aware that this feature exists and it&#8217;s one you will
-probably want to make use of eventually.  It&#8217;s described in
-<a class="reference internal" href="../general/boot.html#boot"><span>more detail here</span></a>.</p>
-</div>
-</div>
-</div>
-<div class="section" id="second-example-doing-something-real">
-<h2><a class="toc-backref" href="#id10">Second Example: Doing something real</a><a class="headerlink" href="#second-example-doing-something-real" title="Permalink to this headline">¶</a></h2>
-<p>Okay that&#8217;s all basic setup stuff but you&#8217;re probably clamoring for a real example that actually does something nifty.</p>
-<p>This example will show the crudest, most basic use of <strong>kOS</strong> just to get started. In this example we&#8217;ll make a program that will launch a vessel using progressively more and more complex checks. <strong>kOS</strong> can be used at any stage of a vessel&#8217;s flight - launching, circularizing, docking, landing,... and in fact launching is one of the simpler piloting tasks that you can do without much need of automation. Where <strong>kOS</strong> really shines is for writing scripts to do touchy sensitive tasks like landing or docking or hovering. These are the areas that can benefit from the faster reaction speed that a computer script can handle.</p>
-<p>But in order to give you an example that you can start with from scratch, that&#8217;s easy to reload and retry from an initial point, we&#8217;ll use an example of launching.</p>
-<div class="section" id="step-1-make-a-vessel">
-<h3><a class="toc-backref" href="#id11">Step 1: Make a vessel</a><a class="headerlink" href="#step-1-make-a-vessel" title="Permalink to this headline">¶</a></h3>
+the launchpad.  You don’t have to do so right now to follow this
+tutorial, but be aware that this feature exists and it’s one you will
+probably want to make use of eventually.  It’s described in
+<a class="reference internal" href="../general/boot.html#boot"><span class="std std-ref">more detail here</span></a>.</p>
+</section>
+</section>
+</section>
+<section id="second-example-doing-something-real">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">Second Example: Doing something real</a><a class="headerlink" href="#second-example-doing-something-real" title="Permalink to this heading">¶</a></h2>
+<p>Okay that’s all basic setup stuff but you’re probably clamoring for a real example that actually does something nifty.</p>
+<p>This example will show the crudest, most basic use of <strong>kOS</strong> just to get started. In this example we’ll make a program that will launch a vessel using progressively more and more complex checks. <strong>kOS</strong> can be used at any stage of a vessel’s flight - launching, circularizing, docking, landing,… and in fact launching is one of the simpler piloting tasks that you can do without much need of automation. Where <strong>kOS</strong> really shines is for writing scripts to do touchy sensitive tasks like landing or docking or hovering. These are the areas that can benefit from the faster reaction speed that a computer script can handle.</p>
+<p>But in order to give you an example that you can start with from scratch, that’s easy to reload and retry from an initial point, we’ll use an example of launching.</p>
+<section id="step-1-make-a-vessel">
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">Step 1: Make a vessel</a><a class="headerlink" href="#step-1-make-a-vessel" title="Permalink to this heading">¶</a></h3>
 <p>This tutorial is designed to work with a very specific rocket design.
 You need to make the vessel you see here:</p>
-<div class="figure">
+<figure class="align-default">
 <a class="reference internal image-reference" href="../_images/example_2_0.png"><img alt="../_images/example_2_0.png" src="../_images/example_2_0.png" style="width: 80%;" /></a>
-</div>
+</figure>
 <p>If you prefer, you can instead download the
 <a class="reference external" href="../_static/tutorials/quickstart/MyFirstRocket.craft">.craft file here</a></p>
-</div>
-<div class="section" id="step-2-make-the-start-of-the-script">
-<h3><a class="toc-backref" href="#id12">Step 2: Make the start of the script</a><a class="headerlink" href="#step-2-make-the-start-of-the-script" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="step-2-make-the-start-of-the-script">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">Step 2: Make the start of the script</a><a class="headerlink" href="#step-2-make-the-start-of-the-script" title="Permalink to this heading">¶</a></h3>
 <p>Okay, so type the lines below in an external <em>text editor of your choice</em> (i.e. Notepad on Windows, or TextEdit on Mac, or whatever you fancy):</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">//hellolaunch</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">//hellolaunch</span>
 
 <span class="c1">//First, we&#39;ll clear the terminal screen to make it look nice</span>
 <span class="k">CLEARSCREEN</span><span class="p">.</span>
@@ -347,29 +279,29 @@ You need to make the vessel you see here:</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>See those things with the two slashes (&#8220;//&#8221;)? Those are comments in the Kerboscript language and they&#8217;re just ways to write things in the program that don&#8217;t do anything - they&#8217;re there for humans like you to read so you understand what&#8217;s going on. In these examples you never actually have to type in the things you see after the slashes. They&#8217;re there for your benefit when reading this document but you can leave them out if you wish.</p>
-<p>Save the file in your <code class="docutils literal"><span class="pre">Ships/Script</span></code> folder of your <strong>KSP</strong> installation under the filename &#8220;hellolaunch.ks&#8221;. DO NOT save it anywhere under <code class="docutils literal"><span class="pre">GameData/kOS/</span></code>. Do NOT. According to the <strong>KSP</strong> standard, normally <strong>KSP</strong> mods should put their files in <code class="docutils literal"><span class="pre">GameData/[mod</span> <span class="pre">name]</span></code>, but <strong>kOS</strong> puts the archive outside the <code class="docutils literal"><span class="pre">GameData</span></code> folder because it represents content owned by you, the player, not content owned by the <strong>kOS</strong> mod.</p>
-<p>By saving the file in <code class="docutils literal"><span class="pre">Ships/Script</span></code>, you have actually put it in your archive volume of <strong>kOS</strong>. <strong>kOS</strong> will see it there immediately without delay. You do not need to restart the game. If you do:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SWITCH</span> <span class="ow">TO</span> <span class="mf">0</span><span class="p">.</span>
+<p>See those things with the two slashes (“//”)? Those are comments in the Kerboscript language and they’re just ways to write things in the program that don’t do anything - they’re there for humans like you to read so you understand what’s going on. In these examples you never actually have to type in the things you see after the slashes. They’re there for your benefit when reading this document but you can leave them out if you wish.</p>
+<p>Save the file in your <code class="docutils literal notranslate"><span class="pre">Ships/Script</span></code> folder of your <strong>KSP</strong> installation under the filename “hellolaunch.ks”. DO NOT save it anywhere under <code class="docutils literal notranslate"><span class="pre">GameData/kOS/</span></code>. Do NOT. According to the <strong>KSP</strong> standard, normally <strong>KSP</strong> mods should put their files in <code class="docutils literal notranslate"><span class="pre">GameData/[mod</span> <span class="pre">name]</span></code>, but <strong>kOS</strong> puts the archive outside the <code class="docutils literal notranslate"><span class="pre">GameData</span></code> folder because it represents content owned by you, the player, not content owned by the <strong>kOS</strong> mod.</p>
+<p>By saving the file in <code class="docutils literal notranslate"><span class="pre">Ships/Script</span></code>, you have actually put it in your archive volume of <strong>kOS</strong>. <strong>kOS</strong> will see it there immediately without delay. You do not need to restart the game. If you do:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SWITCH</span> <span class="ow">TO</span> <span class="mf">0</span><span class="p">.</span>
 <span class="k">LIST</span> <span class="nv">FILES</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>after saving the file from your external text editor program, you will see a listing of your file &#8220;hellolaunch&#8221; right away. Okay, now copy it to your local drive and give it a try running it from there:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SWITCH</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
+<p>after saving the file from your external text editor program, you will see a listing of your file “hellolaunch” right away. Okay, now copy it to your local drive and give it a try running it from there:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SWITCH</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
 <span class="nv">COPYPATH</span><span class="p">(</span><span class="s">&quot;0:/HELLOLAUNCH&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">).</span> <span class="c1">// copies from 0 (archive) to current default location (local drive (1)).</span>
 <span class="k">RUN</span> <span class="nv">HELLOLAUNCH</span><span class="p">.</span>
 </pre></div>
 </div>
-<div class="figure">
+<figure class="align-default">
 <a class="reference internal image-reference" href="../_images/example_2_1.png"><img alt="../_images/example_2_1.png" src="../_images/example_2_1.png" style="width: 80%;" /></a>
-</div>
-<p>Okay so the program doesn&#8217;t actually DO anything yet other than just countdown from 10 to 0. A bit of a disappointment, but we haven&#8217;t written the rest of the program yet.</p>
-<p>You&#8217;ll note that what you&#8217;ve done is switch to the local volume (1) and then copy the program from the archive (0) to the local volume (1) and then run it from the local volume. Technically you didn&#8217;t need to do this. You could have just run it directly from the archive. For those looking at the <strong>KSP</strong> game as a bit of a role-play experience, it makes sense to never run programs directly from the archive, and instead live with the limitation that software should be copied to the craft for it to be able to run it.</p>
-</div>
-<div class="section" id="step-3-make-the-script-actually-do-something">
-<h3><a class="toc-backref" href="#id13">Step 3: Make the script actually do something</a><a class="headerlink" href="#step-3-make-the-script-actually-do-something" title="Permalink to this headline">¶</a></h3>
+</figure>
+<p>Okay so the program doesn’t actually DO anything yet other than just countdown from 10 to 0. A bit of a disappointment, but we haven’t written the rest of the program yet.</p>
+<p>You’ll note that what you’ve done is switch to the local volume (1) and then copy the program from the archive (0) to the local volume (1) and then run it from the local volume. Technically you didn’t need to do this. You could have just run it directly from the archive. For those looking at the <strong>KSP</strong> game as a bit of a role-play experience, it makes sense to never run programs directly from the archive, and instead live with the limitation that software should be copied to the craft for it to be able to run it.</p>
+</section>
+<section id="step-3-make-the-script-actually-do-something">
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">Step 3: Make the script actually do something</a><a class="headerlink" href="#step-3-make-the-script-actually-do-something" title="Permalink to this heading">¶</a></h3>
 <p>Okay now go back into your <em>text editor of choice</em> and append a few more lines to the hellolaunch.ks file so it now looks like this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">//hellolaunch</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">//hellolaunch</span>
 
 <span class="c1">//First, we&#39;ll clear the terminal screen to make it look nice</span>
 <span class="k">CLEARSCREEN</span><span class="p">.</span>
@@ -400,29 +332,29 @@ You need to make the vessel you see here:</p>
 </pre></div>
 </div>
 <p>Save this file to hellolaunch.ks again, and re-copy it to your vessel that should still be sitting on the launchpad, then run it, like so:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">COPYPATH</span><span class="p">(</span><span class="s">&quot;0:/HELLOLAUNCH&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">).</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">COPYPATH</span><span class="p">(</span><span class="s">&quot;0:/HELLOLAUNCH&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">).</span>
 <span class="k">RUN</span> <span class="nv">HELLOLAUNCH</span><span class="p">.</span> <span class="c1">// You could also say RUNPATH(&quot;hellolaunch&quot;) here.</span>
 </pre></div>
 </div>
-<div class="figure">
+<figure class="align-default">
 <a class="reference internal image-reference" href="../_images/example_2_2.png"><img alt="../_images/example_2_2.png" src="../_images/example_2_2.png" style="width: 80%;" /></a>
-</div>
+</figure>
 <p>Hey! It does something now! It fires the first stage engine and launches!</p>
-<p>But.. but wait... It doesn&#8217;t control the steering and it just lets it go where ever it will.</p>
-<p>Most likely you had a crash with this script because it didn&#8217;t do anything to affect the steering at all, so it probably allowed the rocket to tilt over.</p>
-</div>
-<div class="section" id="step-4-make-the-script-actually-control-steering">
-<h3><a class="toc-backref" href="#id14">Step 4: Make the script actually control steering</a><a class="headerlink" href="#step-4-make-the-script-actually-control-steering" title="Permalink to this headline">¶</a></h3>
-<p>So to fix that problem, let&#8217;s add steering control to the script.</p>
-<p>The easy way to control steering is to use the <code class="docutils literal"><span class="pre">LOCK</span> <span class="pre">STEERING</span></code> command.</p>
-<p>Once you have mastered the basics of <strong>kOS</strong>, you should go and read <a class="reference external" href="../commands/flight.html">the documentation on ship steering techniques</a>, but that&#8217;s a more advanced topic for later.</p>
-<p>The way to use the <code class="docutils literal"><span class="pre">LOCK</span> <span class="pre">STEERING</span></code> command is to set it to a thing called a <a class="reference internal" href="../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> or a <a class="reference internal" href="../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></code></a>. There are several Directions built-in to <strong>kOS</strong>, one of which is called &#8220;UP&#8221;. &#8220;UP&#8221; is a Direction that always aims directly toward the sky (the center of the blue part of the navball).</p>
+<p>But.. but wait… It doesn’t control the steering and it just lets it go where ever it will.</p>
+<p>Most likely you had a crash with this script because it didn’t do anything to affect the steering at all, so it probably allowed the rocket to tilt over.</p>
+</section>
+<section id="step-4-make-the-script-actually-control-steering">
+<h3><a class="toc-backref" href="#id14" role="doc-backlink">Step 4: Make the script actually control steering</a><a class="headerlink" href="#step-4-make-the-script-actually-control-steering" title="Permalink to this heading">¶</a></h3>
+<p>So to fix that problem, let’s add steering control to the script.</p>
+<p>The easy way to control steering is to use the <code class="docutils literal notranslate"><span class="pre">LOCK</span> <span class="pre">STEERING</span></code> command.</p>
+<p>Once you have mastered the basics of <strong>kOS</strong>, you should go and read <a class="reference external" href="../commands/flight.html">the documentation on ship steering techniques</a>, but that’s a more advanced topic for later.</p>
+<p>The way to use the <code class="docutils literal notranslate"><span class="pre">LOCK</span> <span class="pre">STEERING</span></code> command is to set it to a thing called a <a class="reference internal" href="../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a> or a <a class="reference internal" href="../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Direction</span></code></a>. There are several Directions built-in to <strong>kOS</strong>, one of which is called “UP”. “UP” is a Direction that always aims directly toward the sky (the center of the blue part of the navball).</p>
 <p>So to steer always UP, just do this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LOCK</span> <span class="nv">STEERING</span> <span class="ow">TO</span> <span class="nv">UP</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">LOCK</span> <span class="nv">STEERING</span> <span class="ow">TO</span> <span class="nv">UP</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>So if you just add this one line to your script, you&#8217;ll get something that should keep the craft aimed straight up and not let it tip over. Add the line just after the line that sets the THROTTLE, like so:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">//hellolaunch</span>
+<p>So if you just add this one line to your script, you’ll get something that should keep the craft aimed straight up and not let it tip over. Add the line just after the line that sets the THROTTLE, like so:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">//hellolaunch</span>
 
 <span class="c1">//First, we&#39;ll clear the terminal screen to make it look nice</span>
 <span class="k">CLEARSCREEN</span><span class="p">.</span>
@@ -456,37 +388,37 @@ You need to make the vessel you see here:</p>
 </pre></div>
 </div>
 <p>Again, copy this and run it, like before. If your craft crashed in the previous step, which it probably did, then revert to the VAB and re-launch it.:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SWITCH</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span> <span class="c1">// should be the default already, but just in case.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SWITCH</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span> <span class="c1">// should be the default already, but just in case.</span>
 <span class="nv">COPYPATH</span><span class="p">(</span><span class="s">&quot;0:/HELLOLAUNCH&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">).</span>
 <span class="k">RUN</span> <span class="nv">HELLOLAUNCH</span><span class="p">.</span> <span class="c1">// You could also say RUNPATH(&quot;hellolaunch&quot;) here.</span>
 </pre></div>
 </div>
-<div class="figure">
+<figure class="align-default">
 <a class="reference internal image-reference" href="../_images/example_2_3.png"><img alt="../_images/example_2_3.png" src="../_images/example_2_3.png" style="width: 80%;" /></a>
-</div>
+</figure>
 <p>Now you should see the same thing as before, but now your craft will stay pointed up.</p>
 <p><em>But wait - it only does the first stage and then it stops without
 doing the next stage? how do I fix that?</em></p>
-</div>
-<div class="section" id="step-5-add-staging-logic">
-<h3><a class="toc-backref" href="#id15">Step 5: Add staging logic</a><a class="headerlink" href="#step-5-add-staging-logic" title="Permalink to this headline">¶</a></h3>
-<p>The logic for how and when to stage can be an interesting and fun thing to write yourself. This example will keep it very simple, and this is the part where it&#8217;s important that you are using a vessel that only contains liquidfuel engines. If your vessel has some booster engines, then it would require a more sophisticated script to launch it correctly than this tutorial gives you.</p>
+</section>
+<section id="step-5-add-staging-logic">
+<h3><a class="toc-backref" href="#id15" role="doc-backlink">Step 5: Add staging logic</a><a class="headerlink" href="#step-5-add-staging-logic" title="Permalink to this heading">¶</a></h3>
+<p>The logic for how and when to stage can be an interesting and fun thing to write yourself. This example will keep it very simple, and this is the part where it’s important that you are using a vessel that only contains liquidfuel engines. If your vessel has some booster engines, then it would require a more sophisticated script to launch it correctly than this tutorial gives you.</p>
 <p>To add the logic to check when to stage, we introduce a new concept called the WHEN trigger. To see full documentation on it when you finish the tutorial, look for it on the <a class="reference external" href="../language/flow.html">Flow Control page</a></p>
 <p>The quick and dirty explanation is that a WHEN section is a short section of code that you set up to run LATER rather than right now. It creates a check in the background that will constantly look for some condition to occur, and when it happens, it interrupts whatever else the code is doing, and it will run the body of the WHEN code before continuing from where it left off in the main script.</p>
 <p>There are some complex dangers with writing WHEN triggers that can cause <strong>KSP</strong> itself to hang or stutter if you are not careful, but explaining them is beyond the scope of this tutorial. But when you want to start using WHEN triggers yourself, you really should read the section on WHEN in the <a class="reference external" href="../language/flow.html">Flow Control page</a> before you do so.</p>
 <p>The WHEN trigger we are going to add to the launch script looks like this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">WHEN</span> <span class="nv">MAXTHRUST</span> <span class="o">=</span> <span class="mf">0</span> <span class="k">THEN</span> <span class="p">{</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">WHEN</span> <span class="nv">MAXTHRUST</span> <span class="o">=</span> <span class="mf">0</span> <span class="k">THEN</span> <span class="p">{</span>
     <span class="k">PRINT</span> <span class="s">&quot;Staging&quot;</span><span class="p">.</span>
     <span class="k">STAGE</span><span class="p">.</span>
     <span class="k">PRESERVE</span><span class="p">.</span>
 <span class="p">}.</span>
 </pre></div>
 </div>
-<p>It says, &#8220;Whenever the maximum thrust of our vehicle is zero, then activate the next stage.&#8221; The PRESERVE keyword says, &#8220;don&#8217;t stop checking this condition just because it&#8217;s been triggered once. It should still keep checking for it again in the future.&#8221;
+<p>It says, “Whenever the maximum thrust of our vehicle is zero, then activate the next stage.” The PRESERVE keyword says, “don’t stop checking this condition just because it’s been triggered once. It should still keep checking for it again in the future.”
 If this block of code is inserted into the script, then it will set up a constant background check that will always hit the next stage as soon as the current stage has no thrust.
-UNLIKE with all the previous edits this tutorial has asked you to make to the script, this time you&#8217;re going to be asked to delete something and replace it. The new WHEN section above should actually <strong>REPLACE</strong> the existing &#8220;UNTIL SHIP:MAXTHRUST &gt; 0&#8221; loop that you had before.</p>
+UNLIKE with all the previous edits this tutorial has asked you to make to the script, this time you’re going to be asked to delete something and replace it. The new WHEN section above should actually <strong>REPLACE</strong> the existing “UNTIL SHIP:MAXTHRUST &gt; 0” loop that you had before.</p>
 <p>Now your script should look like this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">//hellolaunch</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">//hellolaunch</span>
 
 <span class="c1">//First, we&#39;ll clear the terminal screen to make it look nice</span>
 <span class="k">CLEARSCREEN</span><span class="p">.</span>
@@ -523,32 +455,32 @@ UNLIKE with all the previous edits this tutorial has asked you to make to the sc
 </pre></div>
 </div>
 <p>Again, relaunch the ship, copy the script as before, and run it again. This time you should see it activate your later upper stages correctly.</p>
-<div class="figure">
+<figure class="align-default">
 <a class="reference internal image-reference" href="../_images/example_2_4.png"><img alt="../_images/example_2_4.png" src="../_images/example_2_4.png" style="width: 80%;" /></a>
-</div>
-</div>
-<div class="section" id="step-6-now-to-make-it-turn">
-<h3><a class="toc-backref" href="#id16">Step 6: Now to make it turn</a><a class="headerlink" href="#step-6-now-to-make-it-turn" title="Permalink to this headline">¶</a></h3>
-<p><em>Okay that&#8217;s fine but it still just goes straight up! What about a
+</figure>
+</section>
+<section id="step-6-now-to-make-it-turn">
+<h3><a class="toc-backref" href="#id16" role="doc-backlink">Step 6: Now to make it turn</a><a class="headerlink" href="#step-6-now-to-make-it-turn" title="Permalink to this heading">¶</a></h3>
+<p><em>Okay that’s fine but it still just goes straight up! What about a
 gravity turn?</em></p>
 <p>Well, a true and proper gravity turn is a very complex bit of math that is best left as an exercise for the reader, given that the goal of <strong>kOS</strong> is to let you write your OWN autopilot, not to write it for you. But to give some basic examples of commands, lets just make a crude gravity turn approximation that simply flies the ship like a lot of new <strong>KSP</strong> pilots learn to do it for the first time:</p>
 <ul class="simple">
-<li>Fly straight up until your velocity is 100m/s.</li>
-<li>Pitch ten degrees towards the East.</li>
-<li>Continue to pitch 10 degrees down for each 100m/s of velocity.</li>
+<li><p>Fly straight up until your velocity is 100m/s.</p></li>
+<li><p>Pitch ten degrees towards the East.</p></li>
+<li><p>Continue to pitch 10 degrees down for each 100m/s of velocity.</p></li>
 </ul>
 <p>To make this work, we introduce a new way to make a Direction, called the HEADING function. Whenever you call the function HEADING(a,b), it makes a Direction oriented as follows on the navball:</p>
 <ul class="simple">
-<li>Point at the compass heading A.</li>
-<li>Pitch up a number of degrees from the horizon = to B.</li>
+<li><p>Point at the compass heading A.</p></li>
+<li><p>Pitch up a number of degrees from the horizon = to B.</p></li>
 </ul>
 <p>So for example, HEADING(45,10) would aim northeast, 10 degrees above the horizon. We can use this to easily set our orientation. For example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">//This locks our steering to due east, pitched 45 degrees above the horizon.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">//This locks our steering to due east, pitched 45 degrees above the horizon.</span>
 <span class="k">LOCK</span> <span class="nv">STEERING</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">45</span><span class="p">).</span>
 </pre></div>
 </div>
 <p>Instead of using WAIT UNTIL to pause the script and keep it from exiting, we can use an UNTIL loop to constantly perform actions until a certain condition is met. For example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">MYSTEER</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">90</span><span class="p">).</span> <span class="c1">//90 degrees east and pitched up 90 degrees (straight up)</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">MYSTEER</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">90</span><span class="p">).</span> <span class="c1">//90 degrees east and pitched up 90 degrees (straight up)</span>
 <span class="k">LOCK</span> <span class="nv">STEERING</span> <span class="ow">TO</span> <span class="nv">MYSTEER</span><span class="p">.</span> <span class="c1">// from now on we&#39;ll be able to change steering by just assigning a new value to MYSTEER</span>
 <span class="k">UNTIL</span> <span class="nv">APOAPSIS</span> <span class="o">&gt;</span> <span class="mf">100000</span> <span class="p">{</span>
     <span class="k">SET</span> <span class="nv">MYSTEER</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">90</span><span class="p">).</span> <span class="c1">//90 degrees east and pitched up 90 degrees (straight up)</span>
@@ -561,7 +493,7 @@ gravity turn?</em></p>
 </div>
 <p>This loop will continue to execute all of its instructions until the apoapsis reaches 100km. Once the apoapsis is past 100km, the loop exits and the rest of the code continues.</p>
 <p>We can combine this with IF statements in order to have one main loop that only executes certain chunks of its code under certain conditions. For example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">MYSTEER</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">90</span><span class="p">).</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">MYSTEER</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">90</span><span class="p">).</span>
 <span class="k">LOCK</span> <span class="nv">STEERING</span> <span class="ow">TO</span> <span class="nv">MYSTEER</span><span class="p">.</span>
 <span class="k">UNTIL</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">APOAPSIS</span> <span class="o">&gt;</span> <span class="mf">100000</span> <span class="p">{</span> <span class="c1">//Remember, all altitudes will be in meters, not kilometers</span>
 
@@ -584,7 +516,7 @@ gravity turn?</em></p>
 <p>Each time this loop iterates, it will check the surface velocity. If the velocity is below 100m/s, it will continuously execute the first block of instructions.
 Once the velocity reaches 100m/s, it will stop executing the first block and start executing the second block, which will pitch the nose down to 80 degrees above the horizon.</p>
 <p>Putting this into your script, it should look like this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">//hellolaunch</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">//hellolaunch</span>
 
 <span class="c1">//First, we&#39;ll clear the terminal screen to make it look nice</span>
 <span class="k">CLEARSCREEN</span><span class="p">.</span>
@@ -636,19 +568,19 @@ Once the velocity reaches 100m/s, it will stop executing the first block and sta
 </div>
 <p>Again, copy this into your script and run it. You should see your countdown occur, then it will launch. Once the ship passes 100m/s surface velocity, it will
 pitch down to 80 degrees and continuously print the apoapsis until the apoapsis reaches 100km, staging if necessary. The script will then end.</p>
-<div class="figure">
+<figure class="align-default">
 <a class="reference internal image-reference" href="../_images/example_2_5.png"><img alt="../_images/example_2_5.png" src="../_images/example_2_5.png" style="width: 80%;" /></a>
-</div>
-</div>
-<div class="section" id="step-7-putting-it-all-together">
-<h3><a class="toc-backref" href="#id17">Step 7: Putting it all together</a><a class="headerlink" href="#step-7-putting-it-all-together" title="Permalink to this headline">¶</a></h3>
+</figure>
+</section>
+<section id="step-7-putting-it-all-together">
+<h3><a class="toc-backref" href="#id17" role="doc-backlink">Step 7: Putting it all together</a><a class="headerlink" href="#step-7-putting-it-all-together" title="Permalink to this heading">¶</a></h3>
 <p>We now have every element of the script necessary to do a proper (albeit simple) gravity turn. We just need to extend it all the way through the ascent.</p>
 <p>Adding additional IF statements inside our main loop will allow us to perform further actions based on our velocity. Each IF statement you see in the script below
 covers a 100m/s block of velocity, and will adjust the pitch 10 degrees farther down than the previous block.</p>
 <p>You can see that with the AND statement, we can check multiple conditions and only execute that block when all of those conditions are true. We can carefully set up
 the conditions for each IF statement to allow a block of code to be executed no matter what our surface velocity is.</p>
 <p>Copy this into your script and run it. It should take you nearly to orbit:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">//hellolaunch</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">//hellolaunch</span>
 
 <span class="c1">//First, we&#39;ll clear the terminal screen to make it look nice</span>
 <span class="k">CLEARSCREEN</span><span class="p">.</span>
@@ -751,93 +683,55 @@ the conditions for each IF statement to allow a block of code to be executed no 
 </pre></div>
 </div>
 <p>And here is it in action:</p>
-<div class="figure">
+<figure class="align-default">
 <a class="reference internal image-reference" href="../_images/example_2_6.png"><img alt="../_images/example_2_6.png" src="../_images/example_2_6.png" style="width: 80%;" /></a>
-</div>
+</figure>
 <p>And toward the end:</p>
-<div class="figure">
+<figure class="align-default">
 <a class="reference internal image-reference" href="../_images/example_2_7.png"><img alt="../_images/example_2_7.png" src="../_images/example_2_7.png" style="width: 80%;" /></a>
-</div>
+</figure>
 <p>This script should, in principle, work to get you to the point of leaving the atmosphere. It will probably still fall back down, because this script makes no attempt to ensure that the craft is going fast enough to maintain the orbit.</p>
 <p>As you can probably see, it would still have a long way to go before it would become a really GOOD launching autopilot. Think about the following features you could add yourself as you become more familiar with <strong>kOS</strong>:</p>
 <ul class="simple">
-<li>You could change the steering logic to make a more smooth gravity turn by constantly adjusting the pitch in the HEADING according to some math formula. The example shown here tends to create a &#8220;too high&#8221; launch that&#8217;s a bit inefficient. In addition, this method relies on velocity to determine pitch angle, which could result in some very firey launches for other ships with a higher TWR profile.</li>
-<li>This script just stupidly leaves the throttle at max the whole way. You could make it more sophisticated by adjusting the throttle as necessary to avoid velocities that result in high atmospheric heating.</li>
-<li>This script does not attempt to circularize. With some simple checks of the time to apoapsis and the orbital velocity, you can execute a burn that circularizes your orbit.</li>
-<li>With even more sophisticated checks, the script could be made to work with fancy staging methods like asparagus.</li>
-<li>Using the PRINT AT command, you can make fancier status readouts in the terminal window as the script runs.</li>
+<li><p>You could change the steering logic to make a more smooth gravity turn by constantly adjusting the pitch in the HEADING according to some math formula. The example shown here tends to create a “too high” launch that’s a bit inefficient. In addition, this method relies on velocity to determine pitch angle, which could result in some very firey launches for other ships with a higher TWR profile.</p></li>
+<li><p>This script just stupidly leaves the throttle at max the whole way. You could make it more sophisticated by adjusting the throttle as necessary to avoid velocities that result in high atmospheric heating.</p></li>
+<li><p>This script does not attempt to circularize. With some simple checks of the time to apoapsis and the orbital velocity, you can execute a burn that circularizes your orbit.</p></li>
+<li><p>With even more sophisticated checks, the script could be made to work with fancy staging methods like asparagus.</p></li>
+<li><p>Using the PRINT AT command, you can make fancier status readouts in the terminal window as the script runs.</p></li>
 </ul>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="basictutorial.html" class="btn btn-neutral float-right" title="KOS and programming introduction" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="../tutorials.html" class="btn btn-neutral" title="Tutorials" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../tutorials.html" class="btn btn-neutral float-left" title="Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="basictutorial.html" class="btn btn-neutral float-right" title="KOS and programming introduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

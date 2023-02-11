@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>KOS and programming introduction &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KOS and programming introduction &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../about.html"/>
-        <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../index.html"/>
-        <link rel="up" title="Tutorials" href="../tutorials.html"/>
-        <link rel="next" title="Design Patterns and Considerations with kOS" href="designpatterns.html"/>
-        <link rel="prev" title="Quick Start Tutorial" href="quickstart.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="next" title="Design Patterns and Considerations with kOS" href="designpatterns.html" />
+    <link rel="prev" title="Quick Start Tutorial" href="quickstart.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,23 +40,14 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Basic Explanation</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Basic Explanation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="designpatterns.html">Design Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pidloops.html">PID Loops</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exenode.html">Execute Node script</a></li>
@@ -119,167 +68,153 @@
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../tutorials.html">Tutorials</a> &raquo;</li>
-      
-    <li>KOS and programming introduction</li>
+      <li>KOS and programming introduction</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../_sources/tutorials/basictutorial.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../_sources/tutorials/basictutorial.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="kos-and-programming-introduction">
-<h1>KOS and programming introduction<a class="headerlink" href="#kos-and-programming-introduction" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="kos-and-programming-introduction">
+<h1>KOS and programming introduction<a class="headerlink" href="#kos-and-programming-introduction" title="Permalink to this heading">¶</a></h1>
 <p>This tutorial is for people who are new to programming and want to start programming using KOS.</p>
-<div class="contents local topic" id="contents">
-<p class="topic-title first">Contents</p>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#accessing-the-kos-terminal" id="id1">Accessing the KOS terminal</a><ul>
-<li><a class="reference internal" href="#making-scripts-in-game" id="id2">Making scripts in-game</a></li>
-<li><a class="reference internal" href="#making-scrips-with-an-editor" id="id3">Making scrips with an editor</a></li>
+<li><p><a class="reference internal" href="#accessing-the-kos-terminal" id="id1">Accessing the KOS terminal</a></p>
+<ul>
+<li><p><a class="reference internal" href="#making-scripts-in-game" id="id2">Making scripts in-game</a></p></li>
+<li><p><a class="reference internal" href="#making-scrips-with-an-editor" id="id3">Making scrips with an editor</a></p></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#print-and-set" id="id4">Print and set</a></li>
-<li><a class="reference internal" href="#if-statements" id="id5">If statements</a></li>
-<li><a class="reference internal" href="#if-vs-else-if" id="id6"><code class="docutils literal"><span class="pre">if</span></code> vs <code class="docutils literal"><span class="pre">else</span> <span class="pre">if</span></code></a><ul>
-<li><a class="reference internal" href="#example-1-using-else-if" id="id7">Example 1, using <code class="docutils literal"><span class="pre">else</span> <span class="pre">if</span></code></a></li>
-<li><a class="reference internal" href="#example-2-only-using-if" id="id8">Example 2, only using <code class="docutils literal"><span class="pre">if</span></code></a></li>
+<li><p><a class="reference internal" href="#print-and-set" id="id4">Print and set</a></p></li>
+<li><p><a class="reference internal" href="#if-statements" id="id5">If statements</a></p></li>
+<li><p><a class="reference internal" href="#if-vs-else-if" id="id6"><code class="docutils literal notranslate"><span class="pre">if</span></code> vs <code class="docutils literal notranslate"><span class="pre">else</span> <span class="pre">if</span></code></a></p>
+<ul>
+<li><p><a class="reference internal" href="#example-1-using-else-if" id="id7">Example 1, using <code class="docutils literal notranslate"><span class="pre">else</span> <span class="pre">if</span></code></a></p></li>
+<li><p><a class="reference internal" href="#example-2-only-using-if" id="id8">Example 2, only using <code class="docutils literal notranslate"><span class="pre">if</span></code></a></p></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#until-lock-and-wait" id="id9">Until, lock and wait</a><ul>
-<li><a class="reference internal" href="#using-until-lock-and-wait-in-an-example" id="id10">Using until, lock and wait in an example</a></li>
-<li><a class="reference internal" href="#wait-until" id="id11">Wait until</a></li>
+<li><p><a class="reference internal" href="#until-lock-and-wait" id="id9">Until, lock and wait</a></p>
+<ul>
+<li><p><a class="reference internal" href="#using-until-lock-and-wait-in-an-example" id="id10">Using until, lock and wait in an example</a></p></li>
+<li><p><a class="reference internal" href="#wait-until" id="id11">Wait until</a></p></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#lists-and-lexicons" id="id12">Lists and lexicons</a><ul>
-<li><a class="reference internal" href="#lexicons" id="id13">Lexicons</a></li>
+<li><p><a class="reference internal" href="#lists-and-lexicons" id="id12">Lists and lexicons</a></p>
+<ul>
+<li><p><a class="reference internal" href="#lexicons" id="id13">Lexicons</a></p></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#functions" id="id14">Functions</a><ul>
-<li><a class="reference internal" href="#a-working-example-of-a-function" id="id15">A working example of a function</a></li>
-<li><a class="reference internal" href="#a-more-complex-function" id="id16">A more complex function</a></li>
+<li><p><a class="reference internal" href="#functions" id="id14">Functions</a></p>
+<ul>
+<li><p><a class="reference internal" href="#a-working-example-of-a-function" id="id15">A working example of a function</a></p></li>
+<li><p><a class="reference internal" href="#a-more-complex-function" id="id16">A more complex function</a></p></li>
 </ul>
 </li>
 </ul>
-</div>
-<div class="section" id="accessing-the-kos-terminal">
-<h2><a class="toc-backref" href="#id1">Accessing the KOS terminal</a><a class="headerlink" href="#accessing-the-kos-terminal" title="Permalink to this headline">¶</a></h2>
-<p>To use KOS you need to have a KOS processor on your vessel, they can be found under the &#8216;control&#8217; tab in the editor and are under
+</nav>
+<section id="accessing-the-kos-terminal">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Accessing the KOS terminal</a><a class="headerlink" href="#accessing-the-kos-terminal" title="Permalink to this heading">¶</a></h2>
+<p>To use KOS you need to have a KOS processor on your vessel, they can be found under the ‘control’ tab in the editor and are under
 the same tab as the RCS thrusters and the reaction wheels.
 Right clicking the KOS processor in the editor after adding it to your vessel shows a screen where you can tweak settings of the
 KOS processor.</p>
 <p>There are two ways you can create KOS scripts: either you make them in game and edit them in game or you use a text editor.</p>
-<div class="section" id="making-scripts-in-game">
-<h3><a class="toc-backref" href="#id2">Making scripts in-game</a><a class="headerlink" href="#making-scripts-in-game" title="Permalink to this headline">¶</a></h3>
-<p>First we&#8217;ll look at making and editing scripts in-game.
+<section id="making-scripts-in-game">
+<h3><a class="toc-backref" href="#id2" role="doc-backlink">Making scripts in-game</a><a class="headerlink" href="#making-scripts-in-game" title="Permalink to this heading">¶</a></h3>
+<p>First we’ll look at making and editing scripts in-game.
 Put your vessel with KOS processor on the launchpad and right click the processor.
-Press the button that says &#8216;open terminal&#8217; and click on the window that just popped up.</p>
-<p>typing the following will create a file called &#8216;hello&#8217;, to enter the command press <code class="docutils literal"><span class="pre">ENTER</span></code> (don&#8217;t forget the period at the end):</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">edit</span> <span class="nv">hello</span><span class="p">.</span>
+Press the button that says ‘open terminal’ and click on the window that just popped up.</p>
+<p>typing the following will create a file called ‘hello’, to enter the command press <code class="docutils literal notranslate"><span class="pre">ENTER</span></code> (don’t forget the period at the end):</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">edit</span> <span class="nv">hello</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>you can now edit the file and make your script for the processor to execute, the other tutorials will show how you can make a
-working script. Keep in mind that files made in game dissapear after the vessel is gone. This happens because you locally made a file on the ship&#8217;s processor.</p>
+working script. Keep in mind that files made in game dissapear after the vessel is gone. This happens because you locally made a file on the ship’s processor.</p>
 <p>To run the file, type:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">run</span> <span class="nv">hello</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">run</span> <span class="nv">hello</span><span class="p">.</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="making-scrips-with-an-editor">
-<h3><a class="toc-backref" href="#id3">Making scrips with an editor</a><a class="headerlink" href="#making-scrips-with-an-editor" title="Permalink to this headline">¶</a></h3>
-<p>To use a text editor instead go to your KSP folder and go to <code class="docutils literal"><span class="pre">Ships/Script/</span></code> and create an empty file and name it whatever you want
-(be cautious using spaces in filenames because this might mess stuff up, also, avoid using capital letters in .ks files if you are running Linux). Not sure where your KSP folder is? If you used steam to install KSP, go to your steam library and right click Kerbal Space Program in the list of games. Next click on <code class="docutils literal"><span class="pre">properties</span></code> and go to the <code class="docutils literal"><span class="pre">local</span> <span class="pre">files</span></code> tab. Finally, press on the <code class="docutils literal"><span class="pre">browse</span> <span class="pre">local</span> <span class="pre">files</span></code> button. (KSP doesn&#8217;t require you to use steam, you can copy the KSP folder from the Steam folder to your desktop so you can play without using Steam).</p>
-<p>All KOS script files should end with <code class="docutils literal"><span class="pre">.ks</span></code>.
+</section>
+<section id="making-scrips-with-an-editor">
+<h3><a class="toc-backref" href="#id3" role="doc-backlink">Making scrips with an editor</a><a class="headerlink" href="#making-scrips-with-an-editor" title="Permalink to this heading">¶</a></h3>
+<p>To use a text editor instead go to your KSP folder and go to <code class="docutils literal notranslate"><span class="pre">Ships/Script/</span></code> and create an empty file and name it whatever you want
+(be cautious using spaces in filenames because this might mess stuff up, also, avoid using capital letters in .ks files if you are running Linux). Not sure where your KSP folder is? If you used steam to install KSP, go to your steam library and right click Kerbal Space Program in the list of games. Next click on <code class="docutils literal notranslate"><span class="pre">properties</span></code> and go to the <code class="docutils literal notranslate"><span class="pre">local</span> <span class="pre">files</span></code> tab. Finally, press on the <code class="docutils literal notranslate"><span class="pre">browse</span> <span class="pre">local</span> <span class="pre">files</span></code> button. (KSP doesn’t require you to use steam, you can copy the KSP folder from the Steam folder to your desktop so you can play without using Steam).</p>
+<p>All KOS script files should end with <code class="docutils literal notranslate"><span class="pre">.ks</span></code>.
 An example of a valid KOS script file name would be:</p>
-<p><code class="docutils literal"><span class="pre">hello.ks</span></code></p>
-<p>Running files you made using text editors is a bit more complex than if you&#8217;d make a file in game.
+<p><code class="docutils literal notranslate"><span class="pre">hello.ks</span></code></p>
+<p>Running files you made using text editors is a bit more complex than if you’d make a file in game.
 This is because when you make a script in game the script is locally stored on the ship.
-Files you made with a text editor are saved in the archive, can be accessed from different saved games and won&#8217;t be lost after
+Files you made with a text editor are saved in the archive, can be accessed from different saved games and won’t be lost after
 the vessel is gone. You could compare it with ground control, which has infinite data storage and a spaceship which has limited
 space for data.</p>
 <p>To access the archive type:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">switch</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">switch</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>To run <code class="docutils literal"><span class="pre">hello.ks</span></code> type the same as above:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">run</span> <span class="nv">hello</span><span class="p">.</span>
+<p>To run <code class="docutils literal notranslate"><span class="pre">hello.ks</span></code> type the same as above:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">run</span> <span class="nv">hello</span><span class="p">.</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="print-and-set">
-<h2><a class="toc-backref" href="#id4">Print and set</a><a class="headerlink" href="#print-and-set" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="print-and-set">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Print and set</a><a class="headerlink" href="#print-and-set" title="Permalink to this heading">¶</a></h2>
 <p>Before we can send ships to space we first need to know the basic features of KOS.
-Let&#8217;s begin with the <code class="docutils literal"><span class="pre">print</span></code> command. Type the following in your terminal and press <code class="docutils literal"><span class="pre">ENTER</span></code> to enter the piece of code. Keep in mind that <strong>ALL</strong> lines of code require a period
+Let’s begin with the <code class="docutils literal notranslate"><span class="pre">print</span></code> command. Type the following in your terminal and press <code class="docutils literal notranslate"><span class="pre">ENTER</span></code> to enter the piece of code. Keep in mind that <strong>ALL</strong> lines of code require a period
 at the end of the line, there are some exceptions but more about that later.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="s">&quot;hello world&quot;</span><span class="p">.</span>  <span class="c1">// shows: hello world</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="s">&quot;hello world&quot;</span><span class="p">.</span>  <span class="c1">// shows: hello world</span>
 </pre></div>
 </div>
 <p>See those two forward slashes? That means that a comment has been made, anything
-after the double slashes won&#8217;t be read by the script so you don&#8217;t have to worry
-about what it says. Here&#8217;s an example of what happens if you make something a comment:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// print &quot;hello world 1&quot;.</span>
+after the double slashes won’t be read by the script so you don’t have to worry
+about what it says. Here’s an example of what happens if you make something a comment:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// print &quot;hello world 1&quot;.</span>
 <span class="k">print</span> <span class="s">&quot;hello world 2&quot;</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>If you&#8217;d run these two lines of code you&#8217;d <strong>ONLY</strong> see:
-<code class="docutils literal"><span class="pre">hello</span> <span class="pre">world</span> <span class="pre">2</span></code></p>
-<p>You&#8217;d might be wondering why you&#8217;d want to use the forward slashes if the script doesn&#8217;t read them.
-The computer ignores them, but they&#8217;re there to help leave explanations for the humans to see who might have to read your program.</p>
+<p>If you’d run these two lines of code you’d <strong>ONLY</strong> see:
+<code class="docutils literal notranslate"><span class="pre">hello</span> <span class="pre">world</span> <span class="pre">2</span></code></p>
+<p>You’d might be wondering why you’d want to use the forward slashes if the script doesn’t read them.
+The computer ignores them, but they’re there to help leave explanations for the humans to see who might have to read your program.</p>
 <p>To clear the screen type:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">clearscreen</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">clearscreen</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>Now say that we really like to use our hello world command but don&#8217;t want to type
+<p>Now say that we really like to use our hello world command but don’t want to type
 the entire sentence every time, we could use the set command.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="s">&quot;hello world&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="s">&quot;hello world&quot;</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>The set command &#8216;sets&#8217; a certain value to the given variable. Everytime we refer
-to <code class="docutils literal"><span class="pre">x</span></code> we will actually refer to <code class="docutils literal"><span class="pre">&quot;hello</span> <span class="pre">world&quot;</span></code>.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="s">&quot;hello world&quot;</span><span class="p">.</span>
+<p>The set command ‘sets’ a certain value to the given variable. Everytime we refer
+to <code class="docutils literal notranslate"><span class="pre">x</span></code> we will actually refer to <code class="docutils literal notranslate"><span class="pre">&quot;hello</span> <span class="pre">world&quot;</span></code>.</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="s">&quot;hello world&quot;</span><span class="p">.</span>
 <span class="k">print</span> <span class="nv">x</span><span class="p">.</span> <span class="c1">// shows: hello world</span>
 </pre></div>
 </div>
-<p>Of course we can choose other things to print other than <code class="docutils literal"><span class="pre">hello</span> <span class="pre">world</span></code>.
-Keep in mind that &#8216;normal&#8217; text requires <code class="docutils literal"><span class="pre">&quot;&quot;</span></code> and variables you made using the
-set command, numbers and booleans (true or false) don&#8217;t need <code class="docutils literal"><span class="pre">&quot;&quot;</span></code>.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="s">&quot;hello world&quot;</span><span class="p">.</span>
+<p>Of course we can choose other things to print other than <code class="docutils literal notranslate"><span class="pre">hello</span> <span class="pre">world</span></code>.
+Keep in mind that ‘normal’ text requires <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> and variables you made using the
+set command, numbers and booleans (true or false) don’t need <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code>.</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="s">&quot;hello world&quot;</span><span class="p">.</span>
 <span class="k">set</span> <span class="nv">y</span> <span class="ow">to</span> <span class="nb">true</span><span class="p">.</span>
 <span class="k">set</span> <span class="nv">z</span> <span class="ow">to</span> <span class="mf">123</span><span class="p">.</span>
 
@@ -291,8 +226,8 @@ set command, numbers and booleans (true or false) don&#8217;t need <code class="
 <span class="k">print</span> <span class="s">&quot;z&quot;</span><span class="p">.</span> <span class="c1">// shows: z</span>
 </pre></div>
 </div>
-<p>You can also replace a variable you&#8217;ve made:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="s">&quot;hello world&quot;</span><span class="p">.</span>
+<p>You can also replace a variable you’ve made:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="s">&quot;hello world&quot;</span><span class="p">.</span>
 <span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="s">&quot;updated text&quot;</span><span class="p">.</span>
 <span class="k">print</span> <span class="nv">x</span><span class="p">.</span> <span class="c1">// shows: updated text</span>
 
@@ -302,9 +237,9 @@ set command, numbers and booleans (true or false) don&#8217;t need <code class="
 <span class="k">print</span> <span class="nv">x</span><span class="p">.</span> <span class="c1">// shows: updated text</span>
 </pre></div>
 </div>
-<p>As you can see <code class="docutils literal"><span class="pre">hello</span> <span class="pre">world</span></code> doesn&#8217;t exist anymore. If you&#8217;d want to print
+<p>As you can see <code class="docutils literal notranslate"><span class="pre">hello</span> <span class="pre">world</span></code> doesn’t exist anymore. If you’d want to print
 both you could do:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="s">&quot;hello world&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="s">&quot;hello world&quot;</span><span class="p">.</span>
 <span class="k">set</span> <span class="nv">y</span> <span class="ow">to</span> <span class="nv">x</span><span class="p">.</span>
 <span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="s">&quot;updated text&quot;</span><span class="p">.</span>
 
@@ -312,53 +247,53 @@ both you could do:</p>
 <span class="k">print</span> <span class="nv">x</span><span class="p">.</span> <span class="c1">// shows: updated text</span>
 </pre></div>
 </div>
-<p>Variables don&#8217;t just have to be one letter you could also use a word as a variable, don&#8217;t use spaces when naming variables.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">WhateverThisVariableIs</span> <span class="ow">to</span> <span class="nb">false</span><span class="p">.</span>
+<p>Variables don’t just have to be one letter you could also use a word as a variable, don’t use spaces when naming variables.</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">WhateverThisVariableIs</span> <span class="ow">to</span> <span class="nb">false</span><span class="p">.</span>
 <span class="k">print</span> <span class="nv">WhateverThisVariableIs</span><span class="p">.</span> <span class="c1">// shows: false</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="if-statements">
-<h2><a class="toc-backref" href="#id5">If statements</a><a class="headerlink" href="#if-statements" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="if-statements">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">If statements</a><a class="headerlink" href="#if-statements" title="Permalink to this heading">¶</a></h2>
 <p>Now we know how to set certain text to a variable we can explore more stuff.
-For instance <code class="docutils literal"><span class="pre">if</span></code>, this checks if a certain value matches the given value.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="mf">1</span><span class="p">.</span>
+For instance <code class="docutils literal notranslate"><span class="pre">if</span></code>, this checks if a certain value matches the given value.</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="mf">1</span><span class="p">.</span>
 
 <span class="k">if</span> <span class="nv">x</span> <span class="o">=</span> <span class="mf">1</span> <span class="p">{</span>
   <span class="k">print</span> <span class="s">&quot;x is one&quot;</span><span class="p">.</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>This will show: <code class="docutils literal"><span class="pre">x</span> <span class="pre">is</span> <span class="pre">one</span></code>.</p>
-<p>You&#8217;ve probably noticed the curly brackets <code class="docutils literal"><span class="pre">{</span> <span class="pre">}</span></code> after an <code class="docutils literal"><span class="pre">if</span></code> statement. You don&#8217;t need a period at the end of an <code class="docutils literal"><span class="pre">if</span></code> statement but you need these brackets if you have more than one statement in the body, otherwise they&#8217;re optional.</p>
+<p>This will show: <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">is</span> <span class="pre">one</span></code>.</p>
+<p>You’ve probably noticed the curly brackets <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">}</span></code> after an <code class="docutils literal notranslate"><span class="pre">if</span></code> statement. You don’t need a period at the end of an <code class="docutils literal notranslate"><span class="pre">if</span></code> statement but you need these brackets if you have more than one statement in the body, otherwise they’re optional.</p>
 <p>This is valid:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nv">x</span> <span class="o">=</span> <span class="mf">1</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nv">x</span> <span class="o">=</span> <span class="mf">1</span>
   <span class="k">print</span> <span class="s">&quot;x is one&quot;</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>You could cover the piece the code within the curly brackets with your hand and say: if <code class="docutils literal"><span class="pre">x</span></code> is equal to <code class="docutils literal"><span class="pre">1</span></code>, then do whatever
-I covered with my hand. <code class="docutils literal"><span class="pre">If</span></code> statements can also be used for booleans:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">SomeBoolean</span> <span class="ow">to</span> <span class="nb">true</span><span class="p">.</span>
+<p>You could cover the piece the code within the curly brackets with your hand and say: if <code class="docutils literal notranslate"><span class="pre">x</span></code> is equal to <code class="docutils literal notranslate"><span class="pre">1</span></code>, then do whatever
+I covered with my hand. <code class="docutils literal notranslate"><span class="pre">If</span></code> statements can also be used for booleans:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">SomeBoolean</span> <span class="ow">to</span> <span class="nb">true</span><span class="p">.</span>
 
 <span class="k">if</span> <span class="nv">SomeBoolean</span> <span class="o">=</span> <span class="nb">true</span> <span class="p">{</span>
   <span class="k">print</span> <span class="s">&quot;this is a true&quot;</span><span class="p">.</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>This will show: <code class="docutils literal"><span class="pre">this</span> <span class="pre">is</span> <span class="pre">true</span></code>.</p>
-<p>Ofcourse the equals sign isn&#8217;t the only symbol you can use, other symbols are:</p>
+<p>This will show: <code class="docutils literal notranslate"><span class="pre">this</span> <span class="pre">is</span> <span class="pre">true</span></code>.</p>
+<p>Ofcourse the equals sign isn’t the only symbol you can use, other symbols are:</p>
 <p>Equals to or bigger than:</p>
-<p><code class="docutils literal"><span class="pre">1</span> <span class="pre">&gt;=</span> <span class="pre">1</span></code></p>
-<p><code class="docutils literal"><span class="pre">2</span> <span class="pre">&gt;=</span> <span class="pre">1</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">&gt;=</span> <span class="pre">1</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">&gt;=</span> <span class="pre">1</span></code></p>
 <p>Equals to or smaller than</p>
-<p><code class="docutils literal"><span class="pre">1</span> <span class="pre">&lt;=</span> <span class="pre">1</span></code></p>
-<p><code class="docutils literal"><span class="pre">1</span> <span class="pre">&lt;=</span> <span class="pre">2</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">&lt;=</span> <span class="pre">1</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">&lt;=</span> <span class="pre">2</span></code></p>
 <p>Is not equal to:</p>
-<p><code class="docutils literal"><span class="pre">1</span> <span class="pre">&lt;&gt;</span> <span class="pre">2</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">&lt;&gt;</span> <span class="pre">2</span></code></p>
 <p>So as you have seen, we created some commands that will only happen if a condition is true, otherwise nothing happens and we move
-on. But what if you want to do some commands when the condition is true and instead of doing nothing when it&#8217;s false,
-you&#8217;d give it commands to do instead. The <code class="docutils literal"><span class="pre">else</span></code> statement also requires curly brackets <code class="docutils literal"><span class="pre">{</span> <span class="pre">}</span></code>.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">SomeAnimal</span> <span class="ow">to</span> <span class="s">&quot;Dog&quot;</span><span class="p">.</span>
+on. But what if you want to do some commands when the condition is true and instead of doing nothing when it’s false,
+you’d give it commands to do instead. The <code class="docutils literal notranslate"><span class="pre">else</span></code> statement also requires curly brackets <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">}</span></code>.</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">SomeAnimal</span> <span class="ow">to</span> <span class="s">&quot;Dog&quot;</span><span class="p">.</span>
 
 <span class="k">if</span> <span class="nv">SomeAnimal</span> <span class="o">=</span> <span class="s">&quot;Cat&quot;</span> <span class="p">{</span>
   <span class="k">print</span> <span class="s">&quot;this is a cat&quot;</span><span class="p">.</span>
@@ -367,10 +302,10 @@ you&#8217;d give it commands to do instead. The <code class="docutils literal"><
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Since <code class="docutils literal"><span class="pre">SomeAnimal</span></code> isn&#8217;t <code class="docutils literal"><span class="pre">Cat</span></code>, it skips whatever would happen if <code class="docutils literal"><span class="pre">SomeAnimal</span></code> would be <code class="docutils literal"><span class="pre">Cat</span></code>. Then it checks what else to do, which is
-to print <code class="docutils literal"><span class="pre">this</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">a</span> <span class="pre">cat</span></code>. You could expand this by using <code class="docutils literal"><span class="pre">else</span> <span class="pre">if</span></code>, which means that if the first <code class="docutils literal"><span class="pre">if</span></code> statement isn&#8217;t true
-then check the following <code class="docutils literal"><span class="pre">if</span></code> statement.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">SomeAnimal</span> <span class="ow">to</span> <span class="s">&quot;Dog&quot;</span><span class="p">.</span>
+<p>Since <code class="docutils literal notranslate"><span class="pre">SomeAnimal</span></code> isn’t <code class="docutils literal notranslate"><span class="pre">Cat</span></code>, it skips whatever would happen if <code class="docutils literal notranslate"><span class="pre">SomeAnimal</span></code> would be <code class="docutils literal notranslate"><span class="pre">Cat</span></code>. Then it checks what else to do, which is
+to print <code class="docutils literal notranslate"><span class="pre">this</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">a</span> <span class="pre">cat</span></code>. You could expand this by using <code class="docutils literal notranslate"><span class="pre">else</span> <span class="pre">if</span></code>, which means that if the first <code class="docutils literal notranslate"><span class="pre">if</span></code> statement isn’t true
+then check the following <code class="docutils literal notranslate"><span class="pre">if</span></code> statement.</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">SomeAnimal</span> <span class="ow">to</span> <span class="s">&quot;Dog&quot;</span><span class="p">.</span>
 
 <span class="k">if</span> <span class="nv">SomeAnimal</span> <span class="o">=</span> <span class="s">&quot;Cat&quot;</span> <span class="p">{</span>
   <span class="k">print</span> <span class="s">&quot;this is a cat&quot;</span><span class="p">.</span>
@@ -381,14 +316,14 @@ then check the following <code class="docutils literal"><span class="pre">if</sp
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>This would print <code class="docutils literal"><span class="pre">this</span> <span class="pre">is</span> <span class="pre">a</span> <span class="pre">dog</span></code>.</p>
-</div>
-<div class="section" id="if-vs-else-if">
-<h2><a class="toc-backref" href="#id6"><code class="docutils literal"><span class="pre">if</span></code> vs <code class="docutils literal"><span class="pre">else</span> <span class="pre">if</span></code></a><a class="headerlink" href="#if-vs-else-if" title="Permalink to this headline">¶</a></h2>
-<p>Hopefully you now know the basics of how <code class="docutils literal"><span class="pre">if</span></code> works. You might be wondering why use <code class="docutils literal"><span class="pre">else</span> <span class="pre">if</span></code> if it&#8217;s the same as <code class="docutils literal"><span class="pre">if</span></code>.</p>
-<div class="section" id="example-1-using-else-if">
-<h3><a class="toc-backref" href="#id7">Example 1, using <code class="docutils literal"><span class="pre">else</span> <span class="pre">if</span></code></a><a class="headerlink" href="#example-1-using-else-if" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nv">distance</span> <span class="o">&lt;=</span> <span class="mf">1</span> <span class="p">{</span>
+<p>This would print <code class="docutils literal notranslate"><span class="pre">this</span> <span class="pre">is</span> <span class="pre">a</span> <span class="pre">dog</span></code>.</p>
+</section>
+<section id="if-vs-else-if">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">if</span></code> vs <code class="docutils literal notranslate"><span class="pre">else</span> <span class="pre">if</span></code></a><a class="headerlink" href="#if-vs-else-if" title="Permalink to this heading">¶</a></h2>
+<p>Hopefully you now know the basics of how <code class="docutils literal notranslate"><span class="pre">if</span></code> works. You might be wondering why use <code class="docutils literal notranslate"><span class="pre">else</span> <span class="pre">if</span></code> if it’s the same as <code class="docutils literal notranslate"><span class="pre">if</span></code>.</p>
+<section id="example-1-using-else-if">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">Example 1, using <code class="docutils literal notranslate"><span class="pre">else</span> <span class="pre">if</span></code></a><a class="headerlink" href="#example-1-using-else-if" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nv">distance</span> <span class="o">&lt;=</span> <span class="mf">1</span> <span class="p">{</span>
   <span class="k">print</span> <span class="s">&quot;Distance is within a meter.&quot;</span><span class="p">.</span>
 <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="nv">distance</span> <span class="o">&lt;=</span> <span class="mf">100</span> <span class="p">{</span>
   <span class="k">print</span> <span class="s">&quot;Distance is within 100 meters.&quot;</span><span class="p">.</span>
@@ -397,10 +332,10 @@ then check the following <code class="docutils literal"><span class="pre">if</sp
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="example-2-only-using-if">
-<h3><a class="toc-backref" href="#id8">Example 2, only using <code class="docutils literal"><span class="pre">if</span></code></a><a class="headerlink" href="#example-2-only-using-if" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nv">distance</span> <span class="o">&lt;=</span> <span class="mf">1</span> <span class="p">{</span>
+</section>
+<section id="example-2-only-using-if">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">Example 2, only using <code class="docutils literal notranslate"><span class="pre">if</span></code></a><a class="headerlink" href="#example-2-only-using-if" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nv">distance</span> <span class="o">&lt;=</span> <span class="mf">1</span> <span class="p">{</span>
   <span class="k">print</span> <span class="s">&quot;Distance is within a meter.&quot;</span><span class="p">.</span>
 <span class="p">}</span>
 <span class="k">if</span> <span class="nv">distance</span> <span class="o">&lt;=</span> <span class="mf">100</span> <span class="p">{</span>
@@ -411,91 +346,91 @@ then check the following <code class="docutils literal"><span class="pre">if</sp
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Using example 1, if your distance is less than a meter you&#8217;ll get the following message:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">Distance</span> <span class="ow">is</span> <span class="nv">within</span> <span class="nv">a</span> <span class="nv">meter</span><span class="p">.</span>
+<p>Using example 1, if your distance is less than a meter you’ll get the following message:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">Distance</span> <span class="ow">is</span> <span class="nv">within</span> <span class="nv">a</span> <span class="nv">meter</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>Using example 2, if your distance is less than a meter you&#8217;ll get the following messages:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">Distance</span> <span class="ow">is</span> <span class="nv">within</span> <span class="nv">a</span> <span class="nv">meter</span><span class="p">.</span>
+<p>Using example 2, if your distance is less than a meter you’ll get the following messages:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">Distance</span> <span class="ow">is</span> <span class="nv">within</span> <span class="nv">a</span> <span class="nv">meter</span><span class="p">.</span>
 <span class="nv">Distance</span> <span class="ow">is</span> <span class="nv">within</span> <span class="mf">100</span> <span class="nv">meters</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>As you can imagine the second example isn&#8217;t good. If we&#8217;re at less than a meter away from something and the messages for if we would be farther
+<p>As you can imagine the second example isn’t good. If we’re at less than a meter away from something and the messages for if we would be farther
 than 100 meters show up we have a big problem. This could be fixed by doing the following, but <strong>THIS IS UNNECESSARILY COMPLEX</strong>:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">Done</span> <span class="ow">to</span> <span class="nb">false</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">Done</span> <span class="ow">to</span> <span class="nb">false</span><span class="p">.</span>
 
 <span class="k">if</span> <span class="nv">Done</span> <span class="o">=</span> <span class="nb">false</span> <span class="p">{</span>
   <span class="k">if</span> <span class="nv">distance</span> <span class="o">&lt;=</span> <span class="mf">1</span> <span class="p">{</span>
     <span class="k">print</span> <span class="s">&quot;Distance is within a meter.&quot;</span><span class="p">.</span>
-    <span class="k">set</span> <span class="nv">NotDone</span> <span class="ow">to</span> <span class="nb">false</span><span class="p">.</span>
+    <span class="k">set</span> <span class="nv">Done</span> <span class="ow">to</span> <span class="nb">true</span><span class="p">.</span>
   <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="k">if</span> <span class="nv">Done</span> <span class="o">=</span> <span class="nb">false</span> <span class="p">{</span>
   <span class="k">if</span> <span class="nv">distance</span> <span class="o">&lt;=</span> <span class="mf">100</span> <span class="p">{</span>
     <span class="k">print</span> <span class="s">&quot;Distance is within 100 meters.&quot;</span><span class="p">.</span>
-    <span class="k">set</span> <span class="nv">NotDone</span> <span class="ow">to</span> <span class="nb">false</span><span class="p">.</span>
+    <span class="k">set</span> <span class="nv">Done</span> <span class="ow">to</span> <span class="nb">true</span><span class="p">.</span>
   <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="k">if</span> <span class="nv">Done</span> <span class="o">=</span> <span class="nb">false</span> <span class="p">{</span>
   <span class="k">if</span> <span class="nv">distance</span> <span class="o">&gt;</span> <span class="mf">1000</span> <span class="p">{</span>
     <span class="k">print</span> <span class="s">&quot;Distance is farther than 1 kilometer.&quot;</span><span class="p">.</span>
-    <span class="k">set</span> <span class="nv">NotDone</span> <span class="ow">to</span> <span class="nb">false</span><span class="p">.</span>
+    <span class="k">set</span> <span class="nv">Done</span> <span class="ow">to</span> <span class="nb">true</span><span class="p">.</span>
   <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Now this essentially does the same as the <code class="docutils literal"><span class="pre">else</span> <span class="pre">if</span></code> script but it&#8217;s way more confusing and complicating.</p>
-</div>
-</div>
-<div class="section" id="until-lock-and-wait">
-<h2><a class="toc-backref" href="#id9">Until, lock and wait</a><a class="headerlink" href="#until-lock-and-wait" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="docutils literal"><span class="pre">wait</span></code> command is pretty straight forward:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">wait</span> <span class="mf">10</span><span class="p">.</span>
+<p>Now this essentially does the same as the <code class="docutils literal notranslate"><span class="pre">else</span> <span class="pre">if</span></code> script but it’s way more confusing and complicating.</p>
+</section>
+</section>
+<section id="until-lock-and-wait">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">Until, lock and wait</a><a class="headerlink" href="#until-lock-and-wait" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">wait</span></code> command is pretty straight forward:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">wait</span> <span class="mf">10</span><span class="p">.</span>
 <span class="k">print</span> <span class="s">&quot;done waiting&quot;</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>It will take 10 seconds before <code class="docutils literal"><span class="pre">done</span> <span class="pre">waiting</span></code> shows up.
-Using <code class="docutils literal"><span class="pre">wait</span> <span class="pre">0</span></code> will let the script wait for one physics tick (a physics tick is the time it takes for KSP to update its physics), this can be handy for when you&#8217;re doing stuff with maneuvers. Maneuvers don&#8217;t show up instantly but show up
+<p>It will take 10 seconds before <code class="docutils literal notranslate"><span class="pre">done</span> <span class="pre">waiting</span></code> shows up.
+Using <code class="docutils literal notranslate"><span class="pre">wait</span> <span class="pre">0</span></code> will let the script wait for one physics tick (a physics tick is the time it takes for KSP to update its physics), this can be handy for when you’re doing stuff with maneuvers. Maneuvers don’t show up instantly but show up
 after one physics tick. More about maneuvers in a future tutorial.</p>
-<p>The <code class="docutils literal"><span class="pre">until</span></code> command will keep looping a piece of code until the given value has been met. Here&#8217;s a simple example of what you can do with an <code class="docutils literal"><span class="pre">until</span></code> command:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span>
+<p>The <code class="docutils literal notranslate"><span class="pre">until</span></code> command will keep looping a piece of code until the given value has been met. Here’s a simple example of what you can do with an <code class="docutils literal notranslate"><span class="pre">until</span></code> command:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span>
 <span class="k">until</span> <span class="nv">x</span> <span class="o">&gt;</span> <span class="mf">100</span> <span class="p">{</span>
   <span class="k">print</span> <span class="nv">x</span><span class="p">.</span>
   <span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="nv">x</span> <span class="o">+</span> <span class="mf">1</span><span class="p">.</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>This first sets <code class="docutils literal"><span class="pre">x</span></code> to 0 and until <code class="docutils literal"><span class="pre">x</span></code> is bigger than 100 it does whatever happens within the brackets.
-In this case it prints <code class="docutils literal"><span class="pre">x</span></code> and then it increases <code class="docutils literal"><span class="pre">x</span></code> by 1. This loop repeats itself until <code class="docutils literal"><span class="pre">x</span></code> is bigger than 100.
-Before we can talk about more complex until loops let&#8217;s first talk about <code class="docutils literal"><span class="pre">time:seconds</span></code> and the <code class="docutils literal"><span class="pre">lock</span></code> command.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span><span class="p">.</span>
+<p>This first sets <code class="docutils literal notranslate"><span class="pre">x</span></code> to 0 and until <code class="docutils literal notranslate"><span class="pre">x</span></code> is bigger than 100 it does whatever happens within the brackets.
+In this case it prints <code class="docutils literal notranslate"><span class="pre">x</span></code> and then it increases <code class="docutils literal notranslate"><span class="pre">x</span></code> by 1. This loop repeats itself until <code class="docutils literal notranslate"><span class="pre">x</span></code> is bigger than 100.
+Before we can talk about more complex until loops let’s first talk about <code class="docutils literal notranslate"><span class="pre">time:seconds</span></code> and the <code class="docutils literal notranslate"><span class="pre">lock</span></code> command.</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>Will print the current time in seconds. Let&#8217;s say the in-game time is 1 minute.
-It would print <code class="docutils literal"><span class="pre">60</span></code>. You can also set the current in-game time as a variable:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">CurrentTime</span> <span class="ow">to</span> <span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span><span class="p">.</span>
+<p>Will print the current time in seconds. Let’s say the in-game time is 1 minute.
+It would print <code class="docutils literal notranslate"><span class="pre">60</span></code>. You can also set the current in-game time as a variable:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">CurrentTime</span> <span class="ow">to</span> <span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>The variable <code class="docutils literal"><span class="pre">CurrentTime</span></code> will stay 60 seconds. Eventhough the in-game time changes:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">CurrentTime</span> <span class="ow">to</span> <span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span><span class="p">.</span>
+<p>The variable <code class="docutils literal notranslate"><span class="pre">CurrentTime</span></code> will stay 60 seconds. Eventhough the in-game time changes:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">CurrentTime</span> <span class="ow">to</span> <span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span><span class="p">.</span>
 <span class="k">print</span> <span class="nv">CurrentTime</span><span class="p">.</span> <span class="c1">// shows: 60</span>
 <span class="k">wait</span> <span class="mf">10</span><span class="p">.</span>
 <span class="k">print</span> <span class="nv">CurrentTime</span><span class="p">.</span> <span class="c1">// shows: 60</span>
 </pre></div>
 </div>
-<p>As you can see, eventhough the in-game time has changed the variable <code class="docutils literal"><span class="pre">CurrentTime</span></code> is still 60. The <code class="docutils literal"><span class="pre">set</span></code> command does <strong>NOT</strong> constantly update the variable. If you want a constantly updating variable you have to use the <code class="docutils literal"><span class="pre">lock</span></code> command.
-Here&#8217;s an example of what the <code class="docutils literal"><span class="pre">lock</span></code> command can do:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">lock</span> <span class="nv">TimeSecondsPlusTen</span> <span class="ow">to</span> <span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span> <span class="o">+</span> <span class="mf">10</span><span class="p">.</span>
+<p>As you can see, eventhough the in-game time has changed the variable <code class="docutils literal notranslate"><span class="pre">CurrentTime</span></code> is still 60. The <code class="docutils literal notranslate"><span class="pre">set</span></code> command does <strong>NOT</strong> constantly update the variable. If you want a constantly updating variable you have to use the <code class="docutils literal notranslate"><span class="pre">lock</span></code> command.
+Here’s an example of what the <code class="docutils literal notranslate"><span class="pre">lock</span></code> command can do:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">lock</span> <span class="nv">TimeSecondsPlusTen</span> <span class="ow">to</span> <span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span> <span class="o">+</span> <span class="mf">10</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>If you print <code class="docutils literal"><span class="pre">TimeSecondsPlusTen</span></code> at 60 seconds it will show 70, if you print
-<code class="docutils literal"><span class="pre">TimeSecondsPlusTen</span></code> at 4000 seconds it will show 4010.</p>
-<div class="section" id="using-until-lock-and-wait-in-an-example">
-<h3><a class="toc-backref" href="#id10">Using until, lock and wait in an example</a><a class="headerlink" href="#using-until-lock-and-wait-in-an-example" title="Permalink to this headline">¶</a></h3>
+<p>If you print <code class="docutils literal notranslate"><span class="pre">TimeSecondsPlusTen</span></code> at 60 seconds it will show 70, if you print
+<code class="docutils literal notranslate"><span class="pre">TimeSecondsPlusTen</span></code> at 4000 seconds it will show 4010.</p>
+<section id="using-until-lock-and-wait-in-an-example">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">Using until, lock and wait in an example</a><a class="headerlink" href="#using-until-lock-and-wait-in-an-example" title="Permalink to this heading">¶</a></h3>
 <p>If we now combine all the command we can make the following piece of code:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">Adder</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">Adder</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span>
 <span class="k">lock</span> <span class="nv">Multiplier</span> <span class="ow">to</span> <span class="nv">Adder</span> <span class="o">*</span> <span class="mf">2</span><span class="p">.</span>
 <span class="k">set</span> <span class="nv">TimePlusFive</span> <span class="ow">to</span> <span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span> <span class="o">+</span> <span class="mf">5</span><span class="p">.</span>
 
@@ -507,10 +442,10 @@ Here&#8217;s an example of what the <code class="docutils literal"><span class="
 </pre></div>
 </div>
 <p>So an easy way to read the until loop is to cover what ever is inside of the curly brackets
-and say: until <code class="docutils literal"><span class="pre">time:seconds</span></code> is bigger than our current time plus 5 seconds, repeat whatever I covered with my hand.
-In this case that&#8217;d be: print <code class="docutils literal"><span class="pre">Multiplier</span></code>, increase the value of <code class="docutils literal"><span class="pre">Adder</span></code> and wait 1 second.</p>
+and say: until <code class="docutils literal notranslate"><span class="pre">time:seconds</span></code> is bigger than our current time plus 5 seconds, repeat whatever I covered with my hand.
+In this case that’d be: print <code class="docutils literal notranslate"><span class="pre">Multiplier</span></code>, increase the value of <code class="docutils literal notranslate"><span class="pre">Adder</span></code> and wait 1 second.</p>
 <p>The outcome of this piece of code is:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="mf">0</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="mf">0</span>
 <span class="mf">2</span>
 <span class="mf">4</span>
 <span class="mf">6</span>
@@ -518,57 +453,57 @@ In this case that&#8217;d be: print <code class="docutils literal"><span class="
 <span class="mf">10</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="wait-until">
-<h3><a class="toc-backref" href="#id11">Wait until</a><a class="headerlink" href="#wait-until" title="Permalink to this headline">¶</a></h3>
-<p>You can also use the <code class="docutils literal"><span class="pre">wait</span> <span class="pre">until</span></code> command, this pauses the current script until the
+</section>
+<section id="wait-until">
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">Wait until</a><a class="headerlink" href="#wait-until" title="Permalink to this heading">¶</a></h3>
+<p>You can also use the <code class="docutils literal notranslate"><span class="pre">wait</span> <span class="pre">until</span></code> command, this pauses the current script until the
 conditions have been met.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">TimePlusFive</span> <span class="ow">to</span> <span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span> <span class="o">+</span> <span class="mf">5</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">TimePlusFive</span> <span class="ow">to</span> <span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span> <span class="o">+</span> <span class="mf">5</span><span class="p">.</span>
 <span class="k">wait</span> <span class="k">until</span> <span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span> <span class="o">&gt;</span> <span class="nv">TimePlusFive</span><span class="p">.</span>
 <span class="k">print</span> <span class="s">&quot;done waiting&quot;</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>It will take 5 seconds for <code class="docutils literal"><span class="pre">done</span> <span class="pre">waiting</span></code> to show up.
-Note: the <code class="docutils literal"><span class="pre">wait</span> <span class="pre">until</span></code> command only checks the condition once per physics tick.  Using <code class="docutils literal"><span class="pre">wait</span> <span class="pre">until</span></code> for a fraction of a physics tick will round up to the start of a new physics tick.</p>
-</div>
-</div>
-<div class="section" id="lists-and-lexicons">
-<h2><a class="toc-backref" href="#id12">Lists and lexicons</a><a class="headerlink" href="#lists-and-lexicons" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">Value1</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span>
+<p>It will take 5 seconds for <code class="docutils literal notranslate"><span class="pre">done</span> <span class="pre">waiting</span></code> to show up.
+Note: the <code class="docutils literal notranslate"><span class="pre">wait</span> <span class="pre">until</span></code> command only checks the condition once per physics tick.  Using <code class="docutils literal notranslate"><span class="pre">wait</span> <span class="pre">until</span></code> for a fraction of a physics tick will round up to the start of a new physics tick.</p>
+</section>
+</section>
+<section id="lists-and-lexicons">
+<h2><a class="toc-backref" href="#id12" role="doc-backlink">Lists and lexicons</a><a class="headerlink" href="#lists-and-lexicons" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">Value1</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span>
 <span class="k">set</span> <span class="nv">Value2</span> <span class="ow">to</span> <span class="mf">5</span><span class="p">.</span>
 <span class="k">set</span> <span class="nv">Value3</span> <span class="ow">to</span> <span class="mf">10</span><span class="p">.</span>
 <span class="k">set</span> <span class="nv">Value4</span> <span class="ow">to</span> <span class="mf">15</span><span class="p">.</span>
 <span class="k">set</span> <span class="nv">Value5</span> <span class="ow">to</span> <span class="mf">20</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>Let&#8217;s say we want to put these values in a list we want to edit later we can put them into a list by typing the following:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">ValueList</span> <span class="ow">to</span> <span class="k">list</span><span class="p">(</span><span class="nv">Value1</span><span class="p">,</span> <span class="nv">Value2</span><span class="p">,</span> <span class="nv">Value3</span><span class="p">,</span> <span class="nv">Value4</span><span class="p">,</span> <span class="nv">Value5</span><span class="p">).</span>
+<p>Let’s say we want to put these values in a list we want to edit later we can put them into a list by typing the following:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">ValueList</span> <span class="ow">to</span> <span class="k">list</span><span class="p">(</span><span class="nv">Value1</span><span class="p">,</span> <span class="nv">Value2</span><span class="p">,</span> <span class="nv">Value3</span><span class="p">,</span> <span class="nv">Value4</span><span class="p">,</span> <span class="nv">Value5</span><span class="p">).</span>
 <span class="k">print</span> <span class="nv">ValueList</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>This will show:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mf">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mf">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0</span>
 <span class="p">[</span><span class="mf">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">5</span>
 <span class="p">[</span><span class="mf">2</span><span class="p">]</span> <span class="o">=</span> <span class="mf">10</span>
 <span class="p">[</span><span class="mf">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">15</span>
 <span class="p">[</span><span class="mf">4</span><span class="p">]</span> <span class="o">=</span> <span class="mf">20</span>
 </pre></div>
 </div>
-<p>As you can see the list goes from 0-4 instead of 1-5. So if you&#8217;d want to access <code class="docutils literal"><span class="pre">Value3</span></code> you&#8217;d need to look for <code class="docutils literal"><span class="pre">[2]</span></code>.
+<p>As you can see the list goes from 0-4 instead of 1-5. So if you’d want to access <code class="docutils literal notranslate"><span class="pre">Value3</span></code> you’d need to look for <code class="docutils literal notranslate"><span class="pre">[2]</span></code>.
 This can be done as follows:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">ValueList</span><span class="p">[</span><span class="mf">2</span><span class="p">].</span> <span class="c1">// shows 10</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">ValueList</span><span class="p">[</span><span class="mf">2</span><span class="p">].</span> <span class="c1">// shows 10</span>
 </pre></div>
 </div>
-<p>But let&#8217;s say you want to print every item in the list you could do:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">ValueList</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span> <span class="c1">// shows 0</span>
+<p>But let’s say you want to print every item in the list you could do:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">ValueList</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span> <span class="c1">// shows 0</span>
 <span class="k">print</span> <span class="nv">ValueList</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span> <span class="c1">// shows 5</span>
 <span class="k">print</span> <span class="nv">ValueList</span><span class="p">[</span><span class="mf">2</span><span class="p">].</span> <span class="c1">// shows 10</span>
 <span class="k">print</span> <span class="nv">ValueList</span><span class="p">[</span><span class="mf">3</span><span class="p">].</span> <span class="c1">// shows 15</span>
 <span class="k">print</span> <span class="nv">ValueList</span><span class="p">[</span><span class="mf">4</span><span class="p">].</span> <span class="c1">// shows 20</span>
 </pre></div>
 </div>
-<p>But the problem with this is that you have to know how big the list is and it&#8217;d take up a lot space when dealing with big lists.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="nv">Whatever</span> <span class="nv">in</span> <span class="nv">ValueList</span> <span class="p">{</span>
+<p>But the problem with this is that you have to know how big the list is and it’d take up a lot space when dealing with big lists.</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="nv">Whatever</span> <span class="nv">in</span> <span class="nv">ValueList</span> <span class="p">{</span>
   <span class="k">print</span> <span class="nv">Whatever</span><span class="p">.</span>
 <span class="p">}</span>
 
@@ -578,10 +513,10 @@ This can be done as follows:</p>
 </pre></div>
 </div>
 <p>Both pieces of code do <strong>EXACTLY</strong> the same.
-This checks each item in a given list (now called <code class="docutils literal"><span class="pre">Whatever</span></code>) and does what the curly brackets contains.
-(For each item in the list called <code class="docutils literal"><span class="pre">ValueList</span></code>, which we call <code class="docutils literal"><span class="pre">Whatever</span></code>, do whatever is inside of the brackets).</p>
+This checks each item in a given list (now called <code class="docutils literal notranslate"><span class="pre">Whatever</span></code>) and does what the curly brackets contains.
+(For each item in the list called <code class="docutils literal notranslate"><span class="pre">ValueList</span></code>, which we call <code class="docutils literal notranslate"><span class="pre">Whatever</span></code>, do whatever is inside of the brackets).</p>
 <p>In this case it prints:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="mf">0</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="mf">0</span>
 <span class="mf">5</span>
 <span class="mf">10</span>
 <span class="mf">15</span>
@@ -589,42 +524,42 @@ This checks each item in a given list (now called <code class="docutils literal"
 </pre></div>
 </div>
 <p>You can also use variables to check an item in a list:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="mf">3</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="mf">3</span><span class="p">.</span>
 <span class="k">print</span> <span class="nv">ValueList</span><span class="p">[</span><span class="nv">x</span><span class="p">].</span> <span class="c1">// shows 15</span>
 </pre></div>
 </div>
 <p>Does the same as:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">ValueList</span><span class="p">[</span><span class="mf">3</span><span class="p">].</span> <span class="c1">// also shows 15</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">ValueList</span><span class="p">[</span><span class="mf">3</span><span class="p">].</span> <span class="c1">// also shows 15</span>
 </pre></div>
 </div>
-<div class="section" id="lexicons">
-<h3><a class="toc-backref" href="#id13">Lexicons</a><a class="headerlink" href="#lexicons" title="Permalink to this headline">¶</a></h3>
+<section id="lexicons">
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">Lexicons</a><a class="headerlink" href="#lexicons" title="Permalink to this heading">¶</a></h3>
 <p>Lexicons are in a way the same as lists but they have some crucial differences.
 Lexicons can store a pair of information, for example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">MyLexicon</span> <span class="ow">to</span> <span class="nv">lexicon</span><span class="p">(</span><span class="s">&quot;MyValue1&quot;</span><span class="p">,</span> <span class="mf">100</span><span class="p">,</span> <span class="s">&quot;MyValue2&quot;</span><span class="p">,</span> <span class="mf">200</span><span class="p">,</span> <span class="s">&quot;MyValue3&quot;</span><span class="p">,</span> <span class="mf">300</span><span class="p">).</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">MyLexicon</span> <span class="ow">to</span> <span class="nv">lexicon</span><span class="p">(</span><span class="s">&quot;MyValue1&quot;</span><span class="p">,</span> <span class="mf">100</span><span class="p">,</span> <span class="s">&quot;MyValue2&quot;</span><span class="p">,</span> <span class="mf">200</span><span class="p">,</span> <span class="s">&quot;MyValue3&quot;</span><span class="p">,</span> <span class="mf">300</span><span class="p">).</span>
 </pre></div>
 </div>
 <p>The following piece of code acts <strong>EXACTLY</strong> the same as the piece of code above but is easier to read:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">MyLexicon</span> <span class="ow">to</span> <span class="nv">lexicon</span><span class="p">(</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">MyLexicon</span> <span class="ow">to</span> <span class="nv">lexicon</span><span class="p">(</span>
   <span class="s">&quot;MyValue1&quot;</span><span class="p">,</span> <span class="mf">100</span><span class="p">,</span>
   <span class="s">&quot;MyValue2&quot;</span><span class="p">,</span> <span class="mf">200</span><span class="p">,</span>
   <span class="s">&quot;MyValue3&quot;</span><span class="p">,</span> <span class="mf">300</span>
 <span class="p">).</span>
 </pre></div>
 </div>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">MyLexicon</span><span class="p">[</span><span class="s">&quot;MyValue1&quot;</span><span class="p">].</span> <span class="c1">// shows 100</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">MyLexicon</span><span class="p">[</span><span class="s">&quot;MyValue1&quot;</span><span class="p">].</span> <span class="c1">// shows 100</span>
 <span class="k">print</span> <span class="nv">MyLexicon</span><span class="p">[</span><span class="s">&quot;MyValue2&quot;</span><span class="p">].</span> <span class="c1">// shows 200</span>
 <span class="k">print</span> <span class="nv">MyLexicon</span><span class="p">[</span><span class="s">&quot;MyValue3&quot;</span><span class="p">].</span> <span class="c1">// shows 300</span>
 </pre></div>
 </div>
-<p>NOTE: print <code class="docutils literal"><span class="pre">MyLexicon[100]</span></code>. will NOT work.</p>
-</div>
-</div>
-<div class="section" id="functions">
-<h2><a class="toc-backref" href="#id14">Functions</a><a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
-<p>Imagine you&#8217;re driving in a manual shift car for with an instructor for the first time.
+<p>NOTE: print <code class="docutils literal notranslate"><span class="pre">MyLexicon[100]</span></code>. will NOT work.</p>
+</section>
+</section>
+<section id="functions">
+<h2><a class="toc-backref" href="#id14" role="doc-backlink">Functions</a><a class="headerlink" href="#functions" title="Permalink to this heading">¶</a></h2>
+<p>Imagine you’re driving in a manual shift car for with an instructor for the first time.
 He helps you getting into first gear and tells you the following when you want to accelerate:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">Let</span> <span class="nv">go</span> <span class="nv">of</span> <span class="nv">the</span> <span class="nv">gas</span> <span class="nv">pedal</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">Let</span> <span class="nv">go</span> <span class="nv">of</span> <span class="nv">the</span> <span class="nv">gas</span> <span class="nv">pedal</span><span class="p">.</span>
 <span class="nv">Press</span> <span class="nv">in</span> <span class="nv">the</span> <span class="nv">clutch</span> <span class="nv">pedal</span><span class="p">.</span>
 <span class="nv">Shift</span> <span class="nv">the</span> <span class="nv">gear</span> <span class="nv">stick</span> <span class="k">from</span> <span class="nv">first</span> <span class="ow">to</span> <span class="nv">second</span><span class="p">.</span>
 <span class="nv">Let</span> <span class="nv">go</span> <span class="nv">of</span> <span class="nv">the</span> <span class="nv">clutch</span> <span class="nv">pedal</span><span class="p">.</span>
@@ -632,7 +567,7 @@ He helps you getting into first gear and tells you the following when you want t
 </pre></div>
 </div>
 <p>After a while he tells you:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">Let</span> <span class="nv">go</span> <span class="nv">of</span> <span class="nv">the</span> <span class="nv">gas</span> <span class="nv">pedal</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">Let</span> <span class="nv">go</span> <span class="nv">of</span> <span class="nv">the</span> <span class="nv">gas</span> <span class="nv">pedal</span><span class="p">.</span>
 <span class="nv">Press</span> <span class="nv">in</span> <span class="nv">the</span> <span class="nv">clutch</span> <span class="nv">pedal</span><span class="p">.</span>
 <span class="nv">Shift</span> <span class="nv">the</span> <span class="nv">gear</span> <span class="nv">stick</span> <span class="k">from</span> <span class="nv">second</span> <span class="ow">to</span> <span class="nv">third</span><span class="p">.</span>
 <span class="nv">Let</span> <span class="nv">go</span> <span class="nv">of</span> <span class="nv">the</span> <span class="nv">clutch</span> <span class="nv">pedal</span><span class="p">.</span>
@@ -640,27 +575,27 @@ He helps you getting into first gear and tells you the following when you want t
 </pre></div>
 </div>
 <p>Not long after that he tells you:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">Let</span> <span class="nv">go</span> <span class="nv">of</span> <span class="nv">the</span> <span class="nv">gas</span> <span class="nv">pedal</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">Let</span> <span class="nv">go</span> <span class="nv">of</span> <span class="nv">the</span> <span class="nv">gas</span> <span class="nv">pedal</span><span class="p">.</span>
 <span class="nv">Press</span> <span class="nv">in</span> <span class="nv">the</span> <span class="nv">clutch</span> <span class="nv">pedal</span><span class="p">.</span>
 <span class="nv">Shift</span> <span class="nv">the</span> <span class="nv">gear</span> <span class="nv">stick</span> <span class="k">from</span> <span class="nv">third</span> <span class="ow">to</span> <span class="nv">fourth</span><span class="p">.</span>
 <span class="nv">Let</span> <span class="nv">go</span> <span class="nv">of</span> <span class="nv">the</span> <span class="nv">clutch</span> <span class="nv">pedal</span><span class="p">.</span>
 <span class="nv">Press</span> <span class="nv">in</span> <span class="nv">the</span> <span class="nv">gas</span> <span class="nv">pedal</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>Wouldn&#8217;t it be easier if instead of telling you the entire procedure he&#8217;d tell you the following:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">Shift</span> <span class="k">from</span> <span class="nv">first</span> <span class="ow">to</span> <span class="nv">second</span><span class="p">.</span>
+<p>Wouldn’t it be easier if instead of telling you the entire procedure he’d tell you the following:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">Shift</span> <span class="k">from</span> <span class="nv">first</span> <span class="ow">to</span> <span class="nv">second</span><span class="p">.</span>
 <span class="ow">And</span> <span class="nv">after</span> <span class="nv">a</span> <span class="nv">after</span> <span class="nv">he</span> <span class="nv">tells</span> <span class="nv">you</span><span class="p">:</span>
 <span class="nv">Shift</span> <span class="k">from</span> <span class="nv">second</span> <span class="ow">to</span> <span class="nv">third</span><span class="p">.</span>
 <span class="ow">And</span> <span class="ow">not</span> <span class="nv">long</span> <span class="nv">after</span> <span class="nv">that</span> <span class="nv">he</span> <span class="nv">tells</span> <span class="nv">you</span><span class="p">:</span>
 <span class="nv">Shift</span> <span class="k">from</span> <span class="nv">third</span> <span class="ow">to</span> <span class="nv">fourth</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>As you can see you only need to know how to shift once (if you&#8217;re a quick learner) and after that telling the whole process is
+<p>As you can see you only need to know how to shift once (if you’re a quick learner) and after that telling the whole process is
 repetitive. The same goes for code in KOS, you might want to use a piece of code more than once without typing it out everytime.
-This is called a <code class="docutils literal"><span class="pre">function</span></code> and functions often have <code class="docutils literal"><span class="pre">parameters</span></code> (similar to starting conditions).</p>
+This is called a <code class="docutils literal notranslate"><span class="pre">function</span></code> and functions often have <code class="docutils literal notranslate"><span class="pre">parameters</span></code> (similar to starting conditions).</p>
 <p>Keep in mind that the following piece of code is pseudo-code and is not actual working code but an example of what functions
 are like:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="kd">Function</span> <span class="nv">ShiftGearFirstToSecond</span> <span class="p">{</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="kd">Function</span> <span class="nv">ShiftGearFirstToSecond</span> <span class="p">{</span>
   <span class="nv">Let</span> <span class="nv">go</span> <span class="nv">of</span> <span class="nv">the</span> <span class="nv">gas</span> <span class="nv">pedal</span><span class="p">.</span>
   <span class="nv">Press</span> <span class="nv">in</span> <span class="nv">the</span> <span class="nv">clutch</span> <span class="nv">pedal</span><span class="p">.</span>
   <span class="nv">Shift</span> <span class="nv">the</span> <span class="nv">gear</span> <span class="nv">stick</span> <span class="k">from</span> <span class="nv">first</span> <span class="nv">gear</span> <span class="ow">to</span> <span class="nv">second</span> <span class="nv">gear</span><span class="p">.</span>
@@ -669,10 +604,10 @@ are like:</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Your instructor could now say <code class="docutils literal"><span class="pre">ShiftGearFirstToSecond()</span></code> and you&#8217;d know how to go from the first gear to the second.
+<p>Your instructor could now say <code class="docutils literal notranslate"><span class="pre">ShiftGearFirstToSecond()</span></code> and you’d know how to go from the first gear to the second.
 But this is only about going from the first gear to the second and not from the second gear to the third.
-To do that you&#8217;d need to have blank spaces for you to fill in with your desired gears.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="kd">Function</span> <span class="nv">ShiftGear</span> <span class="p">{</span>
+To do that you’d need to have blank spaces for you to fill in with your desired gears.</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="kd">Function</span> <span class="nv">ShiftGear</span> <span class="p">{</span>
   <span class="nv">Let</span> <span class="nv">go</span> <span class="nv">of</span> <span class="nv">the</span> <span class="nv">gas</span> <span class="nv">pedal</span><span class="p">.</span>
   <span class="nv">Press</span> <span class="nv">in</span> <span class="nv">the</span> <span class="nv">clutch</span> <span class="nv">pedal</span><span class="p">.</span>
   <span class="nv">Shift</span> <span class="nv">the</span> <span class="nv">gear</span> <span class="nv">stick</span> <span class="k">from</span> <span class="nv">____</span> <span class="ow">to</span> <span class="nv">____</span><span class="p">.</span>
@@ -681,12 +616,12 @@ To do that you&#8217;d need to have blank spaces for you to fill in with your de
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>On paper this sounds like a great idea but if your instructor tells you <code class="docutils literal"><span class="pre">ShiftGear()</span></code> <code class="docutils literal"><span class="pre">first</span> <span class="pre">gear</span></code>, <code class="docutils literal"><span class="pre">second</span> <span class="pre">gear</span></code>. But you&#8217;re not sure where to
-put <code class="docutils literal"><span class="pre">first</span> <span class="pre">gear</span></code> and where to put <code class="docutils literal"><span class="pre">second</span> <span class="pre">gear</span></code>. Wouldn&#8217;t it be handy if you made rule that the first word your instructor says is the
-gear you start in and the second word he says is the gear you end in? Well luckily there&#8217;s a way to apply that rule.
-This is were <code class="docutils literal"><span class="pre">parameters</span></code> come into play, all functions get called using <code class="docutils literal"><span class="pre">()</span></code> after the function name and inside of the brackets
+<p>On paper this sounds like a great idea but if your instructor tells you <code class="docutils literal notranslate"><span class="pre">ShiftGear()</span></code> <code class="docutils literal notranslate"><span class="pre">first</span> <span class="pre">gear</span></code>, <code class="docutils literal notranslate"><span class="pre">second</span> <span class="pre">gear</span></code>. But you’re not sure where to
+put <code class="docutils literal notranslate"><span class="pre">first</span> <span class="pre">gear</span></code> and where to put <code class="docutils literal notranslate"><span class="pre">second</span> <span class="pre">gear</span></code>. Wouldn’t it be handy if you made rule that the first word your instructor says is the
+gear you start in and the second word he says is the gear you end in? Well luckily there’s a way to apply that rule.
+This is were <code class="docutils literal notranslate"><span class="pre">parameters</span></code> come into play, all functions get called using <code class="docutils literal notranslate"><span class="pre">()</span></code> after the function name and inside of the brackets
 you put the parameters.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="kd">Function</span> <span class="nv">ShiftGear</span> <span class="p">{</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="kd">Function</span> <span class="nv">ShiftGear</span> <span class="p">{</span>
   <span class="kd">Parameter</span> <span class="nv">StartGear</span><span class="p">.</span>
   <span class="kd">Parameter</span> <span class="nv">EndGear</span><span class="p">.</span>
 
@@ -699,16 +634,16 @@ you put the parameters.</p>
 </pre></div>
 </div>
 <p>As you can see we replaced the blank spaces with variables (parameters are also variables).
-So to go from first gear to second gear you&#8217;d use:
-<code class="docutils literal"><span class="pre">ShiftGear(first,</span> <span class="pre">second)</span></code>.
-To go from second to third you&#8217;d use:
-<code class="docutils literal"><span class="pre">ShiftGear(second,</span> <span class="pre">third)</span></code>.
-To go from third to second you&#8217;d use:
-<code class="docutils literal"><span class="pre">ShiftGear(third,</span> <span class="pre">second)</span></code>.</p>
-<div class="section" id="a-working-example-of-a-function">
-<h3><a class="toc-backref" href="#id15">A working example of a function</a><a class="headerlink" href="#a-working-example-of-a-function" title="Permalink to this headline">¶</a></h3>
-<p>Here&#8217;s an example of a simple function which works in KOS:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="kd">Function</span> <span class="nv">OneThroughFivePrint</span> <span class="p">{</span>
+So to go from first gear to second gear you’d use:
+<code class="docutils literal notranslate"><span class="pre">ShiftGear(first,</span> <span class="pre">second)</span></code>.
+To go from second to third you’d use:
+<code class="docutils literal notranslate"><span class="pre">ShiftGear(second,</span> <span class="pre">third)</span></code>.
+To go from third to second you’d use:
+<code class="docutils literal notranslate"><span class="pre">ShiftGear(third,</span> <span class="pre">second)</span></code>.</p>
+<section id="a-working-example-of-a-function">
+<h3><a class="toc-backref" href="#id15" role="doc-backlink">A working example of a function</a><a class="headerlink" href="#a-working-example-of-a-function" title="Permalink to this heading">¶</a></h3>
+<p>Here’s an example of a simple function which works in KOS:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="kd">Function</span> <span class="nv">OneThroughFivePrint</span> <span class="p">{</span>
   <span class="k">print</span> <span class="mf">1</span><span class="p">.</span>
   <span class="k">print</span> <span class="mf">2</span><span class="p">.</span>
   <span class="k">print</span> <span class="mf">3</span><span class="p">.</span>
@@ -718,27 +653,27 @@ To go from third to second you&#8217;d use:
 </pre></div>
 </div>
 <p>Functions can have any name but avoid making functions and variables the same name as this will very likely cause problems.
-A function will do anything that&#8217;s inside of the curly brackets. To use this function type the following:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">OneThroughFivePrint</span><span class="p">().</span>
+A function will do anything that’s inside of the curly brackets. To use this function type the following:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">OneThroughFivePrint</span><span class="p">().</span>
 </pre></div>
 </div>
 <p>This will show:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="mf">1</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="mf">1</span>
 <span class="mf">2</span>
 <span class="mf">3</span>
 <span class="mf">4</span>
 <span class="mf">5</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="a-more-complex-function">
-<h3><a class="toc-backref" href="#id16">A more complex function</a><a class="headerlink" href="#a-more-complex-function" title="Permalink to this headline">¶</a></h3>
-<p>Here&#8217;s an example of a more complex function which has a parameter and will also work in KOS:</p>
-<p>Let&#8217;s say we&#8217;re in a perfectly circular orbit around kerbin, we can use the following formula:
-<code class="docutils literal"><span class="pre">velocity</span> <span class="pre">=</span> <span class="pre">(2</span> <span class="pre">*</span> <span class="pre">pi</span> <span class="pre">*</span> <span class="pre">radius)</span> <span class="pre">/</span> <span class="pre">orbital</span> <span class="pre">period</span></code>
+</section>
+<section id="a-more-complex-function">
+<h3><a class="toc-backref" href="#id16" role="doc-backlink">A more complex function</a><a class="headerlink" href="#a-more-complex-function" title="Permalink to this heading">¶</a></h3>
+<p>Here’s an example of a more complex function which has a parameter and will also work in KOS:</p>
+<p>Let’s say we’re in a perfectly circular orbit around kerbin, we can use the following formula:
+<code class="docutils literal notranslate"><span class="pre">velocity</span> <span class="pre">=</span> <span class="pre">(2</span> <span class="pre">*</span> <span class="pre">pi</span> <span class="pre">*</span> <span class="pre">radius)</span> <span class="pre">/</span> <span class="pre">orbital</span> <span class="pre">period</span></code>
 (<a class="reference external" href="https://en.wikipedia.org/wiki/Circular_motion#Formulas">https://en.wikipedia.org/wiki/Circular_motion#Formulas</a>)</p>
-<p>Ignore how <code class="docutils literal"><span class="pre">ship:orbit:period</span></code> works for now, that will be discussed in the next chapter.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="kd">Function</span> <span class="nv">VelocityCalculator</span> <span class="p">{</span>
+<p>Ignore how <code class="docutils literal notranslate"><span class="pre">ship:orbit:period</span></code> works for now, that will be discussed in the next chapter.</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="kd">Function</span> <span class="nv">VelocityCalculator</span> <span class="p">{</span>
   <span class="kd">Parameter</span> <span class="nv">OrbitHeight</span><span class="p">.</span>
 
   <span class="k">set</span> <span class="nv">KerbinRadius</span> <span class="ow">to</span> <span class="mf">600000</span><span class="p">.</span>
@@ -748,15 +683,15 @@ A function will do anything that&#8217;s inside of the curly brackets. To use th
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>If you&#8217;re in a 400 km circular orbit and type:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">VelocityCalculator</span><span class="p">(</span><span class="mf">400000</span><span class="p">).</span>
+<p>If you’re in a 400 km circular orbit and type:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">VelocityCalculator</span><span class="p">(</span><span class="mf">400000</span><span class="p">).</span>
 </pre></div>
 </div>
 <p>Will show your orbital velocity.</p>
-<p>Now what if you want to use the velocity for other calculations, is that possible? Yes of course that&#8217;s possible!
-The <code class="docutils literal"><span class="pre">return</span></code> command is very helpful is these situations. The <code class="docutils literal"><span class="pre">return</span></code> function returns a value, piece of text, boolean etc and ends
+<p>Now what if you want to use the velocity for other calculations, is that possible? Yes of course that’s possible!
+The <code class="docutils literal notranslate"><span class="pre">return</span></code> command is very helpful is these situations. The <code class="docutils literal notranslate"><span class="pre">return</span></code> function returns a value, piece of text, boolean etc and ends
 the function it is in.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="kd">Function</span> <span class="nv">VelocityCalculator</span> <span class="p">{</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="kd">Function</span> <span class="nv">VelocityCalculator</span> <span class="p">{</span>
   <span class="kd">Parameter</span> <span class="nv">OrbitHeight</span><span class="p">.</span>
 
   <span class="k">set</span> <span class="nv">KerbinRadius</span> <span class="ow">to</span> <span class="mf">600000</span><span class="p">.</span>
@@ -772,21 +707,21 @@ the function it is in.</p>
 </pre></div>
 </div>
 <p>Will show your orbital velocity for a circular orbit at 400 kilometers.</p>
-<div class="section" id="suffixes">
-<h4>Suffixes<a class="headerlink" href="#suffixes" title="Permalink to this headline">¶</a></h4>
+<section id="suffixes">
+<h4>Suffixes<a class="headerlink" href="#suffixes" title="Permalink to this heading">¶</a></h4>
 <p>In KOS you can access information about orbits using special structures.
-Let&#8217;s start with things we can check about our ship&#8217;s orbit.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">orbit</span><span class="p">:</span><span class="nv">apoapsis</span><span class="p">.</span> <span class="c1">// shows the ship&#39;s apoapsis</span>
+Let’s start with things we can check about our ship’s orbit.</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">orbit</span><span class="p">:</span><span class="nv">apoapsis</span><span class="p">.</span> <span class="c1">// shows the ship&#39;s apoapsis</span>
 <span class="k">print</span> <span class="nv">kerbin</span><span class="p">:</span><span class="nv">orbit</span><span class="p">:</span><span class="nv">apoapsis</span><span class="p">.</span> <span class="c1">// shows kerbin&#39;s apoapsis</span>
 <span class="k">print</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">body</span><span class="p">:</span><span class="nv">orbit</span><span class="p">:</span><span class="nv">apoapsis</span><span class="p">.</span> <span class="c1">// shows kerbin&#39;s apoapsis if you&#39;re currently orbiting kerbin</span>
 </pre></div>
 </div>
 <p>You could compare these structures to a fill in the blanks story:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">___</span><span class="p">:</span><span class="nv">orbit</span><span class="p">:</span><span class="nv">apoapsis</span><span class="p">.</span> <span class="c1">// shows the apoapsis of whatever you fill in the blank</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">___</span><span class="p">:</span><span class="nv">orbit</span><span class="p">:</span><span class="nv">apoapsis</span><span class="p">.</span> <span class="c1">// shows the apoapsis of whatever you fill in the blank</span>
 </pre></div>
 </div>
 <p>There are also other things you can get instead of just apoapsis, for example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">orbit</span><span class="p">:</span><span class="nv">periapsis</span><span class="p">.</span> <span class="c1">// shows the ship&#39;s periapsis</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">orbit</span><span class="p">:</span><span class="nv">periapsis</span><span class="p">.</span> <span class="c1">// shows the ship&#39;s periapsis</span>
 <span class="k">print</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">orbit</span><span class="p">:</span><span class="nv">period</span><span class="p">.</span> <span class="c1">// shows the ship&#39;s period</span>
 <span class="k">print</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">orbit</span><span class="p">:</span><span class="nv">inclination</span><span class="p">.</span> <span class="c1">// shows the ship&#39;s inclination</span>
 <span class="k">print</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">orbit</span><span class="p">:</span><span class="nv">eccentricity</span><span class="p">.</span> <span class="c1">// shows the ship&#39;s eccentricity</span>
@@ -796,14 +731,14 @@ Let&#8217;s start with things we can check about our ship&#8217;s orbit.</p>
 <p>The full list of things you can add after :orbit can be found here:
 <a class="reference external" href="https://ksp-kos.github.io/KOS/structures/orbits/orbit.html">https://ksp-kos.github.io/KOS/structures/orbits/orbit.html</a></p>
 <p>Taking a step back, you can also look up values of planets</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">kerbin</span><span class="p">:</span><span class="nv">name</span><span class="p">.</span> <span class="c1">// shows kerbin</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">kerbin</span><span class="p">:</span><span class="nv">name</span><span class="p">.</span> <span class="c1">// shows kerbin</span>
 <span class="k">print</span> <span class="nv">kerbin</span><span class="p">:</span><span class="nv">mass</span><span class="p">.</span> <span class="c1">// shows kerbin&#39;s mass</span>
 <span class="k">print</span> <span class="nv">kerbin</span><span class="p">:</span><span class="nv">radius</span> <span class="c1">// shows kerbin&#39;s radius</span>
 <span class="k">print</span> <span class="nv">kerbin</span><span class="p">:</span><span class="nv">mu</span> <span class="c1">// shows kerbin&#39;s gravitational parameter</span>
 </pre></div>
 </div>
-<p>If you&#8217;re currently orbiting kerbin, the following is true:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">body</span><span class="p">:</span><span class="nv">name</span><span class="p">.</span> <span class="c1">// shows kerbin</span>
+<p>If you’re currently orbiting kerbin, the following is true:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">body</span><span class="p">:</span><span class="nv">name</span><span class="p">.</span> <span class="c1">// shows kerbin</span>
 <span class="k">print</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">body</span><span class="p">:</span><span class="nv">mass</span><span class="p">.</span> <span class="c1">// shows kerbin&#39;s mass</span>
 <span class="k">print</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">body</span><span class="p">:</span><span class="nv">radius</span> <span class="c1">// shows kerbin&#39;s radius</span>
 <span class="k">print</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">body</span><span class="p">:</span><span class="nv">mu</span> <span class="c1">// shows kerbin&#39;s gravitational parameter</span>
@@ -811,78 +746,40 @@ Let&#8217;s start with things we can check about our ship&#8217;s orbit.</p>
 </div>
 <p>More information about that here:
 <a class="reference external" href="https://ksp-kos.github.io/KOS/structures/orbits/orbitable.html">https://ksp-kos.github.io/KOS/structures/orbits/orbitable.html</a></p>
-</div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="designpatterns.html" class="btn btn-neutral float-right" title="Design Patterns and Considerations with kOS" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="quickstart.html" class="btn btn-neutral" title="Quick Start Tutorial" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="quickstart.html" class="btn btn-neutral float-left" title="Quick Start Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="designpatterns.html" class="btn btn-neutral float-right" title="Design Patterns and Considerations with kOS" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

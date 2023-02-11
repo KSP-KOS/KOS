@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Waypoints &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Waypoints &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../about.html"/>
-        <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../index.html"/>
-        <link rel="up" title="Structure Reference" href="../structures.html"/>
-        <link rel="next" title="Addon Reference" href="../addons.html"/>
-        <link rel="prev" title="Voice" href="misc/voice.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="next" title="Addon Reference" href="../addons.html" />
+    <link rel="prev" title="Voice" href="misc/voice.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
@@ -110,7 +61,7 @@
 <li class="toctree-l2"><a class="reference internal" href="celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gui.html">GUI Widgets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="misc.html">Miscellaneous</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Waypoints</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Waypoints</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a></li>
@@ -120,386 +71,300 @@
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../structures.html">Structure Reference</a> &raquo;</li>
-      
-    <li>Waypoints</li>
+      <li>Waypoints</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../_sources/structures/waypoint.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../_sources/structures/waypoint.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="waypoints">
-<span id="waypoint"></span><h1>Waypoints<a class="headerlink" href="#waypoints" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="waypoints">
+<span id="waypoint"></span><h1>Waypoints<a class="headerlink" href="#waypoints" title="Permalink to this heading">¶</a></h1>
 <p>Waypoints are the location markers you can see on the map view showing you where contracts are targeted for.  With this structure, you can obtain coordinate data for the locations of these waypoints.</p>
-<dl class="function">
-<dt id="function:WAYPOINT">
-<code class="descname">WAYPOINT</code><span class="sig-paren">(</span>name<span class="sig-paren">)</span><a class="headerlink" href="#function:WAYPOINT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> &#8211; (<a class="reference internal" href="misc/string.html#string"><span>string</span></a>) Name of the waypoint as it appears on the map or in the contract description</li>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:WAYPOINT">
+<span class="sig-name descname"><span class="pre">WAYPOINT</span></span><span class="sig-paren">(</span><span class="pre">name</span><span class="sig-paren">)</span><a class="headerlink" href="#function:WAYPOINT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – (<a class="reference internal" href="misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>) Name of the waypoint as it appears on the map or in the contract description</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#structure:WAYPOINT" title="WAYPOINT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Waypoint</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-<p>This creates a new Waypoint from a name of a waypoint you read from the contract paramters.  Note that this only works on contracts you&#8217;ve accpted.  Waypoints for proposed contracts haven&#8217;t accepted yet  do not actually work in kOS.</p>
-<p>SET spot TO WAYPOINT(&#8220;herman&#8217;s folly beta&#8221;).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#structure:WAYPOINT" title="WAYPOINT structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Waypoint</span></code></a></p>
+</dd>
+</dl>
+<p>This creates a new Waypoint from a name of a waypoint you read from the contract paramters.  Note that this only works on contracts you’ve accpted.  Waypoints for proposed contracts haven’t accepted yet  do not actually work in kOS.</p>
+<p>SET spot TO WAYPOINT(“herman’s folly beta”).</p>
 <p>The name match is case-insensitive.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="function:ALLWAYPOINTS">
-<code class="descname">ALLWAYPOINTS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#function:ALLWAYPOINTS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="#structure:WAYPOINT" title="WAYPOINT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Waypoint</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>This creates a <a class="reference internal" href="collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="#structure:WAYPOINT" title="WAYPOINT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Waypoint</span></code></a> structures for all accepted contracts.  Waypoints for proposed contracts you haven&#8217;t accepted yet do not appear in the list.</p>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:ALLWAYPOINTS">
+<span class="sig-name descname"><span class="pre">ALLWAYPOINTS</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#function:ALLWAYPOINTS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="#structure:WAYPOINT" title="WAYPOINT structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Waypoint</span></code></a></p>
+</dd>
+</dl>
+<p>This creates a <a class="reference internal" href="collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="#structure:WAYPOINT" title="WAYPOINT structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Waypoint</span></code></a> structures for all accepted contracts.  Waypoints for proposed contracts you haven’t accepted yet do not appear in the list.</p>
 </dd></dl>
 
-<dl class="structure">
-<dt id="structure:WAYPOINT">
-<em class="property">structure </em><code class="descname">Waypoint</code><a class="headerlink" href="#structure:WAYPOINT" title="Permalink to this definition">¶</a></dt>
-<dd><table border="1" class="docutils" id="id1">
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:WAYPOINT">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">Waypoint</span></span><a class="headerlink" href="#structure:WAYPOINT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils align-default" id="id1">
 <caption><span class="caption-text"><strong>Members</strong></span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="50%" />
-<col width="50%" />
+<col style="width: 50.0%" />
+<col style="width: 50.0%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#attribute:WAYPOINT:NAME" title="WAYPOINT:NAME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></code></a></td>
-<td><a class="reference internal" href="misc/string.html#string"><span>string</span></a></td>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:WAYPOINT:NAME" title="WAYPOINT:NAME attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">NAME</span></code></a></p></td>
+<td><p><a class="reference internal" href="misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:WAYPOINT:BODY" title="WAYPOINT:BODY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">BODY</span></code></a></td>
-<td><cite>BodyTarget</cite></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:WAYPOINT:BODY" title="WAYPOINT:BODY attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">BODY</span></code></a></p></td>
+<td><p><cite>BodyTarget</cite></p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:WAYPOINT:GEOPOSITION" title="WAYPOINT:GEOPOSITION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">GEOPOSITION</span></code></a></td>
-<td><cite>GeoCoordinates</cite></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:WAYPOINT:GEOPOSITION" title="WAYPOINT:GEOPOSITION attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">GEOPOSITION</span></code></a></p></td>
+<td><p><cite>GeoCoordinates</cite></p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:WAYPOINT:POSITION" title="WAYPOINT:POSITION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">POSITION</span></code></a></td>
-<td><cite>Vector</cite></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:WAYPOINT:POSITION" title="WAYPOINT:POSITION attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">POSITION</span></code></a></p></td>
+<td><p><cite>Vector</cite></p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:WAYPOINT:ALTITUDE" title="WAYPOINT:ALTITUDE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALTITUDE</span></code></a></td>
-<td><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:WAYPOINT:ALTITUDE" title="WAYPOINT:ALTITUDE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ALTITUDE</span></code></a></p></td>
+<td><p><a class="reference internal" href="../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:WAYPOINT:AGL" title="WAYPOINT:AGL attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">AGL</span></code></a></td>
-<td><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:WAYPOINT:AGL" title="WAYPOINT:AGL attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">AGL</span></code></a></p></td>
+<td><p><a class="reference internal" href="../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:WAYPOINT:NEARSURFACE" title="WAYPOINT:NEARSURFACE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NEARSURFACE</span></code></a></td>
-<td><a class="reference internal" href="misc/boolean.html#boolean"><span>boolean</span></a></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:WAYPOINT:NEARSURFACE" title="WAYPOINT:NEARSURFACE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">NEARSURFACE</span></code></a></p></td>
+<td><p><a class="reference internal" href="misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:WAYPOINT:GROUNDED" title="WAYPOINT:GROUNDED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">GROUNDED</span></code></a></td>
-<td><a class="reference internal" href="misc/boolean.html#boolean"><span>boolean</span></a></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:WAYPOINT:GROUNDED" title="WAYPOINT:GROUNDED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">GROUNDED</span></code></a></p></td>
+<td><p><a class="reference internal" href="misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:WAYPOINT:INDEX" title="WAYPOINT:INDEX attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">INDEX</span></code></a></td>
-<td><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:WAYPOINT:INDEX" title="WAYPOINT:INDEX attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">INDEX</span></code></a></p></td>
+<td><p><a class="reference internal" href="../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:WAYPOINT:CLUSTERED" title="WAYPOINT:CLUSTERED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CLUSTERED</span></code></a></td>
-<td><a class="reference internal" href="misc/boolean.html#boolean"><span>boolean</span></a></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:WAYPOINT:CLUSTERED" title="WAYPOINT:CLUSTERED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">CLUSTERED</span></code></a></p></td>
+<td><p><a class="reference internal" href="misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:WAYPOINT:ISSELECTED" title="WAYPOINT:ISSELECTED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ISSELECTED</span></code></a></td>
-<td><a class="reference internal" href="misc/boolean.html#boolean"><span>boolean</span></a></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:WAYPOINT:ISSELECTED" title="WAYPOINT:ISSELECTED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ISSELECTED</span></code></a></p></td>
+<td><p><a class="reference internal" href="misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:WAYPOINT:NAME">
-Waypoint:<code class="descname">NAME</code><a class="headerlink" href="#attribute:WAYPOINT:NAME" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="misc/string.html#string"><span>string</span></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:WAYPOINT:NAME">
+<span class="pre">Waypoint:</span><span class="sig-name descname"><span class="pre">NAME</span></span><a class="headerlink" href="#attribute:WAYPOINT:NAME" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>Name of waypoint as it appears on the map and contract</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:WAYPOINT:BODY">
-Waypoint:<code class="descname">BODY</code><a class="headerlink" href="#attribute:WAYPOINT:BODY" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><cite>BodyTarget</cite></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:WAYPOINT:BODY">
+<span class="pre">Waypoint:</span><span class="sig-name descname"><span class="pre">BODY</span></span><a class="headerlink" href="#attribute:WAYPOINT:BODY" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>BodyTarget</cite></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>Celestial body the waypoint is attached to</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:WAYPOINT:GEOPOSITION">
-Waypoint:<code class="descname">GEOPOSITION</code><a class="headerlink" href="#attribute:WAYPOINT:GEOPOSITION" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">GeoCoordinates</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:WAYPOINT:GEOPOSITION">
+<span class="pre">Waypoint:</span><span class="sig-name descname"><span class="pre">GEOPOSITION</span></span><a class="headerlink" href="#attribute:WAYPOINT:GEOPOSITION" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>GeoCoordinates</p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>The LATLNG of this waypoint</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:WAYPOINT:POSITION">
-Waypoint:<code class="descname">POSITION</code><a class="headerlink" href="#attribute:WAYPOINT:POSITION" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Vector</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:WAYPOINT:POSITION">
+<span class="pre">Waypoint:</span><span class="sig-name descname"><span class="pre">POSITION</span></span><a class="headerlink" href="#attribute:WAYPOINT:POSITION" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Vector</p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>The Vector position of this waypoint in 3D space, in ship-raw coords.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:WAYPOINT:ALTITUDE">
-Waypoint:<code class="descname">ALTITUDE</code><a class="headerlink" href="#attribute:WAYPOINT:ALTITUDE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
-<p>Altitude of waypoint <strong>above &#8220;sea&#8221; level</strong>.  Warning, this a point somewhere in the midst of the contract altitude range, not the edge of the altitude range.  It corresponds towhere the marker tip hovers on the map, which is not actually at the very edge of the contract condition&#8217;s range.  It represents a typical midling location inside the contract&#8217;s altitude range.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:WAYPOINT:ALTITUDE">
+<span class="pre">Waypoint:</span><span class="sig-name descname"><span class="pre">ALTITUDE</span></span><a class="headerlink" href="#attribute:WAYPOINT:ALTITUDE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
+<p>Altitude of waypoint <strong>above “sea” level</strong>.  Warning, this a point somewhere in the midst of the contract altitude range, not the edge of the altitude range.  It corresponds towhere the marker tip hovers on the map, which is not actually at the very edge of the contract condition’s range.  It represents a typical midling location inside the contract’s altitude range.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:WAYPOINT:AGL">
-Waypoint:<code class="descname">AGL</code><a class="headerlink" href="#attribute:WAYPOINT:AGL" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
-<p>Altitude of waypoint <strong>above ground</strong>.  Warning, this a point somewhere in the midst of the contract altitude range, not the edge of the altitude range.  It corresponds to where the marker tip hovers on the map, which is not actually at the very edge of the contract condition&#8217;s range.  It represents a typical midling location inside the contract&#8217;s altitude range.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:WAYPOINT:AGL">
+<span class="pre">Waypoint:</span><span class="sig-name descname"><span class="pre">AGL</span></span><a class="headerlink" href="#attribute:WAYPOINT:AGL" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
+<p>Altitude of waypoint <strong>above ground</strong>.  Warning, this a point somewhere in the midst of the contract altitude range, not the edge of the altitude range.  It corresponds to where the marker tip hovers on the map, which is not actually at the very edge of the contract condition’s range.  It represents a typical midling location inside the contract’s altitude range.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:WAYPOINT:NEARSURFACE">
-Waypoint:<code class="descname">NEARSURFACE</code><a class="headerlink" href="#attribute:WAYPOINT:NEARSURFACE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="misc/boolean.html#boolean"><span>boolean</span></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:WAYPOINT:NEARSURFACE">
+<span class="pre">Waypoint:</span><span class="sig-name descname"><span class="pre">NEARSURFACE</span></span><a class="headerlink" href="#attribute:WAYPOINT:NEARSURFACE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>True if waypoint is a point near or on the body rather than high in orbit.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:WAYPOINT:GROUNDED">
-Waypoint:<code class="descname">GROUNDED</code><a class="headerlink" href="#attribute:WAYPOINT:GROUNDED" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="misc/boolean.html#boolean"><span>boolean</span></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:WAYPOINT:GROUNDED">
+<span class="pre">Waypoint:</span><span class="sig-name descname"><span class="pre">GROUNDED</span></span><a class="headerlink" href="#attribute:WAYPOINT:GROUNDED" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>True if waypoint is actually glued to the ground.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:WAYPOINT:INDEX">
-Waypoint:<code class="descname">INDEX</code><a class="headerlink" href="#attribute:WAYPOINT:INDEX" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
-<p>The integer index of this waypoint amongst its cluster of sibling waypoints.  In other words, when you have a cluster of waypoints called &#8220;Somewhere Alpha&#8221;, &#8220;Somewhere Beta&#8221;, and &#8220;Somewhere Gamma&#8221;, then the alpha site has index 0, the beta site has index 1 and the gamma site has index 2. When Waypoint:CLUSTERED is false, this value is zero but meaningless.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:WAYPOINT:INDEX">
+<span class="pre">Waypoint:</span><span class="sig-name descname"><span class="pre">INDEX</span></span><a class="headerlink" href="#attribute:WAYPOINT:INDEX" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
+<p>The integer index of this waypoint amongst its cluster of sibling waypoints.  In other words, when you have a cluster of waypoints called “Somewhere Alpha”, “Somewhere Beta”, and “Somewhere Gamma”, then the alpha site has index 0, the beta site has index 1 and the gamma site has index 2. When Waypoint:CLUSTERED is false, this value is zero but meaningless.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:WAYPOINT:CLUSTERED">
-Waypoint:<code class="descname">CLUSTERED</code><a class="headerlink" href="#attribute:WAYPOINT:CLUSTERED" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="misc/boolean.html#boolean"><span>boolean</span></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:WAYPOINT:CLUSTERED">
+<span class="pre">Waypoint:</span><span class="sig-name descname"><span class="pre">CLUSTERED</span></span><a class="headerlink" href="#attribute:WAYPOINT:CLUSTERED" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>True if this waypoint is part of a set of clustered waypoints with greek letter names appended (Alpha, Beta, Gamma, etc).  If true, there should be a one-to-one correspondence with the greek letter name and the :INDEX suffix. (0 = Alpha, 1 = Beta, 2 = Gamma, etc).</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:WAYPOINT:ISSELECTED">
-Waypoint:<code class="descname">ISSELECTED</code><a class="headerlink" href="#attribute:WAYPOINT:ISSELECTED" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="misc/boolean.html#boolean"><span>boolean</span></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:WAYPOINT:ISSELECTED">
+<span class="pre">Waypoint:</span><span class="sig-name descname"><span class="pre">ISSELECTED</span></span><a class="headerlink" href="#attribute:WAYPOINT:ISSELECTED" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>True if navigation has been activated on this waypoint.</p>
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="../addons.html" class="btn btn-neutral float-right" title="Addon Reference" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="misc/voice.html" class="btn btn-neutral" title="Voice" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="misc/voice.html" class="btn btn-neutral float-left" title="Voice" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../addons.html" class="btn btn-neutral float-right" title="Addon Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

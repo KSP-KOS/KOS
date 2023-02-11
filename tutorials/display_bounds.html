@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Testbounds &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Testbounds &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../about.html"/>
-        <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../index.html"/>
-        <link rel="up" title="Tutorials" href="../tutorials.html"/>
-        <link rel="next" title="Creating Reusable GUI Elements" href="gui.html"/>
-        <link rel="prev" title="Execute Node Script" href="exenode.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="next" title="Creating Reusable GUI Elements" href="gui.html" />
+    <link rel="prev" title="Execute Node Script" href="exenode.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
@@ -100,7 +51,7 @@
 <li class="toctree-l2"><a class="reference internal" href="designpatterns.html">Design Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pidloops.html">PID Loops</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exenode.html">Execute Node script</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Drawing VecDraws, and showing Bounds Boxes</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Drawing VecDraws, and showing Bounds Boxes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gui.html">Making a tabbed GUI</a></li>
 </ul>
 </li>
@@ -117,85 +68,66 @@
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../tutorials.html">Tutorials</a> &raquo;</li>
-      
-    <li>Testbounds</li>
+      <li>Testbounds</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../_sources/tutorials/display_bounds.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../_sources/tutorials/display_bounds.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="testbounds">
-<span id="display-bounds"></span><h1>Testbounds<a class="headerlink" href="#testbounds" title="Permalink to this headline">¶</a></h1>
-<p>This is a working example that shows how you can use <a class="reference internal" href="../structures/vessels/bounds.html#structure:BOUNDS" title="BOUNDS structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Bounds</span></code></a>
-to see the information about a part or vessel&#8217;s shape.</p>
+             
+  <section id="testbounds">
+<span id="display-bounds"></span><h1>Testbounds<a class="headerlink" href="#testbounds" title="Permalink to this heading">¶</a></h1>
+<p>This is a working example that shows how you can use <a class="reference internal" href="../structures/vessels/bounds.html#structure:BOUNDS" title="BOUNDS structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Bounds</span></code></a>
+to see the information about a part or vessel’s shape.</p>
 <p>To run this example, simply copy and paste the file below into
-a file in your archive folder called <code class="docutils literal"><span class="pre">display_bounds.ks</span></code>.  Then
+a file in your archive folder called <code class="docutils literal notranslate"><span class="pre">display_bounds.ks</span></code>.  Then
 put any vessel that has a kOS part on it on the launchpad,
-and just run &#8220;0:/display_bounds.ks&#8221;.  The whole example is contained
-in this one script so you won&#8217;t need any other libraries.</p>
+and just run “0:/display_bounds.ks”.  The whole example is contained
+in this one script so you won’t need any other libraries.</p>
 <p>The best test vessels to try this on will be vessels that have a
 variety of different types of parts.</p>
-<p>Press &#8220;N&#8221; for next part or &#8220;P&#8221; for previous part, and it will go
+<p>Press “N” for next part or “P” for previous part, and it will go
 through the whole vessel showing you the bounds box for each part.
-(At the start it&#8217;s showing the bounds box for the whole vessel,
-which you may get back to by using &#8220;P&#8221; for &#8220;Previous&#8221; part, all
+(At the start it’s showing the bounds box for the whole vessel,
+which you may get back to by using “P” for “Previous” part, all
 the way to the start again.)</p>
 <p>To help show what kind of information a BOUNDS can give you,
 this program prints a lot of the BOUNDS suffixes on the screen
 as you iterate over the parts.</p>
-<p>This is not so much a &#8220;tutorial&#8221; as an &#8220;example&#8221; that shows
+<p>This is not so much a “tutorial” as an “example” that shows
 a lot of different kOS topics, such as:</p>
 <ul class="simple">
-<li>Using VecDraw() to draw lines and arrows.</li>
-<li>Using Vector rotations by multiplying a bounds&#8217; <code class="docutils literal"><span class="pre">:FACING</span></code>
+<li><p>Using VecDraw() to draw lines and arrows.</p></li>
+<li><p>Using Vector rotations by multiplying a bounds’ <code class="docutils literal notranslate"><span class="pre">:FACING</span></code>
 by a position vector, which converts that position vector from
 a part-relative orientation to the absolute ship-raw reference
-frame the rest of kOS uses.</li>
-<li>Using Delegates in the VecDraw() constructor to tell it how
-to continually update its START and VEC properties.</li>
-<li>Using <code class="docutils literal"><span class="pre">TERMINAL:INPUT:GETCHAR()</span></code> to read keyboard input in
-the terminal.</li>
-<li>Using <code class="docutils literal"><span class="pre">Vessel:BOUNDS</span></code> and <code class="docutils literal"><span class="pre">Part:BOUNDS</span></code> to get bounding box
-information about the ship.</li>
+frame the rest of kOS uses.</p></li>
+<li><p>Using Delegates in the VecDraw() constructor to tell it how
+to continually update its START and VEC properties.</p></li>
+<li><p>Using <code class="docutils literal notranslate"><span class="pre">TERMINAL:INPUT:GETCHAR()</span></code> to read keyboard input in
+the terminal.</p></li>
+<li><p>Using <code class="docutils literal notranslate"><span class="pre">Vessel:BOUNDS</span></code> and <code class="docutils literal notranslate"><span class="pre">Part:BOUNDS</span></code> to get bounding box
+information about the ship.</p></li>
 </ul>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="p">@</span><span class="nv">lazyglobal</span> <span class="nb">off</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="p">@</span><span class="nv">lazyglobal</span> <span class="nb">off</span><span class="p">.</span>
 <span class="c1">//</span>
 <span class="c1">//  display_bounds.ks</span>
 <span class="c1">//  -----------------</span>
@@ -383,75 +315,37 @@ information about the ship.</li>
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="gui.html" class="btn btn-neutral float-right" title="Creating Reusable GUI Elements" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="exenode.html" class="btn btn-neutral" title="Execute Node Script" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="exenode.html" class="btn btn-neutral float-left" title="Execute Node Script" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gui.html" class="btn btn-neutral float-right" title="Creating Reusable GUI Elements" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

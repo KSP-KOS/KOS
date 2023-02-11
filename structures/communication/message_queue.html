@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>MessageQueue &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MessageQueue &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../../about.html"/>
-        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Communication" href="../communication.html"/>
-        <link rel="next" title="Orbits" href="../orbits.html"/>
-        <link rel="prev" title="Message" href="message.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Orbits" href="../orbits.html" />
+    <link rel="prev" title="Message" href="message.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
@@ -108,9 +59,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../communication.html">Communication</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="connection.html">Connection</a></li>
 <li class="toctree-l3"><a class="reference internal" href="message.html">Message</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">MessageQueue</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">MessageQueue</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
@@ -127,257 +76,186 @@
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
-      
           <li><a href="../communication.html">Communication</a> &raquo;</li>
-      
-    <li>MessageQueue</li>
+      <li>MessageQueue</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/structures/communication/message_queue.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../../_sources/structures/communication/message_queue.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="messagequeue">
-<span id="message-queue"></span><h1>MessageQueue<a class="headerlink" href="#messagequeue" title="Permalink to this headline">¶</a></h1>
-<p>Just like ordinary <a class="reference internal" href="../collections/queue.html#structure:QUEUE" title="QUEUE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">queues</span></code></a> message queues work according to <a class="reference external" href="https://en.wikipedia.org/wiki/FIFO_and_LIFO_accounting">First-In first-out</a> principle.
+             
+  <section id="messagequeue">
+<span id="message-queue"></span><h1>MessageQueue<a class="headerlink" href="#messagequeue" title="Permalink to this heading">¶</a></h1>
+<p>Just like ordinary <a class="reference internal" href="../collections/queue.html#structure:QUEUE" title="QUEUE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">queues</span></code></a> message queues work according to <a class="reference external" href="https://en.wikipedia.org/wiki/FIFO_and_LIFO_accounting">First-In first-out</a> principle.
 You can read more about queues on <a class="reference external" href="https://en.wikipedia.org/wiki/Queue_(abstract_data_type)">Wikipedia</a>.</p>
-<p>Whenever you send a message to a CPU or a vessel it gets added to the end of that CPU&#8217;s or vessel&#8217;s message queue. The recipient can then read those messages from the queue.</p>
-<div class="section" id="accessing-message-queues">
-<h2>Accessing message queues<a class="headerlink" href="#accessing-message-queues" title="Permalink to this headline">¶</a></h2>
-<p>You can access the current processor&#8217;s message queue using <a class="reference internal" href="../vessels/core.html#attribute:CORE:MESSAGES" title="CORE:MESSAGES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CORE:MESSAGES</span></code></a>:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">QUEUE</span> <span class="ow">TO</span> <span class="nv">CORE</span><span class="p">:</span><span class="nv">MESSAGES</span><span class="p">.</span>
+<p>Whenever you send a message to a CPU or a vessel it gets added to the end of that CPU’s or vessel’s message queue. The recipient can then read those messages from the queue.</p>
+<section id="accessing-message-queues">
+<h2>Accessing message queues<a class="headerlink" href="#accessing-message-queues" title="Permalink to this heading">¶</a></h2>
+<p>You can access the current processor’s message queue using <a class="reference internal" href="../vessels/core.html#attribute:CORE:MESSAGES" title="CORE:MESSAGES attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">CORE:MESSAGES</span></code></a>:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">QUEUE</span> <span class="ow">TO</span> <span class="nv">CORE</span><span class="p">:</span><span class="nv">MESSAGES</span><span class="p">.</span>
 <span class="k">PRINT</span> <span class="s">&quot;Number of messages on the queue: &quot;</span> <span class="o">+</span> <span class="nv">QUEUE</span><span class="p">:</span><span class="nv">LENGTH</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>The current vessel&#8217;s message queue can be accessed using <a class="reference internal" href="../vessels/vessel.html#attribute:VESSEL:MESSAGES" title="VESSEL:MESSAGES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Vessel:MESSAGES</span></code></a>:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">QUEUE</span> <span class="ow">TO</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">MESSAGES</span><span class="p">.</span>
+<p>The current vessel’s message queue can be accessed using <a class="reference internal" href="../vessels/vessel.html#attribute:VESSEL:MESSAGES" title="VESSEL:MESSAGES attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Vessel:MESSAGES</span></code></a>:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">QUEUE</span> <span class="ow">TO</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">MESSAGES</span><span class="p">.</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="structure">
-<h2>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
-<dl class="structure">
-<dt id="structure:MESSAGEQUEUE">
-<em class="property">structure </em><code class="descname">MessageQueue</code><a class="headerlink" href="#structure:MESSAGEQUEUE" title="Permalink to this definition">¶</a></dt>
-<dd><table border="1" class="docutils">
+</section>
+<section id="structure">
+<h2>Structure<a class="headerlink" href="#structure" title="Permalink to this heading">¶</a></h2>
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:MESSAGEQUEUE">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">MessageQueue</span></span><a class="headerlink" href="#structure:MESSAGEQUEUE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils align-default">
 <colgroup>
-<col width="29%" />
-<col width="14%" />
-<col width="57%" />
+<col style="width: 28.6%" />
+<col style="width: 14.3%" />
+<col style="width: 57.1%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type</th>
-<th class="head">Description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#attribute:MESSAGEQUEUE:EMPTY" title="MESSAGEQUEUE:EMPTY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">EMPTY</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>true if there are no messages in the queue</td>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:MESSAGEQUEUE:EMPTY" title="MESSAGEQUEUE:EMPTY attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">EMPTY</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>true if there are no messages in the queue</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:MESSAGEQUEUE:LENGTH" title="MESSAGEQUEUE:LENGTH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LENGTH</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-<td>number of messages in the queue</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:MESSAGEQUEUE:LENGTH" title="MESSAGEQUEUE:LENGTH attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">LENGTH</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>number of messages in the queue</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:MESSAGEQUEUE:POP" title="MESSAGEQUEUE:POP method"><code class="xref ks ks-meth docutils literal"><span class="pre">POP()</span></code></a></td>
-<td><a class="reference internal" href="message.html#structure:MESSAGE" title="MESSAGE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Message</span></code></a></td>
-<td>returns the oldest element in the queue and removes it</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#method:MESSAGEQUEUE:POP" title="MESSAGEQUEUE:POP method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">POP()</span></code></a></p></td>
+<td><p><a class="reference internal" href="message.html#structure:MESSAGE" title="MESSAGE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Message</span></code></a></p></td>
+<td><p>returns the oldest element in the queue and removes it</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:MESSAGEQUEUE:PEEK" title="MESSAGEQUEUE:PEEK method"><code class="xref ks ks-meth docutils literal"><span class="pre">PEEK()</span></code></a></td>
-<td><a class="reference internal" href="message.html#structure:MESSAGE" title="MESSAGE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Message</span></code></a></td>
-<td>returns the oldest element in the queue without removing it</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:MESSAGEQUEUE:PEEK" title="MESSAGEQUEUE:PEEK method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">PEEK()</span></code></a></p></td>
+<td><p><a class="reference internal" href="message.html#structure:MESSAGE" title="MESSAGE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Message</span></code></a></p></td>
+<td><p>returns the oldest element in the queue without removing it</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:MESSAGEQUEUE:CLEAR" title="MESSAGEQUEUE:CLEAR method"><code class="xref ks ks-meth docutils literal"><span class="pre">CLEAR()</span></code></a></td>
-<td>None</td>
-<td>remove all messages</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#method:MESSAGEQUEUE:CLEAR" title="MESSAGEQUEUE:CLEAR method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">CLEAR()</span></code></a></p></td>
+<td><p>None</p></td>
+<td><p>remove all messages</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:MESSAGEQUEUE:PUSH" title="MESSAGEQUEUE:PUSH method"><code class="xref ks ks-meth docutils literal"><span class="pre">PUSH(message)</span></code></a></td>
-<td>None</td>
-<td>explicitly append a message</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:MESSAGEQUEUE:PUSH" title="MESSAGEQUEUE:PUSH method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">PUSH(message)</span></code></a></p></td>
+<td><p>None</p></td>
+<td><p>explicitly append a message</p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:MESSAGEQUEUE:EMPTY">
-MessageQueue:<code class="descname">EMPTY</code><a class="headerlink" href="#attribute:MESSAGEQUEUE:EMPTY" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:MESSAGEQUEUE:EMPTY">
+<span class="pre">MessageQueue:</span><span class="sig-name descname"><span class="pre">EMPTY</span></span><a class="headerlink" href="#attribute:MESSAGEQUEUE:EMPTY" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>True if there are no messages in this queue.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:MESSAGEQUEUE:LENGTH">
-MessageQueue:<code class="descname">LENGTH</code><a class="headerlink" href="#attribute:MESSAGEQUEUE:LENGTH" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:MESSAGEQUEUE:LENGTH">
+<span class="pre">MessageQueue:</span><span class="sig-name descname"><span class="pre">LENGTH</span></span><a class="headerlink" href="#attribute:MESSAGEQUEUE:LENGTH" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+</dl>
 <p>Number of messages in this queue.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:MESSAGEQUEUE:POP">
-MessageQueue:<code class="descname">POP</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:MESSAGEQUEUE:POP" title="Permalink to this definition">¶</a></dt>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:MESSAGEQUEUE:POP">
+<span class="pre">MessageQueue:</span><span class="sig-name descname"><span class="pre">POP</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:MESSAGEQUEUE:POP" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the first (oldest) message in the queue and removes it. Messages in the queue are always ordered by their arrival date.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:MESSAGEQUEUE:PEEK">
-MessageQueue:<code class="descname">PEEK</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:MESSAGEQUEUE:PEEK" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="message.html#structure:MESSAGE" title="MESSAGE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Message</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:MESSAGEQUEUE:PEEK">
+<span class="pre">MessageQueue:</span><span class="sig-name descname"><span class="pre">PEEK</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:MESSAGEQUEUE:PEEK" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="message.html#structure:MESSAGE" title="MESSAGE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Message</span></code></a></p>
+</dd>
+</dl>
 <p>Returns the oldest message in the queue without removing it from the queue.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:MESSAGEQUEUE:CLEAR">
-MessageQueue:<code class="descname">CLEAR</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:MESSAGEQUEUE:CLEAR" title="Permalink to this definition">¶</a></dt>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:MESSAGEQUEUE:CLEAR">
+<span class="pre">MessageQueue:</span><span class="sig-name descname"><span class="pre">CLEAR</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:MESSAGEQUEUE:CLEAR" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes all messages from the queue.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:MESSAGEQUEUE:PUSH">
-MessageQueue:<code class="descname">PUSH</code><span class="sig-paren">(</span>message<span class="sig-paren">)</span><a class="headerlink" href="#method:MESSAGEQUEUE:PUSH" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>message</strong> &#8211; <a class="reference internal" href="message.html#structure:MESSAGE" title="MESSAGE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Message</span></code></a> message to be added</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:MESSAGEQUEUE:PUSH">
+<span class="pre">MessageQueue:</span><span class="sig-name descname"><span class="pre">PUSH</span></span><span class="sig-paren">(</span><span class="pre">message</span><span class="sig-paren">)</span><a class="headerlink" href="#method:MESSAGEQUEUE:PUSH" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> – <a class="reference internal" href="message.html#structure:MESSAGE" title="MESSAGE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Message</span></code></a> message to be added</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p>You can use this message to explicitly add a message to this queue. This will insert this exact message to the queue, all attributes that are normally
-added automatically by kOS (<a class="reference internal" href="message.html#attribute:MESSAGE:SENTAT" title="MESSAGE:SENTAT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Message:SENTAT</span></code></a>, <a class="reference internal" href="message.html#attribute:MESSAGE:RECEIVEDAT" title="MESSAGE:RECEIVEDAT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Message:RECEIVEDAT</span></code></a> and <a class="reference internal" href="message.html#attribute:MESSAGE:SENDER" title="MESSAGE:SENDER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Message:SENDER</span></code></a>) will not be changed.</p>
+added automatically by kOS (<a class="reference internal" href="message.html#attribute:MESSAGE:SENTAT" title="MESSAGE:SENTAT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Message:SENTAT</span></code></a>, <a class="reference internal" href="message.html#attribute:MESSAGE:RECEIVEDAT" title="MESSAGE:RECEIVEDAT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Message:RECEIVEDAT</span></code></a> and <a class="reference internal" href="message.html#attribute:MESSAGE:SENDER" title="MESSAGE:SENDER attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Message:SENDER</span></code></a>) will not be changed.</p>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="../orbits.html" class="btn btn-neutral float-right" title="Orbits" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="message.html" class="btn btn-neutral" title="Message" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="message.html" class="btn btn-neutral float-left" title="Message" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../orbits.html" class="btn btn-neutral float-right" title="Orbits" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

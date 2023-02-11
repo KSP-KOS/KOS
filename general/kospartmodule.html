@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>KOS Processor PartModule Configuration Fields &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KOS Processor PartModule Configuration Fields &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../about.html"/>
-        <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../index.html"/>
-        <link rel="up" title="General Topics" href="../general.html"/>
-        <link rel="next" title="kOS Settings Windows" href="settingsWindows.html"/>
-        <link rel="prev" title="Boot Files" href="boot.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="next" title="kOS Settings Windows" href="settingsWindows.html" />
+    <link rel="prev" title="Boot Files" href="boot.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
@@ -101,9 +52,7 @@
 <li class="toctree-l2"><a class="reference internal" href="cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cpu_hardware.html">CPU Hardware</a></li>
 <li class="toctree-l2"><a class="reference internal" href="boot.html">Booting</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Game Part</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Game Part</a></li>
 <li class="toctree-l2"><a class="reference internal" href="settingsWindows.html">Settings Windows</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gui.html">Making User GUIs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="telnet.html">Telnet Server</a></li>
@@ -126,55 +75,36 @@
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../general.html">General Topics</a> &raquo;</li>
-      
-    <li>KOS Processor PartModule Configuration Fields</li>
+      <li>KOS Processor PartModule Configuration Fields</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../_sources/general/kospartmodule.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../_sources/general/kospartmodule.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="kos-processor-partmodule-configuration-fields">
-<span id="kospartmodule"></span><h1>KOS Processor PartModule Configuration Fields<a class="headerlink" href="#kos-processor-partmodule-configuration-fields" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="kos-processor-partmodule-configuration-fields">
+<span id="kospartmodule"></span><h1>KOS Processor PartModule Configuration Fields<a class="headerlink" href="#kos-processor-partmodule-configuration-fields" title="Permalink to this heading">¶</a></h1>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">(The most important part of this page is probably the
+<p class="admonition-title">Note</p>
+<p>(The most important part of this page is probably the
 section below on the EcPerInstruction setting.)</p>
 </div>
 <p>When using <a class="reference external" href="https://github.com/sarbian/ModuleManager/wiki">ModuleManager</a>
@@ -182,14 +112,14 @@ or directly editing the part.cfg files a mod ships with, it is useful to
 know what those settings mean.  This page documents what some of the
 settings in the kOS part config files mean.</p>
 <p>These are the settings typically found in the files named:</p>
-<p><code class="docutils literal"><span class="pre">GameData/kOS/Parts/</span></code> name_of_part_here <code class="docutils literal"><span class="pre">/part.cfg</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">GameData/kOS/Parts/</span></code> name_of_part_here <code class="docutils literal notranslate"><span class="pre">/part.cfg</span></code></p>
 <p>You can add kOS to any other part in the game by adding the kOS module
 to the part (although this may cause strange interactions that are not
 officially supported).</p>
 <p>Here is an example of the kOS processor module : the one that is
 attached to the small disk shaped CPU part (KR-2402 b).  Optional fields
 have been added in comments for clarity:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">MODULE</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">MODULE</span>
 <span class="p">{</span>
     <span class="nv">name</span> <span class="o">=</span> <span class="nv">kOSProcessor</span>
     <span class="nv">diskSpace</span> <span class="o">=</span> <span class="mf">5000</span>
@@ -210,62 +140,62 @@ a kOS computer.</p>
 <p>When editing these values, the case is important.  You must capitalize
 them and lowercase them exactly as shown here.</p>
 <p>Here is a list of all the potential fields you could set in that section:</p>
-<div class="section" id="diskspace">
-<span id="id1"></span><h2>diskSpace<a class="headerlink" href="#diskspace" title="Permalink to this headline">¶</a></h2>
+<section id="diskspace">
+<span id="id1"></span><h2>diskSpace<a class="headerlink" href="#diskspace" title="Permalink to this heading">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
-<li><strong>Type:</strong> integer</li>
-<li><strong>Default if omitted:</strong> 1024</li>
-<li><strong>Effect:</strong> The disk space the part has by default if the
-adjustment slider in the VAB isn&#8217;t changed by the user.</li>
+<li><p><strong>Type:</strong> integer</p></li>
+<li><p><strong>Default if omitted:</strong> 1024</p></li>
+<li><p><strong>Effect:</strong> The disk space the part has by default if the
+adjustment slider in the VAB isn’t changed by the user.</p></li>
 </ul>
 </div></blockquote>
-</div>
-<div class="section" id="basediskspace">
-<span id="id2"></span><h2>baseDiskSpace<a class="headerlink" href="#basediskspace" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="basediskspace">
+<span id="id2"></span><h2>baseDiskSpace<a class="headerlink" href="#basediskspace" title="Permalink to this heading">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
-<li><strong>Type:</strong> integer</li>
-<li><strong>Default if omitted:</strong> copied from initial <a class="reference internal" href="#diskspace"><span>diskSpace</span></a> setting</li>
-<li><strong>Effect:</strong> The lowest disk space the part can have at the lowest
-end of the slider in the VAB.</li>
+<li><p><strong>Type:</strong> integer</p></li>
+<li><p><strong>Default if omitted:</strong> copied from initial <a class="reference internal" href="#diskspace"><span class="std std-ref">diskSpace</span></a> setting</p></li>
+<li><p><strong>Effect:</strong> The lowest disk space the part can have at the lowest
+end of the slider in the VAB.</p></li>
 </ul>
 </div></blockquote>
 <p>The possible choices for disk space the user can select on the
 slider is always one of 1x, 2x, and 4x this amount.</p>
-</div>
-<div class="section" id="ecperinstruction">
-<span id="id3"></span><h2>ECPerInstruction:<a class="headerlink" href="#ecperinstruction" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="ecperinstruction">
+<span id="id3"></span><h2>ECPerInstruction:<a class="headerlink" href="#ecperinstruction" title="Permalink to this heading">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
-<li><strong>Type:</strong> float</li>
-<li><strong>Default if omitted:</strong> 0.000004</li>
-<li><strong>Effect:</strong> How much ElectricCharge resource is consumed per
-instruction the program executes.</li>
+<li><p><strong>Type:</strong> float</p></li>
+<li><p><strong>Default if omitted:</strong> 0.000004</p></li>
+<li><p><strong>Effect:</strong> How much ElectricCharge resource is consumed per
+instruction the program executes.</p></li>
 </ul>
 </div></blockquote>
 <p>This is a very small number so the electric charge can be payed
 in micro-amounts as the CPU executes.  Remember that with default
-Unity settings (which can be changed on the KSP game&#8217;s main settings
+Unity settings (which can be changed on the KSP game’s main settings
 screen at the launch of the program), the game runs 25 physical
 updates per second.  So if the setting is 0.000004, and program is
 executing 200 instructions per update, at 25 updates per second,
-then it&#8217;s consuming 0.02 Ec per second, or 1 Ec every 50 seconds.</p>
+then it’s consuming 0.02 Ec per second, or 1 Ec every 50 seconds.</p>
 <p>This is the setting from which the value in the VAB/SPH info panel,
-1 Electric Charge per N instructions, is derived (it&#8217;s the reciprocal
+1 Electric Charge per N instructions, is derived (it’s the reciprocal
 of that display value).</p>
 <p>More information about programs reducing power consumption can be
 found in the section of the CPU hardware description that
-<a class="reference internal" href="cpu_hardware.html#electricdrain"><span>talks about electric drain</span></a>.</p>
-</div>
-<div class="section" id="ecperbytepersecond">
-<span id="id4"></span><h2>ECPerBytePerSecond:<a class="headerlink" href="#ecperbytepersecond" title="Permalink to this headline">¶</a></h2>
+<a class="reference internal" href="cpu_hardware.html#electricdrain"><span class="std std-ref">talks about electric drain</span></a>.</p>
+</section>
+<section id="ecperbytepersecond">
+<span id="id4"></span><h2>ECPerBytePerSecond:<a class="headerlink" href="#ecperbytepersecond" title="Permalink to this heading">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
-<li><strong>Type:</strong> float</li>
-<li><strong>Default if omitted:</strong> 0.0</li>
-<li><strong>Effect:</strong> How much ElectricCharge resource is consumed per
-byte of disk space avaialable (not just used).</li>
+<li><p><strong>Type:</strong> float</p></li>
+<li><p><strong>Default if omitted:</strong> 0.0</p></li>
+<li><p><strong>Effect:</strong> How much ElectricCharge resource is consumed per
+byte of disk space avaialable (not just used).</p></li>
 </ul>
 </div></blockquote>
 <p>It is possible to make the disk cost more electricity to run the
@@ -273,138 +203,100 @@ bigger it is.  By default this ships as zero, but it can be changed
 by a re-balancing mod by changing this value.  This value is
 multiplied by how much available space there is total (used + free),
 not just how much is currently in use.</p>
-</div>
-<div class="section" id="diskspacecostfactor">
-<span id="id5"></span><h2>diskSpaceCostFactor:<a class="headerlink" href="#diskspacecostfactor" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="diskspacecostfactor">
+<span id="id5"></span><h2>diskSpaceCostFactor:<a class="headerlink" href="#diskspacecostfactor" title="Permalink to this heading">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
-<li><strong>Type:</strong> float</li>
-<li><strong>Default if omitted:</strong> 0.0244140625</li>
-<li><strong>Effect:</strong> How much additional cost is incurred per
-byte of disk space added via the editor tweakable.</li>
+<li><p><strong>Type:</strong> float</p></li>
+<li><p><strong>Default if omitted:</strong> 0.0244140625</p></li>
+<li><p><strong>Effect:</strong> How much additional cost is incurred per
+byte of disk space added via the editor tweakable.</p></li>
 </ul>
 </div></blockquote>
 <p>When using the editor tweakable to increase storage, cost is added to the
 module.  That additional cost is found by multiplying the number of additional
 bytes by this factor.  The default value is balanced for approximately 100
 additional funds for 4096 Bytes.</p>
-</div>
-<div class="section" id="basemodulecost">
-<span id="id6"></span><h2>baseModuleCost:<a class="headerlink" href="#basemodulecost" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="basemodulecost">
+<span id="id6"></span><h2>baseModuleCost:<a class="headerlink" href="#basemodulecost" title="Permalink to this heading">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
-<li><strong>Type:</strong> float</li>
-<li><strong>Default if omitted:</strong> 0.0</li>
-<li><strong>Effect:</strong> How much cost is added to the part cost by including this
-module.</li>
+<li><p><strong>Type:</strong> float</p></li>
+<li><p><strong>Default if omitted:</strong> 0.0</p></li>
+<li><p><strong>Effect:</strong> How much cost is added to the part cost by including this
+module.</p></li>
 </ul>
 </div></blockquote>
 <p>While kOS only includes kOSProcessor in dedicated parts, users may choose to add
 it to existing parts by editing cfg files or using a ModuleManager patch.  In
 cases where the cost of a part may depend on multiple PartModules this allows
-you to specify the cost for the kOSProcessor itself without changing the part&#8217;s
+you to specify the cost for the kOSProcessor itself without changing the part’s
 cost directly.</p>
-</div>
-<div class="section" id="diskspacemassfactor">
-<span id="id7"></span><h2>diskSpaceMassFactor:<a class="headerlink" href="#diskspacemassfactor" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="diskspacemassfactor">
+<span id="id7"></span><h2>diskSpaceMassFactor:<a class="headerlink" href="#diskspacemassfactor" title="Permalink to this heading">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
-<li><strong>Type:</strong> float</li>
-<li><strong>Default if omitted:</strong> 0.0000048829</li>
-<li><strong>Effect:</strong> How much additional cost is incurred per
-byte of disk space added via the editor tweakable.</li>
+<li><p><strong>Type:</strong> float</p></li>
+<li><p><strong>Default if omitted:</strong> 0.0000048829</p></li>
+<li><p><strong>Effect:</strong> How much additional cost is incurred per
+byte of disk space added via the editor tweakable.</p></li>
 </ul>
 </div></blockquote>
 <p>When using the editor tweakable to increase storage, mass is added to the
 module.  That additional mass is found by multiplying the number of additional
 bytes by this factor.  The default value is balanced for approximately 0.02kg
 of additional mass for 4096 Bytes.</p>
-</div>
-<div class="section" id="basemodulemass">
-<span id="id8"></span><h2>baseModuleMass:<a class="headerlink" href="#basemodulemass" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="basemodulemass">
+<span id="id8"></span><h2>baseModuleMass:<a class="headerlink" href="#basemodulemass" title="Permalink to this heading">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
-<li><strong>Type:</strong> float</li>
-<li><strong>Default if omitted:</strong> 0.0</li>
-<li><strong>Effect:</strong> How much mass is added to the part cost by including this
-module.</li>
+<li><p><strong>Type:</strong> float</p></li>
+<li><p><strong>Default if omitted:</strong> 0.0</p></li>
+<li><p><strong>Effect:</strong> How much mass is added to the part cost by including this
+module.</p></li>
 </ul>
 </div></blockquote>
 <p>While kOS only includes kOSProcessor in dedicated parts, users may choose to add
 it to existing parts by editing cfg files or using a ModuleManager patch.  In
 cases where the mass of a part may depend on multiple PartModules this allows
-you to specify the mass for the kOSProcessor itself without changing the part&#8217;s
+you to specify the mass for the kOSProcessor itself without changing the part’s
 mass directly.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="settingsWindows.html" class="btn btn-neutral float-right" title="kOS Settings Windows" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="boot.html" class="btn btn-neutral" title="Boot Files" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="boot.html" class="btn btn-neutral float-left" title="Boot Files" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="settingsWindows.html" class="btn btn-neutral float-right" title="kOS Settings Windows" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

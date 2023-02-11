@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>PopupMenu &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PopupMenu &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../../about.html"/>
-        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Creating GUIs" href="../gui.html"/>
-        <link rel="next" title="Scrollbox" href="scrollbox.html"/>
-        <link rel="prev" title="Label" href="label.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Scrollbox" href="scrollbox.html" />
+    <link rel="prev" title="Label" href="label.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
@@ -115,7 +66,7 @@
 <li class="toctree-l3"><a class="reference internal" href="gui.html">GUI structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="label.html">Label</a></li>
 <li class="toctree-l3"><a class="reference internal" href="label.html#rich-text">Rich Text</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">PopupMenu</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">PopupMenu</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scrollbox.html">Scrollbox</a></li>
 <li class="toctree-l3"><a class="reference internal" href="skin.html">Skin</a></li>
 <li class="toctree-l3"><a class="reference internal" href="slider.html">Slider</a></li>
@@ -139,68 +90,48 @@
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
-      
           <li><a href="../gui.html">Creating GUIs</a> &raquo;</li>
-      
-    <li>PopupMenu</li>
+      <li>PopupMenu</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/structures/gui_widgets/popupmenu.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../../_sources/structures/gui_widgets/popupmenu.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="popupmenu">
-<span id="gui-popupmenu"></span><h1>PopupMenu<a class="headerlink" href="#popupmenu" title="Permalink to this headline">¶</a></h1>
-<dl class="structure">
-<dt id="structure:POPUPMENU">
-<em class="property">structure </em><code class="descname">PopupMenu</code><a class="headerlink" href="#structure:POPUPMENU" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">PopupMenu</span></code> objects are created by calling <a class="reference internal" href="box.html#method:BOX:ADDPOPUPMENU" title="BOX:ADDPOPUPMENU method"><code class="xref ks ks-meth docutils literal"><span class="pre">BOX:ADDPOPUPMENU</span></code></a>.</p>
-<p>A <code class="docutils literal"><span class="pre">PopupMenu</span></code> is a special kind of button for choosing from a list of things.
-It looks like a button who&#8217;s face displays the currently selected thing.  When a user
+             
+  <section id="popupmenu">
+<span id="gui-popupmenu"></span><h1>PopupMenu<a class="headerlink" href="#popupmenu" title="Permalink to this heading">¶</a></h1>
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:POPUPMENU">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">PopupMenu</span></span><a class="headerlink" href="#structure:POPUPMENU" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">PopupMenu</span></code> objects are created by calling <a class="reference internal" href="box.html#method:BOX:ADDPOPUPMENU" title="BOX:ADDPOPUPMENU method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">BOX:ADDPOPUPMENU</span></code></a>.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">PopupMenu</span></code> is a special kind of button for choosing from a list of things.
+It looks like a button who’s face displays the currently selected thing.  When a user
 clicks on the button, it pops up a list of displayed strings to choose
 from, and when one is selected the popup goes away and the new choice is
 displayed on the button.</p>
 <p>The menu displays the string values in the OPTIONS property. If OPTIONS contains items that are not strings,
-then by default their <a class="reference internal" href="../reflection/structure.html#attribute:STRUCTURE:TOSTRING" title="STRUCTURE:TOSTRING attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TOSTRING</span></code></a> suffixes will be used to display them as strings.
-You can change this default behaviour by setting the popupmenu&#8217;s <a class="reference internal" href="#attribute:POPUPMENU:OPTIONSUFFIX" title="POPUPMENU:OPTIONSUFFIX attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">OPTIONSUFFIX</span></code></a>.</p>
+then by default their <a class="reference internal" href="../reflection/structure.html#attribute:STRUCTURE:TOSTRING" title="STRUCTURE:TOSTRING attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">TOSTRING</span></code></a> suffixes will be used to display them as strings.
+You can change this default behaviour by setting the popupmenu’s <a class="reference internal" href="#attribute:POPUPMENU:OPTIONSUFFIX" title="POPUPMENU:OPTIONSUFFIX attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">OPTIONSUFFIX</span></code></a>.</p>
 <p>Example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">popup</span> <span class="ow">is</span> <span class="nv">gui</span><span class="p">:</span><span class="nv">addpopupmenu</span><span class="p">().</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">popup</span> <span class="ow">is</span> <span class="nv">gui</span><span class="p">:</span><span class="nv">addpopupmenu</span><span class="p">().</span>
 
 <span class="c1">// Make the popup display the Body:NAME&#39;s instead of the Body:TOSTRING&#39;s:</span>
 <span class="k">set</span> <span class="nv">popup</span><span class="p">:</span><span class="nv">OPTIONSUFFIX</span> <span class="ow">to</span> <span class="s">&quot;NAME&quot;</span><span class="p">.</span>
@@ -214,245 +145,219 @@ You can change this default behaviour by setting the popupmenu&#8217;s <a class=
 <span class="k">set</span> <span class="nv">popup</span><span class="p">:</span><span class="nv">value</span> <span class="ow">to</span> <span class="nv">body</span><span class="p">.</span>
 </pre></div>
 </div>
-<table border="1" class="docutils">
-<colgroup>
-<col width="23%" />
-<col width="25%" />
-<col width="52%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type</th>
-<th class="head">Description</th>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td colspan="3">Every suffix of <a class="reference internal" href="button.html#structure:BUTTON" title="BUTTON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">BUTTON</span></code></a></td>
+<tbody>
+<tr class="row-even"><td colspan="3"><p>Every suffix of <a class="reference internal" href="button.html#structure:BUTTON" title="BUTTON structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">BUTTON</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:POPUPMENU:OPTIONS" title="POPUPMENU:OPTIONS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">OPTIONS</span></code></a></td>
-<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
-<td>List of options to display.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:POPUPMENU:OPTIONS" title="POPUPMENU:OPTIONS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">OPTIONS</span></code></a></p></td>
+<td><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a></p></td>
+<td><p>List of options to display.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:POPUPMENU:OPTIONSUFFIX" title="POPUPMENU:OPTIONSUFFIX attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">OPTIONSUFFIX</span></code></a></td>
-<td><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">string</span></code></a></td>
-<td>Name of the suffix used for display names. Default = TOSTRING.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:POPUPMENU:OPTIONSUFFIX" title="POPUPMENU:OPTIONSUFFIX attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">OPTIONSUFFIX</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>Name of the suffix used for display names. Default = TOSTRING.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:POPUPMENU:ADDOPTION" title="POPUPMENU:ADDOPTION method"><code class="xref ks ks-meth docutils literal"><span class="pre">ADDOPTION(value)</span></code></a></td>
-<td>&nbsp;</td>
-<td>Add a value to the end of the list of options.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:POPUPMENU:ADDOPTION" title="POPUPMENU:ADDOPTION method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">ADDOPTION(value)</span></code></a></p></td>
+<td></td>
+<td><p>Add a value to the end of the list of options.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:POPUPMENU:VALUE" title="POPUPMENU:VALUE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VALUE</span></code></a></td>
-<td>Any</td>
-<td>Returns the current selected value.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:POPUPMENU:VALUE" title="POPUPMENU:VALUE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VALUE</span></code></a></p></td>
+<td><p>Any</p></td>
+<td><p>Returns the current selected value.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:POPUPMENU:INDEX" title="POPUPMENU:INDEX attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">INDEX</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-<td>Returns the index of the current selected value.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:POPUPMENU:INDEX" title="POPUPMENU:INDEX attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">INDEX</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Returns the index of the current selected value.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:POPUPMENU:CHANGED" title="POPUPMENU:CHANGED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CHANGED</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>Has the user chosen something?</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:POPUPMENU:CHANGED" title="POPUPMENU:CHANGED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">CHANGED</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Has the user chosen something?</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:POPUPMENU:ONCHANGE" title="POPUPMENU:ONCHANGE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ONCHANGE</span></code></a></td>
-<td><a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a> (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a>)</td>
-<td>Your function called whenever the <a class="reference internal" href="#attribute:POPUPMENU:CHANGED" title="POPUPMENU:CHANGED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CHANGED</span></code></a> state changes.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:POPUPMENU:ONCHANGE" title="POPUPMENU:ONCHANGE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ONCHANGE</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegate</span></code></a> (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>)</p></td>
+<td><p>Your function called whenever the <a class="reference internal" href="#attribute:POPUPMENU:CHANGED" title="POPUPMENU:CHANGED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">CHANGED</span></code></a> state changes.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:POPUPMENU:CLEAR" title="POPUPMENU:CLEAR method"><code class="xref ks ks-meth docutils literal"><span class="pre">CLEAR</span></code></a></td>
-<td>&nbsp;</td>
-<td>Removes all options.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#method:POPUPMENU:CLEAR" title="POPUPMENU:CLEAR method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">CLEAR</span></code></a></p></td>
+<td></td>
+<td><p>Removes all options.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:POPUPMENU:MAXVISIBLE" title="POPUPMENU:MAXVISIBLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MAXVISIBLE</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (integer)</td>
-<td>How many choices to show at once in the list (if more exist, it makes it scrollable).</td>
-</tr>
-</tbody>
-</table>
-<dl class="attribute">
-<dt id="attribute:POPUPMENU:OPTIONS">
-PopupMenu:<code class="descname">OPTIONS</code><a class="headerlink" href="#attribute:POPUPMENU:OPTIONS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> (of any Structure)</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:POPUPMENU:MAXVISIBLE" title="POPUPMENU:MAXVISIBLE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">MAXVISIBLE</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer)</p></td>
+<td><p>How many choices to show at once in the list (if more exist, it makes it scrollable).</p></td>
 </tr>
 </tbody>
 </table>
-<p>This is the list of options the user has to choose from.  They don&#8217;t need
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:POPUPMENU:OPTIONS">
+<span class="pre">PopupMenu:</span><span class="sig-name descname"><span class="pre">OPTIONS</span></span><a class="headerlink" href="#attribute:POPUPMENU:OPTIONS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> (of any Structure)</p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
+<p>This is the list of options the user has to choose from.  They don’t need
 to be Strings, but they must be capable of having a string extracted from
-them for display on the list, by use of the :attr&#8221;<cite>OPTIONSSUFFIX</cite> suffix.</p>
+them for display on the list, by use of the :attr”<cite>OPTIONSSUFFIX</cite> suffix.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:POPUPMENU:OPTIONSUFFIX">
-PopupMenu:<code class="descname">OPTIONSUFFIX</code><a class="headerlink" href="#attribute:POPUPMENU:OPTIONSUFFIX" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
-<p>This decides how you get strings from the list of items in <a class="reference internal" href="#attribute:POPUPMENU:OPTIONS" title="POPUPMENU:OPTIONS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">OPTIONS</span></code></a>.
-The usual way to use a <code class="docutils literal"><span class="pre">PopupMenu</span></code> would be to have it select from a list
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:POPUPMENU:OPTIONSUFFIX">
+<span class="pre">PopupMenu:</span><span class="sig-name descname"><span class="pre">OPTIONSUFFIX</span></span><a class="headerlink" href="#attribute:POPUPMENU:OPTIONSUFFIX" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
+<p>This decides how you get strings from the list of items in <a class="reference internal" href="#attribute:POPUPMENU:OPTIONS" title="POPUPMENU:OPTIONS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">OPTIONS</span></code></a>.
+The usual way to use a <code class="docutils literal notranslate"><span class="pre">PopupMenu</span></code> would be to have it select from a list
 of strings.  But you can use any other kind of object you want in the
-<a class="reference internal" href="#attribute:POPUPMENU:OPTIONS" title="POPUPMENU:OPTIONS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">OPTIONS</span></code></a> list, provided all of them share a common suffix name
+<a class="reference internal" href="#attribute:POPUPMENU:OPTIONS" title="POPUPMENU:OPTIONS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">OPTIONS</span></code></a> list, provided all of them share a common suffix name
 that builds a string from them.  The default value for this is
-<code class="docutils literal"><span class="pre">&quot;TOSTRING:</span></code>, which is a suffix that all things in kOS have.  If you
-wish to use something other than <a class="reference internal" href="../reflection/structure.html#attribute:STRUCTURE:TOSTRING" title="STRUCTURE:TOSTRING attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Structure:TOSTRING</span></code></a>, you
-can set this to that suffix&#8217;s string name.</p>
+<code class="docutils literal notranslate"><span class="pre">&quot;TOSTRING:</span></code>, which is a suffix that all things in kOS have.  If you
+wish to use something other than <a class="reference internal" href="../reflection/structure.html#attribute:STRUCTURE:TOSTRING" title="STRUCTURE:TOSTRING attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Structure:TOSTRING</span></code></a>, you
+can set this to that suffix’s string name.</p>
 <p>This page begins with a good example of using this.  See above.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:POPUPMENU:ADDOPTION">
-PopupMenu:<code class="descname">ADDOPTION</code><span class="sig-paren">(</span>value<span class="sig-paren">)</span><a class="headerlink" href="#method:POPUPMENU:ADDOPTION" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>value</strong> &#8211; <ul>
-<li>any kind of kOS type, provided it has the suffix mentioned in <code class="xref ks ks-attr docutils literal"><span class="pre">OPTIONSSUFFIX</span></code> on it.</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:POPUPMENU:ADDOPTION">
+<span class="pre">PopupMenu:</span><span class="sig-name descname"><span class="pre">ADDOPTION</span></span><span class="sig-paren">(</span><span class="pre">value</span><span class="sig-paren">)</span><a class="headerlink" href="#method:POPUPMENU:ADDOPTION" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> – <ul>
+<li><p>any kind of kOS type, provided it has the suffix mentioned in <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">OPTIONSSUFFIX</span></code> on it.</p></li>
 </ul>
-</li>
+</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type value:</th><td class="field-body"><p class="first"><a class="reference internal" href="../reflection/structure.html#structure:STRUCTURE" title="STRUCTURE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Structure</span></code></a></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body"><p class="first last">Get/Set</p>
-</td>
-</tr>
-</tbody>
-</table>
-<p>This appends another choice to the <a class="reference internal" href="#attribute:POPUPMENU:OPTIONS" title="POPUPMENU:OPTIONS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">OPTIONS</span></code></a> list.</p>
+</dd>
+<dt class="field-even">Type value<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../reflection/structure.html#structure:STRUCTURE" title="STRUCTURE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Structure</span></code></a></p>
+</dd>
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+</dl>
+<p>This appends another choice to the <a class="reference internal" href="#attribute:POPUPMENU:OPTIONS" title="POPUPMENU:OPTIONS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">OPTIONS</span></code></a> list.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:POPUPMENU:VALUE">
-PopupMenu:<code class="descname">VALUE</code><a class="headerlink" href="#attribute:POPUPMENU:VALUE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../reflection/structure.html#structure:STRUCTURE" title="STRUCTURE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Structure</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:POPUPMENU:VALUE">
+<span class="pre">PopupMenu:</span><span class="sig-name descname"><span class="pre">VALUE</span></span><a class="headerlink" href="#attribute:POPUPMENU:VALUE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../reflection/structure.html#structure:STRUCTURE" title="STRUCTURE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Structure</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
 <p>Returns the value currently chosen from the list.
-If no selection has been made, it will return an empty <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> (<code class="docutils literal"><span class="pre">&quot;&quot;</span></code>).</p>
+If no selection has been made, it will return an empty <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> (<code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code>).</p>
 <p>If you set it, you are choosing which item is selected from the list.  If you
-set this to something that wasn&#8217;t in the list, the attempt to set it will be
+set this to something that wasn’t in the list, the attempt to set it will be
 rejected and instead the choice will become de-selected.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:POPUPMENU:INDEX">
-PopupMenu:<code class="descname">INDEX</code><a class="headerlink" href="#attribute:POPUPMENU:INDEX" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
-<p>Returns the number index into the <a class="reference internal" href="#attribute:POPUPMENU:OPTIONS" title="POPUPMENU:OPTIONS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">OPTIONS</span></code></a> list that goes with the
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:POPUPMENU:INDEX">
+<span class="pre">PopupMenu:</span><span class="sig-name descname"><span class="pre">INDEX</span></span><a class="headerlink" href="#attribute:POPUPMENU:INDEX" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
+<p>Returns the number index into the <a class="reference internal" href="#attribute:POPUPMENU:OPTIONS" title="POPUPMENU:OPTIONS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">OPTIONS</span></code></a> list that goes with the
 current choice.  If this is set to -1, that means nothing has been
 selected.</p>
 <p>Setting this value causes the selected choice to change.  Setting it
 to -1 will de-select the choice.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:POPUPMENU:CHANGED">
-PopupMenu:<code class="descname">CHANGED</code><a class="headerlink" href="#attribute:POPUPMENU:CHANGED" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:POPUPMENU:CHANGED">
+<span class="pre">PopupMenu:</span><span class="sig-name descname"><span class="pre">CHANGED</span></span><a class="headerlink" href="#attribute:POPUPMENU:CHANGED" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
 <p>Has the choice been changed since the last time this was checked?</p>
 <p>Note that reading this has a side effect.  When you read this value,
 you cause it to become false if it had been true.  (The system
-assumes that &#8220;last time this was checked&#8221; means &#8220;now&#8221; after you&#8217;ve
+assumes that “last time this was checked” means “now” after you’ve
 read the value of this suffix.)</p>
 <p>This is intended to be used with the
-<a class="reference internal" href="../gui.html#gui-polling-technique"><span>polling technique</span></a> of reading the widget.
-You can query this field until it says it&#8217;s true, at which point you
+<a class="reference internal" href="../gui.html#gui-polling-technique"><span class="std std-ref">polling technique</span></a> of reading the widget.
+You can query this field until it says it’s true, at which point you
 know to go have a look at the current value to see what it is.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:POPUPMENU:ONCHANGE">
-PopupMenu:<code class="descname">ONCHANGE</code><a class="headerlink" href="#attribute:POPUPMENU:ONCHANGE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
-<p>This is a <a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a> that expects one parameter, the new value, and returns nothing.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:POPUPMENU:ONCHANGE">
+<span class="pre">PopupMenu:</span><span class="sig-name descname"><span class="pre">ONCHANGE</span></span><a class="headerlink" href="#attribute:POPUPMENU:ONCHANGE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegate</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
+<p>This is a <a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegate</span></code></a> that expects one parameter, the new value, and returns nothing.</p>
 <p>Sets a callback hook you want called when a new selection has
 been made.  This is for use with the
-<a class="reference internal" href="../gui.html#gui-callback-technique"><span>callback technique</span></a> of reading the widget.</p>
+<a class="reference internal" href="../gui.html#gui-callback-technique"><span class="std std-ref">callback technique</span></a> of reading the widget.</p>
 <p>The function you specify must be designed to take one parameter,
-which is the new value (same as reading the <a class="reference internal" href="#attribute:POPUPMENU:VALUE" title="POPUPMENU:VALUE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VALUE</span></code></a> suffix) of
+which is the new value (same as reading the <a class="reference internal" href="#attribute:POPUPMENU:VALUE" title="POPUPMENU:VALUE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VALUE</span></code></a> suffix) of
 this widget, and return nothing.</p>
 <p>Example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">myPopupMenu</span><span class="p">:</span><span class="nv">ONCHANGE</span> <span class="ow">to</span> <span class="p">{</span> <span class="kd">parameter</span> <span class="nv">choice</span><span class="p">.</span> <span class="k">print</span> <span class="s">&quot;You have selected: &quot;</span> <span class="o">+</span> <span class="nv">choice</span><span class="p">:</span><span class="nv">TOSTRING</span><span class="p">.</span> <span class="p">}.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">myPopupMenu</span><span class="p">:</span><span class="nv">ONCHANGE</span> <span class="ow">to</span> <span class="p">{</span> <span class="kd">parameter</span> <span class="nv">choice</span><span class="p">.</span> <span class="k">print</span> <span class="s">&quot;You have selected: &quot;</span> <span class="o">+</span> <span class="nv">choice</span><span class="p">:</span><span class="nv">TOSTRING</span><span class="p">.</span> <span class="p">}.</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:POPUPMENU:CLEAR">
-PopupMenu:<code class="descname">CLEAR</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:POPUPMENU:CLEAR" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(nothing)</td>
-</tr>
-</tbody>
-</table>
-<p>Calling this causes the <code class="docutils literal"><span class="pre">PopupMenu</span></code> to wipe out all the contents of its <a class="reference internal" href="#attribute:POPUPMENU:OPTIONS" title="POPUPMENU:OPTIONS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">OPTIONS</span></code></a>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:POPUPMENU:CLEAR">
+<span class="pre">PopupMenu:</span><span class="sig-name descname"><span class="pre">CLEAR</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:POPUPMENU:CLEAR" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(nothing)</p>
+</dd>
+</dl>
+<p>Calling this causes the <code class="docutils literal notranslate"><span class="pre">PopupMenu</span></code> to wipe out all the contents of its <a class="reference internal" href="#attribute:POPUPMENU:OPTIONS" title="POPUPMENU:OPTIONS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">OPTIONS</span></code></a>
 list.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:POPUPMENU:MAXVISIBLE">
-PopupMenu:<code class="descname">MAXVISIBLE</code><a class="headerlink" href="#attribute:POPUPMENU:MAXVISIBLE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:POPUPMENU:MAXVISIBLE">
+<span class="pre">PopupMenu:</span><span class="sig-name descname"><span class="pre">MAXVISIBLE</span></span><a class="headerlink" href="#attribute:POPUPMENU:MAXVISIBLE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
 <p>(Default value is 15).</p>
 <p>This sets the largest number of choices (roughly) the layout
 system will be willing to grow the popup window to support
@@ -460,81 +365,43 @@ before it resorts to using a scrollbar to show more choices,
 instead of letting the window get any bigger.  This value is
 only a rough hint.</p>
 <p>If this is set too large, it can become possible to make
-the popup menu so large it won&#8217;t fit on the screen, if you
+the popup menu so large it won’t fit on the screen, if you
 give it a lot of items in the options list.</p>
 </dd></dl>
 
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="scrollbox.html" class="btn btn-neutral float-right" title="Scrollbox" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="label.html" class="btn btn-neutral" title="Label" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="label.html" class="btn btn-neutral float-left" title="Label" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="scrollbox.html" class="btn btn-neutral float-right" title="Scrollbox" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

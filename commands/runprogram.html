@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Running Programs &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Running Programs &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../about.html"/>
-        <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../index.html"/>
-        <link rel="up" title="Command Reference" href="../commands.html"/>
-        <link rel="next" title="Flight Control" href="flight.html"/>
-        <link rel="prev" title="Command Reference" href="../commands.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="next" title="Flight Control" href="flight.html" />
+    <link rel="prev" title="Command Reference" href="../commands.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
@@ -100,9 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../commands.html">Commands</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="">Running Programs</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Running Programs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="flight.html">Flight Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="prediction.html">Prediction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="list.html">Listing Data</a></li>
@@ -122,96 +71,78 @@
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../commands.html">Command Reference</a> &raquo;</li>
-      
-    <li>Running Programs</li>
+      <li>Running Programs</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../_sources/commands/runprogram.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../_sources/commands/runprogram.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="running-programs">
-<span id="running"></span><h1>Running Programs<a class="headerlink" href="#running-programs" title="Permalink to this headline">¶</a></h1>
-<div class="contents local topic" id="contents">
-<p class="topic-title first">Contents</p>
+             
+  <section id="running-programs">
+<span id="running"></span><h1>Running Programs<a class="headerlink" href="#running-programs" title="Permalink to this heading">¶</a></h1>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#run-functions" id="id1">Run Functions</a></li>
-<li><a class="reference internal" href="#run-keyword" id="id2">Run Keyword</a></li>
-<li><a class="reference internal" href="#details-of-running-programs" id="id3">Details Of Running Programs</a><ul>
-<li><a class="reference internal" href="#running-a-program-once" id="id4">Running a program &#8220;ONCE&#8221;</a></li>
-<li><a class="reference internal" href="#automatic-guessing-of-full-filename" id="id5">Automatic guessing of full filename</a></li>
-<li><a class="reference internal" href="#arguments" id="id6">Arguments</a></li>
+<li><p><a class="reference internal" href="#run-functions" id="id1">Run Functions</a></p></li>
+<li><p><a class="reference internal" href="#run-keyword" id="id2">Run Keyword</a></p></li>
+<li><p><a class="reference internal" href="#details-of-running-programs" id="id3">Details Of Running Programs</a></p>
+<ul>
+<li><p><a class="reference internal" href="#running-a-program-once" id="id4">Running a program “ONCE”</a></p></li>
+<li><p><a class="reference internal" href="#automatic-guessing-of-full-filename" id="id5">Automatic guessing of full filename</a></p></li>
+<li><p><a class="reference internal" href="#arguments" id="id6">Arguments</a></p></li>
 </ul>
 </li>
 </ul>
-</div>
+</nav>
 <p>KerboScript supports running executing code saved in files on the local or
-archive disks. The terms &#8220;program&#8221; and &#8220;script&#8221; are generally used
+archive disks. The terms “program” and “script” are generally used
 interchangably when describing this behavior. Programs can either be run using
-one of the <a class="reference internal" href="#runfunctions"><span>Run Functions</span></a> or the <a class="reference internal" href="#run"><span>Run Keyword</span></a>.  Supported file types are:</p>
+one of the <a class="reference internal" href="#runfunctions"><span class="std std-ref">Run Functions</span></a> or the <a class="reference internal" href="#run"><span class="std std-ref">Run Keyword</span></a>.  Supported file types are:</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>Raw Text KerboScript files</dt>
-<dd>These files contain KerboScript text commands, as if you had typed them
+<div><dl class="simple">
+<dt>Raw Text KerboScript files</dt><dd><p>These files contain KerboScript text commands, as if you had typed them
 directly into the terminal.  They are easily read, written, and edited
-by humans.  These files traditionally have a <code class="docutils literal"><span class="pre">&quot;.ks&quot;</span></code> extension,
-however it is not required.</dd>
-<dt>Compiled Machine Language Files</dt>
-<dd>These files contain encoded and compressed machine language opcodes.
+by humans.  These files traditionally have a <code class="docutils literal notranslate"><span class="pre">&quot;.ks&quot;</span></code> extension,
+however it is not required.</p>
+</dd>
+<dt>Compiled Machine Language Files</dt><dd><p>These files contain encoded and compressed machine language opcodes.
 They are not formatted to allow humans to read, write, or edit the
-files.  These files traditionally have a <code class="docutils literal"><span class="pre">&quot;.ksm&quot;</span></code> extension, however
-it is not required.</dd>
+files.  These files traditionally have a <code class="docutils literal notranslate"><span class="pre">&quot;.ksm&quot;</span></code> extension, however
+it is not required.</p>
+</dd>
 </dl>
 </div></blockquote>
 <div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<dl class="last docutils">
-<dt><a class="reference internal" href="../general/compiling.html#compiling"><span>KerboScript Machine Code</span></a></dt>
-<dd>An explaination of how scripts are compiled, as well as an explaination
-of how <a class="reference internal" href="../general/compiling.html#keyword:COMPILE" title="COMPILE keyword"><code class="xref ks ks-key docutils literal"><span class="pre">COMPILE</span></code></a> stores opcodes.</dd>
-<dt><a class="reference internal" href="files.html#filename-case-warning"><span>Filename Warning</span></a></dt>
-<dd>Warning detailing issues with case sensitive host file systems.</dd>
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="../general/compiling.html#compiling"><span class="std std-ref">KerboScript Machine Code</span></a></dt><dd><p>An explaination of how scripts are compiled, as well as an explaination
+of how <a class="reference internal" href="../general/compiling.html#keyword:COMPILE" title="COMPILE keyword"><code class="xref ks ks-key docutils literal notranslate"><span class="pre">COMPILE</span></code></a> stores opcodes.</p>
+</dd>
+<dt><a class="reference internal" href="files.html#filename-case-warning"><span class="std std-ref">Filename Warning</span></a></dt><dd><p>Warning detailing issues with case sensitive host file systems.</p>
+</dd>
 </dl>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">If you attempt to run the same program twice from within another script,
+<p class="admonition-title">Note</p>
+<p>If you attempt to run the same program twice from within another script,
 the previously compiled version will be executed without attempting to
 recompile even if the original source script has been modified.  However
 once the program has finished executing and returns to the main terminal
@@ -219,59 +150,55 @@ input, the memory containing the programs is released.  This means that
 every time that a script file is run from the terminal it is recompiled,
 even if the script file has not changed.</p>
 </div>
-<div class="section" id="run-functions">
-<span id="runfunctions"></span><h2><a class="toc-backref" href="#id1">Run Functions</a><a class="headerlink" href="#run-functions" title="Permalink to this headline">¶</a></h2>
+<section id="run-functions">
+<span id="runfunctions"></span><h2><a class="toc-backref" href="#id1" role="doc-backlink">Run Functions</a><a class="headerlink" href="#run-functions" title="Permalink to this heading">¶</a></h2>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<div class="last versionchanged">
-<p><span class="versionmodified">Changed in version 1.0.0: </span>The <a class="reference internal" href="#function:RUNPATH" title="RUNPATH function"><code class="xref ks ks-func docutils literal"><span class="pre">RUNPATH</span></code></a> and <a class="reference internal" href="#function:RUNONCEPATH" title="RUNONCEPATH function"><code class="xref ks ks-func docutils literal"><span class="pre">RUNONCEPATH</span></code></a> functions were added in
-version 1.0.0.  Previously, only the more limited <a class="reference internal" href="#keyword:RUN" title="RUN keyword"><code class="xref ks ks-key docutils literal"><span class="pre">RUN</span></code></a>
+<p class="admonition-title">Note</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 1.0.0: </span>The <a class="reference internal" href="#function:RUNPATH" title="RUNPATH function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">RUNPATH</span></code></a> and <a class="reference internal" href="#function:RUNONCEPATH" title="RUNONCEPATH function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">RUNONCEPATH</span></code></a> functions were added in
+version 1.0.0.  Previously, only the more limited <a class="reference internal" href="#keyword:RUN" title="RUN keyword"><code class="xref ks ks-key docutils literal notranslate"><span class="pre">RUN</span></code></a>
 command existed.</p>
 </div>
 </div>
-<span class="target" id="runoncepath"><span id="runpath"></span></span><dl class="function">
-<dt id="function:RUNPATH">
-<code class="descname">RUNPATH</code><span class="sig-paren">(</span>path<span class="sig-paren">)</span><a class="headerlink" href="#function:RUNPATH" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="runoncepath"><span id="runpath"></span></span><dl class="ks function">
+<dt class="sig sig-object ks" id="function:RUNPATH">
+<span class="sig-name descname"><span class="pre">RUNPATH</span></span><span class="sig-paren">(</span><span class="pre">path</span><span class="sig-paren">)</span><a class="headerlink" href="#function:RUNPATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt>
-<code class="descname">RUNPATH</code><span class="sig-paren">(</span>path, commaSeperatedArgs...<span class="sig-paren">)</span></dt>
+<dl class="ks function">
+<dt class="sig sig-object ks">
+<span class="sig-name descname"><span class="pre">RUNPATH</span></span><span class="sig-paren">(</span><span class="pre">path,</span> <span class="pre">commaSeperatedArgs...</span><span class="sig-paren">)</span></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="function:RUNONCEPATH">
-<code class="descname">RUNONCEPATH</code><span class="sig-paren">(</span>path<span class="sig-paren">)</span><a class="headerlink" href="#function:RUNONCEPATH" title="Permalink to this definition">¶</a></dt>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:RUNONCEPATH">
+<span class="sig-name descname"><span class="pre">RUNONCEPATH</span></span><span class="sig-paren">(</span><span class="pre">path</span><span class="sig-paren">)</span><a class="headerlink" href="#function:RUNONCEPATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt>
-<code class="descname">RUNONCEPATH</code><span class="sig-paren">(</span>path, commaSeperatedArgs...<span class="sig-paren">)</span></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>path</strong> (<a class="reference internal" href="../structures/misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> or <a class="reference internal" href="../structures/volumes_and_files/path.html#structure:PATH" title="PATH structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Path</span></code></a>) &#8211; Path information pointing to the script file. May be an
-<a class="reference internal" href="files.html#absolute-paths"><span>Absolute</span></a> or <a class="reference internal" href="files.html#relative-paths"><span>Relative</span></a> path.</li>
-<li><strong>commaSeperatedArgs...</strong> (<em>Optional</em>) &#8211; A comma seperated list of arguments to
-pass to the program</li>
+<dl class="ks function">
+<dt class="sig sig-object ks">
+<span class="sig-name descname"><span class="pre">RUNONCEPATH</span></span><span class="sig-paren">(</span><span class="pre">path,</span> <span class="pre">commaSeperatedArgs...</span><span class="sig-paren">)</span></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference internal" href="../structures/misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> or <a class="reference internal" href="../structures/volumes_and_files/path.html#structure:PATH" title="PATH structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Path</span></code></a>) – Path information pointing to the script file. May be an
+<a class="reference internal" href="files.html#absolute-paths"><span class="std std-ref">Absolute</span></a> or <a class="reference internal" href="files.html#relative-paths"><span class="std std-ref">Relative</span></a> path.</p></li>
+<li><p><strong>commaSeperatedArgs...</strong> (<em>Optional</em>) – A comma seperated list of arguments to
+pass to the program</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The <a class="reference internal" href="#function:RUNPATH" title="RUNPATH function"><code class="xref ks ks-func docutils literal"><span class="pre">RUNPATH</span></code></a> or <a class="reference internal" href="#function:RUNONCEPATH" title="RUNONCEPATH function"><code class="xref ks ks-func docutils literal"><span class="pre">RUNONCEPATH</span></code></a> functions are nearly
+<p class="admonition-title">Note</p>
+<p>The <a class="reference internal" href="#function:RUNPATH" title="RUNPATH function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">RUNPATH</span></code></a> or <a class="reference internal" href="#function:RUNONCEPATH" title="RUNONCEPATH function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">RUNONCEPATH</span></code></a> functions are nearly
 identical to each other except for what is described below under the
-heading <a class="reference internal" href="#run-once"><span>Running a program &#8220;ONCE&#8221;</span></a>.</p>
+heading <a class="reference internal" href="#run-once"><span class="std std-ref">Running a program “ONCE”</span></a>.</p>
 </div>
-<p><code class="docutils literal"><span class="pre">RUNPATH</span></code> or <code class="docutils literal"><span class="pre">RUNONCEPATH</span></code> take a list of arguments, the first of
+<p><code class="docutils literal notranslate"><span class="pre">RUNPATH</span></code> or <code class="docutils literal notranslate"><span class="pre">RUNONCEPATH</span></code> take a list of arguments, the first of
 which is the filename of the program to run, and must evaluate to a
 string.  Any additional arguments after that are optional, and are
 passed in to the program as its parameters it can read:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">RUNPATH</span><span class="p">(</span> <span class="s">&quot;myfile.ks&quot;</span> <span class="p">).</span> <span class="c1">// Run a program called myfile.ks.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">RUNPATH</span><span class="p">(</span> <span class="s">&quot;myfile.ks&quot;</span> <span class="p">).</span> <span class="c1">// Run a program called myfile.ks.</span>
 <span class="nv">RUNPATH</span><span class="p">(</span> <span class="s">&quot;myfile&quot;</span> <span class="p">).</span> <span class="c1">// Run a program called myfile, where kOS will guess</span>
                      <span class="c1">// the filename extension you meant, and probably</span>
                      <span class="c1">// pick &quot;.ks&quot; for you.</span>
@@ -280,9 +207,9 @@ passed in to the program as its parameters it can read:</p>
                               <span class="c1">// two parameters.</span>
 </pre></div>
 </div>
-<p><code class="docutils literal"><span class="pre">RUNPATH</span></code> or <code class="docutils literal"><span class="pre">RUNONCEPATH</span></code> can also work with any expression for the
+<p><code class="docutils literal notranslate"><span class="pre">RUNPATH</span></code> or <code class="docutils literal notranslate"><span class="pre">RUNONCEPATH</span></code> can also work with any expression for the
 filename as long as it results in a string:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">file_base</span> <span class="ow">to</span> <span class="s">&quot;prog_num_&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">file_base</span> <span class="ow">to</span> <span class="s">&quot;prog_num_&quot;</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">file_num</span> <span class="ow">to</span> <span class="mf">3</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">file_ending</span> <span class="ow">to</span> <span class="s">&quot;.ks&quot;</span><span class="p">.</span>
 <span class="nv">RUNPATH</span><span class="p">(</span> <span class="nv">file_base</span> <span class="o">+</span> <span class="nv">file_num</span> <span class="o">+</span> <span class="nv">file_ending</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">2</span> <span class="p">).</span>
@@ -292,62 +219,58 @@ filename as long as it results in a string:</p>
 </div>
 </dd></dl>
 
-</div>
-<div class="section" id="run-keyword">
-<span id="run"></span><h2><a class="toc-backref" href="#id2">Run Keyword</a><a class="headerlink" href="#run-keyword" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="run-keyword">
+<span id="run"></span><h2><a class="toc-backref" href="#id2" role="doc-backlink">Run Keyword</a><a class="headerlink" href="#run-keyword" title="Permalink to this heading">¶</a></h2>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
+<p class="admonition-title">Note</p>
 <p><strong>You should prefer RUNPATH over RUN</strong></p>
-<p>The <code class="docutils literal"><span class="pre">RUN</span></code> command is older, and less powerful than the newer
-<a class="reference internal" href="#runfunctions"><span>Run Functions</span></a>, and is kept around mostly for backward compatibility.
-You can&#8217;t use a variable or expression to refer to the file name.
+<p>The <code class="docutils literal notranslate"><span class="pre">RUN</span></code> command is older, and less powerful than the newer
+<a class="reference internal" href="#runfunctions"><span class="std std-ref">Run Functions</span></a>, and is kept around mostly for backward compatibility.
+You can’t use a variable or expression to refer to the file name.
 The following examples will throw exceptions (but are compatible with
-the <a class="reference internal" href="#runfunctions"><span>Run Functions</span></a>):</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">filename_variable</span> <span class="ow">TO</span> <span class="s">&quot;myfile.ks&quot;</span><span class="p">.</span>
+the <a class="reference internal" href="#runfunctions"><span class="std std-ref">Run Functions</span></a>):</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">filename_variable</span> <span class="ow">TO</span> <span class="s">&quot;myfile.ks&quot;</span><span class="p">.</span>
 <span class="k">RUN</span> <span class="nv">filename_variable</span><span class="p">.</span> <span class="c1">// Error: a file called &quot;filename_variable&quot; not found.</span>
 
 <span class="k">RUN</span> <span class="s">&quot;my&quot;</span> <span class="o">+</span> <span class="s">&quot;file&quot;</span> <span class="o">+</span> <span class="s">&quot;.ks&quot;</span><span class="p">.</span>  <span class="c1">// Syntax error - a single literal string expected,</span>
                             <span class="c1">// not an expression that returns a string.</span>
 </pre></div>
 </div>
-<p class="last">Due to a parsing ambiguity issue, it was impossible to make <code class="docutils literal"><span class="pre">RUN</span></code>
+<p>Due to a parsing ambiguity issue, it was impossible to make <code class="docutils literal notranslate"><span class="pre">RUN</span></code>
 work with any arbitrary expression as the filename without changing its syntax a little in
 a way that would break every old kOS script.  Therefore it was deemed better to
 just add a new function that uses the new syntax instead of changing the syntax
-of <code class="docutils literal"><span class="pre">RUN</span></code>.</p>
+of <code class="docutils literal notranslate"><span class="pre">RUN</span></code>.</p>
 </div>
-<dl class="keyword">
-<dt id="keyword:RUN">
-<code class="descname">RUN [ONCE] path [(commaSeperatedArgs...)]</code><a class="headerlink" href="#keyword:RUN" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>once</strong> &#8211; By using the optional <code class="docutils literal"><span class="pre">ONCE</span></code> keyword parameter you can modify the
-behavior of the <code class="docutils literal"><span class="pre">RUN</span></code> keyword to obey the <a class="reference internal" href="#run-once"><span>run once logic</span></a></li>
-<li><strong>path</strong> (<a class="reference internal" href="../structures/misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> or bare word literal) &#8211; The string (i.e. <code class="docutils literal"><span class="pre">&quot;filename.ks&quot;</span></code>) describing the path
-pointing to the script file. May be an <a class="reference internal" href="files.html#absolute-paths"><span>Absolute</span></a>
-or <a class="reference internal" href="files.html#relative-paths"><span>Relative</span></a> path.</li>
-<li><strong>commaSeperatedArgs...</strong> (<em>Optional</em>) &#8211; A comma seperated list of arguments to
-pass to the program, surrounded by parenthesis (i.e. <code class="docutils literal"><span class="pre">(arg1,</span> <span class="pre">arg2)</span></code>)</li>
+<dl class="ks keyword">
+<dt class="sig sig-object ks" id="keyword:RUN">
+<span class="sig-name descname"><span class="pre">RUN</span> <span class="pre">[ONCE]</span> <span class="pre">path</span> <span class="pre">[(commaSeperatedArgs...)]</span></span><a class="headerlink" href="#keyword:RUN" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>once</strong> – By using the optional <code class="docutils literal notranslate"><span class="pre">ONCE</span></code> keyword parameter you can modify the
+behavior of the <code class="docutils literal notranslate"><span class="pre">RUN</span></code> keyword to obey the <a class="reference internal" href="#run-once"><span class="std std-ref">run once logic</span></a></p></li>
+<li><p><strong>path</strong> (<a class="reference internal" href="../structures/misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> or bare word literal) – The string (i.e. <code class="docutils literal notranslate"><span class="pre">&quot;filename.ks&quot;</span></code>) describing the path
+pointing to the script file. May be an <a class="reference internal" href="files.html#absolute-paths"><span class="std std-ref">Absolute</span></a>
+or <a class="reference internal" href="files.html#relative-paths"><span class="std std-ref">Relative</span></a> path.</p></li>
+<li><p><strong>commaSeperatedArgs...</strong> (<em>Optional</em>) – A comma seperated list of arguments to
+pass to the program, surrounded by parenthesis (i.e. <code class="docutils literal notranslate"><span class="pre">(arg1,</span> <span class="pre">arg2)</span></code>)</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>The <code class="docutils literal"><span class="pre">RUN</span></code> keyword is only capable of
+</dd>
+</dl>
+<p>The <code class="docutils literal notranslate"><span class="pre">RUN</span></code> keyword is only capable of
 using hard-coded program names that were known at the time you wrote
 the script, and expressed as a simple bare word or literal string in
 quotes.  For example, you can do this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">RUN</span> <span class="s">&quot;myfile.ks&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">RUN</span> <span class="s">&quot;myfile.ks&quot;</span><span class="p">.</span>
 <span class="k">RUN</span> <span class="nv">myfile</span><span class="p">.</span><span class="nv">ks</span><span class="p">.</span> <span class="c1">// using a bare word literal string</span>
 </pre></div>
 </div>
 <p>If you wish to pass arguments to the program, you may
 optionally add a set of parentheses with an argument list to the
 end of the syntax, like so:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// All 3 of these work:</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// All 3 of these work:</span>
 <span class="k">RUN</span> <span class="nv">myfile</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">).</span>
 <span class="k">RUN</span> <span class="nv">myfile</span><span class="p">.</span><span class="nv">ks</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">).</span>
 <span class="nv">RUM</span> <span class="s">&quot;myfile.ks&quot;</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">).</span>
@@ -355,138 +278,100 @@ end of the syntax, like so:</p>
 </div>
 </dd></dl>
 
-</div>
-<div class="section" id="details-of-running-programs">
-<h2><a class="toc-backref" href="#id3">Details Of Running Programs</a><a class="headerlink" href="#details-of-running-programs" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="running-a-program-once">
-<span id="run-once"></span><h3><a class="toc-backref" href="#id4">Running a program &#8220;ONCE&#8221;</a><a class="headerlink" href="#running-a-program-once" title="Permalink to this headline">¶</a></h3>
-<p>If the <code class="docutils literal"><span class="pre">RUNONCEPATH</span></code> function is used instead of the <code class="docutils literal"><span class="pre">RUNPATH</span></code> function, or
-the optional <code class="docutils literal"><span class="pre">ONCE</span></code> keyword is added to the <code class="docutils literal"><span class="pre">RUN</span></code> command, it means the run
+</section>
+<section id="details-of-running-programs">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Details Of Running Programs</a><a class="headerlink" href="#details-of-running-programs" title="Permalink to this heading">¶</a></h2>
+<section id="running-a-program-once">
+<span id="run-once"></span><h3><a class="toc-backref" href="#id4" role="doc-backlink">Running a program “ONCE”</a><a class="headerlink" href="#running-a-program-once" title="Permalink to this heading">¶</a></h3>
+<p>If the <code class="docutils literal notranslate"><span class="pre">RUNONCEPATH</span></code> function is used instead of the <code class="docutils literal notranslate"><span class="pre">RUNPATH</span></code> function, or
+the optional <code class="docutils literal notranslate"><span class="pre">ONCE</span></code> keyword is added to the <code class="docutils literal notranslate"><span class="pre">RUN</span></code> command, it means the run
 will not actually occur if the program has already been run once during the
 current program context.  This is intended mostly for loading library program
 files that may have mainline code in them for initialization purposes that you
-don&#8217;t want to get run a second time just because you use the library in two
+don’t want to get run a second time just because you use the library in two
 different subprograms.</p>
-<p><code class="docutils literal"><span class="pre">RUN</span> <span class="pre">ONCE</span></code> and <code class="docutils literal"><span class="pre">RUNONCEPATH</span></code> mean &#8220;Run unless it&#8217;s already been run, in which
-case skip it.&#8221;</p>
+<p><code class="docutils literal notranslate"><span class="pre">RUN</span> <span class="pre">ONCE</span></code> and <code class="docutils literal notranslate"><span class="pre">RUNONCEPATH</span></code> mean “Run unless it’s already been run, in which
+case skip it.”</p>
 <div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">The &#8220;ONCE&#8221; component has no effect on how frequently a given program is
+<p class="admonition-title">Warning</p>
+<p>The “ONCE” component has no effect on how frequently a given program is
 compiled.  Every unique program is compiled exactly once per program context
 execution, and remains in memory until the program finishes and returns
 control to the terminal.</p>
 </div>
-</div>
-<div class="section" id="automatic-guessing-of-full-filename">
-<h3><a class="toc-backref" href="#id5">Automatic guessing of full filename</a><a class="headerlink" href="#automatic-guessing-of-full-filename" title="Permalink to this headline">¶</a></h3>
-<p>For all 3 types of run command (<code class="docutils literal"><span class="pre">RUN</span></code>, <code class="docutils literal"><span class="pre">RUNPATH</span></code>, and <code class="docutils literal"><span class="pre">RUNONCEPATH</span></code>),
-the following filename &#8220;guess&#8221; rules are used when the filename given is
+</section>
+<section id="automatic-guessing-of-full-filename">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">Automatic guessing of full filename</a><a class="headerlink" href="#automatic-guessing-of-full-filename" title="Permalink to this heading">¶</a></h3>
+<p>For all 3 types of run command (<code class="docutils literal notranslate"><span class="pre">RUN</span></code>, <code class="docutils literal notranslate"><span class="pre">RUNPATH</span></code>, and <code class="docutils literal notranslate"><span class="pre">RUNONCEPATH</span></code>),
+the following filename “guess” rules are used when the filename given is
 incomplete:</p>
 <ul class="simple">
-<li>1: If no path information was present in the filename, then assume the
-file is in the current directory (that&#8217;s pretty much standard for all
-filename commands).</li>
-<li>2: Assume if no filename extension such as <code class="docutils literal"><span class="pre">&quot;.ks&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;.ksm&quot;</span></code> was given,
+<li><p>1: If no path information was present in the filename, then assume the
+file is in the current directory (that’s pretty much standard for all
+filename commands).</p></li>
+<li><p>2: Assume if no filename extension such as <code class="docutils literal notranslate"><span class="pre">&quot;.ks&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;.ksm&quot;</span></code> was given,
 and there is no file found that lacks an extension in the way the
-filename was given, then first try to find a file with the &#8221;.ksm&#8221;
+filename was given, then first try to find a file with the “.ksm”
 extension appended to it, and if that file is not found then try
-to find a file with the &#8221;.ks&#8221; extension appended to it.</li>
+to find a file with the “.ks” extension appended to it.</p></li>
 </ul>
-</div>
-<div class="section" id="arguments">
-<h3><a class="toc-backref" href="#id6">Arguments</a><a class="headerlink" href="#arguments" title="Permalink to this headline">¶</a></h3>
-<p>Although the syntax is a bit different for <code class="docutils literal"><span class="pre">RUN</span></code> versus
-<code class="docutils literal"><span class="pre">RUNPATH</span></code> (and <code class="docutils literal"><span class="pre">RUNONCEPATH</span></code>), all 3 techniques allow you to
+</section>
+<section id="arguments">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">Arguments</a><a class="headerlink" href="#arguments" title="Permalink to this heading">¶</a></h3>
+<p>Although the syntax is a bit different for <code class="docutils literal notranslate"><span class="pre">RUN</span></code> versus
+<code class="docutils literal notranslate"><span class="pre">RUNPATH</span></code> (and <code class="docutils literal notranslate"><span class="pre">RUNONCEPATH</span></code>), all 3 techniques allow you to
 pass arguments into the program that it sees as its main script
-<a class="reference internal" href="../language/variables.html#declare-parameter"><span>parameter</span></a> values.</p>
+<a class="reference internal" href="../language/variables.html#declare-parameter"><span class="std std-ref">parameter</span></a> values.</p>
 <p>The following commands do equivalent things:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">RUN</span> <span class="s">&quot;AutoLaunch.ks&quot;</span><span class="p">(</span> <span class="mf">75000</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="s">&quot;hello&quot;</span> <span class="p">).</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">RUN</span> <span class="s">&quot;AutoLaunch.ks&quot;</span><span class="p">(</span> <span class="mf">75000</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="s">&quot;hello&quot;</span> <span class="p">).</span>
 <span class="nv">RUNPATH</span><span class="p">(</span><span class="s">&quot;AutoLaunch.ksm&quot;</span><span class="p">,</span> <span class="mf">75000</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="s">&quot;hello&quot;</span> <span class="p">).</span>
 </pre></div>
 </div>
-<p>In both of the above examples, had the program &#8220;AutoLaunch.ks&#8221;
+<p>In both of the above examples, had the program “AutoLaunch.ks”
 started with these lines:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// AutoLaunch.ks program file:</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// AutoLaunch.ks program file:</span>
 <span class="kd">parameter</span> <span class="nv">final_alt</span><span class="p">,</span> <span class="nv">do_countdown</span><span class="p">,</span> <span class="nv">message</span><span class="p">.</span>
 <span class="c1">//</span>
 <span class="c1">// rest of program not shown...</span>
 <span class="c1">//</span>
 </pre></div>
 </div>
-<p>Then inside AutoLaunch.ks, <code class="docutils literal"><span class="pre">final_alt</span></code> would be <code class="docutils literal"><span class="pre">75000</span></code>,
-and <code class="docutils literal"><span class="pre">do_countdown</span></code> would be <code class="docutils literal"><span class="pre">true</span></code>, and <code class="docutils literal"><span class="pre">message</span></code>
-would be <code class="docutils literal"><span class="pre">&quot;hello&quot;</span></code>.</p>
-</div>
-</div>
-</div>
+<p>Then inside AutoLaunch.ks, <code class="docutils literal notranslate"><span class="pre">final_alt</span></code> would be <code class="docutils literal notranslate"><span class="pre">75000</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">do_countdown</span></code> would be <code class="docutils literal notranslate"><span class="pre">true</span></code>, and <code class="docutils literal notranslate"><span class="pre">message</span></code>
+would be <code class="docutils literal notranslate"><span class="pre">&quot;hello&quot;</span></code>.</p>
+</section>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="flight.html" class="btn btn-neutral float-right" title="Flight Control" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="../commands.html" class="btn btn-neutral" title="Command Reference" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../commands.html" class="btn btn-neutral float-left" title="Command Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="flight.html" class="btn btn-neutral float-right" title="Flight Control" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

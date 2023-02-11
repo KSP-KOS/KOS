@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>String &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>String &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../../about.html"/>
-        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
-        <link rel="next" title="Terminal" href="terminal.html"/>
-        <link rel="prev" title="SteeringManager" href="steeringmanager.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Terminal" href="terminal.html" />
+    <link rel="prev" title="SteeringManager" href="steeringmanager.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
@@ -122,9 +73,7 @@
 <li class="toctree-l3"><a class="reference internal" href="pidloop.html">PIDLoop</a></li>
 <li class="toctree-l3"><a class="reference internal" href="resource_transfer.html">Resource Transfer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="steeringmanager.html">SteeringManager</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">String</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">String</a></li>
 <li class="toctree-l3"><a class="reference internal" href="terminal.html">Terminal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="terminalinput.html">Terminal Input</a></li>
 <li class="toctree-l3"><a class="reference internal" href="time.html">Time</a></li>
@@ -148,81 +97,61 @@
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
-      
           <li><a href="../misc.html">Configurations and Miscellany</a> &raquo;</li>
-      
-    <li>String</li>
+      <li>String</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/structures/misc/string.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../../_sources/structures/misc/string.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="string">
-<span id="id1"></span><h1>String<a class="headerlink" href="#string" title="Permalink to this headline">¶</a></h1>
-<p>A <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> is an immutable sequence of characters in kOS.</p>
-<div class="section" id="creating-strings">
-<h2>Creating strings<a class="headerlink" href="#creating-strings" title="Permalink to this headline">¶</a></h2>
+             
+  <section id="string">
+<span id="id1"></span><h1>String<a class="headerlink" href="#string" title="Permalink to this heading">¶</a></h1>
+<p>A <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> is an immutable sequence of characters in kOS.</p>
+<section id="creating-strings">
+<h2>Creating strings<a class="headerlink" href="#creating-strings" title="Permalink to this heading">¶</a></h2>
 <p>Unlike other structures, strings are created with a special syntax:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Create a new string</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// Create a new string</span>
 <span class="k">SET</span> <span class="nv">s</span> <span class="ow">TO</span> <span class="s">&quot;Hello, Strings!&quot;</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>Strings are immutable. This means, once a string has been created, it
 can not be directly modified. However, new strings can be created out
 of existing strings. For example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Create a new string with &quot;Hello&quot; replaced with &quot;Goodbye&quot;</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// Create a new string with &quot;Hello&quot; replaced with &quot;Goodbye&quot;</span>
 <span class="k">SET</span> <span class="nv">s</span> <span class="ow">TO</span> <span class="s">&quot;Hello, Strings!&quot;</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">t</span> <span class="ow">TO</span> <span class="nv">s</span><span class="p">:</span><span class="nv">REPLACE</span><span class="p">(</span><span class="s">&quot;Hello&quot;</span><span class="p">,</span> <span class="s">&quot;Goodbye&quot;</span><span class="p">).</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="accessing-individual-characters">
-<h2>ACCESSING INDIVIDUAL CHARACTERS<a class="headerlink" href="#accessing-individual-characters" title="Permalink to this headline">¶</a></h2>
-<p>There&#8217;s two main ways to access the individual characters
+</section>
+<section id="accessing-individual-characters">
+<h2>ACCESSING INDIVIDUAL CHARACTERS<a class="headerlink" href="#accessing-individual-characters" title="Permalink to this heading">¶</a></h2>
+<p>There’s two main ways to access the individual characters
 of a string - using an iterator or using index numbers:</p>
-<div class="section" id="using-an-iterator-for">
-<h3>Using an Iterator (FOR)<a class="headerlink" href="#using-an-iterator-for" title="Permalink to this headline">¶</a></h3>
+<section id="using-an-iterator-for">
+<h3>Using an Iterator (FOR)<a class="headerlink" href="#using-an-iterator-for" title="Permalink to this heading">¶</a></h3>
 <p>Strings can be treated a little bit like iterable lists
 of characters. This allows them to be used in FOR loops
 as in the example below:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LOCAL</span> <span class="nv">str</span> <span class="ow">is</span> <span class="s">&quot;abcde&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">LOCAL</span> <span class="nv">str</span> <span class="ow">is</span> <span class="s">&quot;abcde&quot;</span><span class="p">.</span>
 
 <span class="k">FOR</span> <span class="nv">c</span> <span class="nv">IN</span> <span class="nv">str</span> <span class="p">{</span>
   <span class="k">PRINT</span> <span class="nv">c</span><span class="p">.</span>  <span class="c1">// prints &quot;a&quot; the first time, then &quot;b&quot;, etc.</span>
@@ -230,18 +159,18 @@ as in the example below:</p>
 </pre></div>
 </div>
 <p>The reason you can use Strings with the FOR loop like this is
-because you can obatain an <a class="reference internal" href="../collections/iterator.html#structure:ITERATOR" title="ITERATOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></code></a> of a string with the
-<code class="xref ks ks-attr docutils literal"><span class="pre">ITERATOR</span></code> suffix mentioned below.  (Any type that
+because you can obatain an <a class="reference internal" href="../collections/iterator.html#structure:ITERATOR" title="ITERATOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Iterator</span></code></a> of a string with the
+<code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ITERATOR</span></code> suffix mentioned below.  (Any type that
 implements the ITERATOR suffix can do this.)</p>
-</div>
-<div class="section" id="using-an-index-i">
-<h3>Using an Index ( [i] )<a class="headerlink" href="#using-an-index-i" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="using-an-index-i">
+<h3>Using an Index ( [i] )<a class="headerlink" href="#using-an-index-i" title="Permalink to this heading">¶</a></h3>
 <p>Strings can also be treated a little bit like lists in that
 they allow you to use the square-brackets operator <cite>[</cite>..`]`
 to choose one character by its index number (numbers start
-counting at zero).  Here&#8217;s an example that does the same thing
+counting at zero).  Here’s an example that does the same thing
 as the FOR loop above, but using index notation:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LOCAL</span> <span class="nv">str</span> <span class="ow">is</span> <span class="s">&quot;abcde&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">LOCAL</span> <span class="nv">str</span> <span class="ow">is</span> <span class="s">&quot;abcde&quot;</span><span class="p">.</span>
 <span class="k">local</span> <span class="nv">index</span> <span class="ow">is</span> <span class="mf">0</span><span class="p">.</span>
 <span class="k">until</span> <span class="nv">index</span> <span class="o">=</span> <span class="nv">str</span><span class="p">:</span><span class="nv">LENGTH</span> <span class="p">{</span>
   <span class="k">print</span> <span class="nv">str</span><span class="p">[</span><span class="nv">index</span><span class="p">].</span>
@@ -252,689 +181,611 @@ as the FOR loop above, but using index notation:</p>
 <p>Be aware that despite being able to read the characters this way,
 you cannot set them this way.  The following will give
 an error:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LOCAL</span> <span class="nv">str</span> <span class="ow">is</span> <span class="s">&quot;abcde&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">LOCAL</span> <span class="nv">str</span> <span class="ow">is</span> <span class="s">&quot;abcde&quot;</span><span class="p">.</span>
 
 <span class="c1">// The following line gives an error because you can&#39;t</span>
 <span class="c1">// change the characters inside a string:</span>
 <span class="k">set</span> <span class="nv">str</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span> <span class="ow">to</span> <span class="s">&quot;X&quot;</span><span class="p">.</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="boolean-operators">
-<h2>Boolean Operators<a class="headerlink" href="#boolean-operators" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="equality">
-<h3>Equality<a class="headerlink" href="#equality" title="Permalink to this headline">¶</a></h3>
-<p>Using the <code class="docutils literal"><span class="pre">=</span></code> and <code class="docutils literal"><span class="pre">&lt;&gt;</span></code> operators, two strings are equal
+</section>
+</section>
+<section id="boolean-operators">
+<h2>Boolean Operators<a class="headerlink" href="#boolean-operators" title="Permalink to this heading">¶</a></h2>
+<section id="equality">
+<h3>Equality<a class="headerlink" href="#equality" title="Permalink to this heading">¶</a></h3>
+<p>Using the <code class="docutils literal notranslate"><span class="pre">=</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;&gt;</span></code> operators, two strings are equal
 if and only if they are the same length and have letters that differ
-only in capitalization (<code class="docutils literal"><span class="pre">a</span></code> and <code class="docutils literal"><span class="pre">A</span></code> are considered the same letter
+only in capitalization (<code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">A</span></code> are considered the same letter
 for this test).</p>
-</div>
-<div class="section" id="ordering">
-<h3>Ordering<a class="headerlink" href="#ordering" title="Permalink to this headline">¶</a></h3>
-<p>Using the <code class="docutils literal"><span class="pre">&lt;</span></code>, <code class="docutils literal"><span class="pre">&gt;</span></code>, <code class="docutils literal"><span class="pre">&lt;=</span></code>, and <code class="docutils literal"><span class="pre">&gt;=</span></code> operators, one
+</section>
+<section id="ordering">
+<h3>Ordering<a class="headerlink" href="#ordering" title="Permalink to this heading">¶</a></h3>
+<p>Using the <code class="docutils literal notranslate"><span class="pre">&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code>, and <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code> operators, one
 string is considered to be less than the other if it is alphabetically
 sooner according to the ordering of its Unicode mapping, with the
-exception that capitalization is ingored (<code class="docutils literal"><span class="pre">a</span></code> and <code class="docutils literal"><span class="pre">A</span></code> are
+exception that capitalization is ingored (<code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">A</span></code> are
 considered the same letter).  Starting from the lefthand side of the
 two strings, the characters are compered one at a time until the first
 difference is found, and that first difference decides the ordering.
 If one of the strings is shorter length than the other, and the characters
 are all equal up until one of the two strings runs out of characters,
-then the shorter string will be considered &#8220;less than&#8221; the longer one.</p>
-<div class="section" id="mixtures-of-strings-and-non-strings">
-<h4>Mixtures of strings and non-strings<a class="headerlink" href="#mixtures-of-strings-and-non-strings" title="Permalink to this headline">¶</a></h4>
+then the shorter string will be considered “less than” the longer one.</p>
+<section id="mixtures-of-strings-and-non-strings">
+<h4>Mixtures of strings and non-strings<a class="headerlink" href="#mixtures-of-strings-and-non-strings" title="Permalink to this heading">¶</a></h4>
 <p>If you attempt to compare two things only one of which is a string
 and the other is not, then the non-string will be converted into a
 string first, (Giving the same string as its :TOSTRING suffix would
 give), and the two will be compared as strings.  Example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="p">(</span><span class="mf">1234</span> <span class="o">&lt;</span> <span class="mf">99</span><span class="p">).</span>    <span class="c1">// prints &quot;False&quot;</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="p">(</span><span class="mf">1234</span> <span class="o">&lt;</span> <span class="mf">99</span><span class="p">).</span>    <span class="c1">// prints &quot;False&quot;</span>
 <span class="k">print</span> <span class="p">(</span><span class="s">&quot;1234&quot;</span> <span class="o">&lt;</span> <span class="mf">99</span><span class="p">).</span>  <span class="c1">// prints &quot;True&quot;</span>
 </pre></div>
 </div>
-<p>In the first example, both sides of the <code class="docutils literal"><span class="pre">&lt;</span></code> operator are
-<a class="reference internal" href="../../math/scalar.html#scalar"><span>scalars</span></a>, so the comparison is done numerically,
+<p>In the first example, both sides of the <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> operator are
+<a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalars</span></a>, so the comparison is done numerically,
 and 1234 is much bigger than 99.</p>
-<p>In the second example, one side of the <code class="docutils literal"><span class="pre">&lt;</span></code> operator is a
-string, so the other side is converted from the <a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a>
-<code class="docutils literal"><span class="pre">99</span></code> into the <a class="reference internal" href="#string"><span>string</span></a> <code class="docutils literal"><span class="pre">&quot;99&quot;</span></code> to perform the
+<p>In the second example, one side of the <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> operator is a
+string, so the other side is converted from the <a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a>
+<code class="docutils literal notranslate"><span class="pre">99</span></code> into the <a class="reference internal" href="#string"><span class="std std-ref">string</span></a> <code class="docutils literal notranslate"><span class="pre">&quot;99&quot;</span></code> to perform the
 comparison, and then the string comparison looks one character at
-a time and notices that &#8220;1&#8221; is less than &#8220;9&#8221; and calls &#8220;1234&#8221; the
+a time and notices that “1” is less than “9” and calls “1234” the
 lesser value.</p>
-</div>
-</div>
-<div class="section" id="case-sensitiviy">
-<h3>CASE SENSITIVIY<a class="headerlink" href="#case-sensitiviy" title="Permalink to this headline">¶</a></h3>
+</section>
+</section>
+<section id="case-sensitiviy">
+<h3>CASE SENSITIVIY<a class="headerlink" href="#case-sensitiviy" title="Permalink to this heading">¶</a></h3>
 <p>NOTE: All string comparisons for equality and ordering, all substring
 matches, all pattern matches, and all string searches, are currently
-case <strong>in</strong> sensive, meaning that for example the letter &#8220;A&#8221; and the
-letter &#8220;a&#8221; are indistinguishable.  There are future plans to add
+case <strong>in</strong> sensive, meaning that for example the letter “A” and the
+letter “a” are indistinguishable.  There are future plans to add
 mechanisms that will let you choose case-sensitivity when you prefer.</p>
 <p>At the moment the only way to force a case-sensitive comparison is
 to look at the characters one at a time and obtain their numerical
-ordinal Unicode value with the <a class="reference internal" href="../../math/basic.html#function:UNCHAR" title="UNCHAR function"><code class="xref ks ks-func docutils literal"><span class="pre">unchar(a)</span></code></a> function.</p>
-</div>
-</div>
-<div class="section" id="structure">
-<h2>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
-<dl class="structure">
-<dt id="structure:STRING">
-<em class="property">structure </em><code class="descname">String</code><a class="headerlink" href="#structure:STRING" title="Permalink to this definition">¶</a></dt>
-<dd><table border="1" class="docutils" id="id2">
+ordinal Unicode value with the <a class="reference internal" href="../../math/basic.html#function:UNCHAR" title="UNCHAR function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">unchar(a)</span></code></a> function.</p>
+</section>
+</section>
+<section id="structure">
+<h2>Structure<a class="headerlink" href="#structure" title="Permalink to this heading">¶</a></h2>
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:STRING">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">String</span></span><a class="headerlink" href="#structure:STRING" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils align-default" id="id2">
 <caption><span class="caption-text">Members</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="29%" />
-<col width="14%" />
-<col width="57%" />
+<col style="width: 28.6%" />
+<col style="width: 14.3%" />
+<col style="width: 57.1%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type</th>
-<th class="head">Description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#method:STRING:CONTAINS" title="STRING:CONTAINS method"><code class="xref ks ks-meth docutils literal"><span class="pre">CONTAINS(string)</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>True if the given string is contained within this string</td>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#method:STRING:CONTAINS" title="STRING:CONTAINS method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">CONTAINS(string)</span></code></a></p></td>
+<td><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>True if the given string is contained within this string</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:STRING:ENDSWITH" title="STRING:ENDSWITH method"><code class="xref ks ks-meth docutils literal"><span class="pre">ENDSWITH(string)</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>True if this string ends with the given string</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:STRING:ENDSWITH" title="STRING:ENDSWITH method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">ENDSWITH(string)</span></code></a></p></td>
+<td><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>True if this string ends with the given string</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:STRING:FIND" title="STRING:FIND method"><code class="xref ks ks-meth docutils literal"><span class="pre">FIND(string)</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-<td>Returns the index of the first occurrence of the given string in this string (starting from 0)</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#method:STRING:FIND" title="STRING:FIND method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">FIND(string)</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Returns the index of the first occurrence of the given string in this string (starting from 0)</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:STRING:FINDAT" title="STRING:FINDAT method"><code class="xref ks ks-meth docutils literal"><span class="pre">FINDAT(string,</span> <span class="pre">startAt)</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-<td>Returns the index of the first occurrence of the given string in this string (starting from startAt)</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:STRING:FINDAT" title="STRING:FINDAT method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">FINDAT(string,</span> <span class="pre">startAt)</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Returns the index of the first occurrence of the given string in this string (starting from startAt)</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:STRING:FINDLAST" title="STRING:FINDLAST method"><code class="xref ks ks-meth docutils literal"><span class="pre">FINDLAST(string)</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-<td>Returns the index of the last occurrence of the given string in this string (starting from 0)</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#method:STRING:FINDLAST" title="STRING:FINDLAST method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">FINDLAST(string)</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Returns the index of the last occurrence of the given string in this string (starting from 0)</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:STRING:FINDLASTAT" title="STRING:FINDLASTAT method"><code class="xref ks ks-meth docutils literal"><span class="pre">FINDLASTAT(string,</span> <span class="pre">startAt)</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-<td>Returns the index of the last occurrence of the given string in this string (starting from startAt)</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:STRING:FINDLASTAT" title="STRING:FINDLASTAT method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">FINDLASTAT(string,</span> <span class="pre">startAt)</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Returns the index of the last occurrence of the given string in this string (starting from startAt)</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:STRING:INDEXOF" title="STRING:INDEXOF method"><code class="xref ks ks-meth docutils literal"><span class="pre">INDEXOF(string)</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-<td>Alias for FIND(string)</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#method:STRING:INDEXOF" title="STRING:INDEXOF method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">INDEXOF(string)</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Alias for FIND(string)</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:STRING:INSERT" title="STRING:INSERT method"><code class="xref ks ks-meth docutils literal"><span class="pre">INSERT(index,</span> <span class="pre">string)</span></code></a></td>
-<td><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-<td>Returns a new string with the given string inserted at the given index into this string</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:STRING:INSERT" title="STRING:INSERT method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">INSERT(index,</span> <span class="pre">string)</span></code></a></p></td>
+<td><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>Returns a new string with the given string inserted at the given index into this string</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:STRING:ITERATOR" title="STRING:ITERATOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ITERATOR</span></code></a></td>
-<td><a class="reference internal" href="../collections/iterator.html#structure:ITERATOR" title="ITERATOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></code></a></td>
-<td>generates an iterator object the elements</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:STRING:ITERATOR" title="STRING:ITERATOR attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ITERATOR</span></code></a></p></td>
+<td><p><a class="reference internal" href="../collections/iterator.html#structure:ITERATOR" title="ITERATOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Iterator</span></code></a></p></td>
+<td><p>generates an iterator object the elements</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:STRING:LASTINDEXOF" title="STRING:LASTINDEXOF method"><code class="xref ks ks-meth docutils literal"><span class="pre">LASTINDEXOF(string)</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-<td>Alias for FINDLAST(string)</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:STRING:LASTINDEXOF" title="STRING:LASTINDEXOF method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">LASTINDEXOF(string)</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Alias for FINDLAST(string)</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:STRING:LENGTH" title="STRING:LENGTH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LENGTH</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-<td>Number of characters in the string</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:STRING:LENGTH" title="STRING:LENGTH attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">LENGTH</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Number of characters in the string</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:STRING:MATCHESPATTERN" title="STRING:MATCHESPATTERN method"><code class="xref ks ks-meth docutils literal"><span class="pre">MATCHESPATTERN(pattern)</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>Tests whether the string matches the given regex pattern.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:STRING:MATCHESPATTERN" title="STRING:MATCHESPATTERN method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">MATCHESPATTERN(pattern)</span></code></a></p></td>
+<td><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Tests whether the string matches the given regex pattern.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:STRING:PADLEFT" title="STRING:PADLEFT method"><code class="xref ks ks-meth docutils literal"><span class="pre">PADLEFT(width)</span></code></a></td>
-<td><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-<td>Returns a new right-aligned version of this string padded to the given width by spaces</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#method:STRING:PADLEFT" title="STRING:PADLEFT method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">PADLEFT(width)</span></code></a></p></td>
+<td><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>Returns a new right-aligned version of this string padded to the given width by spaces</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:STRING:PADRIGHT" title="STRING:PADRIGHT method"><code class="xref ks ks-meth docutils literal"><span class="pre">PADRIGHT(width)</span></code></a></td>
-<td><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-<td>Returns a new left-aligned version of this string padded to the given width by spaces</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:STRING:PADRIGHT" title="STRING:PADRIGHT method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">PADRIGHT(width)</span></code></a></p></td>
+<td><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>Returns a new left-aligned version of this string padded to the given width by spaces</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:STRING:REMOVE" title="STRING:REMOVE method"><code class="xref ks ks-meth docutils literal"><span class="pre">REMOVE(index,count)</span></code></a></td>
-<td><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-<td>Returns a new string out of this string with the given count of characters removed starting at the given index</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#method:STRING:REMOVE" title="STRING:REMOVE method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">REMOVE(index,count)</span></code></a></p></td>
+<td><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>Returns a new string out of this string with the given count of characters removed starting at the given index</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:STRING:REPLACE" title="STRING:REPLACE method"><code class="xref ks ks-meth docutils literal"><span class="pre">REPLACE(oldString,</span> <span class="pre">newString)</span></code></a></td>
-<td><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-<td>Returns a new string out of this string with any occurrences of oldString replaced with newString</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:STRING:REPLACE" title="STRING:REPLACE method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">REPLACE(oldString,</span> <span class="pre">newString)</span></code></a></p></td>
+<td><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>Returns a new string out of this string with any occurrences of oldString replaced with newString</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:STRING:SPLIT" title="STRING:SPLIT method"><code class="xref ks ks-meth docutils literal"><span class="pre">SPLIT(separator)</span></code></a></td>
-<td><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-<td>Breaks this string up into a list of smaller strings on each occurrence of the given separator</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#method:STRING:SPLIT" title="STRING:SPLIT method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">SPLIT(separator)</span></code></a></p></td>
+<td><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>Breaks this string up into a list of smaller strings on each occurrence of the given separator</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:STRING:STARTSWITH" title="STRING:STARTSWITH method"><code class="xref ks ks-meth docutils literal"><span class="pre">STARTSWITH(string)</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>True if this string starts with the given string</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:STRING:STARTSWITH" title="STRING:STARTSWITH method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">STARTSWITH(string)</span></code></a></p></td>
+<td><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>True if this string starts with the given string</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:STRING:SUBSTRING" title="STRING:SUBSTRING method"><code class="xref ks ks-meth docutils literal"><span class="pre">SUBSTRING(start,</span> <span class="pre">count)</span></code></a></td>
-<td><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-<td>Returns a new string with the given count of characters from this string starting from the given start position</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#method:STRING:SUBSTRING" title="STRING:SUBSTRING method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">SUBSTRING(start,</span> <span class="pre">count)</span></code></a></p></td>
+<td><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>Returns a new string with the given count of characters from this string starting from the given start position</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:STRING:TOLOWER" title="STRING:TOLOWER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TOLOWER</span></code></a></td>
-<td><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-<td>Returns a new string with all characters in this string replaced with their lower case versions</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:STRING:TOLOWER" title="STRING:TOLOWER attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">TOLOWER</span></code></a></p></td>
+<td><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>Returns a new string with all characters in this string replaced with their lower case versions</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:STRING:TOUPPER" title="STRING:TOUPPER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TOUPPER</span></code></a></td>
-<td><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-<td>Returns a new string with all characters in this string replaced with their upper case versions</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:STRING:TOUPPER" title="STRING:TOUPPER attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">TOUPPER</span></code></a></p></td>
+<td><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>Returns a new string with all characters in this string replaced with their upper case versions</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:STRING:TRIM" title="STRING:TRIM attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TRIM</span></code></a></td>
-<td><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-<td>returns a new string with no leading or trailing whitespace</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:STRING:TRIM" title="STRING:TRIM attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">TRIM</span></code></a></p></td>
+<td><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>returns a new string with no leading or trailing whitespace</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:STRING:TRIMEND" title="STRING:TRIMEND attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TRIMEND</span></code></a></td>
-<td><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-<td>returns a new string with no trailing whitespace</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:STRING:TRIMEND" title="STRING:TRIMEND attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">TRIMEND</span></code></a></p></td>
+<td><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>returns a new string with no trailing whitespace</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:STRING:TRIMSTART" title="STRING:TRIMSTART attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TRIMSTART</span></code></a></td>
-<td><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-<td>returns a new string with no leading whitespace</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:STRING:TRIMSTART" title="STRING:TRIMSTART attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">TRIMSTART</span></code></a></p></td>
+<td><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>returns a new string with no leading whitespace</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:STRING:TONUMBER" title="STRING:TONUMBER method"><code class="xref ks ks-meth docutils literal"><span class="pre">TONUMBER(defaultIfError)</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-<td>Parse the string into a number that can be used for mathematics.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#method:STRING:TONUMBER" title="STRING:TONUMBER method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">TONUMBER(defaultIfError)</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Parse the string into a number that can be used for mathematics.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:STRING:TOSCALAR" title="STRING:TOSCALAR method"><code class="xref ks ks-meth docutils literal"><span class="pre">TOSCALAR(defaultIfError)</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-<td>Alias for <a class="reference internal" href="#method:STRING:TONUMBER" title="STRING:TONUMBER method"><code class="xref ks ks-meth docutils literal"><span class="pre">TONUMBER</span></code></a></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:STRING:TOSCALAR" title="STRING:TOSCALAR method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">TOSCALAR(defaultIfError)</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Alias for <a class="reference internal" href="#method:STRING:TONUMBER" title="STRING:TONUMBER method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">TONUMBER</span></code></a></p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:STRING:CONTAINS">
-String:<code class="descname">CONTAINS</code><span class="sig-paren">(</span>string<span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:CONTAINS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>string</strong> &#8211; <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> to look for</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:STRING:CONTAINS">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">CONTAINS</span></span><span class="sig-paren">(</span><span class="pre">string</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:CONTAINS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>string</strong> – <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> to look for</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>True if the given string is contained within this string.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:STRING:ENDSWITH">
-String:<code class="descname">ENDSWITH</code><span class="sig-paren">(</span>string<span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:ENDSWITH" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>string</strong> &#8211; <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> to look for</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:STRING:ENDSWITH">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">ENDSWITH</span></span><span class="sig-paren">(</span><span class="pre">string</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:ENDSWITH" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>string</strong> – <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> to look for</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>True if this string ends with the given string.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:STRING:FIND">
-String:<code class="descname">FIND</code><span class="sig-paren">(</span>string<span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:FIND" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>string</strong> &#8211; <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> to look for</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:STRING:FIND">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">FIND</span></span><span class="sig-paren">(</span><span class="pre">string</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:FIND" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>string</strong> – <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> to look for</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+</dl>
 <p>Returns the index of the first occurrence of the given string in this string (starting from 0).</p>
-<p>If the <code class="docutils literal"><span class="pre">string</span></code> passed in is not found, this returns -1.</p>
-<p>If the <code class="docutils literal"><span class="pre">string</span></code> passed in is the empty string <code class="docutils literal"><span class="pre">&quot;&quot;</span></code>, this always claims to have
-successfully &#8220;found&#8221; that empty string at the start of the search.</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">string</span></code> passed in is not found, this returns -1.</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">string</span></code> passed in is the empty string <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code>, this always claims to have
+successfully “found” that empty string at the start of the search.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:STRING:FINDAT">
-String:<code class="descname">FINDAT</code><span class="sig-paren">(</span>string, startAt<span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:FINDAT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>string</strong> &#8211; <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> to look for</li>
-<li><strong>startAt</strong> &#8211; <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (integer) index to start searching at</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:STRING:FINDAT">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">FINDAT</span></span><span class="sig-paren">(</span><span class="pre">string,</span> <span class="pre">startAt</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:FINDAT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>string</strong> – <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> to look for</p></li>
+<li><p><strong>startAt</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer) index to start searching at</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+</dl>
 <p>Returns the index of the first occurrence of the given string in this string (starting from startAt).</p>
-<p>If the <code class="docutils literal"><span class="pre">string</span></code> passed in is not found, this returns -1.</p>
-<p>If the <code class="docutils literal"><span class="pre">string</span></code> passed in is the empty string <code class="docutils literal"><span class="pre">&quot;&quot;</span></code>, this always claims to have
-successfully &#8220;found&#8221; that empty string at the start of the search.</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">string</span></code> passed in is not found, this returns -1.</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">string</span></code> passed in is the empty string <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code>, this always claims to have
+successfully “found” that empty string at the start of the search.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:STRING:FINDLAST">
-String:<code class="descname">FINDLAST</code><span class="sig-paren">(</span>string<span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:FINDLAST" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>string</strong> &#8211; <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> to look for</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:STRING:FINDLAST">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">FINDLAST</span></span><span class="sig-paren">(</span><span class="pre">string</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:FINDLAST" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>string</strong> – <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> to look for</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+</dl>
 <p>Returns the index of the last occurrence of the given string in this string (starting from 0)</p>
-<p>If the <code class="docutils literal"><span class="pre">string</span></code> passed in is not found, this returns -1.</p>
-<p>If the <code class="docutils literal"><span class="pre">string</span></code> passed in is the empty string <code class="docutils literal"><span class="pre">&quot;&quot;</span></code>, this always claims to have
-successfully &#8220;found&#8221; that empty string at the beginning of the search.</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">string</span></code> passed in is not found, this returns -1.</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">string</span></code> passed in is the empty string <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code>, this always claims to have
+successfully “found” that empty string at the beginning of the search.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:STRING:FINDLASTAT">
-String:<code class="descname">FINDLASTAT</code><span class="sig-paren">(</span>string, startAt<span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:FINDLASTAT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>string</strong> &#8211; <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> to look for</li>
-<li><strong>startAt</strong> &#8211; <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (integer) index to start searching at</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:STRING:FINDLASTAT">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">FINDLASTAT</span></span><span class="sig-paren">(</span><span class="pre">string,</span> <span class="pre">startAt</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:FINDLASTAT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>string</strong> – <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> to look for</p></li>
+<li><p><strong>startAt</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer) index to start searching at</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+</dl>
 <p>Returns the index of the last occurrence of the given string in this string (starting from startAt)</p>
-<p>If the <code class="docutils literal"><span class="pre">string</span></code> passed in is not found, this returns -1.</p>
-<p>If the <code class="docutils literal"><span class="pre">string</span></code> passed in is the empty string <code class="docutils literal"><span class="pre">&quot;&quot;</span></code>, this always claims to have
-successfully &#8220;found&#8221; that empty string at the beginning of the search.</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">string</span></code> passed in is not found, this returns -1.</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">string</span></code> passed in is the empty string <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code>, this always claims to have
+successfully “found” that empty string at the beginning of the search.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:STRING:INDEXOF">
-String:<code class="descname">INDEXOF</code><span class="sig-paren">(</span>string<span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:INDEXOF" title="Permalink to this definition">¶</a></dt>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:STRING:INDEXOF">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">INDEXOF</span></span><span class="sig-paren">(</span><span class="pre">string</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:INDEXOF" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for FIND(string)</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:STRING:INSERT">
-String:<code class="descname">INSERT</code><span class="sig-paren">(</span>index, string<span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:INSERT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>index</strong> &#8211; <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (integer) index to add the string at</li>
-<li><strong>string</strong> &#8211; <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> to insert</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:STRING:INSERT">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">INSERT</span></span><span class="sig-paren">(</span><span class="pre">index,</span> <span class="pre">string</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:INSERT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer) index to add the string at</p></li>
+<li><p><strong>string</strong> – <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> to insert</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+</dl>
 <p>Returns a new string with the given string inserted at the given index into this string</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:STRING:ITERATOR">
-String:<code class="descname">ITERATOR</code><a class="headerlink" href="#attribute:STRING:ITERATOR" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../collections/iterator.html#structure:ITERATOR" title="ITERATOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
-<p>An alternate means of iterating over a string&#8217;s characters
-(See: <a class="reference internal" href="../collections/iterator.html#structure:ITERATOR" title="ITERATOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></code></a>).</p>
-<p>For most programs you won&#8217;t have to use this directly.  It&#8217;s just
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:STRING:ITERATOR">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">ITERATOR</span></span><a class="headerlink" href="#attribute:STRING:ITERATOR" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../collections/iterator.html#structure:ITERATOR" title="ITERATOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Iterator</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
+<p>An alternate means of iterating over a string’s characters
+(See: <a class="reference internal" href="../collections/iterator.html#structure:ITERATOR" title="ITERATOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Iterator</span></code></a>).</p>
+<p>For most programs you won’t have to use this directly.  It’s just
 what enables you to use a string with a FOR loop to get access
 to its characters one at a time.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:STRING:LASTINDEXOF">
-String:<code class="descname">LASTINDEXOF</code><span class="sig-paren">(</span>string<span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:LASTINDEXOF" title="Permalink to this definition">¶</a></dt>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:STRING:LASTINDEXOF">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">LASTINDEXOF</span></span><span class="sig-paren">(</span><span class="pre">string</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:LASTINDEXOF" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for FINDLAST(string)</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:STRING:LENGTH">
-String:<code class="descname">LENGTH</code><a class="headerlink" href="#attribute:STRING:LENGTH" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (integer)</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:STRING:LENGTH">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">LENGTH</span></span><a class="headerlink" href="#attribute:STRING:LENGTH" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer)</p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>Number of characters in the string</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:STRING:MATCHESPATTERN">
-String:<code class="descname">MATCHESPATTERN</code><span class="sig-paren">(</span>pattern<span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:MATCHESPATTERN" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>pattern</strong> &#8211; <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> pattern to be matched against the string</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:STRING:MATCHESPATTERN">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">MATCHESPATTERN</span></span><span class="sig-paren">(</span><span class="pre">pattern</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:MATCHESPATTERN" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pattern</strong> – <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> pattern to be matched against the string</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>True if the string matches the given pattern (regular expression). The match is not anchored to neither the start nor the end of the string.
-That means that pattern <code class="docutils literal"><span class="pre">&quot;foo&quot;</span></code> will match <code class="docutils literal"><span class="pre">&quot;foobar&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;barfoo&quot;</span></code> and <code class="docutils literal"><span class="pre">&quot;barfoobar&quot;</span></code> too. If you want to match from the start,
-you have to explicitly specify the start of the string in the pattern, i.e. for example to match strings starting with <code class="docutils literal"><span class="pre">&quot;foo&quot;</span></code> you need to
-use the pattern <code class="docutils literal"><span class="pre">&quot;^foo&quot;</span></code> (or equivalently <code class="docutils literal"><span class="pre">&quot;^foo.*&quot;</span></code> or even <code class="docutils literal"><span class="pre">&quot;^foo.*$&quot;</span></code>).</p>
+That means that pattern <code class="docutils literal notranslate"><span class="pre">&quot;foo&quot;</span></code> will match <code class="docutils literal notranslate"><span class="pre">&quot;foobar&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;barfoo&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;barfoobar&quot;</span></code> too. If you want to match from the start,
+you have to explicitly specify the start of the string in the pattern, i.e. for example to match strings starting with <code class="docutils literal notranslate"><span class="pre">&quot;foo&quot;</span></code> you need to
+use the pattern <code class="docutils literal notranslate"><span class="pre">&quot;^foo&quot;</span></code> (or equivalently <code class="docutils literal notranslate"><span class="pre">&quot;^foo.*&quot;</span></code> or even <code class="docutils literal notranslate"><span class="pre">&quot;^foo.*$&quot;</span></code>).</p>
 <p>Regular expressions are beyond the scope of this documentation. For reference see <a class="reference external" href="https://msdn.microsoft.com/en-us/library/az24scfc.aspx">Regular Expression Language - Quick Reference</a>.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:STRING:PADLEFT">
-String:<code class="descname">PADLEFT</code><span class="sig-paren">(</span>width<span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:PADLEFT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>width</strong> &#8211; <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (integer) number of characters the resulting string will contain</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:STRING:PADLEFT">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">PADLEFT</span></span><span class="sig-paren">(</span><span class="pre">width</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:PADLEFT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer) number of characters the resulting string will contain</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+</dl>
 <p>Returns a new right-aligned version of this string padded to the given width by spaces.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:STRING:PADRIGHT">
-String:<code class="descname">PADRIGHT</code><span class="sig-paren">(</span>width<span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:PADRIGHT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>width</strong> &#8211; <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (integer) number of characters the resulting string will contain</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:STRING:PADRIGHT">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">PADRIGHT</span></span><span class="sig-paren">(</span><span class="pre">width</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:PADRIGHT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer) number of characters the resulting string will contain</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+</dl>
 <p>Returns a new left-aligned version of this string padded to the given width by spaces.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:STRING:REMOVE">
-String:<code class="descname">REMOVE</code><span class="sig-paren">(</span>index,count<span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:REMOVE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>index</strong> &#8211; <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (integer) position of the string from which characters will be removed from the resulting string</li>
-<li><strong>count</strong> &#8211; <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (integer) number of characters that will be removing from the resulting string</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:STRING:REMOVE">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">REMOVE</span></span><span class="sig-paren">(</span><span class="pre">index,count</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:REMOVE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer) position of the string from which characters will be removed from the resulting string</p></li>
+<li><p><strong>count</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer) number of characters that will be removing from the resulting string</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+</dl>
 <p>Returns a new string out of this string with the given count of characters removed starting at the given index.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:STRING:REPLACE">
-String:<code class="descname">REPLACE</code><span class="sig-paren">(</span>oldString,newString<span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:REPLACE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>oldString</strong> &#8211; <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> to search for</li>
-<li><strong>newString</strong> &#8211; <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> that all occurances of oldString will be replaced with</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:STRING:REPLACE">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">REPLACE</span></span><span class="sig-paren">(</span><span class="pre">oldString,newString</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:REPLACE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>oldString</strong> – <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> to search for</p></li>
+<li><p><strong>newString</strong> – <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> that all occurances of oldString will be replaced with</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+</dl>
 <p>Returns a new string out of this string with any occurrences of oldString replaced with newString.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:STRING:SPLIT">
-String:<code class="descname">SPLIT</code><span class="sig-paren">(</span>separator<span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:SPLIT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>separator</strong> &#8211; <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> delimiter on which this string will be split</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:STRING:SPLIT">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">SPLIT</span></span><span class="sig-paren">(</span><span class="pre">separator</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:SPLIT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>separator</strong> – <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> delimiter on which this string will be split</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a></p>
+</dd>
+</dl>
 <p>Breaks this string up into a list of smaller strings on each occurrence of the given separator. This will return a
 list of strings, none of which will contain the separator character(s).</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:STRING:STARTSWITH">
-String:<code class="descname">STARTSWITH</code><span class="sig-paren">(</span>string<span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:STARTSWITH" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>string</strong> &#8211; <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> to look for</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:STRING:STARTSWITH">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">STARTSWITH</span></span><span class="sig-paren">(</span><span class="pre">string</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:STARTSWITH" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>string</strong> – <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> to look for</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>True if this string starts with the given string .</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:STRING:SUBSTRING">
-String:<code class="descname">SUBSTRING</code><span class="sig-paren">(</span>start,count<span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:SUBSTRING" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>start</strong> &#8211; <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (integer) starting index (from zero)</li>
-<li><strong>count</strong> &#8211; <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (integer) resulting length of returned <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:STRING:SUBSTRING">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">SUBSTRING</span></span><span class="sig-paren">(</span><span class="pre">start,count</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:SUBSTRING" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer) starting index (from zero)</p></li>
+<li><p><strong>count</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer) resulting length of returned <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+</dl>
 <p>Returns a new string with the given count of characters from this string starting from the given start position.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:STRING:TOLOWER">
-String:<code class="descname">TOLOWER</code><a class="headerlink" href="#attribute:STRING:TOLOWER" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:STRING:TOLOWER">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">TOLOWER</span></span><a class="headerlink" href="#attribute:STRING:TOLOWER" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>Returns a new string with all characters in this string replaced with their lower case versions</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:STRING:TOUPPER">
-String:<code class="descname">TOUPPER</code><a class="headerlink" href="#attribute:STRING:TOUPPER" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:STRING:TOUPPER">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">TOUPPER</span></span><a class="headerlink" href="#attribute:STRING:TOUPPER" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>Returns a new string with all characters in this string replaced with their upper case versions</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:STRING:TRIM">
-String:<code class="descname">TRIM</code><a class="headerlink" href="#attribute:STRING:TRIM" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:STRING:TRIM">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">TRIM</span></span><a class="headerlink" href="#attribute:STRING:TRIM" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>returns a new string with no leading or trailing whitespace</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:STRING:TRIMEND">
-String:<code class="descname">TRIMEND</code><a class="headerlink" href="#attribute:STRING:TRIMEND" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:STRING:TRIMEND">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">TRIMEND</span></span><a class="headerlink" href="#attribute:STRING:TRIMEND" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>returns a new string with no trailing whitespace</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:STRING:TRIMSTART">
-String:<code class="descname">TRIMSTART</code><a class="headerlink" href="#attribute:STRING:TRIMSTART" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:STRING:TRIMSTART">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">TRIMSTART</span></span><a class="headerlink" href="#attribute:STRING:TRIMSTART" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>returns a new string with no leading whitespace</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:STRING:TONUMBER">
-String:<code class="descname">TONUMBER</code><span class="sig-paren">(</span>defaultIfError<span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:TONUMBER" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>defaultIfError</strong> &#8211; (optional argument) <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> to return as a default value if the string format is in error.</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:STRING:TONUMBER">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">TONUMBER</span></span><span class="sig-paren">(</span><span class="pre">defaultIfError</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:TONUMBER" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>defaultIfError</strong> – (optional argument) <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> to return as a default value if the string format is in error.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+</dl>
 <p>Returns the numeric version of the string, as a number that can be used
-for mathematics or anywhere a <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> is expected.  If the
+for mathematics or anywhere a <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> is expected.  If the
 string is not in a format that kOS is able to convert into a number, then
-the value <code class="docutils literal"><span class="pre">defaultIfError</span></code> is returned instead.  You can use this to
+the value <code class="docutils literal notranslate"><span class="pre">defaultIfError</span></code> is returned instead.  You can use this to
 either select a sane default, or to deliberately select a value you
 never expect to get in normal circumstances so you can use it as a
 test to see if the string was formatted well.</p>
-<p>The argument <code class="docutils literal"><span class="pre">defaultIfError</span></code> is optional.  If it is left off, then
+<p>The argument <code class="docutils literal notranslate"><span class="pre">defaultIfError</span></code> is optional.  If it is left off, then
 when there is a problem in the format of the string, you will get
 an error that stops the script instead of returning a value.</p>
 <p>The valid understood format allows an optional leading sign,
 a decimal point with fractional part, and scientific notation
-using &#8220;e&#8221; as in &#8220;1.23e3&#8221; for &#8220;1230&#8221; or &#8220;1.23e-3&#8221; for &#8220;0.00123&#8221;.</p>
+using “e” as in “1.23e3” for “1230” or “1.23e-3” for “0.00123”.</p>
 <p>You may also include optional underscores in the string to
 help space groups of digits, and they will be ignored.
-(For example you may write &#8220;one thousand&#8221; as &#8220;1_000&#8221; instead
-of as &#8220;1000&#8221; if you like&#8221;.)</p>
+(For example you may write “one thousand” as “1_000” instead
+of as “1000” if you like”.)</p>
 <p>Example - using with math:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">str</span> <span class="ow">to</span> <span class="s">&quot;16.8&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">str</span> <span class="ow">to</span> <span class="s">&quot;16.8&quot;</span><span class="p">.</span>
 <span class="k">print</span> <span class="s">&quot;half of &quot;</span> <span class="o">+</span> <span class="nv">str</span> <span class="o">+</span> <span class="s">&quot; is &quot;</span> <span class="o">+</span> <span class="nv">str</span><span class="p">:</span><span class="nv">tonumber</span><span class="p">()</span> <span class="o">/</span> <span class="mf">2</span><span class="p">.</span>
 <span class="nv">half</span> <span class="nv">of</span> <span class="mf">16</span><span class="p">.</span><span class="mf">8</span> <span class="ow">is</span> <span class="mf">8</span><span class="p">.</span><span class="mf">4</span>
 </pre></div>
 </div>
 <p>Example - checking for bad values by using defaultIfError:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">str</span> <span class="ow">to</span> <span class="s">&quot;Garbage 123 that is not a proper number&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">str</span> <span class="ow">to</span> <span class="s">&quot;Garbage 123 that is not a proper number&quot;</span><span class="p">.</span>
 <span class="k">set</span> <span class="nv">val</span> <span class="ow">to</span> <span class="nv">str</span><span class="p">:</span><span class="nv">tonumber</span><span class="p">(</span><span class="o">-</span><span class="mf">9999</span><span class="p">).</span>
 <span class="k">if</span> <span class="nv">val</span> <span class="o">=</span> <span class="o">-</span><span class="mf">9999</span> <span class="p">{</span>
   <span class="k">print</span> <span class="s">&quot;that string isn&#39;t a number&quot;</span><span class="p">.</span>
@@ -944,37 +795,37 @@ of as &#8220;1000&#8221; if you like&#8221;.)</p>
 </pre></div>
 </div>
 <p>Example - not setting a default value can throw an error:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">str</span> <span class="ow">to</span> <span class="s">&quot;Garbage&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">str</span> <span class="ow">to</span> <span class="s">&quot;Garbage&quot;</span><span class="p">.</span>
 <span class="k">set</span> <span class="nv">val</span> <span class="ow">to</span> <span class="nv">str</span><span class="p">:</span><span class="nv">tonumber</span><span class="p">().</span>  <span class="c1">// the script dies with error here.</span>
 <span class="k">print</span> <span class="s">&quot;value is &quot;</span> <span class="o">+</span> <span class="nv">val</span><span class="p">.</span> <span class="c1">// the script never gets this far.</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:STRING:TOSCALAR">
-String:<code class="descname">TOSCALAR</code><span class="sig-paren">(</span>defaultIfError<span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:TOSCALAR" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for <a class="reference internal" href="#method:STRING:TONUMBER" title="STRING:TONUMBER method"><code class="xref ks ks-meth docutils literal"><span class="pre">String:TONUMBER(defaultIfError)</span></code></a></p>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:STRING:TOSCALAR">
+<span class="pre">String:</span><span class="sig-name descname"><span class="pre">TOSCALAR</span></span><span class="sig-paren">(</span><span class="pre">defaultIfError</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:TOSCALAR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for <a class="reference internal" href="#method:STRING:TONUMBER" title="STRING:TONUMBER method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">String:TONUMBER(defaultIfError)</span></code></a></p>
 </dd></dl>
 
-</div>
-<div class="section" id="access-to-individual-characters">
-<h2>Access to Individual Characters<a class="headerlink" href="#access-to-individual-characters" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="access-to-individual-characters">
+<h2>Access to Individual Characters<a class="headerlink" href="#access-to-individual-characters" title="Permalink to this heading">¶</a></h2>
 <p>All string indexes start counting at zero. (The characters are numbered from 0 to N-1 rather than from 1 to N.)</p>
-<p><code class="docutils literal"><span class="pre">string[expression]</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">string[expression]</span></code></p>
 <blockquote>
 <div><ul class="simple">
-<li>operator: access the character at position &#8216;expression&#8217;. Any arbitrary complex expression may be used with this syntax, not just a number or variable name.</li>
+<li><p>operator: access the character at position ‘expression’. Any arbitrary complex expression may be used with this syntax, not just a number or variable name.</p></li>
 </ul>
 </div></blockquote>
-<p><code class="docutils literal"><span class="pre">FOR</span> <span class="pre">VAR</span> <span class="pre">IN</span> <span class="pre">STRING</span> <span class="pre">{</span> <span class="pre">...</span> <span class="pre">}.</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">FOR</span> <span class="pre">VAR</span> <span class="pre">IN</span> <span class="pre">STRING</span> <span class="pre">{</span> <span class="pre">...</span> <span class="pre">}.</span></code></p>
 <blockquote>
 <div><ul class="simple">
-<li><a class="reference internal" href="../../language/flow.html#flow"><span>A type of loop</span></a> in which var iterates over all the characters of the string from 0 to LENGTH-1.</li>
+<li><p><a class="reference internal" href="../../language/flow.html#flow"><span class="std std-ref">A type of loop</span></a> in which var iterates over all the characters of the string from 0 to LENGTH-1.</p></li>
 </ul>
 </div></blockquote>
 <p>Examples:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span>                                                                <span class="c1">// CORRECT OUTPUTS</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span>                                                                <span class="c1">// CORRECT OUTPUTS</span>
 <span class="k">SET</span> <span class="nv">s</span> <span class="ow">TO</span> <span class="s">&quot;Hello, Strings!&quot;</span><span class="p">.</span>                                     <span class="c1">// ---------------</span>
 <span class="k">PRINT</span> <span class="s">&quot;Original String:               &quot;</span> <span class="o">+</span> <span class="nv">s</span><span class="p">.</span>                    <span class="c1">// Hello, Strings!</span>
 <span class="k">PRINT</span> <span class="s">&quot;string[7]:                     &quot;</span> <span class="o">+</span> <span class="nv">s</span><span class="p">[</span><span class="mf">7</span><span class="p">].</span>                 <span class="c1">// S</span>
@@ -1014,76 +865,38 @@ String:<code class="descname">TOSCALAR</code><span class="sig-paren">(</span>def
 <span class="k">PRINT</span> <span class="s">&quot;Chained: &quot;</span> <span class="o">+</span> <span class="s">&quot;Hello!&quot;</span><span class="p">:</span><span class="nv">SUBSTRING</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span> <span class="mf">4</span><span class="p">):</span><span class="nv">TOUPPER</span><span class="p">():</span><span class="nv">REPLACE</span><span class="p">(</span><span class="s">&quot;ELL&quot;</span><span class="p">,</span> <span class="s">&quot;ELEPHANT&quot;</span><span class="p">).</span>  <span class="c1">// HELEPHANT</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="terminal.html" class="btn btn-neutral float-right" title="Terminal" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="steeringmanager.html" class="btn btn-neutral" title="SteeringManager" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="steeringmanager.html" class="btn btn-neutral float-left" title="SteeringManager" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="terminal.html" class="btn btn-neutral float-right" title="Terminal" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

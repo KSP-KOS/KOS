@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Stage &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stage &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../../about.html"/>
-        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
-        <link rel="next" title="Vessel" href="vessel.html"/>
-        <link rel="prev" title="Sensor" href="sensor.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Vessel" href="vessel.html" />
+    <link rel="prev" title="Separator" href="separator.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
@@ -126,12 +77,12 @@
 <li class="toctree-l3"><a class="reference internal" href="partmodule.html">PartModule</a></li>
 <li class="toctree-l3"><a class="reference internal" href="rcs.html">RCS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="resource.html">Resource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sciencecontainermodule.html">ScienceContainerModule</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sciencedatavalue.html">ScienceData</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scienceexperiment.html">ScienceExperimentModule</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sensor.html">Sensor</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Stage</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="separator.html">Separator</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Stage</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vessel.html">Vessel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vesselsensors.html">VesselSensors</a></li>
 </ul>
@@ -151,67 +102,47 @@
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
-      
           <li><a href="../vessels.html">Vessels and Parts</a> &raquo;</li>
-      
-    <li>Stage</li>
+      <li>Stage</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/structures/vessels/stage.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../../_sources/structures/vessels/stage.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="stage">
-<span id="id1"></span><h1>Stage<a class="headerlink" href="#stage" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="stage">
+<span id="id1"></span><h1>Stage<a class="headerlink" href="#stage" title="Permalink to this heading">¶</a></h1>
 <p><em>Contents</em></p>
 <blockquote>
 <div><ul class="simple">
-<li><a class="reference internal" href="#stagingexample"><span>Staging Example</span></a></li>
-<li><a class="reference internal" href="#stagefunction"><span>Staging Function</span></a></li>
-<li><a class="reference internal" href="#stagestructure"><span>Staging Structure</span></a></li>
+<li><p><a class="reference internal" href="#stagingexample"><span class="std std-ref">Staging Example</span></a></p></li>
+<li><p><a class="reference internal" href="#stagefunction"><span class="std std-ref">Staging Function</span></a></p></li>
+<li><p><a class="reference internal" href="#stagestructure"><span class="std std-ref">Staging Structure</span></a></p></li>
 </ul>
 </div></blockquote>
-<div class="section" id="staging-example">
-<span id="stagingexample"></span><h2>Staging Example<a class="headerlink" href="#staging-example" title="Permalink to this headline">¶</a></h2>
+<section id="staging-example">
+<span id="stagingexample"></span><h2>Staging Example<a class="headerlink" href="#staging-example" title="Permalink to this heading">¶</a></h2>
 <blockquote>
-<div><p>A very simple auto-stager using <a class="reference internal" href="#attribute:STAGE:READY" title="STAGE:READY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">:READY</span></code></a></p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LIST</span> <span class="nv">ENGINES</span> <span class="nv">IN</span> <span class="nv">elist</span><span class="p">.</span>
+<div><p>A very simple auto-stager using <a class="reference internal" href="#attribute:STAGE:READY" title="STAGE:READY attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">:READY</span></code></a></p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">LIST</span> <span class="nv">ENGINES</span> <span class="nv">IN</span> <span class="nv">elist</span><span class="p">.</span>
 
 <span class="k">UNTIL</span> <span class="nb">false</span> <span class="p">{</span>
     <span class="k">PRINT</span> <span class="s">&quot;Stage: &quot;</span> <span class="o">+</span> <span class="k">STAGE</span><span class="p">:</span><span class="nv">NUMBER</span> <span class="k">AT</span> <span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">).</span>
@@ -233,195 +164,182 @@
 </pre></div>
 </div>
 </div></blockquote>
-</div>
-<div class="section" id="stage-function">
-<span id="stagefunction"></span><h2>Stage Function<a class="headerlink" href="#stage-function" title="Permalink to this headline">¶</a></h2>
-<dl class="global">
-<dt id="global:STAGE">
-<code class="descname">Stage</code><a class="headerlink" href="#global:STAGE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
+</section>
+<section id="stage-function">
+<span id="stagefunction"></span><h2>Stage Function<a class="headerlink" href="#stage-function" title="Permalink to this heading">¶</a></h2>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:STAGE">
+<span class="sig-name descname"><span class="pre">Stage</span></span><a class="headerlink" href="#global:STAGE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
 <p>Activates the next stage if the cpu vessel is the active vessel.  This will
 trigger engines, decouplers, and any other parts that would normally be
 triggered by manually staging.  The default equivalent key binding is the
-space bar.  As with other parameter-less functions, both <code class="docutils literal"><span class="pre">STAGE.</span></code> and
-<code class="docutils literal"><span class="pre">STAGE().</span></code> are acceptable ways to call the function.</p>
+space bar.  As with other parameter-less functions, both <code class="docutils literal notranslate"><span class="pre">STAGE.</span></code> and
+<code class="docutils literal notranslate"><span class="pre">STAGE().</span></code> are acceptable ways to call the function.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<div class="last versionchanged">
-<p><span class="versionmodified">Changed in version 1.0.1: </span>The stage function will automatically pause execution until the next
+<p class="admonition-title">Note</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 1.0.1: </span>The stage function will automatically pause execution until the next
 tick.  This is because some of the results of the staging event take
 effect immediately, while others do not update until the next time
-that physics are calculated.  Calling <code class="docutils literal"><span class="pre">STAGE.</span></code> is essentially
+that physics are calculated.  Calling <code class="docutils literal notranslate"><span class="pre">STAGE.</span></code> is essentially
 equivalent to:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">STAGE</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">STAGE</span><span class="p">.</span>
 <span class="k">WAIT</span> <span class="mf">0</span><span class="p">.</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">Calling the <a class="reference internal" href="#global:STAGE" title="STAGE global"><code class="xref ks ks-global docutils literal"><span class="pre">Stage</span></code></a> function on a vessel other than the active
+<p class="admonition-title">Warning</p>
+<p>Calling the <a class="reference internal" href="#global:STAGE" title="STAGE global"><code class="xref ks ks-global docutils literal notranslate"><span class="pre">Stage</span></code></a> function on a vessel other than the active
 vessel will throw an exception.</p>
 </div>
 </dd></dl>
 
-</div>
-<div class="section" id="stage-structure">
-<span id="stagestructure"></span><h2>Stage Structure<a class="headerlink" href="#stage-structure" title="Permalink to this headline">¶</a></h2>
-<p>The &#8220;Stage&#8221; structure gives you some information about the current stage
+</section>
+<section id="stage-structure">
+<span id="stagestructure"></span><h2>Stage Structure<a class="headerlink" href="#stage-structure" title="Permalink to this heading">¶</a></h2>
+<p>The “Stage” structure gives you some information about the current stage
 of the vessel.</p>
-<dl class="structure">
-<dt id="structure:STAGE">
-<em class="property">structure </em><code class="descname">Stage</code><a class="headerlink" href="#structure:STAGE" title="Permalink to this definition">¶</a></dt>
-<dd><table border="1" class="docutils" id="id2">
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:STAGE">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">Stage</span></span><a class="headerlink" href="#structure:STAGE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils align-default" id="id2">
 <caption><span class="caption-text">Members</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
-<col width="40%" />
+<col style="width: 20.0%" />
+<col style="width: 20.0%" />
+<col style="width: 20.0%" />
+<col style="width: 40.0%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type (units)</th>
-<th class="head">Access</th>
-<th class="head">Description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type (units)</p></th>
+<th class="head"><p>Access</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#attribute:STAGE:READY" title="STAGE:READY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">READY</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>Get only</td>
-<td>Is the craft ready to activate the next stage.</td>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:STAGE:READY" title="STAGE:READY attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">READY</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Get only</p></td>
+<td><p>Is the craft ready to activate the next stage.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:STAGE:NUMBER" title="STAGE:NUMBER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NUMBER</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-<td>Get only</td>
-<td>The current stage number for the craft</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:STAGE:NUMBER" title="STAGE:NUMBER attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">NUMBER</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Get only</p></td>
+<td><p>The current stage number for the craft</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:STAGE:RESOURCES" title="STAGE:RESOURCES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RESOURCES</span></code></a></td>
-<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
-<td>Get only</td>
-<td>the <a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="aggregateresource.html#structure:AGGREGATERESOURCE" title="AGGREGATERESOURCE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">AggregateResource</span></code></a> in the current stage</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:STAGE:RESOURCES" title="STAGE:RESOURCES attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">RESOURCES</span></code></a></p></td>
+<td><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a></p></td>
+<td><p>Get only</p></td>
+<td><p>the <a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="aggregateresource.html#structure:AGGREGATERESOURCE" title="AGGREGATERESOURCE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">AggregateResource</span></code></a> in the current stage</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:STAGE:RESOURCESLEX" title="STAGE:RESOURCESLEX attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RESOURCESLEX</span></code></a></td>
-<td><a class="reference internal" href="../collections/lexicon.html#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Lexicon</span></code></a></td>
-<td>Get only</td>
-<td>the <a class="reference internal" href="../collections/lexicon.html#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Lexicon</span></code></a> of name <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> keyed <a class="reference internal" href="aggregateresource.html#structure:AGGREGATERESOURCE" title="AGGREGATERESOURCE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">AggregateResource</span></code></a> values in the current stage</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:STAGE:RESOURCESLEX" title="STAGE:RESOURCESLEX attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">RESOURCESLEX</span></code></a></p></td>
+<td><p><a class="reference internal" href="../collections/lexicon.html#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Lexicon</span></code></a></p></td>
+<td><p>Get only</p></td>
+<td><p>the <a class="reference internal" href="../collections/lexicon.html#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Lexicon</span></code></a> of name <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> keyed <a class="reference internal" href="aggregateresource.html#structure:AGGREGATERESOURCE" title="AGGREGATERESOURCE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">AggregateResource</span></code></a> values in the current stage</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:STAGE:NEXTDECOUPLER" title="STAGE:NEXTDECOUPLER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NEXTDECOUPLER</span></code></a></td>
-<td><a class="reference internal" href="decoupler.html#structure:DECOUPLER" title="DECOUPLER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Decoupler</span></code></a> or <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-<td>Get only</td>
-<td>one of the nearest <a class="reference internal" href="decoupler.html#structure:DECOUPLER" title="DECOUPLER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Decoupler</span></code></a> parts that is going to be activated by staging (not necessarily in next stage). <cite>None</cite> if there is no decoupler.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:STAGE:NEXTDECOUPLER" title="STAGE:NEXTDECOUPLER attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">NEXTDECOUPLER</span></code></a></p></td>
+<td><p><a class="reference internal" href="decoupler.html#structure:DECOUPLER" title="DECOUPLER structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Decoupler</span></code></a> or <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>Get only</p></td>
+<td><p>one of the nearest <a class="reference internal" href="decoupler.html#structure:DECOUPLER" title="DECOUPLER structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Decoupler</span></code></a> parts that is going to be activated by staging (not necessarily in next stage). <cite>None</cite> if there is no decoupler.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:STAGE:NEXTSEPARATOR" title="STAGE:NEXTSEPARATOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NEXTSEPARATOR</span></code></a></td>
-<td><a class="reference internal" href="decoupler.html#structure:DECOUPLER" title="DECOUPLER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Decoupler</span></code></a> or <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-<td>Get only</td>
-<td>Alias name for <a class="reference internal" href="#attribute:STAGE:NEXTDECOUPLER" title="STAGE:NEXTDECOUPLER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NEXTDECOUPLER</span></code></a></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:STAGE:NEXTSEPARATOR" title="STAGE:NEXTSEPARATOR attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">NEXTSEPARATOR</span></code></a></p></td>
+<td><p><a class="reference internal" href="decoupler.html#structure:DECOUPLER" title="DECOUPLER structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Decoupler</span></code></a> or <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>Get only</p></td>
+<td><p>Alias name for <a class="reference internal" href="#attribute:STAGE:NEXTDECOUPLER" title="STAGE:NEXTDECOUPLER attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">NEXTDECOUPLER</span></code></a></p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:STAGE:DELTAV" title="STAGE:DELTAV attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DELTAV</span></code></a></td>
-<td><a class="reference internal" href="deltav.html#structure:DELTAV" title="DELTAV structure"><code class="xref ks ks-struct docutils literal"><span class="pre">DeltaV</span></code></a></td>
-<td>Get only</td>
-<td>Gets delta-V information about the current stage.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:STAGE:DELTAV" title="STAGE:DELTAV attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">DELTAV</span></code></a></p></td>
+<td><p><a class="reference internal" href="deltav.html#structure:DELTAV" title="DELTAV structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">DeltaV</span></code></a></p></td>
+<td><p>Get only</p></td>
+<td><p>Gets delta-V information about the current stage.</p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:STAGE:READY">
-Stage:<code class="descname">READY</code><a class="headerlink" href="#attribute:STAGE:READY" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:STAGE:READY">
+<span class="pre">Stage:</span><span class="sig-name descname"><span class="pre">READY</span></span><a class="headerlink" href="#attribute:STAGE:READY" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Kerbal Space Program enforces a small delay between staging commands, this is to allow the last staging command to complete. This bool value will let you know if kOS can activate the next stage.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:STAGE:NUMBER">
-Stage:<code class="descname">NUMBER</code><a class="headerlink" href="#attribute:STAGE:NUMBER" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:STAGE:NUMBER">
+<span class="pre">Stage:</span><span class="sig-name descname"><span class="pre">NUMBER</span></span><a class="headerlink" href="#attribute:STAGE:NUMBER" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+</dl>
 <p>Every craft has a current stage, and that stage is represented by a number, this is it!</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:STAGE:RESOURCES">
-Stage:<code class="descname">Resources</code><a class="headerlink" href="#attribute:STAGE:RESOURCES" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>This is a collection of the available <a class="reference internal" href="aggregateresource.html#structure:AGGREGATERESOURCE" title="AGGREGATERESOURCE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">AggregateResource</span></code></a> for the current stage.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:STAGE:RESOURCES">
+<span class="pre">Stage:</span><span class="sig-name descname"><span class="pre">Resources</span></span><a class="headerlink" href="#attribute:STAGE:RESOURCES" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a></p>
+</dd>
+</dl>
+<p>This is a collection of the available <a class="reference internal" href="aggregateresource.html#structure:AGGREGATERESOURCE" title="AGGREGATERESOURCE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">AggregateResource</span></code></a> for the current stage.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:STAGE:RESOURCESLEX">
-Stage:<code class="descname">Resourceslex</code><a class="headerlink" href="#attribute:STAGE:RESOURCESLEX" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../collections/lexicon.html#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Lexicon</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>This is a dictionary style collection of the available <a class="reference internal" href="resource.html#structure:RESOURCE" title="RESOURCE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Resource</span></code></a>
-for the current stage.  The <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> key in the lexicon will match
-the name suffix on the <a class="reference internal" href="aggregateresource.html#structure:AGGREGATERESOURCE" title="AGGREGATERESOURCE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">AggregateResource</span></code></a>.  This suffix walks the parts
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:STAGE:RESOURCESLEX">
+<span class="pre">Stage:</span><span class="sig-name descname"><span class="pre">Resourceslex</span></span><a class="headerlink" href="#attribute:STAGE:RESOURCESLEX" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../collections/lexicon.html#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Lexicon</span></code></a></p>
+</dd>
+</dl>
+<p>This is a dictionary style collection of the available <a class="reference internal" href="resource.html#structure:RESOURCE" title="RESOURCE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Resource</span></code></a>
+for the current stage.  The <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> key in the lexicon will match
+the name suffix on the <a class="reference internal" href="aggregateresource.html#structure:AGGREGATERESOURCE" title="AGGREGATERESOURCE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">AggregateResource</span></code></a>.  This suffix walks the parts
 list entirely on every call, so it is recommended that you cache the value
 if it will be reference repeatedly.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:STAGE:NEXTDECOUPLER">
-Stage:<code class="descname">NextDecoupler</code><a class="headerlink" href="#attribute:STAGE:NEXTDECOUPLER" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="decoupler.html#structure:DECOUPLER" title="DECOUPLER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Decoupler</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>One of the nearest <a class="reference internal" href="decoupler.html#structure:DECOUPLER" title="DECOUPLER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Decoupler</span></code></a> parts that is going to be activated by staging
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:STAGE:NEXTDECOUPLER">
+<span class="pre">Stage:</span><span class="sig-name descname"><span class="pre">NextDecoupler</span></span><a class="headerlink" href="#attribute:STAGE:NEXTDECOUPLER" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="decoupler.html#structure:DECOUPLER" title="DECOUPLER structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Decoupler</span></code></a></p>
+</dd>
+</dl>
+<p>One of the nearest <a class="reference internal" href="decoupler.html#structure:DECOUPLER" title="DECOUPLER structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Decoupler</span></code></a> parts that is going to be activated by staging
 (not necessarily in next stage, if that stage does not contain any decoupler, separator,
 launch clamp or docking port with staging enabled). <cite>None</cite> if there is no decoupler.</p>
 <p>This is particularly helpful for advanced staging logic, e.g.:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">STAGE</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">STAGE</span><span class="p">.</span>
 <span class="k">IF</span> <span class="k">stage</span><span class="p">:</span><span class="nv">nextDecoupler</span><span class="p">:</span><span class="nv">isType</span><span class="p">(</span><span class="s">&quot;LaunchClamp&quot;</span><span class="p">)</span>
     <span class="k">STAGE</span><span class="p">.</span>
 <span class="k">IF</span> <span class="k">stage</span><span class="p">:</span><span class="nv">nextDecoupler</span> <span class="o">&lt;&gt;</span> <span class="s">&quot;None&quot;</span> <span class="p">{</span>
@@ -437,113 +355,71 @@ launch clamp or docking port with staging enabled). <cite>None</cite> if there i
 </div>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:STAGE:NEXTSEPARATOR">
-Stage:<code class="descname">NextSeparator</code><a class="headerlink" href="#attribute:STAGE:NEXTSEPARATOR" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="decoupler.html#structure:DECOUPLER" title="DECOUPLER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Decoupler</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>Alias for <a class="reference internal" href="#attribute:STAGE:NEXTDECOUPLER" title="STAGE:NEXTDECOUPLER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NEXTDECOUPLER</span></code></a></p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:STAGE:NEXTSEPARATOR">
+<span class="pre">Stage:</span><span class="sig-name descname"><span class="pre">NextSeparator</span></span><a class="headerlink" href="#attribute:STAGE:NEXTSEPARATOR" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="decoupler.html#structure:DECOUPLER" title="DECOUPLER structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Decoupler</span></code></a></p>
+</dd>
+</dl>
+<p>Alias for <a class="reference internal" href="#attribute:STAGE:NEXTDECOUPLER" title="STAGE:NEXTDECOUPLER attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">NEXTDECOUPLER</span></code></a></p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:STAGE:DELTAV">
-Stage:<code class="descname">DELTAV</code><a class="headerlink" href="#attribute:STAGE:DELTAV" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="deltav.html#structure:DELTAV" title="DELTAV structure"><code class="xref ks ks-struct docutils literal"><span class="pre">DeltaV</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
-<p>Returns delta-V information (see <a class="reference internal" href="deltav.html#structure:DELTAV" title="DELTAV structure"><code class="xref ks ks-struct docutils literal"><span class="pre">DeltaV</span></code></a>) about the current stage.:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// These two lines would do the same thing:</span>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:STAGE:DELTAV">
+<span class="pre">Stage:</span><span class="sig-name descname"><span class="pre">DELTAV</span></span><a class="headerlink" href="#attribute:STAGE:DELTAV" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="deltav.html#structure:DELTAV" title="DELTAV structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">DeltaV</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
+<p>Returns delta-V information (see <a class="reference internal" href="deltav.html#structure:DELTAV" title="DELTAV structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">DeltaV</span></code></a>) about the current stage.:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// These two lines would do the same thing:</span>
 <span class="k">SET</span> <span class="nv">DV</span> <span class="ow">TO</span> <span class="k">STAGE</span><span class="p">:</span><span class="nv">DELTAV</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">DV</span> <span class="ow">TO</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">STAGEDELTAV</span><span class="p">(</span><span class="nv">SHIP</span><span class="p">:</span><span class="nv">STAGRENUM</span><span class="p">).</span>
 </pre></div>
 </div>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="vessel.html" class="btn btn-neutral float-right" title="Vessel" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="sensor.html" class="btn btn-neutral" title="Sensor" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="separator.html" class="btn btn-neutral float-left" title="Separator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="vessel.html" class="btn btn-neutral float-right" title="Vessel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

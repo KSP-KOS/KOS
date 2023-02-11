@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>WARP &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WARP &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../../about.html"/>
-        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
-        <link rel="next" title="Drawing Vectors on the Screen" href="vecdraw.html"/>
-        <link rel="prev" title="Time" href="time.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Drawing Vectors on the Screen" href="vecdraw.html" />
+    <link rel="prev" title="Time" href="time.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
@@ -130,9 +81,7 @@
 <li class="toctree-l3"><a class="reference internal" href="time.html#timespan">TimeSpan</a></li>
 <li class="toctree-l3"><a class="reference internal" href="time.html#constructing">Constructing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="time.html#time-operators">Time Operators</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">WARP</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">WARP</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vecdraw.html">Drawing Vectors on the Screen</a></li>
 <li class="toctree-l3"><a class="reference internal" href="versioninfo.html">Structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="voice.html">Voice</a></li>
@@ -148,340 +97,300 @@
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
-      
           <li><a href="../misc.html">Configurations and Miscellany</a> &raquo;</li>
-      
-    <li>WARP</li>
+      <li>WARP</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/structures/misc/timewarp.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../../_sources/structures/misc/timewarp.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="warp">
-<span id="id1"></span><h1>WARP<a class="headerlink" href="#warp" title="Permalink to this headline">¶</a></h1>
-<div class="contents local topic" id="contents">
-<p class="topic-title first">CONTENTS</p>
+             
+  <section id="warp">
+<span id="id1"></span><h1>WARP<a class="headerlink" href="#warp" title="Permalink to this heading">¶</a></h1>
+<nav class="contents local" id="contents">
+<p class="topic-title">CONTENTS</p>
 <ul class="simple">
-<li><a class="reference internal" href="#timewarp-structure" id="id5">TimeWarp structure</a></li>
-<li><a class="reference internal" href="#suffixes" id="id6">Suffixes</a></li>
-<li><a class="reference internal" href="#backward-compatible-time-warping" id="id7">Backward Compatible Time Warping</a></li>
+<li><p><a class="reference internal" href="#timewarp-structure" id="id5">TimeWarp structure</a></p></li>
+<li><p><a class="reference internal" href="#suffixes" id="id6">Suffixes</a></p></li>
+<li><p><a class="reference internal" href="#backward-compatible-time-warping" id="id7">Backward Compatible Time Warping</a></p></li>
 </ul>
-</div>
-<div class="section" id="timewarp-structure">
-<span id="timewarp"></span><h2><a class="toc-backref" href="#id5">TimeWarp structure</a><a class="headerlink" href="#timewarp-structure" title="Permalink to this headline">¶</a></h2>
-<dl class="structure">
-<dt id="structure:TIMEWARP">
-<em class="property">structure </em><code class="descname">TimeWarp</code><a class="headerlink" href="#structure:TIMEWARP" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#structure:TIMEWARP" title="TIMEWARP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TimeWarp</span></code></a> allows you to control and query the KSP game&#8217;s
-time warping abilities.  You can obtain the <code class="docutils literal"><span class="pre">TimeWarp</span></code> structure
-by using the <a class="reference internal" href="kuniverse.html#attribute:KUNIVERSE:TIMEWARP" title="KUNIVERSE:TIMEWARP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TimeWarp</span></code></a> suffix of
-<a class="reference internal" href="kuniverse.html#structure:KUNIVERSE" title="KUNIVERSE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">kuniverse</span></code></a>.</p>
-<table border="1" class="docutils" id="id2">
+</nav>
+<section id="timewarp-structure">
+<span id="timewarp"></span><h2><a class="toc-backref" href="#id5" role="doc-backlink">TimeWarp structure</a><a class="headerlink" href="#timewarp-structure" title="Permalink to this heading">¶</a></h2>
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:TIMEWARP">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">TimeWarp</span></span><a class="headerlink" href="#structure:TIMEWARP" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#structure:TIMEWARP" title="TIMEWARP structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">TimeWarp</span></code></a> allows you to control and query the KSP game’s
+time warping abilities.  You can obtain the <code class="docutils literal notranslate"><span class="pre">TimeWarp</span></code> structure
+by using the <a class="reference internal" href="kuniverse.html#attribute:KUNIVERSE:TIMEWARP" title="KUNIVERSE:TIMEWARP attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">TimeWarp</span></code></a> suffix of
+<a class="reference internal" href="kuniverse.html#structure:KUNIVERSE" title="KUNIVERSE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">kuniverse</span></code></a>.</p>
+<table class="docutils align-default" id="id2">
 <caption><span class="caption-text">Members and Methods</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="22%" />
-<col width="22%" />
-<col width="11%" />
-<col width="44%" />
+<col style="width: 22.2%" />
+<col style="width: 22.2%" />
+<col style="width: 11.1%" />
+<col style="width: 44.4%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type</th>
-<th class="head">Get/Set</th>
-<th class="head">Description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Get/Set</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#attribute:TIMEWARP:RATELIST" title="TIMEWARP:RATELIST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RATELIST</span></code></a></td>
-<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> values</td>
-<td>Get</td>
-<td>returns either <a class="reference internal" href="#attribute:TIMEWARP:RAILSRATELIST" title="TIMEWARP:RAILSRATELIST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RAILSRATELIST</span></code></a> or <a class="reference internal" href="#attribute:TIMEWARP:PHYSICSRATELIST" title="TIMEWARP:PHYSICSRATELIST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PHYSICSRATELIST</span></code></a> depending on which matches the current mode.</td>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:TIMEWARP:RATELIST" title="TIMEWARP:RATELIST attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">RATELIST</span></code></a></p></td>
+<td><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> values</p></td>
+<td><p>Get</p></td>
+<td><p>returns either <a class="reference internal" href="#attribute:TIMEWARP:RAILSRATELIST" title="TIMEWARP:RAILSRATELIST attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">RAILSRATELIST</span></code></a> or <a class="reference internal" href="#attribute:TIMEWARP:PHYSICSRATELIST" title="TIMEWARP:PHYSICSRATELIST attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">PHYSICSRATELIST</span></code></a> depending on which matches the current mode.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:TIMEWARP:RAILSRATELIST" title="TIMEWARP:RAILSRATELIST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RAILSRATELIST</span></code></a></td>
-<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> values</td>
-<td>Get</td>
-<td>The list of allowed multiplier rates for on-rails-warp modes.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:TIMEWARP:RAILSRATELIST" title="TIMEWARP:RAILSRATELIST attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">RAILSRATELIST</span></code></a></p></td>
+<td><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> values</p></td>
+<td><p>Get</p></td>
+<td><p>The list of allowed multiplier rates for on-rails-warp modes.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:TIMEWARP:PHYSICSRATELIST" title="TIMEWARP:PHYSICSRATELIST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PHYSICSRATELIST</span></code></a></td>
-<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> values</td>
-<td>Get</td>
-<td>The list of allowed multiplier rates for physics-warp modes.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:TIMEWARP:PHYSICSRATELIST" title="TIMEWARP:PHYSICSRATELIST attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">PHYSICSRATELIST</span></code></a></p></td>
+<td><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> values</p></td>
+<td><p>Get</p></td>
+<td><p>The list of allowed multiplier rates for physics-warp modes.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:TIMEWARP:MODE" title="TIMEWARP:MODE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MODE</span></code></a></td>
-<td><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-<td>Get/Set</td>
-<td>Time warp mode.  values are &#8220;PHYSICS&#8221; or &#8220;RAILS&#8221;.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:TIMEWARP:MODE" title="TIMEWARP:MODE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">MODE</span></code></a></p></td>
+<td><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>Get/Set</p></td>
+<td><p>Time warp mode.  values are “PHYSICS” or “RAILS”.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:TIMEWARP:WARP" title="TIMEWARP:WARP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">WARP</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-<td>Get/Set</td>
-<td>Time warp integer index.  Values go 0,1,2,3, etc.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:TIMEWARP:WARP" title="TIMEWARP:WARP attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">WARP</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Get/Set</p></td>
+<td><p>Time warp integer index.  Values go 0,1,2,3, etc.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:TIMEWARP:RATE" title="TIMEWARP:RATE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RATE</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-<td>Get/Set</td>
-<td>The current multiplier timescale rate (i.e. 100 for 100x warp)</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:TIMEWARP:RATE" title="TIMEWARP:RATE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">RATE</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Get/Set</p></td>
+<td><p>The current multiplier timescale rate (i.e. 100 for 100x warp)</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:TIMEWARP:WARPTO" title="TIMEWARP:WARPTO method"><code class="xref ks ks-meth docutils literal"><span class="pre">WARPTO</span></code></a></td>
-<td>None</td>
-<td>Callable method</td>
-<td>Call to warp forward to a known timestamp.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#method:TIMEWARP:WARPTO" title="TIMEWARP:WARPTO method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">WARPTO</span></code></a></p></td>
+<td><p>None</p></td>
+<td><p>Callable method</p></td>
+<td><p>Call to warp forward to a known timestamp.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:TIMEWARP:CANCELWARP" title="TIMEWARP:CANCELWARP method"><code class="xref ks ks-meth docutils literal"><span class="pre">CANCELWARP</span></code></a></td>
-<td>None</td>
-<td>Callable method</td>
-<td>Cancel current warping (including <a class="reference internal" href="#method:TIMEWARP:WARPTO" title="TIMEWARP:WARPTO method"><code class="xref ks ks-meth docutils literal"><span class="pre">WARPTO</span></code></a>)</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:TIMEWARP:CANCELWARP" title="TIMEWARP:CANCELWARP method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">CANCELWARP</span></code></a></p></td>
+<td><p>None</p></td>
+<td><p>Callable method</p></td>
+<td><p>Cancel current warping (including <a class="reference internal" href="#method:TIMEWARP:WARPTO" title="TIMEWARP:WARPTO method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">WARPTO</span></code></a>)</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:TIMEWARP:PHYSICSDELTAT" title="TIMEWARP:PHYSICSDELTAT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PHYSICSDELTAT</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">SCALAR</span></code></a></td>
-<td>Get</td>
-<td>Physics Delta-T.  How much time <em>should</em> pass between ticks.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:TIMEWARP:PHYSICSDELTAT" title="TIMEWARP:PHYSICSDELTAT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">PHYSICSDELTAT</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">SCALAR</span></code></a></p></td>
+<td><p>Get</p></td>
+<td><p>Physics Delta-T.  How much time <em>should</em> pass between ticks.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:TIMEWARP:ISSETTLED" title="TIMEWARP:ISSETTLED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ISSETTLED</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>Get</td>
-<td>True once the actual rate finally arrives at the commanded rate.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:TIMEWARP:ISSETTLED" title="TIMEWARP:ISSETTLED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ISSETTLED</span></code></a></p></td>
+<td><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Get</p></td>
+<td><p>True once the actual rate finally arrives at the commanded rate.</p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
-</div>
-<div class="section" id="suffixes">
-<h2><a class="toc-backref" href="#id6">Suffixes</a><a class="headerlink" href="#suffixes" title="Permalink to this headline">¶</a></h2>
-<dl class="attribute">
-<dt id="attribute:TIMEWARP:RATELIST">
-TimeWarp:<code class="descname">RATELIST</code><a class="headerlink" href="#attribute:TIMEWARP:RATELIST" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>If <a class="reference internal" href="#attribute:TIMEWARP:MODE" title="TIMEWARP:MODE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MODE</span></code></a> is &#8220;PHYSICS&#8221;, this will return <a class="reference internal" href="#attribute:TIMEWARP:PHYSICSRATELIST" title="TIMEWARP:PHYSICSRATELIST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PHYSICSRATELIST</span></code></a>.
-If <a class="reference internal" href="#attribute:TIMEWARP:MODE" title="TIMEWARP:MODE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MODE</span></code></a> is &#8220;RAILS&#8221;, this will return <a class="reference internal" href="#attribute:TIMEWARP:RAILSRATELIST" title="TIMEWARP:RAILSRATELIST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RAILSRATELIST</span></code></a>.</p>
-<p>It&#8217;s always the list that goes with the current warping mode.</p>
+</section>
+<section id="suffixes">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Suffixes</a><a class="headerlink" href="#suffixes" title="Permalink to this heading">¶</a></h2>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:TIMEWARP:RATELIST">
+<span class="pre">TimeWarp:</span><span class="sig-name descname"><span class="pre">RATELIST</span></span><a class="headerlink" href="#attribute:TIMEWARP:RATELIST" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+</dl>
+<p>If <a class="reference internal" href="#attribute:TIMEWARP:MODE" title="TIMEWARP:MODE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">MODE</span></code></a> is “PHYSICS”, this will return <a class="reference internal" href="#attribute:TIMEWARP:PHYSICSRATELIST" title="TIMEWARP:PHYSICSRATELIST attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">PHYSICSRATELIST</span></code></a>.
+If <a class="reference internal" href="#attribute:TIMEWARP:MODE" title="TIMEWARP:MODE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">MODE</span></code></a> is “RAILS”, this will return <a class="reference internal" href="#attribute:TIMEWARP:RAILSRATELIST" title="TIMEWARP:RAILSRATELIST attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">RAILSRATELIST</span></code></a>.</p>
+<p>It’s always the list that goes with the current warping mode.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:TIMEWARP:RAILSRATELIST">
-TimeWarp:<code class="descname">RAILSRATELIST</code><a class="headerlink" href="#attribute:TIMEWARP:RAILSRATELIST" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> values</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:TIMEWARP:RAILSRATELIST">
+<span class="pre">TimeWarp:</span><span class="sig-name descname"><span class="pre">RAILSRATELIST</span></span><a class="headerlink" href="#attribute:TIMEWARP:RAILSRATELIST" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> values</p>
+</dd>
+</dl>
 <p>The list of the legal values that the game lets you set the warp rate
-to when in &#8220;on rails&#8221; warping mode (&#8220;normal&#8221; time warp).</p>
+to when in “on rails” warping mode (“normal” time warp).</p>
 <p>(As of this writing of the documents, the values come out like the table
 below, but the base KSP game could change these at any time.  The
 following table is not a guarantee.)</p>
-<table border="1" class="docutils" id="id3">
+<table class="docutils align-default" id="id3">
 <caption><span class="caption-text">RAILS WARP RATE LIST</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
-<colgroup>
-<col width="36%" />
-<col width="64%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">WARP</th>
-<th class="head">RATE</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>WARP</p></th>
+<th class="head"><p>RATE</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>0</td>
-<td>1x</td>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>1x</p></td>
 </tr>
-<tr class="row-odd"><td>1</td>
-<td>5x</td>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>5x</p></td>
 </tr>
-<tr class="row-even"><td>2</td>
-<td>10x</td>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>10x</p></td>
 </tr>
-<tr class="row-odd"><td>3</td>
-<td>50x</td>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>50x</p></td>
 </tr>
-<tr class="row-even"><td>4</td>
-<td>100x</td>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>100x</p></td>
 </tr>
-<tr class="row-odd"><td>5</td>
-<td>1000x</td>
+<tr class="row-odd"><td><p>5</p></td>
+<td><p>1000x</p></td>
 </tr>
-<tr class="row-even"><td>6</td>
-<td>10000x</td>
+<tr class="row-even"><td><p>6</p></td>
+<td><p>10000x</p></td>
 </tr>
-<tr class="row-odd"><td>7</td>
-<td>100000x</td>
+<tr class="row-odd"><td><p>7</p></td>
+<td><p>100000x</p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:TIMEWARP:PHYSICSRATELIST">
-TimeWarp:<code class="descname">PHYSICSRATELIST</code><a class="headerlink" href="#attribute:TIMEWARP:PHYSICSRATELIST" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> values</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:TIMEWARP:PHYSICSRATELIST">
+<span class="pre">TimeWarp:</span><span class="sig-name descname"><span class="pre">PHYSICSRATELIST</span></span><a class="headerlink" href="#attribute:TIMEWARP:PHYSICSRATELIST" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> values</p>
+</dd>
+</dl>
 <p>The list of the legal values that the game lets you set the warp rate
-to when in &#8220;physics warp&#8221; warping mode.</p>
+to when in “physics warp” warping mode.</p>
 <p>(As of this writing of the documents, the values come out like the table
 below, but the base KSP game could change these at any time.  The
 following table is not a guarantee.)</p>
-<table border="1" class="docutils" id="id4">
+<table class="docutils align-default" id="id4">
 <caption><span class="caption-text">PHYSICS WARP RATE LIST</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
-<colgroup>
-<col width="50%" />
-<col width="50%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">WARP</th>
-<th class="head">RATE</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>WARP</p></th>
+<th class="head"><p>RATE</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>0</td>
-<td>1x</td>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>1x</p></td>
 </tr>
-<tr class="row-odd"><td>1</td>
-<td>2x</td>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>2x</p></td>
 </tr>
-<tr class="row-even"><td>2</td>
-<td>3x</td>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>3x</p></td>
 </tr>
-<tr class="row-odd"><td>3</td>
-<td>4x</td>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>4x</p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:TIMEWARP:MODE">
-TimeWarp:<code class="descname">MODE</code><a class="headerlink" href="#attribute:TIMEWARP:MODE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>The string value indicating whether we are in &#8220;PHYSICS&#8221; or &#8220;RAILS&#8221;
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:TIMEWARP:MODE">
+<span class="pre">TimeWarp:</span><span class="sig-name descname"><span class="pre">MODE</span></span><a class="headerlink" href="#attribute:TIMEWARP:MODE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+</dl>
+<p>The string value indicating whether we are in “PHYSICS” or “RAILS”
 warping mode right now.  You can set this value to change which
 warp mode the game will perform.</p>
 <p>(Any experienced player of KSP should be aware of what the difference
-between physics warp and &#8220;time warp&#8221; (rails) is.  In &#8220;physics&#8221; warp,
+between physics warp and “time warp” (rails) is.  In “physics” warp,
 all the normal things work, and the game simulates the entire physics
 engine with longer coarser delta-T time steps to achieve a faster
-simulation rate.  In &#8220;rails&#8221; warp, many of the calculations are not
+simulation rate.  In “rails” warp, many of the calculations are not
 working, the vessel is not controllable, and the game calculates
 positions of objects based on the Keplerian elliptical parameters only.)</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:TIMEWARP:WARP">
-TimeWarp:<code class="descname">WARP</code><a class="headerlink" href="#attribute:TIMEWARP:WARP" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:TIMEWARP:WARP">
+<span class="pre">TimeWarp:</span><span class="sig-name descname"><span class="pre">WARP</span></span><a class="headerlink" href="#attribute:TIMEWARP:WARP" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+</dl>
 <p>Time warp as an integer index.  In the tables listed above for
-<a class="reference internal" href="#attribute:TIMEWARP:RAILSRATELIST" title="TIMEWARP:RAILSRATELIST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RAILSRATELIST</span></code></a> and <a class="reference internal" href="#attribute:TIMEWARP:PHYSICSRATELIST" title="TIMEWARP:PHYSICSRATELIST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PHYSICSRATELIST</span></code></a>, this is the number
+<a class="reference internal" href="#attribute:TIMEWARP:RAILSRATELIST" title="TIMEWARP:RAILSRATELIST attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">RAILSRATELIST</span></code></a> and <a class="reference internal" href="#attribute:TIMEWARP:PHYSICSRATELIST" title="TIMEWARP:PHYSICSRATELIST attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">PHYSICSRATELIST</span></code></a>, this is the number
 on the lefthand side of those tables.  (i.e. if
-<a class="reference internal" href="#attribute:TIMEWARP:MODE" title="TIMEWARP:MODE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MODE</span></code></a> is &#8220;RAILS&#8221; and <a class="reference internal" href="#attribute:TIMEWARP:RATE" title="TIMEWARP:RATE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RATE</span></code></a> is 50, then that means
-<a class="reference internal" href="#attribute:TIMEWARP:WARP" title="TIMEWARP:WARP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">WARP</span></code></a> is 3.)</p>
-<p>If you set either <a class="reference internal" href="#attribute:TIMEWARP:WARP" title="TIMEWARP:WARP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">WARP</span></code></a> or <a class="reference internal" href="#attribute:TIMEWARP:RATE" title="TIMEWARP:RATE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RATE</span></code></a>, the other will change
+<a class="reference internal" href="#attribute:TIMEWARP:MODE" title="TIMEWARP:MODE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">MODE</span></code></a> is “RAILS” and <a class="reference internal" href="#attribute:TIMEWARP:RATE" title="TIMEWARP:RATE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">RATE</span></code></a> is 50, then that means
+<a class="reference internal" href="#attribute:TIMEWARP:WARP" title="TIMEWARP:WARP attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">WARP</span></code></a> is 3.)</p>
+<p>If you set either <a class="reference internal" href="#attribute:TIMEWARP:WARP" title="TIMEWARP:WARP attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">WARP</span></code></a> or <a class="reference internal" href="#attribute:TIMEWARP:RATE" title="TIMEWARP:RATE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">RATE</span></code></a>, the other will change
 along with it to agree with it.  (See the full explanation in
-<a class="reference internal" href="#attribute:TIMEWARP:RATE" title="TIMEWARP:RATE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RATE</span></code></a> below).</p>
+<a class="reference internal" href="#attribute:TIMEWARP:RATE" title="TIMEWARP:RATE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">RATE</span></code></a> below).</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:TIMEWARP:RATE">
-TimeWarp:<code class="descname">RATE</code><a class="headerlink" href="#attribute:TIMEWARP:RATE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:TIMEWARP:RATE">
+<span class="pre">TimeWarp:</span><span class="sig-name descname"><span class="pre">RATE</span></span><a class="headerlink" href="#attribute:TIMEWARP:RATE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+</dl>
 <p>The current multiplier timescale rate (i.e.  1000 if current rate
 is 1000x as much as normal, etc).</p>
 <p>If you have just changed the time warp, it takes a few moments for
-the game to &#8220;catch up&#8221; and achieve the desired warp rate.  You can
+the game to “catch up” and achieve the desired warp rate.  You can
 query this value to find out what the current rate is the game is
 operating under during this physics tick.  It often takes almost
 a whole second of game time to finally arrive at the destination rate.</p>
-<p>When you <code class="docutils literal"><span class="pre">set</span></code> the <code class="docutils literal"><span class="pre">:RATE</span></code> equal to a new value, then
+<p>When you <code class="docutils literal notranslate"><span class="pre">set</span></code> the <code class="docutils literal notranslate"><span class="pre">:RATE</span></code> equal to a new value, then
 instead of directly setting the rate to that value, kOS will
-set the <a class="reference internal" href="#attribute:TIMEWARP:WARP" title="TIMEWARP:WARP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">WARP</span></code></a> to whatever value it would need to have
-to end up with that rate.  The rate itself won&#8217;t change right
+set the <a class="reference internal" href="#attribute:TIMEWARP:WARP" title="TIMEWARP:WARP attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">WARP</span></code></a> to whatever value it would need to have
+to end up with that rate.  The rate itself won’t change right
 away.  For example, the following two commands are equivalent:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// This will eventually give you a rate of 100, after several</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// This will eventually give you a rate of 100, after several</span>
 <span class="c1">// update ticks have passed, but not right away:</span>
 <span class="k">set</span> <span class="nv">kuniverse</span><span class="p">:</span><span class="nv">timewarp</span><span class="p">:</span><span class="nv">warp</span> <span class="ow">to</span> <span class="mf">4</span><span class="p">.</span>
 
@@ -492,11 +401,11 @@ away.  For example, the following two commands are equivalent:</p>
 <span class="k">set</span> <span class="nv">kuniverse</span><span class="p">:</span><span class="nv">timewarp</span><span class="p">:</span><span class="nv">rate</span> <span class="ow">to</span> <span class="mf">100</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>If you set the rate to a value that isn&#8217;t on the allowed list
+<p>If you set the rate to a value that isn’t on the allowed list
 that the KSP game interface normally lets you pick, then kOS
-will pick whichever <a class="reference internal" href="#attribute:TIMEWARP:WARP" title="TIMEWARP:WARP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">WARP</span></code></a> value will get you closest
+will pick whichever <a class="reference internal" href="#attribute:TIMEWARP:WARP" title="TIMEWARP:WARP attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">WARP</span></code></a> value will get you closest
 to the requested rate.  For example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// If you do any of these, then the effect is the same:</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// If you do any of these, then the effect is the same:</span>
 <span class="k">set</span> <span class="nv">kuniverse</span><span class="p">:</span><span class="nv">timewarp</span><span class="p">:</span><span class="nv">rate</span> <span class="ow">to</span> <span class="mf">89</span><span class="p">.</span>
 <span class="k">set</span> <span class="nv">kuniverse</span><span class="p">:</span><span class="nv">timewarp</span><span class="p">:</span><span class="nv">rate</span> <span class="ow">to</span> <span class="mf">145</span><span class="p">.</span>
 <span class="k">set</span> <span class="nv">kuniverse</span><span class="p">:</span><span class="nv">timewarp</span><span class="p">:</span><span class="nv">rate</span> <span class="ow">to</span> <span class="mf">100</span><span class="p">.</span>
@@ -506,105 +415,95 @@ to the requested rate.  For example:</p>
 </div>
 <p>Note, the game is actually capable of warping at arbitrary rates
 in between these values, and it does so temporarily when transitioning
-to a new warp rate, but it doesn&#8217;t allow you to hold the rate at those
+to a new warp rate, but it doesn’t allow you to hold the rate at those
 in-between values indefintiely.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:TIMEWARP:WARPTO">
-TimeWarp:<code class="descname">WARPTO</code><span class="sig-paren">(</span>timestamp<span class="sig-paren">)</span><a class="headerlink" href="#method:TIMEWARP:WARPTO" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body"><p class="first">Method</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>timestamp</strong> &#8211; <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:TIMEWARP:WARPTO">
+<span class="pre">TimeWarp:</span><span class="sig-name descname"><span class="pre">WARPTO</span></span><span class="sig-paren">(</span><span class="pre">timestamp</span><span class="sig-paren">)</span><a class="headerlink" href="#method:TIMEWARP:WARPTO" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Method</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>timestamp</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
 <p>Call this method to warp time forward to a universal time stamp.
 The argument you pass in should be a universal timestamp in seconds.
 Example: To warp 120 seconds into the future:
-<code class="docutils literal"><span class="pre">kuniverse:timewarp:warpto(time:seconds</span> <span class="pre">+</span> <span class="pre">120)</span></code>.</p>
-<p>Obviously this alters the values of <a class="reference internal" href="#attribute:TIMEWARP:WARP" title="TIMEWARP:WARP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">WARP</span></code></a> and <a class="reference internal" href="#attribute:TIMEWARP:RATE" title="TIMEWARP:RATE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RATE</span></code></a> while
+<code class="docutils literal notranslate"><span class="pre">kuniverse:timewarp:warpto(time:seconds</span> <span class="pre">+</span> <span class="pre">120)</span></code>.</p>
+<p>Obviously this alters the values of <a class="reference internal" href="#attribute:TIMEWARP:WARP" title="TIMEWARP:WARP attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">WARP</span></code></a> and <a class="reference internal" href="#attribute:TIMEWARP:RATE" title="TIMEWARP:RATE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">RATE</span></code></a> while
 the warping is happening.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:TIMEWARP:CANCELWARP">
-TimeWarp:<code class="descname">CANCELWARP</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:TIMEWARP:CANCELWARP" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Method</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:TIMEWARP:CANCELWARP">
+<span class="pre">TimeWarp:</span><span class="sig-name descname"><span class="pre">CANCELWARP</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:TIMEWARP:CANCELWARP" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Method</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 <p>Call this method to cancel any active warp.  This will both interupt any
-current automated warp (such as one using <a class="reference internal" href="#method:TIMEWARP:WARPTO" title="TIMEWARP:WARPTO method"><code class="xref ks ks-meth docutils literal"><span class="pre">WARPTO</span></code></a>
-or the &#8220;Warp Here&#8221; user interface) and a manual warp setting (as if you had
-used the <code class="docutils literal"><span class="pre">SET</span> <span class="pre">WARP</span> <span class="pre">TO</span> <span class="pre">0.</span></code> command).</p>
+current automated warp (such as one using <a class="reference internal" href="#method:TIMEWARP:WARPTO" title="TIMEWARP:WARPTO method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">WARPTO</span></code></a>
+or the “Warp Here” user interface) and a manual warp setting (as if you had
+used the <code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">WARP</span> <span class="pre">TO</span> <span class="pre">0.</span></code> command).</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:TIMEWARP:PHYSICSDELTAT">
-TimeWarp:<code class="descname">PHYSICSDELTAT</code><a class="headerlink" href="#attribute:TIMEWARP:PHYSICSDELTAT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:TIMEWARP:PHYSICSDELTAT">
+<span class="pre">TimeWarp:</span><span class="sig-name descname"><span class="pre">PHYSICSDELTAT</span></span><a class="headerlink" href="#attribute:TIMEWARP:PHYSICSDELTAT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+</dl>
 <p>Physics Delta-T.  How much time <em>should</em> pass between ticks.  Note this is
 not the <em>actual</em> time that has passed.  For that you should query
-<a class="reference internal" href="time.html#attribute:TIMESPAN:SECONDS" title="TIMESPAN:SECONDS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">time:seconds</span></code></a> regularly and store the timestamps it
-returns, and compare those timestamps.  This value is just the &#8220;expected&#8221;
+<a class="reference internal" href="time.html#attribute:TIMESPAN:SECONDS" title="TIMESPAN:SECONDS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">time:seconds</span></code></a> regularly and store the timestamps it
+returns, and compare those timestamps.  This value is just the “expected”
 physics delta-T that you <em>should</em> get if everything is running smoothly
 and your computer can keep up with everything the game is doing.</p>
 <p>This value changes depending on your physics warp.  Note, if you query it
 during on-rails warping, it can return some very strange values you
-shouldn&#8217;t trust.</p>
+shouldn’t trust.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:TIMEWARP:ISSETTLED">
-TimeWarp:<code class="descname">ISSETTLED</code><a class="headerlink" href="#attribute:TIMEWARP:ISSETTLED" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:TIMEWARP:ISSETTLED">
+<span class="pre">TimeWarp:</span><span class="sig-name descname"><span class="pre">ISSETTLED</span></span><a class="headerlink" href="#attribute:TIMEWARP:ISSETTLED" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>When you have just changed the warp speed, the game takes time to
-&#8220;catch up&#8221; and achieve the new desired speed.  (i.e. if you change your
+“catch up” and achieve the new desired speed.  (i.e. if you change your
 rate from 100x up to 1000x, and you look at the screen, you will see
-the numbers in the display saying things like &#8220;Warp 123x&#8221; then &#8220;Warp 344x&#8221;
-then &#8220;Warp 432x&#8221;, etc.  There are several &#8220;ticks&#8221; during which the warp
-hasn&#8217;t yet achieved the desired 1000x level.)  This can take a &#8220;long&#8221;
+the numbers in the display saying things like “Warp 123x” then “Warp 344x”
+then “Warp 432x”, etc.  There are several “ticks” during which the warp
+hasn’t yet achieved the desired 1000x level.)  This can take a “long”
 time in computer terms to happen.</p>
 <p>You can query this value to find out whether or not the actual warp
 rate has finally settled on the desired amount yet.</p>
 <p>For example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">kuniverse</span><span class="p">:</span><span class="nv">timewarp</span><span class="p">:</span><span class="nv">mode</span> <span class="ow">to</span> <span class="s">&quot;RAILS&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">kuniverse</span><span class="p">:</span><span class="nv">timewarp</span><span class="p">:</span><span class="nv">mode</span> <span class="ow">to</span> <span class="s">&quot;RAILS&quot;</span><span class="p">.</span>
 <span class="k">set</span> <span class="nv">kuniverse</span><span class="p">:</span><span class="nv">timewarp</span><span class="p">:</span><span class="nv">rate</span> <span class="ow">to</span> <span class="mf">1000</span><span class="p">.</span>
 <span class="k">print</span> <span class="s">&quot;starting to change warp&quot;</span><span class="p">.</span>
 <span class="k">until</span> <span class="nv">kuniverse</span><span class="p">:</span><span class="nv">timewarp</span><span class="p">:</span><span class="nv">issettled</span> <span class="p">{</span>
@@ -652,20 +551,20 @@ rate has finally settled on the desired amount yet.</p>
 </div>
 </dd></dl>
 
-</div>
-<div class="section" id="backward-compatible-time-warping">
-<h2><a class="toc-backref" href="#id7">Backward Compatible Time Warping</a><a class="headerlink" href="#backward-compatible-time-warping" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="backward-compatible-time-warping">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Backward Compatible Time Warping</a><a class="headerlink" href="#backward-compatible-time-warping" title="Permalink to this heading">¶</a></h2>
 <blockquote>
-<div><p>Time warping is accomplished using the <a class="reference internal" href="#structure:TIMEWARP" title="TIMEWARP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TimeWarp</span></code></a> structure
+<div><p>Time warping is accomplished using the <a class="reference internal" href="#structure:TIMEWARP" title="TIMEWARP structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">TimeWarp</span></code></a> structure
 described above on this page.</p>
 <p>But, for backward compatibility, the following shortcut bound names exist
-as aliases for the functionality in the <a class="reference internal" href="#structure:TIMEWARP" title="TIMEWARP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TimeWarp</span></code></a> structure.</p>
+as aliases for the functionality in the <a class="reference internal" href="#structure:TIMEWARP" title="TIMEWARP structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">TimeWarp</span></code></a> structure.</p>
 </div></blockquote>
-<dl class="global">
-<dt id="global:WARPMODE">
-<code class="descname">WARPMODE</code><a class="headerlink" href="#global:WARPMODE" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is identical to <a class="reference internal" href="#attribute:TIMEWARP:MODE" title="TIMEWARP:MODE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MODE</span></code></a> above.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// These two do the same thing:</span>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:WARPMODE">
+<span class="sig-name descname"><span class="pre">WARPMODE</span></span><a class="headerlink" href="#global:WARPMODE" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is identical to <a class="reference internal" href="#attribute:TIMEWARP:MODE" title="TIMEWARP:MODE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">MODE</span></code></a> above.</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// These two do the same thing:</span>
 <span class="k">SET</span> <span class="nv">WARPMODE</span> <span class="ow">TO</span> <span class="s">&quot;PHYSICS&quot;</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">KUNIVERSE</span><span class="p">:</span><span class="nv">TIMEWARP</span><span class="p">:</span><span class="nv">MODE</span> <span class="ow">TO</span> <span class="s">&quot;PHYSICS&quot;</span><span class="p">.</span>
 
@@ -676,98 +575,60 @@ as aliases for the functionality in the <a class="reference internal" href="#str
 </div>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:WARP">
-<code class="descname">WARP</code><a class="headerlink" href="#global:WARP" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is identical to <a class="reference internal" href="#attribute:TIMEWARP:WARP" title="TIMEWARP:WARP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">WARP</span></code></a> above.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// These do the same thing:</span>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:WARP">
+<span class="sig-name descname"><span class="pre">WARP</span></span><a class="headerlink" href="#global:WARP" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is identical to <a class="reference internal" href="#attribute:TIMEWARP:WARP" title="TIMEWARP:WARP attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">WARP</span></code></a> above.</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// These do the same thing:</span>
 <span class="k">SET</span> <span class="nv">WARP</span> <span class="ow">TO</span> <span class="mf">3</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">KUNIVERSE</span><span class="p">:</span><span class="nv">TIMEWARP</span><span class="p">:</span><span class="nv">WARP</span> <span class="ow">to</span> <span class="mf">3</span><span class="p">.</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="function:WARPTO">
-<code class="descname">WARPTO</code><span class="sig-paren">(</span>timestamp<span class="sig-paren">)</span><a class="headerlink" href="#function:WARPTO" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is identical to <a class="reference internal" href="#method:TIMEWARP:WARPTO" title="TIMEWARP:WARPTO method"><code class="xref ks ks-meth docutils literal"><span class="pre">WARPTO</span></code></a> above.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// These two do the same thing:</span>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:WARPTO">
+<span class="sig-name descname"><span class="pre">WARPTO</span></span><span class="sig-paren">(</span><span class="pre">timestamp</span><span class="sig-paren">)</span><a class="headerlink" href="#function:WARPTO" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is identical to <a class="reference internal" href="#method:TIMEWARP:WARPTO" title="TIMEWARP:WARPTO method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">WARPTO</span></code></a> above.</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// These two do the same thing:</span>
 <span class="nv">WARPTO</span><span class="p">(</span><span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span> <span class="o">+</span> <span class="mf">60</span><span class="o">*</span><span class="mf">60</span><span class="p">).</span> <span class="c1">// warp 1 hour into the future.</span>
 <span class="nv">KUNIVERSE</span><span class="p">:</span><span class="nv">TIMEWARP</span><span class="p">:</span><span class="nv">WARPTO</span><span class="p">(</span><span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span> <span class="o">+</span> <span class="mf">60</span><span class="o">*</span><span class="mf">60</span><span class="p">).</span>
 </pre></div>
 </div>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="vecdraw.html" class="btn btn-neutral float-right" title="Drawing Vectors on the Screen" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="time.html" class="btn btn-neutral" title="Time" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="time.html" class="btn btn-neutral float-left" title="Time" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="vecdraw.html" class="btn btn-neutral float-right" title="Drawing Vectors on the Screen" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

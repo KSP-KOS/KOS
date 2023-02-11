@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Using the Sound/Kerbal Interface Device (SKID) &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Using the Sound/Kerbal Interface Device (SKID) &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../about.html"/>
-        <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../index.html"/>
-        <link rel="up" title="General Topics" href="../general.html"/>
-        <link rel="next" title="The Name Tag System" href="nametag.html"/>
-        <link rel="prev" title="KerboScript Machine Code" href="compiling.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="next" title="The Name Tag System" href="nametag.html" />
+    <link rel="prev" title="KerboScript Machine Code" href="compiling.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
@@ -107,9 +58,7 @@
 <li class="toctree-l2"><a class="reference internal" href="telnet.html">Telnet Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="volumes.html">Files &amp; Volumes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compiling.html">Machine Code</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Sound Chip (SKID)</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Sound Chip (SKID)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parts_and_partmodules.html">Parts &amp; PartModules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="career_limits.html">Respecting Career Limits</a></li>
@@ -126,92 +75,75 @@
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../general.html">General Topics</a> &raquo;</li>
-      
-    <li>Using the Sound/Kerbal Interface Device (SKID)</li>
+      <li>Using the Sound/Kerbal Interface Device (SKID)</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../_sources/general/skid.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../_sources/general/skid.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="using-the-sound-kerbal-interface-device-skid">
-<span id="sound"></span><span id="skid"></span><h1>Using the Sound/Kerbal Interface Device (SKID)<a class="headerlink" href="#using-the-sound-kerbal-interface-device-skid" title="Permalink to this headline">¶</a></h1>
-<p>A hidden feature shippped with all kOS CPU&#8217;s was uncovered recently.
-It turns out all kOS CPU&#8217;s come with a so-called SKID chip
+             
+  <section id="using-the-sound-kerbal-interface-device-skid">
+<span id="sound"></span><span id="skid"></span><h1>Using the Sound/Kerbal Interface Device (SKID)<a class="headerlink" href="#using-the-sound-kerbal-interface-device-skid" title="Permalink to this heading">¶</a></h1>
+<p>A hidden feature shippped with all kOS CPU’s was uncovered recently.
+It turns out all kOS CPU’s come with a so-called SKID chip
 (Sound/Kerbal Interface Device).  This little integrated chip can
 send audio data through the terminal lines and play the sounds on
-your terminal&#8217;s speaker.  (Note, you can&#8217;t hear the sound over
-<a class="reference internal" href="telnet.html#telnet"><span>telnet connections</span></a>.)</p>
+your terminal’s speaker.  (Note, you can’t hear the sound over
+<a class="reference internal" href="telnet.html#telnet"><span class="std std-ref">telnet connections</span></a>.)</p>
 <p>This page will explain what we have discovered about how to use
 this interesting little device.</p>
-<div class="contents local topic" id="contents">
+<nav class="contents local" id="contents">
 <ul class="simple">
-<li><a class="reference internal" href="#quick-and-dirty-sound-example" id="id7">Quick and dirty sound example:</a></li>
-<li><a class="reference internal" href="#hardware-capabilities-of-skid" id="id8">Hardware Capabilities of SKID</a><ul>
-<li><a class="reference internal" href="#voices" id="id9">Voices</a></li>
-<li><a class="reference internal" href="#frequency-range" id="id10">Frequency Range</a></li>
-<li><a class="reference internal" href="#amplitude-volume-control" id="id11">Amplitude (volume) Control</a></li>
-<li><a class="reference internal" href="#waveforms" id="id12">Waveforms</a></li>
-<li><a class="reference internal" href="#adsr-envelope" id="id13">ADSR &#8220;Envelope&#8221;</a></li>
-<li><a class="reference internal" href="#letter-frequency-notation" id="id14">Letter Frequency Notation</a></li>
-<li><a class="reference internal" href="#the-note-format" id="id15">The Note format</a></li>
-<li><a class="reference internal" href="#tempo" id="id16">Tempo</a></li>
-<li><a class="reference internal" href="#songs-lists-of-notes" id="id17">Songs (Lists of Notes)</a></li>
-<li><a class="reference internal" href="#looping" id="id18">Looping</a></li>
-<li><a class="reference internal" href="#chords" id="id19">Chords</a></li>
+<li><p><a class="reference internal" href="#quick-and-dirty-sound-example" id="id7">Quick and dirty sound example:</a></p></li>
+<li><p><a class="reference internal" href="#hardware-capabilities-of-skid" id="id8">Hardware Capabilities of SKID</a></p>
+<ul>
+<li><p><a class="reference internal" href="#voices" id="id9">Voices</a></p></li>
+<li><p><a class="reference internal" href="#frequency-range" id="id10">Frequency Range</a></p></li>
+<li><p><a class="reference internal" href="#amplitude-volume-control" id="id11">Amplitude (volume) Control</a></p></li>
+<li><p><a class="reference internal" href="#waveforms" id="id12">Waveforms</a></p></li>
+<li><p><a class="reference internal" href="#adsr-envelope" id="id13">ADSR “Envelope”</a></p></li>
+<li><p><a class="reference internal" href="#letter-frequency-notation" id="id14">Letter Frequency Notation</a></p></li>
+<li><p><a class="reference internal" href="#the-note-format" id="id15">The Note format</a></p></li>
+<li><p><a class="reference internal" href="#tempo" id="id16">Tempo</a></p></li>
+<li><p><a class="reference internal" href="#songs-lists-of-notes" id="id17">Songs (Lists of Notes)</a></p></li>
+<li><p><a class="reference internal" href="#looping" id="id18">Looping</a></p></li>
+<li><p><a class="reference internal" href="#chords" id="id19">Chords</a></p></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#kerboscript-interface-synopsis" id="id20">Kerboscript Interface Synopsis</a><ul>
-<li><a class="reference internal" href="#getvoice" id="id21">GetVoice()</a></li>
-<li><a class="reference internal" href="#voice-object" id="id22">Voice object</a></li>
-<li><a class="reference internal" href="#note" id="id23">Note()</a></li>
-<li><a class="reference internal" href="#voice-play" id="id24">Voice:Play()</a></li>
+<li><p><a class="reference internal" href="#kerboscript-interface-synopsis" id="id20">Kerboscript Interface Synopsis</a></p>
+<ul>
+<li><p><a class="reference internal" href="#getvoice" id="id21">GetVoice()</a></p></li>
+<li><p><a class="reference internal" href="#voice-object" id="id22">Voice object</a></p></li>
+<li><p><a class="reference internal" href="#note" id="id23">Note()</a></p></li>
+<li><p><a class="reference internal" href="#voice-play" id="id24">Voice:Play()</a></p></li>
 </ul>
 </li>
 </ul>
-</div>
-<div class="section" id="quick-and-dirty-sound-example">
-<h2><a class="toc-backref" href="#id7">Quick and dirty sound example:</a><a class="headerlink" href="#quick-and-dirty-sound-example" title="Permalink to this headline">¶</a></h2>
+</nav>
+<section id="quick-and-dirty-sound-example">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Quick and dirty sound example:</a><a class="headerlink" href="#quick-and-dirty-sound-example" title="Permalink to this heading">¶</a></h2>
 <p>If you just want to hurry up and hear something, without understanding
 all the features of the SKID chip, type the lines below into a program
 file and run it:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">V0</span> <span class="ow">TO</span> <span class="nv">GETVOICE</span><span class="p">(</span><span class="mf">0</span><span class="p">).</span> <span class="c1">// Gets a reference to the zero-th voice in the chip.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">V0</span> <span class="ow">TO</span> <span class="nv">GETVOICE</span><span class="p">(</span><span class="mf">0</span><span class="p">).</span> <span class="c1">// Gets a reference to the zero-th voice in the chip.</span>
 <span class="nv">V0</span><span class="p">:</span><span class="nv">PLAY</span><span class="p">(</span> <span class="nv">NOTE</span><span class="p">(</span><span class="mf">400</span><span class="p">,</span> <span class="mf">2</span><span class="p">.</span><span class="mf">5</span><span class="p">)</span> <span class="p">).</span>  <span class="c1">// Starts a note at 400 Hz for 2.5 seconds.</span>
                             <span class="c1">// The note will play while the program continues.</span>
 <span class="k">PRINT</span> <span class="s">&quot;The note is still playing&quot;</span><span class="p">.</span>
@@ -219,145 +151,157 @@ file and run it:</p>
 </pre></div>
 </div>
 <p>If you wish to do something more complex than that, then read on:</p>
-</div>
-<div class="section" id="hardware-capabilities-of-skid">
-<h2><a class="toc-backref" href="#id8">Hardware Capabilities of SKID</a><a class="headerlink" href="#hardware-capabilities-of-skid" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="hardware-capabilities-of-skid">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">Hardware Capabilities of SKID</a><a class="headerlink" href="#hardware-capabilities-of-skid" title="Permalink to this heading">¶</a></h2>
 <p>Below we describe, to the best of our knowledge, the sound capabilities
-of the SKID chip.  Further below after this section, we&#8217;ll describe
-the programming interface we&#8217;ve added to Kerboscript to let you access
-these abilities.  For now, don&#8217;t think about how to access these
+of the SKID chip.  Further below after this section, we’ll describe
+the programming interface we’ve added to Kerboscript to let you access
+these abilities.  For now, don’t think about how to access these
 abilities, just look at what they are.</p>
-<div class="section" id="voices">
-<span id="skid-voice"></span><h3><a class="toc-backref" href="#id9">Voices</a><a class="headerlink" href="#voices" title="Permalink to this headline">¶</a></h3>
-<p>The SKID chip contains up to 10 simultaneous &#8220;voices&#8221; that can
+<section id="voices">
+<span id="skid-voice"></span><h3><a class="toc-backref" href="#id9" role="doc-backlink">Voices</a><a class="headerlink" href="#voices" title="Permalink to this heading">¶</a></h3>
+<p>The SKID chip contains up to 10 simultaneous “voices” that can
 emit sounds together.  (The voices are numbered 0 through 9).
-Each of these so-called &#8220;voices&#8221; can be set up with a particular
+Each of these so-called “voices” can be set up with a particular
 set of sound settings, which is like defining the properties of its
-&#8220;instrument&#8221; .  Then it can be told to play one or more notes
+“instrument” .  Then it can be told to play one or more notes
 using that set of settings.</p>
-<p>Please don&#8217;t be fooled into thinking these actually sound like
-Kerbals speaking just because we called them &#8220;voices&#8221;.  They&#8217;re
+<p>Please don’t be fooled into thinking these actually sound like
+Kerbals speaking just because we called them “voices”.  They’re
 just electronic bloopity-blopity sounds.</p>
-</div>
-<div class="section" id="frequency-range">
-<h3><a class="toc-backref" href="#id10">Frequency Range</a><a class="headerlink" href="#frequency-range" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="frequency-range">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">Frequency Range</a><a class="headerlink" href="#frequency-range" title="Permalink to this heading">¶</a></h3>
 <p>The SKID chip appears to be capable of producing sounds in the
-range of as low as 1 Hertz (not like you&#8217;d ever hear that) and
+range of as low as 1 Hertz (not like you’d ever hear that) and
 as high as up to 14000 Hertz.  Most people can hear higher notes
-than that, but the chip&#8217;s notes start to get a little distorted
+than that, but the chip’s notes start to get a little distorted
 at those frequencies.  At any rate, this range is plenty high
-enough to hear the entire range of a piano&#8217;s 88 notes, and then
+enough to hear the entire range of a piano’s 88 notes, and then
 some.</p>
-</div>
-<div class="section" id="amplitude-volume-control">
-<h3><a class="toc-backref" href="#id11">Amplitude (volume) Control</a><a class="headerlink" href="#amplitude-volume-control" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="amplitude-volume-control">
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">Amplitude (volume) Control</a><a class="headerlink" href="#amplitude-volume-control" title="Permalink to this heading">¶</a></h3>
 <p>The SKID chip can put out any range of volume levels between
 0.0 and 1.0, within the accuracy of floating point numbers.
 It is noted that it can also amplify the volume to levels
 higher than 1.0, to boost the signal when needed, although
 this feature is not well understood.</p>
-</div>
-<div class="section" id="waveforms">
-<span id="skid-waveform"></span><h3><a class="toc-backref" href="#id12">Waveforms</a><a class="headerlink" href="#waveforms" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="waveforms">
+<span id="skid-waveform"></span><h3><a class="toc-backref" href="#id12" role="doc-backlink">Waveforms</a><a class="headerlink" href="#waveforms" title="Permalink to this heading">¶</a></h3>
 <p>Each voice can be set to one of several possible sound waveform
 patterns.  As of this writing, our engineers have uncovered
 5 such wave forms, displayed here.</p>
 <p>These each produce a slightly different sound.</p>
-<div class="figure" id="id1">
+<figure class="align-default" id="id1">
 <img alt="Image of a square sound wave." src="../_images/square.png" />
-<p class="caption"><span class="caption-text"><code class="docutils literal"><span class="pre">&quot;SQUARE&quot;</span></code>: When this <code class="docutils literal"><span class="pre">:WAVE</span></code> setting is used, the
-sound is very electronic, and &#8220;beep&#8221;-like.  This is also
+<figcaption>
+<p><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">&quot;SQUARE&quot;</span></code>: When this <code class="docutils literal notranslate"><span class="pre">:WAVE</span></code> setting is used, the
+sound is very electronic, and “beep”-like.  This is also
 the <strong>default</strong> wave a voice starts off with if you never
-changed the setting.</span></p>
-</div>
-<div class="figure" id="id2">
+changed the setting.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id2">
 <img alt="Image of a triangle sound wave." src="../_images/triangle.png" />
-<p class="caption"><span class="caption-text"><code class="docutils literal"><span class="pre">&quot;TRIANGLE&quot;</span></code>: When this <code class="docutils literal"><span class="pre">:WAVE</span></code> setting is used, the
+<figcaption>
+<p><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">&quot;TRIANGLE&quot;</span></code>: When this <code class="docutils literal notranslate"><span class="pre">:WAVE</span></code> setting is used, the
 sound is sort of halfway between sounding electronic and
-sounding mellow.</span></p>
-</div>
-<div class="figure" id="id3">
+sounding mellow.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id3">
 <img alt="Image of a sawtooth sound wave." src="../_images/sawtooth.png" />
-<p class="caption"><span class="caption-text"><code class="docutils literal"><span class="pre">&quot;SAWTOOTH&quot;</span></code>: When this <code class="docutils literal"><span class="pre">:WAVE</span></code> setting is used, the
-sound is a little bit like a rasping wasp.</span></p>
-</div>
-<div class="figure" id="id4">
+<figcaption>
+<p><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">&quot;SAWTOOTH&quot;</span></code>: When this <code class="docutils literal notranslate"><span class="pre">:WAVE</span></code> setting is used, the
+sound is a little bit like a rasping wasp.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id4">
 <img alt="Image of a sine sound wave." src="../_images/sine.png" />
-<p class="caption"><span class="caption-text"><code class="docutils literal"><span class="pre">&quot;SINE&quot;</span></code>: When this <code class="docutils literal"><span class="pre">:WAVE</span></code> setting is used, the
+<figcaption>
+<p><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">&quot;SINE&quot;</span></code>: When this <code class="docutils literal notranslate"><span class="pre">:WAVE</span></code> setting is used, the
 sound is a mellow and smooth tone, which also ends up
-seeming a bit quieter because of the smoother edges.</span></p>
-</div>
-<div class="figure" id="id5">
+seeming a bit quieter because of the smoother edges.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id5">
 <img alt="Image of a noise sound wave." src="../_images/noise.png" />
-<p class="caption"><span class="caption-text"><code class="docutils literal"><span class="pre">&quot;NOISE&quot;</span></code>: When this <code class="docutils literal"><span class="pre">:WAVE</span></code> setting is used, the
-sound is like random static on a walkie-talkie.</span></p>
-</div>
-</div>
-<div class="section" id="adsr-envelope">
-<span id="skid-envelope"></span><h3><a class="toc-backref" href="#id13">ADSR &#8220;Envelope&#8221;</a><a class="headerlink" href="#adsr-envelope" title="Permalink to this headline">¶</a></h3>
+<figcaption>
+<p><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">&quot;NOISE&quot;</span></code>: When this <code class="docutils literal notranslate"><span class="pre">:WAVE</span></code> setting is used, the
+sound is like random static on a walkie-talkie.</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="adsr-envelope">
+<span id="skid-envelope"></span><h3><a class="toc-backref" href="#id13" role="doc-backlink">ADSR “Envelope”</a><a class="headerlink" href="#adsr-envelope" title="Permalink to this heading">¶</a></h3>
 <p>The SKID chip will play a note in the background unattended
-while the CPU continues with its work.  Thus you don&#8217;t have
+while the CPU continues with its work.  Thus you don’t have
 to have the main program pause while it plays a note.</p>
 <p>When controlling the note, the SKID chip also can vary the
 amplitude (volume) of the note over time, to simulate the
 effects of several types of analog instruments.  It does
-this using its &#8220;ADSR Envelope&#8221;, (ADSR is shorthand for &#8220;Attack,
-Decay, Sustain, and Release&#8221;.)</p>
-<div class="figure align-right" id="id6">
+this using its “ADSR Envelope”, (ADSR is shorthand for “Attack,
+Decay, Sustain, and Release”.)</p>
+<figure class="align-right" id="id6">
 <img alt="Image of the ADSR Envelope" src="../_images/envelope.png" />
-<p class="caption"><span class="caption-text">The ADSR envelope shown graphically.</span></p>
-</div>
+<figcaption>
+<p><span class="caption-text">The ADSR envelope shown graphically.</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>When a natural analog instrument plays a note, there is often a
-sharp &#8220;spike&#8221; of volume right at the start of the note, followed
+sharp “spike” of volume right at the start of the note, followed
 by a slightly quieter volume while the note is being sustained,
 followed by the volume fading down to zero when the note is
 released.  The ADSR envelope lets you define this behavior by
 adjusting these settings differently for each of the 10 voices
 of the SKID chip.</p>
-<dl class="docutils">
-<dt>Attack (a time setting)</dt>
-<dd>The Attack setting is a time, expressed in seconds (usually
+<dl class="simple">
+<dt>Attack (a time setting)</dt><dd><p>The Attack setting is a time, expressed in seconds (usually
 a fraction of a second), for how long a note takes to
 achieve its full volume in its initial first spike when it
 is played.  Note that the volume achieved at the top of
-this spike is the voice&#8217;s default volume level.
-This time setting is not modified by <a class="reference internal" href="#skid-tempo"><span>tempo</span></a>,
-because it represents the instrument&#8217;s physical properties that
-don&#8217;t change when the song goes faster.</dd>
-<dt>Decay (a time setting)</dt>
-<dd>The Decay setting is a time, expressed in seconds (usually
+this spike is the voice’s default volume level.
+This time setting is not modified by <a class="reference internal" href="#skid-tempo"><span class="std std-ref">tempo</span></a>,
+because it represents the instrument’s physical properties that
+don’t change when the song goes faster.</p>
+</dd>
+<dt>Decay (a time setting)</dt><dd><p>The Decay setting is a time, expressed in seconds (usually
 a fraction of a second), for how long a note takes to
 drop from its initial spike in volume down to its sustaining
 volume level.
-This time setting is not modified by <a class="reference internal" href="#skid-tempo"><span>tempo</span></a>,
-because it represents the instrument&#8217;s physical properties that
-don&#8217;t change when the song goes faster.</dd>
-<dt>Sustain (a volume setting)</dt>
-<dd>The Sustain setting is not a time, but a volume multiplier (
+This time setting is not modified by <a class="reference internal" href="#skid-tempo"><span class="std std-ref">tempo</span></a>,
+because it represents the instrument’s physical properties that
+don’t change when the song goes faster.</p>
+</dd>
+<dt>Sustain (a volume setting)</dt><dd><p>The Sustain setting is not a time, but a volume multiplier (
 usually some amount less than 1.0 but higher than 0.0).  It
 is the lesser volume level that the note drops to after the spike
 of volume defined by the Attack and Decay settings is over.
 The note will stay held here at this level until it is released.
-The reason this value isn&#8217;t a time setting is because the
+The reason this value isn’t a time setting is because the
 duration of this period of the note varies depending on the note
-being played.</dd>
-<dt>Release (a time setting)</dt>
-<dd>The Release setting is a time, expressed in seconds (usually
+being played.</p>
+</dd>
+<dt>Release (a time setting)</dt><dd><p>The Release setting is a time, expressed in seconds (usually
 a fraction of a second), for how long a note takes to
 fade from its Sustain volume level back down to zero again
 at the end of the note when the sustained duration of the note
 is over.
-This time setting is not modified by <a class="reference internal" href="#skid-tempo"><span>tempo</span></a>,
-because it represents the instrument&#8217;s physical properties that
-don&#8217;t change when the song goes faster.</dd>
+This time setting is not modified by <a class="reference internal" href="#skid-tempo"><span class="std std-ref">tempo</span></a>,
+because it represents the instrument’s physical properties that
+don’t change when the song goes faster.</p>
+</dd>
 </dl>
 <p>Default settings for the ADSR envelopes for all voices in the
 SKID chip are:</p>
 <ul class="simple">
-<li>Attack = 0.0s</li>
-<li>Decay = 0.0s</li>
-<li>Sustain = 1.0</li>
-<li>Release = 0.1s</li>
+<li><p>Attack = 0.0s</p></li>
+<li><p>Decay = 0.0s</p></li>
+<li><p>Sustain = 1.0</p></li>
+<li><p>Release = 0.1s</p></li>
 </ul>
 <p>This produces a sound that will suddenly start but ever so slightly
 fade at the end rather than dropping off immediately.  There is just
@@ -365,97 +309,96 @@ enough of a Release time to make the listener hear the sound as
 slightly less harsh than a fast cutoff would sound.</p>
 <p>It is possible to make the chip describe different shaped envelopes by
 using degenerate values for some of these settings.  For some examples:</p>
-<p>Below are settings you might use for a &#8220;staccato&#8221; type of instrument,
+<p>Below are settings you might use for a “staccato” type of instrument,
 such as a drum, that is incapable of holding a sustained note and
 instead just fades right away whenever you hit a note:</p>
 <ul class="simple">
-<li>Attack = 0.0s</li>
-<li>Decay = 0.2s   (Note decays immediatly on being struck)</li>
-<li>Sustain = 0.0  (and it decays to zero, so you can&#8217;t &#8220;hold&#8221; the note).</li>
-<li>Release = 0.0s (Because Sustain is zero, this setting doesn&#8217;t matter).</li>
+<li><p>Attack = 0.0s</p></li>
+<li><p>Decay = 0.2s   (Note decays immediatly on being struck)</p></li>
+<li><p>Sustain = 0.0  (and it decays to zero, so you can’t “hold” the note).</p></li>
+<li><p>Release = 0.0s (Because Sustain is zero, this setting doesn’t matter).</p></li>
 </ul>
 <p>Below are settings you might use for an instrument with a strong
-&#8220;wow wow&#8221; effect, where it takes time to reach full volume and you
+“wow wow” effect, where it takes time to reach full volume and you
 have to hold a note in for a half second or so before you really hear it:</p>
 <ul class="simple">
-<li>Attack = 0.5s (takes a whole half second to reach full volume)</li>
-<li>Decay = 0s (stays at full volume once it&#8217;s there)</li>
-<li>Sustain = 1.0 (stays at full volume once it&#8217;s there)</li>
-<li>Release = 0.2 (and fades fairly fast when released, but not <em>immediately</em>).</li>
+<li><p>Attack = 0.5s (takes a whole half second to reach full volume)</p></li>
+<li><p>Decay = 0s (stays at full volume once it’s there)</p></li>
+<li><p>Sustain = 1.0 (stays at full volume once it’s there)</p></li>
+<li><p>Release = 0.2 (and fades fairly fast when released, but not <em>immediately</em>).</p></li>
 </ul>
-</div>
-<div class="section" id="letter-frequency-notation">
-<span id="skid-letter-frequency"></span><h3><a class="toc-backref" href="#id14">Letter Frequency Notation</a><a class="headerlink" href="#letter-frequency-notation" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="letter-frequency-notation">
+<span id="skid-letter-frequency"></span><h3><a class="toc-backref" href="#id14" role="doc-backlink">Letter Frequency Notation</a><a class="headerlink" href="#letter-frequency-notation" title="Permalink to this heading">¶</a></h3>
 <p>The SKID chip contains an interior lookup system that makes it possible,
 anywhere the chip expects you to give a frequency in Hertz, to instead
 specify its frequency using the more familiar
-<a class="reference external" href="https://en.wikipedia.org/wiki/Scientific_pitch_notation">&#8220;letter notes&#8221;.</a></p>
+<a class="reference external" href="https://en.wikipedia.org/wiki/Scientific_pitch_notation">“letter notes”.</a></p>
 <p>To do this, you use a string in the following format:</p>
 <ol class="arabic simple">
-<li>Mandatory: First character is the note letter, one of
-&#8220;C&#8221;,&#8221;D&#8221;,&#8221;E&#8221;,&#8221;F&#8221;,&#8221;G&#8221;,&#8221;A&#8221;, &#8220;B&#8221;, or &#8220;R&#8221;(to mean &#8220;rest&#8221;).</li>
-<li>Optional: Followed by an optional character, &#8220;#&#8221; or &#8220;b&#8221; for &#8220;sharp&#8221; or
-&#8220;flat&#8221;.  Note the ASCII characters hash (&#8220;#&#8221;) and lower-case &#8220;B&#8221; (&#8216;b&#8217;)
-are used for &#8220;sharp&#8221; and &#8220;flat&#8221; in place of the Unicode characters
-U+266F and U+266D (which are the more proper &#8220;sharp&#8221; and &#8220;flat&#8221;
-characters, but they are cumbersome to type on most keyboards.)</li>
-<li>Mandatory: The last character is a digit indicating which octave
-number (0 through 7) this note is in.  (4 is the &#8220;middle&#8221; octave
-that starts with &#8220;middle C&#8221; on a piano keyboard.)</li>
+<li><p>Mandatory: First character is the note letter, one of
+“C”,”D”,”E”,”F”,”G”,”A”, “B”, or “R”(to mean “rest”).</p></li>
+<li><p>Optional: Followed by an optional character, “#” or “b” for “sharp” or
+“flat”.  Note the ASCII characters hash (“#”) and lower-case “B” (‘b’)
+are used for “sharp” and “flat” in place of the Unicode characters
+U+266F and U+266D (which are the more proper “sharp” and “flat”
+characters, but they are cumbersome to type on most keyboards.)</p></li>
+<li><p>Mandatory: The last character is a digit indicating which octave
+number (0 through 7) this note is in.  (4 is the “middle” octave
+that starts with “middle C” on a piano keyboard.)</p></li>
 </ol>
-<p>Examples:  <code class="docutils literal"><span class="pre">&quot;C4&quot;</span></code> is middle C.  <code class="docutils literal"><span class="pre">&quot;C#4&quot;</span></code> is the C-sharp just one half
-step above middle C.  <code class="docutils literal"><span class="pre">&quot;Db4&quot;</span></code> is the D-flat that is in fact the same
-thing as <code class="docutils literal"><span class="pre">&quot;C#4&quot;</span></code>.  <code class="docutils literal"><span class="pre">&quot;B3&quot;</span></code> is the B that is just to the left of
+<p>Examples:  <code class="docutils literal notranslate"><span class="pre">&quot;C4&quot;</span></code> is middle C.  <code class="docutils literal notranslate"><span class="pre">&quot;C#4&quot;</span></code> is the C-sharp just one half
+step above middle C.  <code class="docutils literal notranslate"><span class="pre">&quot;Db4&quot;</span></code> is the D-flat that is in fact the same
+thing as <code class="docutils literal notranslate"><span class="pre">&quot;C#4&quot;</span></code>.  <code class="docutils literal notranslate"><span class="pre">&quot;B3&quot;</span></code> is the B that is just to the left of
 middle C (Note the octave numbering starts with C at the bottom of the
 octave, not A, thus why B3 is adjacent to C4.)</p>
 <p>Note that in all cases where you communicate a frequency to the SKID
-chip using one of these &#8220;letter notes&#8221;, the SKID chip merely converts
+chip using one of these “letter notes”, the SKID chip merely converts
 these values into their equivalent Hertz value, and forgets the letter
-string you used after that.  Thus if you set a Note&#8217;s frequency to
-&#8220;A4&#8221;, and then immediately query its Frequency, you&#8217;ll get 440 back,
-not &#8220;A4&#8221;.</p>
+string you used after that.  Thus if you set a Note’s frequency to
+“A4”, and then immediately query its Frequency, you’ll get 440 back,
+not “A4”.</p>
 <p>Note that if you form a string indicating an unknown note in this
-notation scheme (for example <code class="docutils literal"><span class="pre">&quot;E#5&quot;</span></code>, when there is no such thing
+notation scheme (for example <code class="docutils literal notranslate"><span class="pre">&quot;E#5&quot;</span></code>, when there is no such thing
 as an E-sharp), the resulting frequency will just be zero Hertz, the
 same as for a rest note.</p>
-</div>
-<div class="section" id="the-note-format">
-<span id="skid-note"></span><h3><a class="toc-backref" href="#id15">The Note format</a><a class="headerlink" href="#the-note-format" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="the-note-format">
+<span id="skid-note"></span><h3><a class="toc-backref" href="#id15" role="doc-backlink">The Note format</a><a class="headerlink" href="#the-note-format" title="Permalink to this heading">¶</a></h3>
 <p>When telling the SKID chip to begin a note, the following data is
 passed into it, to let it know the parameters of that one note:</p>
-<dl class="docutils">
-<dt>Frequency (In Hertz)</dt>
-<dd>Defines which note you mean, i.e. which of the keys on a
+<dl>
+<dt>Frequency (In Hertz)</dt><dd><p>Defines which note you mean, i.e. which of the keys on a
 synthesizer keyboard.  Be aware that if you set the frequency
-to zero, you end up with a note that is, essentially, a &#8220;rest&#8221;,
+to zero, you end up with a note that is, essentially, a “rest”,
 and makes no sound.  The frequency can also be expressed using
-<a class="reference internal" href="#skid-letter-frequency"><span>musical letter notation</span></a>.
+<a class="reference internal" href="#skid-letter-frequency"><span class="std std-ref">musical letter notation</span></a>.
 If you define both a Frequency and an EndFrequency, then the
-Frequency is merely the initial frequency the note starts at.</dd>
-<dt>EndFrequency (In Hertz)</dt>
-<dd>The SKID chip can emit &#8220;slide&#8221; notes where the note&#8217;s frequency
+Frequency is merely the initial frequency the note starts at.</p>
+</dd>
+<dt>EndFrequency (In Hertz)</dt><dd><p>The SKID chip can emit “slide” notes where the note’s frequency
 changes smoothly between a start and end frequency over the duration of
-the note without further intervention from the CPU&#8217;s program.  To
+the note without further intervention from the CPU’s program.  To
 communicate to the chip that this is your intent, you can give it
 a note which has an EndFrequency value that differs from its
-Frequency value.  When you do this, the note&#8217;s normal frequency
-value is merely its &#8220;start&#8221; frequency.  The SKID chip will change
-the note&#8217;s frequency either upward or downward as needed depending
+Frequency value.  When you do this, the note’s normal frequency
+value is merely its “start” frequency.  The SKID chip will change
+the note’s frequency either upward or downward as needed depending
 on whether the EndFrequency is higher or lower than the initial
 frequency of the note.  It will also change the frequency as
 quickly or slowly as needed to make the frequency reach EndFrequency
-at exactly the moment the note&#8217;s Duration runs out.  (So giving it
-a shorter Duration makes it change frequencies faster).</dd>
-<dt>Duration (Seconds, modified by <a class="reference internal" href="#skid-tempo"><span>tempo</span></a>)</dt>
-<dd>Defines how long this entire note lasts from the start of its
+at exactly the moment the note’s Duration runs out.  (So giving it
+a shorter Duration makes it change frequencies faster).</p>
+</dd>
+<dt>Duration (Seconds, modified by <a class="reference internal" href="#skid-tempo"><span class="std std-ref">tempo</span></a>)</dt><dd><p>Defines how long this entire note lasts from the start of its
 Attack until the end when the next note can start.  Note that
 by default, unless you choose to set the KeyDownLength (see
 next item below) to something other than the default, the note
-won&#8217;t quite fill the entire Duration, instead reserving a small
+won’t quite fill the entire Duration, instead reserving a small
 sliver of the end of the Duration to represent the gap between
-this note and the next.</dd>
-<dt>KeyDownLength (Seconds, modified by <a class="reference internal" href="#skid-tempo"><span>tempo</span></a>)</dt>
-<dd><p class="first">Defines how long you imagine the &#8220;key&#8221; on a synthesizer keyboard is
+this note and the next.</p>
+</dd>
+<dt>KeyDownLength (Seconds, modified by <a class="reference internal" href="#skid-tempo"><span class="std std-ref">tempo</span></a>)</dt><dd><p>Defines how long you imagine the “key” on a synthesizer keyboard is
 being held down for to produce this note. In terms of the
 ADSR Envelope, this is the time span that includes the Attack,
 Decay, and Sustain portion of the note, but not the Release portion
@@ -465,81 +408,81 @@ exceeds the Duration, it will be shortened to match the Duration.
 Essentially the Difference between Duration and KeyDownLength is
 that Duration is how much time the note fills up of the song, and
 KeyDownLength is how much of that time is spent with the finger
-holding the &#8220;synthesizer key&#8221; down.  The time between the end of
+holding the “synthesizer key” down.  The time between the end of
 the KeyDownLength and the end of the Duration is the gap of time
 from when one key is let go and the next key is begun.  If there
 is no such gap, then two adjacent notes of the same frequency would
 just bleed together into sounding like one continuous note.</p>
 <p>By default, the KeyDownLength is slightly shorter than the Duration
-if you don&#8217;t specify it explicitly.</p>
-<p class="last">The Release portion of the ADSR Envelope occurs entirely within the
+if you don’t specify it explicitly.</p>
+<p>The Release portion of the ADSR Envelope occurs entirely within the
 gap between the end of KeyDownLength and Duration.  If you define
-the KeyDownLength to last the entire Duration, then you won&#8217;t hear
-the Release portion of the note&#8217;s envelope, because the note will
+the KeyDownLength to last the entire Duration, then you won’t hear
+the Release portion of the note’s envelope, because the note will
 cut off before it has a chance to start the release.</p>
 </dd>
-<dt>Volume (between 0.0 and 1.0, although it can go higher than 1.0)</dt>
-<dd>A multiplier for the volume of this one note relative to the overall
+<dt>Volume (between 0.0 and 1.0, although it can go higher than 1.0)</dt><dd><p>A multiplier for the volume of this one note relative to the overall
 volume of the voice on which it is playing.  By setting it differently
-per note, it&#8217;s possible to play a song in which some notes are quieter
+per note, it’s possible to play a song in which some notes are quieter
 than others.  This can go above 1.0 if the main volume is less than 1.0.
 But it is probably a good idea to make sure that this volume times
-the voice&#8217;s main volume doesn&#8217;t exceed 1.0 or you might get some
-&#8220;audio compression&#8221; effects that slightly distort the sound.</dd>
+the voice’s main volume doesn’t exceed 1.0 or you might get some
+“audio compression” effects that slightly distort the sound.</p>
+</dd>
 </dl>
-</div>
-<div class="section" id="tempo">
-<span id="skid-tempo"></span><h3><a class="toc-backref" href="#id16">Tempo</a><a class="headerlink" href="#tempo" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="tempo">
+<span id="skid-tempo"></span><h3><a class="toc-backref" href="#id16" role="doc-backlink">Tempo</a><a class="headerlink" href="#tempo" title="Permalink to this heading">¶</a></h3>
 <p>The SKID chip allows you to set a tempo multiplier (a coefficient
 multiplier that can be a fractional number like 0.5, 2.0, 1.1, etc).
 This tempo multiplier causes all sound durations mentioned in specific
 notes to be sped up or slowed down by multiplying them by this
-number.  It can be thought of as &#8220;how long is one second&#8217;s worth
-of sheet music going to last when played on this chip?&#8221;  If you set
-it to 0.5, then each second&#8217;s worth of time in a Note&#8217;s Duration
+number.  It can be thought of as “how long is one second’s worth
+of sheet music going to last when played on this chip?”  If you set
+it to 0.5, then each second’s worth of time in a Note’s Duration
 or KeyDownLength fields only lasts half a second for real, thus
 causing the notes to play twice as fast.  Conversely, if you set
 this to 2.0, it makes notes take twice as long to play, thus
 slowing down the tempo.</p>
 <p>It should be possible to transcribe sheet music into the note format
 the SKID chip uses, by simply using a note Duration of 0.25 for
-&#8220;quarter note&#8221;, 0.5 for &#8220;half note&#8221;, 1.0 for &#8220;whole note&#8221;, and so on,
-and then setting the chip&#8217;s Tempo to set how long you mean for a whole
+“quarter note”, 0.5 for “half note”, 1.0 for “whole note”, and so on,
+and then setting the chip’s Tempo to set how long you mean for a whole
 note to last.</p>
-</div>
-<div class="section" id="songs-lists-of-notes">
-<span id="skid-song"></span><h3><a class="toc-backref" href="#id17">Songs (Lists of Notes)</a><a class="headerlink" href="#songs-lists-of-notes" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="songs-lists-of-notes">
+<span id="skid-song"></span><h3><a class="toc-backref" href="#id17" role="doc-backlink">Songs (Lists of Notes)</a><a class="headerlink" href="#songs-lists-of-notes" title="Permalink to this heading">¶</a></h3>
 <p>It is possible to point the SKID chip at an array of these
-<a class="reference internal" href="#skid-note"><span>notes</span></a> to make it play several notes back to
+<a class="reference internal" href="#skid-note"><span class="std std-ref">notes</span></a> to make it play several notes back to
 back without further intervention of the main CPU.  When the
 chip is given such a list of notes, it is a bit like feeding
-&#8220;sheet music&#8221; to the chip, and letting it play the song itself.</p>
-<p>This is where the settings such as <a class="reference internal" href="#skid-tempo"><span>tempo</span></a>
+“sheet music” to the chip, and letting it play the song itself.</p>
+<p>This is where the settings such as <a class="reference internal" href="#skid-tempo"><span class="std std-ref">tempo</span></a>
 become quite relevant.  The SKID chip will simply play the
-notes it sees in the order they&#8217;re listed, waiting for one
+notes it sees in the order they’re listed, waiting for one
 note to finish its Duration before the next note is started.
 By changing the Tempo setting, you can speed up the song
 that is in the current note list without changing the
 definitions of the individual notes in the song.</p>
 <p>Note that any note with a frequency set to zero counts as a
-&#8220;rest&#8221;, which is useful to know when encoding a song into a
+“rest”, which is useful to know when encoding a song into a
 list of notes.</p>
 <p>It is unknown if there is a limit to how long a list of notes can
-be.  In our testing, the engineers haven&#8217;t discovered an upper
+be.  In our testing, the engineers haven’t discovered an upper
 limit yet.</p>
-</div>
-<div class="section" id="looping">
-<span id="skid-loop"></span><h3><a class="toc-backref" href="#id18">Looping</a><a class="headerlink" href="#looping" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="looping">
+<span id="skid-loop"></span><h3><a class="toc-backref" href="#id18" role="doc-backlink">Looping</a><a class="headerlink" href="#looping" title="Permalink to this heading">¶</a></h3>
 <p>The SKID chip contains a flag that can be used to set whether or not
 it should start again with the first note in a list when it
 reaches the last note in the list.  If this flag is true, then it
 will continue playing the song list forever and ever until made to stop.</p>
-<p>Note that even a single note counts as a &#8220;song&#8221; for the purpose of
+<p>Note that even a single note counts as a “song” for the purpose of
 this looping flag.  Yes, the SKID chip can play the same note over and
-over if that&#8217;s what you really want.</p>
-</div>
-<div class="section" id="chords">
-<span id="skid-chords"></span><h3><a class="toc-backref" href="#id19">Chords</a><a class="headerlink" href="#chords" title="Permalink to this headline">¶</a></h3>
+over if that’s what you really want.</p>
+</section>
+<section id="chords">
+<span id="skid-chords"></span><h3><a class="toc-backref" href="#id19" role="doc-backlink">Chords</a><a class="headerlink" href="#chords" title="Permalink to this heading">¶</a></h3>
 <p>Each of the 10 voices of a SKID chip can only play a single note at a
 time.  But you may wish to transcribe some music into a song (list of
 notes) in which the notes of the sheet music contained chords - that
@@ -547,55 +490,55 @@ is to say, cases where more than one note is supposed to be played
 simultaneously.  The SKID chip can support this, but the way to do
 it is a little bit messy.</p>
 <p>In order to play something that has chords, you need to imagine that
-each of the SKID chip&#8217;s voices can be a different finger of a
-synthesizer keyboard player.  Let&#8217;s say you want to play a song that has
+each of the SKID chip’s voices can be a different finger of a
+synthesizer keyboard player.  Let’s say you want to play a song that has
 some 3-note chords in it.  At minimum, a keyboard player would need
-3 fingers to accomplish this.  To do this with SKID, you&#8217;d need to dedicate
+3 fingers to accomplish this.  To do this with SKID, you’d need to dedicate
 3 of the voices to the job, and make sure all 3 voices are given the
 same settings (Waveform, ADSR Envelope, Tempo, Volume, etc).  With one
 of these voices, you play all the time, all the notes.  (You give it
-a <a class="reference internal" href="#skid-song"><span>song</span></a> that consists of all the notes in the sheet
-music).  With the other two voices, you&#8217;d give them songs (note lists)
+a <a class="reference internal" href="#skid-song"><span class="std std-ref">song</span></a> that consists of all the notes in the sheet
+music).  With the other two voices, you’d give them songs (note lists)
 that contain rests in all the places where there is only a singleton
 note being played, but then have them join in with with the extra notes
-to add to the main voice&#8217;s note in the places where a chord should be
+to add to the main voice’s note in the places where a chord should be
 played.</p>
-</div>
-</div>
-<div class="section" id="kerboscript-interface-synopsis">
-<h2><a class="toc-backref" href="#id20">Kerboscript Interface Synopsis</a><a class="headerlink" href="#kerboscript-interface-synopsis" title="Permalink to this headline">¶</a></h2>
-<p>In order that you don&#8217;t need to send individual bits and bytes to the
-SKID chip, we&#8217;ve added a user interface in the Kerboscript language
+</section>
+</section>
+<section id="kerboscript-interface-synopsis">
+<h2><a class="toc-backref" href="#id20" role="doc-backlink">Kerboscript Interface Synopsis</a><a class="headerlink" href="#kerboscript-interface-synopsis" title="Permalink to this heading">¶</a></h2>
+<p>In order that you don’t need to send individual bits and bytes to the
+SKID chip, we’ve added a user interface in the Kerboscript language
 that interfaces with all these features for you.  Keep the above
-technical specs in mind so you know what the settings you&#8217;re
+technical specs in mind so you know what the settings you’re
 changing do.</p>
 <p>The documentation below is just a quick synopsis of how to use
 the kerboscript interface to SKID.  To really fully exploit it, you
 need to follow the links below and read the detailed documentation
-on the <a class="reference internal" href="../structures/misc/note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Note</span></code></a> structure and the <a class="reference internal" href="../structures/misc/voice.html#structure:VOICE" title="VOICE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Voice</span></code></a> structure.</p>
-<div class="section" id="getvoice">
-<span id="skid-getvoice"></span><h3><a class="toc-backref" href="#id21">GetVoice()</a><a class="headerlink" href="#getvoice" title="Permalink to this headline">¶</a></h3>
+on the <a class="reference internal" href="../structures/misc/note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Note</span></code></a> structure and the <a class="reference internal" href="../structures/misc/voice.html#structure:VOICE" title="VOICE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Voice</span></code></a> structure.</p>
+<section id="getvoice">
+<span id="skid-getvoice"></span><h3><a class="toc-backref" href="#id21" role="doc-backlink">GetVoice()</a><a class="headerlink" href="#getvoice" title="Permalink to this heading">¶</a></h3>
 <p>The basic starting point of any Kerboscript program that works with
-the SKID chip is the <a class="reference internal" href="../structures/misc/voice.html#function:GETVOICE" title="GETVOICE function"><code class="xref ks ks-func docutils literal"><span class="pre">GetVoice()</span></code></a> built-in function.
-<code class="docutils literal"><span class="pre">GetVoice(n)</span></code>, given any N within the range of 0 through 9 for the
+the SKID chip is the <a class="reference internal" href="../structures/misc/voice.html#function:GETVOICE" title="GETVOICE function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">GetVoice()</span></code></a> built-in function.
+<code class="docutils literal notranslate"><span class="pre">GetVoice(n)</span></code>, given any N within the range of 0 through 9 for the
 10 voices in the SKID chip, returns a handle you can use to send
 commands to that voice of the SKID chip.</p>
 <p>For simple easy examples, you can just use voice 0 for most of your
 needs:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">V0</span> <span class="ow">to</span> <span class="nv">GetVoice</span><span class="p">(</span><span class="mf">0</span><span class="p">).</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">V0</span> <span class="ow">to</span> <span class="nv">GetVoice</span><span class="p">(</span><span class="mf">0</span><span class="p">).</span>
 </pre></div>
 </div>
-<p><code class="docutils literal"><span class="pre">GetVoice()</span></code> returns an object of type <a class="reference internal" href="../structures/misc/voice.html#structure:VOICE" title="VOICE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Voice</span></code></a>, that can be
+<p><code class="docutils literal notranslate"><span class="pre">GetVoice()</span></code> returns an object of type <a class="reference internal" href="../structures/misc/voice.html#structure:VOICE" title="VOICE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Voice</span></code></a>, that can be
 used to do everything else you need after that.</p>
-</div>
-<div class="section" id="voice-object">
-<h3><a class="toc-backref" href="#id22">Voice object</a><a class="headerlink" href="#voice-object" title="Permalink to this headline">¶</a></h3>
-<p>If you take a moment to look at the documentation for <a class="reference internal" href="../structures/misc/voice.html#structure:VOICE" title="VOICE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Voice</span></code></a>,
+</section>
+<section id="voice-object">
+<h3><a class="toc-backref" href="#id22" role="doc-backlink">Voice object</a><a class="headerlink" href="#voice-object" title="Permalink to this heading">¶</a></h3>
+<p>If you take a moment to look at the documentation for <a class="reference internal" href="../structures/misc/voice.html#structure:VOICE" title="VOICE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Voice</span></code></a>,
 you can see that almost everything it lets you do has a one-to-one
 correspondence to the hardware features mentioned above in this document.</p>
 <p>All the features of the SKID chip can be set this way, and have a
 suffix that corresponds to them, as given in the example below:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">V0</span><span class="p">:</span><span class="k">VOLUME</span> <span class="ow">TO</span> <span class="mf">0</span><span class="p">.</span><span class="mf">9</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">V0</span><span class="p">:</span><span class="k">VOLUME</span> <span class="ow">TO</span> <span class="mf">0</span><span class="p">.</span><span class="mf">9</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">V0</span><span class="p">:</span><span class="nv">WAVE</span> <span class="ow">to</span> <span class="s">&quot;sawtooth&quot;</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">V0</span><span class="p">:</span><span class="nv">ATTACK</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span><span class="mf">1</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">V0</span><span class="p">:</span><span class="nv">DECAY</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span><span class="mf">2</span><span class="p">.</span>
@@ -603,14 +546,14 @@ suffix that corresponds to them, as given in the example below:</p>
 <span class="k">SET</span> <span class="nv">V0</span><span class="p">:</span><span class="nv">RELEASE</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span><span class="mf">5</span><span class="p">.</span> <span class="c1">// takes half a second to fade out.</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="note">
-<h3><a class="toc-backref" href="#id23">Note()</a><a class="headerlink" href="#note" title="Permalink to this headline">¶</a></h3>
-<p>When asking one of SKID&#8217;s voices to play a note, you have to specify
-which note you meant, and you do so by constructing a <a class="reference internal" href="../structures/misc/note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Note</span></code></a>
-object using the <a class="reference internal" href="../structures/misc/note.html#function:NOTE" title="NOTE function"><code class="xref ks ks-func docutils literal"><span class="pre">Note()</span></code></a> built-in function, or the
-<a class="reference internal" href="../structures/misc/note.html#function:SLIDENOTE" title="SLIDENOTE function"><code class="xref ks ks-func docutils literal"><span class="pre">SlideNote()</span></code></a> built-in function:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// N1 is a note (also at 440 Hz because that&#39;s what &quot;A4&quot; means)</span>
+</section>
+<section id="note">
+<h3><a class="toc-backref" href="#id23" role="doc-backlink">Note()</a><a class="headerlink" href="#note" title="Permalink to this heading">¶</a></h3>
+<p>When asking one of SKID’s voices to play a note, you have to specify
+which note you meant, and you do so by constructing a <a class="reference internal" href="../structures/misc/note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Note</span></code></a>
+object using the <a class="reference internal" href="../structures/misc/note.html#function:NOTE" title="NOTE function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">Note()</span></code></a> built-in function, or the
+<a class="reference internal" href="../structures/misc/note.html#function:SLIDENOTE" title="SLIDENOTE function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">SlideNote()</span></code></a> built-in function:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// N1 is a note (also at 440 Hz because that&#39;s what &quot;A4&quot; means)</span>
 <span class="c1">// that lasts 1 second overall, but only 0.8 seconds of it</span>
 <span class="c1">// are &quot;key down&quot; time (i.e. the A,D,S part of the ADSR Envelope).</span>
 <span class="k">SET</span> <span class="nv">N1</span> <span class="ow">to</span> <span class="nv">NOTE</span><span class="p">(</span><span class="s">&quot;A4&quot;</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">8</span><span class="p">,</span> <span class="mf">1</span><span class="p">).</span>
@@ -622,23 +565,23 @@ object using the <a class="reference internal" href="../structures/misc/note.htm
 <span class="k">SET</span> <span class="nv">N2</span> <span class="ow">to</span> <span class="nv">SLIDENOTE</span><span class="p">(</span><span class="s">&quot;A4&quot;</span><span class="p">,</span> <span class="s">&quot;A5&quot;</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">25</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">3</span><span class="p">).</span>
 </pre></div>
 </div>
-<p>Once a note has been constructed, it&#8217;s components are not changable.  The
+<p>Once a note has been constructed, it’s components are not changable.  The
 only way to change the note is to make a new note and use it to overwrite
 the previous note.</p>
-<p>For that reason, it&#8217;s typical not to bother storing the result of a Note()
+<p>For that reason, it’s typical not to bother storing the result of a Note()
 or SlideNote() constructor in a variable as shown above, and instead just
 pass it right into the <cite>Play()</cite> method, or to make it part of a
-<a class="reference internal" href="../structures/collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of notes for making a song.</p>
-</div>
-<div class="section" id="voice-play">
-<h3><a class="toc-backref" href="#id24">Voice:Play()</a><a class="headerlink" href="#voice-play" title="Permalink to this headline">¶</a></h3>
+<a class="reference internal" href="../structures/collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of notes for making a song.</p>
+</section>
+<section id="voice-play">
+<h3><a class="toc-backref" href="#id24" role="doc-backlink">Voice:Play()</a><a class="headerlink" href="#voice-play" title="Permalink to this heading">¶</a></h3>
 <p>The heart of the Kerboscript interface to the SKID chip is the <cite>Play()</cite>
-suffix method of the <a class="reference internal" href="../structures/misc/voice.html#structure:VOICE" title="VOICE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Voice</span></code></a> object.</p>
-<p>You either construct a single <a class="reference internal" href="../structures/misc/note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Note</span></code></a> and tell Play() to play it,
-or you construct a <a class="reference internal" href="../structures/collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="../structures/misc/note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Note</span></code></a>&#8216;s and tell Play()
+suffix method of the <a class="reference internal" href="../structures/misc/voice.html#structure:VOICE" title="VOICE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Voice</span></code></a> object.</p>
+<p>You either construct a single <a class="reference internal" href="../structures/misc/note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Note</span></code></a> and tell Play() to play it,
+or you construct a <a class="reference internal" href="../structures/collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="../structures/misc/note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Note</span></code></a>’s and tell Play()
 to play them.</p>
 <p>Examples:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">V0</span> <span class="ow">TO</span> <span class="nv">GetVoice</span><span class="p">(</span><span class="mf">0</span><span class="p">).</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">V0</span> <span class="ow">TO</span> <span class="nv">GetVoice</span><span class="p">(</span><span class="mf">0</span><span class="p">).</span>
 <span class="nv">V0</span><span class="p">:</span><span class="nv">PLAY</span><span class="p">(</span> <span class="nv">NOTE</span><span class="p">(</span> <span class="mf">440</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="p">).</span>  <span class="c1">// Play one note at 440 Hz for 1 second.</span>
 
 <span class="c1">// Play a &#39;song&#39; consisting of note, note, rest, sliding note, rest:</span>
@@ -653,77 +596,39 @@ to play them.</p>
 <span class="p">).</span>
 </pre></div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="nametag.html" class="btn btn-neutral float-right" title="The Name Tag System" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="compiling.html" class="btn btn-neutral" title="KerboScript Machine Code" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="compiling.html" class="btn btn-neutral float-left" title="KerboScript Machine Code" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nametag.html" class="btn btn-neutral float-right" title="The Name Tag System" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

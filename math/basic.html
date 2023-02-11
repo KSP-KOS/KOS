@@ -1,80 +1,39 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Basic Math Functions &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Basic Math Functions &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../about.html"/>
-        <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../index.html"/>
-        <link rel="up" title="Mathematics and Basic Geometry" href="../math.html"/>
-        <link rel="next" title="Scalar" href="scalar.html"/>
-        <link rel="prev" title="Mathematics and Basic Geometry" href="../math.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="next" title="Scalar" href="scalar.html" />
+    <link rel="prev" title="Mathematics and Basic Geometry" href="../math.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +41,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
@@ -99,9 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../general.html">General</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../math.html">Mathematics</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="">Basic Math Functions</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Basic Math Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scalar.html">Scalar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vector.html">Vectors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="direction.html">Directions</a></li>
@@ -118,128 +68,109 @@
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../math.html">Mathematics and Basic Geometry</a> &raquo;</li>
-      
-    <li>Basic Math Functions</li>
+      <li>Basic Math Functions</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../_sources/math/basic.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../_sources/math/basic.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="basic-math-functions">
-<span id="basic-math"></span><h1>Basic Math Functions<a class="headerlink" href="#basic-math-functions" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="basic-math-functions">
+<span id="basic-math"></span><h1>Basic Math Functions<a class="headerlink" href="#basic-math-functions" title="Permalink to this heading">¶</a></h1>
 <p>These functions are built-in for performing basic math operations in kOS.</p>
-<span class="target" id="constants"></span><div class="section" id="fundamental-constants">
-<span id="index-0"></span><h2>Fundamental Constants<a class="headerlink" href="#fundamental-constants" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="constants"></span><section id="fundamental-constants">
+<span id="index-0"></span><h2>Fundamental Constants<a class="headerlink" href="#fundamental-constants" title="Permalink to this heading">¶</a></h2>
 <p>There is a bound variable called <cite>CONSTANT</cite> which contains some basic fundamental
 constants about the universe that you may find handy in your math operations.  Prior to kOS version 0.18, <cite>CONSTANT</cite> was implemented as a function call, so values were accessed as <cite>CONSTANT():PI</cite> and the like.  This functionality has been retained for backward compatibility, but new code should instead call <cite>CONSTANT:PI</cite>.</p>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="20%" />
-<col width="80%" />
+<col style="width: 20.0%" />
+<col style="width: 80.0%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Identifier</th>
-<th class="head">Description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Identifier</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><code class="xref ks ks-global docutils literal"><span class="pre">G</span></code></td>
-<td>Newton&#8217;s Gravitational Constant.</td>
+<tbody>
+<tr class="row-even"><td><p><code class="xref ks ks-global docutils literal notranslate"><span class="pre">G</span></code></p></td>
+<td><p>Newton’s Gravitational Constant.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref ks ks-global docutils literal"><span class="pre">g0</span></code></td>
-<td>gravity acceleration (m/s^2) at sea level on Earth.</td>
+<tr class="row-odd"><td><p><code class="xref ks ks-global docutils literal notranslate"><span class="pre">g0</span></code></p></td>
+<td><p>gravity acceleration (m/s^2) at sea level on Earth.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref ks ks-global docutils literal"><span class="pre">E</span></code></td>
-<td>Base of the natural log (Euler&#8217;s number)</td>
+<tr class="row-even"><td><p><code class="xref ks ks-global docutils literal notranslate"><span class="pre">E</span></code></p></td>
+<td><p>Base of the natural log (Euler’s number)</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref ks ks-global docutils literal"><span class="pre">PI</span></code></td>
-<td><span class="math">\(\pi\)</span></td>
+<tr class="row-odd"><td><p><code class="xref ks ks-global docutils literal notranslate"><span class="pre">PI</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\pi\)</span></p></td>
 </tr>
-<tr class="row-even"><td><code class="xref ks ks-global docutils literal"><span class="pre">c</span></code></td>
-<td>Speed of light in a vacuum, in m/s.</td>
+<tr class="row-even"><td><p><code class="xref ks ks-global docutils literal notranslate"><span class="pre">c</span></code></p></td>
+<td><p>Speed of light in a vacuum, in m/s.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref ks ks-global docutils literal"><span class="pre">AtmToKPa</span></code></td>
-<td>Conversion constant: Atmospheres to kiloPascals.</td>
+<tr class="row-odd"><td><p><code class="xref ks ks-global docutils literal notranslate"><span class="pre">AtmToKPa</span></code></p></td>
+<td><p>Conversion constant: Atmospheres to kiloPascals.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref ks ks-global docutils literal"><span class="pre">KPaToAtm</span></code></td>
-<td>Conversion constant: kiloPascals to Atmospheres.</td>
+<tr class="row-even"><td><p><code class="xref ks ks-global docutils literal notranslate"><span class="pre">KPaToAtm</span></code></p></td>
+<td><p>Conversion constant: kiloPascals to Atmospheres.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref ks ks-global docutils literal"><span class="pre">DegToRad</span></code></td>
-<td>Conversion constant: Degrees to Radians.</td>
+<tr class="row-odd"><td><p><code class="xref ks ks-global docutils literal notranslate"><span class="pre">DegToRad</span></code></p></td>
+<td><p>Conversion constant: Degrees to Radians.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref ks ks-global docutils literal"><span class="pre">RadToDeg</span></code></td>
-<td>Conversion constant: Radians to Degrees.</td>
+<tr class="row-even"><td><p><code class="xref ks ks-global docutils literal notranslate"><span class="pre">RadToDeg</span></code></p></td>
+<td><p>Conversion constant: Radians to Degrees.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref ks ks-global docutils literal"><span class="pre">Avogadro</span></code></td>
-<td>Avogadro&#8217;s Constant</td>
+<tr class="row-odd"><td><p><code class="xref ks ks-global docutils literal notranslate"><span class="pre">Avogadro</span></code></p></td>
+<td><p>Avogadro’s Constant</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref ks ks-global docutils literal"><span class="pre">Boltzmann</span></code></td>
-<td>Boltzmann&#8217;s Constant</td>
+<tr class="row-even"><td><p><code class="xref ks ks-global docutils literal notranslate"><span class="pre">Boltzmann</span></code></p></td>
+<td><p>Boltzmann’s Constant</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref ks ks-global docutils literal"><span class="pre">IdealGas</span></code></td>
-<td>The Ideal Gas Constant</td>
+<tr class="row-odd"><td><p><code class="xref ks ks-global docutils literal notranslate"><span class="pre">IdealGas</span></code></p></td>
+<td><p>The Ideal Gas Constant</p></td>
 </tr>
 </tbody>
 </table>
-<dl class="global">
-<dt id="global:CONSTANT:G">
-<code class="descname">Constant:G</code><a class="headerlink" href="#global:CONSTANT:G" title="Permalink to this definition">¶</a></dt>
-<dd><p>Newton&#8217;s Gravitational Constant that the game&#8217;s planetary
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:CONSTANT:G">
+<span class="sig-name descname"><span class="pre">Constant:G</span></span><a class="headerlink" href="#global:CONSTANT:G" title="Permalink to this definition">¶</a></dt>
+<dd><p>Newton’s Gravitational Constant that the game’s planetary
 bodies are implying in their configuration data.
 (6.67384E-11 as of the last update to these documents).</p>
 <p>Note, the stock KSP game never technically records a value
 for G in its data.  kOS derives this value by calculating it
-based on the Sun&#8217;s Mass and its Gravitational Parameter.  It
+based on the Sun’s Mass and its Gravitational Parameter.  It
 is possible for a mod (or perhaps a future release of KSP, if
-mistakes were made) to define a universe in which Newton&#8217;s
-Gravitational Constant, G, isn&#8217;t actually constant at all
+mistakes were made) to define a universe in which Newton’s
+Gravitational Constant, G, isn’t actually constant at all
 within that game universe, and instead varies from one sphere
 of influence to the next.  Such a universe would be breaking
 some laws of physics by a lot, but it is technically possible
-in the game&#8217;s data model.  Due to this strange feature in
-the game&#8217;s data model, it is probably safer to always have
-your scripts use the body&#8217;s Mu in your formulas instead of
+in the game’s data model.  Due to this strange feature in
+the game’s data model, it is probably safer to always have
+your scripts use the body’s Mu in your formulas instead of
 explicitly doing mass*G to derive it.</p>
-<p>Do NOT confuse this with <code class="docutils literal"><span class="pre">Constant:g0</span></code> below.</p>
+<p>Do NOT confuse this with <code class="docutils literal notranslate"><span class="pre">Constant:g0</span></code> below.</p>
 <p>Example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;Gravitational parameter of Kerbin, calculated:&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;Gravitational parameter of Kerbin, calculated:&quot;</span><span class="p">.</span>
 <span class="k">PRINT</span> <span class="nv">constant</span><span class="p">:</span><span class="nv">G</span> <span class="o">*</span> <span class="nv">Kerbin</span><span class="p">:</span><span class="nv">Mass</span><span class="p">.</span>
 <span class="k">PRINT</span> <span class="s">&quot;Gravitational parameter of Kerbin, hardcoded:&quot;</span><span class="p">.</span>
 <span class="k">PRINT</span> <span class="nv">Kerbin</span><span class="p">:</span><span class="nv">Mu</span><span class="p">.</span>
@@ -249,18 +180,18 @@ explicitly doing mass*G to derive it.</p>
 </div>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:CONSTANT:G0">
-<code class="descname">Constant:g0</code><a class="headerlink" href="#global:CONSTANT:G0" title="Permalink to this definition">¶</a></dt>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:CONSTANT:G0">
+<span class="sig-name descname"><span class="pre">Constant:g0</span></span><a class="headerlink" href="#global:CONSTANT:G0" title="Permalink to this definition">¶</a></dt>
 <dd><p>Standard value the game uses for acceleration due to
 gravity at sea level on Earth.  (9.80655 m/s^2 as
 of the last update to these documents).</p>
-<p>Do NOT confuse this with <code class="docutils literal"><span class="pre">Constant:G</span></code> above.</p>
+<p>Do NOT confuse this with <code class="docutils literal notranslate"><span class="pre">Constant:G</span></code> above.</p>
 <p>The place where this matters the most is in ISP
 calculations.  The rocket equation using ISP
 contains an inherent conversion from mass to weight
-that basically means, &#8220;what would this mass of fuel
-have weighed at g0?&#8221;.  Some kind of official standard
+that basically means, “what would this mass of fuel
+have weighed at g0?”.  Some kind of official standard
 value of g0 is needed to use ISP properly to predict
 how much fuel will be burned in a scenario.</p>
 <p>In pretty much any other calculation you do in your kOS
@@ -269,312 +200,308 @@ you should probably not use g0 and instead calculate your
 local gravity more precisely based on your actual radius to
 the body center.  Not only because this is more accurate, but
 because the g0 you see here is NOT the g0 you would actually
-have on Kerbin&#8217;s sea level.  It&#8217;s the g0 on Earth, which is
-what the game&#8217;s ISP numbers are using.  Kerbin&#8217;s sea level
-g0 is ever so slightly different from Earth&#8217;s g0 (but not
+have on Kerbin’s sea level.  It’s the g0 on Earth, which is
+what the game’s ISP numbers are using.  Kerbin’s sea level
+g0 is ever so slightly different from Earth’s g0 (but not
 by much.)</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;Gravitational parameter of Kerbin is:&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;Gravitational parameter of Kerbin is:&quot;</span><span class="p">.</span>
 <span class="k">PRINT</span> <span class="nv">constant</span><span class="p">:</span><span class="nv">G</span> <span class="o">*</span> <span class="nv">Kerbin</span><span class="p">:</span><span class="nv">Mass</span><span class="p">.</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:CONSTANT:E">
-<code class="descname">Constant:E</code><a class="headerlink" href="#global:CONSTANT:E" title="Permalink to this definition">¶</a></dt>
-<dd><p>Natural Log base &#8220;e&#8221;:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;e^2 is:&quot;</span><span class="p">.</span>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:CONSTANT:E">
+<span class="sig-name descname"><span class="pre">Constant:E</span></span><a class="headerlink" href="#global:CONSTANT:E" title="Permalink to this definition">¶</a></dt>
+<dd><p>Natural Log base “e”:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;e^2 is:&quot;</span><span class="p">.</span>
 <span class="k">PRINT</span> <span class="nv">constant</span><span class="p">:</span><span class="nv">e</span> <span class="o">^</span> <span class="mf">2</span><span class="p">.</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:CONSTANT:PI">
-<code class="descname">Constant:PI</code><a class="headerlink" href="#global:CONSTANT:PI" title="Permalink to this definition">¶</a></dt>
-<dd><p>Ratio of circumference of a circle to its diameter, 3.14159265...</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">diameter</span> <span class="ow">to</span> <span class="mf">10</span><span class="p">.</span>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:CONSTANT:PI">
+<span class="sig-name descname"><span class="pre">Constant:PI</span></span><a class="headerlink" href="#global:CONSTANT:PI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ratio of circumference of a circle to its diameter, 3.14159265…</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">diameter</span> <span class="ow">to</span> <span class="mf">10</span><span class="p">.</span>
 <span class="k">PRINT</span> <span class="s">&quot;circumference is:&quot;</span><span class="p">.</span>
 <span class="k">PRINT</span> <span class="nv">constant</span><span class="p">:</span><span class="nv">pi</span> <span class="o">*</span> <span class="nv">diameter</span><span class="p">.</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:CONSTANT:C">
-<code class="descname">Constant:C</code><a class="headerlink" href="#global:CONSTANT:C" title="Permalink to this definition">¶</a></dt>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:CONSTANT:C">
+<span class="sig-name descname"><span class="pre">Constant:C</span></span><a class="headerlink" href="#global:CONSTANT:C" title="Permalink to this definition">¶</a></dt>
 <dd><p>Speed of light in a vacuum, in meters per second.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">speed</span> <span class="ow">to</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">ORBIT</span><span class="p">:</span><span class="nv">MAG</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">speed</span> <span class="ow">to</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">ORBIT</span><span class="p">:</span><span class="nv">MAG</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">percentOfLight</span> <span class="ow">to</span> <span class="p">(</span><span class="nv">speed</span> <span class="o">/</span> <span class="nv">constant</span><span class="p">:</span><span class="nv">c</span><span class="p">)</span> <span class="o">*</span> <span class="mf">100</span><span class="p">.</span>
 <span class="k">PRINT</span> <span class="s">&quot;We&#39;re going &quot;</span> <span class="o">+</span> <span class="nv">percentOfLight</span> <span class="o">+</span> <span class="s">&quot;% of lightspeed!&quot;</span><span class="p">.</span>
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">In Kerbal Space Program, all physics motion is purely Newtonian.
+<p class="admonition-title">Note</p>
+<p>In Kerbal Space Program, all physics motion is purely Newtonian.
 You can go faster than the speed of light provided you have enough
 delta-V, and no time dilation effects will occur.  The universe
 will behave entirely linearly even at speeds near <em>c</em>.</p>
 </div>
 <p>This constant is provided mainly for the benefit of people who are
-playing with the mod &#8220;RemoteTech&#8221; installed, who may want to perform
+playing with the mod “RemoteTech” installed, who may want to perform
 calculations about signal delays to hypothetical probes.  (Note that
 if the probe already has a connection, you can
-<a class="reference internal" href="../addons/RemoteTech.html#remotetech"><span>ask Remotetech directly</span></a> what the signal delay is.</p>
+<a class="reference internal" href="../addons/RemoteTech.html#remotetech"><span class="std std-ref">ask Remotetech directly</span></a> what the signal delay is.</p>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:CONSTANT:ATMTOKPA">
-<code class="descname">Constant:AtmToKPa</code><a class="headerlink" href="#global:CONSTANT:ATMTOKPA" title="Permalink to this definition">¶</a></dt>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:CONSTANT:ATMTOKPA">
+<span class="sig-name descname"><span class="pre">Constant:AtmToKPa</span></span><a class="headerlink" href="#global:CONSTANT:ATMTOKPA" title="Permalink to this definition">¶</a></dt>
 <dd><p>A conversion constant.</p>
 <p>If you have a pressure measurement expressed in atmospheres of pressure,
 you can multiply it by this to get the equivalent in kiloPascals
 (kiloNewtons per square meter).</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;1 atm is:&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;1 atm is:&quot;</span><span class="p">.</span>
 <span class="k">PRINT</span> <span class="mf">1</span> <span class="o">*</span> <span class="nv">constant</span><span class="p">:</span><span class="nv">AtmToKPa</span> <span class="o">+</span> <span class="s">&quot; kPa.&quot;</span><span class="p">.</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:CONSTANT:KPATOATM">
-<code class="descname">Constant:KPaToATM</code><a class="headerlink" href="#global:CONSTANT:KPATOATM" title="Permalink to this definition">¶</a></dt>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:CONSTANT:KPATOATM">
+<span class="sig-name descname"><span class="pre">Constant:KPaToATM</span></span><a class="headerlink" href="#global:CONSTANT:KPATOATM" title="Permalink to this definition">¶</a></dt>
 <dd><p>A conversion constant.</p>
 <p>If you have a pressure measurement expressed in kiloPascals (kiloNewtons
 per square meter), you can multiply it by this to get the equivalent
 in atmospheres.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;100 kPa is:&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;100 kPa is:&quot;</span><span class="p">.</span>
 <span class="k">PRINT</span> <span class="mf">100</span> <span class="o">*</span> <span class="nv">constant</span><span class="p">:</span><span class="nv">KPaToATM</span> <span class="o">+</span> <span class="s">&quot; atmospheres&quot;</span><span class="p">.</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:CONSTANT:DEGTORAD">
-<code class="descname">Constant:DegToRad</code><a class="headerlink" href="#global:CONSTANT:DEGTORAD" title="Permalink to this definition">¶</a></dt>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:CONSTANT:DEGTORAD">
+<span class="sig-name descname"><span class="pre">Constant:DegToRad</span></span><a class="headerlink" href="#global:CONSTANT:DEGTORAD" title="Permalink to this definition">¶</a></dt>
 <dd><p>A conversion constant.</p>
 <p>If you have an angle measured in degrees, you can multiply it by
 this to get the equivalent measure in radians.  It is exactly
-the same thing as saying <code class="docutils literal"><span class="pre">constant:pi</span> <span class="pre">/</span> <span class="pre">180</span></code>, except the result is
+the same thing as saying <code class="docutils literal notranslate"><span class="pre">constant:pi</span> <span class="pre">/</span> <span class="pre">180</span></code>, except the result is
 pre-recorded as a constant number and thus no division is performed
 at runtime.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;A right angle is:&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;A right angle is:&quot;</span><span class="p">.</span>
 <span class="k">PRINT</span> <span class="mf">90</span> <span class="o">*</span> <span class="nv">constant</span><span class="p">:</span><span class="nv">DegToRad</span> <span class="o">+</span> <span class="s">&quot; radians&quot;</span><span class="p">.</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:CONSTANT:RADTODEG">
-<code class="descname">Constant:RadToDeg</code><a class="headerlink" href="#global:CONSTANT:RADTODEG" title="Permalink to this definition">¶</a></dt>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:CONSTANT:RADTODEG">
+<span class="sig-name descname"><span class="pre">Constant:RadToDeg</span></span><a class="headerlink" href="#global:CONSTANT:RADTODEG" title="Permalink to this definition">¶</a></dt>
 <dd><p>A conversion constant.</p>
 <p>If you have an angle measured in radians, you can multiply it by
 this to get the equivalent measure in degrees.  It is exactly
-the same thing as saying <code class="docutils literal"><span class="pre">180</span> <span class="pre">/</span> <span class="pre">constant:pi</span></code>, except the result is
+the same thing as saying <code class="docutils literal notranslate"><span class="pre">180</span> <span class="pre">/</span> <span class="pre">constant:pi</span></code>, except the result is
 pre-recorded as a constant number and thus no division is performed
 at runtime.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;A radian is:&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;A radian is:&quot;</span><span class="p">.</span>
 <span class="k">PRINT</span> <span class="mf">1</span> <span class="o">*</span> <span class="nv">constant</span><span class="p">:</span><span class="nv">RadToDeg</span> <span class="o">+</span> <span class="s">&quot; degrees&quot;</span><span class="p">.</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:CONSTANT:AVOGADRO">
-<code class="descname">Constant:Avogadro</code><a class="headerlink" href="#global:CONSTANT:AVOGADRO" title="Permalink to this definition">¶</a></dt>
-<dd><p>Avogadro&#8217;s Constant.</p>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:CONSTANT:AVOGADRO">
+<span class="sig-name descname"><span class="pre">Constant:Avogadro</span></span><a class="headerlink" href="#global:CONSTANT:AVOGADRO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Avogadro’s Constant.</p>
 <p>This value can be used in calculating atmospheric properties for drag purposes,
 which can be a rather advanced topic.
-<a class="reference external" href="https://en.wikipedia.org/wiki/Avogadro_constant">(Avogadro&#8217;s constant Wikipedia Page)</a>.</p>
+<a class="reference external" href="https://en.wikipedia.org/wiki/Avogadro_constant">(Avogadro’s constant Wikipedia Page)</a>.</p>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:CONSTANT:BOLTZMANN">
-<code class="descname">Constant:Boltzmann</code><a class="headerlink" href="#global:CONSTANT:BOLTZMANN" title="Permalink to this definition">¶</a></dt>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:CONSTANT:BOLTZMANN">
+<span class="sig-name descname"><span class="pre">Constant:Boltzmann</span></span><a class="headerlink" href="#global:CONSTANT:BOLTZMANN" title="Permalink to this definition">¶</a></dt>
 <dd><p>Boltzmann Constant.</p>
 <p>This value can be used in calculating atmospheric properties for drag purposes,
 which can be a rather advanced topic.
 <a class="reference external" href="https://en.wikipedia.org/wiki/Boltzmann_constant">(Boltzmann constant Wikipedia Page)</a>.</p>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:CONSTANT:IDEALGAS">
-<code class="descname">Constant:IdealGas</code><a class="headerlink" href="#global:CONSTANT:IDEALGAS" title="Permalink to this definition">¶</a></dt>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:CONSTANT:IDEALGAS">
+<span class="sig-name descname"><span class="pre">Constant:IdealGas</span></span><a class="headerlink" href="#global:CONSTANT:IDEALGAS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ideal Gas Constant.</p>
 <p>This value can be used in calculating atmospheric properties for drag purposes,
 which can be a rather advanced topic.
 <a class="reference external" href="https://en.wikipedia.org/wiki/Gas_constant">(Ideal Gas Constant Wikipedia Page)</a>.</p>
 </dd></dl>
 
-<span class="target" id="math-functions"></span></div>
-<div class="section" id="mathematical-functions">
-<span id="index-1"></span><h2>Mathematical Functions<a class="headerlink" href="#mathematical-functions" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="docutils">
-<colgroup>
-<col width="28%" />
-<col width="72%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Function</th>
-<th class="head">Description</th>
+<span class="target" id="math-functions"></span></section>
+<section id="mathematical-functions">
+<span id="index-1"></span><h2>Mathematical Functions<a class="headerlink" href="#mathematical-functions" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#function:ABS" title="ABS function"><code class="xref ks ks-func docutils literal"><span class="pre">ABS(a)</span></code></a></td>
-<td>absolute value</td>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#function:ABS" title="ABS function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">ABS(a)</span></code></a></p></td>
+<td><p>absolute value</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#function:CEILING" title="CEILING function"><code class="xref ks ks-func docutils literal"><span class="pre">CEILING(a)</span></code></a></td>
-<td>round up</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#function:CEILING" title="CEILING function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">CEILING(a)</span></code></a></p></td>
+<td><p>round up</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#function:CEILING" title="CEILING function"><code class="xref ks ks-func docutils literal"><span class="pre">CEILING(a,b)</span></code></a></td>
-<td>round up to nearest place</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#function:CEILING" title="CEILING function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">CEILING(a,b)</span></code></a></p></td>
+<td><p>round up to nearest place</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#function:FLOOR" title="FLOOR function"><code class="xref ks ks-func docutils literal"><span class="pre">FLOOR(a)</span></code></a></td>
-<td>round down</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#function:FLOOR" title="FLOOR function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">FLOOR(a)</span></code></a></p></td>
+<td><p>round down</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#function:FLOOR" title="FLOOR function"><code class="xref ks ks-func docutils literal"><span class="pre">FLOOR(a,b)</span></code></a></td>
-<td>round down to nearest place</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#function:FLOOR" title="FLOOR function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">FLOOR(a,b)</span></code></a></p></td>
+<td><p>round down to nearest place</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#function:LN" title="LN function"><code class="xref ks ks-func docutils literal"><span class="pre">LN(a)</span></code></a></td>
-<td>natural log</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#function:LN" title="LN function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">LN(a)</span></code></a></p></td>
+<td><p>natural log</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#function:LOG10" title="LOG10 function"><code class="xref ks ks-func docutils literal"><span class="pre">LOG10(a)</span></code></a></td>
-<td>log base 10</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#function:LOG10" title="LOG10 function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">LOG10(a)</span></code></a></p></td>
+<td><p>log base 10</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#function:MOD" title="MOD function"><code class="xref ks ks-func docutils literal"><span class="pre">MOD(a,b)</span></code></a></td>
-<td>modulus</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#function:MOD" title="MOD function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">MOD(a,b)</span></code></a></p></td>
+<td><p>modulus</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#function:MIN" title="MIN function"><code class="xref ks ks-func docutils literal"><span class="pre">MIN(a,b)</span></code></a></td>
-<td>return a or b, whichever is lesser.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#function:MIN" title="MIN function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">MIN(a,b)</span></code></a></p></td>
+<td><p>return a or b, whichever is lesser.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#function:MAX" title="MAX function"><code class="xref ks ks-func docutils literal"><span class="pre">MAX(a,b)</span></code></a></td>
-<td>return a or b, whichever is greater.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#function:MAX" title="MAX function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">MAX(a,b)</span></code></a></p></td>
+<td><p>return a or b, whichever is greater.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#function:RANDOM" title="RANDOM function"><code class="xref ks ks-func docutils literal"><span class="pre">RANDOM()</span></code></a></td>
-<td>random fractional number between 0 and 1.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#function:RANDOM" title="RANDOM function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">RANDOM()</span></code></a></p></td>
+<td><p>random fractional number between 0 and 1.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#function:RANDOMSEED" title="RANDOMSEED function"><code class="xref ks ks-func docutils literal"><span class="pre">RANDOMSEED()</span></code></a></td>
-<td>Start a new random sequence with a seed.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#function:RANDOMSEED" title="RANDOMSEED function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">RANDOMSEED()</span></code></a></p></td>
+<td><p>Start a new random sequence with a seed.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#function:ROUND" title="ROUND function"><code class="xref ks ks-func docutils literal"><span class="pre">ROUND(a)</span></code></a></td>
-<td>round to whole number</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#function:ROUND" title="ROUND function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">ROUND(a)</span></code></a></p></td>
+<td><p>round to whole number</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#function:ROUND" title="ROUND function"><code class="xref ks ks-func docutils literal"><span class="pre">ROUND(a,b)</span></code></a></td>
-<td>round to nearest place</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#function:ROUND" title="ROUND function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">ROUND(a,b)</span></code></a></p></td>
+<td><p>round to nearest place</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#function:SQRT" title="SQRT function"><code class="xref ks ks-func docutils literal"><span class="pre">SQRT(a)</span></code></a></td>
-<td>square root</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#function:SQRT" title="SQRT function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">SQRT(a)</span></code></a></p></td>
+<td><p>square root</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#function:CHAR" title="CHAR function"><code class="xref ks ks-func docutils literal"><span class="pre">CHAR(a)</span></code></a></td>
-<td>character from unicode</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#function:CHAR" title="CHAR function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">CHAR(a)</span></code></a></p></td>
+<td><p>character from unicode</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#function:UNCHAR" title="UNCHAR function"><code class="xref ks ks-func docutils literal"><span class="pre">UNCHAR(a)</span></code></a></td>
-<td>unicode from character</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#function:UNCHAR" title="UNCHAR function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">UNCHAR(a)</span></code></a></p></td>
+<td><p>unicode from character</p></td>
 </tr>
 </tbody>
 </table>
-<dl class="function">
-<dt id="function:ABS">
-<code class="descname">ABS</code><span class="sig-paren">(</span>a<span class="sig-paren">)</span><a class="headerlink" href="#function:ABS" title="Permalink to this definition">¶</a></dt>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:ABS">
+<span class="sig-name descname"><span class="pre">ABS</span></span><span class="sig-paren">(</span><span class="pre">a</span><span class="sig-paren">)</span><a class="headerlink" href="#function:ABS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns absolute value of input:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">ABS</span><span class="p">(</span><span class="o">-</span><span class="mf">1</span><span class="p">).</span> <span class="c1">// prints 1</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">ABS</span><span class="p">(</span><span class="o">-</span><span class="mf">1</span><span class="p">).</span> <span class="c1">// prints 1</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="function:CEILING">
-<code class="descname">CEILING</code><span class="sig-paren">(</span>a<span class="sig-paren">)</span><a class="headerlink" href="#function:CEILING" title="Permalink to this definition">¶</a></dt>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:CEILING">
+<span class="sig-name descname"><span class="pre">CEILING</span></span><span class="sig-paren">(</span><span class="pre">a</span><span class="sig-paren">)</span><a class="headerlink" href="#function:CEILING" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rounds up to the nearest whole number:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">CEILING</span><span class="p">(</span><span class="mf">1</span><span class="p">.</span><span class="mf">887</span><span class="p">).</span> <span class="c1">// prints 2</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">CEILING</span><span class="p">(</span><span class="mf">1</span><span class="p">.</span><span class="mf">887</span><span class="p">).</span> <span class="c1">// prints 2</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt>
-<code class="descname">CEILING</code><span class="sig-paren">(</span>a,b<span class="sig-paren">)</span></dt>
+<dl class="ks function">
+<dt class="sig sig-object ks">
+<span class="sig-name descname"><span class="pre">CEILING</span></span><span class="sig-paren">(</span><span class="pre">a,b</span><span class="sig-paren">)</span></dt>
 <dd><p>Rounds up to the nearest place value:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">CEILING</span><span class="p">(</span><span class="mf">1</span><span class="p">.</span><span class="mf">887</span><span class="p">,</span><span class="mf">2</span><span class="p">).</span> <span class="c1">// prints 1.89</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">CEILING</span><span class="p">(</span><span class="mf">1</span><span class="p">.</span><span class="mf">887</span><span class="p">,</span><span class="mf">2</span><span class="p">).</span> <span class="c1">// prints 1.89</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="function:FLOOR">
-<code class="descname">FLOOR</code><span class="sig-paren">(</span>a<span class="sig-paren">)</span><a class="headerlink" href="#function:FLOOR" title="Permalink to this definition">¶</a></dt>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:FLOOR">
+<span class="sig-name descname"><span class="pre">FLOOR</span></span><span class="sig-paren">(</span><span class="pre">a</span><span class="sig-paren">)</span><a class="headerlink" href="#function:FLOOR" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rounds down to the nearest whole number:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">FLOOR</span><span class="p">(</span><span class="mf">1</span><span class="p">.</span><span class="mf">887</span><span class="p">).</span> <span class="c1">// prints 1</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">FLOOR</span><span class="p">(</span><span class="mf">1</span><span class="p">.</span><span class="mf">887</span><span class="p">).</span> <span class="c1">// prints 1</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt>
-<code class="descname">FLOOR</code><span class="sig-paren">(</span>a,b<span class="sig-paren">)</span></dt>
+<dl class="ks function">
+<dt class="sig sig-object ks">
+<span class="sig-name descname"><span class="pre">FLOOR</span></span><span class="sig-paren">(</span><span class="pre">a,b</span><span class="sig-paren">)</span></dt>
 <dd><p>Rounds down to the nearest place value:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">CEILING</span><span class="p">(</span><span class="mf">1</span><span class="p">.</span><span class="mf">887</span><span class="p">,</span><span class="mf">2</span><span class="p">).</span> <span class="c1">// prints 1.88</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">CEILING</span><span class="p">(</span><span class="mf">1</span><span class="p">.</span><span class="mf">887</span><span class="p">,</span><span class="mf">2</span><span class="p">).</span> <span class="c1">// prints 1.88</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="function:LN">
-<code class="descname">LN</code><span class="sig-paren">(</span>a<span class="sig-paren">)</span><a class="headerlink" href="#function:LN" title="Permalink to this definition">¶</a></dt>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:LN">
+<span class="sig-name descname"><span class="pre">LN</span></span><span class="sig-paren">(</span><span class="pre">a</span><span class="sig-paren">)</span><a class="headerlink" href="#function:LN" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gives the natural log of the provided number:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">LN</span><span class="p">(</span><span class="mf">2</span><span class="p">).</span> <span class="c1">// prints 0.6931471805599453</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">LN</span><span class="p">(</span><span class="mf">2</span><span class="p">).</span> <span class="c1">// prints 0.6931471805599453</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="function:LOG10">
-<code class="descname">LOG10</code><span class="sig-paren">(</span>a<span class="sig-paren">)</span><a class="headerlink" href="#function:LOG10" title="Permalink to this definition">¶</a></dt>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:LOG10">
+<span class="sig-name descname"><span class="pre">LOG10</span></span><span class="sig-paren">(</span><span class="pre">a</span><span class="sig-paren">)</span><a class="headerlink" href="#function:LOG10" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gives the log base 10 of the provided number:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">LOG10</span><span class="p">(</span><span class="mf">2</span><span class="p">).</span> <span class="c1">// prints 0.30102999566398114</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">LOG10</span><span class="p">(</span><span class="mf">2</span><span class="p">).</span> <span class="c1">// prints 0.30102999566398114</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="function:MOD">
-<code class="descname">MOD</code><span class="sig-paren">(</span>a,b<span class="sig-paren">)</span><a class="headerlink" href="#function:MOD" title="Permalink to this definition">¶</a></dt>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:MOD">
+<span class="sig-name descname"><span class="pre">MOD</span></span><span class="sig-paren">(</span><span class="pre">a,b</span><span class="sig-paren">)</span><a class="headerlink" href="#function:MOD" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns remainder from integer division.
-Keep in mind that it&#8217;s not a traditional mathematical Euclidean division where the result is always positive. The result has the same absolute value as mathematical modulo operation but the sign is the same as the sign of dividend:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">MOD</span><span class="p">(</span><span class="mf">21</span><span class="p">,</span><span class="mf">6</span><span class="p">).</span> <span class="c1">// prints 3</span>
+Keep in mind that it’s not a traditional mathematical Euclidean division where the result is always positive. The result has the same absolute value as mathematical modulo operation but the sign is the same as the sign of dividend:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">MOD</span><span class="p">(</span><span class="mf">21</span><span class="p">,</span><span class="mf">6</span><span class="p">).</span> <span class="c1">// prints 3</span>
 <span class="k">PRINT</span> <span class="nv">MOD</span><span class="p">(</span><span class="o">-</span><span class="mf">21</span><span class="p">,</span><span class="mf">6</span><span class="p">).</span> <span class="c1">// prints -3</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="function:MIN">
-<code class="descname">MIN</code><span class="sig-paren">(</span>a,b<span class="sig-paren">)</span><a class="headerlink" href="#function:MIN" title="Permalink to this definition">¶</a></dt>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:MIN">
+<span class="sig-name descname"><span class="pre">MIN</span></span><span class="sig-paren">(</span><span class="pre">a,b</span><span class="sig-paren">)</span><a class="headerlink" href="#function:MIN" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns The lower of the two values:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">MIN</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">100</span><span class="p">).</span> <span class="c1">// prints 0</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">MIN</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">100</span><span class="p">).</span> <span class="c1">// prints 0</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="function:MAX">
-<code class="descname">MAX</code><span class="sig-paren">(</span>a,b<span class="sig-paren">)</span><a class="headerlink" href="#function:MAX" title="Permalink to this definition">¶</a></dt>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:MAX">
+<span class="sig-name descname"><span class="pre">MAX</span></span><span class="sig-paren">(</span><span class="pre">a,b</span><span class="sig-paren">)</span><a class="headerlink" href="#function:MAX" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns The higher of the two values:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">MAX</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">100</span><span class="p">).</span> <span class="c1">// prints 100</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">MAX</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">100</span><span class="p">).</span> <span class="c1">// prints 100</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="function:RANDOM">
-<code class="descname">RANDOM</code><span class="sig-paren">(</span>key<span class="sig-paren">)</span><a class="headerlink" href="#function:RANDOM" title="Permalink to this definition">¶</a></dt>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:RANDOM">
+<span class="sig-name descname"><span class="pre">RANDOM</span></span><span class="sig-paren">(</span><span class="pre">key</span><span class="sig-paren">)</span><a class="headerlink" href="#function:RANDOM" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the next random floating point number from a random
 number sequence.  The result is always in the range [0..1]</p>
 <p>This uses what is called a <a class="reference external" href="https://en.wikipedia.org/wiki/Pseudorandom_number_generator">pseudo-random number generator</a>.</p>
-<p>For basic usage you can leave the <code class="docutils literal"><span class="pre">key</span></code> parameter off and it
+<p>For basic usage you can leave the <code class="docutils literal notranslate"><span class="pre">key</span></code> parameter off and it
 works fine, like so:</p>
 <p>Example, basic usage:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">RANDOM</span><span class="p">().</span> <span class="c1">//prints a random number</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">RANDOM</span><span class="p">().</span> <span class="c1">//prints a random number</span>
 <span class="k">PRINT</span> <span class="s">&quot;Let&#39;s roll a 6-sided die 10 times:&quot;</span><span class="p">.</span>
 <span class="k">FOR</span> <span class="nv">n</span> <span class="nv">in</span> <span class="nv">range</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">10</span><span class="p">)</span> <span class="p">{</span>
 
@@ -586,28 +513,28 @@ works fine, like so:</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>The parameter <code class="docutils literal"><span class="pre">key</span></code> is a string, and it&#8217;s used when you want
+<p>The parameter <code class="docutils literal notranslate"><span class="pre">key</span></code> is a string, and it’s used when you want
 to track separate psuedo-random number sequences by name and
 have them be deterministically repeatable. <em>Like other
 string keys in kOS, this key is case-insensitive.</em></p>
 <ul class="simple">
-<li>If you leave the parameter <code class="docutils literal"><span class="pre">key</span></code> off, you get the next number
-from a default unnamed random number sequencer.</li>
-<li>If you supply the parameter <code class="docutils literal"><span class="pre">key</span></code>, you get the next number
+<li><p>If you leave the parameter <code class="docutils literal notranslate"><span class="pre">key</span></code> off, you get the next number
+from a default unnamed random number sequencer.</p></li>
+<li><p>If you supply the parameter <code class="docutils literal notranslate"><span class="pre">key</span></code>, you get the next number
 from a named random number sequencer.  You can invent however
 many keys you like and each one is a new random number sequencer.
 Supplying a key probably only means something if you have
-previously used <a class="reference internal" href="#function:RANDOMSEED" title="RANDOMSEED function"><code class="xref ks ks-func docutils literal"><span class="pre">RANDOMSEED(key,</span> <span class="pre">seed)</span></code></a>.</li>
+previously used <a class="reference internal" href="#function:RANDOMSEED" title="RANDOMSEED function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">RANDOMSEED(key,</span> <span class="pre">seed)</span></code></a>.</p></li>
 </ul>
 <p>The following example is more complex and shows the repeatability
-of the &#8220;random&#8221; sequence using seeds.  For most simple uses you
-probably don&#8217;t need to bother with this.  If words like &#8220;random
-number seed&#8221; are confusing, you can probably skip this part and
+of the “random” sequence using seeds.  For most simple uses you
+probably don’t need to bother with this.  If words like “random
+number seed” are confusing, you can probably skip this part and
 get by just fine with the basic usage shown above.  (Explaining
 how pseudorandom number generators work is a bit beyond this
 page - check the wikipedia link above to learn more.)</p>
 <p>Example, deterministic usage:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// create two different random number sequencers, both starting</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// create two different random number sequencers, both starting</span>
 <span class="c1">// with seed 12345 so they should have the same exact values.</span>
 <span class="nv">RANDOMSEED</span><span class="p">(</span><span class="s">&quot;sequence1&quot;</span><span class="p">,</span><span class="mf">12345</span><span class="p">).</span>
 <span class="nv">RANDOMSEED</span><span class="p">(</span><span class="s">&quot;sequence2&quot;</span><span class="p">,</span><span class="mf">12345</span><span class="p">).</span>
@@ -635,28 +562,28 @@ page - check the wikipedia link above to learn more.)</p>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="function:RANDOMSEED">
-<code class="descname">RANDOMSEED</code><span class="sig-paren">(</span>key, seed<span class="sig-paren">)</span><a class="headerlink" href="#function:RANDOMSEED" title="Permalink to this definition">¶</a></dt>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:RANDOMSEED">
+<span class="sig-name descname"><span class="pre">RANDOMSEED</span></span><span class="sig-paren">(</span><span class="pre">key,</span> <span class="pre">seed</span><span class="sig-paren">)</span><a class="headerlink" href="#function:RANDOMSEED" title="Permalink to this definition">¶</a></dt>
 <dd><p>No Return Value.</p>
 <p>Initializes a new random number sequence from a seed, giving it a
-key name you can use to refer to it in future calls to <a class="reference internal" href="#function:RANDOM" title="RANDOM function"><code class="xref ks ks-func docutils literal"><span class="pre">RANDOM(key)</span></code></a></p>
+key name you can use to refer to it in future calls to <a class="reference internal" href="#function:RANDOM" title="RANDOM function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">RANDOM(key)</span></code></a></p>
 <p>Using this you can make psuedo-random number sequences that can be
 re-run using the same seed to get the same result a second time.</p>
-<p>Parameter <code class="docutils literal"><span class="pre">key</span></code> is a string - a name you can use to refer to this
-random series later.  Calls to <code class="docutils literal"><span class="pre">RANDOMSEED</span></code> that use different
+<p>Parameter <code class="docutils literal notranslate"><span class="pre">key</span></code> is a string - a name you can use to refer to this
+random series later.  Calls to <code class="docutils literal notranslate"><span class="pre">RANDOMSEED</span></code> that use different
 keys actually cause different new random number sequences to be
 created that are tracked separately from each other. <em>Like other
 string keys in kOS, this key is case-insensitive.</em></p>
-<p>Parameter <code class="docutils literal"><span class="pre">seed</span></code> is an integer - an initial value to cause a
+<p>Parameter <code class="docutils literal notranslate"><span class="pre">seed</span></code> is an integer - an initial value to cause a
 deterministic series of random numbers to come out of the random
 function.</p>
-<p>Whenever you call <code class="docutils literal"><span class="pre">RANDOMSEED(key,</span> <span class="pre">seed)</span></code>, it starts a new
+<p>Whenever you call <code class="docutils literal notranslate"><span class="pre">RANDOMSEED(key,</span> <span class="pre">seed)</span></code>, it starts a new
 random number sequence using the integer seed you give it, and names
 that sequence with a string key you can use later to retrive
 values from that random number sequence.</p>
 <p>Example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">RANDOMSEED</span><span class="p">(</span><span class="s">&quot;generator A&quot;</span><span class="p">,</span><span class="mf">1000</span><span class="p">).</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">RANDOMSEED</span><span class="p">(</span><span class="s">&quot;generator A&quot;</span><span class="p">,</span><span class="mf">1000</span><span class="p">).</span>
 <span class="nv">RANDOMSEED</span><span class="p">(</span><span class="s">&quot;generator B&quot;</span><span class="p">,</span><span class="mf">1000</span><span class="p">).</span>
 <span class="k">PRINT</span> <span class="s">&quot;Generators A and B should emit identical &quot;</span><span class="p">.</span>
 <span class="k">PRINT</span> <span class="s">&quot;sequences because they both started at seed 1000.&quot;</span><span class="p">.</span>
@@ -684,336 +611,262 @@ values from that random number sequence.</p>
 <span class="k">PRINT</span> <span class="nv">floor</span><span class="p">(</span><span class="nv">RANDOM</span><span class="p">(</span><span class="s">&quot;generator B&quot;</span><span class="p">)</span><span class="o">*</span><span class="mf">100</span><span class="p">).</span>
 </pre></div>
 </div>
-<p>If you call <code class="docutils literal"><span class="pre">RANDOMSEED</span></code> using the same key as a key you already used
+<p>If you call <code class="docutils literal notranslate"><span class="pre">RANDOMSEED</span></code> using the same key as a key you already used
 before, it just forgets the previous random number sequence and starts
 a new one using the new seed.  You can use this to reset the sequence.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="function:ROUND">
-<code class="descname">ROUND</code><span class="sig-paren">(</span>a<span class="sig-paren">)</span><a class="headerlink" href="#function:ROUND" title="Permalink to this definition">¶</a></dt>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:ROUND">
+<span class="sig-name descname"><span class="pre">ROUND</span></span><span class="sig-paren">(</span><span class="pre">a</span><span class="sig-paren">)</span><a class="headerlink" href="#function:ROUND" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rounds to the nearest whole number:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">ROUND</span><span class="p">(</span><span class="mf">1</span><span class="p">.</span><span class="mf">887</span><span class="p">).</span> <span class="c1">// prints 2</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">ROUND</span><span class="p">(</span><span class="mf">1</span><span class="p">.</span><span class="mf">887</span><span class="p">).</span> <span class="c1">// prints 2</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt>
-<code class="descname">ROUND</code><span class="sig-paren">(</span>a,b<span class="sig-paren">)</span></dt>
+<dl class="ks function">
+<dt class="sig sig-object ks">
+<span class="sig-name descname"><span class="pre">ROUND</span></span><span class="sig-paren">(</span><span class="pre">a,b</span><span class="sig-paren">)</span></dt>
 <dd><p>Rounds to the nearest place value:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">ROUND</span><span class="p">(</span><span class="mf">1</span><span class="p">.</span><span class="mf">887</span><span class="p">,</span><span class="mf">2</span><span class="p">).</span> <span class="c1">// prints 1.89</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">ROUND</span><span class="p">(</span><span class="mf">1</span><span class="p">.</span><span class="mf">887</span><span class="p">,</span><span class="mf">2</span><span class="p">).</span> <span class="c1">// prints 1.89</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="function:SQRT">
-<code class="descname">SQRT</code><span class="sig-paren">(</span>a<span class="sig-paren">)</span><a class="headerlink" href="#function:SQRT" title="Permalink to this definition">¶</a></dt>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:SQRT">
+<span class="sig-name descname"><span class="pre">SQRT</span></span><span class="sig-paren">(</span><span class="pre">a</span><span class="sig-paren">)</span><a class="headerlink" href="#function:SQRT" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns square root:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">SQRT</span><span class="p">(</span><span class="mf">7</span><span class="p">.</span><span class="mf">89</span><span class="p">).</span> <span class="c1">// prints 2.80891438103763</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">SQRT</span><span class="p">(</span><span class="mf">7</span><span class="p">.</span><span class="mf">89</span><span class="p">).</span> <span class="c1">// prints 2.80891438103763</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="function:CHAR">
-<code class="descname">CHAR</code><span class="sig-paren">(</span>a<span class="sig-paren">)</span><a class="headerlink" href="#function:CHAR" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>a</strong> &#8211; (number)</li>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:CHAR">
+<span class="sig-name descname"><span class="pre">CHAR</span></span><span class="sig-paren">(</span><span class="pre">a</span><span class="sig-paren">)</span><a class="headerlink" href="#function:CHAR" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> – (number)</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(string) single-character string containing the unicode character specified</p>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">CHAR</span><span class="p">(</span><span class="mf">34</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;Apples&quot;</span> <span class="o">+</span> <span class="nv">CHAR</span><span class="p">(</span><span class="mf">34</span><span class="p">).</span> <span class="c1">// prints &quot;Apples&quot;</span>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(string) single-character string containing the unicode character specified</p>
+</dd>
+</dl>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">CHAR</span><span class="p">(</span><span class="mf">34</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;Apples&quot;</span> <span class="o">+</span> <span class="nv">CHAR</span><span class="p">(</span><span class="mf">34</span><span class="p">).</span> <span class="c1">// prints &quot;Apples&quot;</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="function:UNCHAR">
-<code class="descname">UNCHAR</code><span class="sig-paren">(</span>a<span class="sig-paren">)</span><a class="headerlink" href="#function:UNCHAR" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>a</strong> &#8211; (string)</li>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:UNCHAR">
+<span class="sig-name descname"><span class="pre">UNCHAR</span></span><span class="sig-paren">(</span><span class="pre">a</span><span class="sig-paren">)</span><a class="headerlink" href="#function:UNCHAR" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> – (string)</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(number) unicode number representing the character specified</p>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">UNCHAR</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">).</span> <span class="c1">// prints 65</span>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(number) unicode number representing the character specified</p>
+</dd>
+</dl>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">UNCHAR</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">).</span> <span class="c1">// prints 65</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<span class="target" id="trig"></span><div class="section" id="trigonometric-functions">
-<span id="index-2"></span><h3>Trigonometric Functions<a class="headerlink" href="#trigonometric-functions" title="Permalink to this headline">¶</a></h3>
-<table border="1" class="docutils">
+<span class="target" id="trig"></span><section id="trigonometric-functions">
+<span id="index-2"></span><h3>Trigonometric Functions<a class="headerlink" href="#trigonometric-functions" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default">
 <colgroup>
-<col width="100%" />
+<col style="width: 100.0%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Function</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#function:SIN" title="SIN function"><code class="xref ks ks-func docutils literal"><span class="pre">SIN(a)</span></code></a></td>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#function:SIN" title="SIN function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">SIN(a)</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#function:COS" title="COS function"><code class="xref ks ks-func docutils literal"><span class="pre">COS(a)</span></code></a></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#function:COS" title="COS function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">COS(a)</span></code></a></p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#function:TAN" title="TAN function"><code class="xref ks ks-func docutils literal"><span class="pre">TAN(a)</span></code></a></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#function:TAN" title="TAN function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">TAN(a)</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#function:ARCSIN" title="ARCSIN function"><code class="xref ks ks-func docutils literal"><span class="pre">ARCSIN(x)</span></code></a></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#function:ARCSIN" title="ARCSIN function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">ARCSIN(x)</span></code></a></p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#function:ARCCOS" title="ARCCOS function"><code class="xref ks ks-func docutils literal"><span class="pre">ARCCOS(x)</span></code></a></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#function:ARCCOS" title="ARCCOS function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">ARCCOS(x)</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#function:ARCTAN" title="ARCTAN function"><code class="xref ks ks-func docutils literal"><span class="pre">ARCTAN(x)</span></code></a></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#function:ARCTAN" title="ARCTAN function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">ARCTAN(x)</span></code></a></p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#function:ARCTAN2" title="ARCTAN2 function"><code class="xref ks ks-func docutils literal"><span class="pre">ARCTAN2(y,x)</span></code></a></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#function:ARCTAN2" title="ARCTAN2 function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">ARCTAN2(y,x)</span></code></a></p></td>
 </tr>
 </tbody>
 </table>
-<dl class="function">
-<dt id="function:SIN">
-<code class="descname">SIN</code><span class="sig-paren">(</span>a<span class="sig-paren">)</span><a class="headerlink" href="#function:SIN" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>a</strong> &#8211; (deg) angle</li>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:SIN">
+<span class="sig-name descname"><span class="pre">SIN</span></span><span class="sig-paren">(</span><span class="pre">a</span><span class="sig-paren">)</span><a class="headerlink" href="#function:SIN" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> – (deg) angle</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">sine of the angle</p>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">SIN</span><span class="p">(</span><span class="mf">6</span><span class="p">).</span> <span class="c1">// prints 0.10452846326</span>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>sine of the angle</p>
+</dd>
+</dl>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">SIN</span><span class="p">(</span><span class="mf">6</span><span class="p">).</span> <span class="c1">// prints 0.10452846326</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="function:COS">
-<code class="descname">COS</code><span class="sig-paren">(</span>a<span class="sig-paren">)</span><a class="headerlink" href="#function:COS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>a</strong> &#8211; (deg) angle</li>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:COS">
+<span class="sig-name descname"><span class="pre">COS</span></span><span class="sig-paren">(</span><span class="pre">a</span><span class="sig-paren">)</span><a class="headerlink" href="#function:COS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> – (deg) angle</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">cosine of the angle</p>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">COS</span><span class="p">(</span><span class="mf">6</span><span class="p">).</span> <span class="c1">// prints 0.99452189536</span>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>cosine of the angle</p>
+</dd>
+</dl>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">COS</span><span class="p">(</span><span class="mf">6</span><span class="p">).</span> <span class="c1">// prints 0.99452189536</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="function:TAN">
-<code class="descname">TAN</code><span class="sig-paren">(</span>a<span class="sig-paren">)</span><a class="headerlink" href="#function:TAN" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>a</strong> &#8211; (deg) angle</li>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:TAN">
+<span class="sig-name descname"><span class="pre">TAN</span></span><span class="sig-paren">(</span><span class="pre">a</span><span class="sig-paren">)</span><a class="headerlink" href="#function:TAN" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> – (deg) angle</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">tangent of the angle</p>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">TAN</span><span class="p">(</span><span class="mf">6</span><span class="p">).</span> <span class="c1">// prints 0.10510423526</span>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tangent of the angle</p>
+</dd>
+</dl>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">TAN</span><span class="p">(</span><span class="mf">6</span><span class="p">).</span> <span class="c1">// prints 0.10510423526</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="function:ARCSIN">
-<code class="descname">ARCSIN</code><span class="sig-paren">(</span>x<span class="sig-paren">)</span><a class="headerlink" href="#function:ARCSIN" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>x</strong> &#8211; (<a class="reference internal" href="scalar.html#scalar"><span>scalar</span></a>)</li>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:ARCSIN">
+<span class="sig-name descname"><span class="pre">ARCSIN</span></span><span class="sig-paren">(</span><span class="pre">x</span><span class="sig-paren">)</span><a class="headerlink" href="#function:ARCSIN" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – (<a class="reference internal" href="scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>)</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(deg) angle whose sine is x</p>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">ARCSIN</span><span class="p">(</span><span class="mf">0</span><span class="p">.</span><span class="mf">67</span><span class="p">).</span> <span class="c1">// prints 42.0670648</span>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(deg) angle whose sine is x</p>
+</dd>
+</dl>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">ARCSIN</span><span class="p">(</span><span class="mf">0</span><span class="p">.</span><span class="mf">67</span><span class="p">).</span> <span class="c1">// prints 42.0670648</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="function:ARCCOS">
-<code class="descname">ARCCOS</code><span class="sig-paren">(</span>x<span class="sig-paren">)</span><a class="headerlink" href="#function:ARCCOS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>x</strong> &#8211; (<a class="reference internal" href="scalar.html#scalar"><span>scalar</span></a>)</li>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:ARCCOS">
+<span class="sig-name descname"><span class="pre">ARCCOS</span></span><span class="sig-paren">(</span><span class="pre">x</span><span class="sig-paren">)</span><a class="headerlink" href="#function:ARCCOS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – (<a class="reference internal" href="scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>)</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(deg) angle whose cosine is x</p>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">ARCCOS</span><span class="p">(</span><span class="mf">0</span><span class="p">.</span><span class="mf">67</span><span class="p">).</span> <span class="c1">// prints 47.9329352</span>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(deg) angle whose cosine is x</p>
+</dd>
+</dl>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">ARCCOS</span><span class="p">(</span><span class="mf">0</span><span class="p">.</span><span class="mf">67</span><span class="p">).</span> <span class="c1">// prints 47.9329352</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="function:ARCTAN">
-<code class="descname">ARCTAN</code><span class="sig-paren">(</span>x<span class="sig-paren">)</span><a class="headerlink" href="#function:ARCTAN" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>x</strong> &#8211; (<a class="reference internal" href="scalar.html#scalar"><span>scalar</span></a>)</li>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:ARCTAN">
+<span class="sig-name descname"><span class="pre">ARCTAN</span></span><span class="sig-paren">(</span><span class="pre">x</span><span class="sig-paren">)</span><a class="headerlink" href="#function:ARCTAN" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – (<a class="reference internal" href="scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>)</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(deg) angle whose tangent is x</p>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">ARCTAN</span><span class="p">(</span><span class="mf">0</span><span class="p">.</span><span class="mf">67</span><span class="p">).</span> <span class="c1">// prints 33.8220852</span>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(deg) angle whose tangent is x</p>
+</dd>
+</dl>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">ARCTAN</span><span class="p">(</span><span class="mf">0</span><span class="p">.</span><span class="mf">67</span><span class="p">).</span> <span class="c1">// prints 33.8220852</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="function:ARCTAN2">
-<code class="descname">ARCTAN2</code><span class="sig-paren">(</span>y,x<span class="sig-paren">)</span><a class="headerlink" href="#function:ARCTAN2" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>y</strong> &#8211; (<a class="reference internal" href="scalar.html#scalar"><span>scalar</span></a>)</li>
-<li><strong>x</strong> &#8211; (<a class="reference internal" href="scalar.html#scalar"><span>scalar</span></a>)</li>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:ARCTAN2">
+<span class="sig-name descname"><span class="pre">ARCTAN2</span></span><span class="sig-paren">(</span><span class="pre">y,x</span><span class="sig-paren">)</span><a class="headerlink" href="#function:ARCTAN2" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y</strong> – (<a class="reference internal" href="scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>)</p></li>
+<li><p><strong>x</strong> – (<a class="reference internal" href="scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>)</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(deg) angle whose tangent is <span class="math">\(\frac{y}{x}\)</span></p>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">ARCTAN2</span><span class="p">(</span><span class="mf">0</span><span class="p">.</span><span class="mf">67</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">89</span><span class="p">).</span> <span class="c1">// prints 36.9727625</span>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(deg) angle whose tangent is <span class="math notranslate nohighlight">\(\frac{y}{x}\)</span></p>
+</dd>
+</dl>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">ARCTAN2</span><span class="p">(</span><span class="mf">0</span><span class="p">.</span><span class="mf">67</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">89</span><span class="p">).</span> <span class="c1">// prints 36.9727625</span>
 </pre></div>
 </div>
 <p>The two parameters resolve ambiguities when taking the arctangent. See the <a class="reference external" href="http://en.wikipedia.org/wiki/Atan2">wikipedia page about atan2</a> for more details.</p>
 </dd></dl>
 
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="scalar.html" class="btn btn-neutral float-right" title="Scalar" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="../math.html" class="btn btn-neutral" title="Mathematics and Basic Geometry" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../math.html" class="btn btn-neutral float-left" title="Mathematics and Basic Geometry" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="scalar.html" class="btn btn-neutral float-right" title="Scalar" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

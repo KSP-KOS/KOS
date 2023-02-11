@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Vessel Load Distance &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vessel Load Distance &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../../about.html"/>
-        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
-        <link rel="next" title="Note" href="note.html"/>
-        <link rel="prev" title="KUniverse 4th wall methods" href="kuniverse.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Note" href="note.html" />
+    <link rel="prev" title="KUniverse 4th wall methods" href="kuniverse.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
@@ -116,7 +67,7 @@
 <li class="toctree-l3"><a class="reference internal" href="highlight.html">Part Highlighting</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kosdelegate.html">KOSDelegate</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kuniverse.html">KUniverse 4th wall methods</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Vessel Load Distance</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Vessel Load Distance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#situation-load-distance">Situation Load Distance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="note.html">Note</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pidloop.html">PIDLoop</a></li>
@@ -146,103 +97,83 @@
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
-      
           <li><a href="../misc.html">Configurations and Miscellany</a> &raquo;</li>
-      
-    <li>Vessel Load Distance</li>
+      <li>Vessel Load Distance</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/structures/misc/loaddistance.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../../_sources/structures/misc/loaddistance.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="vessel-load-distance">
-<span id="loaddistance"></span><h1>Vessel Load Distance<a class="headerlink" href="#vessel-load-distance" title="Permalink to this headline">¶</a></h1>
-<dl class="structure">
-<dt id="structure:LOADDISTANCE">
-<em class="property">structure </em><code class="descname">LoadDistance</code><a class="headerlink" href="#structure:LOADDISTANCE" title="Permalink to this definition">¶</a></dt>
-<dd><p><strong>(The &#8220;on rails&#8221; settings)</strong></p>
-<p><a class="reference internal" href="#structure:LOADDISTANCE" title="LOADDISTANCE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">LoadDistance</span></code></a> describes the set of distances at which the game
+             
+  <section id="vessel-load-distance">
+<span id="loaddistance"></span><h1>Vessel Load Distance<a class="headerlink" href="#vessel-load-distance" title="Permalink to this heading">¶</a></h1>
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:LOADDISTANCE">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">LoadDistance</span></span><a class="headerlink" href="#structure:LOADDISTANCE" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>(The “on rails” settings)</strong></p>
+<p><a class="reference internal" href="#structure:LOADDISTANCE" title="LOADDISTANCE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">LoadDistance</span></code></a> describes the set of distances at which the game
 causes vessels to unload, and the distances that cause a vessel to
-become &#8220;packed&#8221;. This requires some explanation.</p>
-<p>Before entering into that explanation, first here&#8217;s a list of
+become “packed”. This requires some explanation.</p>
+<p>Before entering into that explanation, first here’s a list of
 example cases where you might want to use this feature to change
 these values:</p>
 <ul class="simple">
-<li>Trying to have one airplane follow another.</li>
-<li>Trying to have two rockets fly in formation into orbit together.</li>
-<li>Trying to have a rover race to a flag, with several rovers seeing who gets there first.</li>
+<li><p>Trying to have one airplane follow another.</p></li>
+<li><p>Trying to have two rockets fly in formation into orbit together.</p></li>
+<li><p>Trying to have a rover race to a flag, with several rovers seeing who gets there first.</p></li>
 </ul>
 <p>Basically, any time you might have more than just the current
 active vessel running a kOS script, this is a setting you probably
 will want to understand and tweak.</p>
 <p><strong>The explanation:</strong></p>
 <p>Most players of KSP eventually discover a concept called being
-&#8220;on rails&#8221;.  This is a term used by the player community to
+“on rails”.  This is a term used by the player community to
 describe the fact that vessels that are far away from the active
-vessel aren&#8217;t being micro-managed under the full physics engine.  At that
+vessel aren’t being micro-managed under the full physics engine.  At that
 distance, changes in movement due to things like the atmosphere, are not
-applied.  The vessel&#8217;s physics are calculated based only on orbital motion,
+applied.  The vessel’s physics are calculated based only on orbital motion,
 much like the effects of using timewarp (not physics warp).</p>
 <p>But the actual behavior in the game is a bit more complex than that,
 and understanding it is necessary to use this structure.</p>
-<p>The term &#8220;on rails&#8221; actually refers to two entirely different things
+<p>The term “on rails” actually refers to two entirely different things
 that are controlled by separate settings, as described below:</p>
 <p><strong>loaded</strong> : A vessel is LOADED when all its parts are being
-rendered by the graphics engine and it&#8217;s possible to actually see
-what it looks like.  A vessel that is UNLOADED doesn&#8217;t even
+rendered by the graphics engine and it’s possible to actually see
+what it looks like.  A vessel that is UNLOADED doesn’t even
 have its parts in memory and is just a single dot in space
 with no dimensions. An unloaded vessel is literally impossible
 to see on your screen no matter how much you squint because
-it&#8217;s not even being rendered on camera at all.  Unloaded vessels
+it’s not even being rendered on camera at all.  Unloaded vessels
 only exist as a marker icon in space, with a possible label text.</p>
 <p><strong>packed</strong> : A vessel is PACKED when it is close enough to be
 <em>loaded</em> (see above), but still far enough away that its full
-capabilities aren&#8217;t enabled.  A vessel that is <em>loaded</em>, but
+capabilities aren’t enabled.  A vessel that is <em>loaded</em>, but
 still <em>packed</em> will be unable to have its parts interact, and
 the vessel will appear stuck in the same location, unmoving.
 You can <em>see</em> a vessel that is loaded but packed, but the vessel
-won&#8217;t actually be able to <em>do</em> anything.  In this state, the
+won’t actually be able to <em>do</em> anything.  In this state, the
 game is still treating the entire object as if it was one single
-part.  It&#8217;s added all the graphic models of all the parts together
-into one conglomerate &#8220;object&#8221; (thus the term &#8220;packed&#8221;) that exists
-purely so you can look at it, even though it doesn&#8217;t actually work
+part.  It’s added all the graphic models of all the parts together
+into one conglomerate “object” (thus the term “packed”) that exists
+purely so you can look at it, even though it doesn’t actually work
 until you get closer and it becomes <em>unpacked</em>.</p>
 <p><strong>THE NEXT SENTENCE IS VERY IMPORTANT AND VITAL:</strong></p>
 <p><em>The kOS processor is able to run scripts any time that a vessel is loaded,
@@ -250,17 +181,17 @@ but the script is not guaranteed access to all features when a ship is
 LOADED but not UNPACKED.</em>  KSP limits some features (like throttle control)
 to only vessels that are unpacked.  You may check the <cite>UNPACKED</cite> suffix of
 the <cite>SHIP</cite> variable to determine if these features are available.</p>
-<p>This structure allows you to read or change the stock KSP game&#8217;s
+<p>This structure allows you to read or change the stock KSP game’s
 distance settings for how far a vessel has to get from the active
 vessel in order for it to trigger its UNLOAD or PACK states.</p>
 <p>The distance settings are different for different vessel situations.
-It&#8217;s important to first read the existing values before changing them,
+It’s important to first read the existing values before changing them,
 to see what the stock game thought were reasonable for them.</p>
 <p>Some distances are very short.  For example, the fact that the
 pack distance for a landed vessel is short is what allows landers
-to stay &#8220;parked&#8221; in place without tipping over when you leave them
+to stay “parked” in place without tipping over when you leave them
 on a long distance EVA.</p>
-<p>Each of these suffixes returns a <a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">SituationLoadDistance</span></code></a>,
+<p>Each of these suffixes returns a <a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">SituationLoadDistance</span></code></a>,
 which is a tuple of values for the loading and packing distances in
 that situation.</p>
 <p><strong>Wait between LOAD and PACK changes!</strong></p>
@@ -268,229 +199,221 @@ that situation.</p>
 both the load/unload distance and the unpack/pack distance at
 the same time in the same physics tick.  If you are
 going to increase both, then increase the load/unload distances
-first, followed by a <code class="docutils literal"><span class="pre">WAIT</span> <span class="pre">0.001.</span></code> to force a new physics tick
+first, followed by a <code class="docutils literal notranslate"><span class="pre">WAIT</span> <span class="pre">0.001.</span></code> to force a new physics tick
 and let the change take effect, then increase the unpack/pack
 distances after the wait is over.</p>
 <p><strong>Beware the space kraken when changing these:</strong></p>
-<p>There&#8217;s a reason the stock game has these distance limitations.  Setting
+<p>There’s a reason the stock game has these distance limitations.  Setting
 them very large can degrade your performance, and can cause buggy
 inaccuracies in the position and velocity calculations that cause the
-game to think things have collided together when they haven&#8217;t.  This
-is the classic &#8220;space kraken&#8221; that KSP players talk about a lot.  Computer
+game to think things have collided together when they haven’t.  This
+is the classic “space kraken” that KSP players talk about a lot.  Computer
 floating point numbers get less precise the farther from zero they are.
 So allowing the game to try to perform microcalculations on tiny time
 scales using floating point numbers that have imprecision because they are
 large in magnitude (i.e. the positions of parts that are many kilometers
 away from you), can cause phantom collisions, which make the game
-explode things for &#8220;no reason&#8221;.</p>
+explode things for “no reason”.</p>
 <p>These distance limits were put in place by SQUAD specifically for
 the purpose of trying to avoid the space kraken.  If you set them
 too large again, you can risk invoking the Kraken again.  They
 typically CAN be enlarged some, because the settings are very low
 to provide a overly large safety margin, but be careful with it.
-Don&#8217;t go overboard and set the ranges to several thousand kilometers.</p>
-<p>Also, don&#8217;t set the PACK distance to be higher than the LOAD distance,
+Don’t go overboard and set the ranges to several thousand kilometers.</p>
+<p>Also, don’t set the PACK distance to be higher than the LOAD distance,
 as that is undefined behavior in the main game.  Always keep the LOAD
 distance higher than or equal to the PACK distance.</p>
-<table border="1" class="docutils" id="id1">
+<table class="docutils align-default" id="id1">
 <caption><span class="caption-text">Members and Methods</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="22%" />
-<col width="22%" />
-<col width="11%" />
-<col width="44%" />
+<col style="width: 22.2%" />
+<col style="width: 22.2%" />
+<col style="width: 11.1%" />
+<col style="width: 44.4%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type</th>
-<th class="head">Get/Set</th>
-<th class="head">Description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Get/Set</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><code class="xref ks ks-attr docutils literal"><span class="pre">ESCAPING</span></code></td>
-<td><a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">SituationLoadDistance</span></code></a></td>
-<td>Get</td>
-<td>Load and pack Distances while escaping the current body</td>
+<tbody>
+<tr class="row-even"><td><p><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ESCAPING</span></code></p></td>
+<td><p><a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">SituationLoadDistance</span></code></a></p></td>
+<td><p>Get</p></td>
+<td><p>Load and pack Distances while escaping the current body</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref ks ks-attr docutils literal"><span class="pre">FLYING</span></code></td>
-<td><a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">SituationLoadDistance</span></code></a></td>
-<td>Get</td>
-<td>Load and pack Distances while flying in atmosphere</td>
+<tr class="row-odd"><td><p><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">FLYING</span></code></p></td>
+<td><p><a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">SituationLoadDistance</span></code></a></p></td>
+<td><p>Get</p></td>
+<td><p>Load and pack Distances while flying in atmosphere</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref ks ks-attr docutils literal"><span class="pre">LANDED</span></code></td>
-<td><a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">SituationLoadDistance</span></code></a></td>
-<td>Get</td>
-<td>Load and pack Distances while landed on the surface</td>
+<tr class="row-even"><td><p><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">LANDED</span></code></p></td>
+<td><p><a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">SituationLoadDistance</span></code></a></p></td>
+<td><p>Get</p></td>
+<td><p>Load and pack Distances while landed on the surface</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref ks ks-attr docutils literal"><span class="pre">ORBIT</span></code></td>
-<td><a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">SituationLoadDistance</span></code></a></td>
-<td>Get</td>
-<td>Load and pack Distances while in orbit</td>
+<tr class="row-odd"><td><p><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ORBIT</span></code></p></td>
+<td><p><a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">SituationLoadDistance</span></code></a></p></td>
+<td><p>Get</p></td>
+<td><p>Load and pack Distances while in orbit</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref ks ks-attr docutils literal"><span class="pre">PRELAUNCH</span></code></td>
-<td><a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">SituationLoadDistance</span></code></a></td>
-<td>Get</td>
-<td>Load and pack Distances while on the launch pad or runway</td>
+<tr class="row-even"><td><p><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">PRELAUNCH</span></code></p></td>
+<td><p><a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">SituationLoadDistance</span></code></a></p></td>
+<td><p>Get</p></td>
+<td><p>Load and pack Distances while on the launch pad or runway</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref ks ks-attr docutils literal"><span class="pre">SPLASHED</span></code></td>
-<td><a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">SituationLoadDistance</span></code></a></td>
-<td>Get</td>
-<td>Load and pack Distances while splashed in water</td>
+<tr class="row-odd"><td><p><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">SPLASHED</span></code></p></td>
+<td><p><a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">SituationLoadDistance</span></code></a></p></td>
+<td><p>Get</p></td>
+<td><p>Load and pack Distances while splashed in water</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref ks ks-attr docutils literal"><span class="pre">SUBORBITAL</span></code></td>
-<td><a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">SituationLoadDistance</span></code></a></td>
-<td>Get</td>
-<td>Load and pack Distances while on a suborbital trajectory</td>
+<tr class="row-even"><td><p><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">SUBORBITAL</span></code></p></td>
+<td><p><a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">SituationLoadDistance</span></code></a></p></td>
+<td><p>Get</p></td>
+<td><p>Load and pack Distances while on a suborbital trajectory</p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
-</div>
-<div class="section" id="situation-load-distance">
-<h1>Situation Load Distance<a class="headerlink" href="#situation-load-distance" title="Permalink to this headline">¶</a></h1>
+</section>
+<section id="situation-load-distance">
+<h1>Situation Load Distance<a class="headerlink" href="#situation-load-distance" title="Permalink to this heading">¶</a></h1>
 <p>Each of the above</p>
-<dl class="structure">
-<dt id="structure:SITUATIONLOADDISTANCE">
-<em class="property">structure </em><code class="descname">SituationLoadDistance</code><a class="headerlink" href="#structure:SITUATIONLOADDISTANCE" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">SituationLoadDistance</span></code></a> is what is returned by each of the
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:SITUATIONLOADDISTANCE">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">SituationLoadDistance</span></span><a class="headerlink" href="#structure:SITUATIONLOADDISTANCE" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">SituationLoadDistance</span></code></a> is what is returned by each of the
 above suffixes mentioned in the LoadDistance suffix list above.</p>
 <p><strong>Order Matters.</strong> - Becuse of the protections in place to prevent
 you from setting some values bigger than others (see the descriptions
 below), sometimes the order in which you change the values matters
 and you have to be careful to change them in the correct order, or
 else  the attempt to change them will be denied.</p>
-<table border="1" class="docutils" id="id2">
+<table class="docutils align-default" id="id2">
 <caption><span class="caption-text">Members and Methods</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="25%" />
-<col width="13%" />
-<col width="13%" />
-<col width="50%" />
+<col style="width: 25.0%" />
+<col style="width: 12.5%" />
+<col style="width: 12.5%" />
+<col style="width: 50.0%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type</th>
-<th class="head">Get/Set</th>
-<th class="head">Description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Get/Set</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#attribute:SITUATIONLOADDISTANCE:LOAD" title="SITUATIONLOADDISTANCE:LOAD attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LOAD</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a>, in meters</td>
-<td>Get/Set</td>
-<td>The load distance</td>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:SITUATIONLOADDISTANCE:LOAD" title="SITUATIONLOADDISTANCE:LOAD attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">LOAD</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (m)</p></td>
+<td><p>Get/Set</p></td>
+<td><p>The load distance</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:SITUATIONLOADDISTANCE:UNLOAD" title="SITUATIONLOADDISTANCE:UNLOAD attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">UNLOAD</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a>, in meters</td>
-<td>Get/Set</td>
-<td>The unload distance</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:SITUATIONLOADDISTANCE:UNLOAD" title="SITUATIONLOADDISTANCE:UNLOAD attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">UNLOAD</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (m)</p></td>
+<td><p>Get/Set</p></td>
+<td><p>The unload distance</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:SITUATIONLOADDISTANCE:UNPACK" title="SITUATIONLOADDISTANCE:UNPACK attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">UNPACK</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a>, in meters</td>
-<td>Get/Set</td>
-<td>The unpack distance</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:SITUATIONLOADDISTANCE:UNPACK" title="SITUATIONLOADDISTANCE:UNPACK attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">UNPACK</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (m)</p></td>
+<td><p>Get/Set</p></td>
+<td><p>The unpack distance</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:SITUATIONLOADDISTANCE:PACK" title="SITUATIONLOADDISTANCE:PACK attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PACK</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a>, in meters</td>
-<td>Get/Set</td>
-<td>The pack distance</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:SITUATIONLOADDISTANCE:PACK" title="SITUATIONLOADDISTANCE:PACK attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">PACK</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (m)</p></td>
+<td><p>Get/Set</p></td>
+<td><p>The pack distance</p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:SITUATIONLOADDISTANCE:LOAD">
-SituationLoadDistance:<code class="descname">LOAD</code><a class="headerlink" href="#attribute:SITUATIONLOADDISTANCE:LOAD" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a>, in meters</td>
-</tr>
-</tbody>
-</table>
-<p>Get or set the load distance.  When another vessel is getting closer
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:SITUATIONLOADDISTANCE:LOAD">
+<span class="pre">SituationLoadDistance:</span><span class="sig-name descname"><span class="pre">LOAD</span></span><a class="headerlink" href="#attribute:SITUATIONLOADDISTANCE:LOAD" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (m)</p>
+</dd>
+</dl>
+<p>Get or set the load distance in meters.  When another vessel is getting closer
 to you, because you are moving toward it or it is moving toward you,
 when that vessel becomes this distance <em>or closer</em> to the active
 vessel, it will transition from being <em>unloaded</em> to being <em>loaded</em>.
 See the description above for what it means for a vessel to be <em>loaded</em>.</p>
-<p>This value must be less than <code class="xref ks ks-attr docutils literal"><span class="pre">UNLOAD</span></code>, and will automatically
+<p>This value must be less than <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">UNLOAD</span></code>, and will automatically
 be adjusted accordingly.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:SITUATIONLOADDISTANCE:UNLOAD">
-SituationLoadDistance:<code class="descname">UNLOAD</code><a class="headerlink" href="#attribute:SITUATIONLOADDISTANCE:UNLOAD" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a>, in meters</td>
-</tr>
-</tbody>
-</table>
-<p>Get or set the unload distance.  When another vessel is becoming more
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:SITUATIONLOADDISTANCE:UNLOAD">
+<span class="pre">SituationLoadDistance:</span><span class="sig-name descname"><span class="pre">UNLOAD</span></span><a class="headerlink" href="#attribute:SITUATIONLOADDISTANCE:UNLOAD" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (m)</p>
+</dd>
+</dl>
+<p>Get or set the unload distance in meters.  When another vessel is becoming more
 distant as you move away from it, or it moves away from you,
 when that vessel becomes this distance <em>or greater</em> from the active
 vessel, it will transition from being <em>loaded</em> to being <em>unloaded</em>.
 See the description above for what it means for a vessel to be <em>loaded</em>.</p>
-<p>This value must be greater than <code class="xref ks ks-attr docutils literal"><span class="pre">LOAD</span></code>, and will automatically
+<p>This value must be greater than <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">LOAD</span></code>, and will automatically
 be adjusted accordingly.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:SITUATIONLOADDISTANCE:UNPACK">
-SituationLoadDistance:<code class="descname">UNPACK</code><a class="headerlink" href="#attribute:SITUATIONLOADDISTANCE:UNPACK" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a>, in meters</td>
-</tr>
-</tbody>
-</table>
-<p>Get or set the unpack distance.  When another vessel is getting closer
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:SITUATIONLOADDISTANCE:UNPACK">
+<span class="pre">SituationLoadDistance:</span><span class="sig-name descname"><span class="pre">UNPACK</span></span><a class="headerlink" href="#attribute:SITUATIONLOADDISTANCE:UNPACK" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (m)</p>
+</dd>
+</dl>
+<p>Get or set the unpack distance in meters.  When another vessel is getting closer
 to you, because you are moving toward it or it is moving toward you,
 when that vessel becomes this distance <em>or closer</em> to the active
 vessel, it will transition from being <em>packed</em> to being <em>unpacked</em>.
 See the description above for what it means for a vessel to be <em>packed</em>.</p>
-<p>This value must be less than <code class="xref ks ks-attr docutils literal"><span class="pre">PACK</span></code>, and will automatically be adjusted accordingly.</p>
+<p>This value must be less than <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">PACK</span></code>, and will automatically be adjusted accordingly.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:SITUATIONLOADDISTANCE:PACK">
-SituationLoadDistance:<code class="descname">PACK</code><a class="headerlink" href="#attribute:SITUATIONLOADDISTANCE:PACK" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a>, in meters</td>
-</tr>
-</tbody>
-</table>
-<p>Get or set the pack distance.  When another vessel is getting farther
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:SITUATIONLOADDISTANCE:PACK">
+<span class="pre">SituationLoadDistance:</span><span class="sig-name descname"><span class="pre">PACK</span></span><a class="headerlink" href="#attribute:SITUATIONLOADDISTANCE:PACK" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (m)</p>
+</dd>
+</dl>
+<p>Get or set the pack distance in meters.  When another vessel is getting farther
 away from you, because you are moving away from it or it is moving
 away from you, when that vessel becomes this distance <em>or greater</em>
 from the active vessel, it will transition from being <em>unpacked</em> to
 being <em>packed</em>.  See the description above for what it means for
 a vessel to be <em>packed</em>.</p>
-<p>This value must be greater than <code class="xref ks ks-attr docutils literal"><span class="pre">UNPACK</span></code>, and will automatically be adjusted accordingly.</p>
+<p>This value must be greater than <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">UNPACK</span></code>, and will automatically be adjusted accordingly.</p>
 </dd></dl>
 
 <p>===Examples===</p>
 <p>Print out all the current settings:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">distances</span> <span class="ow">TO</span> <span class="nv">KUNIVERSE</span><span class="p">:</span><span class="nv">DEFAULTLOADDISTANCE</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">distances</span> <span class="ow">TO</span> <span class="nv">KUNIVERSE</span><span class="p">:</span><span class="nv">DEFAULTLOADDISTANCE</span><span class="p">.</span>
 
 <span class="k">PRINT</span> <span class="s">&quot;escaping distances:&quot;</span><span class="p">.</span>
 <span class="k">print</span> <span class="s">&quot;    load: &quot;</span> <span class="o">+</span> <span class="nv">distances</span><span class="p">:</span><span class="nv">ESCAPING</span><span class="p">:</span><span class="nv">LOAD</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
@@ -533,7 +456,7 @@ a vessel to be <em>packed</em>.</p>
 on launchpad or runway,
 For the purpose of allowing more vessels to fly around the
 Kerbal Space Center at a greater distances from each other:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// 30 km for in-flight</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// 30 km for in-flight</span>
 <span class="c1">// Note the order is important.  set UNLOAD BEFORE LOAD,</span>
 <span class="c1">// and PACK before UNPACK.  Otherwise the protections in</span>
 <span class="c1">// place to prevent invalid values will deny your attempt</span>
@@ -582,75 +505,37 @@ Kerbal Space Center at a greater distances from each other:</p>
 <span class="k">WAIT</span> <span class="mf">0</span><span class="p">.</span><span class="mf">001</span><span class="p">.</span> <span class="c1">// See paragraph above: &quot;wait between load and pack changes&quot;</span>
 </pre></div>
 </div>
-</div>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="note.html" class="btn btn-neutral float-right" title="Note" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="kuniverse.html" class="btn btn-neutral" title="KUniverse 4th wall methods" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="kuniverse.html" class="btn btn-neutral float-left" title="KUniverse 4th wall methods" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="note.html" class="btn btn-neutral float-right" title="Note" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

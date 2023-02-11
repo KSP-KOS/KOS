@@ -1,80 +1,39 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Reference Frames &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reference Frames &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../about.html"/>
-        <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../index.html"/>
-        <link rel="up" title="Mathematics and Basic Geometry" href="../math.html"/>
-        <link rel="next" title="Command Reference" href="../commands.html"/>
-        <link rel="prev" title="Geographic Coordinates" href="geocoordinates.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="next" title="Command Reference" href="../commands.html" />
+    <link rel="prev" title="Geographic Coordinates" href="geocoordinates.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +41,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
@@ -104,9 +56,7 @@
 <li class="toctree-l2"><a class="reference internal" href="vector.html">Vectors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="direction.html">Directions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geocoordinates.html">Geographic Coordinates</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Reference Frames</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Reference Frames</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a></li>
@@ -118,60 +68,41 @@
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../math.html">Mathematics and Basic Geometry</a> &raquo;</li>
-      
-    <li>Reference Frames</li>
+      <li>Reference Frames</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../_sources/math/ref_frame.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../_sources/math/ref_frame.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="reference-frames">
-<span id="ref-frame"></span><h1>Reference Frames<a class="headerlink" href="#reference-frames" title="Permalink to this headline">¶</a></h1>
-<p>This page describes the <span class="math">\((x,y,z)\)</span> reference frame used for most
-of <strong>kOS</strong>&#8216;s vectors. kOS inherits its reference frame mostly from the
+             
+  <section id="reference-frames">
+<span id="ref-frame"></span><h1>Reference Frames<a class="headerlink" href="#reference-frames" title="Permalink to this heading">¶</a></h1>
+<p>This page describes the <span class="math notranslate nohighlight">\((x,y,z)\)</span> reference frame used for most
+of <strong>kOS</strong>’s vectors. kOS inherits its reference frame mostly from the
 base Kerbal Space Program game itself.  The coordinate system of Kerbal
-Space Program does some strange things that don&#8217;t make a lot of sense
+Space Program does some strange things that don’t make a lot of sense
 at first.</p>
 <div class="admonition note" id="left-handed">
-<p class="first admonition-title">Note</p>
-<p class="last">Be aware that Kerbal Space program (and in fact many of the games
+<p class="admonition-title">Note</p>
+<p>Be aware that Kerbal Space program (and in fact many of the games
 based on the Unity game engine) uses a <strong>LEFT-handed</strong> coordinate
 system.  kOS inherits this behavior from KSP.</p>
 </div>
@@ -188,128 +119,90 @@ convention first.  But for a variety of reasons, many computer
 graphics systems have a tradition of using left-handed systems
 instead, and Kerbal Space Program is one of them.</p>
 <span class="target" id="ship-raw"></span><span class="target" id="index-0"></span><dl class="object">
-<dt>
-<code class="descname">SHIP-RAW</code></dt>
-<dd><p>The name of the reference frame in which the origin point is <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span>CPU Vessel (SHIP)</span></a>, and the rotation is identical to <strong>KSP</strong>&#8216;s native raw coordinate grid.</p>
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">SHIP-RAW</span></span></dt>
+<dd><p>The name of the reference frame in which the origin point is <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span class="std std-ref">CPU Vessel (SHIP)</span></a>, and the rotation is identical to <strong>KSP</strong>’s native raw coordinate grid.</p>
 </dd></dl>
 
 <span class="target" id="soi-raw"></span><span class="target" id="index-1"></span><dl class="object">
-<dt>
-<code class="descname">SOI-RAW</code></dt>
-<dd><p>The name of the reference frame in which the origin point is the center of the <em>SOI body</em>, and the rotation is identical to <strong>KSP</strong>&#8216;s native raw coordinate grid.</p>
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">SOI-RAW</span></span></dt>
+<dd><p>The name of the reference frame in which the origin point is the center of the <em>SOI body</em>, and the rotation is identical to <strong>KSP</strong>’s native raw coordinate grid.</p>
 </dd></dl>
 
 <span class="target" id="raw-raw"></span><span class="target" id="index-2"></span><dl class="object">
-<dt>
-<code class="descname">RAW-RAW</code></dt>
-<dd><p>The name of the reference frame in which both the origin point and the rotation of the axes is identical to <strong>KSP</strong>&#8216;s native raw coordinate grid. This is never exposed to the <strong>KerbalScript</strong> program, because the origin point is meaningless to work with.</p>
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">RAW-RAW</span></span></dt>
+<dd><p>The name of the reference frame in which both the origin point and the rotation of the axes is identical to <strong>KSP</strong>’s native raw coordinate grid. This is never exposed to the <strong>KerbalScript</strong> program, because the origin point is meaningless to work with.</p>
 </dd></dl>
 
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">It is hoped that this may be expanded in the future, and conversion routines provided to let people pick a reference frame that makes sense depending on what the script is trying to do. At the moment the only reference frames used are SHIP-RAW and SOI-RAW, as they match closely to what <strong>KSP</strong> is using internally.</p>
+<p class="admonition-title">Note</p>
+<p>It is hoped that this may be expanded in the future, and conversion routines provided to let people pick a reference frame that makes sense depending on what the script is trying to do. At the moment the only reference frames used are SHIP-RAW and SOI-RAW, as they match closely to what <strong>KSP</strong> is using internally.</p>
 </div>
-<div class="section" id="raw-orientation">
-<h2>Raw Orientation<a class="headerlink" href="#raw-orientation" title="Permalink to this headline">¶</a></h2>
-<div class="figure">
+<section id="raw-orientation">
+<h2>Raw Orientation<a class="headerlink" href="#raw-orientation" title="Permalink to this heading">¶</a></h2>
+<figure class="align-default">
 <img alt="../_images/KSP_body_coords.png" src="../_images/KSP_body_coords.png" />
-</div>
-<p>The Y axis of <strong>KSP</strong> is the only consistent thing. Imagine a ray starting in the center of the SOI body and pointing upward out through the north pole. That is the direction of the Y axis. (If you move to the SOI of a body with an inclined spin, presumably it will also change the angle of the Y axis to point in the new direction of the body&#8217;s spin axis).</p>
+</figure>
+<p>The Y axis of <strong>KSP</strong> is the only consistent thing. Imagine a ray starting in the center of the SOI body and pointing upward out through the north pole. That is the direction of the Y axis. (If you move to the SOI of a body with an inclined spin, presumably it will also change the angle of the Y axis to point in the new direction of the body’s spin axis).</p>
 <p>The X and Z axes of the coordinate grid are then consequently aligned with the equator plane of the SOI body, 90 degrees to each other. <strong>KSP</strong> uses a left-handed coordinate system, so the Z axis will always be rotated 90 degrees to the east of the X axis.</p>
-<div class="figure">
+<figure class="align-default">
 <img alt="../_images/KSP_body_latlong.png" src="../_images/KSP_body_latlong.png" />
-</div>
-<p>However, it&#8217;s hard to predict exactly where the X and Z axes will be. They keep moving depending on where you are, to the point where it&#8217;s impossible to get a fix on just which direction they&#8217;ll point.</p>
-</div>
-<div class="section" id="origin-position">
-<h2>Origin Position<a class="headerlink" href="#origin-position" title="Permalink to this headline">¶</a></h2>
-<p>The origin position of the <span class="math">\((x,y,z)\)</span> coordinate grid in <strong>KSP</strong> is also a bit messy. It&#8217;s usually <em>near</em> but not exactly <em>on</em> the current ship. <strong>kOS</strong> performs some conversions for you to make this a bit simpler and keep everything consistent.</p>
-<p>Regardless of where the origin of the underlying <strong>KSP</strong> system is, in <strong>kOS</strong>, whenever a POSITION is reported, it will always be reported in a frame of reference where the origin is located at the <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span>CPU Vessel</span></a>.</p>
-<p>However, for the sake of VELOCITY, the origin point of all vectors is usually not SHIP, but the SOI body&#8217;s center. This is because if the origin point was the SHIP, then the ship&#8217;s velocity would always be zero in that frame of reference, and that would not be useful.</p>
-<p>(The makers of <strong>kOS</strong> are aware that this is not technically a proper frame of reference, because the origin point varies depending on if you&#8217;re getting POSITION or getting VELOCITY. Fixing it at this point would break a lot of existing scripts, however.)</p>
+</figure>
+<p>However, it’s hard to predict exactly where the X and Z axes will be. They keep moving depending on where you are, to the point where it’s impossible to get a fix on just which direction they’ll point.</p>
+</section>
+<section id="origin-position">
+<h2>Origin Position<a class="headerlink" href="#origin-position" title="Permalink to this heading">¶</a></h2>
+<p>The origin position of the <span class="math notranslate nohighlight">\((x,y,z)\)</span> coordinate grid in <strong>KSP</strong> is also a bit messy. It’s usually <em>near</em> but not exactly <em>on</em> the current ship. <strong>kOS</strong> performs some conversions for you to make this a bit simpler and keep everything consistent.</p>
+<p>Regardless of where the origin of the underlying <strong>KSP</strong> system is, in <strong>kOS</strong>, whenever a POSITION is reported, it will always be reported in a frame of reference where the origin is located at the <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span class="std std-ref">CPU Vessel</span></a>.</p>
+<p>However, for the sake of VELOCITY, the origin point of all vectors is usually not SHIP, but the SOI body’s center. This is because if the origin point was the SHIP, then the ship’s velocity would always be zero in that frame of reference, and that would not be useful.</p>
+<p>(The makers of <strong>kOS</strong> are aware that this is not technically a proper frame of reference, because the origin point varies depending on if you’re getting POSITION or getting VELOCITY. Fixing it at this point would break a lot of existing scripts, however.)</p>
 <p>So the rule of thumb is:</p>
 <ul class="simple">
-<li>For POSITION returned by <strong>KSP</strong>, the SHIP-RAW reference frame is used: centered on SHIP, with raw axes rotation.</li>
-<li>For VELOCITY returned by <strong>KSP</strong>, the SOI-RAW reference frame is used: centered on SOI Body, with raw axes rotation.</li>
+<li><p>For POSITION returned by <strong>KSP</strong>, the SHIP-RAW reference frame is used: centered on SHIP, with raw axes rotation.</p></li>
+<li><p>For VELOCITY returned by <strong>KSP</strong>, the SOI-RAW reference frame is used: centered on SOI Body, with raw axes rotation.</p></li>
 </ul>
-</div>
-<div class="section" id="converting">
-<h2>Converting<a class="headerlink" href="#converting" title="Permalink to this headline">¶</a></h2>
-<p>Converting between SHIP-RAW and SOI-RAW reference frames is a simple matter of moving the origin point by adding or subtracting the <code class="docutils literal"><span class="pre">SHIP:BODY:POSITION</span></code> vector from the coordinate. This works because both frames are using the same axes rotation.</p>
+</section>
+<section id="converting">
+<h2>Converting<a class="headerlink" href="#converting" title="Permalink to this heading">¶</a></h2>
+<p>Converting between SHIP-RAW and SOI-RAW reference frames is a simple matter of moving the origin point by adding or subtracting the <code class="docutils literal notranslate"><span class="pre">SHIP:BODY:POSITION</span></code> vector from the coordinate. This works because both frames are using the same axes rotation.</p>
 <ul class="simple">
-<li>Any SHIP-RAW position vector <em>minus</em> <code class="docutils literal"><span class="pre">SHIP:BODY:POSITION</span></code> Gives the vector in SOI-RAW coordinates.</li>
-<li>Any SOI-RAW position vector <em>plus</em> <code class="docutils literal"><span class="pre">SHIP:BODY:POSITION</span></code> Gives the vector in SHIP-RAW coordinates.</li>
+<li><p>Any SHIP-RAW position vector <em>minus</em> <code class="docutils literal notranslate"><span class="pre">SHIP:BODY:POSITION</span></code> Gives the vector in SOI-RAW coordinates.</p></li>
+<li><p>Any SOI-RAW position vector <em>plus</em> <code class="docutils literal notranslate"><span class="pre">SHIP:BODY:POSITION</span></code> Gives the vector in SHIP-RAW coordinates.</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="../commands.html" class="btn btn-neutral float-right" title="Command Reference" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="geocoordinates.html" class="btn btn-neutral" title="Geographic Coordinates" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="geocoordinates.html" class="btn btn-neutral float-left" title="Geographic Coordinates" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../commands.html" class="btn btn-neutral float-right" title="Command Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

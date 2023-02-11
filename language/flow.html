@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Flow Control &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flow Control &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../about.html"/>
-        <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../index.html"/>
-        <link rel="up" title="The KerboScript Language" href="../language.html"/>
-        <link rel="next" title="Variables &amp; Statements" href="variables.html"/>
-        <link rel="prev" title="KerboScript Syntax Specification" href="syntax.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="next" title="Variables &amp; Statements" href="variables.html" />
+    <link rel="prev" title="KerboScript Syntax Specification" href="syntax.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
@@ -100,9 +51,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../language.html">Language</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="features.html">General Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Language Syntax</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Flow Control</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Flow Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_functions.html">User Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="anonymous.html">Anonymous User Functions</a></li>
@@ -121,74 +70,55 @@
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../language.html">The <strong>KerboScript</strong> Language</a> &raquo;</li>
-      
-    <li>Flow Control</li>
+      <li>Flow Control</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../_sources/language/flow.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../_sources/language/flow.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="flow-control">
-<span id="flow"></span><h1>Flow Control<a class="headerlink" href="#flow-control" title="Permalink to this headline">¶</a></h1>
-<div class="contents local topic" id="contents">
+             
+  <section id="flow-control">
+<span id="flow"></span><h1>Flow Control<a class="headerlink" href="#flow-control" title="Permalink to this heading">¶</a></h1>
+<nav class="contents local" id="contents">
 <ul class="simple">
-<li><a class="reference internal" href="#break" id="id7"><code class="docutils literal"><span class="pre">BREAK</span></code></a></li>
-<li><a class="reference internal" href="#if-else" id="id8"><code class="docutils literal"><span class="pre">IF</span></code> / <code class="docutils literal"><span class="pre">ELSE</span></code></a></li>
-<li><a class="reference internal" href="#choose-ternary-operator" id="id9">CHOOSE (Ternary operator)</a></li>
-<li><a class="reference internal" href="#lock" id="id10"><code class="docutils literal"><span class="pre">LOCK</span></code></a></li>
-<li><a class="reference internal" href="#unlock" id="id11"><code class="docutils literal"><span class="pre">UNLOCK</span></code></a></li>
-<li><a class="reference internal" href="#until-loop" id="id12"><code class="docutils literal"><span class="pre">UNTIL</span></code> loop</a></li>
-<li><a class="reference internal" href="#for-loop" id="id13"><code class="docutils literal"><span class="pre">FOR</span></code> loop</a></li>
-<li><a class="reference internal" href="#from-loop" id="id14"><code class="docutils literal"><span class="pre">FROM</span></code> loop</a></li>
-<li><a class="reference internal" href="#wait" id="id15"><code class="docutils literal"><span class="pre">WAIT</span></code></a></li>
-<li><a class="reference internal" href="#boolean-operators" id="id16">Boolean Operators</a></li>
-<li><a class="reference internal" href="#declare-function" id="id17"><code class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">FUNCTION</span></code></a></li>
-<li><a class="reference internal" href="#return" id="id18"><code class="docutils literal"><span class="pre">RETURN</span></code></a></li>
-<li><a class="reference internal" href="#when-then-statements-and-on-statements" id="id19"><code class="docutils literal"><span class="pre">WHEN</span></code> / <code class="docutils literal"><span class="pre">THEN</span></code> statements, and <code class="docutils literal"><span class="pre">ON</span></code> statements</a></li>
-<li><a class="reference internal" href="#preserve" id="id20"><code class="docutils literal"><span class="pre">PRESERVE</span></code></a></li>
+<li><p><a class="reference internal" href="#break" id="id7"><code class="docutils literal notranslate"><span class="pre">BREAK</span></code></a></p></li>
+<li><p><a class="reference internal" href="#if-else" id="id8"><code class="docutils literal notranslate"><span class="pre">IF</span></code> / <code class="docutils literal notranslate"><span class="pre">ELSE</span></code></a></p></li>
+<li><p><a class="reference internal" href="#choose-ternary-operator" id="id9">CHOOSE (Ternary operator)</a></p></li>
+<li><p><a class="reference internal" href="#lock" id="id10"><code class="docutils literal notranslate"><span class="pre">LOCK</span></code></a></p></li>
+<li><p><a class="reference internal" href="#unlock" id="id11"><code class="docutils literal notranslate"><span class="pre">UNLOCK</span></code></a></p></li>
+<li><p><a class="reference internal" href="#until-loop" id="id12"><code class="docutils literal notranslate"><span class="pre">UNTIL</span></code> loop</a></p></li>
+<li><p><a class="reference internal" href="#for-loop" id="id13"><code class="docutils literal notranslate"><span class="pre">FOR</span></code> loop</a></p></li>
+<li><p><a class="reference internal" href="#from-loop" id="id14"><code class="docutils literal notranslate"><span class="pre">FROM</span></code> loop</a></p></li>
+<li><p><a class="reference internal" href="#wait" id="id15"><code class="docutils literal notranslate"><span class="pre">WAIT</span></code></a></p></li>
+<li><p><a class="reference internal" href="#boolean-operators" id="id16">Boolean Operators</a></p></li>
+<li><p><a class="reference internal" href="#declare-function" id="id17"><code class="docutils literal notranslate"><span class="pre">DECLARE</span> <span class="pre">FUNCTION</span></code></a></p></li>
+<li><p><a class="reference internal" href="#return" id="id18"><code class="docutils literal notranslate"><span class="pre">RETURN</span></code></a></p></li>
+<li><p><a class="reference internal" href="#when-then-statements-and-on-statements" id="id19"><code class="docutils literal notranslate"><span class="pre">WHEN</span></code> / <code class="docutils literal notranslate"><span class="pre">THEN</span></code> statements, and <code class="docutils literal notranslate"><span class="pre">ON</span></code> statements</a></p></li>
+<li><p><a class="reference internal" href="#preserve" id="id20"><code class="docutils literal notranslate"><span class="pre">PRESERVE</span></code></a></p></li>
 </ul>
-</div>
-<div class="section" id="break">
-<span id="index-0"></span><span id="id1"></span><h2><a class="toc-backref" href="#id7"><code class="docutils literal"><span class="pre">BREAK</span></code></a><a class="headerlink" href="#break" title="Permalink to this headline">¶</a></h2>
+</nav>
+<section id="break">
+<span id="index-0"></span><span id="id1"></span><h2><a class="toc-backref" href="#id7" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">BREAK</span></code></a><a class="headerlink" href="#break" title="Permalink to this heading">¶</a></h2>
 <p>Breaks out of a loop:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">X</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">X</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
 <span class="k">UNTIL</span> <span class="mf">0</span> <span class="p">{</span>
     <span class="k">SET</span> <span class="nv">X</span> <span class="ow">TO</span> <span class="nv">X</span> <span class="o">+</span> <span class="mf">1</span><span class="p">.</span>
     <span class="k">IF</span> <span class="nv">X</span> <span class="o">&gt;</span> <span class="mf">10</span> <span class="p">{</span> <span class="k">BREAK</span><span class="p">.</span> <span class="p">}</span> <span class="c1">// Exits the loop when</span>
@@ -196,11 +126,11 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="if-else">
-<span id="if"></span><span id="index-1"></span><h2><a class="toc-backref" href="#id8"><code class="docutils literal"><span class="pre">IF</span></code> / <code class="docutils literal"><span class="pre">ELSE</span></code></a><a class="headerlink" href="#if-else" title="Permalink to this headline">¶</a></h2>
-<p>Checks if the expression supplied returns true. If it does, <code class="docutils literal"><span class="pre">IF</span></code> executes the following command block. Can also have an optional <code class="docutils literal"><span class="pre">ELSE</span></code> to execute when the <code class="docutils literal"><span class="pre">IF</span></code> condition is not true. <code class="docutils literal"><span class="pre">ELSE</span></code> can have another <code class="docutils literal"><span class="pre">IF</span></code> after it, to make a chain of <code class="docutils literal"><span class="pre">IF</span></code>/<code class="docutils literal"><span class="pre">ELSE</span></code> conditions:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">X</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
+</section>
+<section id="if-else">
+<span id="if"></span><span id="index-1"></span><h2><a class="toc-backref" href="#id8" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">IF</span></code> / <code class="docutils literal notranslate"><span class="pre">ELSE</span></code></a><a class="headerlink" href="#if-else" title="Permalink to this heading">¶</a></h2>
+<p>Checks if the expression supplied returns true. If it does, <code class="docutils literal notranslate"><span class="pre">IF</span></code> executes the following command block. Can also have an optional <code class="docutils literal notranslate"><span class="pre">ELSE</span></code> to execute when the <code class="docutils literal notranslate"><span class="pre">IF</span></code> condition is not true. <code class="docutils literal notranslate"><span class="pre">ELSE</span></code> can have another <code class="docutils literal notranslate"><span class="pre">IF</span></code> after it, to make a chain of <code class="docutils literal notranslate"><span class="pre">IF</span></code>/<code class="docutils literal notranslate"><span class="pre">ELSE</span></code> conditions:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">X</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
 <span class="k">IF</span> <span class="nv">X</span> <span class="o">=</span> <span class="mf">1</span> <span class="p">{</span> <span class="k">PRINT</span> <span class="s">&quot;X equals one.&quot;</span><span class="p">.</span> <span class="p">}</span>     <span class="c1">// Prints &quot;X equals one.&quot;</span>
 <span class="k">IF</span> <span class="nv">X</span> <span class="o">&gt;</span> <span class="mf">10</span> <span class="p">{</span> <span class="k">PRINT</span> <span class="s">&quot;X is greater than ten.&quot;</span><span class="p">.</span> <span class="p">}</span>  <span class="c1">// Does nothing</span>
 
@@ -218,15 +148,15 @@
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p>The period (<code class="docutils literal"><span class="pre">.</span></code>) is optional after the end of a set of curly braces like so:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// both of these lines are fine</span>
+<p class="admonition-title">Note</p>
+<p>The period (<code class="docutils literal notranslate"><span class="pre">.</span></code>) is optional after the end of a set of curly braces like so:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// both of these lines are fine</span>
 <span class="k">IF</span> <span class="nb">TRUE</span> <span class="p">{</span> <span class="k">PRINT</span> <span class="s">&quot;Hello&quot;</span><span class="p">.</span> <span class="p">}</span>
 <span class="k">IF</span> <span class="nb">TRUE</span> <span class="p">{</span> <span class="k">PRINT</span> <span class="s">&quot;Hello&quot;</span><span class="p">.</span> <span class="p">}.</span>
 </pre></div>
 </div>
-<p>In the case where you are using the <code class="docutils literal"><span class="pre">ELSE</span></code> keyword, you must <em>not</em> end the previous <code class="docutils literal"><span class="pre">IF</span></code> body with a period, as that terminates the <code class="docutils literal"><span class="pre">IF</span></code> command and causes the <code class="docutils literal"><span class="pre">ELSE</span></code> keyword to be without a matching <code class="docutils literal"><span class="pre">IF</span></code>:</p>
-<div class="last highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// works:</span>
+<p>In the case where you are using the <code class="docutils literal notranslate"><span class="pre">ELSE</span></code> keyword, you must <em>not</em> end the previous <code class="docutils literal notranslate"><span class="pre">IF</span></code> body with a period, as that terminates the <code class="docutils literal notranslate"><span class="pre">IF</span></code> command and causes the <code class="docutils literal notranslate"><span class="pre">ELSE</span></code> keyword to be without a matching <code class="docutils literal notranslate"><span class="pre">IF</span></code>:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// works:</span>
 <span class="k">IF</span> <span class="nv">X</span> <span class="o">&gt;</span> <span class="mf">10</span> <span class="p">{</span> <span class="k">PRINT</span> <span class="s">&quot;Large&quot;</span><span class="p">.</span> <span class="p">}</span>  <span class="k">ELSE</span> <span class="p">{</span> <span class="k">PRINT</span> <span class="s">&quot;Small&quot;</span><span class="p">.</span> <span class="p">}.</span>
 
 <span class="c1">// syntax error - ELSE without IF.</span>
@@ -234,29 +164,31 @@
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="choose-ternary-operator">
-<span id="choose"></span><span id="index-2"></span><h2><a class="toc-backref" href="#id9">CHOOSE (Ternary operator)</a><a class="headerlink" href="#choose-ternary-operator" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="choose-ternary-operator">
+<span id="choose"></span><span id="index-2"></span><h2><a class="toc-backref" href="#id9" role="doc-backlink">CHOOSE (Ternary operator)</a><a class="headerlink" href="#choose-ternary-operator" title="Permalink to this heading">¶</a></h2>
 <p>An expression that evalualtes to one of two choices depending on a
 conditional check:</p>
 <blockquote>
-<div>CHOOSE expression1 IF condition ELSE expression2</div></blockquote>
+<div><p>CHOOSE expression1 IF condition ELSE expression2</p>
+</div></blockquote>
 <p>Note this is NOT a statement.  This is an expression that can be embedded
 inside other statements, like so:</p>
 <blockquote>
-<div>SET X TO CHOOSE expression1 IF condition ELSE expression2.
-PRINT CHOOSE &#8220;High&#8221; IF altitude &gt; 20000 ELSE &#8220;Low&#8221;.</div></blockquote>
-<p>The reason to use the <code class="docutils literal"><span class="pre">CHOOSE</span></code> operator instead of an
-IF/ELSE statement is that IF/ELSE won&#8217;t return a value, while
+<div><p>SET X TO CHOOSE expression1 IF condition ELSE expression2.
+PRINT CHOOSE “High” IF altitude &gt; 20000 ELSE “Low”.</p>
+</div></blockquote>
+<p>The reason to use the <code class="docutils literal notranslate"><span class="pre">CHOOSE</span></code> operator instead of an
+IF/ELSE statement is that IF/ELSE won’t return a value, while
 this does, and thus this can be embedded inside other expressions.</p>
-<p>(This is similar to the <code class="docutils literal"><span class="pre">?</span></code> operator in languages like &#8220;C&#8221; and its
-derivatives, except it puts the &#8220;true&#8221; choice first, then the
-conditional check, then the &#8220;false&#8221; choice.)</p>
-</div>
-<div class="section" id="lock">
-<span id="index-3"></span><span id="id2"></span><h2><a class="toc-backref" href="#id10"><code class="docutils literal"><span class="pre">LOCK</span></code></a><a class="headerlink" href="#lock" title="Permalink to this headline">¶</a></h2>
+<p>(This is similar to the <code class="docutils literal notranslate"><span class="pre">?</span></code> operator in languages like “C” and its
+derivatives, except it puts the “true” choice first, then the
+conditional check, then the “false” choice.)</p>
+</section>
+<section id="lock">
+<span id="index-3"></span><span id="id2"></span><h2><a class="toc-backref" href="#id10" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">LOCK</span></code></a><a class="headerlink" href="#lock" title="Permalink to this heading">¶</a></h2>
 <p>Locks an identifier to an expression. Each time the identifier is used in an expression, its value will be re-calculated on the fly:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">X</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">X</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
 <span class="k">LOCK</span> <span class="nv">Y</span> <span class="ow">TO</span> <span class="nv">X</span> <span class="o">+</span> <span class="mf">2</span><span class="p">.</span>
 <span class="k">PRINT</span> <span class="nv">Y</span><span class="p">.</span>         <span class="c1">// Outputs 3</span>
 <span class="k">SET</span> <span class="nv">X</span> <span class="ow">TO</span> <span class="mf">4</span><span class="p">.</span>
@@ -268,29 +200,29 @@ name used already exists in local scope, then the lock command creates
 a lock function that only lasts as long as the current scope and then
 becomes unreachable after that.  If the variable name used does not exist
 in local scope, then LOCK will create it as a global variable, unless
-<code class="docutils literal"><span class="pre">&#64;LAZYGLOBAL</span></code> is set to off, in which case it will be an error.</p>
+<code class="docutils literal notranslate"><span class="pre">&#64;LAZYGLOBAL</span></code> is set to off, in which case it will be an error.</p>
 <p>Note that a LOCK expression is extremely similar to a user function.
-Every time you read the value of the &#8220;variable&#8221;, it executes the expression
+Every time you read the value of the “variable”, it executes the expression
 again.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">If a <code class="docutils literal"><span class="pre">LOCK</span></code> expression is used with a flight control such as <code class="docutils literal"><span class="pre">THROTTLE</span></code> or <code class="docutils literal"><span class="pre">STEERING</span></code>, then it will get repeatedly evaluated in <a class="reference internal" href="../general/cpu_hardware.html#physics-tick"><span>each physics tick</span></a>.
-When used with a flight control variable, a <code class="docutils literal"><span class="pre">LOCK</span></code> actually
-becomes a <a class="reference internal" href="../general/cpu_hardware.html#triggers"><span>trigger</span></a>.</p>
+<p class="admonition-title">Note</p>
+<p>If a <code class="docutils literal notranslate"><span class="pre">LOCK</span></code> expression is used with a flight control such as <code class="docutils literal notranslate"><span class="pre">THROTTLE</span></code> or <code class="docutils literal notranslate"><span class="pre">STEERING</span></code>, then it will get repeatedly evaluated in <a class="reference internal" href="../general/cpu_hardware.html#physics-tick"><span class="std std-ref">each physics tick</span></a>.
+When used with a flight control variable, a <code class="docutils literal notranslate"><span class="pre">LOCK</span></code> actually
+becomes a <a class="reference internal" href="../general/cpu_hardware.html#triggers"><span class="std std-ref">trigger</span></a>.</p>
 </div>
-</div>
-<div class="section" id="unlock">
-<span id="index-4"></span><span id="id3"></span><h2><a class="toc-backref" href="#id11"><code class="docutils literal"><span class="pre">UNLOCK</span></code></a><a class="headerlink" href="#unlock" title="Permalink to this headline">¶</a></h2>
-<p>Releases a lock on a variable. See <code class="docutils literal"><span class="pre">LOCK</span></code>:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">UNLOCK</span> <span class="nv">X</span><span class="p">.</span>    <span class="c1">// Releases a lock on variable X</span>
+</section>
+<section id="unlock">
+<span id="index-4"></span><span id="id3"></span><h2><a class="toc-backref" href="#id11" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">UNLOCK</span></code></a><a class="headerlink" href="#unlock" title="Permalink to this heading">¶</a></h2>
+<p>Releases a lock on a variable. See <code class="docutils literal notranslate"><span class="pre">LOCK</span></code>:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">UNLOCK</span> <span class="nv">X</span><span class="p">.</span>    <span class="c1">// Releases a lock on variable X</span>
 <span class="k">UNLOCK</span> <span class="ow">ALL</span><span class="p">.</span>  <span class="c1">// Releases ALL locks</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="until-loop">
-<span id="until"></span><span id="index-5"></span><h2><a class="toc-backref" href="#id12"><code class="docutils literal"><span class="pre">UNTIL</span></code> loop</a><a class="headerlink" href="#until-loop" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="until-loop">
+<span id="until"></span><span id="index-5"></span><h2><a class="toc-backref" href="#id12" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">UNTIL</span></code> loop</a><a class="headerlink" href="#until-loop" title="Permalink to this heading">¶</a></h2>
 <p>Performs a loop until a certain condition is met:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">X</span> <span class="ow">to</span> <span class="mf">1</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">X</span> <span class="ow">to</span> <span class="mf">1</span><span class="p">.</span>
 <span class="k">UNTIL</span> <span class="nv">X</span> <span class="o">&gt;</span> <span class="mf">10</span> <span class="p">{</span>      <span class="c1">// Prints the numbers 1-10</span>
     <span class="k">PRINT</span> <span class="nv">X</span><span class="p">.</span>
     <span class="k">SET</span> <span class="nv">X</span> <span class="ow">to</span> <span class="nv">X</span> <span class="o">+</span> <span class="mf">1</span><span class="p">.</span>
@@ -298,13 +230,13 @@ becomes a <a class="reference internal" href="../general/cpu_hardware.html#trigg
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">If you are writing an <code class="docutils literal"><span class="pre">UNTIL</span></code> loop that looks much like the
+<p class="admonition-title">Note</p>
+<p>If you are writing an <code class="docutils literal notranslate"><span class="pre">UNTIL</span></code> loop that looks much like the
 example above, consider the possibility of writing it as a
-<a class="reference internal" href="#from"><span>FROM</span></a> loop instead.</p>
+<a class="reference internal" href="#from"><span class="std std-ref">FROM</span></a> loop instead.</p>
 </div>
-<p>Note that if you are creating a loop in which you are watching a physical value that you expect to change each iteration, it&#8217;s vital that you insert a small WAIT at the bottom of the loop like so:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">PREV_TIME</span> <span class="ow">to</span> <span class="nv">TIME</span><span class="p">:</span><span class="nv">SECONDS</span><span class="p">.</span>
+<p>Note that if you are creating a loop in which you are watching a physical value that you expect to change each iteration, it’s vital that you insert a small WAIT at the bottom of the loop like so:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">PREV_TIME</span> <span class="ow">to</span> <span class="nv">TIME</span><span class="p">:</span><span class="nv">SECONDS</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">PREV_VEL</span> <span class="ow">to</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">ACCEL</span> <span class="ow">to</span> <span class="nv">V</span><span class="p">(</span><span class="mf">9999</span><span class="p">,</span><span class="mf">9999</span><span class="p">,</span><span class="mf">9999</span><span class="p">).</span>
 <span class="k">PRINT</span> <span class="s">&quot;Waiting for accellerations to stop.&quot;</span><span class="p">.</span>
@@ -317,22 +249,22 @@ example above, consider the possibility of writing it as a
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>The full explanation why is <a class="reference internal" href="../general/cpu_hardware.html#cpu-hardware"><span>in the CPU hardware description
+<p>The full explanation why is <a class="reference internal" href="../general/cpu_hardware.html#cpu-hardware"><span class="std std-ref">in the CPU hardware description
 page</span></a>.</p>
-</div>
-<div class="section" id="for-loop">
-<span id="for"></span><span id="index-6"></span><h2><a class="toc-backref" href="#id13"><code class="docutils literal"><span class="pre">FOR</span></code> loop</a><a class="headerlink" href="#for-loop" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="for-loop">
+<span id="for"></span><span id="index-6"></span><h2><a class="toc-backref" href="#id13" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">FOR</span></code> loop</a><a class="headerlink" href="#for-loop" title="Permalink to this heading">¶</a></h2>
 <p>Loops over a list collection, letting you access one element at a time. Syntax:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">FOR</span> <span class="nv">variable1</span> <span class="nv">IN</span> <span class="nv">variable2</span> <span class="p">{</span> <span class="nv">use</span> <span class="nv">variable1</span> <span class="nv">here</span><span class="p">.</span> <span class="p">}</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">FOR</span> <span class="nv">variable1</span> <span class="nv">IN</span> <span class="nv">variable2</span> <span class="p">{</span> <span class="nv">use</span> <span class="nv">variable1</span> <span class="nv">here</span><span class="p">.</span> <span class="p">}</span>
 </pre></div>
 </div>
 <p>Where:</p>
 <ul class="simple">
-<li><cite>variable1</cite> is a variable to hold each element one at a time.</li>
-<li><cite>variable2</cite> is a LIST variable to iterate over.</li>
+<li><p><cite>variable1</cite> is a variable to hold each element one at a time.</p></li>
+<li><p><cite>variable2</cite> is a LIST variable to iterate over.</p></li>
 </ul>
 <p>Example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;Counting flamed out engines:&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;Counting flamed out engines:&quot;</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">numOUT</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span>
 <span class="k">LIST</span> <span class="nv">ENGINES</span> <span class="nv">IN</span> <span class="nv">MyList</span><span class="p">.</span>
 <span class="k">FOR</span> <span class="nv">eng</span> <span class="nv">IN</span> <span class="nv">MyList</span> <span class="p">{</span>
@@ -344,102 +276,107 @@ page</span></a>.</p>
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">If you are an experienced programmer looking for something more
+<p class="admonition-title">Note</p>
+<p>If you are an experienced programmer looking for something more
 like the for-loop from C, with its 3-part clauses of init,
-check, and increment in the header, see the <a class="reference internal" href="#from"><span>FROM</span></a> loop
-description.  The kerboscript &#8216;for&#8217; loop is more like a
-&#8216;foreach&#8217; loop from other modern languages like C#.</p>
+check, and increment in the header, see the <a class="reference internal" href="#from"><span class="std std-ref">FROM</span></a> loop
+description.  The kerboscript ‘for’ loop is more like a
+‘foreach’ loop from other modern languages like C#.</p>
 </div>
-</div>
-<div class="section" id="from-loop">
-<span id="from"></span><span id="index-7"></span><h2><a class="toc-backref" href="#id14"><code class="docutils literal"><span class="pre">FROM</span></code> loop</a><a class="headerlink" href="#from-loop" title="Permalink to this headline">¶</a></h2>
-<p>Identical to the <a class="reference internal" href="#until"><span>UNTIL</span></a> loop, except that it also contains
+</section>
+<section id="from-loop">
+<span id="from"></span><span id="index-7"></span><h2><a class="toc-backref" href="#id14" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">FROM</span></code> loop</a><a class="headerlink" href="#from-loop" title="Permalink to this heading">¶</a></h2>
+<p>Identical to the <a class="reference internal" href="#until"><span class="std std-ref">UNTIL</span></a> loop, except that it also contains
 an explicit initializer and incrementer section in the header.</p>
-<div class="section" id="syntax">
-<h3>Syntax:<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
+<section id="syntax">
+<h3>Syntax:<a class="headerlink" href="#syntax" title="Permalink to this heading">¶</a></h3>
 <blockquote>
-<div><code class="docutils literal"><span class="pre">FROM</span></code> { one or more statements } <code class="docutils literal"><span class="pre">UNTIL</span></code> Boolean_expression
-<code class="docutils literal"><span class="pre">STEP</span></code> { one or more statements } <code class="docutils literal"><span class="pre">DO</span></code> one statement or a block of statements inside braces &#8216;{}&#8217;</div></blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">FROM</span></code> { one or more statements } <code class="docutils literal notranslate"><span class="pre">UNTIL</span></code> Boolean_expression
+<code class="docutils literal notranslate"><span class="pre">STEP</span></code> { one or more statements } <code class="docutils literal notranslate"><span class="pre">DO</span></code> one statement or a block of statements inside braces ‘{}’</p>
+</div></blockquote>
 <p>Quick Example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="s">&quot;Countdown initiated:&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="s">&quot;Countdown initiated:&quot;</span><span class="p">.</span>
 <span class="k">FROM</span> <span class="p">{</span><span class="k">local</span> <span class="nv">x</span> <span class="ow">is</span> <span class="mf">10</span><span class="p">.}</span> <span class="k">UNTIL</span> <span class="nv">x</span> <span class="o">=</span> <span class="mf">0</span> <span class="k">STEP</span> <span class="p">{</span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="nv">x</span><span class="o">-</span><span class="mf">1</span><span class="p">.}</span> <span class="k">DO</span> <span class="p">{</span>
   <span class="k">print</span> <span class="s">&quot;T -&quot;</span> <span class="o">+</span> <span class="nv">x</span><span class="p">.</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">If you are an experienced programmer, you can think of the <code class="docutils literal"><span class="pre">FROM</span></code>
-loop as just being Kerboscript&#8217;s version of the generic 3-part
-for-loop <code class="docutils literal"><span class="pre">for(</span> <span class="pre">int</span> <span class="pre">x=10;</span> <span class="pre">x</span> <span class="pre">&gt;</span> <span class="pre">0;</span> <span class="pre">--x</span> <span class="pre">)</span> <span class="pre">{...}</span></code> that first appeared
+<p class="admonition-title">Note</p>
+<p>If you are an experienced programmer, you can think of the <code class="docutils literal notranslate"><span class="pre">FROM</span></code>
+loop as just being Kerboscript’s version of the generic 3-part
+for-loop <code class="docutils literal notranslate"><span class="pre">for(</span> <span class="pre">int</span> <span class="pre">x=10;</span> <span class="pre">x</span> <span class="pre">&gt;</span> <span class="pre">0;</span> <span class="pre">--x</span> <span class="pre">)</span> <span class="pre">{...}</span></code> that first appeared
 in C and is now so common to many programming languages, except
-that its Boolean check uses the reverse of that logic because it&#8217;s
+that its Boolean check uses the reverse of that logic because it’s
 based on UNTIL loops instead of WHILE loops.</p>
 </div>
-</div>
-<div class="section" id="what-the-parts-mean">
-<h3>What the parts mean<a class="headerlink" href="#what-the-parts-mean" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="what-the-parts-mean">
+<h3>What the parts mean<a class="headerlink" href="#what-the-parts-mean" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
-<li><code class="docutils literal"><span class="pre">FROM</span></code> { one or more statements }<ul>
-<li>Perform these statements at the beginning before starting the first
+<li><p><code class="docutils literal notranslate"><span class="pre">FROM</span></code> { one or more statements }</p>
+<ul>
+<li><p>Perform these statements at the beginning before starting the first
 pass through the loop.  They may contain local declarations of new
 variables.  If they do, then the variables will be local to the body
-of the loop and won&#8217;t be visible outside the loop.  In this case the
-braces <code class="docutils literal"><span class="pre">{</span></code> and <code class="docutils literal"><span class="pre">}</span></code> are mandatory even when there is only one
+of the loop and won’t be visible outside the loop.  In this case the
+braces <code class="docutils literal notranslate"><span class="pre">{</span></code> and <code class="docutils literal notranslate"><span class="pre">}</span></code> are mandatory even when there is only one
 statement present.  To create a a null FROM clause, give it an empty
-set of braces.</li>
+set of braces.</p></li>
 </ul>
 </li>
-<li><code class="docutils literal"><span class="pre">UNTIL</span></code> expression<ul>
-<li>Exactly like the <a class="reference internal" href="#until"><span>UNTIL</span></a> loop.  The loop will run this
+<li><p><code class="docutils literal notranslate"><span class="pre">UNTIL</span></code> expression</p>
+<ul>
+<li><p>Exactly like the <a class="reference internal" href="#until"><span class="std std-ref">UNTIL</span></a> loop.  The loop will run this
 expression at the start of each pass through the loop body, and if
-it&#8217;s true, it will abort and stop running the loop.  It checks before
-the initial first pass of the loop as well, so it&#8217;s possible for the
+it’s true, it will abort and stop running the loop.  It checks before
+the initial first pass of the loop as well, so it’s possible for the
 check to prevent the loop body from even executing once.  Braces
-<code class="docutils literal"><span class="pre">{</span></code>..``}`` are not used here because this is not technically a
+<code class="docutils literal notranslate"><span class="pre">{</span></code>..``}`` are not used here because this is not technically a
 complete statement.  It is just an expression that evaluates to a
-value.</li>
+value.</p></li>
 </ul>
 </li>
-<li><code class="docutils literal"><span class="pre">STEP</span></code> { one or more statements }<ul>
-<li>Perform these statements at the bottom of each loop pass.  The purpose
+<li><p><code class="docutils literal notranslate"><span class="pre">STEP</span></code> { one or more statements }</p>
+<ul>
+<li><p>Perform these statements at the bottom of each loop pass.  The purpose
 is typically to increment or decrement the variable you declared in
-your <code class="docutils literal"><span class="pre">FROM</span></code> clause to get it ready for the next loop pass.  In this
-case the braces <code class="docutils literal"><span class="pre">{</span></code> and <code class="docutils literal"><span class="pre">}</span></code> are mandatory even when there is
+your <code class="docutils literal notranslate"><span class="pre">FROM</span></code> clause to get it ready for the next loop pass.  In this
+case the braces <code class="docutils literal notranslate"><span class="pre">{</span></code> and <code class="docutils literal notranslate"><span class="pre">}</span></code> are mandatory even when there is
 only one statement present.  To create a null FROM clause, give
-it an empty set of braces.</li>
+it an empty set of braces.</p></li>
 </ul>
 </li>
-<li><code class="docutils literal"><span class="pre">DO</span></code> one statement or a block of statements inside braxes <code class="docutils literal"><span class="pre">{</span></code>..``}``:<ul>
-<li>This is where the loop body gets put.  Much like with the UNTIL and FOR
+<li><p><code class="docutils literal notranslate"><span class="pre">DO</span></code> one statement or a block of statements inside braxes <code class="docutils literal notranslate"><span class="pre">{</span></code>..``}``:</p>
+<ul>
+<li><p>This is where the loop body gets put.  Much like with the UNTIL and FOR
 loops, these braces are not mandatory when there is only exactly one
-statement in the body, but are a very good idea to have anyway.</li>
+statement in the body, but are a very good idea to have anyway.</p></li>
 </ul>
 </li>
 </ul>
-</div>
-<div class="section" id="why-some-braces-are-mandatory">
-<h3>Why some braces are mandatory<a class="headerlink" href="#why-some-braces-are-mandatory" title="Permalink to this headline">¶</a></h3>
-<p>Some braces are mandatory (for the <code class="docutils literal"><span class="pre">FROM</span></code> and <code class="docutils literal"><span class="pre">STEP</span></code> clauses) even
+</section>
+<section id="why-some-braces-are-mandatory">
+<h3>Why some braces are mandatory<a class="headerlink" href="#why-some-braces-are-mandatory" title="Permalink to this heading">¶</a></h3>
+<p>Some braces are mandatory (for the <code class="docutils literal notranslate"><span class="pre">FROM</span></code> and <code class="docutils literal notranslate"><span class="pre">STEP</span></code> clauses) even
 when there is only one statement inside them, because the period that
-ends a single statement would look like it&#8217;s terminating the entire
+ends a single statement would look like it’s terminating the entire
 FROM loop if it was open and bare.  Wrapping it inside braces makes it
-more visually obvious that it&#8217;s not the end of the FROM loop.</p>
-</div>
-<div class="section" id="why-do-is-mandatory">
-<h3>Why <code class="docutils literal"><span class="pre">DO</span></code> is mandatory<a class="headerlink" href="#why-do-is-mandatory" title="Permalink to this headline">¶</a></h3>
-<p>Other loop types don&#8217;t require a keyword to begin the loop body.  You
-can just start in with the opening left-brace <code class="docutils literal"><span class="pre">{</span></code>.  The reason the
-additional <code class="docutils literal"><span class="pre">DO</span></code> keyword exists in the FROM loop is because otherwise
-you&#8217;d have two back-to-back brace sections (The  end of the <code class="docutils literal"><span class="pre">STEP</span></code>
+more visually obvious that it’s not the end of the FROM loop.</p>
+</section>
+<section id="why-do-is-mandatory">
+<h3>Why <code class="docutils literal notranslate"><span class="pre">DO</span></code> is mandatory<a class="headerlink" href="#why-do-is-mandatory" title="Permalink to this heading">¶</a></h3>
+<p>Other loop types don’t require a keyword to begin the loop body.  You
+can just start in with the opening left-brace <code class="docutils literal notranslate"><span class="pre">{</span></code>.  The reason the
+additional <code class="docutils literal notranslate"><span class="pre">DO</span></code> keyword exists in the FROM loop is because otherwise
+you’d have two back-to-back brace sections (The  end of the <code class="docutils literal notranslate"><span class="pre">STEP</span></code>
 clause would abut against the start of the loop body) without any
 punctuation between them, and that would look too much like it was
 starting a brand new thing from scratch.</p>
-</div>
-<div class="section" id="other-formatting-examples">
-<h3>Other formatting examples<a class="headerlink" href="#other-formatting-examples" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// prints a count from 1 to 10:</span>
+</section>
+<section id="other-formatting-examples">
+<h3>Other formatting examples<a class="headerlink" href="#other-formatting-examples" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// prints a count from 1 to 10:</span>
 <span class="k">FROM</span> <span class="p">{</span><span class="k">local</span> <span class="nv">x</span> <span class="ow">is</span> <span class="mf">1</span><span class="p">.}</span> <span class="k">UNTIL</span> <span class="nv">x</span> <span class="o">&gt;</span> <span class="mf">10</span> <span class="k">STEP</span> <span class="p">{</span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="nv">x</span><span class="o">+</span><span class="mf">1</span><span class="p">.}</span> <span class="k">DO</span> <span class="p">{</span> <span class="k">print</span> <span class="nv">x</span><span class="p">.}</span>
 
 <span class="c1">// Entire header in one line, body indented:</span>
@@ -485,20 +422,20 @@ understood by the compiler.  The compiler ignores the spacing and
 indenting.  It is recommended that you pick just two of them and stick
 with them - one compact one to use for short headers, and one longer exploded
 one to use for more wordy headers when you have to split it up across lines.</p>
-</div>
-<div class="section" id="the-literal-meaning-of-from">
-<h3>The literal meaning of <code class="docutils literal"><span class="pre">FROM</span></code><a class="headerlink" href="#the-literal-meaning-of-from" title="Permalink to this headline">¶</a></h3>
-<p>If you have a <code class="docutils literal"><span class="pre">FROM</span></code> loop, it ends up being exactly identical to an
-<a class="reference internal" href="#until"><span>UNTIL</span></a> loop written as follows:</p>
+</section>
+<section id="the-literal-meaning-of-from">
+<h3>The literal meaning of <code class="docutils literal notranslate"><span class="pre">FROM</span></code><a class="headerlink" href="#the-literal-meaning-of-from" title="Permalink to this heading">¶</a></h3>
+<p>If you have a <code class="docutils literal notranslate"><span class="pre">FROM</span></code> loop, it ends up being exactly identical to an
+<a class="reference internal" href="#until"><span class="std std-ref">UNTIL</span></a> loop written as follows:</p>
 <p>If we assume that AAAA, BBBB, CCCC, and DDDD are placeholders referring
 to the actual script syntax, then in the generic case, the following
 is how all FROM loops work:</p>
-<p><code class="docutils literal"><span class="pre">FROM</span></code> loop:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">FROM</span> <span class="p">{</span> <span class="nv">AAAA</span> <span class="p">}</span> <span class="k">UNTIL</span> <span class="nv">BBBB</span> <span class="k">STEP</span> <span class="p">{</span> <span class="nv">CCCC</span> <span class="p">}</span> <span class="k">DO</span> <span class="p">{</span> <span class="nv">DDDD</span> <span class="p">}</span>
+<p><code class="docutils literal notranslate"><span class="pre">FROM</span></code> loop:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">FROM</span> <span class="p">{</span> <span class="nv">AAAA</span> <span class="p">}</span> <span class="k">UNTIL</span> <span class="nv">BBBB</span> <span class="k">STEP</span> <span class="p">{</span> <span class="nv">CCCC</span> <span class="p">}</span> <span class="k">DO</span> <span class="p">{</span> <span class="nv">DDDD</span> <span class="p">}</span>
 </pre></div>
 </div>
 <p>Is exactly the same as doing this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="c1">// start a brace to keep the scope of AAAA local to the loop.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="c1">// start a brace to keep the scope of AAAA local to the loop.</span>
     <span class="nv">AAAA</span>
     <span class="k">UNTIL</span> <span class="nv">BBBB</span> <span class="p">{</span>
         <span class="nv">DDDD</span>
@@ -508,76 +445,76 @@ is how all FROM loops work:</p>
 <span class="p">}</span> <span class="c1">// end a brace to throw away the local scope of AAAA</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="an-example-of-why-the-from-loop-is-useful">
-<h3>An example of why the FROM loop is useful<a class="headerlink" href="#an-example-of-why-the-from-loop-is-useful" title="Permalink to this headline">¶</a></h3>
-<p>Given that the <code class="docutils literal"><span class="pre">FROM</span></code> loop is really just an alternate way to write a
+</section>
+<section id="an-example-of-why-the-from-loop-is-useful">
+<h3>An example of why the FROM loop is useful<a class="headerlink" href="#an-example-of-why-the-from-loop-is-useful" title="Permalink to this heading">¶</a></h3>
+<p>Given that the <code class="docutils literal notranslate"><span class="pre">FROM</span></code> loop is really just an alternate way to write a
 certain format of UNTIL loop, you might ask why bother having it.
 The reason is that in the long run it makes your script easier to
 edit and maintain.  It makes things more self-contained and cut-and-pasteable:</p>
-<p>Above, in the documentation for <a class="reference internal" href="#until"><span>UNTIL</span></a> loops, this example was
+<p>Above, in the documentation for <a class="reference internal" href="#until"><span class="std std-ref">UNTIL</span></a> loops, this example was
 given:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">X</span> <span class="ow">to</span> <span class="mf">1</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">X</span> <span class="ow">to</span> <span class="mf">1</span><span class="p">.</span>
 <span class="k">UNTIL</span> <span class="nv">X</span> <span class="o">&gt;</span> <span class="mf">10</span> <span class="p">{</span>      <span class="c1">// Prints the numbers 1-10</span>
     <span class="k">PRINT</span> <span class="nv">X</span><span class="p">.</span>
     <span class="k">SET</span> <span class="nv">X</span> <span class="ow">to</span> <span class="nv">X</span> <span class="o">+</span> <span class="mf">1</span><span class="p">.</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>The same example, expressed as a <code class="docutils literal"><span class="pre">FROM</span></code> loop is this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">FROM</span> <span class="p">{</span><span class="k">SET</span> <span class="nv">X</span> <span class="ow">to</span> <span class="mf">1</span><span class="p">.}</span> <span class="k">UNTIL</span> <span class="nv">X</span> <span class="o">&gt;</span> <span class="mf">10</span> <span class="p">{</span><span class="k">SET</span> <span class="nv">X</span> <span class="ow">to</span> <span class="nv">X</span> <span class="o">+</span> <span class="mf">1</span><span class="p">.}</span> <span class="k">DO</span> <span class="p">{</span>
+<p>The same example, expressed as a <code class="docutils literal notranslate"><span class="pre">FROM</span></code> loop is this:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">FROM</span> <span class="p">{</span><span class="k">SET</span> <span class="nv">X</span> <span class="ow">to</span> <span class="mf">1</span><span class="p">.}</span> <span class="k">UNTIL</span> <span class="nv">X</span> <span class="o">&gt;</span> <span class="mf">10</span> <span class="p">{</span><span class="k">SET</span> <span class="nv">X</span> <span class="ow">to</span> <span class="nv">X</span> <span class="o">+</span> <span class="mf">1</span><span class="p">.}</span> <span class="k">DO</span> <span class="p">{</span>
     <span class="k">PRINT</span> <span class="nv">X</span><span class="p">.</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Kerboscript <code class="docutils literal"><span class="pre">FROM</span></code> loop provides a way to place those sections in the
+<p>Kerboscript <code class="docutils literal notranslate"><span class="pre">FROM</span></code> loop provides a way to place those sections in the
 loop header so they are declared up front and let people see the layout
 of how the loop iterates, leaving the body to just contain the statements
 to be done for that iteration.</p>
 <p>If you are editing your script and need to cut a loop section and move it
 elsewhere, the FROM loop makes it more visually obvious how to cut
 that loop and move it.  It makes the important parts of the loop be self
-contained in the header, so you don&#8217;t leave the initializer behind when
+contained in the header, so you don’t leave the initializer behind when
 moving the loop.</p>
-</div>
-</div>
-<div class="section" id="wait">
-<span id="index-8"></span><span id="id4"></span><h2><a class="toc-backref" href="#id15"><code class="docutils literal"><span class="pre">WAIT</span></code></a><a class="headerlink" href="#wait" title="Permalink to this headline">¶</a></h2>
-<p>Halts execution for a specified amount of time, or until a specific set of criteria are met. Note that running a <code class="docutils literal"><span class="pre">WAIT</span> <span class="pre">UNTIL</span></code> statement can hang the machine forever if the criteria are never met. Examples:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">WAIT</span> <span class="mf">6</span><span class="p">.</span><span class="mf">2</span><span class="p">.</span>                     <span class="c1">// Wait 6.2 seconds</span>
+</section>
+</section>
+<section id="wait">
+<span id="index-8"></span><span id="id4"></span><h2><a class="toc-backref" href="#id15" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">WAIT</span></code></a><a class="headerlink" href="#wait" title="Permalink to this heading">¶</a></h2>
+<p>Halts execution for a specified amount of time, or until a specific set of criteria are met. Note that running a <code class="docutils literal notranslate"><span class="pre">WAIT</span> <span class="pre">UNTIL</span></code> statement can hang the machine forever if the criteria are never met. Examples:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">WAIT</span> <span class="mf">6</span><span class="p">.</span><span class="mf">2</span><span class="p">.</span>                     <span class="c1">// Wait 6.2 seconds</span>
 <span class="k">WAIT</span> <span class="k">UNTIL</span> <span class="nv">X</span> <span class="o">&gt;</span> <span class="mf">40</span><span class="p">.</span>            <span class="c1">// Wait until X is greater than 40</span>
 <span class="k">WAIT</span> <span class="k">UNTIL</span> <span class="nv">APOAPSIS</span> <span class="o">&gt;</span> <span class="mf">150000</span><span class="p">.</span> <span class="c1">// You can see where this is going</span>
 </pre></div>
 </div>
-<p>Note that any <code class="docutils literal"><span class="pre">WAIT</span></code> statement, no matter what the actual expression is, will always result in a wait time that lasts at least <a class="reference internal" href="../general/cpu_hardware.html#physics-tick"><span>one physics tick</span></a>.</p>
-<div class="section" id="difference-between-wait-in-mainline-code-and-trigger-code">
-<span id="wait-mainline-trigger"></span><h3>Difference between wait in mainline code and trigger code<a class="headerlink" href="#difference-between-wait-in-mainline-code-and-trigger-code" title="Permalink to this headline">¶</a></h3>
-<p>When called from your mainline code, the <a class="reference internal" href="#wait"><span>WAIT</span></a>
+<p>Note that any <code class="docutils literal notranslate"><span class="pre">WAIT</span></code> statement, no matter what the actual expression is, will always result in a wait time that lasts at least <a class="reference internal" href="../general/cpu_hardware.html#physics-tick"><span class="std std-ref">one physics tick</span></a>.</p>
+<section id="difference-between-wait-in-mainline-code-and-trigger-code">
+<span id="wait-mainline-trigger"></span><h3>Difference between wait in mainline code and trigger code<a class="headerlink" href="#difference-between-wait-in-mainline-code-and-trigger-code" title="Permalink to this heading">¶</a></h3>
+<p>When called from your mainline code, the <a class="reference internal" href="#wait"><span class="std std-ref">WAIT</span></a>
 command causes mainline code to be suspended, but does
-not stop <a class="reference internal" href="../general/cpu_hardware.html#triggers"><span>triggers</span></a> from interrupting
+not stop <a class="reference internal" href="../general/cpu_hardware.html#triggers"><span class="std std-ref">triggers</span></a> from interrupting
 this waiting period.  Triggers will continue to fire off
 during the time that mainline code is stuck on a wait.</p>
-<p>But when a <code class="docutils literal"><span class="pre">WAIT</span></code> is used in a trigger&#8217;s body
-(A &#8220;trigger&#8221; is any <code class="docutils literal"><span class="pre">WHEN</span></code>, or <code class="docutils literal"><span class="pre">ON</span></code> statement,
+<p>But when a <code class="docutils literal notranslate"><span class="pre">WAIT</span></code> is used in a trigger’s body
+(A “trigger” is any <code class="docutils literal notranslate"><span class="pre">WHEN</span></code>, or <code class="docutils literal notranslate"><span class="pre">ON</span></code> statement,
 or the expression in a steering control lock like
-<code class="docutils literal"><span class="pre">lock</span> <span class="pre">throttle</span> <span class="pre">to</span> <span class="pre">mythrottlefunction().</span></code>), it actually
+<code class="docutils literal notranslate"><span class="pre">lock</span> <span class="pre">throttle</span> <span class="pre">to</span> <span class="pre">mythrottlefunction().</span></code>), it actually
 causes all execution except for other triggers that are
 of higher priority to get stuck until the wait is done.
 Because of this, while it is allowed, it is
-<a class="reference internal" href="../general/cpu_hardware.html#wait-in-trigger"><span>usually a bad idea to use WAIT inside a trigger</span></a>.</p>
-</div>
-</div>
-<div class="section" id="boolean-operators">
-<span id="booleans"></span><span id="index-9"></span><h2><a class="toc-backref" href="#id16">Boolean Operators</a><a class="headerlink" href="#boolean-operators" title="Permalink to this headline">¶</a></h2>
-<p>All conditional statements, like <code class="docutils literal"><span class="pre">IF</span></code>, can make use of boolean operators. The order of operations is as follows:</p>
+<a class="reference internal" href="../general/cpu_hardware.html#wait-in-trigger"><span class="std std-ref">usually a bad idea to use WAIT inside a trigger</span></a>.</p>
+</section>
+</section>
+<section id="boolean-operators">
+<span id="booleans"></span><span id="index-9"></span><h2><a class="toc-backref" href="#id16" role="doc-backlink">Boolean Operators</a><a class="headerlink" href="#boolean-operators" title="Permalink to this heading">¶</a></h2>
+<p>All conditional statements, like <code class="docutils literal notranslate"><span class="pre">IF</span></code>, can make use of boolean operators. The order of operations is as follows:</p>
 <ul class="simple">
-<li><code class="docutils literal"><span class="pre">=</span></code> <code class="docutils literal"><span class="pre">&lt;</span></code> <code class="docutils literal"><span class="pre">&gt;</span></code> <code class="docutils literal"><span class="pre">&lt;=</span></code> <code class="docutils literal"><span class="pre">&gt;=</span></code> <code class="docutils literal"><span class="pre">&lt;&gt;</span></code></li>
-<li><code class="docutils literal"><span class="pre">AND</span></code></li>
-<li><code class="docutils literal"><span class="pre">OR</span></code></li>
-<li><code class="docutils literal"><span class="pre">NOT</span></code></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">=</span></code> <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> <code class="docutils literal notranslate"><span class="pre">&gt;</span></code> <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code> <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code> <code class="docutils literal notranslate"><span class="pre">&lt;&gt;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AND</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OR</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NOT</span></code></p></li>
 </ul>
-<p>Boolean is a type that can be stored in a variable and used that way as well. The constants <code class="docutils literal"><span class="pre">True</span></code> and <code class="docutils literal"><span class="pre">False</span></code> (case insensitive) may be used as values for boolean variables. If a number is used as if it was a Boolean variable, it will be interpreted in the standard way (zero means false, anything else means true):</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">IF</span> <span class="nv">X</span> <span class="o">=</span> <span class="mf">1</span> <span class="ow">AND</span> <span class="nv">Y</span> <span class="o">&gt;</span> <span class="mf">4</span> <span class="p">{</span> <span class="k">PRINT</span> <span class="s">&quot;Both conditions are true&quot;</span><span class="p">.</span> <span class="p">}</span>
+<p>Boolean is a type that can be stored in a variable and used that way as well. The constants <code class="docutils literal notranslate"><span class="pre">True</span></code> and <code class="docutils literal notranslate"><span class="pre">False</span></code> (case insensitive) may be used as values for boolean variables. If a number is used as if it was a Boolean variable, it will be interpreted in the standard way (zero means false, anything else means true):</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">IF</span> <span class="nv">X</span> <span class="o">=</span> <span class="mf">1</span> <span class="ow">AND</span> <span class="nv">Y</span> <span class="o">&gt;</span> <span class="mf">4</span> <span class="p">{</span> <span class="k">PRINT</span> <span class="s">&quot;Both conditions are true&quot;</span><span class="p">.</span> <span class="p">}</span>
 <span class="k">IF</span> <span class="nv">X</span> <span class="o">=</span> <span class="mf">1</span> <span class="ow">OR</span> <span class="nv">Y</span> <span class="o">&gt;</span> <span class="mf">4</span> <span class="p">{</span> <span class="k">PRINT</span> <span class="s">&quot;At least one condition is true&quot;</span><span class="p">.</span> <span class="p">}</span>
 <span class="k">IF</span> <span class="ow">NOT</span> <span class="p">(</span><span class="nv">X</span> <span class="o">=</span> <span class="mf">1</span> <span class="ow">or</span> <span class="nv">Y</span> <span class="o">&gt;</span> <span class="mf">4</span><span class="p">)</span> <span class="p">{</span> <span class="k">PRINT</span> <span class="s">&quot;Neither condition is true&quot;</span><span class="p">.</span> <span class="p">}</span>
 <span class="k">IF</span> <span class="nv">X</span> <span class="o">&lt;&gt;</span> <span class="mf">1</span> <span class="p">{</span> <span class="k">PRINT</span> <span class="s">&quot;X is not 1&quot;</span><span class="p">.</span> <span class="p">}</span>
@@ -592,72 +529,72 @@ Because of this, while it is allowed, it is
 <span class="k">IF</span> <span class="nv">count</span> <span class="p">{</span> <span class="k">PRINT</span> <span class="s">&quot;count isn&#39;t zero.&quot;</span><span class="p">.</span> <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="declare-function">
-<h2><a class="toc-backref" href="#id17"><code class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">FUNCTION</span></code></a><a class="headerlink" href="#declare-function" title="Permalink to this headline">¶</a></h2>
-<p>Covered in more depth <a class="reference internal" href="user_functions.html#user-functions"><span>elsewhere in the documentation</span></a>,
-the <code class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">FUNCTION</span></code> statement creates a user-defined function that
+</section>
+<section id="declare-function">
+<h2><a class="toc-backref" href="#id17" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">DECLARE</span> <span class="pre">FUNCTION</span></code></a><a class="headerlink" href="#declare-function" title="Permalink to this heading">¶</a></h2>
+<p>Covered in more depth <a class="reference internal" href="user_functions.html#user-functions"><span class="std std-ref">elsewhere in the documentation</span></a>,
+the <code class="docutils literal notranslate"><span class="pre">DECLARE</span> <span class="pre">FUNCTION</span></code> statement creates a user-defined function that
 you can then call elsewhere in the code.</p>
-</div>
-<div class="section" id="return">
-<h2><a class="toc-backref" href="#id18"><code class="docutils literal"><span class="pre">RETURN</span></code></a><a class="headerlink" href="#return" title="Permalink to this headline">¶</a></h2>
-<p>Covered in more depth <a class="reference internal" href="user_functions.html#user-functions"><span>elsewhere in the documentation</span></a>,
-the <code class="docutils literal"><span class="pre">RETURN</span></code> statement causes a user function, or a trigger body, to
+</section>
+<section id="return">
+<h2><a class="toc-backref" href="#id18" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">RETURN</span></code></a><a class="headerlink" href="#return" title="Permalink to this heading">¶</a></h2>
+<p>Covered in more depth <a class="reference internal" href="user_functions.html#user-functions"><span class="std std-ref">elsewhere in the documentation</span></a>,
+the <code class="docutils literal notranslate"><span class="pre">RETURN</span></code> statement causes a user function, or a trigger body, to
 end, and chooses what the calling part of the program will see if it
 reads the value of the function.</p>
-<span class="target" id="when"><span id="index-10"></span></span></div>
-<div class="section" id="when-then-statements-and-on-statements">
-<span id="on-trigger"></span><span id="index-11"></span><h2><a class="toc-backref" href="#id19"><code class="docutils literal"><span class="pre">WHEN</span></code> / <code class="docutils literal"><span class="pre">THEN</span></code> statements, and <code class="docutils literal"><span class="pre">ON</span></code> statements</a><a class="headerlink" href="#when-then-statements-and-on-statements" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="when"><span id="index-10"></span></span></section>
+<section id="when-then-statements-and-on-statements">
+<span id="on-trigger"></span><span id="index-11"></span><h2><a class="toc-backref" href="#id19" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">WHEN</span></code> / <code class="docutils literal notranslate"><span class="pre">THEN</span></code> statements, and <code class="docutils literal notranslate"><span class="pre">ON</span></code> statements</a><a class="headerlink" href="#when-then-statements-and-on-statements" title="Permalink to this heading">¶</a></h2>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Before going too far into this explanation, be aware that the
-<code class="docutils literal"><span class="pre">WHEN</span></code> and <code class="docutils literal"><span class="pre">ON</span></code> statements are rather advanced topics for a
-new programmer and if you&#8217;re just getting a feel for how
+<p class="admonition-title">Note</p>
+<p>Before going too far into this explanation, be aware that the
+<code class="docutils literal notranslate"><span class="pre">WHEN</span></code> and <code class="docutils literal notranslate"><span class="pre">ON</span></code> statements are rather advanced topics for a
+new programmer and if you’re just getting a feel for how
 programming works, and are using kOS as a first gentle introduction
 to writing programs, you might want to avoid using them until
-you&#8217;re more comfortable with the other features of kOS first.</p>
+you’re more comfortable with the other features of kOS first.</p>
 </div>
 <p><em>The WHEN and the ON statement are very similar to each other, and so
 they are documented together here.</em></p>
 <div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<dl class="last docutils">
-<dt><a class="reference internal" href="../tutorials/designpatterns.html#general-guidlines"><span>General Guidelines for kOS Scripts</span></a></dt>
-<dd>Before you continue, be aware that there is
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="../tutorials/designpatterns.html#general-guidlines"><span class="std std-ref">General Guidelines for kOS Scripts</span></a></dt><dd><p>Before you continue, be aware that there is
 also a page in the tutorials section describing the best practices
-to use with these statements, including <a class="reference internal" href="../tutorials/designpatterns.html#minimize-trigger-bodies"><span>minimizing how long
-trigger bodies take</span></a>. and <a class="reference internal" href="../tutorials/designpatterns.html#minimize-trigger-conditions"><span>minimizing
+to use with these statements, including <a class="reference internal" href="../tutorials/designpatterns.html#minimize-trigger-bodies"><span class="std std-ref">minimizing how long
+trigger bodies take</span></a>. and <a class="reference internal" href="../tutorials/designpatterns.html#minimize-trigger-conditions"><span class="std std-ref">minimizing
 how many trigger conditions are active</span></a>.
 It would be a good idea to read that documentation after reading this
-section.</dd>
+section.</p>
+</dd>
 </dl>
 </div>
-<p><code class="docutils literal"><span class="pre">WHEN</span></code> and <code class="docutils literal"><span class="pre">ON</span></code> both begin checking in the background for
+<p><code class="docutils literal notranslate"><span class="pre">WHEN</span></code> and <code class="docutils literal notranslate"><span class="pre">ON</span></code> both begin checking in the background for
 a condition that will cause some code to execute some statements
 later on.  They do NOT cause the code to necessarily get run right
 now.  The check will occur at regular fast intervals in the
 background, and the code will trigger whenever kOS next notices that
 the check happens to be true.</p>
-<p>kOS has a feature known as a <a class="reference internal" href="../general/cpu_hardware.html#triggers"><span>trigger</span></a>, and a
-<code class="docutils literal"><span class="pre">WHEN</span></code> or an <code class="docutils literal"><span class="pre">ON</span></code> statement are two of the ways to create one.
+<p>kOS has a feature known as a <a class="reference internal" href="../general/cpu_hardware.html#triggers"><span class="std std-ref">trigger</span></a>, and a
+<code class="docutils literal notranslate"><span class="pre">WHEN</span></code> or an <code class="docutils literal notranslate"><span class="pre">ON</span></code> statement are two of the ways to create one.
 Any time you make a section of program that is meant to repeatedly
 run a check in the background while the main program continues on,
-that is called a <code class="docutils literal"><span class="pre">trigger</span></code> in kOS terminology.  You may see the
-term <code class="docutils literal"><span class="pre">trigger</span></code> mentioned in many places in this documentation.</p>
+that is called a <code class="docutils literal notranslate"><span class="pre">trigger</span></code> in kOS terminology.  You may see the
+term <code class="docutils literal notranslate"><span class="pre">trigger</span></code> mentioned in many places in this documentation.</p>
 <p>Syntax examples:</p>
-<table border="1" class="docutils" id="id6">
+<table class="docutils align-default" id="id6">
 <caption><span class="caption-text">When and On side by side</span><a class="headerlink" href="#id6" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="50%" />
-<col width="50%" />
+<col style="width: 50.0%" />
+<col style="width: 50.0%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">WHEN .. THEN syntax</th>
-<th class="head">ON syntax</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>WHEN .. THEN syntax</p></th>
+<th class="head"><p>ON syntax</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><div class="first last line-block">
+<tbody>
+<tr class="row-even"><td><div class="line-block">
 <div class="line">WHEN <em>boolean_expression</em> THEN {</div>
 <div class="line"><br /></div>
 <div class="line-block">
@@ -667,7 +604,7 @@ term <code class="docutils literal"><span class="pre">trigger</span></code> ment
 <div class="line">}</div>
 </div>
 </td>
-<td><div class="first last line-block">
+<td><div class="line-block">
 <div class="line">ON <em>any_expression</em> {</div>
 <div class="line"><br /></div>
 <div class="line-block">
@@ -678,30 +615,30 @@ term <code class="docutils literal"><span class="pre">trigger</span></code> ment
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td>WHEN <em>boolean_expression</em> THEN <em>single_statement</em>.</td>
-<td>ON <em>any_expression</em> <em>single_statement</em>.</td>
+<tr class="row-odd"><td><p>WHEN <em>boolean_expression</em> THEN <em>single_statement</em>.</p></td>
+<td><p>ON <em>any_expression</em> <em>single_statement</em>.</p></td>
 </tr>
 </tbody>
 </table>
-<p>For historical reasons, the <code class="docutils literal"><span class="pre">THEN</span></code> keyword is needed for <code class="docutils literal"><span class="pre">WHEN</span></code>
-statements but not for <code class="docutils literal"><span class="pre">ON</span></code> statements.</p>
+<p>For historical reasons, the <code class="docutils literal notranslate"><span class="pre">THEN</span></code> keyword is needed for <code class="docutils literal notranslate"><span class="pre">WHEN</span></code>
+statements but not for <code class="docutils literal notranslate"><span class="pre">ON</span></code> statements.</p>
 <p>Here is the difference between them:</p>
 <ul class="simple">
-<li><code class="docutils literal"><span class="pre">WHEN</span></code> statement:  When kOS checks it in the background, if it
+<li><p><code class="docutils literal notranslate"><span class="pre">WHEN</span></code> statement:  When kOS checks it in the background, if it
 notices the condition is true, the trigger fires and it performs
 the statements. The condition to check for must be a boolean
-expression.</li>
-<li><code class="docutils literal"><span class="pre">ON</span></code> statement: When kOS checks it in the backround, if it
+expression.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ON</span></code> statement: When kOS checks it in the backround, if it
 notices the expression <em>is now different from what it was the last
 time it checked</em>, the trigger fires and it performs the statements.
 The condition to check for can be any expression for which it
 is possible to test equality.  It can be a boolean, a scalar, etc.
 All that matters is that kOS needs to be able to check if its
-new value is equal to its previous value or not.</li>
+new value is equal to its previous value or not.</p></li>
 </ul>
 <p>Other than that, the two work the same way, and follow the same rules.</p>
-<p><code class="docutils literal"><span class="pre">WHEN</span></code> example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// This example will eventually print the message</span>
+<p><code class="docutils literal notranslate"><span class="pre">WHEN</span></code> example:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// This example will eventually print the message</span>
 <span class="c1">// once enough time has passed:</span>
 
 <span class="k">SET</span> <span class="nv">tenSecondsLater</span> <span class="ow">to</span> <span class="nv">TIME</span><span class="p">:</span><span class="nv">SECONDS</span> <span class="o">+</span> <span class="mf">10</span><span class="p">.</span>
@@ -716,10 +653,10 @@ new value is equal to its previous value or not.</li>
                   <span class="c1">// notices it should.</span>
 </pre></div>
 </div>
-<p><code class="docutils literal"><span class="pre">ON</span></code> example.  This style is frequently used with action groups in kOS.
-KSP&#8217;s action groups actually <em>toggle</em> from true to false or from false to
+<p><code class="docutils literal notranslate"><span class="pre">ON</span></code> example.  This style is frequently used with action groups in kOS.
+KSP’s action groups actually <em>toggle</em> from true to false or from false to
 true each time you press the key:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// This example will print a message whenever you toggle</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// This example will print a message whenever you toggle</span>
 <span class="c1">// the lights, or press the &#39;1&#39; key.</span>
 
 <span class="nb">ON</span> <span class="nv">AG1</span> <span class="p">{</span>
@@ -733,7 +670,7 @@ true each time you press the key:</p>
                   <span class="c1">// notices it should.</span>
 </pre></div>
 </div>
-<p>For either <code class="docutils literal"><span class="pre">WHEN</span></code> or <code class="docutils literal"><span class="pre">ON</span></code> triggers, the check to see if it&#8217;s
+<p>For either <code class="docutils literal notranslate"><span class="pre">WHEN</span></code> or <code class="docutils literal notranslate"><span class="pre">ON</span></code> triggers, the check to see if it’s
 time to trigger, and the subsequent run of the statements if they
 do trigger, interrupts the normal flow of the program.  The normal
 program flow will continue from where it left off, after the trigger
@@ -745,15 +682,15 @@ it <em>is</em> implemented much like your own user functions.</p>
 <p>If you run the above examples, you will see that they actually only
 happen once, and then stop happening again.  In the ON AG1 example,
 it will only fire off once, no matter how many times you press the
-&#8216;1&#8217; key.  More will be covered about how to change that further down.</p>
+‘1’ key.  More will be covered about how to change that further down.</p>
 <div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">Do not make the body of a <code class="docutils literal"><span class="pre">WHEN</span></code>/<code class="docutils literal"><span class="pre">THEN</span></code> take a long time to
+<p class="admonition-title">Warning</p>
+<p>Do not make the body of a <code class="docutils literal notranslate"><span class="pre">WHEN</span></code>/<code class="docutils literal notranslate"><span class="pre">THEN</span></code> take a long time to
 execute. If you attempt to run code that lasts too long in the body
-of your <code class="docutils literal"><span class="pre">WHEN</span></code>/<code class="docutils literal"><span class="pre">THEN</span></code> statement, it will cause the main
+of your <code class="docutils literal notranslate"><span class="pre">WHEN</span></code>/<code class="docutils literal notranslate"><span class="pre">THEN</span></code> statement, it will cause the main
 line code, and all other triggers (WHEN, ON, and cooked steering
 locks) to be stuck unable to continue until it finishes.  You also probably
-should not make the system execute a <code class="docutils literal"><span class="pre">WAIT</span></code> command when inside the
+should not make the system execute a <code class="docutils literal notranslate"><span class="pre">WAIT</span></code> command when inside the
 body of a WHEN/THEN statement.</p>
 </div>
 <p>kOS has a mechanism in place that allows triggers to interrupt mainline
@@ -761,54 +698,54 @@ code that is stuck in a wait.  It does not have a mechanism to go the
 other way around and have a trigger get interrupted.  Triggers are
 meant to run quickly and finish so the system can get back to the
 mainline code.</p>
-<div class="section" id="don-t-let-triggers-bog-down-the-code">
-<h3>Don&#8217;t let triggers bog down the code<a class="headerlink" href="#don-t-let-triggers-bog-down-the-code" title="Permalink to this headline">¶</a></h3>
-<p>If you are going to make extensive use of <code class="docutils literal"><span class="pre">WHEN</span></code>/<code class="docutils literal"><span class="pre">THEN</span></code>
-triggers, it&#8217;s important to understand more details of how they
-<a class="reference internal" href="../general/cpu_hardware.html#triggers"><span>work in the kOS CPU</span></a>.</p>
+<section id="don-t-let-triggers-bog-down-the-code">
+<h3>Don’t let triggers bog down the code<a class="headerlink" href="#don-t-let-triggers-bog-down-the-code" title="Permalink to this heading">¶</a></h3>
+<p>If you are going to make extensive use of <code class="docutils literal notranslate"><span class="pre">WHEN</span></code>/<code class="docutils literal notranslate"><span class="pre">THEN</span></code>
+triggers, it’s important to understand more details of how they
+<a class="reference internal" href="../general/cpu_hardware.html#triggers"><span class="std std-ref">work in the kOS CPU</span></a>.</p>
 <p>Most importantly, be aware that since they get checked again and
 again in the background, having too many triggers that are
-&#8220;too expensive&#8221; can starve your main code of its use of the
-CPU, and thus slow down your program&#8217;s rate of running.</p>
-</div>
-<div class="section" id="by-default-triggers-only-run-once-but-this-can-be-changed">
-<h3>By default triggers only run once, but this can be changed<a class="headerlink" href="#by-default-triggers-only-run-once-but-this-can-be-changed" title="Permalink to this headline">¶</a></h3>
-<p>The original intention of the <code class="docutils literal"><span class="pre">WHEN</span></code> and <code class="docutils literal"><span class="pre">ON</span></code> triggers was that
+“too expensive” can starve your main code of its use of the
+CPU, and thus slow down your program’s rate of running.</p>
+</section>
+<section id="by-default-triggers-only-run-once-but-this-can-be-changed">
+<h3>By default triggers only run once, but this can be changed<a class="headerlink" href="#by-default-triggers-only-run-once-but-this-can-be-changed" title="Permalink to this heading">¶</a></h3>
+<p>The original intention of the <code class="docutils literal notranslate"><span class="pre">WHEN</span></code> and <code class="docutils literal notranslate"><span class="pre">ON</span></code> triggers was that
 although they check the condition repeatedly, once the condition is
 found to be true, they execute the body just once and then stop
 checking the condition.</p>
 <p>They were intended for things like only running a piece of code when
-you break a threshold altitude, or detect that you&#8217;ve landed, etc.</p>
+you break a threshold altitude, or detect that you’ve landed, etc.</p>
 <p>So the default way they behave is that once the body of the trigger
 happens the first time, the trigger will never be checked again, and
 is now effectively dead for the rest of the program.</p>
-<p>Obviously, that&#8217;s probably not the behavior you always want.  Sometimes
+<p>Obviously, that’s probably not the behavior you always want.  Sometimes
 you will want them to keep repeatedly happening, as a frequent
-background check.  One obvious example comes from the <code class="docutils literal"><span class="pre">ON</span> <span class="pre">AG1</span></code>
+background check.  One obvious example comes from the <code class="docutils literal notranslate"><span class="pre">ON</span> <span class="pre">AG1</span></code>
 example above.  You probably want a program that can keep re-checking
 to see if the action group button has been hit again and again, not just
 notice it once and then quit looking for it.</p>
 <p>There are two ways to do this - the new (better) way with
-the <code class="docutils literal"><span class="pre">return</span></code> statement, and the older way, kept around for
-backward compatibility, of using the <code class="docutils literal"><span class="pre">preserve</span></code> keyword.</p>
-<div class="section" id="preserving-with-return">
-<span id="trigger-return"></span><h4>Preserving with <code class="docutils literal"><span class="pre">return</span></code><a class="headerlink" href="#preserving-with-return" title="Permalink to this headline">¶</a></h4>
-<p>Triggers are essentialy functions that don&#8217;t quite look like functions.
-They are frequently called, but they&#8217;re not called <em>by you</em>.  They&#8217;re
+the <code class="docutils literal notranslate"><span class="pre">return</span></code> statement, and the older way, kept around for
+backward compatibility, of using the <code class="docutils literal notranslate"><span class="pre">preserve</span></code> keyword.</p>
+<section id="preserving-with-return">
+<span id="trigger-return"></span><h4>Preserving with <code class="docutils literal notranslate"><span class="pre">return</span></code><a class="headerlink" href="#preserving-with-return" title="Permalink to this heading">¶</a></h4>
+<p>Triggers are essentialy functions that don’t quite look like functions.
+They are frequently called, but they’re not called <em>by you</em>.  They’re
 called by the Kerbal Operating System itself.  So you can tell the
 Kerbal Operating System what your intentions were by simply deciding
 to return either a false or a true boolean value from the body of the
 trigger.  This tells kOS if you wanted to keep the trigger around or let
 it get deleted.</p>
 <ul class="simple">
-<li><code class="docutils literal"><span class="pre">return</span> <span class="pre">true.</span></code> to tell kOS to preserve the trigger and keep checking
-it again next time.</li>
-<li><code class="docutils literal"><span class="pre">return</span> <span class="pre">false.</span></code> to tell kOS to disable the trigger after this check,
-and never use it again.</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">true.</span></code> to tell kOS to preserve the trigger and keep checking
+it again next time.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">false.</span></code> to tell kOS to disable the trigger after this check,
+and never use it again.</p></li>
 </ul>
-<p>Therefore, if you want to have the <code class="docutils literal"><span class="pre">ON</span> <span class="pre">AG1</span></code> example always respond to
+<p>Therefore, if you want to have the <code class="docutils literal notranslate"><span class="pre">ON</span> <span class="pre">AG1</span></code> example always respond to
 the keypress from now on, then change this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nb">ON</span> <span class="nv">AG1</span> <span class="p">{</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nb">ON</span> <span class="nv">AG1</span> <span class="p">{</span>
   <span class="k">PRINT</span> <span class="s">&quot;You pressed &#39;1&#39;, causing action group 1 to toggle.&quot;</span><span class="p">.</span>
   <span class="k">PRINT</span> <span class="s">&quot;Action group 1 is now &quot;</span> <span class="o">+</span> <span class="nv">AG1</span><span class="p">.</span>
   <span class="k">PRINT</span> <span class="s">&quot;No longer paying attention.&quot;</span><span class="p">.</span>
@@ -816,7 +753,7 @@ the keypress from now on, then change this:</p>
 </pre></div>
 </div>
 <p>To this instead:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nb">ON</span> <span class="nv">AG1</span> <span class="p">{</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nb">ON</span> <span class="nv">AG1</span> <span class="p">{</span>
   <span class="k">PRINT</span> <span class="s">&quot;You pressed &#39;1&#39;, causing action group 1 to toggle.&quot;</span><span class="p">.</span>
   <span class="k">PRINT</span> <span class="s">&quot;Action group 1 is now &quot;</span> <span class="o">+</span> <span class="nv">AG1</span><span class="p">.</span>
   <span class="k">RETURN</span> <span class="nb">true</span><span class="p">.</span>
@@ -826,7 +763,7 @@ the keypress from now on, then change this:</p>
 <p>Or, for a more complex example, if you want it to only respond to
 the first 5 times you press the key and then stop after that,
 you can conditionally decide what return value to use, like so:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">count</span> <span class="ow">TO</span> <span class="mf">5</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">count</span> <span class="ow">TO</span> <span class="mf">5</span><span class="p">.</span>
 <span class="nb">ON</span> <span class="nv">AG1</span> <span class="p">{</span>
   <span class="k">PRINT</span> <span class="s">&quot;You pressed &#39;1&#39;, causing action group 1 to toggle.&quot;</span><span class="p">.</span>
   <span class="k">PRINT</span> <span class="s">&quot;Action group 1 is now &quot;</span> <span class="o">+</span> <span class="nv">AG1</span><span class="p">.</span>
@@ -840,40 +777,40 @@ you can conditionally decide what return value to use, like so:</p>
 </pre></div>
 </div>
 <p>There is an alternate, older syntax you can use to do the same thing,
-called the <a class="reference internal" href="#preserve"><span>preserve keyword</span></a>.  You may see it used in a lot of
-older scripts, but the new way using the <code class="docutils literal"><span class="pre">return</span></code> keyword is
+called the <a class="reference internal" href="#preserve"><span class="std std-ref">preserve keyword</span></a>.  You may see it used in a lot of
+older scripts, but the new way using the <code class="docutils literal notranslate"><span class="pre">return</span></code> keyword is
 cleaner.</p>
 <p>If you never mention either a true or a false return value, the default
 is to behave as if you had returned false, and delete the trigger.
 This works because of the sort-of-secret fact that in kOS, all
-functions return zero if you don&#8217;t mention the return value explicitly.</p>
-</div>
-</div>
-<div class="section" id="they-don-t-last-past-the-end-of-the-program">
-<h3>They don&#8217;t last past the end of the program<a class="headerlink" href="#they-don-t-last-past-the-end-of-the-program" title="Permalink to this headline">¶</a></h3>
-<p>A <code class="docutils literal"><span class="pre">WHEN</span></code>/<code class="docutils literal"><span class="pre">THEN</span></code> or <code class="docutils literal"><span class="pre">ON</span></code> trigger gets removed when the
+functions return zero if you don’t mention the return value explicitly.</p>
+</section>
+</section>
+<section id="they-don-t-last-past-the-end-of-the-program">
+<h3>They don’t last past the end of the program<a class="headerlink" href="#they-don-t-last-past-the-end-of-the-program" title="Permalink to this heading">¶</a></h3>
+<p>A <code class="docutils literal notranslate"><span class="pre">WHEN</span></code>/<code class="docutils literal notranslate"><span class="pre">THEN</span></code> or <code class="docutils literal notranslate"><span class="pre">ON</span></code> trigger gets removed when the
 program that created it exits, even if it has not occurred yet.</p>
-</div>
-</div>
-<div class="section" id="preserve">
-<span id="index-12"></span><span id="id5"></span><h2><a class="toc-backref" href="#id20"><code class="docutils literal"><span class="pre">PRESERVE</span></code></a><a class="headerlink" href="#preserve" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal"><span class="pre">PRESERVE</span></code> is a command keyword that is only valid inside of <code class="docutils literal"><span class="pre">WHEN</span></code>/<code class="docutils literal"><span class="pre">THEN</span></code> and <code class="docutils literal"><span class="pre">ON</span></code> code blocks.</p>
-<p>When a <code class="docutils literal"><span class="pre">WHEN</span></code>/<code class="docutils literal"><span class="pre">THEN</span></code> or <code class="docutils literal"><span class="pre">ON</span></code> condition is triggered, the default behavior is to execute the code block body exactly once and only once, and then the trigger condition is removed and the trigger will never occur again.</p>
+</section>
+</section>
+<section id="preserve">
+<span id="index-12"></span><span id="id5"></span><h2><a class="toc-backref" href="#id20" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">PRESERVE</span></code></a><a class="headerlink" href="#preserve" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">PRESERVE</span></code> is a command keyword that is only valid inside of <code class="docutils literal notranslate"><span class="pre">WHEN</span></code>/<code class="docutils literal notranslate"><span class="pre">THEN</span></code> and <code class="docutils literal notranslate"><span class="pre">ON</span></code> code blocks.</p>
+<p>When a <code class="docutils literal notranslate"><span class="pre">WHEN</span></code>/<code class="docutils literal notranslate"><span class="pre">THEN</span></code> or <code class="docutils literal notranslate"><span class="pre">ON</span></code> condition is triggered, the default behavior is to execute the code block body exactly once and only once, and then the trigger condition is removed and the trigger will never occur again.</p>
 <p>To alter this, a new ability was added in kOS 0.19.3 and above to
-have triggers simply <a class="reference internal" href="#trigger-return"><span>return a true or false value</span></a>
+have triggers simply <a class="reference internal" href="#trigger-return"><span class="std std-ref">return a true or false value</span></a>
 to determine if they wish to be preserved.</p>
 <p>But prior to kOS 0.19.3, the only way to do it in kerboscript was
-with the <code class="docutils literal"><span class="pre">PRESERVE</span></code> keyword, which will likely remain in
+with the <code class="docutils literal notranslate"><span class="pre">PRESERVE</span></code> keyword, which will likely remain in
 kerboscript for quite some time because it has a lot of backward
 compatibility legacy.</p>
-<p>If you execute the <code class="docutils literal"><span class="pre">PRESERVE</span></code> command anywhere within the body
+<p>If you execute the <code class="docutils literal notranslate"><span class="pre">PRESERVE</span></code> command anywhere within the body
 of a trigger, it tells kOS that you wish the trigger to remain
 present and not get deleted.  Choosing not to execute it, and
 just letting the execution fall through to the bottom of the
 body, has the default behavior of causing the trigger to get
 deleted.</p>
 <p>For example, this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nb">ON</span> <span class="nv">AG1</span> <span class="p">{</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nb">ON</span> <span class="nv">AG1</span> <span class="p">{</span>
   <span class="k">PRINT</span> <span class="s">&quot;You pressed &#39;1&#39;, causing action group 1 to toggle.&quot;</span><span class="p">.</span>
   <span class="k">PRINT</span> <span class="s">&quot;Action group 1 is now &quot;</span> <span class="o">+</span> <span class="nv">AG1</span><span class="p">.</span>
   <span class="k">RETURN</span> <span class="nb">true</span><span class="p">.</span>
@@ -881,7 +818,7 @@ deleted.</p>
 </pre></div>
 </div>
 <p>could also be expressed this way:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nb">ON</span> <span class="nv">AG1</span> <span class="p">{</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nb">ON</span> <span class="nv">AG1</span> <span class="p">{</span>
   <span class="k">PRINT</span> <span class="s">&quot;You pressed &#39;1&#39;, causing action group 1 to toggle.&quot;</span><span class="p">.</span>
   <span class="k">PRINT</span> <span class="s">&quot;Action group 1 is now &quot;</span> <span class="o">+</span> <span class="nv">AG1</span><span class="p">.</span>
   <span class="k">PRESERVE</span><span class="p">.</span>
@@ -889,7 +826,7 @@ deleted.</p>
 </pre></div>
 </div>
 <p>And this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">count</span> <span class="ow">TO</span> <span class="mf">5</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">count</span> <span class="ow">TO</span> <span class="mf">5</span><span class="p">.</span>
 <span class="nb">ON</span> <span class="nv">AG1</span> <span class="p">{</span>
   <span class="k">PRINT</span> <span class="s">&quot;You pressed &#39;1&#39;, causing action group 1 to toggle.&quot;</span><span class="p">.</span>
   <span class="k">PRINT</span> <span class="s">&quot;Action group 1 is now &quot;</span> <span class="o">+</span> <span class="nv">AG1</span><span class="p">.</span>
@@ -903,7 +840,7 @@ deleted.</p>
 </pre></div>
 </div>
 <p>could also be expressed this way:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">count</span> <span class="ow">TO</span> <span class="mf">5</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">count</span> <span class="ow">TO</span> <span class="mf">5</span><span class="p">.</span>
 <span class="nb">ON</span> <span class="nv">AG1</span> <span class="p">{</span>
   <span class="k">PRINT</span> <span class="s">&quot;You pressed &#39;1&#39;, causing action group 1 to toggle.&quot;</span><span class="p">.</span>
   <span class="k">PRINT</span> <span class="s">&quot;Action group 1 is now &quot;</span> <span class="o">+</span> <span class="nv">AG1</span><span class="p">.</span>
@@ -914,13 +851,13 @@ deleted.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Also note that unlike using <code class="docutils literal"><span class="pre">RETURN</span></code>, the <code class="docutils literal"><span class="pre">PRESERVE</span></code> statement
-doesn&#8217;t actually cause the trigger to abort and return at that point.
+<p>Also note that unlike using <code class="docutils literal notranslate"><span class="pre">RETURN</span></code>, the <code class="docutils literal notranslate"><span class="pre">PRESERVE</span></code> statement
+doesn’t actually cause the trigger to abort and return at that point.
 It just sets a flag for what the intended return value will be, without
-actually returning yet.  Therefore it doesn&#8217;t actually matter where
+actually returning yet.  Therefore it doesn’t actually matter where
 within the block of code it happens, it has the same effect.</p>
 <p>this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nb">ON</span> <span class="nv">AG1</span> <span class="p">{</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nb">ON</span> <span class="nv">AG1</span> <span class="p">{</span>
   <span class="k">PRINT</span> <span class="s">&quot;You pressed &#39;1&#39;, causing action group 1 to toggle.&quot;</span><span class="p">.</span>
   <span class="k">PRINT</span> <span class="s">&quot;Action group 1 is now &quot;</span> <span class="o">+</span> <span class="nv">AG1</span><span class="p">.</span>
   <span class="k">PRESERVE</span><span class="p">.</span>
@@ -928,86 +865,48 @@ within the block of code it happens, it has the same effect.</p>
 </pre></div>
 </div>
 <p>has the same effect as this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nb">ON</span> <span class="nv">AG1</span> <span class="p">{</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nb">ON</span> <span class="nv">AG1</span> <span class="p">{</span>
   <span class="k">PRESERVE</span><span class="p">.</span> <span class="c1">// &lt;-- Doesn&#39;t matter where you PRESERVE within the body.</span>
   <span class="k">PRINT</span> <span class="s">&quot;You pressed &#39;1&#39;, causing action group 1 to toggle.&quot;</span><span class="p">.</span>
   <span class="k">PRINT</span> <span class="s">&quot;Action group 1 is now &quot;</span> <span class="o">+</span> <span class="nv">AG1</span><span class="p">.</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>(If you attempt to BOTH execute <code class="docutils literal"><span class="pre">PRESERVE.</span></code> <em>and</em> provide a <code class="docutils literal"><span class="pre">RETURN</span> <span class="pre">false.</span></code>
-statement that contradicts it, the <code class="docutils literal"><span class="pre">RETURN</span></code> statement will end up
-overriding the effect of the <code class="docutils literal"><span class="pre">PRESERVE</span></code>.)</p>
-</div>
-</div>
+<p>(If you attempt to BOTH execute <code class="docutils literal notranslate"><span class="pre">PRESERVE.</span></code> <em>and</em> provide a <code class="docutils literal notranslate"><span class="pre">RETURN</span> <span class="pre">false.</span></code>
+statement that contradicts it, the <code class="docutils literal notranslate"><span class="pre">RETURN</span></code> statement will end up
+overriding the effect of the <code class="docutils literal notranslate"><span class="pre">PRESERVE</span></code>.)</p>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="variables.html" class="btn btn-neutral float-right" title="Variables &amp; Statements" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="syntax.html" class="btn btn-neutral" title="KerboScript Syntax Specification" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="syntax.html" class="btn btn-neutral float-left" title="KerboScript Syntax Specification" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="variables.html" class="btn btn-neutral float-right" title="Variables &amp; Statements" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

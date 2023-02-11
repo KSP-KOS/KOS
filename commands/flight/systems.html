@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Ship Systems &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ship Systems &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../../about.html"/>
-        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Flight Control" href="../flight.html"/>
-        <link rel="next" title="Predictions of Flight Path" href="../prediction.html"/>
-        <link rel="prev" title="Pilot Input" href="pilot.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Predictions of Flight Path" href="../prediction.html" />
+    <link rel="prev" title="Pilot Input" href="pilot.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
@@ -105,9 +56,7 @@
 <li class="toctree-l3"><a class="reference internal" href="cooked.html">Cooked Control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="raw.html">Raw Control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pilot.html">Pilot Input</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Ship Systems</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Ship Systems</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../prediction.html">Prediction</a></li>
@@ -128,208 +77,181 @@
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../commands.html">Command Reference</a> &raquo;</li>
-      
           <li><a href="../flight.html">Flight Control</a> &raquo;</li>
-      
-    <li>Ship Systems</li>
+      <li>Ship Systems</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/commands/flight/systems.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../../_sources/commands/flight/systems.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="ship-systems">
-<span id="systems"></span><h1>Ship Systems<a class="headerlink" href="#ship-systems" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="control-reference">
-<h2>CONTROL REFERENCE<a class="headerlink" href="#control-reference" title="Permalink to this headline">¶</a></h2>
+             
+  <section id="ship-systems">
+<span id="systems"></span><h1>Ship Systems<a class="headerlink" href="#ship-systems" title="Permalink to this heading">¶</a></h1>
+<section id="control-reference">
+<h2>CONTROL REFERENCE<a class="headerlink" href="#control-reference" title="Permalink to this heading">¶</a></h2>
 <blockquote>
-<div>The axes for ship control and ship-relative coordinate system are determined
-in relation to a &#8220;control from&#8221; part (more specifically a transform
+<div><p>The axes for ship control and ship-relative coordinate system are determined
+in relation to a “control from” part (more specifically a transform
 belonging to the part) on the ship. All vessels must have at least one
-&#8220;control from&#8221; part on them somewhere, which is why there&#8217;s no mechanism for
-un-setting the &#8220;control from&#8221; part. You must instead pick another part and
-set it as the &#8220;control from&#8221; source using the <a class="reference internal" href="../../structures/vessels/part.html#method:PART:CONTROLFROM" title="PART:CONTROLFROM method"><code class="xref ks ks-meth docutils literal"><span class="pre">Part:CONTROLFROM</span></code></a>
+“control from” part on them somewhere, which is why there’s no mechanism for
+un-setting the “control from” part. You must instead pick another part and
+set it as the “control from” source using the <a class="reference internal" href="../../structures/vessels/part.html#method:PART:CONTROLFROM" title="PART:CONTROLFROM method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">Part:CONTROLFROM</span></code></a>
 method.  You may retrieve the current control part using the
-<a class="reference internal" href="../../structures/vessels/vessel.html#attribute:VESSEL:CONTROLPART" title="VESSEL:CONTROLPART attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Vessel:CONTROLPART</span></code></a> suffix.</div></blockquote>
-</div>
-<div class="section" id="rcs-and-sas">
-<h2>RCS and SAS<a class="headerlink" href="#rcs-and-sas" title="Permalink to this headline">¶</a></h2>
-<dl class="global">
-<dt id="global:RCS">
-<code class="descname">RCS</code><a class="headerlink" href="#global:RCS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Toggle ON/OFF; get/set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>Turns the RCS <strong>on</strong> or <strong>off</strong>, like using <code class="docutils literal"><span class="pre">R</span></code> at the keyboard:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">RCS</span> <span class="nb">ON</span><span class="p">.</span> <span class="c1">// same as SET RCS TO TRUE.</span>
+<a class="reference internal" href="../../structures/vessels/vessel.html#attribute:VESSEL:CONTROLPART" title="VESSEL:CONTROLPART attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Vessel:CONTROLPART</span></code></a> suffix.</p>
+</div></blockquote>
+</section>
+<section id="rcs-and-sas">
+<h2>RCS and SAS<a class="headerlink" href="#rcs-and-sas" title="Permalink to this heading">¶</a></h2>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:RCS">
+<span class="sig-name descname"><span class="pre">RCS</span></span><a class="headerlink" href="#global:RCS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Toggle ON/OFF; get/set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
+<p>Turns the RCS <strong>on</strong> or <strong>off</strong>, like using <code class="docutils literal notranslate"><span class="pre">R</span></code> at the keyboard:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">RCS</span> <span class="nb">ON</span><span class="p">.</span> <span class="c1">// same as SET RCS TO TRUE.</span>
 <span class="nv">RCS</span> <span class="nb">OFF</span><span class="p">.</span> <span class="c1">// same as SET RCS TO FALSE.</span>
 <span class="k">PRINT</span> <span class="nv">RCS</span><span class="p">.</span>  <span class="c1">// prints either &quot;True&quot; or &quot;False&quot;.</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:SAS">
-<code class="descname">SAS</code><a class="headerlink" href="#global:SAS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Toggle ON/OFF; get/set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>Turns the SAS <strong>on</strong> or <strong>off</strong>, like using <code class="docutils literal"><span class="pre">T</span></code> at the keybaord:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">SAS</span> <span class="nb">ON</span><span class="p">.</span> <span class="c1">// same as SET SAS TO TRUE.</span>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:SAS">
+<span class="sig-name descname"><span class="pre">SAS</span></span><a class="headerlink" href="#global:SAS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Toggle ON/OFF; get/set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
+<p>Turns the SAS <strong>on</strong> or <strong>off</strong>, like using <code class="docutils literal notranslate"><span class="pre">T</span></code> at the keybaord:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">SAS</span> <span class="nb">ON</span><span class="p">.</span> <span class="c1">// same as SET SAS TO TRUE.</span>
 <span class="nv">SAS</span> <span class="nb">OFF</span><span class="p">.</span> <span class="c1">// same as SET SAS TO FALSE.</span>
 <span class="k">PRINT</span> <span class="nv">SAS</span><span class="p">.</span>  <span class="c1">// prints either &quot;True&quot; or &quot;False&quot;.</span>
 </pre></div>
 </div>
 <div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">Be aware that having KSP&#8217;s <code class="docutils literal"><span class="pre">SAS</span></code> turned on <em>will</em> conflict
-with using &#8220;cooked control&#8221; (the <code class="docutils literal"><span class="pre">lock</span> <span class="pre">steering</span></code> command).  You
+<p class="admonition-title">Warning</p>
+<p>Be aware that having KSP’s <code class="docutils literal notranslate"><span class="pre">SAS</span></code> turned on <em>will</em> conflict
+with using “cooked control” (the <code class="docutils literal notranslate"><span class="pre">lock</span> <span class="pre">steering</span></code> command).  You
 should not use these two modes of steering control at the same time.
 For further information see the
-<a class="reference internal" href="cooked.html#locksteeringsaswarning"><span>warning in lock steering documentation</span></a>.</p>
+<a class="reference internal" href="cooked.html#locksteeringsaswarning"><span class="std std-ref">warning in lock steering documentation</span></a>.</p>
 </div>
 </dd></dl>
 
 <span class="target" id="sasmode"></span><dl class="object">
-<dt>
-<code class="descname">SASMODE</code></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../structures/misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>Getting this variable will return the currently selected SAS mode.  Where <code class="docutils literal"><span class="pre">value</span></code> is one of the valid strings listed below, this will set the stock SAS mode for the cpu vessel:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">SASMODE</span> <span class="ow">TO</span> <span class="nv">value</span><span class="p">.</span>
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">SASMODE</span></span></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../structures/misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+</dl>
+<p>Getting this variable will return the currently selected SAS mode.  Where <code class="docutils literal notranslate"><span class="pre">value</span></code> is one of the valid strings listed below, this will set the stock SAS mode for the cpu vessel:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">SASMODE</span> <span class="ow">TO</span> <span class="nv">value</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>It is the equivalent to clicking on the buttons next to the nav ball while manually piloting the craft, and will respect the current mode of the nav ball (orbital, surface, or target velocity - use NAVMODE to read or set it).  Valid strings for <code class="docutils literal"><span class="pre">value</span></code> are <code class="docutils literal"><span class="pre">&quot;PROGRADE&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;RETROGRADE&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;NORMAL&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;ANTINORMAL&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;RADIALOUT&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;RADIALIN&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;TARGET&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;ANTITARGET&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;MANEUVER&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;STABILITYASSIST&quot;</span></code>, and <code class="docutils literal"><span class="pre">&quot;STABILITY&quot;</span></code>.  A null or empty string will default to stability assist mode, however any other invalid string will throw an exception.  This feature will respect career mode limitations, and will throw an exception if the current vessel is not able to use the mode passed to the command.  An exception is also thrown if <code class="docutils literal"><span class="pre">&quot;TARGET&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;ANTITARGET&quot;</span></code> are used when no target is set.</p>
+<p>It is the equivalent to clicking on the buttons next to the nav ball while manually piloting the craft, and will respect the current mode of the nav ball (orbital, surface, or target velocity - use NAVMODE to read or set it).  Valid strings for <code class="docutils literal notranslate"><span class="pre">value</span></code> are <code class="docutils literal notranslate"><span class="pre">&quot;PROGRADE&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;RETROGRADE&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;NORMAL&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;ANTINORMAL&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;RADIALOUT&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;RADIALIN&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;TARGET&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;ANTITARGET&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;MANEUVER&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;STABILITYASSIST&quot;</span></code>, and <code class="docutils literal notranslate"><span class="pre">&quot;STABILITY&quot;</span></code>.  A null or empty string will default to stability assist mode, however any other invalid string will throw an exception.  This feature will respect career mode limitations, and will throw an exception if the current vessel is not able to use the mode passed to the command.  An exception is also thrown if <code class="docutils literal notranslate"><span class="pre">&quot;TARGET&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;ANTITARGET&quot;</span></code> are used when no target is set.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">SAS mode is reset to stability assist when toggling SAS on, however it doesn&#8217;t happen immediately.
-Therefore, after activating SAS, you&#8217;ll have to skip a frame before setting the SAS mode.
+<p class="admonition-title">Note</p>
+<p>SAS mode is reset to stability assist when toggling SAS on, however it doesn’t happen immediately.
+Therefore, after activating SAS, you’ll have to skip a frame before setting the SAS mode.
 Velocity-related modes also reset back to stability assist when the velocity gets too low.</p>
 </div>
 <div class="admonition warning">
-<p class="first admonition-title">Warning</p>
+<p class="admonition-title">Warning</p>
 <p>SASMODE does not work with RemoteTech</p>
-<p class="last">Due to the way that RemoteTech disables flight control input, the built in SAS modes do not function properly when there is no connection to the KSC or a Command Center.  If you are writing scripts for use with RemoteTech, make sure to take this into account.</p>
+<p>Due to the way that RemoteTech disables flight control input, the built in SAS modes do not function properly when there is no connection to the KSC or a Command Center.  If you are writing scripts for use with RemoteTech, make sure to take this into account.</p>
 </div>
 <div class="admonition warning">
-<p class="first admonition-title">Warning</p>
+<p class="admonition-title">Warning</p>
 <p>SASMODE should not be used with LOCK STEERING</p>
-<p class="last">Be aware that having KSP&#8217;s <code class="docutils literal"><span class="pre">SAS</span></code> turned on <em>will</em> conflict
-with using &#8220;cooked control&#8221; (the <code class="docutils literal"><span class="pre">lock</span> <span class="pre">steering</span></code> command).  You
+<p>Be aware that having KSP’s <code class="docutils literal notranslate"><span class="pre">SAS</span></code> turned on <em>will</em> conflict
+with using “cooked control” (the <code class="docutils literal notranslate"><span class="pre">lock</span> <span class="pre">steering</span></code> command).  You
 should not use these two modes of steering control at the same time.
 For further information see the
-<a class="reference internal" href="cooked.html#locksteeringsaswarning"><span>warning in lock steering documentation</span></a>.</p>
+<a class="reference internal" href="cooked.html#locksteeringsaswarning"><span class="std std-ref">warning in lock steering documentation</span></a>.</p>
 </div>
 </dd></dl>
 
 <span class="target" id="navmode"></span><dl class="object">
-<dt>
-<code class="descname">NAVMODE</code></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../structures/misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>Getting this variable will return the currently selected nav ball speed display mode.  Where <code class="docutils literal"><span class="pre">value</span></code> is one of the valid strings listed below, this will set the nav ball mode for the cpu vessel:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">NAVMODE</span> <span class="ow">TO</span> <span class="nv">value</span><span class="p">.</span>
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">NAVMODE</span></span></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../structures/misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+</dl>
+<p>Getting this variable will return the currently selected nav ball speed display mode.  Where <code class="docutils literal notranslate"><span class="pre">value</span></code> is one of the valid strings listed below, this will set the nav ball mode for the cpu vessel:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">NAVMODE</span> <span class="ow">TO</span> <span class="nv">value</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>It is the equivalent to changing the nav ball mode by clicking on speed display on the nav ball while manually piloting the craft, and will change the current mode of the nav ball, affecting behavior of most SAS modes.  Valid strings for <code class="docutils literal"><span class="pre">value</span></code> are <code class="docutils literal"><span class="pre">&quot;ORBIT&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;SURFACE&quot;</span></code> and <code class="docutils literal"><span class="pre">&quot;TARGET&quot;</span></code>.  A null or empty string will default to orbit mode, however any other invalid string will throw an exception.  This feature is accessible only for the active vessel, and will throw an exception if the current vessel is not active.  An exception is also thrown if <code class="docutils literal"><span class="pre">&quot;TARGET&quot;</span></code> is used, but no target is selected.</p>
+<p>It is the equivalent to changing the nav ball mode by clicking on speed display on the nav ball while manually piloting the craft, and will change the current mode of the nav ball, affecting behavior of most SAS modes.  Valid strings for <code class="docutils literal notranslate"><span class="pre">value</span></code> are <code class="docutils literal notranslate"><span class="pre">&quot;ORBIT&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;SURFACE&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;TARGET&quot;</span></code>.  A null or empty string will default to orbit mode, however any other invalid string will throw an exception.  This feature is accessible only for the active vessel, and will throw an exception if the current vessel is not active.  An exception is also thrown if <code class="docutils literal notranslate"><span class="pre">&quot;TARGET&quot;</span></code> is used, but no target is selected.</p>
 </dd></dl>
 
-</div>
-<div class="section" id="stock-action-groups">
-<span id="stock-boolean-flags"></span><h2>STOCK ACTION GROUPS<a class="headerlink" href="#stock-action-groups" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="stock-action-groups">
+<span id="stock-boolean-flags"></span><h2>STOCK ACTION GROUPS<a class="headerlink" href="#stock-action-groups" title="Permalink to this heading">¶</a></h2>
 <blockquote>
-<div><p>These action groups (including abovementioned <a class="reference internal" href="#global:SAS" title="SAS global"><code class="xref ks ks-global docutils literal"><span class="pre">SAS</span></code></a> and
-<a class="reference internal" href="#global:RCS" title="RCS global"><code class="xref ks ks-global docutils literal"><span class="pre">RCS</span></code></a>) are stored as <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a> values which can be read to
+<div><p>These action groups (including abovementioned <a class="reference internal" href="#global:SAS" title="SAS global"><code class="xref ks ks-global docutils literal notranslate"><span class="pre">SAS</span></code></a> and
+<a class="reference internal" href="#global:RCS" title="RCS global"><code class="xref ks ks-global docutils literal notranslate"><span class="pre">RCS</span></code></a>) are stored as <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a> values which can be read to
 determine their current state.  Reading their value can be used by kOS as
 a form of user input:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">IF</span> <span class="nv">RCS</span> <span class="k">PRINT</span> <span class="s">&quot;RCS is on&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">IF</span> <span class="nv">RCS</span> <span class="k">PRINT</span> <span class="s">&quot;RCS is on&quot;</span><span class="p">.</span>
 <span class="nb">ON</span> <span class="nv">ABORT</span> <span class="p">{</span>
     <span class="k">PRINT</span> <span class="s">&quot;Aborting!&quot;</span><span class="p">.</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Using the <code class="docutils literal"><span class="pre">TOGGLE</span></code> command will simply set the value to the opposite of
+<p>Using the <code class="docutils literal notranslate"><span class="pre">TOGGLE</span></code> command will simply set the value to the opposite of
 the current value.  These two are essentially the same:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">TOGGLE</span> <span class="nv">AG1</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">TOGGLE</span> <span class="nv">AG1</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">AG1</span> <span class="ow">TO</span> <span class="ow">NOT</span> <span class="nv">AG1</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>The action groups can be set both by giving <code class="docutils literal"><span class="pre">ON</span></code> or <code class="docutils literal"><span class="pre">OFF</span></code> command
-and by setting the <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a> value. The following commands will have
+<p>The action groups can be set both by giving <code class="docutils literal notranslate"><span class="pre">ON</span></code> or <code class="docutils literal notranslate"><span class="pre">OFF</span></code> command
+and by setting the <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a> value. The following commands will have
 the same effect:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">SAS</span> <span class="nb">ON</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">SAS</span> <span class="nb">ON</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">SAS</span> <span class="ow">TO</span> <span class="nb">TRUE</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>However, using the <code class="docutils literal"><span class="pre">SET</span></code> command allows the use of any <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a>
+<p>However, using the <code class="docutils literal notranslate"><span class="pre">SET</span></code> command allows the use of any <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a>
 variable or expression, for example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">GEAR</span> <span class="ow">TO</span> <span class="nv">ALT</span><span class="p">:</span><span class="nv">RADAR</span><span class="o">&lt;</span><span class="mf">1000</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">GEAR</span> <span class="ow">TO</span> <span class="nv">ALT</span><span class="p">:</span><span class="nv">RADAR</span><span class="o">&lt;</span><span class="mf">1000</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">LIGHTS</span> <span class="ow">TO</span> <span class="nv">GEAR</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">BRAKES</span> <span class="ow">TO</span> <span class="ow">NOT</span> <span class="nv">BRAKES</span><span class="p">.</span>
 </pre></div>
@@ -338,217 +260,201 @@ variable or expression, for example:</p>
 otherwise react to them.  More actions can be added to the groups in the
 editor, if VAB or SPH is advanced enough.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Pressing an action group&#8217;s associated key will toggle it&#8217;s value from
-<code class="docutils literal"><span class="pre">TRUE</span></code> TO <code class="docutils literal"><span class="pre">FALSE</span></code> or from <code class="docutils literal"><span class="pre">FALSE</span></code> to <code class="docutils literal"><span class="pre">TRUE</span></code>.  If you are
+<p class="admonition-title">Note</p>
+<p>Pressing an action group’s associated key will toggle it’s value from
+<code class="docutils literal notranslate"><span class="pre">TRUE</span></code> TO <code class="docutils literal notranslate"><span class="pre">FALSE</span></code> or from <code class="docutils literal notranslate"><span class="pre">FALSE</span></code> to <code class="docutils literal notranslate"><span class="pre">TRUE</span></code>.  If you are
 attempting to use action groups as user input, make sure to compare it
-to a stored &#8220;last value&#8221; or use the <a class="reference internal" href="../../language/flow.html#on-trigger"><span>ON Trigger</span></a></p>
+to a stored “last value” or use the <a class="reference internal" href="../../language/flow.html#on-trigger"><span class="std std-ref">ON Trigger</span></a></p>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Assigned actions only react to changes in action group state, therefore
-calling <code class="docutils literal"><span class="pre">GEAR</span> <span class="pre">ON.</span></code> when it&#8217;s already on will have no effect even on
-undeployed landing gear.  The value will first need to be set to <code class="docutils literal"><span class="pre">False</span></code>
-before setting it back to <code class="docutils literal"><span class="pre">True</span></code>.</p>
+<p class="admonition-title">Note</p>
+<p>Assigned actions only react to changes in action group state, therefore
+calling <code class="docutils literal notranslate"><span class="pre">GEAR</span> <span class="pre">ON.</span></code> when it’s already on will have no effect even on
+undeployed landing gear.  The value will first need to be set to <code class="docutils literal notranslate"><span class="pre">False</span></code>
+before setting it back to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Some actions react differently to toggling the group on and off,
+<p class="admonition-title">Note</p>
+<p>Some actions react differently to toggling the group on and off,
 other will give the same response to both.  For example, landing gear
-will not deploy if they are currently retracted and you set <code class="docutils literal"><span class="pre">GEAR</span> <span class="pre">OFF.</span></code>.
-However, if an engine is off and the &#8220;Toggle Engine&#8221; action is linked
-to <code class="docutils literal"><span class="pre">AG1</span></code> which is currently <code class="docutils literal"><span class="pre">True</span></code>, calling <code class="docutils literal"><span class="pre">AG1</span> <span class="pre">OFF.</span></code> will turn
+will not deploy if they are currently retracted and you set <code class="docutils literal notranslate"><span class="pre">GEAR</span> <span class="pre">OFF.</span></code>.
+However, if an engine is off and the “Toggle Engine” action is linked
+to <code class="docutils literal notranslate"><span class="pre">AG1</span></code> which is currently <code class="docutils literal notranslate"><span class="pre">True</span></code>, calling <code class="docutils literal notranslate"><span class="pre">AG1</span> <span class="pre">OFF.</span></code> will turn
 on the engine.</p>
 </div>
 </div></blockquote>
-<dl class="global">
-<dt id="global:LIGHTS">
-<code class="descname">LIGHTS</code><a class="headerlink" href="#global:LIGHTS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Toggle ON/OFF; get/set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>Turns the lights <strong>on</strong> or <strong>off</strong>, like using the <code class="docutils literal"><span class="pre">U</span></code> key at the keyboard:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">LIGHTS</span> <span class="nb">ON</span><span class="p">.</span>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:LIGHTS">
+<span class="sig-name descname"><span class="pre">LIGHTS</span></span><a class="headerlink" href="#global:LIGHTS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Toggle ON/OFF; get/set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
+<p>Turns the lights <strong>on</strong> or <strong>off</strong>, like using the <code class="docutils literal notranslate"><span class="pre">U</span></code> key at the keyboard:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">LIGHTS</span> <span class="nb">ON</span><span class="p">.</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:BRAKES">
-<code class="descname">BRAKES</code><a class="headerlink" href="#global:BRAKES" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Toggle ON/OFF; get/set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>Turns the brakes <strong>on</strong> or <strong>off</strong>, like clicking the brakes button, though <em>not</em> like using the <code class="docutils literal"><span class="pre">B</span></code> key, because they stay on:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">BRAKES</span> <span class="nb">ON</span><span class="p">.</span>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:BRAKES">
+<span class="sig-name descname"><span class="pre">BRAKES</span></span><a class="headerlink" href="#global:BRAKES" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Toggle ON/OFF; get/set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
+<p>Turns the brakes <strong>on</strong> or <strong>off</strong>, like clicking the brakes button, though <em>not</em> like using the <code class="docutils literal notranslate"><span class="pre">B</span></code> key, because they stay on:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">BRAKES</span> <span class="nb">ON</span><span class="p">.</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:GEAR">
-<code class="descname">GEAR</code><a class="headerlink" href="#global:GEAR" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Toggle ON/OFF; get/set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>Deploys or retracts the landing gear, like using the <code class="docutils literal"><span class="pre">G</span></code> key at the keyboard:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">GEAR</span> <span class="nb">ON</span><span class="p">.</span>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:GEAR">
+<span class="sig-name descname"><span class="pre">GEAR</span></span><a class="headerlink" href="#global:GEAR" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Toggle ON/OFF; get/set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
+<p>Deploys or retracts the landing gear, like using the <code class="docutils literal notranslate"><span class="pre">G</span></code> key at the keyboard:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">GEAR</span> <span class="nb">ON</span><span class="p">.</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:ABORT">
-<code class="descname">ABORT</code><a class="headerlink" href="#global:ABORT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Toggle ON/OFF; get/set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>Abort action group (no actions are automatically assigned, configurable in the editor), like using the <code class="docutils literal"><span class="pre">Backspace</span></code> key at the keyboard:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">ABORT</span> <span class="nb">ON</span><span class="p">.</span>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:ABORT">
+<span class="sig-name descname"><span class="pre">ABORT</span></span><a class="headerlink" href="#global:ABORT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Toggle ON/OFF; get/set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
+<p>Abort action group (no actions are automatically assigned, configurable in the editor), like using the <code class="docutils literal notranslate"><span class="pre">Backspace</span></code> key at the keyboard:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">ABORT</span> <span class="nb">ON</span><span class="p">.</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:AG1 ... AG10">
-<code class="descname">AG1 ... AG10</code><a class="headerlink" href="#global:AG1 ... AG10" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Toggle ON/OFF; get/set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:AG1 ... AG10">
+<span class="sig-name descname"><span class="pre">AG1</span> <span class="pre">...</span> <span class="pre">AG10</span></span><a class="headerlink" href="#global:AG1 ... AG10" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Toggle ON/OFF; get/set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>10 custom action groups (no actions are automatically assigned, configurable in the editor), like using the numeric keys at the keyboard:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">AG1</span> <span class="nb">ON</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">AG1</span> <span class="nb">ON</span><span class="p">.</span>
 <span class="nv">AG4</span> <span class="nb">OFF</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">AG10</span> <span class="ow">to</span> <span class="nv">AG3</span><span class="p">.</span>
 </pre></div>
 </div>
 </dd></dl>
 
-</div>
-<div class="section" id="kos-pseudo-action-groups">
-<span id="kos-boolean-flags"></span><h2>kOS PSEUDO ACTION GROUPS<a class="headerlink" href="#kos-pseudo-action-groups" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="kos-pseudo-action-groups">
+<span id="kos-boolean-flags"></span><h2>kOS PSEUDO ACTION GROUPS<a class="headerlink" href="#kos-pseudo-action-groups" title="Permalink to this heading">¶</a></h2>
 <blockquote>
-<div><p>kOS adds several <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a> flags (bound variable fields) that can be used by scripts in the
+<div><p>kOS adds several <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a> flags (bound variable fields) that can be used by scripts in the
 same way the stock action groups are used:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">PANELS</span> <span class="nb">ON</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">PANELS</span> <span class="nb">ON</span><span class="p">.</span>
 <span class="k">IF</span> <span class="nv">BAYS</span> <span class="k">PRINT</span> <span class="s">&quot;Payload/service bays are ajar!&quot;</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">RADIATORS</span> <span class="ow">TO</span> <span class="nv">LEGS</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>However, unlike the stock action groups, you can&#8217;t manually assign actions
+<p>However, unlike the stock action groups, you can’t manually assign actions
 to these fields in the VAB.  They automatically affect all parts of the
 corresponding type.  The biggest difference is that the values for these
 groups are not stored, instead, the value is directly dependent on the state
 of the associated parts.  Another difference from stock groups is that both
-<code class="docutils literal"><span class="pre">ON</span></code> and <code class="docutils literal"><span class="pre">OFF</span></code> commands work independently of the initial state of the
+<code class="docutils literal notranslate"><span class="pre">ON</span></code> and <code class="docutils literal notranslate"><span class="pre">OFF</span></code> commands work independently of the initial state of the
 field.  For example, if some of the payload bays are closed and some are
-open (<code class="docutils literal"><span class="pre">BAYS</span></code> would return true), <code class="docutils literal"><span class="pre">BAYS</span> <span class="pre">ON</span></code> will still open any bays that
-are currently closed, and <code class="docutils literal"><span class="pre">BAYS</span> <span class="pre">OFF</span></code> will close the ones that are opened.</p>
+open (<code class="docutils literal notranslate"><span class="pre">BAYS</span></code> would return true), <code class="docutils literal notranslate"><span class="pre">BAYS</span> <span class="pre">ON</span></code> will still open any bays that
+are currently closed, and <code class="docutils literal notranslate"><span class="pre">BAYS</span> <span class="pre">OFF</span></code> will close the ones that are opened.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Because these fields return their value based on the actual status of
+<p class="admonition-title">Note</p>
+<p>Because these fields return their value based on the actual status of
 the associated parts, it is not guaranteed that the return value will
 match the value you set immediately.  Some parts may not report the
 new state until an animation has finished, or the part may not be able
 to perform the selected action at this time.</p>
 </div>
 </div></blockquote>
-<dl class="global">
-<dt id="global:LEGS">
-<code class="descname">LEGS</code><a class="headerlink" href="#global:LEGS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Toggle ON/OFF; get/set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:LEGS">
+<span class="sig-name descname"><span class="pre">LEGS</span></span><a class="headerlink" href="#global:LEGS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Toggle ON/OFF; get/set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Deploys or retracts all the landing legs (but not wheeled landing gear):</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">LEGS</span> <span class="nb">ON</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">LEGS</span> <span class="nb">ON</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>Returns true if all the legs are deployed.</p>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:CHUTES">
-<code class="descname">CHUTES</code><a class="headerlink" href="#global:CHUTES" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Toggle ON; get/set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:CHUTES">
+<span class="sig-name descname"><span class="pre">CHUTES</span></span><a class="headerlink" href="#global:CHUTES" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Toggle ON; get/set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Deploys all the parachutes (only <cite>ON</cite> command has effect):</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">CHUTES</span> <span class="nb">ON</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">CHUTES</span> <span class="nb">ON</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>Returns true if all the chutes are deployed.</p>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:CHUTESSAFE">
-<code class="descname">CHUTESSAFE</code><a class="headerlink" href="#global:CHUTESSAFE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Toggle ON; get/set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:CHUTESSAFE">
+<span class="sig-name descname"><span class="pre">CHUTESSAFE</span></span><a class="headerlink" href="#global:CHUTESSAFE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Toggle ON; get/set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Deploys all the parachutes than can be safely deployed in the current conditions (only <cite>ON</cite> command has effect):</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">CHUTESSAFE</span> <span class="nb">ON</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">CHUTESSAFE</span> <span class="nb">ON</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>Returns false only if there are disarmed parachutes chutes which may be safely
 deployed, and true if all safe parachutes are already deployed including
 any time where there are no safe parachutes.</p>
 <p>The following code will gradually deploy all the chutes as the speed drops:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">WHEN</span> <span class="p">(</span><span class="ow">NOT</span> <span class="nv">CHUTESSAFE</span><span class="p">)</span> <span class="k">THEN</span> <span class="p">{</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">WHEN</span> <span class="p">(</span><span class="ow">NOT</span> <span class="nv">CHUTESSAFE</span><span class="p">)</span> <span class="k">THEN</span> <span class="p">{</span>
     <span class="nv">CHUTESSAFE</span> <span class="nb">ON</span><span class="p">.</span>
     <span class="k">RETURN</span> <span class="p">(</span><span class="ow">NOT</span> <span class="nv">CHUTES</span><span class="p">).</span>
 <span class="p">}</span>
@@ -556,294 +462,236 @@ any time where there are no safe parachutes.</p>
 </div>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:PANELS">
-<code class="descname">PANELS</code><a class="headerlink" href="#global:PANELS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Toggle ON/OFF; get/set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:PANELS">
+<span class="sig-name descname"><span class="pre">PANELS</span></span><a class="headerlink" href="#global:PANELS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Toggle ON/OFF; get/set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Extends or retracts all the deployable solar panels:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">PANELS</span> <span class="nb">ON</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">PANELS</span> <span class="nb">ON</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>Returns true if all the panels are extended, including those inside of
 fairings or cargo bays.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Some solar panels can&#8217;t be retracted once deployed.  Consult the part&#8217;s
+<p class="admonition-title">Note</p>
+<p>Some solar panels can’t be retracted once deployed.  Consult the part’s
 description for details.</p>
 </div>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:RADIATORS">
-<code class="descname">RADIATORS</code><a class="headerlink" href="#global:RADIATORS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Toggle ON/OFF; get/set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:RADIATORS">
+<span class="sig-name descname"><span class="pre">RADIATORS</span></span><a class="headerlink" href="#global:RADIATORS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Toggle ON/OFF; get/set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Extends or retracts all the deployable radiators and activates or deactivates all the fixed ones:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">RADIATORS</span> <span class="nb">ON</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">RADIATORS</span> <span class="nb">ON</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>Returns true if all the radiators are extended (if deployable) and active.</p>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:LADDERS">
-<code class="descname">LADDERS</code><a class="headerlink" href="#global:LADDERS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Toggle ON/OFF; get/set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:LADDERS">
+<span class="sig-name descname"><span class="pre">LADDERS</span></span><a class="headerlink" href="#global:LADDERS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Toggle ON/OFF; get/set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Extends or retracts all the extendable ladders:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">LADDERS</span> <span class="nb">ON</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">LADDERS</span> <span class="nb">ON</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>Returns true if all the ladders are extended.</p>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:BAYS">
-<code class="descname">BAYS</code><a class="headerlink" href="#global:BAYS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Toggle ON/OFF; get/set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:BAYS">
+<span class="sig-name descname"><span class="pre">BAYS</span></span><a class="headerlink" href="#global:BAYS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Toggle ON/OFF; get/set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Opens or closes all the payload and service bays (including the cargo ramp):</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">BAYS</span> <span class="nb">ON</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">BAYS</span> <span class="nb">ON</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>Returns true if at least one bay is open.</p>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:DEPLOYDRILLS">
-<code class="descname">DEPLOYDRILLS</code><a class="headerlink" href="#global:DEPLOYDRILLS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Toggle ON/OFF; get/set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:DEPLOYDRILLS">
+<span class="sig-name descname"><span class="pre">DEPLOYDRILLS</span></span><a class="headerlink" href="#global:DEPLOYDRILLS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Toggle ON/OFF; get/set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Deploys or retracts all the mining drills:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">DEPLOYDRILLS</span> <span class="nb">ON</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">DEPLOYDRILLS</span> <span class="nb">ON</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>Returns true if all the drills are deployed.</p>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:DRILLS">
-<code class="descname">DRILLS</code><a class="headerlink" href="#global:DRILLS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Toggle ON/OFF; get/set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:DRILLS">
+<span class="sig-name descname"><span class="pre">DRILLS</span></span><a class="headerlink" href="#global:DRILLS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Toggle ON/OFF; get/set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Activates (has effect only on drills that are deployed and in contact with minable surface) or stops all the mining drills:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">DRILLS</span> <span class="nb">ON</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">DRILLS</span> <span class="nb">ON</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>Returns true if at least one drill is actually mining.</p>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:FUELCELLS">
-<code class="descname">FUELCELLS</code><a class="headerlink" href="#global:FUELCELLS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Toggle ON/OFF; get/set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:FUELCELLS">
+<span class="sig-name descname"><span class="pre">FUELCELLS</span></span><a class="headerlink" href="#global:FUELCELLS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Toggle ON/OFF; get/set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Activates or deactivates all the fuel cells (distingushed from other conveters by converter/action names):</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">FUELCELLS</span> <span class="nb">ON</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">FUELCELLS</span> <span class="nb">ON</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>Returns true if at least one fuel cell is activated.</p>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:ISRU">
-<code class="descname">ISRU</code><a class="headerlink" href="#global:ISRU" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Toggle ON/OFF; get/set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:ISRU">
+<span class="sig-name descname"><span class="pre">ISRU</span></span><a class="headerlink" href="#global:ISRU" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Toggle ON/OFF; get/set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Activates or deactivates all the ISRU converters (distingushed from other conveters by converter/action names):</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">ISRU</span> <span class="nb">ON</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">ISRU</span> <span class="nb">ON</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>Returns true if at least one ISRU converter is activated.</p>
 </dd></dl>
 
-<dl class="global">
-<dt id="global:INTAKES">
-<code class="descname">INTAKES</code><a class="headerlink" href="#global:INTAKES" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Toggle ON/OFF; get/set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:INTAKES">
+<span class="sig-name descname"><span class="pre">INTAKES</span></span><a class="headerlink" href="#global:INTAKES" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Toggle ON/OFF; get/set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Action Group, <a class="reference internal" href="../../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Opens or closes all the air intakes:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">INTAKES</span> <span class="nb">ON</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">INTAKES</span> <span class="nb">ON</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>Returns true if all the intakes are open.</p>
 </dd></dl>
 
-</div>
-<div class="section" id="target">
-<h2>TARGET<a class="headerlink" href="#target" title="Permalink to this headline">¶</a></h2>
-<dl class="global">
-<dt id="global:TARGET">
-<code class="descname">TARGET</code><a class="headerlink" href="#global:TARGET" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../structures/misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> (set); <a class="reference internal" href="../../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a> or <a class="reference internal" href="../../structures/celestial_bodies/body.html#structure:BODY" title="BODY structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Body</span></code></a> or <a class="reference internal" href="../../structures/vessels/part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a> (get/set)</td>
-</tr>
-</tbody>
-</table>
-<p>Where <code class="docutils literal"><span class="pre">name</span></code> is the name of a target vessel or planet, this will set the current target:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">TARGET</span> <span class="ow">TO</span> <span class="nv">name</span><span class="p">.</span>
+</section>
+<section id="target">
+<h2>TARGET<a class="headerlink" href="#target" title="Permalink to this heading">¶</a></h2>
+<dl class="ks global">
+<dt class="sig sig-object ks" id="global:TARGET">
+<span class="sig-name descname"><span class="pre">TARGET</span></span><a class="headerlink" href="#global:TARGET" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../structures/misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> (set); <a class="reference internal" href="../../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vessel</span></code></a> or <a class="reference internal" href="../../structures/celestial_bodies/body.html#structure:BODY" title="BODY structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Body</span></code></a> or <a class="reference internal" href="../../structures/vessels/part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a> (get/set)</p>
+</dd>
+</dl>
+<p>Where <code class="docutils literal notranslate"><span class="pre">name</span></code> is the name of a target vessel or planet, this will set the current target:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">TARGET</span> <span class="ow">TO</span> <span class="nv">name</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>For more information see <a class="reference internal" href="../../bindings.html#bindings"><span>Catalog of Bound Variable Names</span></a>.</p>
+<p>For more information see <a class="reference internal" href="../../bindings.html#bindings"><span class="std std-ref">Catalog of Bound Variable Names</span></a>.</p>
 <p>NOTE, the way to de-select the target is to set it to an empty
 string like this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">TARGET</span> <span class="ow">TO</span> <span class="s">&quot;&quot;</span><span class="p">.</span> <span class="c1">// de-selects the target, setting it to nothing.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">TARGET</span> <span class="ow">TO</span> <span class="s">&quot;&quot;</span><span class="p">.</span> <span class="c1">// de-selects the target, setting it to nothing.</span>
 </pre></div>
 </div>
-<p>(Trying to use <a class="reference internal" href="../../language/variables.html#unset"><span>UNSET TARGET.</span></a> will have no effect because
-<code class="docutils literal"><span class="pre">UNSET</span></code> means &#8220;get rid of the variable itself&#8221; which you&#8217;re not
-allowed to do with built-in bound variables like <code class="docutils literal"><span class="pre">TARGET</span></code>.)</p>
+<p>(Trying to use <a class="reference internal" href="../../language/variables.html#unset"><span class="std std-ref">UNSET TARGET.</span></a> will have no effect because
+<code class="docutils literal notranslate"><span class="pre">UNSET</span></code> means “get rid of the variable itself” which you’re not
+allowed to do with built-in bound variables like <code class="docutils literal notranslate"><span class="pre">TARGET</span></code>.)</p>
 </dd></dl>
 
-<p>Note that the above options also can refer to a different vessel besides the current ship, for example, <code class="docutils literal"><span class="pre">TARGET:THROTTLE</span></code> to read the target&#8217;s throttle. But not all &#8220;set&#8221; or &#8220;lock&#8221; options will work with a different vessel other than the current one, because there&#8217;s no authority to control a craft the current program is not attached to.</p>
-</div>
-</div>
+<p>Note that the above options also can refer to a different vessel besides the current ship, for example, <code class="docutils literal notranslate"><span class="pre">TARGET:THROTTLE</span></code> to read the target’s throttle. But not all “set” or “lock” options will work with a different vessel other than the current one, because there’s no authority to control a craft the current program is not attached to.</p>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="../prediction.html" class="btn btn-neutral float-right" title="Predictions of Flight Path" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="pilot.html" class="btn btn-neutral" title="Pilot Input" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pilot.html" class="btn btn-neutral float-left" title="Pilot Input" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../prediction.html" class="btn btn-neutral float-right" title="Predictions of Flight Path" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

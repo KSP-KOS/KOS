@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Connection &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Connection &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../../about.html"/>
-        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Communication" href="../communication.html"/>
-        <link rel="next" title="Message" href="message.html"/>
-        <link rel="prev" title="Communication" href="../communication.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Message" href="message.html" />
+    <link rel="prev" title="Communication" href="../communication.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
@@ -106,9 +57,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../volumes_and_files.html">Volumes &amp; Files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../communication.html">Communication</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="">Connection</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Connection</a></li>
 <li class="toctree-l3"><a class="reference internal" href="message.html">Message</a></li>
 <li class="toctree-l3"><a class="reference internal" href="message_queue.html">MessageQueue</a></li>
 </ul>
@@ -127,143 +76,118 @@
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
-      
           <li><a href="../communication.html">Communication</a> &raquo;</li>
-      
-    <li>Connection</li>
+      <li>Connection</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/structures/communication/connection.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../../_sources/structures/communication/connection.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="connection">
-<span id="id1"></span><h1>Connection<a class="headerlink" href="#connection" title="Permalink to this headline">¶</a></h1>
-<p>Connections represent your ability to communicate with other <a class="reference internal" href="../vessels/kosprocessor.html#structure:KOSPROCESSOR" title="KOSPROCESSOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">processors</span></code></a> or <a class="reference internal" href="../vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">vessels</span></code></a>. You can
+             
+  <section id="connection">
+<span id="id1"></span><h1>Connection<a class="headerlink" href="#connection" title="Permalink to this heading">¶</a></h1>
+<p>Connections represent your ability to communicate with other <a class="reference internal" href="../vessels/kosprocessor.html#structure:KOSPROCESSOR" title="KOSPROCESSOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">processors</span></code></a> or <a class="reference internal" href="../vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">vessels</span></code></a>. You can
 use them to find out whether such communication is currently possible and send messages.</p>
-<div class="section" id="obtaining-a-connection">
-<h2>Obtaining a connection<a class="headerlink" href="#obtaining-a-connection" title="Permalink to this headline">¶</a></h2>
-<p>There are 2 types of connections. The first type is used to communicate with other <a class="reference internal" href="../vessels/kosprocessor.html#structure:KOSPROCESSOR" title="KOSPROCESSOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">processors</span></code></a> within the same vessel.
-You can obtain a connection by using <cite>CONNECTION</cite> suffix. Assuming your vessel has a second processor tagged <cite>&#8216;second&#8217;</cite> it could look like this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">MY_PROCESSOR</span> <span class="ow">TO</span> <span class="nv">PROCESSOR</span><span class="p">(</span><span class="s">&quot;second&quot;</span><span class="p">).</span>
+<section id="obtaining-a-connection">
+<h2>Obtaining a connection<a class="headerlink" href="#obtaining-a-connection" title="Permalink to this heading">¶</a></h2>
+<p>There are 2 types of connections. The first type is used to communicate with other <a class="reference internal" href="../vessels/kosprocessor.html#structure:KOSPROCESSOR" title="KOSPROCESSOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">processors</span></code></a> within the same vessel.
+You can obtain a connection by using <cite>CONNECTION</cite> suffix. Assuming your vessel has a second processor tagged <cite>‘second’</cite> it could look like this:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">MY_PROCESSOR</span> <span class="ow">TO</span> <span class="nv">PROCESSOR</span><span class="p">(</span><span class="s">&quot;second&quot;</span><span class="p">).</span>
 <span class="k">SET</span> <span class="nv">MY_CONNECTION</span> <span class="ow">TO</span> <span class="nv">MY_PROCESSOR</span><span class="p">:</span><span class="nv">CONNECTION</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>The second type are connections to other vessels. Assuming you have a rover on duna named <cite>&#8216;dunarover&#8217;</cite> you could obtain a connection to it like this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">MY_VESSEL</span> <span class="ow">TO</span> <span class="nv">VESSEL</span><span class="p">(</span><span class="s">&quot;dunarover&quot;</span><span class="p">).</span>
+<p>The second type are connections to other vessels. Assuming you have a rover on duna named <cite>‘dunarover’</cite> you could obtain a connection to it like this:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">MY_VESSEL</span> <span class="ow">TO</span> <span class="nv">VESSEL</span><span class="p">(</span><span class="s">&quot;dunarover&quot;</span><span class="p">).</span>
 <span class="k">SET</span> <span class="nv">MY_CONNECTION</span> <span class="ow">TO</span> <span class="nv">MY_VESSEL</span><span class="p">:</span><span class="nv">CONNECTION</span><span class="p">.</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="structure">
-<h2>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
-<dl class="structure">
-<dt id="structure:CONNECTION">
-<em class="property">structure </em><code class="descname">Connection</code><a class="headerlink" href="#structure:CONNECTION" title="Permalink to this definition">¶</a></dt>
-<dd><table border="1" class="docutils">
+</section>
+<section id="structure">
+<h2>Structure<a class="headerlink" href="#structure" title="Permalink to this heading">¶</a></h2>
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:CONNECTION">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">Connection</span></span><a class="headerlink" href="#structure:CONNECTION" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils align-default">
 <colgroup>
-<col width="29%" />
-<col width="14%" />
-<col width="57%" />
+<col style="width: 28.6%" />
+<col style="width: 14.3%" />
+<col style="width: 57.1%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type</th>
-<th class="head">Description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#attribute:CONNECTION:ISCONNECTED" title="CONNECTION:ISCONNECTED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ISCONNECTED</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>true if this connection is currently opened</td>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:CONNECTION:ISCONNECTED" title="CONNECTION:ISCONNECTED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ISCONNECTED</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>true if this connection is currently opened</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONNECTION:DELAY" title="CONNECTION:DELAY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DELAY</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-<td>delay in seconds</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:CONNECTION:DELAY" title="CONNECTION:DELAY attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">DELAY</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>delay in seconds</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:CONNECTION:DESTINATION" title="CONNECTION:DESTINATION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DESTINATION</span></code></a></td>
-<td><a class="reference internal" href="../vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a> or <a class="reference internal" href="../vessels/kosprocessor.html#structure:KOSPROCESSOR" title="KOSPROCESSOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">kOSProcessor</span></code></a></td>
-<td>destination of this connection</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:CONNECTION:DESTINATION" title="CONNECTION:DESTINATION attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">DESTINATION</span></code></a></p></td>
+<td><p><a class="reference internal" href="../vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vessel</span></code></a> or <a class="reference internal" href="../vessels/kosprocessor.html#structure:KOSPROCESSOR" title="KOSPROCESSOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">kOSProcessor</span></code></a></p></td>
+<td><p>destination of this connection</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:CONNECTION:SENDMESSAGE" title="CONNECTION:SENDMESSAGE method"><code class="xref ks ks-meth docutils literal"><span class="pre">SENDMESSAGE(message)</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>Sends a message using this connection</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:CONNECTION:SENDMESSAGE" title="CONNECTION:SENDMESSAGE method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">SENDMESSAGE(message)</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Sends a message using this connection</p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:CONNECTION:ISCONNECTED">
-Connection:<code class="descname">ISCONNECTED</code><a class="headerlink" href="#attribute:CONNECTION:ISCONNECTED" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:CONNECTION:ISCONNECTED">
+<span class="pre">Connection:</span><span class="sig-name descname"><span class="pre">ISCONNECTED</span></span><a class="headerlink" href="#attribute:CONNECTION:ISCONNECTED" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>True if the connection is opened and messages can be sent.</p>
-<ul>
-<li><dl class="first docutils">
-<dt>For CPU connections:</dt>
-<dd><ul class="first last simple">
-<li>This will be true if the destination CPU belongs to the same vessel
-as the current CPU, and will be false otherwise.</li>
+<ul class="simple">
+<li><dl class="simple">
+<dt>For CPU connections:</dt><dd><ul>
+<li><p>This will be true if the destination CPU belongs to the same vessel
+as the current CPU, and will be false otherwise.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt>For Vessel connections:</dt>
-<dd><ul class="first last simple">
-<li>If you are using Stock KSP and chose the PermitAll connectivity
-manager, then this will aways return true.</li>
-<li>If you are using Stock KSP and chose the CommNet connectivity
+<li><dl class="simple">
+<dt>For Vessel connections:</dt><dd><ul>
+<li><p>If you are using Stock KSP and chose the PermitAll connectivity
+manager, then this will aways return true.</p></li>
+<li><p>If you are using Stock KSP and chose the CommNet connectivity
 manager, then this will obey the rules of the stock CommNet system
 for whether a connection path exists between the source and
-destination vessel.</li>
-<li>If you are using the RemoteTech and chose the RemoteTech
+destination vessel.</p></li>
+<li><p>If you are using the RemoteTech and chose the RemoteTech
 connectivity manager, then this will obey the rules of the
 RemoteTech mod for whether a connection path exists between the
-source and destination vessel.</li>
+source and destination vessel.</p></li>
 </ul>
 </dd>
 </dl>
@@ -272,60 +196,59 @@ source and destination vessel.</li>
 <p>The connection has to be opened only in the moment of sending the message in order for it to arrive. If connection is lost after the message was sent,
 but before it arrives at its destination, this will have no effect on whether the message will reach its destination or not.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
+<p class="admonition-title">Note</p>
 <blockquote>
-<div><strong>Debris Vessels</strong>: If you are using the KSP Stock CommNet system,
-be aware that it never includes &#8220;debris&#8221; type vessels in the
-communications network.  <code class="docutils literal"><span class="pre">ISCONNECTED</span></code> will always be false
-for any vessel of type &#8220;debris&#8221;, no matter what antennas it
-may have on it.</div></blockquote>
-<div class="last admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last"><strong>ISCONNECTION fails just after scene load</strong>: If you have just loaded
+<div><p><strong>Debris Vessels</strong>: If you are using the KSP Stock CommNet system,
+be aware that it never includes “debris” type vessels in the
+communications network.  <code class="docutils literal notranslate"><span class="pre">ISCONNECTED</span></code> will always be false
+for any vessel of type “debris”, no matter what antennas it
+may have on it.</p>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>ISCONNECTION fails just after scene load</strong>: If you have just loaded
 the scene, such as after a vessel switch, then both the Stock CommNet
 system and the RemoteTech mod often have a slight delay before they
-&#8220;find&#8221; all the communication paths that exist.  This means that
-ISCONNECTION will often return <code class="docutils literal"><span class="pre">False</span></code> for the first second or two
-after a scene load, even when the correct answer should be <code class="docutils literal"><span class="pre">True</span></code>.
+“find” all the communication paths that exist.  This means that
+ISCONNECTION will often return <code class="docutils literal notranslate"><span class="pre">False</span></code> for the first second or two
+after a scene load, even when the correct answer should be <code class="docutils literal notranslate"><span class="pre">True</span></code>.
 It will be unable to report the correct answer until a second or so
 later after the communications paths have all been discovered by the
 game.  Because of this, if you have a boot script that depends on an
-accurate answer for ISCONNECTED, it&#8217;s a good idea for that boot
+accurate answer for ISCONNECTED, it’s a good idea for that boot
 script to start with a short wait of a second or two at the top of
 the script.</p>
 </div>
 </div>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:CONNECTION:DELAY">
-Connection:<code class="descname">DELAY</code><a class="headerlink" href="#attribute:CONNECTION:DELAY" title="Permalink to this definition">¶</a></dt>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:CONNECTION:DELAY">
+<span class="pre">Connection:</span><span class="sig-name descname"><span class="pre">DELAY</span></span><a class="headerlink" href="#attribute:CONNECTION:DELAY" title="Permalink to this definition">¶</a></dt>
 <dd><p>The number of seconds that it will take for messages sent using this connection to arrive at their destination. This value will be equal to -1 if connection is not opened.</p>
-<ul>
-<li><dl class="first docutils">
-<dt>For CPU connections:</dt>
-<dd><ul class="first last simple">
-<li>This will be always equal to 0 if the destination CPU belongs
+<ul class="simple">
+<li><dl class="simple">
+<dt>For CPU connections:</dt><dd><ul>
+<li><p>This will be always equal to 0 if the destination CPU belongs
 to the same vessel as the current CPU.  Otherwise it will be
-equal to -1 as no such connection is allowed.</li>
+equal to -1 as no such connection is allowed.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt>For vessel connections:</dt>
-<dd><ul class="first last simple">
-<li>If you are using the PermitAll Connectivity Manager, then this
-will always be zero, as messages arrive instantly.</li>
-<li>If you are using the stock CommNet Connectivirty Manager, then this
+<li><dl class="simple">
+<dt>For vessel connections:</dt><dd><ul>
+<li><p>If you are using the PermitAll Connectivity Manager, then this
+will always be zero, as messages arrive instantly.</p></li>
+<li><p>If you are using the stock CommNet Connectivirty Manager, then this
 will always be zero, as stock CommNet does not impose any delay
-from radio signals.</li>
-<li>If you are using the RemoteTech Connectivity Manager, then this
-will report RemoteTech&#8217;s signal delay along the path being used
+from radio signals.</p></li>
+<li><p>If you are using the RemoteTech Connectivity Manager, then this
+will report RemoteTech’s signal delay along the path being used
 to form the connection.  RemoteTech calculates the number of
 seconds of delay due radio signals traveling at the speed of light,
 which can be quite significant when dealing with interplanetary
-distances.</li>
+distances.</p></li>
 </ul>
 </dd>
 </dl>
@@ -333,112 +256,67 @@ distances.</li>
 </ul>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:CONNECTION:DESTINATION">
-Connection:<code class="descname">DESTINATION</code><a class="headerlink" href="#attribute:CONNECTION:DESTINATION" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a> or <a class="reference internal" href="../vessels/kosprocessor.html#structure:KOSPROCESSOR" title="KOSPROCESSOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">kOSProcessor</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:CONNECTION:DESTINATION">
+<span class="pre">Connection:</span><span class="sig-name descname"><span class="pre">DESTINATION</span></span><a class="headerlink" href="#attribute:CONNECTION:DESTINATION" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vessel</span></code></a> or <a class="reference internal" href="../vessels/kosprocessor.html#structure:KOSPROCESSOR" title="KOSPROCESSOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">kOSProcessor</span></code></a></p>
+</dd>
+</dl>
 <p>Destination of this connection. Will be either a vessel or a processor.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:CONNECTION:SENDMESSAGE">
-Connection:<code class="descname">SENDMESSAGE</code><span class="sig-paren">(</span>message<span class="sig-paren">)</span><a class="headerlink" href="#method:CONNECTION:SENDMESSAGE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>message</strong> &#8211; <a class="reference internal" href="../reflection/structure.html#structure:STRUCTURE" title="STRUCTURE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Structure</span></code></a></li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:CONNECTION:SENDMESSAGE">
+<span class="pre">Connection:</span><span class="sig-name descname"><span class="pre">SENDMESSAGE</span></span><span class="sig-paren">(</span><span class="pre">message</span><span class="sig-paren">)</span><a class="headerlink" href="#method:CONNECTION:SENDMESSAGE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> – <a class="reference internal" href="../reflection/structure.html#structure:STRUCTURE" title="STRUCTURE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Structure</span></code></a></p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(<a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a>) true if the message was successfully sent.</p>
-</td>
-</tr>
-</tbody>
-</table>
-<p>Send a message using this connection. Any serializable structure or a primitive (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a>, <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> or <a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a>) can be given as an argument.
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(<a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a>) true if the message was successfully sent.</p>
+</dd>
+</dl>
+<p>Send a message using this connection. Any serializable structure or a primitive (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>, <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> or <a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a>) can be given as an argument.
 It is always worth checking the return value of this function. A returned false value would indicate that the message was not sent for some reason.
-This method will fail to send the message and return false if <a class="reference internal" href="#attribute:CONNECTION:ISCONNECTED" title="CONNECTION:ISCONNECTED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Connection:ISCONNECTED</span></code></a> is false.</p>
+This method will fail to send the message and return false if <a class="reference internal" href="#attribute:CONNECTION:ISCONNECTED" title="CONNECTION:ISCONNECTED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Connection:ISCONNECTED</span></code></a> is false.</p>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="message.html" class="btn btn-neutral float-right" title="Message" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="../communication.html" class="btn btn-neutral" title="Communication" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../communication.html" class="btn btn-neutral float-left" title="Communication" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="message.html" class="btn btn-neutral float-right" title="Message" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

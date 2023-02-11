@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>PartModule &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PartModule &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../../about.html"/>
-        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
-        <link rel="next" title="RCS" href="rcs.html"/>
-        <link rel="prev" title="Part" href="part.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="RCS" href="rcs.html" />
+    <link rel="prev" title="Part" href="part.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
@@ -123,14 +74,14 @@
 <li class="toctree-l3"><a class="reference internal" href="launchclamp.html">LaunchClamp</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">Maneuver Node</a></li>
 <li class="toctree-l3"><a class="reference internal" href="part.html">Part</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">PartModule</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">PartModule</a></li>
 <li class="toctree-l3"><a class="reference internal" href="rcs.html">RCS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="resource.html">Resource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sciencecontainermodule.html">ScienceContainerModule</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sciencedatavalue.html">ScienceData</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scienceexperiment.html">ScienceExperimentModule</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sensor.html">Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="separator.html">Separator</a></li>
 <li class="toctree-l3"><a class="reference internal" href="stage.html">Stage</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vessel.html">Vessel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vesselsensors.html">VesselSensors</a></li>
@@ -151,549 +102,443 @@
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
-      
           <li><a href="../vessels.html">Vessels and Parts</a> &raquo;</li>
-      
-    <li>PartModule</li>
+      <li>PartModule</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/structures/vessels/partmodule.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../../_sources/structures/vessels/partmodule.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="partmodule">
-<h1>PartModule<a class="headerlink" href="#partmodule" title="Permalink to this headline">¶</a></h1>
-<p>Almost everything done with at right-click menus and action group action can be accessed via the <a class="reference internal" href="#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></code></a> objects that are attached to <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Parts</span></code></a> of a <a class="reference internal" href="vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a>.</p>
-<p>The exact arrangement of <a class="reference internal" href="#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></code></a> to <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Parts</span></code></a> to <a class="reference internal" href="vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessels</span></code></a>, and how to make use of a <a class="reference internal" href="#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></code></a> is a complex enough topic to warrant its own separate subject, described on the <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span>Ship parts and Modules</span></a> page. If you have not read that page, it is recommended that you do so before using <a class="reference internal" href="#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PartModules</span></code></a>. The page you are reading now is meant as just a reference summary, not a tutorial.</p>
-<p>Once you have a <a class="reference internal" href="#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></code></a>, you can use it to invoke the behaviors that are connected to its right-click menu and to its action groups.</p>
-<dl class="structure">
-<dt id="structure:PARTMODULE">
-<em class="property">structure </em><code class="descname">PartModule</code><a class="headerlink" href="#structure:PARTMODULE" title="Permalink to this definition">¶</a></dt>
-<dd><table border="1" class="docutils" id="id1">
+             
+  <section id="partmodule">
+<h1>PartModule<a class="headerlink" href="#partmodule" title="Permalink to this heading">¶</a></h1>
+<p>Almost everything done with at right-click menus and action group action can be accessed via the <a class="reference internal" href="#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">PartModule</span></code></a> objects that are attached to <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Parts</span></code></a> of a <a class="reference internal" href="vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vessel</span></code></a>.</p>
+<p>The exact arrangement of <a class="reference internal" href="#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">PartModule</span></code></a> to <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Parts</span></code></a> to <a class="reference internal" href="vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vessels</span></code></a>, and how to make use of a <a class="reference internal" href="#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">PartModule</span></code></a> is a complex enough topic to warrant its own separate subject, described on the <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span class="std std-ref">Ship parts and Modules</span></a> page. If you have not read that page, it is recommended that you do so before using <a class="reference internal" href="#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">PartModules</span></code></a>. The page you are reading now is meant as just a reference summary, not a tutorial.</p>
+<p>Once you have a <a class="reference internal" href="#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">PartModule</span></code></a>, you can use it to invoke the behaviors that are connected to its right-click menu and to its action groups.</p>
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:PARTMODULE">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">PartModule</span></span><a class="headerlink" href="#structure:PARTMODULE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils align-default" id="id1">
 <caption><span class="caption-text">Members</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="29%" />
-<col width="14%" />
-<col width="57%" />
+<col style="width: 28.6%" />
+<col style="width: 14.3%" />
+<col style="width: 57.1%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type</th>
-<th class="head">Description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#attribute:PARTMODULE:NAME" title="PARTMODULE:NAME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></code></a></td>
-<td>string</td>
-<td>Name of this part module</td>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:PARTMODULE:NAME" title="PARTMODULE:NAME attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">NAME</span></code></a></p></td>
+<td><p>string</p></td>
+<td><p>Name of this part module</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:PARTMODULE:PART" title="PARTMODULE:PART attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PART</span></code></a></td>
-<td><a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a></td>
-<td><a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a> attached to</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:PARTMODULE:PART" title="PARTMODULE:PART attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">PART</span></code></a></p></td>
+<td><p><a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a></p></td>
+<td><p><a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a> attached to</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:PARTMODULE:ALLFIELDS" title="PARTMODULE:ALLFIELDS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALLFIELDS</span></code></a></td>
-<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of strings</td>
-<td>Accessible fields</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:PARTMODULE:ALLFIELDS" title="PARTMODULE:ALLFIELDS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ALLFIELDS</span></code></a></p></td>
+<td><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of strings</p></td>
+<td><p>Accessible fields</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:PARTMODULE:ALLFIELDNAMES" title="PARTMODULE:ALLFIELDNAMES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALLFIELDNAMES</span></code></a></td>
-<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of strings</td>
-<td>Accessible fields (name only)</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:PARTMODULE:ALLFIELDNAMES" title="PARTMODULE:ALLFIELDNAMES attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ALLFIELDNAMES</span></code></a></p></td>
+<td><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of strings</p></td>
+<td><p>Accessible fields (name only)</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:PARTMODULE:ALLEVENTS" title="PARTMODULE:ALLEVENTS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALLEVENTS</span></code></a></td>
-<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of strings</td>
-<td>Triggerable events</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:PARTMODULE:ALLEVENTS" title="PARTMODULE:ALLEVENTS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ALLEVENTS</span></code></a></p></td>
+<td><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of strings</p></td>
+<td><p>Triggerable events</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:PARTMODULE:ALLEVENTNAMES" title="PARTMODULE:ALLEVENTNAMES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALLEVENTNAMES</span></code></a></td>
-<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of strings</td>
-<td>Triggerable event names</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:PARTMODULE:ALLEVENTNAMES" title="PARTMODULE:ALLEVENTNAMES attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ALLEVENTNAMES</span></code></a></p></td>
+<td><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of strings</p></td>
+<td><p>Triggerable event names</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:PARTMODULE:ALLACTIONS" title="PARTMODULE:ALLACTIONS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALLACTIONS</span></code></a></td>
-<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of strings</td>
-<td>Triggerable actions</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:PARTMODULE:ALLACTIONS" title="PARTMODULE:ALLACTIONS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ALLACTIONS</span></code></a></p></td>
+<td><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of strings</p></td>
+<td><p>Triggerable actions</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:PARTMODULE:ALLACTIONNAMES" title="PARTMODULE:ALLACTIONNAMES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALLACTIONNAMES</span></code></a></td>
-<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of strings</td>
-<td>Triggerable event names</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:PARTMODULE:ALLACTIONNAMES" title="PARTMODULE:ALLACTIONNAMES attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ALLACTIONNAMES</span></code></a></p></td>
+<td><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of strings</p></td>
+<td><p>Triggerable event names</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:PARTMODULE:GETFIELD" title="PARTMODULE:GETFIELD method"><code class="xref ks ks-meth docutils literal"><span class="pre">GETFIELD(name)</span></code></a></td>
-<td>&nbsp;</td>
-<td>Get value of a field by name</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#method:PARTMODULE:GETFIELD" title="PARTMODULE:GETFIELD method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">GETFIELD(name)</span></code></a></p></td>
+<td></td>
+<td><p>Get value of a field by name</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:PARTMODULE:SETFIELD" title="PARTMODULE:SETFIELD method"><code class="xref ks ks-meth docutils literal"><span class="pre">SETFIELD(name,value)</span></code></a></td>
-<td>&nbsp;</td>
-<td>Set value of a field by name</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:PARTMODULE:SETFIELD" title="PARTMODULE:SETFIELD method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">SETFIELD(name,value)</span></code></a></p></td>
+<td></td>
+<td><p>Set value of a field by name</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:PARTMODULE:DOEVENT" title="PARTMODULE:DOEVENT method"><code class="xref ks ks-meth docutils literal"><span class="pre">DOEVENT(name)</span></code></a></td>
-<td>&nbsp;</td>
-<td>Trigger an event button</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#method:PARTMODULE:DOEVENT" title="PARTMODULE:DOEVENT method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">DOEVENT(name)</span></code></a></p></td>
+<td></td>
+<td><p>Trigger an event button</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:PARTMODULE:DOACTION" title="PARTMODULE:DOACTION method"><code class="xref ks ks-meth docutils literal"><span class="pre">DOACTION(name,bool)</span></code></a></td>
-<td>&nbsp;</td>
-<td>Activate action by name with True or False</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:PARTMODULE:DOACTION" title="PARTMODULE:DOACTION method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">DOACTION(name,bool)</span></code></a></p></td>
+<td></td>
+<td><p>Activate action by name with True or False</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:PARTMODULE:HASFIELD" title="PARTMODULE:HASFIELD method"><code class="xref ks ks-meth docutils literal"><span class="pre">HASFIELD(name)</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
-<td>Check if field exists</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#method:PARTMODULE:HASFIELD" title="PARTMODULE:HASFIELD method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">HASFIELD(name)</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Check if field exists</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:PARTMODULE:HASEVENT" title="PARTMODULE:HASEVENT method"><code class="xref ks ks-meth docutils literal"><span class="pre">HASEVENT(name)</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
-<td>Check if event exists</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:PARTMODULE:HASEVENT" title="PARTMODULE:HASEVENT method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">HASEVENT(name)</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Check if event exists</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:PARTMODULE:HASACTION" title="PARTMODULE:HASACTION method"><code class="xref ks ks-meth docutils literal"><span class="pre">HASACTION(name)</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
-<td>Check if action exists</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#method:PARTMODULE:HASACTION" title="PARTMODULE:HASACTION method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">HASACTION(name)</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Check if action exists</p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PARTMODULE:NAME">
-PartModule:<code class="descname">NAME</code><a class="headerlink" href="#attribute:PARTMODULE:NAME" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Test:</th><td class="field-body">string</td>
-</tr>
-</tbody>
-</table>
-<p>Get the name of the module. Note that it&#8217;s the same as the name given in the MODULE section of the Part.cfg file for the part.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:PARTMODULE:NAME">
+<span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">NAME</span></span><a class="headerlink" href="#attribute:PARTMODULE:NAME" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Test<span class="colon">:</span></dt>
+<dd class="field-even"><p>string</p>
+</dd>
+</dl>
+<p>Get the name of the module. Note that it’s the same as the name given in the MODULE section of the Part.cfg file for the part.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PARTMODULE:PART">
-PartModule:<code class="descname">PART</code><a class="headerlink" href="#attribute:PARTMODULE:PART" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Test:</th><td class="field-body"><a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>Get the <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a> that this PartModule is attached to.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:PARTMODULE:PART">
+<span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">PART</span></span><a class="headerlink" href="#attribute:PARTMODULE:PART" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Test<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a></p>
+</dd>
+</dl>
+<p>Get the <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a> that this PartModule is attached to.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PARTMODULE:ALLFIELDS">
-PartModule:<code class="descname">ALLFIELDS</code><a class="headerlink" href="#attribute:PARTMODULE:ALLFIELDS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Test:</th><td class="field-body"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of strings</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:PARTMODULE:ALLFIELDS">
+<span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">ALLFIELDS</span></span><a class="headerlink" href="#attribute:PARTMODULE:ALLFIELDS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Test<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of strings</p>
+</dd>
+</dl>
 <p>Get a list of all the names of KSPFields on this PartModule that the kos script is CURRENTLY allowed to get or set with :GETFIELD or :SETFIELD. Note the Security access comments below. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PARTMODULE:ALLFIELDNAMES">
-PartModule:<code class="descname">ALLFIELDNAMES</code><a class="headerlink" href="#attribute:PARTMODULE:ALLFIELDNAMES" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Test:</th><td class="field-body"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of strings</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:PARTMODULE:ALLFIELDNAMES">
+<span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">ALLFIELDNAMES</span></span><a class="headerlink" href="#attribute:PARTMODULE:ALLFIELDNAMES" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Test<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of strings</p>
+</dd>
+</dl>
 <p>Similar to :ALLFIELDS except that it returns the string without the formatting to make it easier to use in a script. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PARTMODULE:ALLEVENTS">
-PartModule:<code class="descname">ALLEVENTS</code><a class="headerlink" href="#attribute:PARTMODULE:ALLEVENTS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Test:</th><td class="field-body"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of strings</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:PARTMODULE:ALLEVENTS">
+<span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">ALLEVENTS</span></span><a class="headerlink" href="#attribute:PARTMODULE:ALLEVENTS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Test<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of strings</p>
+</dd>
+</dl>
 <p>Get a list of all the names of KSPEvents on this PartModule that the kos script is CURRENTLY allowed to trigger with :DOEVENT. Note the Security access comments below. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PARTMODULE:ALLEVENTNAMES">
-PartModule:<code class="descname">ALLEVENTNAMES</code><a class="headerlink" href="#attribute:PARTMODULE:ALLEVENTNAMES" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Test:</th><td class="field-body"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of strings</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:PARTMODULE:ALLEVENTNAMES">
+<span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">ALLEVENTNAMES</span></span><a class="headerlink" href="#attribute:PARTMODULE:ALLEVENTNAMES" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Test<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of strings</p>
+</dd>
+</dl>
 <p>Similar to :ALLEVENTS except that it returns the string without the formatting to make it easier to use in a script. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PARTMODULE:ALLACTIONS">
-PartModule:<code class="descname">ALLACTIONS</code><a class="headerlink" href="#attribute:PARTMODULE:ALLACTIONS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Test:</th><td class="field-body"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of strings</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:PARTMODULE:ALLACTIONS">
+<span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">ALLACTIONS</span></span><a class="headerlink" href="#attribute:PARTMODULE:ALLACTIONS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Test<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of strings</p>
+</dd>
+</dl>
 <p>Get a list of all the names of KSPActions on this PartModule that the kos script is CURRENTLY allowed to trigger with :DOACTION. Note the Security access comments below.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PARTMODULE:ALLACTIONNAMES">
-PartModule:<code class="descname">ALLACTIONNAMES</code><a class="headerlink" href="#attribute:PARTMODULE:ALLACTIONNAMES" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Test:</th><td class="field-body"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of strings</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:PARTMODULE:ALLACTIONNAMES">
+<span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">ALLACTIONNAMES</span></span><a class="headerlink" href="#attribute:PARTMODULE:ALLACTIONNAMES" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Test<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of strings</p>
+</dd>
+</dl>
 <p>Similar to :ALLACTIONS except that it returns the string without the formatting to make it easier to use in a script. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:PARTMODULE:GETFIELD">
-PartModule:<code class="descname">GETFIELD</code><span class="sig-paren">(</span>name<span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:GETFIELD" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> &#8211; (string) Name of the field</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:PARTMODULE:GETFIELD">
+<span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">GETFIELD</span></span><span class="sig-paren">(</span><span class="pre">name</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:GETFIELD" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>) Name of the field</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">varies</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>varies</p>
+</dd>
+</dl>
 <p>Get the value of one of the fields that this PartModule has placed onto the rightclick menu for the part. Note the Security comments below.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:PARTMODULE:SETFIELD">
-PartModule:<code class="descname">SETFIELD</code><span class="sig-paren">(</span>name,value<span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:SETFIELD" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> &#8211; (string) Name of the field</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:PARTMODULE:SETFIELD">
+<span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">SETFIELD</span></span><span class="sig-paren">(</span><span class="pre">name,value</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:SETFIELD" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>) Name of the field</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p>Set the value of one of the fields that this PartModule has placed onto the rightclick menu for the part. Note the Security comments below.</p>
-<p>WARNING: This suffix is only settable for parts attached to the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span>CPU Vessel</span></a></p>
+<p>WARNING: This suffix is only settable for parts attached to the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span class="std std-ref">CPU Vessel</span></a></p>
 <p>SYMMETRY NOTE: There is one important difference between using
 SETFIELD to set a field versus what happens when you use the mouse
-to do it in the game&#8217;s GUI.  In the GUI, often if the part is
+to do it in the game’s GUI.  In the GUI, often if the part is
 in a 2x, 3x, 4x, 6x, or 8x symmetry group, setting a field on
-one part will cause the other parts&#8217; fields to also change along
+one part will cause the other parts’ fields to also change along
 with it.  Generally that does NOT happen when you use kOS to set
 the field.  If you want to set the same value to all the parts in
 a symmetry group, you need to iterate over all the parts yourself
-using the part&#8217;s <code class="xref ks ks-attr docutils literal"><span class="pre">Part::SYMMETRYCOUNT</span></code> suffix to see how
+using the part’s <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Part::SYMMETRYCOUNT</span></code> suffix to see how
 many symmetrical parts there are, and iterate over them with
-<code class="xref ks ks-attr docutils literal"><span class="pre">Part:SYMMETRYPARTNER(index)</span></code>, calling <code class="docutils literal"><span class="pre">SETFIELD</span></code> on
+<code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Part:SYMMETRYPARTNER(index)</span></code>, calling <code class="docutils literal notranslate"><span class="pre">SETFIELD</span></code> on
 them one at a time.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:PARTMODULE:DOEVENT">
-PartModule:<code class="descname">DOEVENT</code><span class="sig-paren">(</span>name<span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:DOEVENT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> &#8211; (string) Name of the event</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:PARTMODULE:DOEVENT">
+<span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">DOEVENT</span></span><span class="sig-paren">(</span><span class="pre">name</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:DOEVENT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>) Name of the event</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>Trigger an &#8220;event button&#8221; that is on the rightclick part menu at the moment. Note the Security comments below.</p>
-<p>WARNING: This suffix is only callable for parts attached to the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span>CPU Vessel</span></a></p>
+</dd>
+</dl>
+<p>Trigger an “event button” that is on the rightclick part menu at the moment. Note the Security comments below.</p>
+<p>WARNING: This suffix is only callable for parts attached to the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span class="std std-ref">CPU Vessel</span></a></p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:PARTMODULE:DOACTION">
-PartModule:<code class="descname">DOACTION</code><span class="sig-paren">(</span>name,bool<span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:DOACTION" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> &#8211; (string) Name of the action</li>
-<li><strong>bool</strong> &#8211; (<a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a>) Value to set: True or False</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:PARTMODULE:DOACTION">
+<span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">DOACTION</span></span><span class="sig-paren">(</span><span class="pre">name,bool</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:DOACTION" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>) Name of the action</p></li>
+<li><p><strong>bool</strong> – (<a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a>) Value to set: True or False</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>Activate one of this PartModule&#8217;s action-group-able actions, bypassing the action group system entirely by just activating it for this one part directly. The <a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a> value decides whether you are toggling the action ON or toggling it OFF. Note the Security comments below.</p>
-<p>WARNING: This suffix is only callable for parts attached to the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span>CPU Vessel</span></a></p>
+</dd>
+</dl>
+<p>Activate one of this PartModule’s action-group-able actions, bypassing the action group system entirely by just activating it for this one part directly. The <a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a> value decides whether you are toggling the action ON or toggling it OFF. Note the Security comments below.</p>
+<p>WARNING: This suffix is only callable for parts attached to the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span class="std std-ref">CPU Vessel</span></a></p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:PARTMODULE:HASFIELD">
-PartModule:<code class="descname">HASFIELD</code><span class="sig-paren">(</span>name<span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:HASFIELD" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> &#8211; (string) Name of the field</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:PARTMODULE:HASFIELD">
+<span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">HASFIELD</span></span><span class="sig-paren">(</span><span class="pre">name</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:HASFIELD" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>) Name of the field</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Return true if the given field name is currently available for use with :GETFIELD or :SETFIELD on this PartModule, false otherwise.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:PARTMODULE:HASEVENT">
-PartModule:<code class="descname">HASEVENT</code><span class="sig-paren">(</span>name<span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:HASEVENT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> &#8211; (string) Name of the event</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:PARTMODULE:HASEVENT">
+<span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">HASEVENT</span></span><span class="sig-paren">(</span><span class="pre">name</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:HASEVENT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>) Name of the event</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Return true if the given event name is currently available for use with :DOEVENT on this PartModule, false otherwise.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:PARTMODULE:HASACTION">
-PartModule:<code class="descname">HASACTION</code><span class="sig-paren">(</span>name<span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:HASACTION" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> &#8211; (string) Name of the action</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:PARTMODULE:HASACTION">
+<span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">HASACTION</span></span><span class="sig-paren">(</span><span class="pre">name</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:HASACTION" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>) Name of the action</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Return true if the given action name is currently available for use with :DOACTION on this PartModule, false otherwise.</p>
 </dd></dl>
 
-<div class="section" id="notes">
-<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h2>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this heading">¶</a></h2>
 <p>In all the above cases where there is a name being passed in to :GETFIELD, :SETFIELD, :DOEVENT, or :DOACTION, the name is meant to be the name that is seen by you, the user, in the GUI screen, and NOT necessarily the actual name of the variable that the programmer of that PartModule chose to call the value behind the scenes. This is so that you can view the GUI rightclick menu to see what to call things in your script.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
+<p class="admonition-title">Note</p>
 <p><strong>Security and Respecting other Mod Authors</strong></p>
-<p class="last">There are often a lot more fields and events and actions that a partmodule can do than are usable via kOS. In designing kOS, the kOS developers have deliberately chosen NOT to expose any &#8220;hidden&#8221; fields of a partmodule that are not normally shown to the user, without the express permission of a mod&#8217;s author to do so.</p>
+<p>There are often a lot more fields and events and actions that a partmodule can do than are usable via kOS. In designing kOS, the kOS developers have deliberately chosen NOT to expose any “hidden” fields of a partmodule that are not normally shown to the user, without the express permission of a mod’s author to do so.</p>
 </div>
 <p>The access rules that kOS uses are as follows:</p>
-<div class="section" id="kspfields">
-<h3>KSPFields<a class="headerlink" href="#kspfields" title="Permalink to this headline">¶</a></h3>
-<p>Is this a value that the user can normally see on the right-click context menu for a part? If so, then let kOS scripts GET the value.  Is this a value that the user can normally manipulate via &#8220;tweakable&#8221; adjustments on the right-click context menu for a part, AND, is that tweakable a CURRENTLY enabled one? If so, then let KOS scripts SET the value, BUT they must set it to one of the values that the GUI would normally allow, according to the following rules.</p>
-<ul>
-<li><dl class="first docutils">
-<dt>If the KSPField is boolean:</dt>
-<dd><ul class="first last simple">
-<li>The value must be true, false, or 0 or 1.</li>
+<section id="kspfields">
+<h3>KSPFields<a class="headerlink" href="#kspfields" title="Permalink to this heading">¶</a></h3>
+<p>Is this a value that the user can normally see on the right-click context menu for a part? If so, then let kOS scripts GET the value.  Is this a value that the user can normally manipulate via “tweakable” adjustments on the right-click context menu for a part, AND, is that tweakable a CURRENTLY enabled one? If so, then let KOS scripts SET the value, BUT they must set it to one of the values that the GUI would normally allow, according to the following rules.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>If the KSPField is boolean:</dt><dd><ul>
+<li><p>The value must be true, false, or 0 or 1.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt>If the KSPField is an integer:</dt>
-<dd><ul class="first last simple">
-<li>The value must be a whole number.</li>
+<li><dl class="simple">
+<dt>If the KSPField is an integer:</dt><dd><ul>
+<li><p>The value must be a whole number.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt>If the KSPField is a floating point sliding number:</dt>
-<dd><ul class="first last simple">
-<li>The GUI for this field will be defined as a slider with a min value, a max value, with a fixed increment interval where the detents are. When setting such a value, you will be constrained to the limits of this slider. For example: If a slider is defined to have a minimum value of 2.0, a maximum value of 5.0, and a minimum allowed delta increment of 0.1:</li>
-<li>If you try to set it to 0, it will instead become 2, the minimum allowed value. If you try to set it to 9, it will instead become 5, the maximum allowed value. If you try to set it to 3.14159, it will instead become 3.1, because that&#8217;s rounding to the nearest increment step the slider supports.</li>
+<li><dl class="simple">
+<dt>If the KSPField is a floating point sliding number:</dt><dd><ul>
+<li><p>The GUI for this field will be defined as a slider with a min value, a max value, with a fixed increment interval where the detents are. When setting such a value, you will be constrained to the limits of this slider. For example: If a slider is defined to have a minimum value of 2.0, a maximum value of 5.0, and a minimum allowed delta increment of 0.1:</p></li>
+<li><p>If you try to set it to 0, it will instead become 2, the minimum allowed value. If you try to set it to 9, it will instead become 5, the maximum allowed value. If you try to set it to 3.14159, it will instead become 3.1, because that’s rounding to the nearest increment step the slider supports.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt>If the KSPField is a string:</dt>
-<dd><ul class="first last simple">
-<li>There is currently no way to set these because kOS uses the existence of a gui tweakable as &#8220;proof&#8221; that it&#8217;s okay to modify the field, and in the stock game there are no gui tweakables for string fields. This may change in the future if mods that extend the tweakables system are taken into account.</li>
+<li><dl class="simple">
+<dt>If the KSPField is a string:</dt><dd><ul>
+<li><p>There is currently no way to set these because kOS uses the existence of a gui tweakable as “proof” that it’s okay to modify the field, and in the stock game there are no gui tweakables for string fields. This may change in the future if mods that extend the tweakables system are taken into account.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
 </ul>
-</div>
-<div class="section" id="kspevents">
-<h3>KSPEvents<a class="headerlink" href="#kspevents" title="Permalink to this headline">¶</a></h3>
-<p>Is this an event that has a GUI button associated with it that is currently visible on the right-click menu? If the answer is yes, then it will also be triggerable by kOSScripts, otherwise it won&#8217;t.</p>
-</div>
-<div class="section" id="kspactions">
-<h3>KSPActions<a class="headerlink" href="#kspactions" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="kspevents">
+<h3>KSPEvents<a class="headerlink" href="#kspevents" title="Permalink to this heading">¶</a></h3>
+<p>Is this an event that has a GUI button associated with it that is currently visible on the right-click menu? If the answer is yes, then it will also be triggerable by kOSScripts, otherwise it won’t.</p>
+</section>
+<section id="kspactions">
+<h3>KSPActions<a class="headerlink" href="#kspactions" title="Permalink to this heading">¶</a></h3>
 <p>Is this an action that the KSP user would have been allowed to set as part of an action group during building in the VAB or SPH? If so, then allow a kOS script to use it, EVEN IF it has never actually been added to an action group for this vessel.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p><strong>If a KSPField, KSPEvent, or KSPAction has been disallowed, often in kOS it won&#8217;t even appear to be a field of the PartModule at all.</strong></p>
-<p class="last">This is necessary because for some modules, the number of fields you can use are far outnumberd by the number of fields that exist but are normally hidden from view. It would become unworkable if all of the unusable ones were exposed to kOS scripts to see as fields.</p>
+<p class="admonition-title">Note</p>
+<p><strong>If a KSPField, KSPEvent, or KSPAction has been disallowed, often in kOS it won’t even appear to be a field of the PartModule at all.</strong></p>
+<p>This is necessary because for some modules, the number of fields you can use are far outnumberd by the number of fields that exist but are normally hidden from view. It would become unworkable if all of the unusable ones were exposed to kOS scripts to see as fields.</p>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
+<p class="admonition-title">Note</p>
 <p><strong>Which KSPFields, KSPEvents, and KSPActions exist on a PartModule can change during runtime!</strong></p>
-<p class="last">A PartModule is allowed to change the look and feel of its rightclick menu fields on the fly as the game runs. Therefore a field that didn&#8217;t exist the last time you looked might now exist, and might not exist again next time. The list of what fields exist is context dependant. For example, a docking port may have an event button on it called &#8220;Undock Node&#8221;, that only exists when that port is connected to another port. If it&#8217;s not connected, the button may be gone. Similarly, a PartModule might toggle something by using a pair of two events that swap in and out depending on the current state. For example, many of the stock lights in the game have a &#8220;Turn on&#8221; button that after it&#8217;s been clicked, gets replaced with a &#8220;Turn off&#8221; button until it&#8217;s clicked again. A boolean toggle with a KSPFIeld would be simpler, but until &#8220;tweakables&#8221; existed in the main game, that wasn&#8217;t an option so a lot of older Partmodules still do things the old way with two KSPEvents that swap in and out.</p>
+<p>A PartModule is allowed to change the look and feel of its rightclick menu fields on the fly as the game runs. Therefore a field that didn’t exist the last time you looked might now exist, and might not exist again next time. The list of what fields exist is context dependant. For example, a docking port may have an event button on it called “Undock Node”, that only exists when that port is connected to another port. If it’s not connected, the button may be gone. Similarly, a PartModule might toggle something by using a pair of two events that swap in and out depending on the current state. For example, many of the stock lights in the game have a “Turn on” button that after it’s been clicked, gets replaced with a “Turn off” button until it’s clicked again. A boolean toggle with a KSPFIeld would be simpler, but until “tweakables” existed in the main game, that wasn’t an option so a lot of older Partmodules still do things the old way with two KSPEvents that swap in and out.</p>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="rcs.html" class="btn btn-neutral float-right" title="RCS" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="part.html" class="btn btn-neutral" title="Part" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="part.html" class="btn btn-neutral float-left" title="Part" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rcs.html" class="btn btn-neutral float-right" title="RCS" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

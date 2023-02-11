@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Delegates (function references) &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delegates (function references) &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../about.html"/>
-        <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../index.html"/>
-        <link rel="up" title="The KerboScript Language" href="../language.html"/>
-        <link rel="next" title="Mathematics and Basic Geometry" href="../math.html"/>
-        <link rel="prev" title="Anonymous Functions (A kind of Delegate)" href="anonymous.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="next" title="Mathematics and Basic Geometry" href="../math.html" />
+    <link rel="prev" title="Anonymous Functions (A kind of Delegate)" href="anonymous.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
@@ -104,12 +55,8 @@
 <li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_functions.html">User Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="anonymous.html">Anonymous User Functions</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Delegates (function references)</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#advanced-topics">Advanced topics</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Delegates (function references)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-topics">Advanced topics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#kinds-of-delegate-no-suffixes">Kinds of Delegate (no suffixes)</a></li>
 </ul>
 </li>
@@ -123,68 +70,50 @@
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../language.html">The <strong>KerboScript</strong> Language</a> &raquo;</li>
-      
-    <li>Delegates (function references)</li>
+      <li>Delegates (function references)</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../_sources/language/delegates.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../_sources/language/delegates.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="delegates-function-references">
-<span id="delegates"></span><h1>Delegates (function references)<a class="headerlink" href="#delegates-function-references" title="Permalink to this headline">¶</a></h1>
-<div class="contents local topic" id="contents">
-<p class="topic-title first">Contents</p>
+             
+  <section id="delegates-function-references">
+<span id="delegates"></span><h1>Delegates (function references)<a class="headerlink" href="#delegates-function-references" title="Permalink to this heading">¶</a></h1>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#overview" id="id1">Overview</a><ul>
-<li><a class="reference internal" href="#syntax-symbol" id="id2">Syntax: &#64; symbol</a></li>
-<li><a class="reference internal" href="#omitting-call" id="id3">Omitting :CALL</a></li>
-<li><a class="reference internal" href="#why-the-sign" id="id4">Why the &#8216;&#64;&#8217; sign?</a></li>
+<li><p><a class="reference internal" href="#overview" id="id1">Overview</a></p>
+<ul>
+<li><p><a class="reference internal" href="#syntax-symbol" id="id2">Syntax: &#64; symbol</a></p></li>
+<li><p><a class="reference internal" href="#omitting-call" id="id3">Omitting :CALL</a></p></li>
+<li><p><a class="reference internal" href="#why-the-sign" id="id4">Why the ‘&#64;’ sign?</a></p></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#why" id="id5">Why?</a></li>
-<li><a class="reference internal" href="#anonymous-functions" id="id6">Anonymous functions</a></li>
-<li><a class="reference internal" href="#lib-enum-in-kslib" id="id7">lib_enum in KSLib</a></li>
+<li><p><a class="reference internal" href="#why" id="id5">Why?</a></p></li>
+<li><p><a class="reference internal" href="#anonymous-functions" id="id6">Anonymous functions</a></p></li>
+<li><p><a class="reference internal" href="#lib-enum-in-kslib" id="id7">lib_enum in KSLib</a></p></li>
 </ul>
-</div>
-<div class="section" id="overview">
-<h2><a class="toc-backref" href="#id1">Overview</a><a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Overview</a><a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
 <p>There are times it would be useful to be able to store, not the
 result of calling a function, but rather a reference to the function
 itself without calling it yet.  Then you can use this value to call
@@ -193,27 +122,27 @@ functions you might want to call, store that choice in a variable, so
 that you can call it multiple times later.</p>
 <p>(If you are an experienced programmer, you have probably heard of this
 feature or a similar feature under one of a number of names, depending
-on which language you learned it in:  &#8220;Function pointers&#8221;,
-&#8220;Function references&#8221;, &#8220;Callbacks&#8221;, &#8220;Delegates&#8221;, &#8220;Deferred execution&#8221;,
+on which language you learned it in:  “Function pointers”,
+“Function references”, “Callbacks”, “Delegates”, “Deferred execution”,
 etc.)</p>
 <p>Kerboscript provides this feature with a built-in type called a
-<a class="reference internal" href="../structures/misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a>, which remembers the details needed
+<a class="reference internal" href="../structures/misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegate</span></code></a>, which remembers the details needed
 to be able to call a function later on.</p>
 <p>The topic can be a bit confusing to people new to it, but this video by a prolific kOS YouTuber may help:</p>
-<p><a class="reference external" href="https://www.youtube.com/watch?v=pcbURdU_WyU">CheersKevin&#8217;s explanation of delegates</a></p>
+<p><a class="reference external" href="https://www.youtube.com/watch?v=pcbURdU_WyU">CheersKevin’s explanation of delegates</a></p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">It&#8217;s important to know before going into this explanation, that the
+<p class="admonition-title">Note</p>
+<p>It’s important to know before going into this explanation, that the
 feature described here does not work on structure suffixes as of
 this release of kOS.  See the bottom of this page for more details.</p>
 </div>
-<div class="section" id="syntax-symbol">
-<span id="kosdelegate-atsign"></span><h3><a class="toc-backref" href="#id2">Syntax: &#64; symbol</a><a class="headerlink" href="#syntax-symbol" title="Permalink to this headline">¶</a></h3>
+<section id="syntax-symbol">
+<span id="kosdelegate-atsign"></span><h3><a class="toc-backref" href="#id2" role="doc-backlink">Syntax: &#64; symbol</a><a class="headerlink" href="#syntax-symbol" title="Permalink to this heading">¶</a></h3>
 <p>To obtain a <em>delegate</em> of a function in kOS, you place a single
-at-sign (<code class="docutils literal"><span class="pre">&#64;</span></code>) to the right of the function name, where the
+at-sign (<code class="docutils literal notranslate"><span class="pre">&#64;</span></code>) to the right of the function name, where the
 parentheses and arguments would normally have gone, as shown
 below:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// example function:</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// example function:</span>
 <span class="kd">function</span> <span class="nv">myfunc</span> <span class="p">{</span> <span class="kd">parameter</span> <span class="nv">a</span><span class="p">,</span><span class="nv">b</span><span class="p">.</span> <span class="k">return</span> <span class="nv">a</span><span class="o">+</span><span class="nv">b</span><span class="p">.</span> <span class="p">}</span>
 
 <span class="c1">// example delegate of that function.</span>
@@ -222,17 +151,17 @@ below:</p>
 </pre></div>
 </div>
 <p>When you do this, you are creating a variable of type
-<a class="reference internal" href="../structures/misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a>, which can be passed around and
+<a class="reference internal" href="../structures/misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegate</span></code></a>, which can be passed around and
 copied to other variables, sent as an argument to other
 functions, and so on.</p>
-<p id="kosdelegate-call">Then you may call the function later on by using the <code class="docutils literal"><span class="pre">:call</span></code>
-suffix, and giving it the parameters that <code class="docutils literal"><span class="pre">myfunc</span></code> would normally
+<p id="kosdelegate-call">Then you may call the function later on by using the <code class="docutils literal notranslate"><span class="pre">:call</span></code>
+suffix, and giving it the parameters that <code class="docutils literal notranslate"><span class="pre">myfunc</span></code> would normally
 have expected, which might look something like this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">aaa</span><span class="p">:</span><span class="nv">call</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span> <span class="mf">2</span><span class="p">).</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">aaa</span><span class="p">:</span><span class="nv">call</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span> <span class="mf">2</span><span class="p">).</span>
 </pre></div>
 </div>
-<p>Here&#8217;s the full example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">myfunc</span> <span class="p">{</span>
+<p>Here’s the full example:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">myfunc</span> <span class="p">{</span>
   <span class="kd">parameter</span> <span class="nv">a</span><span class="p">,</span><span class="nv">b</span><span class="p">.</span>
 
   <span class="k">return</span> <span class="nv">a</span> <span class="o">+</span> <span class="nv">b</span><span class="p">.</span>
@@ -244,13 +173,13 @@ have expected, which might look something like this:</p>
                        <span class="c1">// just like calling myfunc directly.</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="omitting-call">
-<h3><a class="toc-backref" href="#id3">Omitting :CALL</a><a class="headerlink" href="#omitting-call" title="Permalink to this headline">¶</a></h3>
-<p>You can call a KOSDelegate without the use of the <code class="docutils literal"><span class="pre">:call</span></code> suffix,
+</section>
+<section id="omitting-call">
+<h3><a class="toc-backref" href="#id3" role="doc-backlink">Omitting :CALL</a><a class="headerlink" href="#omitting-call" title="Permalink to this heading">¶</a></h3>
+<p>You can call a KOSDelegate without the use of the <code class="docutils literal notranslate"><span class="pre">:call</span></code> suffix,
 instead just using parentheses directly abutted against the variable
 name like a normal function call:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">testfunc</span> <span class="p">{</span><span class="k">print</span> <span class="s">&quot;test&quot;</span><span class="p">.}</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">testfunc</span> <span class="p">{</span><span class="k">print</span> <span class="s">&quot;test&quot;</span><span class="p">.}</span>
 <span class="k">set</span> <span class="nv">del</span> <span class="ow">to</span> <span class="nv">testfunc</span><span class="p">@.</span>
 
 <span class="c1">// The following two are equivalent:</span>
@@ -259,28 +188,28 @@ name like a normal function call:</p>
 <span class="nv">del</span><span class="p">().</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="why-the-sign">
-<h3><a class="toc-backref" href="#id4">Why the &#8216;&#64;&#8217; sign?</a><a class="headerlink" href="#why-the-sign" title="Permalink to this headline">¶</a></h3>
-<p>In Kerboscript, often when you mention a function&#8217;s name and don&#8217;t provide
-any empty parentheses, if it&#8217;s a function that takes zero arguments, it
-ends up being called anyway.  Thus <code class="docutils literal"><span class="pre">set</span> <span class="pre">x</span> <span class="pre">to</span> <span class="pre">myfunc.</span></code> ends up doing
-the same thing as <code class="docutils literal"><span class="pre">set</span> <span class="pre">x</span> <span class="pre">to</span> <span class="pre">myfunc().</span></code>.  It ends up calling the
-function right now.  This is why you must append the <code class="docutils literal"><span class="pre">&#64;</span></code> (at-sign)
+</section>
+<section id="why-the-sign">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">Why the ‘&#64;’ sign?</a><a class="headerlink" href="#why-the-sign" title="Permalink to this heading">¶</a></h3>
+<p>In Kerboscript, often when you mention a function’s name and don’t provide
+any empty parentheses, if it’s a function that takes zero arguments, it
+ends up being called anyway.  Thus <code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">x</span> <span class="pre">to</span> <span class="pre">myfunc.</span></code> ends up doing
+the same thing as <code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">x</span> <span class="pre">to</span> <span class="pre">myfunc().</span></code>.  It ends up calling the
+function right now.  This is why you must append the <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> (at-sign)
 symbol to the end of the function name to obtain a delegate of it.
 It tells the compiler to suppress the normal automatic calling of the
 function that would have occurred if you had left it bare.</p>
-</div>
-</div>
-<div class="section" id="why">
-<h2><a class="toc-backref" href="#id5">Why?</a><a class="headerlink" href="#why" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="why">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Why?</a><a class="headerlink" href="#why" title="Permalink to this heading">¶</a></h2>
 <p>There are several reasons this feature can be useful.  Some experienced
 programmers will already know them, but here is an example of a useful
-case as an illustration for people new to programming.  Let&#8217;s say you
+case as an illustration for people new to programming.  Let’s say you
 wanted to start from a list of numbers, and you wanted to create a
 subset list of just those numbers which are negative.  You might write
 code to do so like this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Just a hodgepodge list of numbers to use as an example:</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// Just a hodgepodge list of numbers to use as an example:</span>
 <span class="k">local</span> <span class="nv">numlist</span> <span class="ow">is</span> <span class="k">LIST</span><span class="p">(</span><span class="mf">5</span><span class="p">,</span> <span class="mf">6</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">49</span><span class="p">.</span><span class="mf">1</span><span class="p">,</span> <span class="mf">10</span><span class="p">,</span> <span class="o">-</span><span class="mf">2</span><span class="p">,</span> <span class="mf">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">12</span><span class="p">,</span> <span class="mf">50</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">3</span><span class="p">,</span> <span class="mf">1</span><span class="p">.</span><span class="mf">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">,</span> <span class="mf">0</span><span class="p">).</span>
 
 <span class="k">local</span> <span class="nv">result</span> <span class="ow">is</span> <span class="k">list</span><span class="p">().</span>
@@ -292,10 +221,10 @@ code to do so like this:</p>
 <span class="c1">// Now result is the subset list.</span>
 </pre></div>
 </div>
-<p>Okay, but then later let&#8217;s say you want to do the same thing, but now you
+<p>Okay, but then later let’s say you want to do the same thing, but now you
 want to get the subset which are integers (no fractional component after
 the decimal point).  Then you might do this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">result</span> <span class="ow">is</span> <span class="k">list</span><span class="p">().</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">result</span> <span class="ow">is</span> <span class="k">list</span><span class="p">().</span>
 <span class="k">for</span> <span class="nv">num</span> <span class="nv">in</span> <span class="nv">numlist</span> <span class="p">{</span>
   <span class="k">if</span> <span class="nv">num</span> <span class="o">=</span> <span class="nv">round</span><span class="p">(</span><span class="nv">num</span><span class="p">,</span><span class="mf">0</span><span class="p">)</span> <span class="p">{</span>
     <span class="nv">result</span><span class="p">:</span><span class="k">add</span><span class="p">(</span><span class="nv">num</span><span class="p">).</span>
@@ -304,9 +233,9 @@ the decimal point).  Then you might do this:</p>
 <span class="c1">// Now result is the subset list.</span>
 </pre></div>
 </div>
-<p>Okay, but then later let&#8217;s say you want to do the same thing, but now you
+<p>Okay, but then later let’s say you want to do the same thing, but now you
 want to get the subset which are even numbers:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">result</span> <span class="ow">is</span> <span class="k">list</span><span class="p">().</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">result</span> <span class="ow">is</span> <span class="k">list</span><span class="p">().</span>
 <span class="k">for</span> <span class="nv">num</span> <span class="nv">in</span> <span class="nv">numlist</span> <span class="p">{</span>
   <span class="k">if</span> <span class="nv">mod</span><span class="p">(</span><span class="nv">num</span><span class="p">,</span><span class="mf">2</span><span class="p">)</span> <span class="o">=</span> <span class="mf">0</span> <span class="p">{</span>
     <span class="nv">result</span><span class="p">:</span><span class="k">add</span><span class="p">(</span><span class="nv">num</span><span class="p">).</span>
@@ -315,11 +244,11 @@ want to get the subset which are even numbers:</p>
 <span class="c1">// Now result is the subset list.</span>
 </pre></div>
 </div>
-<p>So you look at these three cases and think &#8220;well, gee, they&#8217;re all pretty much
-the same thing except for what I put in the &#8216;if&#8217; check.  I should probably
-combine them into one function.&#8221;  You want to make one function that does
+<p>So you look at these three cases and think “well, gee, they’re all pretty much
+the same thing except for what I put in the ‘if’ check.  I should probably
+combine them into one function.”  You want to make one function that does
 essentially this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">make_sublist</span> <span class="p">{</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">make_sublist</span> <span class="p">{</span>
   <span class="kd">parameter</span>
     <span class="nv">input_list</span><span class="p">,</span> <span class="c1">// Full list to take a subset of.</span>
     <span class="nv">check</span><span class="p">.</span>      <span class="c1">// Condition to look for.</span>
@@ -334,13 +263,13 @@ essentially this:</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>But how do you call it telling it what condition to look for?  You&#8217;re
-essentially not trying to pass it a value, but you&#8217;re trying to pass it
+<p>But how do you call it telling it what condition to look for?  You’re
+essentially not trying to pass it a value, but you’re trying to pass it
 some code for it to run.</p>
-<p>And that&#8217;s what you would use a delegate for.  Here&#8217;s the full example
+<p>And that’s what you would use a delegate for.  Here’s the full example
 that passes in a delegate where you tell it what kind of check you want
 it to do by giving it a function you want it to call for the boolean check:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">make_sublist</span> <span class="p">{</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">make_sublist</span> <span class="p">{</span>
   <span class="kd">parameter</span>
     <span class="nv">input_list</span><span class="p">,</span> <span class="c1">// Full list to take a subset of.</span>
     <span class="nv">check_func</span><span class="p">.</span> <span class="c1">// pass in a delegate that expects 1 number parameter and returns 1 number.</span>
@@ -374,8 +303,8 @@ it to do by giving it a function you want it to call for the boolean check:</p>
 <p>This technique can be chained together to form very powerful operations on
 collections and enumerations of data.  You can start nesting several of
 these types of function calls inside each other to perform a result, such
-as &#8220;get the average mass of the subset of the subset of the parts on my
-vessel that are fuel tanks that have oxidizer in them&#8221;.  There is a style
+as “get the average mass of the subset of the subset of the parts on my
+vessel that are fuel tanks that have oxidizer in them”.  There is a style
 of programming called
 <a class="reference external" href="https://en.wikipedia.org/wiki/Functional_programming">Functional programming</a>
 in which you are meant to try to think this way about all possible problems
@@ -383,66 +312,66 @@ you are trying to solve.  While Kerboscript is mostly an
 <a class="reference external" href="https://en.wikipedia.org/wiki/Imperative_programming">imperative programming language</a>,
 some limited concepts of functional programming style are possible through the use
 of these delegates.</p>
-</div>
-<div class="section" id="anonymous-functions">
-<h2><a class="toc-backref" href="#id6">Anonymous functions</a><a class="headerlink" href="#anonymous-functions" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="anonymous-functions">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Anonymous functions</a><a class="headerlink" href="#anonymous-functions" title="Permalink to this heading">¶</a></h2>
 <p>Kerboscript also allows you to make a Delegate from an
-<a class="reference internal" href="anonymous.html#anonymous-functions"><span>Anonymous function</span></a> (see the link
+<a class="reference internal" href="anonymous.html#anonymous-functions"><span class="std std-ref">Anonymous function</span></a> (see the link
 for the full description of the syntax and its use), as in this
 example below:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">add_func</span> <span class="ow">to</span> <span class="p">{</span> <span class="kd">parameter</span> <span class="nv">a</span><span class="p">,</span><span class="nv">b</span><span class="p">.</span> <span class="k">return</span> <span class="nv">a</span><span class="o">+</span><span class="nv">b</span><span class="p">.</span> <span class="p">}.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">add_func</span> <span class="ow">to</span> <span class="p">{</span> <span class="kd">parameter</span> <span class="nv">a</span><span class="p">,</span><span class="nv">b</span><span class="p">.</span> <span class="k">return</span> <span class="nv">a</span><span class="o">+</span><span class="nv">b</span><span class="p">.</span> <span class="p">}.</span>
 <span class="c1">// add_func is now a KOSDelegate of the anonymous function.</span>
 </pre></div>
 </div>
-<p>When using anonymous functions like this, you don&#8217;t use the &#8216;&#64;&#8217;
+<p>When using anonymous functions like this, you don’t use the ‘&#64;’
 character because an anonymous function already <em>is</em> a Delegate
 to begin with.</p>
 <p>It is technically possible, using anonymous functions, to
 actually make an entire program library out of delegates
 rather than normal functions.</p>
-</div>
-<div class="section" id="lib-enum-in-kslib">
-<h2><a class="toc-backref" href="#id7">lib_enum in KSLib</a><a class="headerlink" href="#lib-enum-in-kslib" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="lib-enum-in-kslib">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">lib_enum in KSLib</a><a class="headerlink" href="#lib-enum-in-kslib" title="Permalink to this heading">¶</a></h2>
 <p>There is a library in the kslib that can be used to perform many data
 set enumeration operations like the one described in the above section.
 It was written to be released coinciding with the addition of this feature
 to Kerboscript.  In addition to being useful as a library, it also can
 serve as a good list of example cases for how you can use this
-&#8220;delegate&#8221; feature in your own code.  Please have a look at
+“delegate” feature in your own code.  Please have a look at
 <a class="reference external" href="https://github.com/KSP-KOS/KSLib/blob/master/doc/lib_enum.md">the lib_enum library in KSLib</a>
 to see what it has to offer.  It allows you to do things such as sorting
 a LIST() based on whatever comparison criteria you like, finding the
 minimum or maximum from a list, transforming all items in the list according
 to a mapping rule, finding the index of the first hit in a list that
 matches given criteria, and so on.</p>
-</div>
-</div>
-<div class="section" id="advanced-topics">
-<h1>Advanced topics<a class="headerlink" href="#advanced-topics" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="can-t-call-dead-delegates">
-<h2>Can&#8217;t call dead delegates<a class="headerlink" href="#can-t-call-dead-delegates" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="advanced-topics">
+<h1>Advanced topics<a class="headerlink" href="#advanced-topics" title="Permalink to this heading">¶</a></h1>
+<section id="can-t-call-dead-delegates">
+<h2>Can’t call dead delegates<a class="headerlink" href="#can-t-call-dead-delegates" title="Permalink to this heading">¶</a></h2>
 <p>You might store a KOSDelegate in a global variable.
 Global varibles continue existing even after all the programs
 are done and you are back at the terminal interpreter.</p>
 <p>This makes it possible to have a (global) variable
 that contains a KOSDelegate that refers to user program
 code that no longer exists.</p>
-<p>But you can&#8217;t actually call that delegate.
+<p>But you can’t actually call that delegate.
 If you have such a situation, that delegate is
-referred to as &#8220;DEAD&#8221; and trying to call it will cause an
-error.  You can test for this with the <a class="reference internal" href="../structures/misc/kosdelegate.html#attribute:KOSDELEGATE:ISDEAD" title="KOSDELEGATE:ISDEAD attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">KOSDelegate:ISDEAD</span></code></a>
+referred to as “DEAD” and trying to call it will cause an
+error.  You can test for this with the <a class="reference internal" href="../structures/misc/kosdelegate.html#attribute:KOSDELEGATE:ISDEAD" title="KOSDELEGATE:ISDEAD attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">KOSDelegate:ISDEAD</span></code></a>
 suffix.</p>
-</div>
-<div class="section" id="pre-binding-arguments-with-bind">
-<span id="kosdelegate-bind"></span><h2>Pre-binding arguments with :bind<a class="headerlink" href="#pre-binding-arguments-with-bind" title="Permalink to this headline">¶</a></h2>
-<p>A <a class="reference internal" href="../structures/misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a> allows you to create another KOSDelegate that
+</section>
+<section id="pre-binding-arguments-with-bind">
+<span id="kosdelegate-bind"></span><h2>Pre-binding arguments with :bind<a class="headerlink" href="#pre-binding-arguments-with-bind" title="Permalink to this heading">¶</a></h2>
+<p>A <a class="reference internal" href="../structures/misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegate</span></code></a> allows you to create another KOSDelegate that
 has some of its parameters bound to some pre-set values, so you then
 only need to supply the remaining, unbound values when you call it.
 This allows you to implement certain types of functional programming
-styles.  This is done using the <code class="docutils literal"><span class="pre">:bind</span></code> suffix of KOSDelegate.</p>
-<p>Let&#8217;s say you have a function you made that draws a vector arrow
+styles.  This is done using the <code class="docutils literal notranslate"><span class="pre">:bind</span></code> suffix of KOSDelegate.</p>
+<p>Let’s say you have a function you made that draws a vector arrow
 from one ship to another, in a color of your choice, that looks like so:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">draw_ship_to_ship</span> <span class="p">{</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">draw_ship_to_ship</span> <span class="p">{</span>
   <span class="kd">parameter</span>
     <span class="nv">ship1</span><span class="p">,</span>
     <span class="nv">ship2</span><span class="p">,</span>
@@ -457,13 +386,13 @@ from one ship to another, in a color of your choice, that looks like so:</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>You realize that you&#8217;ll be using this a lot with the same two ships
+<p>You realize that you’ll be using this a lot with the same two ships
 over and over.  You decide to create a variation of this function
 that already has the two ships hardcoded to begin with, only
 asking you for the final color parameter.</p>
-<p>You can do that with KOSDelegates, using the <code class="docutils literal"><span class="pre">:bind</span></code> suffix of
+<p>You can do that with KOSDelegates, using the <code class="docutils literal notranslate"><span class="pre">:bind</span></code> suffix of
 KOSDelegate, as follows:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">draw_delegate</span> <span class="ow">is</span> <span class="nv">draw_ship_to_ship</span><span class="p">@.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">draw_delegate</span> <span class="ow">is</span> <span class="nv">draw_ship_to_ship</span><span class="p">@.</span>
 <span class="k">local</span> <span class="nv">draw_a_to_b</span> <span class="ow">is</span> <span class="nv">draw_delegate</span><span class="p">:</span><span class="nv">bind</span><span class="p">(</span><span class="nv">shipA</span><span class="p">,</span> <span class="nv">shipB</span><span class="p">).</span>
 
 <span class="c1">// Then later on you can call it with the first two arguments omitted</span>
@@ -475,22 +404,22 @@ KOSDelegate, as follows:</p>
 </pre></div>
 </div>
 <p>Note that you can combine the two lines above that looked like this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">draw_delegate</span> <span class="ow">is</span> <span class="nv">draw_ship_to_ship</span><span class="p">@.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">draw_delegate</span> <span class="ow">is</span> <span class="nv">draw_ship_to_ship</span><span class="p">@.</span>
 <span class="k">local</span> <span class="nv">draw_a_to_b</span> <span class="ow">is</span> <span class="nv">draw_delegate</span><span class="p">:</span><span class="nv">bind</span><span class="p">(</span><span class="nv">shipA</span><span class="p">,</span> <span class="nv">shipB</span><span class="p">).</span>
 </pre></div>
 </div>
 <p>into just this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">draw_a_to_b</span> <span class="ow">is</span> <span class="nv">draw_ship_to_ship</span><span class="p">@:</span><span class="nv">bind</span><span class="p">(</span><span class="nv">shipA</span><span class="p">,</span> <span class="nv">shipB</span><span class="p">).</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">draw_a_to_b</span> <span class="ow">is</span> <span class="nv">draw_ship_to_ship</span><span class="p">@:</span><span class="nv">bind</span><span class="p">(</span><span class="nv">shipA</span><span class="p">,</span> <span class="nv">shipB</span><span class="p">).</span>
 </pre></div>
 </div>
-<p>When you use the at-sign(<code class="docutils literal"><span class="pre">&#64;</span></code>), you are returning an object of type
-<a class="reference internal" href="../structures/misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a> that can be used in-line right in the expression,
+<p>When you use the at-sign(<code class="docutils literal notranslate"><span class="pre">&#64;</span></code>), you are returning an object of type
+<a class="reference internal" href="../structures/misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegate</span></code></a> that can be used in-line right in the expression,
 as demonstrated above.</p>
-<div class="section" id="currying">
-<h3>Currying<a class="headerlink" href="#currying" title="Permalink to this headline">¶</a></h3>
+<section id="currying">
+<h3>Currying<a class="headerlink" href="#currying" title="Permalink to this heading">¶</a></h3>
 <p>It is possible to shave off exactly one parameter at a time in a chain
-of these <code class="docutils literal"><span class="pre">:bind</span></code> calls.  You could do this, for example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// V() is the built-in function that makes a vector of x, y, and z</span>
+of these <code class="docutils literal notranslate"><span class="pre">:bind</span></code> calls.  You could do this, for example:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// V() is the built-in function that makes a vector of x, y, and z</span>
 <span class="c1">// components.  You could bind the values one at a time as follows:</span>
 <span class="k">local</span> <span class="nv">vecx</span> <span class="ow">is</span> <span class="nv">V</span><span class="p">@:</span><span class="nv">bind</span><span class="p">(</span><span class="mf">10</span><span class="p">).</span> <span class="c1">// vecx is now a KOSDelegate hardcoding x to 10 and taking just y and z args</span>
 <span class="k">local</span> <span class="nv">vecxy</span> <span class="ow">is</span> <span class="nv">vecx</span><span class="p">:</span><span class="nv">bind</span><span class="p">(</span><span class="mf">5</span><span class="p">).</span>  <span class="c1">// vecxy is a KOSDelegate hardcoding x to 10 and y to 5, taking just the z arg</span>
@@ -503,66 +432,66 @@ of these <code class="docutils literal"><span class="pre">:bind</span></code> ca
 </div>
 <p>The technique of transforming a function that takes many arguments into
 a nested succession of functions that each only take one argument has a
-name.  It&#8217;s called <a class="reference external" href="https://en.wikipedia.org/wiki/Currying">Currying</a>.
-(It&#8217;s named after mathematician
+name.  It’s called <a class="reference external" href="https://en.wikipedia.org/wiki/Currying">Currying</a>.
+(It’s named after mathematician
 <a class="reference external" href="https://en.wikipedia.org/wiki/Haskell_Curry">Haskell Curry</a>
 and has nothing to do with delicious spicy food).</p>
 <p>(If anyone reading this is an experienced functional programmer and is thinking,
-&#8220;But <code class="docutils literal"><span class="pre">:bind</span></code> as described here isn&#8217;t currying&#8221;,  yes, we are aware that this is
-correct.  The KOSDelegate suffix <code class="docutils literal"><span class="pre">:bind</span></code> is technically not a proper &#8220;curry&#8221; because
+“But <code class="docutils literal notranslate"><span class="pre">:bind</span></code> as described here isn’t currying”,  yes, we are aware that this is
+correct.  The KOSDelegate suffix <code class="docutils literal notranslate"><span class="pre">:bind</span></code> is technically not a proper “curry” because
 it is actually a
 <a class="reference external" href="https://en.wikipedia.org/wiki/Partial_application">partial function application</a>.
-and thus doesn&#8217;t <em>require</em> that you limit it to only one parameter at a time.)</p>
-</div>
-</div>
-<div class="section" id="closures">
-<h2>Closures<a class="headerlink" href="#closures" title="Permalink to this headline">¶</a></h2>
-<p>Kerboscript <code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegates</span></code> of user functions do hold their
-&#8220;closure&#8221; information inside themselves.  What on earth does that
-mean?  If you haven&#8217;t heard this term before, it essentially means
-that the KOSDelegate &#8220;remembers&#8221; what the local variables were
+and thus doesn’t <em>require</em> that you limit it to only one parameter at a time.)</p>
+</section>
+</section>
+<section id="closures">
+<h2>Closures<a class="headerlink" href="#closures" title="Permalink to this heading">¶</a></h2>
+<p>Kerboscript <code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegates</span></code> of user functions do hold their
+“closure” information inside themselves.  What on earth does that
+mean?  If you haven’t heard this term before, it essentially means
+that the KOSDelegate “remembers” what the local variables were
 at the location where it was created.  It is possible for the
 KOSDelegate you make of a function to access the local variables
 that only that function is allowed to see, even if you call that
-delegate from a &#8220;foreign&#8221; location where those variables wouldn&#8217;t
-normally be in <a class="reference internal" href="variables.html#scope"><span>scope</span></a>.</p>
-</div>
-</div>
-<div class="section" id="kinds-of-delegate-no-suffixes">
-<h1>Kinds of Delegate (no suffixes)<a class="headerlink" href="#kinds-of-delegate-no-suffixes" title="Permalink to this headline">¶</a></h1>
-<p>Under the hood, kOS handles several different kinds of &#8220;functions&#8221; and
-methods that aren&#8217;t actually implemented the same way.  A <code class="docutils literal"><span class="pre">KOSDelegate</span></code>
+delegate from a “foreign” location where those variables wouldn’t
+normally be in <a class="reference internal" href="variables.html#scope"><span class="std std-ref">scope</span></a>.</p>
+</section>
+</section>
+<section id="kinds-of-delegate-no-suffixes">
+<h1>Kinds of Delegate (no suffixes)<a class="headerlink" href="#kinds-of-delegate-no-suffixes" title="Permalink to this heading">¶</a></h1>
+<p>Under the hood, kOS handles several different kinds of “functions” and
+methods that aren’t actually implemented the same way.  A <code class="docutils literal notranslate"><span class="pre">KOSDelegate</span></code>
 attempts to hide the details of these differences from the user, but
 one difference in particular still stands out.  As of kOS version 1.1.5.2,
 you cannot reliably make a delegate of a suffix just yet.  (<em>This is
-intended as a future feature though.  It&#8217;s been put off because it
+intended as a future feature though.  It’s been put off because it
 involves decisions that impact the future of the language and which, once
-made, can&#8217;t be changed easily.</em>)</p>
+made, can’t be changed easily.</em>)</p>
 <ul>
-<li><p class="first">You <strong>can</strong> make a delegate of a <a class="reference internal" href="user_functions.html#user-functions"><span>user function</span></a>
+<li><p>You <strong>can</strong> make a delegate of a <a class="reference internal" href="user_functions.html#user-functions"><span class="std std-ref">user function</span></a>
 implemented in Kerboscript code.</p>
 <blockquote>
-<div><div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">mysquarefunc</span> <span class="p">{</span> <span class="kd">parameter</span> <span class="nv">a</span><span class="p">.</span> <span class="k">return</span> <span class="nv">a</span><span class="o">*</span><span class="nv">a</span><span class="p">.</span> <span class="p">}</span>
+<div><div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">mysquarefunc</span> <span class="p">{</span> <span class="kd">parameter</span> <span class="nv">a</span><span class="p">.</span> <span class="k">return</span> <span class="nv">a</span><span class="o">*</span><span class="nv">a</span><span class="p">.</span> <span class="p">}</span>
 <span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="nv">mysquarefunc</span><span class="p">@.</span>
 <span class="k">set</span> <span class="nv">y</span> <span class="ow">to</span> <span class="nv">x</span><span class="p">:</span><span class="nv">call</span><span class="p">(</span><span class="mf">5</span><span class="p">).</span> <span class="c1">// y is now 25.</span>
 </pre></div>
 </div>
 </div></blockquote>
 </li>
-<li><p class="first">You <strong>can</strong> make a delegate of a built-in function provided by kOS
-itself, provided it isn&#8217;t a structure suffix.</p>
+<li><p>You <strong>can</strong> make a delegate of a built-in function provided by kOS
+itself, provided it isn’t a structure suffix.</p>
 <blockquote>
-<div><div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">r</span> <span class="ow">to</span> <span class="nv">round</span><span class="p">@.</span>
+<div><div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">r</span> <span class="ow">to</span> <span class="nv">round</span><span class="p">@.</span>
 <span class="k">set</span> <span class="nv">s</span> <span class="ow">to</span> <span class="nv">sqrt</span><span class="p">@.</span>
 <span class="k">print</span> <span class="s">&quot;square root of 7, to the nearest 2 places is: &quot;</span> <span class="o">+</span> <span class="nv">r</span><span class="p">:</span><span class="nv">call</span><span class="p">(</span><span class="nv">s</span><span class="p">:</span><span class="nv">call</span><span class="p">(</span><span class="mf">7</span><span class="p">),</span> <span class="mf">2</span><span class="p">).</span>
 </pre></div>
 </div>
 </div></blockquote>
 </li>
-<li><p class="first">You <strong>cannot</strong> make a delegate of a suffix of a structure (<em>yet?</em>)
+<li><p>You <strong>cannot</strong> make a delegate of a suffix of a structure (<em>yet?</em>)
 in Kerboscript.</p>
 <blockquote>
-<div><div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">//</span>
+<div><div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">//</span>
 <span class="c1">// WON&#39;T WORK, WILL GIVE ERROR:</span>
 <span class="c1">//</span>
 <span class="k">set</span> <span class="nv">altpos</span> <span class="ow">to</span> <span class="nv">latlng</span><span class="p">(</span><span class="mf">10</span><span class="p">,</span><span class="mf">20</span><span class="p">):</span><span class="nv">altitudeposition</span><span class="p">@.</span> <span class="c1">// altitudeposition is a suffix of geoposition.</span>
@@ -574,75 +503,37 @@ in Kerboscript.</p>
 wrapper around a structure suffix call, and make a delegate of <strong>that</strong>.</p>
 </li>
 </ul>
-</div>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="../math.html" class="btn btn-neutral float-right" title="Mathematics and Basic Geometry" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="anonymous.html" class="btn btn-neutral" title="Anonymous Functions (A kind of Delegate)" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="anonymous.html" class="btn btn-neutral float-left" title="Anonymous Functions (A kind of Delegate)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../math.html" class="btn btn-neutral float-right" title="Mathematics and Basic Geometry" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

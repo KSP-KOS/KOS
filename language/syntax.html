@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>KerboScript Syntax Specification &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KerboScript Syntax Specification &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../about.html"/>
-        <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../index.html"/>
-        <link rel="up" title="The KerboScript Language" href="../language.html"/>
-        <link rel="next" title="Flow Control" href="flow.html"/>
-        <link rel="prev" title="General Features of the KerboScript Language" href="features.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="next" title="Flow Control" href="flow.html" />
+    <link rel="prev" title="General Features of the KerboScript Language" href="features.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
@@ -99,9 +50,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../general.html">General</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../language.html">Language</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="features.html">General Features</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Language Syntax</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Language Syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="flow.html">Flow Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_functions.html">User Functions</a></li>
@@ -121,125 +70,102 @@
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../language.html">The <strong>KerboScript</strong> Language</a> &raquo;</li>
-      
-    <li><strong>KerboScript</strong> Syntax Specification</li>
+      <li><strong>KerboScript</strong> Syntax Specification</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../_sources/language/syntax.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../_sources/language/syntax.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="kerboscript-syntax-specification">
-<span id="syntax"></span><h1><strong>KerboScript</strong> Syntax Specification<a class="headerlink" href="#kerboscript-syntax-specification" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="kerboscript-syntax-specification">
+<span id="syntax"></span><h1><strong>KerboScript</strong> Syntax Specification<a class="headerlink" href="#kerboscript-syntax-specification" title="Permalink to this heading">¶</a></h1>
 <p>This describes what is and is not a syntax error in the <strong>KerboScript</strong> programming language. It does not describe what function calls exist or which commands and built-in variables are present. Those are contained in other documents.</p>
-<div class="contents local topic" id="contents">
-<p class="topic-title first">Contents</p>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#general-rules" id="id1">General Rules</a></li>
-<li><a class="reference internal" href="#suffixes" id="id2">Suffixes</a></li>
-<li><a class="reference internal" href="#numbers-scalars" id="id3">Numbers (scalars)</a></li>
-<li><a class="reference internal" href="#braces-statement-blocks" id="id4">Braces (statement blocks)</a></li>
-<li><a class="reference internal" href="#functions-built-in" id="id5">Functions (built-in)</a></li>
-<li><a class="reference internal" href="#suffixes-as-functions-methods" id="id6">Suffixes as Functions (Methods)</a></li>
-<li><a class="reference internal" href="#suffixes-as-lexicon-keys" id="id7">Suffixes as Lexicon keys</a></li>
-<li><a class="reference internal" href="#user-functions" id="id8">User Functions</a></li>
-<li><a class="reference internal" href="#built-in-special-variable-names" id="id9">Built-In Special Variable Names</a></li>
-<li><a class="reference internal" href="#what-does-not-exist-yet" id="id10">What does not exist (yet?)</a></li>
+<li><p><a class="reference internal" href="#general-rules" id="id1">General Rules</a></p></li>
+<li><p><a class="reference internal" href="#suffixes" id="id2">Suffixes</a></p></li>
+<li><p><a class="reference internal" href="#numbers-scalars" id="id3">Numbers (scalars)</a></p></li>
+<li><p><a class="reference internal" href="#braces-statement-blocks" id="id4">Braces (statement blocks)</a></p></li>
+<li><p><a class="reference internal" href="#functions-built-in" id="id5">Functions (built-in)</a></p></li>
+<li><p><a class="reference internal" href="#suffixes-as-functions-methods" id="id6">Suffixes as Functions (Methods)</a></p></li>
+<li><p><a class="reference internal" href="#suffixes-as-lexicon-keys" id="id7">Suffixes as Lexicon keys</a></p></li>
+<li><p><a class="reference internal" href="#user-functions" id="id8">User Functions</a></p></li>
+<li><p><a class="reference internal" href="#built-in-special-variable-names" id="id9">Built-In Special Variable Names</a></p></li>
+<li><p><a class="reference internal" href="#what-does-not-exist-yet" id="id10">What does not exist (yet?)</a></p></li>
 </ul>
-</div>
-<div class="section" id="general-rules">
-<h2><a class="toc-backref" href="#id1">General Rules</a><a class="headerlink" href="#general-rules" title="Permalink to this headline">¶</a></h2>
+</nav>
+<section id="general-rules">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">General Rules</a><a class="headerlink" href="#general-rules" title="Permalink to this heading">¶</a></h2>
 <p><em>Whitespace</em> consisting of consecutive spaces, tabs, and line breaks are all considered identical to each other. Because of this, indentation is up to you. You may indent however you like.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Statements are ended with a <strong>period</strong> character (&#8221;.&#8221;).</p>
+<p class="admonition-title">Note</p>
+<p>Statements are ended with a <strong>period</strong> character (“.”).</p>
 </div>
 <p>The following are <strong>reserved command keywords</strong> and special
 operator symbols:</p>
 <p id="operators"><strong>Arithmetic Operators</strong>: These are listed in order of precedence from first to last:</p>
 <blockquote>
 <div><ul class="simple">
-<li><code class="docutils literal"><span class="pre">(</span></code> ..to.. <code class="docutils literal"><span class="pre">)</span></code> -&gt; Grouping with brackets makes the expression evaluate first.</li>
-<li><code class="docutils literal"><span class="pre">e</span></code> -&gt; Scientific notation operator, for example: <code class="docutils literal"><span class="pre">1.23e-4</span></code> is <code class="docutils literal"><span class="pre">0.000123</span></code>.</li>
-<li><code class="docutils literal"><span class="pre">^</span></code> -&gt; Exponent operator, for example: <code class="docutils literal"><span class="pre">2^3</span></code> is <code class="docutils literal"><span class="pre">8</span></code>.</li>
-<li><code class="docutils literal"><span class="pre">*</span></code>, <code class="docutils literal"><span class="pre">/</span></code> -&gt; Multiplication and Division, having equal precedence.  Note that
+<li><p><code class="docutils literal notranslate"><span class="pre">(</span></code> ..to.. <code class="docutils literal notranslate"><span class="pre">)</span></code> -&gt; Grouping with brackets makes the expression evaluate first.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">e</span></code> -&gt; Scientific notation operator, for example: <code class="docutils literal notranslate"><span class="pre">1.23e-4</span></code> is <code class="docutils literal notranslate"><span class="pre">0.000123</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">^</span></code> -&gt; Exponent operator, for example: <code class="docutils literal notranslate"><span class="pre">2^3</span></code> is <code class="docutils literal notranslate"><span class="pre">8</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">*</span></code>, <code class="docutils literal notranslate"><span class="pre">/</span></code> -&gt; Multiplication and Division, having equal precedence.  Note that
 division never truncates remainders, even when given two integer operands.
-(i.e. <code class="docutils literal"><span class="pre">1</span> <span class="pre">/</span> <span class="pre">4</span></code> will return <code class="docutils literal"><span class="pre">0.25</span></code>, not <code class="docutils literal"><span class="pre">0</span></code>).</li>
-<li><code class="docutils literal"><span class="pre">+</span></code>, <code class="docutils literal"><span class="pre">-</span></code> -&gt; Addition and Subtraction, having equal precedence.</li>
+(i.e. <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">/</span> <span class="pre">4</span></code> will return <code class="docutils literal notranslate"><span class="pre">0.25</span></code>, not <code class="docutils literal notranslate"><span class="pre">0</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">+</span></code>, <code class="docutils literal notranslate"><span class="pre">-</span></code> -&gt; Addition and Subtraction, having equal precedence.</p></li>
 </ul>
 </div></blockquote>
 <p><strong>Logic Operators</strong>: These are listed in order of precedence from first to last:</p>
 <blockquote>
 <div><ul>
-<li><p class="first"><code class="docutils literal"><span class="pre">(</span></code> ..to.. <code class="docutils literal"><span class="pre">)</span></code> -&gt; Grouping with brackets makes the expression evaluate first.</p>
-</li>
-<li><p class="first"><code class="docutils literal"><span class="pre">not</span></code> -&gt; <code class="docutils literal"><span class="pre">not</span> <span class="pre">A</span></code> Logical inversion of A.  Due to the high precedence,
+<li><p><code class="docutils literal notranslate"><span class="pre">(</span></code> ..to.. <code class="docutils literal notranslate"><span class="pre">)</span></code> -&gt; Grouping with brackets makes the expression evaluate first.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">not</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">not</span> <span class="pre">A</span></code> Logical inversion of A.  Due to the high precedence,
 if A is some complex expression you may need to write this with brackets
-as <code class="docutils literal"><span class="pre">not(A)</span></code> in kerboscript to make it parse right.</p>
-</li>
-<li><p class="first"><code class="docutils literal"><span class="pre">=</span></code>, &lt;&gt;``, <code class="docutils literal"><span class="pre">&gt;=</span></code>, <code class="docutils literal"><span class="pre">&lt;=</span></code>, <code class="docutils literal"><span class="pre">&gt;</span></code>, <code class="docutils literal"><span class="pre">&lt;</span></code> -&gt; Comparitors.  Note
+as <code class="docutils literal notranslate"><span class="pre">not(A)</span></code> in kerboscript to make it parse right.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">=</span></code>, &lt;&gt;``, <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> -&gt; Comparitors.  Note
 that equals and not-equals are different than in some common languages:</p>
 <blockquote>
 <div><ul class="simple">
-<li>The equals comparitor is a single character <code class="docutils literal"><span class="pre">=</span></code> not a double-equal <code class="docutils literal"><span class="pre">==</span></code>.</li>
-<li>The not-equal comparitor is <code class="docutils literal"><span class="pre">&lt;&gt;</span></code> not <code class="docutils literal"><span class="pre">!=</span></code>.</li>
+<li><p>The equals comparitor is a single character <code class="docutils literal notranslate"><span class="pre">=</span></code> not a double-equal <code class="docutils literal notranslate"><span class="pre">==</span></code>.</p></li>
+<li><p>The not-equal comparitor is <code class="docutils literal notranslate"><span class="pre">&lt;&gt;</span></code> not <code class="docutils literal notranslate"><span class="pre">!=</span></code>.</p></li>
 </ul>
 </div></blockquote>
 </li>
-<li><p class="first"><code class="docutils literal"><span class="pre">and</span></code> -&gt; Logical AND of two Boolean expresssions.</p>
-</li>
-<li><p class="first"><code class="docutils literal"><span class="pre">or</span></code> -&gt; Logical OR of two Boolean expresssions.</p>
-</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">and</span></code> -&gt; Logical AND of two Boolean expresssions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">or</span></code> -&gt; Logical OR of two Boolean expresssions.</p></li>
 </ul>
 </div></blockquote>
 <p>** Logic constants**: all logic operators return one of these, and you may assign them to variables:</p>
 <blockquote>
 <div><ul class="simple">
-<li><code class="docutils literal"><span class="pre">false</span></code> -&gt; (case insensitive, so can be writtedn as False, FALSE, etc)</li>
-<li><code class="docutils literal"><span class="pre">true</span></code> -&gt; (case insensitive, so can be written as True, TRUE, etc)</li>
-<li>Although not a recommended programming style to use, numbers used in a
+<li><p><code class="docutils literal notranslate"><span class="pre">false</span></code> -&gt; (case insensitive, so can be writtedn as False, FALSE, etc)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">true</span></code> -&gt; (case insensitive, so can be written as True, TRUE, etc)</p></li>
+<li><p>Although not a recommended programming style to use, numbers used in a
 logic context get interpreted as Boolean values followng the typical
-rule that zero is <code class="docutils literal"><span class="pre">false</span></code> and anything other than zero is <code class="docutils literal"><span class="pre">true</span></code>.</li>
+rule that zero is <code class="docutils literal notranslate"><span class="pre">false</span></code> and anything other than zero is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></li>
 </ul>
 </div></blockquote>
 <p><strong>Instructions and Keywords</strong>:</p>
-<div class="highlight-none"><div class="highlight"><pre><span></span>add all at break choose clearscreen compile copy declare defined
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>add all at break choose clearscreen compile copy declare defined
 delete do edit else file for from function global if in is list
 local lock log off on once parameter preserve print reboot remove
 rename return run runoncepath runpath set shutdown stage step
@@ -247,7 +173,7 @@ switch then to toggle unlock unset until volume wait when
 </pre></div>
 </div>
 <p><strong>Other Symbols</strong>:</p>
-<div class="highlight-none"><div class="highlight"><pre><span></span>* ``//`` -&gt; Comment indicator - starts a comment that runs until
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>* ``//`` -&gt; Comment indicator - starts a comment that runs until
   the end of the line.
 * ``( )`` -&gt; Used either to group expressions to change the order of
   operations (in the usual fashion), or to mark the parameters of
@@ -271,38 +197,37 @@ switch then to toggle unlock unset until volume wait when
   may be called later.
 </pre></div>
 </div>
-<p><em>Comments</em> consist of everything from a &#8220;//&#8221; symbol to the end of the line:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="mf">1</span><span class="p">.</span> <span class="c1">// this is a comment.</span>
+<p><em>Comments</em> consist of everything from a “//” symbol to the end of the line:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="mf">1</span><span class="p">.</span> <span class="c1">// this is a comment.</span>
 </pre></div>
 </div>
 <p><strong>Identifiers</strong>: Identifiers consist of: a string of (letter, digit, or
 underscore). The first character must be a letter or an underscore.
 The rest may be letters, digits or underscores.</p>
 <p><strong>Identifiers are case-insensitive</strong>. The following are identical identifiers:</p>
-<div class="highlight-none"><div class="highlight"><pre><span></span>my_variable
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>my_variable
 My_Variable
 MY_VARIABLE
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<div class="last versionadded">
-<p><span class="versionmodified">New in version 1.1.0: </span>Kerboscript accepts Unicode source code, encoded using the UTF-8
-encoding method.  Because of this, the definition of a &#8220;letter&#8221;
-character for an identifier includes letters from many languages&#8217;
+<p class="admonition-title">Note</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.1.0: </span>Kerboscript accepts Unicode source code, encoded using the UTF-8
+encoding method.  Because of this, the definition of a “letter”
+character for an identifier includes letters from many languages’
 alphabets, including accented Latin alphabet characters, Cyrllic
 characters, etc.  Not all languages have been tested but in
 principle they should work as long as they have a Unicode standard
-accepted definition of what counts as a &#8220;letter&#8221;.  We defer to
-the .NET libraries&#8217; definition of what constitutes the &#8220;same&#8221; letter
+accepted definition of what counts as a “letter”.  We defer to
+the .NET libraries’ definition of what constitutes the “same” letter
 in uppercase and lowercase forms, and we hope this is right for
 most alphabets.</p>
 </div>
 </div>
-<dl class="docutils">
-<dt><strong>case-insensitivity</strong></dt>
-<dd><p class="first">The same case-insensitivity applies throughout the entire language, with all keywords and when comparing literal strings. The values inside the strings are also case-insensitive, for example, the following will print &#8220;equal&#8221;:</p>
-<div class="last highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="s">&quot;hello&quot;</span> <span class="o">=</span> <span class="s">&quot;HELLO&quot;</span> <span class="p">{</span>
+<dl>
+<dt><strong>case-insensitivity</strong></dt><dd><p>The same case-insensitivity applies throughout the entire language, with all keywords and when comparing literal strings. The values inside the strings are also case-insensitive, for example, the following will print “equal”:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="s">&quot;hello&quot;</span> <span class="o">=</span> <span class="s">&quot;HELLO&quot;</span> <span class="p">{</span>
     <span class="k">print</span> <span class="s">&quot;equal&quot;</span><span class="p">.</span>
 <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
     <span class="k">print</span> <span class="s">&quot;unequal&quot;</span><span class="p">.</span>
@@ -312,40 +237,40 @@ most alphabets.</p>
 </dd>
 </dl>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<div class="last versionadded">
-<p><span class="versionmodified">New in version 1.1.0: </span>Again, depending on the alphabet being used, the concept of
-&#8220;uppercase&#8221; and &#8220;lowercase&#8221; might not make sense in some
-languages.  kOS defers to .NET&#8217;s interpretation of what
-letters in Unicode are paired together as the &#8220;upper&#8221; and
-&#8220;lower&#8221; versions of the same letter.  For obvious reasons,
+<p class="admonition-title">Note</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.1.0: </span>Again, depending on the alphabet being used, the concept of
+“uppercase” and “lowercase” might not make sense in some
+languages.  kOS defers to .NET’s interpretation of what
+letters in Unicode are paired together as the “upper” and
+“lower” versions of the same letter.  For obvious reasons,
 the kOS developers cannot test every language and verify if
 this is correct or not.</p>
 </div>
 </div>
-</div>
-<div class="section" id="suffixes">
-<h2><a class="toc-backref" href="#id2">Suffixes</a><a class="headerlink" href="#suffixes" title="Permalink to this headline">¶</a></h2>
-<p>Some variable types are structures that contain sub-portions. The separator between the main variable and the item inside it is a colon character (<code class="docutils literal"><span class="pre">:</span></code>). When this symbol is used, the part on the right-hand side of the colon is called the &#8220;suffix&#8221;:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">list</span> <span class="nv">parts</span> <span class="nv">in</span> <span class="nv">mylist</span><span class="p">.</span>
+</section>
+<section id="suffixes">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Suffixes</a><a class="headerlink" href="#suffixes" title="Permalink to this heading">¶</a></h2>
+<p>Some variable types are structures that contain sub-portions. The separator between the main variable and the item inside it is a colon character (<code class="docutils literal notranslate"><span class="pre">:</span></code>). When this symbol is used, the part on the right-hand side of the colon is called the “suffix”:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">list</span> <span class="nv">parts</span> <span class="nv">in</span> <span class="nv">mylist</span><span class="p">.</span>
 <span class="k">print</span> <span class="nv">mylist</span><span class="p">:</span><span class="nv">length</span><span class="p">.</span> <span class="c1">// length is a suffix of mylist</span>
 </pre></div>
 </div>
 <p>Suffixes can be chained together, as in this example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">velocity</span><span class="p">:</span><span class="nv">orbit</span><span class="p">:</span><span class="nv">x</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">velocity</span><span class="p">:</span><span class="nv">orbit</span><span class="p">:</span><span class="nv">x</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>In the above example you&#8217;d say &#8220;<code class="docutils literal"><span class="pre">velocity</span></code> is a suffix of <code class="docutils literal"><span class="pre">ship</span></code>&#8221;, and &#8220;<code class="docutils literal"><span class="pre">orbit</span></code> is a suffix of <code class="docutils literal"><span class="pre">ship:velocity</span></code>&#8221;, and &#8220;<code class="docutils literal"><span class="pre">x</span></code> is a suffix of <code class="docutils literal"><span class="pre">ship:velocity:orbit</span></code>&#8221;.</p>
-</div>
-<div class="section" id="numbers-scalars">
-<h2><a class="toc-backref" href="#id3">Numbers (scalars)</a><a class="headerlink" href="#numbers-scalars" title="Permalink to this headline">¶</a></h2>
-<p>Numbers in kerboscript are referred to as &#8220;scalars&#8221;, to distinguish
+<p>In the above example you’d say “<code class="docutils literal notranslate"><span class="pre">velocity</span></code> is a suffix of <code class="docutils literal notranslate"><span class="pre">ship</span></code>”, and “<code class="docutils literal notranslate"><span class="pre">orbit</span></code> is a suffix of <code class="docutils literal notranslate"><span class="pre">ship:velocity</span></code>”, and “<code class="docutils literal notranslate"><span class="pre">x</span></code> is a suffix of <code class="docutils literal notranslate"><span class="pre">ship:velocity:orbit</span></code>”.</p>
+</section>
+<section id="numbers-scalars">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Numbers (scalars)</a><a class="headerlink" href="#numbers-scalars" title="Permalink to this heading">¶</a></h2>
+<p>Numbers in kerboscript are referred to as “scalars”, to distinguish
 them from the many cases where a values will be represnted
 as a vectors.  You are allowed to use integers, decimal fractional numbers
 (numbers with a decimal point and a fractional part), and scientific
 notation numbers.</p>
 <p>The following are valid scalar syntax:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="mf">12345678</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="mf">12345678</span>
 <span class="err">12_345_678</span> <span class="p">(</span><span class="nv">The</span> <span class="nv">underscores</span> <span class="nv">are</span> <span class="nv">ignored</span> <span class="nv">as</span> <span class="nv">just</span> <span class="nv">visual</span> <span class="nv">spacers</span><span class="p">)</span>
 <span class="mf">12345</span><span class="p">.</span><span class="mf">6789</span>
 <span class="err">12_345</span><span class="p">.</span><span class="mf">6789</span>
@@ -357,34 +282,34 @@ notation numbers.</p>
 <p>Kerobscript does not support imaginary numbers or irrational numbers
 or rational numbers that cannot be represented as a finite decimal
 (i.e.  sqrt(-1) returns a Not-a-Number error.  Pi will have to be
-an approximation.  &#8220;One third&#8221;, ends up being something like 0.333333333).)</p>
+an approximation.  “One third”, ends up being something like 0.333333333).)</p>
 <p>Under the hood, these numbers are stored as either 32-bit integers or as
 64-bit double floats, depending on the need, but kerboscript attempts
 to hide this detail from the programmer as much as possible.</p>
-</div>
-<div class="section" id="braces-statement-blocks">
-<h2><a class="toc-backref" href="#id4">Braces (statement blocks)</a><a class="headerlink" href="#braces-statement-blocks" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="braces-statement-blocks">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Braces (statement blocks)</a><a class="headerlink" href="#braces-statement-blocks" title="Permalink to this heading">¶</a></h2>
 <p>Anywhere you feel like, you may insert braces around a list of statements
 to get the language to treat them all as a single statement block.</p>
 <p>For example: the IF statement expects one statement as its body, like so:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nv">x</span> <span class="o">=</span> <span class="mf">1</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nv">x</span> <span class="o">=</span> <span class="mf">1</span>
   <span class="k">print</span> <span class="s">&quot;it&#39;s 1&quot;</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>But you can put multiple statements there as its body by surrounding them
 with braces, like so:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nv">x</span> <span class="o">=</span> <span class="mf">1</span> <span class="p">{</span> <span class="k">print</span> <span class="s">&quot;it&#39;s 1&quot;</span><span class="p">.</span>  <span class="k">print</span> <span class="s">&quot;yippieee.&quot;</span><span class="p">.</span>  <span class="p">}</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nv">x</span> <span class="o">=</span> <span class="mf">1</span> <span class="p">{</span> <span class="k">print</span> <span class="s">&quot;it&#39;s 1&quot;</span><span class="p">.</span>  <span class="k">print</span> <span class="s">&quot;yippieee.&quot;</span><span class="p">.</span>  <span class="p">}</span>
 </pre></div>
 </div>
 <p>(Although this is usually preferred to be indented as follows):</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nv">x</span> <span class="o">=</span> <span class="mf">1</span> <span class="p">{</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nv">x</span> <span class="o">=</span> <span class="mf">1</span> <span class="p">{</span>
   <span class="k">print</span> <span class="s">&quot;it&#39;s 1&quot;</span><span class="p">.</span>
   <span class="k">print</span> <span class="s">&quot;yippieee.&quot;</span><span class="p">.</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>or:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nv">x</span> <span class="o">=</span> <span class="mf">1</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nv">x</span> <span class="o">=</span> <span class="mf">1</span>
 <span class="p">{</span>
   <span class="k">print</span> <span class="s">&quot;it&#39;s 1&quot;</span><span class="p">.</span>
   <span class="k">print</span> <span class="s">&quot;yippieee.&quot;</span><span class="p">.</span>
@@ -395,7 +320,7 @@ with braces, like so:</p>
 but it is a good idea to make things clear.</p>
 <p>You are allowed to just insert braces anywhere you feel like even when the
 language does not require it, as shown below:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">declare</span> <span class="nv">x</span> <span class="ow">to</span> <span class="mf">3</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">declare</span> <span class="nv">x</span> <span class="ow">to</span> <span class="mf">3</span><span class="p">.</span>
 <span class="k">print</span> <span class="s">&quot;x here is &quot;</span> <span class="o">+</span> <span class="nv">x</span><span class="p">.</span>
 <span class="p">{</span>
   <span class="k">declare</span> <span class="nv">x</span> <span class="ow">to</span> <span class="mf">5</span><span class="p">.</span>
@@ -408,46 +333,46 @@ language does not require it, as shown below:</p>
 </pre></div>
 </div>
 <p>The usual reason for doing this is to create a
-<a class="reference internal" href="variables.html#scope"><span>local scope section</span></a> for yourself.
+<a class="reference internal" href="variables.html#scope"><span class="std std-ref">local scope section</span></a> for yourself.
 In the above example, there are actually 3 <em>different</em>
-variables called &#8216;x&#8217; - each with a different scope.</p>
-</div>
-<div class="section" id="functions-built-in">
-<h2><a class="toc-backref" href="#id5">Functions (built-in)</a><a class="headerlink" href="#functions-built-in" title="Permalink to this headline">¶</a></h2>
+variables called ‘x’ - each with a different scope.</p>
+</section>
+<section id="functions-built-in">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Functions (built-in)</a><a class="headerlink" href="#functions-built-in" title="Permalink to this heading">¶</a></h2>
 <p>There exist a number of built-in functions you can call using their names. When you do so, you can do it like so:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">functionName</span><span class="p">(</span> <span class="o">*</span><span class="nv">arguments</span> <span class="nv">with</span> <span class="nv">commas</span> <span class="nv">between</span> <span class="nv">them</span><span class="o">*</span> <span class="p">).</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">functionName</span><span class="p">(</span> <span class="o">*</span><span class="nv">arguments</span> <span class="nv">with</span> <span class="nv">commas</span> <span class="nv">between</span> <span class="nv">them</span><span class="o">*</span> <span class="p">).</span>
 </pre></div>
 </div>
-<p>For example, the <code class="docutils literal"><span class="pre">ROUND</span></code> function takes 2 arguments:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">ROUND</span><span class="p">(</span><span class="mf">1230</span><span class="p">.</span><span class="mf">12312</span><span class="p">,</span> <span class="mf">2</span><span class="p">).</span>
+<p>For example, the <code class="docutils literal notranslate"><span class="pre">ROUND</span></code> function takes 2 arguments:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">ROUND</span><span class="p">(</span><span class="mf">1230</span><span class="p">.</span><span class="mf">12312</span><span class="p">,</span> <span class="mf">2</span><span class="p">).</span>
 </pre></div>
 </div>
-<p>The <code class="docutils literal"><span class="pre">SIN</span></code> function takes 1 argument:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">SIN</span><span class="p">(</span><span class="mf">45</span><span class="p">).</span>
+<p>The <code class="docutils literal notranslate"><span class="pre">SIN</span></code> function takes 1 argument:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">SIN</span><span class="p">(</span><span class="mf">45</span><span class="p">).</span>
 </pre></div>
 </div>
 <p>When a function requires zero arguments, it is legal to call it using the parentheses or not using them. You can pick either way:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// These both work:</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// These both work:</span>
 <span class="k">CLEARSCREEN</span><span class="p">.</span>
 <span class="k">CLEARSCREEN</span><span class="p">().</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="suffixes-as-functions-methods">
-<h2><a class="toc-backref" href="#id6">Suffixes as Functions (Methods)</a><a class="headerlink" href="#suffixes-as-functions-methods" title="Permalink to this headline">¶</a></h2>
-<p>Some suffixes are actually functions you can call. When that is the case, these suffixes are called &#8220;method suffixes&#8221;. Here are some examples:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">partsnamed</span><span class="p">(</span><span class="s">&quot;rtg&quot;</span><span class="p">).</span>
+</section>
+<section id="suffixes-as-functions-methods">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Suffixes as Functions (Methods)</a><a class="headerlink" href="#suffixes-as-functions-methods" title="Permalink to this heading">¶</a></h2>
+<p>Some suffixes are actually functions you can call. When that is the case, these suffixes are called “method suffixes”. Here are some examples:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">partsnamed</span><span class="p">(</span><span class="s">&quot;rtg&quot;</span><span class="p">).</span>
 <span class="k">print</span> <span class="nv">x</span><span class="p">:</span><span class="nv">length</span><span class="p">().</span>
 <span class="nv">x</span><span class="p">:</span><span class="k">remove</span><span class="p">(</span><span class="mf">0</span><span class="p">).</span>
 <span class="nv">x</span><span class="p">:</span><span class="nv">clear</span><span class="p">().</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="suffixes-as-lexicon-keys">
-<h2><a class="toc-backref" href="#id7">Suffixes as Lexicon keys</a><a class="headerlink" href="#suffixes-as-lexicon-keys" title="Permalink to this headline">¶</a></h2>
-<p>The special type called a <a class="reference internal" href="../structures/collections/lexicon.html#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Lexicon</span></code></a> can be used with this suffix syntax as
+</section>
+<section id="suffixes-as-lexicon-keys">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Suffixes as Lexicon keys</a><a class="headerlink" href="#suffixes-as-lexicon-keys" title="Permalink to this heading">¶</a></h2>
+<p>The special type called a <a class="reference internal" href="../structures/collections/lexicon.html#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Lexicon</span></code></a> can be used with this suffix syntax as
 an alternate way to get the value for a key, as in the example below:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Given this setup...</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// Given this setup...</span>
 <span class="k">set</span> <span class="nv">MyLex</span> <span class="ow">to</span> <span class="nv">Lexicon</span><span class="p">().</span>
 <span class="nv">MyLex</span><span class="p">:</span><span class="k">ADD</span><span class="p">(</span> <span class="s">&quot;key1&quot;</span><span class="p">,</span> <span class="s">&quot;value1&quot;</span><span class="p">).</span>
 <span class="c1">// ...these two lines have the same effect:</span>
@@ -456,139 +381,101 @@ an alternate way to get the value for a key, as in the example below:</p>
 </pre></div>
 </div>
 <p>There are some limits to using this syntax, as described in more detail
-<a class="reference internal" href="../structures/collections/lexicon.html#lexicon-suffix"><span>in the documentation for the Lexion type</span></a>.</p>
-</div>
-<div class="section" id="user-functions">
-<span id="syntax-functions"></span><h2><a class="toc-backref" href="#id8">User Functions</a><a class="headerlink" href="#user-functions" title="Permalink to this headline">¶</a></h2>
-<dl class="docutils">
-<dt>Help for the new user - What is a Function?</dt>
-<dd><p class="first">In programming terminology, there is a commonly used feature of
+<a class="reference internal" href="../structures/collections/lexicon.html#lexicon-suffix"><span class="std std-ref">in the documentation for the Lexion type</span></a>.</p>
+</section>
+<section id="user-functions">
+<span id="syntax-functions"></span><h2><a class="toc-backref" href="#id8" role="doc-backlink">User Functions</a><a class="headerlink" href="#user-functions" title="Permalink to this heading">¶</a></h2>
+<dl>
+<dt>Help for the new user - What is a Function?</dt><dd><p>In programming terminology, there is a commonly used feature of
 many programming languages that works as follows:</p>
 <ul>
-<li><ol class="first arabic simple">
-<li>Create a chunk of program instructions that you don&#8217;t intend to execute YET.</li>
+<li><ol class="arabic simple">
+<li><p>Create a chunk of program instructions that you don’t intend to execute YET.</p></li>
 </ol>
 </li>
-<li><ol class="first arabic simple" start="2">
-<li>Later, when executing other parts of the program, do the following:</li>
+<li><ol class="arabic simple" start="2">
+<li><p>Later, when executing other parts of the program, do the following:</p></li>
 </ol>
 <blockquote>
 <div><ul class="simple">
-<li><ol class="first upperalpha">
-<li>Remember the current location in the program.</li>
+<li><ol class="upperalpha simple">
+<li><p>Remember the current location in the program.</p></li>
 </ol>
 </li>
-<li><ol class="first upperalpha" start="2">
-<li>Jump to the previously created chunk of code from (1) above.</li>
+<li><ol class="upperalpha simple" start="2">
+<li><p>Jump to the previously created chunk of code from (1) above.</p></li>
 </ol>
 </li>
-<li><ol class="first upperalpha" start="3">
-<li>Run the instructions there.</li>
+<li><ol class="upperalpha simple" start="3">
+<li><p>Run the instructions there.</p></li>
 </ol>
 </li>
-<li><ol class="first upperalpha" start="4">
-<li>Return to where you remembered from (2.A) and continue from there.</li>
+<li><ol class="upperalpha simple" start="4">
+<li><p>Return to where you remembered from (2.A) and continue from there.</p></li>
 </ol>
 </li>
 </ul>
 </div></blockquote>
 </li>
 </ul>
-<p class="last">This feature goes by many different names, with slightly different
+<p>This feature goes by many different names, with slightly different
 precise meanings: <em>Subroutines</em>, <em>Procedures</em>, <em>Functions</em>, etc.
 For the purposes of kerboscript, we will refer to all uses of this
 feature with the term <em>Function</em>, whether it <em>technically</em> fits the
-mathematical definition of a &#8220;function&#8221; or not.</p>
+mathematical definition of a “function” or not.</p>
 </dd>
 </dl>
 <p>In kerboscript, you can make your own user functions using the
 DECLARE FUNCTION command, which is structured as follows:</p>
 <blockquote>
-<div><code class="docutils literal"><span class="pre">declare</span> <span class="pre">function</span></code> <em>identifier</em> <code class="docutils literal"><span class="pre">{</span></code> <em>statements</em> <code class="docutils literal"><span class="pre">}</span></code> <em>optional dot (.)</em></div></blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">declare</span> <span class="pre">function</span></code> <em>identifier</em> <code class="docutils literal notranslate"><span class="pre">{</span></code> <em>statements</em> <code class="docutils literal notranslate"><span class="pre">}</span></code> <em>optional dot (.)</em></p>
+</div></blockquote>
 <p>Functions are a long enough topic as to require a
-<a class="reference internal" href="user_functions.html#user-functions"><span>separate documentation page, here.</span></a></p>
-</div>
-<div class="section" id="built-in-special-variable-names">
-<h2><a class="toc-backref" href="#id9">Built-In Special Variable Names</a><a class="headerlink" href="#built-in-special-variable-names" title="Permalink to this headline">¶</a></h2>
-<p>Some variable names have special meaning and will not work as identifiers. Understanding this list is crucial to using kOS effectively, as these special variables are the usual way to query flight state information. <a class="reference internal" href="../bindings.html#bindings"><span>The full list of reserved variable names is on its own page</span></a>.</p>
-</div>
-<div class="section" id="what-does-not-exist-yet">
-<h2><a class="toc-backref" href="#id10">What does not exist (yet?)</a><a class="headerlink" href="#what-does-not-exist-yet" title="Permalink to this headline">¶</a></h2>
-<p>Concepts that many other languages have, that are missing from <strong>KerboScript</strong>, are listed below. Many of these are things that could be supported some day, but at the moment with the limited amount of developer time available they haven&#8217;t become essential enough to spend the time on supporting them.</p>
-<dl class="docutils">
-<dt><strong>user-made structures or classes</strong></dt>
-<dd>Several of the built-in variables of <strong>kOS</strong> are essentially &#8220;classes&#8221; with methods and fields, however there&#8217;s currently no way for user code to create its own classes or structures. Supporting this would open up a <em>large</em> can of worms, as it would then make the <strong>kOS</strong> system more complex.</dd>
+<a class="reference internal" href="user_functions.html#user-functions"><span class="std std-ref">separate documentation page, here.</span></a></p>
+</section>
+<section id="built-in-special-variable-names">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">Built-In Special Variable Names</a><a class="headerlink" href="#built-in-special-variable-names" title="Permalink to this heading">¶</a></h2>
+<p>Some variable names have special meaning and will not work as identifiers. Understanding this list is crucial to using kOS effectively, as these special variables are the usual way to query flight state information. <a class="reference internal" href="../bindings.html#bindings"><span class="std std-ref">The full list of reserved variable names is on its own page</span></a>.</p>
+</section>
+<section id="what-does-not-exist-yet">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">What does not exist (yet?)</a><a class="headerlink" href="#what-does-not-exist-yet" title="Permalink to this heading">¶</a></h2>
+<p>Concepts that many other languages have, that are missing from <strong>KerboScript</strong>, are listed below. Many of these are things that could be supported some day, but at the moment with the limited amount of developer time available they haven’t become essential enough to spend the time on supporting them.</p>
+<dl class="simple">
+<dt><strong>user-made structures or classes</strong></dt><dd><p>Several of the built-in variables of <strong>kOS</strong> are essentially “classes” with methods and fields, however there’s currently no way for user code to create its own classes or structures. Supporting this would open up a <em>large</em> can of worms, as it would then make the <strong>kOS</strong> system more complex.</p>
+</dd>
 </dl>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="flow.html" class="btn btn-neutral float-right" title="Flow Control" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="features.html" class="btn btn-neutral" title="General Features of the KerboScript Language" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="features.html" class="btn btn-neutral float-left" title="General Features of the KerboScript Language" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="flow.html" class="btn btn-neutral float-right" title="Flow Control" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

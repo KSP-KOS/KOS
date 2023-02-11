@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>PID Loops in kOS &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PID Loops in kOS &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../about.html"/>
-        <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../index.html"/>
-        <link rel="up" title="Tutorials" href="../tutorials.html"/>
-        <link rel="next" title="Execute Node Script" href="exenode.html"/>
-        <link rel="prev" title="Design Patterns and Considerations with kOS" href="designpatterns.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="next" title="Execute Node Script" href="exenode.html" />
+    <link rel="prev" title="Design Patterns and Considerations with kOS" href="designpatterns.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
@@ -98,9 +49,7 @@
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
 <li class="toctree-l2"><a class="reference internal" href="basictutorial.html">Basic Explanation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="designpatterns.html">Design Patterns</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">PID Loops</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">PID Loops</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exenode.html">Execute Node script</a></li>
 <li class="toctree-l2"><a class="reference internal" href="display_bounds.html">Drawing VecDraws, and showing Bounds Boxes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gui.html">Making a tabbed GUI</a></li>
@@ -119,89 +68,70 @@
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../tutorials.html">Tutorials</a> &raquo;</li>
-      
-    <li>PID Loops in kOS</li>
+      <li>PID Loops in kOS</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../_sources/tutorials/pidloops.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../_sources/tutorials/pidloops.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="pid-loops-in-kos">
-<span id="pidloops"></span><h1>PID Loops in kOS<a class="headerlink" href="#pid-loops-in-kos" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="pid-loops-in-kos">
+<span id="pidloops"></span><h1>PID Loops in kOS<a class="headerlink" href="#pid-loops-in-kos" title="Permalink to this heading">¶</a></h1>
 <div class="versionadded">
-<p><span class="versionmodified">New in version 0.18.1: </span>Note, this is an older tutorial.  As of
-kOS version 0.18.1 and up, a new <a class="reference internal" href="../structures/misc/pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">pidloop</span></code></a>
+<p><span class="versionmodified added">New in version 0.18.1: </span>Note, this is an older tutorial.  As of
+kOS version 0.18.1 and up, a new <a class="reference internal" href="../structures/misc/pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">pidloop</span></code></a>
 feature was added to kOS to allow you to use a built-in PID
-controller that executes very quickly in the kOS &#8220;hardware&#8221;
+controller that executes very quickly in the kOS “hardware”
 rather than in your script code.  You can use it to perform
 the work described in detail on this page.  However, this
 tutorial is still quite important because it walks you through
-how a PID controller works and what it&#8217;s really doing under the
-hood.  It&#8217;s probably a good idea to use the built-in
-<a class="reference internal" href="../structures/misc/pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">pidloop</span></code></a> instead of the program shown here, once you
-understand the topic this page describes.  However, it&#8217;s also
+how a PID controller works and what it’s really doing under the
+hood.  It’s probably a good idea to use the built-in
+<a class="reference internal" href="../structures/misc/pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">pidloop</span></code></a> instead of the program shown here, once you
+understand the topic this page describes.  However, it’s also
 a good idea to have a read through this page to get an
 understanding of what that built-in feature is really doing.</p>
 </div>
-<p>This tutorial covers how one can implement a <a class="reference external" href="http://en.wikipedia.org/wiki/PID_controller">PID loop</a> using kOS. A P-loop, or &#8220;proportional feedback loop&#8221; was already introduced in the second section of the <a class="reference internal" href="designpatterns.html#designpatterns"><span>Design Patterns Tutorial</span></a>, and that will serve as our starting point. After some code rearrangement, the integral and derivative terms will be added and discussed in turn. Next, a couple extra features will be added to the full PID-loop. Lastly, we&#8217;ll show a case-study in tuning a full PID loop using the Ziegler-Nichols method. We&#8217;ll use the LOG method to dump telemetry from KSP into a file and our favorite graphing software to visualize the data.</p>
+<p>This tutorial covers how one can implement a <a class="reference external" href="http://en.wikipedia.org/wiki/PID_controller">PID loop</a> using kOS. A P-loop, or “proportional feedback loop” was already introduced in the second section of the <a class="reference internal" href="designpatterns.html#designpatterns"><span class="std std-ref">Design Patterns Tutorial</span></a>, and that will serve as our starting point. After some code rearrangement, the integral and derivative terms will be added and discussed in turn. Next, a couple extra features will be added to the full PID-loop. Lastly, we’ll show a case-study in tuning a full PID loop using the Ziegler-Nichols method. We’ll use the LOG method to dump telemetry from KSP into a file and our favorite graphing software to visualize the data.</p>
 <p>The code examples in this tutorial can be tested with a similar rocket design as shown. Do not forget the accelerometer, gravioli detector or the kOS CPU module. The engine is purposefully overpowered to demonstrate the feedback in action.</p>
-<div class="figure">
+<figure class="align-default">
 <img alt="../_images/pidtune_rocket_design_maxtwr8.png" src="../_images/pidtune_rocket_design_maxtwr8.png" />
-</div>
+</figure>
 <p>Those fuel-tank adapters are from the <a class="reference external" href="https://kerbalstuff.com/mod/148/Modular%20Rocket%20Systems%20-%20Parts%20Pack">Modular Rocket Systems (MRS) addon</a>, but stock tanks will work just fine. The design goal of this rocket is to have a TWR of 8 on the launchpad and enough fuel to make it past 30km when throttled for optimal atmospheric efficiency.</p>
-<div class="contents local topic" id="contents">
-<p class="topic-title first">Contents</p>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#proportional-feedback-loop-p-loop" id="id1">Proportional Feedback Loop (P-loop)</a></li>
-<li><a class="reference internal" href="#proportional-integral-feedback-loop-pi-loop" id="id2">Proportional-Integral Feedback Loop (PI-loop)</a></li>
-<li><a class="reference internal" href="#proportional-integral-derivative-feedback-loop-pid-loop" id="id3">Proportional-Integral-Derivative Feedback Loop (PID-loop)</a></li>
-<li><a class="reference internal" href="#using-pidloop" id="id4">Using <a class="reference internal" href="../structures/misc/pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">pidloop</span></code></a></a></li>
-<li><a class="reference internal" href="#final-touches" id="id5">Final Touches</a></li>
-<li><a class="reference internal" href="#tuning-a-pid-loop" id="id6">Tuning a PID-loop</a></li>
-<li><a class="reference internal" href="#final-thoughts" id="id7">Final Thoughts</a></li>
+<li><p><a class="reference internal" href="#proportional-feedback-loop-p-loop" id="id1">Proportional Feedback Loop (P-loop)</a></p></li>
+<li><p><a class="reference internal" href="#proportional-integral-feedback-loop-pi-loop" id="id2">Proportional-Integral Feedback Loop (PI-loop)</a></p></li>
+<li><p><a class="reference internal" href="#proportional-integral-derivative-feedback-loop-pid-loop" id="id3">Proportional-Integral-Derivative Feedback Loop (PID-loop)</a></p></li>
+<li><p><a class="reference internal" href="#using-pidloop" id="id4">Using <a class="reference internal" href="../structures/misc/pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">pidloop</span></code></a></a></p></li>
+<li><p><a class="reference internal" href="#final-touches" id="id5">Final Touches</a></p></li>
+<li><p><a class="reference internal" href="#tuning-a-pid-loop" id="id6">Tuning a PID-loop</a></p></li>
+<li><p><a class="reference internal" href="#final-thoughts" id="id7">Final Thoughts</a></p></li>
 </ul>
-</div>
-<div class="section" id="proportional-feedback-loop-p-loop">
-<h2><a class="toc-backref" href="#id1">Proportional Feedback Loop (P-loop)</a><a class="headerlink" href="#proportional-feedback-loop-p-loop" title="Permalink to this headline">¶</a></h2>
-<p>The example code from the <a class="reference internal" href="designpatterns.html#designpatterns"><span>Design Patterns Tutorial</span></a>, with some slight modifications looks like the following:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// staging, throttle, steering, go</span>
+</nav>
+<section id="proportional-feedback-loop-p-loop">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Proportional Feedback Loop (P-loop)</a><a class="headerlink" href="#proportional-feedback-loop-p-loop" title="Permalink to this heading">¶</a></h2>
+<p>The example code from the <a class="reference internal" href="designpatterns.html#designpatterns"><span class="std std-ref">Design Patterns Tutorial</span></a>, with some slight modifications looks like the following:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// staging, throttle, steering, go</span>
 <span class="k">WHEN</span> <span class="k">STAGE</span><span class="p">:</span><span class="nv">LIQUIDFUEL</span> <span class="o">&lt;</span> <span class="mf">0</span><span class="p">.</span><span class="mf">1</span> <span class="k">THEN</span> <span class="p">{</span>
     <span class="k">STAGE</span><span class="p">.</span>
     <span class="k">PRESERVE</span><span class="p">.</span>
@@ -226,10 +156,10 @@ understanding of what that built-in feature is really doing.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>The first several lines sets up a simple staging condition, puts the throttle to maximum, steers the rocket straight up and launches. The rocket is assumed to use only liquid fuel engines. After the rocket hits 1km, the script sets up the LOCK used in the P-loop which is updated every 0.1 seconds in the UNTIL loop. The use of LOCK variables makes this code fairly clean. When the script comes up to the first line in the UNTIL loop, i.e. &#8220;SET thrott TO thrott + dthrott.&#8221;, the variable dthrott is evaluated which causes the LOCK on gforce to be evaluated which in-turn causes accvec to be evaluated.</p>
-<p>The input to this feedback loop is the acceleration experienced by the ship (gforce) in terms of Kerbin&#8217;s gravitational acceleration at sea level (g). The variable accvec is the total acceleration vector and is obtained by the accelerometer and gravioli detectors, both of which must be on the ship for this to work. The variable dthrott is the change in throttle that should be applied in a single iteration of the feedback loop.</p>
-<p>In terms of a PID loop, the factor 1.2 is called the setpoint, gforce is the process variable and 0.05 is called the proportional gain. The setpoint and gain factors can be promoted to their own variables with names. Also, the code up to and including the &#8220;WAIT UNTIL SHIP:ALTITUDE &gt; 1000.&#8221; will be implied for the next few examples of code:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// P-loop</span>
+<p>The first several lines sets up a simple staging condition, puts the throttle to maximum, steers the rocket straight up and launches. The rocket is assumed to use only liquid fuel engines. After the rocket hits 1km, the script sets up the LOCK used in the P-loop which is updated every 0.1 seconds in the UNTIL loop. The use of LOCK variables makes this code fairly clean. When the script comes up to the first line in the UNTIL loop, i.e. “SET thrott TO thrott + dthrott.”, the variable dthrott is evaluated which causes the LOCK on gforce to be evaluated which in-turn causes accvec to be evaluated.</p>
+<p>The input to this feedback loop is the acceleration experienced by the ship (gforce) in terms of Kerbin’s gravitational acceleration at sea level (g). The variable accvec is the total acceleration vector and is obtained by the accelerometer and gravioli detectors, both of which must be on the ship for this to work. The variable dthrott is the change in throttle that should be applied in a single iteration of the feedback loop.</p>
+<p>In terms of a PID loop, the factor 1.2 is called the setpoint, gforce is the process variable and 0.05 is called the proportional gain. The setpoint and gain factors can be promoted to their own variables with names. Also, the code up to and including the “WAIT UNTIL SHIP:ALTITUDE &gt; 1000.” will be implied for the next few examples of code:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// P-loop</span>
 <span class="k">SET</span> <span class="nv">g</span> <span class="ow">TO</span> <span class="nv">KERBIN</span><span class="p">:</span><span class="nv">MU</span> <span class="o">/</span> <span class="nv">KERBIN</span><span class="p">:</span><span class="nv">RADIUS</span><span class="o">^</span><span class="mf">2</span><span class="p">.</span>
 <span class="k">LOCK</span> <span class="nv">accvec</span> <span class="ow">TO</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">SENSORS</span><span class="p">:</span><span class="nv">ACC</span> <span class="o">-</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">SENSORS</span><span class="p">:</span><span class="nv">GRAV</span><span class="p">.</span>
 <span class="k">LOCK</span> <span class="nv">gforce</span> <span class="ow">TO</span> <span class="nv">accvec</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">/</span> <span class="nv">g</span><span class="p">.</span>
@@ -248,11 +178,11 @@ understanding of what that built-in feature is really doing.</p>
 </pre></div>
 </div>
 <p>This is not a big change, but it will set us up to include the integral and derivative terms in the next section.</p>
-</div>
-<div class="section" id="proportional-integral-feedback-loop-pi-loop">
-<h2><a class="toc-backref" href="#id2">Proportional-Integral Feedback Loop (PI-loop)</a><a class="headerlink" href="#proportional-integral-feedback-loop-pi-loop" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="proportional-integral-feedback-loop-pi-loop">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Proportional-Integral Feedback Loop (PI-loop)</a><a class="headerlink" href="#proportional-integral-feedback-loop-pi-loop" title="Permalink to this heading">¶</a></h2>
 <p>Adding the integral term requires us to keep track of time. This is done by introducing a variable (t0) to store the time of the last iteration. Now, the throttle is changed only on iterations where some time has elapsed so the WAIT time in the UNTIL can be brought to 0.001. The offset of the gforce has been set to the variable P, and the integral gain to Ki.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// PI-loop</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// PI-loop</span>
 <span class="k">SET</span> <span class="nv">g</span> <span class="ow">TO</span> <span class="nv">KERBIN</span><span class="p">:</span><span class="nv">MU</span> <span class="o">/</span> <span class="nv">KERBIN</span><span class="p">:</span><span class="nv">RADIUS</span><span class="o">^</span><span class="mf">2</span><span class="p">.</span>
 <span class="k">LOCK</span> <span class="nv">accvec</span> <span class="ow">TO</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">SENSORS</span><span class="p">:</span><span class="nv">ACC</span> <span class="o">-</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">SENSORS</span><span class="p">:</span><span class="nv">GRAV</span><span class="p">.</span>
 <span class="k">LOCK</span> <span class="nv">gforce</span> <span class="ow">TO</span> <span class="nv">accvec</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">/</span> <span class="nv">g</span><span class="p">.</span>
@@ -283,11 +213,11 @@ understanding of what that built-in feature is really doing.</p>
 </pre></div>
 </div>
 <p>Adding the integral term has the general effect of stabilizing the feedback loop, making it less prone to oscillating due to rapid changes in the process variable (gforce, in this case). This is usually at the expense of a longer settling time.</p>
-</div>
-<div class="section" id="proportional-integral-derivative-feedback-loop-pid-loop">
-<h2><a class="toc-backref" href="#id3">Proportional-Integral-Derivative Feedback Loop (PID-loop)</a><a class="headerlink" href="#proportional-integral-derivative-feedback-loop-pid-loop" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="proportional-integral-derivative-feedback-loop-pid-loop">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Proportional-Integral-Derivative Feedback Loop (PID-loop)</a><a class="headerlink" href="#proportional-integral-derivative-feedback-loop-pid-loop" title="Permalink to this heading">¶</a></h2>
 <p>Incorporating the derivative term (D) and derivative gain (Kd) requires an additional variable (P0) to keep track of the previous value of the proportional term (P).</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// PID-loop</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// PID-loop</span>
 <span class="k">SET</span> <span class="nv">g</span> <span class="ow">TO</span> <span class="nv">KERBIN</span><span class="p">:</span><span class="nv">MU</span> <span class="o">/</span> <span class="nv">KERBIN</span><span class="p">:</span><span class="nv">RADIUS</span><span class="o">^</span><span class="mf">2</span><span class="p">.</span>
 <span class="k">LOCK</span> <span class="nv">accvec</span> <span class="ow">TO</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">SENSORS</span><span class="p">:</span><span class="nv">ACC</span> <span class="o">-</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">SENSORS</span><span class="p">:</span><span class="nv">GRAV</span><span class="p">.</span>
 <span class="k">LOCK</span> <span class="nv">gforce</span> <span class="ow">TO</span> <span class="nv">accvec</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">/</span> <span class="nv">g</span><span class="p">.</span>
@@ -323,11 +253,11 @@ understanding of what that built-in feature is really doing.</p>
 </pre></div>
 </div>
 <p>When tuned properly, the derivative term will cause the PID-loop to act quickly without causing problematic oscillations. Later in this tutorial, we will cover a way to tune a PID-loop using only the proportional term called the Zieger-Nichols method.</p>
-</div>
-<div class="section" id="using-pidloop">
-<span id="struct-pidloop-in-tutorial"></span><h2><a class="toc-backref" href="#id4">Using <a class="reference internal" href="../structures/misc/pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">pidloop</span></code></a></a><a class="headerlink" href="#using-pidloop" title="Permalink to this headline">¶</a></h2>
-<p>As mentioned earlier, kOS 0.18.1 introduced a new structure called <a class="reference internal" href="../structures/misc/pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">pidloop</span></code></a> that can take the place of much of the previous code.  Here is the previous script, converted to use <a class="reference internal" href="../structures/misc/pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">pidloop</span></code></a>.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// pidloop</span>
+</section>
+<section id="using-pidloop">
+<span id="struct-pidloop-in-tutorial"></span><h2><a class="toc-backref" href="#id4" role="doc-backlink">Using <a class="reference internal" href="../structures/misc/pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">pidloop</span></code></a></a><a class="headerlink" href="#using-pidloop" title="Permalink to this heading">¶</a></h2>
+<p>As mentioned earlier, kOS 0.18.1 introduced a new structure called <a class="reference internal" href="../structures/misc/pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">pidloop</span></code></a> that can take the place of much of the previous code.  Here is the previous script, converted to use <a class="reference internal" href="../structures/misc/pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">pidloop</span></code></a>.</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// pidloop</span>
 <span class="k">SET</span> <span class="nv">g</span> <span class="ow">TO</span> <span class="nv">KERBIN</span><span class="p">:</span><span class="nv">MU</span> <span class="o">/</span> <span class="nv">KERBIN</span><span class="p">:</span><span class="nv">RADIUS</span><span class="o">^</span><span class="mf">2</span><span class="p">.</span>
 <span class="k">LOCK</span> <span class="nv">accvec</span> <span class="ow">TO</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">SENSORS</span><span class="p">:</span><span class="nv">ACC</span> <span class="o">-</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">SENSORS</span><span class="p">:</span><span class="nv">GRAV</span><span class="p">.</span>
 <span class="k">LOCK</span> <span class="nv">gforce</span> <span class="ow">TO</span> <span class="nv">accvec</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">/</span> <span class="nv">g</span><span class="p">.</span>
@@ -348,19 +278,19 @@ understanding of what that built-in feature is really doing.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>The primary advantage to using <a class="reference internal" href="../structures/misc/pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">pidloop</span></code></a> is the reduction in the number of instructions per update (see <a class="reference internal" href="../structures/misc/config.html#attribute:CONFIG:IPU" title="CONFIG:IPU attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Config:IPU</span></code></a>).  For example, this <a class="reference internal" href="../structures/misc/pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">pidloop</span></code></a> script requires approximately one-third the number of instructions needed by the script shown in the previous section.  Since the number of instructions executed has a direct bearing on <a class="reference internal" href="../general/cpu_hardware.html#electricdrain"><span>electrical drain</span></a> as of 0.19.0, this can be a great help with power conservation.</p>
-<p>Note that <a class="reference internal" href="../structures/misc/pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">pidloop</span></code></a> offers a great deal more options than were presented here, but nevertheless, this should provide a decent introduction to using <a class="reference internal" href="../structures/misc/pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">pidloop</span></code></a>.</p>
-</div>
-<div class="section" id="final-touches">
-<h2><a class="toc-backref" href="#id5">Final Touches</a><a class="headerlink" href="#final-touches" title="Permalink to this headline">¶</a></h2>
+<p>The primary advantage to using <a class="reference internal" href="../structures/misc/pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">pidloop</span></code></a> is the reduction in the number of instructions per update (see <a class="reference internal" href="../structures/misc/config.html#attribute:CONFIG:IPU" title="CONFIG:IPU attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Config:IPU</span></code></a>).  For example, this <a class="reference internal" href="../structures/misc/pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">pidloop</span></code></a> script requires approximately one-third the number of instructions needed by the script shown in the previous section.  Since the number of instructions executed has a direct bearing on <a class="reference internal" href="../general/cpu_hardware.html#electricdrain"><span class="std std-ref">electrical drain</span></a> as of 0.19.0, this can be a great help with power conservation.</p>
+<p>Note that <a class="reference internal" href="../structures/misc/pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">pidloop</span></code></a> offers a great deal more options than were presented here, but nevertheless, this should provide a decent introduction to using <a class="reference internal" href="../structures/misc/pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">pidloop</span></code></a>.</p>
+</section>
+<section id="final-touches">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Final Touches</a><a class="headerlink" href="#final-touches" title="Permalink to this heading">¶</a></h2>
 <p>There are a few modifications that can make PID loops very robust. The following code example adds three range limits:</p>
 <ol class="arabic simple">
-<li>bounds on the Integral term which addresses possible <a class="reference external" href="http://en.wikipedia.org/wiki/Integral_windup">integral windup</a></li>
-<li>bounds on the throttle since it must stay in the range 0 to 1</li>
-<li>a <a class="reference external" href="http://en.wikipedia.org/wiki/Deadband">deadband</a> to avoid changing the throttle due to small fluctuations</li>
+<li><p>bounds on the Integral term which addresses possible <a class="reference external" href="http://en.wikipedia.org/wiki/Integral_windup">integral windup</a></p></li>
+<li><p>bounds on the throttle since it must stay in the range 0 to 1</p></li>
+<li><p>a <a class="reference external" href="http://en.wikipedia.org/wiki/Deadband">deadband</a> to avoid changing the throttle due to small fluctuations</p></li>
 </ol>
 <p>Of course, KSP is a simulator and small fluctuations are not observed in this particular loop. Indeed, the P-loop is sufficient in this example, but all these features are included here for illustration purposes and they could become useful for unstable aircraft or untested scenarios.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// PID-loop</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// PID-loop</span>
 <span class="k">SET</span> <span class="nv">g</span> <span class="ow">TO</span> <span class="nv">KERBIN</span><span class="p">:</span><span class="nv">MU</span> <span class="o">/</span> <span class="nv">KERBIN</span><span class="p">:</span><span class="nv">RADIUS</span><span class="o">^</span><span class="mf">2</span><span class="p">.</span>
 <span class="k">LOCK</span> <span class="nv">accvec</span> <span class="ow">TO</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">SENSORS</span><span class="p">:</span><span class="nv">ACC</span> <span class="o">-</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">SENSORS</span><span class="p">:</span><span class="nv">GRAV</span><span class="p">.</span>
 <span class="k">LOCK</span> <span class="nv">gforce</span> <span class="ow">TO</span> <span class="nv">accvec</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">/</span> <span class="nv">g</span><span class="p">.</span>
@@ -407,96 +337,90 @@ understanding of what that built-in feature is really doing.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="tuning-a-pid-loop">
-<h2><a class="toc-backref" href="#id6">Tuning a PID-loop</a><a class="headerlink" href="#tuning-a-pid-loop" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="tuning-a-pid-loop">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Tuning a PID-loop</a><a class="headerlink" href="#tuning-a-pid-loop" title="Permalink to this heading">¶</a></h2>
 <div class="admonition warning">
-<p class="first admonition-title">Warning</p>
+<p class="admonition-title">Warning</p>
 <p><strong>Obsolete Atmospheric Model Assumed Here.</strong></p>
 <p>The following section was written prior to Kerbal Space Program 1.0, when
-the game&#8217;s atmospheric model was drastically different than it is today.
+the game’s atmospheric model was drastically different than it is today.
 Much of what it says is no longer applicable.  Most importantly, it is
 built on the assumption that the most efficient speed for a rocket to
-travel at is exactly at the edge of terminal velocity.  This isn&#8217;t true
-in the real world, and it&#8217;s no longer true in Kerbal Space Program either
+travel at is exactly at the edge of terminal velocity.  This isn’t true
+in the real world, and it’s no longer true in Kerbal Space Program either
 (although it was when this section was first written).</p>
-<p class="last">Please take that under advisement when reading this section.  Although
+<p>Please take that under advisement when reading this section.  Although
 what it says is good for teaching PID loop tuning, the goal it is trying
 to seek, of holding the rocket at terminal velocity, is no longer a
 good goal to try to achieve.  A new replacement for this section should
 be written, but has not been yet.</p>
 </div>
-<p>We are going to start with the same rocket design we have been using so far and actually tune the PID-loop using the Ziegler-Nichols method. This is where we turn off the integral and derivative terms in the loop and bring the proportional gain (Kp) up from zero to the point where the loop causes a steady oscillation with a measured period (Tu). At this point, the proportional gain is called the &#8220;ultimate gain&#8221; (Ku) and the actual gains (Kp, Ki and Kd) are set according to this table <a class="reference external" href="http://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method">taken from wikipedia</a>:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="38%" />
-<col width="17%" />
-<col width="23%" />
-<col width="22%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Control Type</th>
-<th class="head">Kp</th>
-<th class="head">Ki</th>
-<th class="head">Kd</th>
+<p>We are going to start with the same rocket design we have been using so far and actually tune the PID-loop using the Ziegler-Nichols method. This is where we turn off the integral and derivative terms in the loop and bring the proportional gain (Kp) up from zero to the point where the loop causes a steady oscillation with a measured period (Tu). At this point, the proportional gain is called the “ultimate gain” (Ku) and the actual gains (Kp, Ki and Kd) are set according to this table <a class="reference external" href="http://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method">taken from wikipedia</a>:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Control Type</p></th>
+<th class="head"><p>Kp</p></th>
+<th class="head"><p>Ki</p></th>
+<th class="head"><p>Kd</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>P</td>
-<td>0.5 Ku</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
+<tbody>
+<tr class="row-even"><td><p>P</p></td>
+<td><p>0.5 Ku</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td>PI</td>
-<td>0.45 Ku</td>
-<td>1.2 Kp / Tu</td>
-<td>&nbsp;</td>
+<tr class="row-odd"><td><p>PI</p></td>
+<td><p>0.45 Ku</p></td>
+<td><p>1.2 Kp / Tu</p></td>
+<td></td>
 </tr>
-<tr class="row-even"><td>PD</td>
-<td>0.8 Ku</td>
-<td>&nbsp;</td>
-<td>Kp Tu / 8</td>
+<tr class="row-even"><td><p>PD</p></td>
+<td><p>0.8 Ku</p></td>
+<td></td>
+<td><p>Kp Tu / 8</p></td>
 </tr>
-<tr class="row-odd"><td>classic PID</td>
-<td>0.6 Ku</td>
-<td>2 Kp / Tu</td>
-<td>Kp Tu / 8</td>
+<tr class="row-odd"><td><p>classic PID</p></td>
+<td><p>0.6 Ku</p></td>
+<td><p>2 Kp / Tu</p></td>
+<td><p>Kp Tu / 8</p></td>
 </tr>
-<tr class="row-even"><td>Pessen Integral Rule</td>
-<td>0.7 Ku</td>
-<td>0.4 Kp / Tu</td>
-<td>0.15 Kp Tu</td>
+<tr class="row-even"><td><p>Pessen Integral Rule</p></td>
+<td><p>0.7 Ku</p></td>
+<td><p>0.4 Kp / Tu</p></td>
+<td><p>0.15 Kp Tu</p></td>
 </tr>
-<tr class="row-odd"><td>some overshoot</td>
-<td>0.33 Ku</td>
-<td>2 Kp / Tu</td>
-<td>Kp Tu / 3</td>
+<tr class="row-odd"><td><p>some overshoot</p></td>
+<td><p>0.33 Ku</p></td>
+<td><p>2 Kp / Tu</p></td>
+<td><p>Kp Tu / 3</p></td>
 </tr>
-<tr class="row-even"><td>no overshoot</td>
-<td>0.2 Ku</td>
-<td>2 Kp / Tu</td>
-<td>Kp Tu / 3</td>
+<tr class="row-even"><td><p>no overshoot</p></td>
+<td><p>0.2 Ku</p></td>
+<td><p>2 Kp / Tu</p></td>
+<td><p>Kp Tu / 3</p></td>
 </tr>
 </tbody>
 </table>
 <p>An immediate problem to overcome with this method is that it assumes a steady state can be achieved. With rockets, there is never a steady state: fuel is being consumed, altitude and therefore gravity and atmosphere is changing, staging can cause major upsets in the feedback loop. So, this tuning method will be some approximation which should come as no surprise since it will come from experimental observation. All we need is enough of a steady state that we can measure the oscillations - both the change in amplitude and the period.</p>
-<div class="sidebar">
-<p class="first sidebar-title">Obsolete, deprecated</p>
-<p>This example assumes Kerbal Space Program&#8217;s old
+<aside class="sidebar">
+<p class="sidebar-title">Obsolete, deprecated</p>
+<p>This example assumes Kerbal Space Program’s old
 atmospheric model which has now been obsoleted,
-and this example won&#8217;t quite work as described if
+and this example won’t quite work as described if
 you try using it today.</p>
-<p class="last">Please note the warning at the start of this section.</p>
-</div>
-<p>The script we&#8217;ll use to tune the highly overpowered rocket shown will launch the rocket straight up (using SAS) and will log data to an output file until it reaches 30km at which point the log file will be copied to the archive and the program will terminate. Also, this time the feedback loop will be based on the more realistic &#8220;atmospheric efficiency.&#8221; The log file will contain three columns: time since launch, offset of atmospheric efficiency from the ideal (in this case, 1.0) and the ship&#8217;s maximum thrust. The maximum thrust will increase monotonically with time (this rocket has only one stage) and we&#8217;ll use both as the x-axis when plotting the offset on the y-axis.</p>
-<div class="sidebar">
-<p class="first sidebar-title">Obsolete, deprecated</p>
-<p>The example program here uses the suffix <code class="docutils literal"><span class="pre">SHIP:TERMVELOCITY</span></code>,
+<p>Please note the warning at the start of this section.</p>
+</aside>
+<p>The script we’ll use to tune the highly overpowered rocket shown will launch the rocket straight up (using SAS) and will log data to an output file until it reaches 30km at which point the log file will be copied to the archive and the program will terminate. Also, this time the feedback loop will be based on the more realistic “atmospheric efficiency.” The log file will contain three columns: time since launch, offset of atmospheric efficiency from the ideal (in this case, 1.0) and the ship’s maximum thrust. The maximum thrust will increase monotonically with time (this rocket has only one stage) and we’ll use both as the x-axis when plotting the offset on the y-axis.</p>
+<aside class="sidebar">
+<p class="sidebar-title">Obsolete, deprecated</p>
+<p>The example program here uses the suffix <code class="docutils literal notranslate"><span class="pre">SHIP:TERMVELOCITY</span></code>,
 which no longer exists in kOS because of changes to the base
-game&#8217;s atmospheric model.</p>
-<p class="last">Please note the warning at the start of this section.</p>
-</div>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">DECLARE</span> <span class="kd">PARAMETER</span> <span class="nv">Kp</span><span class="p">.</span>
+game’s atmospheric model.</p>
+<p>Please note the warning at the start of this section.</p>
+</aside>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">DECLARE</span> <span class="kd">PARAMETER</span> <span class="nv">Kp</span><span class="p">.</span>
 
 <span class="k">SWITCH</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span> <span class="c1">// This is the default usually, but just to be sure.</span>
 
@@ -538,122 +462,84 @@ game&#8217;s atmospheric model.</p>
 <span class="nv">COPYPATH</span><span class="p">(</span><span class="s">&quot;throttle_log&quot;</span><span class="p">,</span> <span class="s">&quot;0:/&quot;</span><span class="p">).</span>
 </pre></div>
 </div>
-<p>Give this script a short name, something like &#8220;tune.txt&#8221; so that running is simple:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">copypath</span><span class="p">(</span><span class="s">&quot;0:/tune&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">).</span>
+<p>Give this script a short name, something like “tune.txt” so that running is simple:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">copypath</span><span class="p">(</span><span class="s">&quot;0:/tune&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">).</span>
 <span class="k">run</span> <span class="nv">tune</span><span class="p">(</span><span class="mf">0</span><span class="p">.</span><span class="mf">5</span><span class="p">).</span>
 </pre></div>
 </div>
-<div class="sidebar">
-<p class="first sidebar-title">Obsolete, deprecated</p>
-<p>These data values wouldn&#8217;t quite come out this
+<aside class="sidebar">
+<p class="sidebar-title">Obsolete, deprecated</p>
+<p>These data values wouldn’t quite come out this
 way if you tried using this example today.</p>
-<p class="last">Please note the warning at the start of this section.</p>
-</div>
-<p>After every launch completes, you&#8217;ll have to go into the archive directory and rename the output logfile. Something like &#8220;throttle_log.txt&#8221; &#8211;&gt; &#8220;throttle.01.log&#8221; will help if you increment the index number each time. To analyze the data, plot the offset (P) as a function of time (t). Here, we show the results for three values of Kp: 0.002, 0.016 and 0.160, including the maximum TWR when Kp = 0.002 as the top x-axis. The maximum TWR dependence on time is different for the three values of Kp, but not by a lot.</p>
-<div class="figure">
+<p>Please note the warning at the start of this section.</p>
+</aside>
+<p>After every launch completes, you’ll have to go into the archive directory and rename the output logfile. Something like “throttle_log.txt” –&gt; “throttle.01.log” will help if you increment the index number each time. To analyze the data, plot the offset (P) as a function of time (t). Here, we show the results for three values of Kp: 0.002, 0.016 and 0.160, including the maximum TWR when Kp = 0.002 as the top x-axis. The maximum TWR dependence on time is different for the three values of Kp, but not by a lot.</p>
+<figure class="align-default">
 <img alt="../_images/pidtune1.png" src="../_images/pidtune1.png" />
-</div>
-<p>The value of 0.002 is obviously too low. The settling time is well over 20 seconds and the loop can&#8217;t keep up with the increase in terminal velocity at the higher altitudes reached after one minute. When Kp = 0.016, the behavior is far more well behaved, and though some oscillation exists, it&#8217;s damped and slow with a period of about 10 seconds. At Kp = 0.160, the oscillations are prominent and we can start to measure the change in amplitude along with the period of the oscillations. This plot shows the data for Kp = 0.160 from 20 to 40 seconds after ignition. The peaks are found and are fit to a line.</p>
-<div class="sidebar">
-<p class="first sidebar-title">Obsolete, deprecated</p>
-<p>These data values wouldn&#8217;t quite come out this
+</figure>
+<p>The value of 0.002 is obviously too low. The settling time is well over 20 seconds and the loop can’t keep up with the increase in terminal velocity at the higher altitudes reached after one minute. When Kp = 0.016, the behavior is far more well behaved, and though some oscillation exists, it’s damped and slow with a period of about 10 seconds. At Kp = 0.160, the oscillations are prominent and we can start to measure the change in amplitude along with the period of the oscillations. This plot shows the data for Kp = 0.160 from 20 to 40 seconds after ignition. The peaks are found and are fit to a line.</p>
+<aside class="sidebar">
+<p class="sidebar-title">Obsolete, deprecated</p>
+<p>These data values wouldn’t quite come out this
 way if you tried using this example today.</p>
-<p class="last">Please note the warning at the start of this section.</p>
-</div>
+<p>Please note the warning at the start of this section.</p>
+</aside>
 <p>This is done for each value of Kp and the slopes of the fitted lines are plotted as a function of Kp in the following plot:</p>
-<div class="figure">
+<figure class="align-default">
 <img alt="../_images/pidtune3.png" src="../_images/pidtune3.png" />
-</div>
-<div class="sidebar">
-<p class="first sidebar-title">Obsolete, deprecated</p>
-<p>These data values wouldn&#8217;t quite come out this
+</figure>
+<aside class="sidebar">
+<p class="sidebar-title">Obsolete, deprecated</p>
+<p>These data values wouldn’t quite come out this
 way if you tried using this example today.</p>
-<p class="last">Please note the warning at the start of this section.</p>
-</div>
-<p>The period of oscillation was averaged over the interval and plotted on top of the amplitude change over time. Notice the turn over that occurs when Kp reaches approximately 0.26. This will mark the &#8220;ultimate gain&#8221; and 3.1 seconds will be used as the associated period of oscillation. It is left as an exercise for the reader to implement a full PID-loop using the classic PID values (see table above): Kp = 0.156, Ki = 0.101, Kd = 0.060, producing this behavior:</p>
-<div class="figure">
+<p>Please note the warning at the start of this section.</p>
+</aside>
+<p>The period of oscillation was averaged over the interval and plotted on top of the amplitude change over time. Notice the turn over that occurs when Kp reaches approximately 0.26. This will mark the “ultimate gain” and 3.1 seconds will be used as the associated period of oscillation. It is left as an exercise for the reader to implement a full PID-loop using the classic PID values (see table above): Kp = 0.156, Ki = 0.101, Kd = 0.060, producing this behavior:</p>
+<figure class="align-default">
 <img alt="../_images/pidtune4.png" src="../_images/pidtune4.png" />
-</div>
+</figure>
 <p>As soon as the PID-loop was activated at 3 seconds after ignition, the throttle was cut. At approximately 7 seconds, the atmospheric efficiency dropped below 100% and the integral term started to climb back to zero. At 11 seconds, the engine was reignited and the feedback loop settled after about 20 seconds. The inset plot has the same axes as the parent and shows the long-term stability of the final PID-loop.</p>
-</div>
-<div class="section" id="final-thoughts">
-<h2><a class="toc-backref" href="#id7">Final Thoughts</a><a class="headerlink" href="#final-thoughts" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="final-thoughts">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Final Thoughts</a><a class="headerlink" href="#final-thoughts" title="Permalink to this heading">¶</a></h2>
 <p>The classic PID values used above are fairly aggressive and there is some overshoot at the beginning. This can be dealt with in many ways and is discussed on the <a class="reference external" href="http://en.wikipedia.org/wiki/PID_controller">wikipedia page about PID controllers</a>. For example, one might consider trying to implement a switch to a PD-loop when the integral term hits some limit, switching back once P crosses zero. The PID behavior should look like the following:</p>
-<div class="figure">
+<figure class="align-default">
 <img alt="../_images/pidtune5.png" src="../_images/pidtune5.png" />
-</div>
-<p>Finally, Controlling the throttle of a rocket is perhaps the easiest thing to implement as a PID loop in KSP using kOS. The steering was largely ignored and the orientation was always up. When writing an autopilot for horizontal atmospheric flight, one will have to deal with the direction the ship is traveling using SHIP:HEADING as well as it&#8217;s orientation with SHIP:FACING. Additionally, there are the SHIP:ROTATION and SHIP:TRANSLATION vectors which can tell you the rate of change of the ship&#8217;s facing and heading respectively. The controls in this case are six-dimensional using SHIP:CONTROL with YAW, PITCH, ROLL, FORE, STARBOARD, TOP and MAINTHROTTLE.</p>
-<p>The PID gain parameters are dependent on the characteristics of the ship being controlled. The size, shape, turning capability and maximum TWR should be considered when tuning a PID loop. Turning RCS on can also have an effect and you might consider changing the PID loop&#8217;s gain parameters every time to switch them on or off.</p>
-</div>
-</div>
+</figure>
+<p>Finally, Controlling the throttle of a rocket is perhaps the easiest thing to implement as a PID loop in KSP using kOS. The steering was largely ignored and the orientation was always up. When writing an autopilot for horizontal atmospheric flight, one will have to deal with the direction the ship is traveling using SHIP:HEADING as well as it’s orientation with SHIP:FACING. Additionally, there are the SHIP:ROTATION and SHIP:TRANSLATION vectors which can tell you the rate of change of the ship’s facing and heading respectively. The controls in this case are six-dimensional using SHIP:CONTROL with YAW, PITCH, ROLL, FORE, STARBOARD, TOP and MAINTHROTTLE.</p>
+<p>The PID gain parameters are dependent on the characteristics of the ship being controlled. The size, shape, turning capability and maximum TWR should be considered when tuning a PID loop. Turning RCS on can also have an effect and you might consider changing the PID loop’s gain parameters every time to switch them on or off.</p>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="exenode.html" class="btn btn-neutral float-right" title="Execute Node Script" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="designpatterns.html" class="btn btn-neutral" title="Design Patterns and Considerations with kOS" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="designpatterns.html" class="btn btn-neutral float-left" title="Design Patterns and Considerations with kOS" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="exenode.html" class="btn btn-neutral float-right" title="Execute Node Script" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

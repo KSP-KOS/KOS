@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Voice &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Voice &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../../about.html"/>
-        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
-        <link rel="next" title="Waypoints" href="../waypoint.html"/>
-        <link rel="prev" title="Structure" href="versioninfo.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Waypoints" href="../waypoint.html" />
+    <link rel="prev" title="Structure" href="versioninfo.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
@@ -133,9 +84,7 @@
 <li class="toctree-l3"><a class="reference internal" href="timewarp.html">WARP</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vecdraw.html">Drawing Vectors on the Screen</a></li>
 <li class="toctree-l3"><a class="reference internal" href="versioninfo.html">Structure</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Voice</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Voice</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
@@ -148,351 +97,309 @@
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
-      
           <li><a href="../misc.html">Configurations and Miscellany</a> &raquo;</li>
-      
-    <li>Voice</li>
+      <li>Voice</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/structures/misc/voice.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../../_sources/structures/misc/voice.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="voice">
-<span id="id1"></span><h1>Voice<a class="headerlink" href="#voice" title="Permalink to this headline">¶</a></h1>
-<p>This structure represents a single one of the <a class="reference internal" href="../../general/skid.html#skid-voice"><span>&#8216;voices&#8217;</span></a>
-in the built-in sound chip called <a class="reference internal" href="../../general/skid.html#skid"><span>SKID</span></a> in the kOS CPU.
-Please refer to the <a class="reference internal" href="../../general/skid.html#skid"><span>SKID chip</span></a> documentation page if you
+             
+  <section id="voice">
+<span id="id1"></span><h1>Voice<a class="headerlink" href="#voice" title="Permalink to this heading">¶</a></h1>
+<p>This structure represents a single one of the <a class="reference internal" href="../../general/skid.html#skid-voice"><span class="std std-ref">‘voices’</span></a>
+in the built-in sound chip called <a class="reference internal" href="../../general/skid.html#skid"><span class="std std-ref">SKID</span></a> in the kOS CPU.
+Please refer to the <a class="reference internal" href="../../general/skid.html#skid"><span class="std std-ref">SKID chip</span></a> documentation page if you
 have not already done so before reading this page.  The things mentioned
-here are just ways to access the features of the SKID chip so they won&#8217;t
+here are just ways to access the features of the SKID chip so they won’t
 be fully explained on this page, instead just referring to the SKID
 documentation with links.</p>
-<div class="contents local topic" id="contents">
-<p class="topic-title first">Contents</p>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#functions" id="id3">Functions</a></li>
-<li><a class="reference internal" href="#structure" id="id4">Structure</a></li>
-<li><a class="reference internal" href="#example-song" id="id5">Example Song</a></li>
+<li><p><a class="reference internal" href="#functions" id="id3">Functions</a></p></li>
+<li><p><a class="reference internal" href="#structure" id="id4">Structure</a></p></li>
+<li><p><a class="reference internal" href="#example-song" id="id5">Example Song</a></p></li>
 </ul>
-</div>
-<div class="section" id="functions">
-<h2><a class="toc-backref" href="#id3">Functions</a><a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="getvoice"></span><dl class="function">
-<dt id="function:GETVOICE">
-<code class="descname">GETVOICE</code><span class="sig-paren">(</span>num<span class="sig-paren">)</span><a class="headerlink" href="#function:GETVOICE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="#structure:VOICE" title="VOICE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Voice</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>To access one of the <a class="reference internal" href="../../general/skid.html#skid-voice"><span>voices</span></a> of the
-<a class="reference internal" href="../../general/skid.html#skid"><span>SKID</span></a> chip, you use the <code class="docutils literal"><span class="pre">GetVoice(num)</span></code> built-in
+</nav>
+<section id="functions">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Functions</a><a class="headerlink" href="#functions" title="Permalink to this heading">¶</a></h2>
+<span class="target" id="getvoice"></span><dl class="ks function">
+<dt class="sig sig-object ks" id="function:GETVOICE">
+<span class="sig-name descname"><span class="pre">GETVOICE</span></span><span class="sig-paren">(</span><span class="pre">num</span><span class="sig-paren">)</span><a class="headerlink" href="#function:GETVOICE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#structure:VOICE" title="VOICE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Voice</span></code></a></p>
+</dd>
+</dl>
+<p>To access one of the <a class="reference internal" href="../../general/skid.html#skid-voice"><span class="std std-ref">voices</span></a> of the
+<a class="reference internal" href="../../general/skid.html#skid"><span class="std std-ref">SKID</span></a> chip, you use the <code class="docutils literal notranslate"><span class="pre">GetVoice(num)</span></code> built-in
 function.</p>
-<p>Where <code class="docutils literal"><span class="pre">num</span></code> is the number of the hardware voice you&#8217;re interested
+<p>Where <code class="docutils literal notranslate"><span class="pre">num</span></code> is the number of the hardware voice you’re interested
 in accessing.  (The numbering starts with the first voice being
 called 0).</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="function:STOPALLVOICES">
-<code class="descname">STOPALLVOICES</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#function:STOPALLVOICES" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:STOPALLVOICES">
+<span class="sig-name descname"><span class="pre">STOPALLVOICES</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#function:STOPALLVOICES" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
 <p>This will stop all voices.  If the voice is scheduled to play additional
 notes, they will not be played. If the voice in the middle of playing a note,
 that note will be stopped.</p>
 </dd></dl>
 
 <p>Each voice is capable of playing one note at a time, or a series of
-notes from a song (a <a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Note</span></code></a>&#8216;s), but what
-matters is that one voice can&#8217;t play two notes at once.  To do that
+notes from a song (a <a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Note</span></code></a>’s), but what
+matters is that one voice can’t play two notes at once.  To do that
 you need to use multiple voices.  For simple one-voice situations,
 you probably only need to ever use voice 0.</p>
-</div>
-<div class="section" id="structure">
-<h2><a class="toc-backref" href="#id4">Structure</a><a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
-<dl class="structure">
-<dt id="structure:VOICE">
-<em class="property">structure </em><code class="descname">Voice</code><a class="headerlink" href="#structure:VOICE" title="Permalink to this definition">¶</a></dt>
-<dd><table border="1" class="docutils" id="id2">
+</section>
+<section id="structure">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Structure</a><a class="headerlink" href="#structure" title="Permalink to this heading">¶</a></h2>
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:VOICE">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">Voice</span></span><a class="headerlink" href="#structure:VOICE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils align-default" id="id2">
 <caption><span class="caption-text">Members</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="25%" />
-<col width="13%" />
-<col width="13%" />
-<col width="50%" />
+<col style="width: 25.0%" />
+<col style="width: 12.5%" />
+<col style="width: 12.5%" />
+<col style="width: 50.0%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type</th>
-<th class="head">Get/Set/Call</th>
-<th class="head">Description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Get/Set/Call</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VOICE:ATTACK" title="VOICE:ATTACK attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ATTACK</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-<td>Get/Set</td>
-<td>The <em>Attack</em> setting of the SKID voice&#8217;s <a class="reference internal" href="../../general/skid.html#skid-envelope"><span>ADSR Envelope</span></a></td>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:VOICE:ATTACK" title="VOICE:ATTACK attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ATTACK</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Get/Set</p></td>
+<td><p>The <em>Attack</em> setting of the SKID voice’s <a class="reference internal" href="../../general/skid.html#skid-envelope"><span class="std std-ref">ADSR Envelope</span></a></p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VOICE:DECAY" title="VOICE:DECAY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DECAY</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-<td>Get/Set</td>
-<td>The <em>Decay</em> setting of the SKID voice&#8217;s <a class="reference internal" href="../../general/skid.html#skid-envelope"><span>ADSR Envelope</span></a></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:VOICE:DECAY" title="VOICE:DECAY attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">DECAY</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Get/Set</p></td>
+<td><p>The <em>Decay</em> setting of the SKID voice’s <a class="reference internal" href="../../general/skid.html#skid-envelope"><span class="std std-ref">ADSR Envelope</span></a></p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VOICE:SUSTAIN" title="VOICE:SUSTAIN attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SUSTAIN</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-<td>Get/Set</td>
-<td>The <em>Sustain</em> setting of the SKID voice&#8217;s <a class="reference internal" href="../../general/skid.html#skid-envelope"><span>ADSR Envelope</span></a></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:VOICE:SUSTAIN" title="VOICE:SUSTAIN attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">SUSTAIN</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Get/Set</p></td>
+<td><p>The <em>Sustain</em> setting of the SKID voice’s <a class="reference internal" href="../../general/skid.html#skid-envelope"><span class="std std-ref">ADSR Envelope</span></a></p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VOICE:RELEASE" title="VOICE:RELEASE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RELEASE</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-<td>Get/Set</td>
-<td>The <em>Release</em> setting of the SKID voice&#8217;s <a class="reference internal" href="../../general/skid.html#skid-envelope"><span>ADSR Envelope</span></a></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:VOICE:RELEASE" title="VOICE:RELEASE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">RELEASE</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Get/Set</p></td>
+<td><p>The <em>Release</em> setting of the SKID voice’s <a class="reference internal" href="../../general/skid.html#skid-envelope"><span class="std std-ref">ADSR Envelope</span></a></p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VOICE:VOLUME" title="VOICE:VOLUME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VOLUME</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-<td>Get/Set</td>
-<td>The default volume to play the notes on this voice.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:VOICE:VOLUME" title="VOICE:VOLUME attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VOLUME</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Get/Set</p></td>
+<td><p>The default volume to play the notes on this voice.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VOICE:WAVE" title="VOICE:WAVE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">WAVE</span></code></a></td>
-<td><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">string</span></code></a></td>
-<td>Get/Set</td>
-<td>The name for the <a class="reference internal" href="../../general/skid.html#skid-waveform"><span>waveform</span></a> you want this voice to use.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:VOICE:WAVE" title="VOICE:WAVE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">WAVE</span></code></a></p></td>
+<td><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>Get/Set</p></td>
+<td><p>The name for the <a class="reference internal" href="../../general/skid.html#skid-waveform"><span class="std std-ref">waveform</span></a> you want this voice to use.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:VOICE:PLAY" title="VOICE:PLAY method"><code class="xref ks ks-meth docutils literal"><span class="pre">PLAY(note_or_list)</span></code></a></td>
-<td>None</td>
-<td>Call</td>
-<td>The method that actually causes the voice to make some sound.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#method:VOICE:PLAY" title="VOICE:PLAY method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">PLAY(note_or_list)</span></code></a></p></td>
+<td><p>None</p></td>
+<td><p>Call</p></td>
+<td><p>The method that actually causes the voice to make some sound.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:VOICE:STOP" title="VOICE:STOP method"><code class="xref ks ks-meth docutils literal"><span class="pre">STOP()</span></code></a></td>
-<td>None</td>
-<td>Call</td>
-<td>Stop playing note on this voice instance.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:VOICE:STOP" title="VOICE:STOP method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">STOP()</span></code></a></p></td>
+<td><p>None</p></td>
+<td><p>Call</p></td>
+<td><p>Stop playing note on this voice instance.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VOICE:LOOP" title="VOICE:LOOP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LOOP</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">boolean</span></code></a></td>
-<td>Get/Set</td>
-<td>Whether or not the voice should keep re-playing the song that was queued with PLAY().</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:VOICE:LOOP" title="VOICE:LOOP attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">LOOP</span></code></a></p></td>
+<td><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Get/Set</p></td>
+<td><p>Whether or not the voice should keep re-playing the song that was queued with PLAY().</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VOICE:ISPLAYING" title="VOICE:ISPLAYING attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ISPLAYING</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">boolean</span></code></a></td>
-<td>Get/Set</td>
-<td>The playing status of voice.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:VOICE:ISPLAYING" title="VOICE:ISPLAYING attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ISPLAYING</span></code></a></p></td>
+<td><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Get/Set</p></td>
+<td><p>The playing status of voice.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VOICE:TEMPO" title="VOICE:TEMPO attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TEMPO</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-<td>Get/Set</td>
-<td>Stretches or shrinks the duration of the notes to speed up or slow down the song.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:VOICE:TEMPO" title="VOICE:TEMPO attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">TEMPO</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Get/Set</p></td>
+<td><p>Stretches or shrinks the duration of the notes to speed up or slow down the song.</p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:VOICE:ATTACK">
-Voice:<code class="descname">ATTACK</code><a class="headerlink" href="#attribute:VOICE:ATTACK" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (seconds)</td>
-</tr>
-</tbody>
-</table>
-<p>The <em>Attack</em> setting of the SKID voice&#8217;s
-<a class="reference internal" href="../../general/skid.html#skid-envelope"><span>ADSR Envelope</span></a>.  This value is
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:VOICE:ATTACK">
+<span class="pre">Voice:</span><span class="sig-name descname"><span class="pre">ATTACK</span></span><a class="headerlink" href="#attribute:VOICE:ATTACK" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (seconds)</p>
+</dd>
+</dl>
+<p>The <em>Attack</em> setting of the SKID voice’s
+<a class="reference internal" href="../../general/skid.html#skid-envelope"><span class="std std-ref">ADSR Envelope</span></a>.  This value is
 in seconds (usually a fractional portion of a second).</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:VOICE:DECAY">
-Voice:<code class="descname">DECAY</code><a class="headerlink" href="#attribute:VOICE:DECAY" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (seconds)</td>
-</tr>
-</tbody>
-</table>
-<p>The <em>Decay</em> setting of the SKID voice&#8217;s
-<a class="reference internal" href="../../general/skid.html#skid-envelope"><span>ADSR Envelope</span></a>.  This value is
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:VOICE:DECAY">
+<span class="pre">Voice:</span><span class="sig-name descname"><span class="pre">DECAY</span></span><a class="headerlink" href="#attribute:VOICE:DECAY" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (seconds)</p>
+</dd>
+</dl>
+<p>The <em>Decay</em> setting of the SKID voice’s
+<a class="reference internal" href="../../general/skid.html#skid-envelope"><span class="std std-ref">ADSR Envelope</span></a>.  This value is
 in seconds (usually a fractional portion of a second).</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:VOICE:SUSTAIN">
-Voice:<code class="descname">SUSTAIN</code><a class="headerlink" href="#attribute:VOICE:SUSTAIN" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> in the range [0..1]</td>
-</tr>
-</tbody>
-</table>
-<p>The <em>Sustain</em> setting of the SKID voice&#8217;s
-<a class="reference internal" href="../../general/skid.html#skid-envelope"><span>ADSR Envelope</span></a>.  Unlike the other
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:VOICE:SUSTAIN">
+<span class="pre">Voice:</span><span class="sig-name descname"><span class="pre">SUSTAIN</span></span><a class="headerlink" href="#attribute:VOICE:SUSTAIN" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> in the range [0..1]</p>
+</dd>
+</dl>
+<p>The <em>Sustain</em> setting of the SKID voice’s
+<a class="reference internal" href="../../general/skid.html#skid-envelope"><span class="std std-ref">ADSR Envelope</span></a>.  Unlike the other
 values in the ASDR Envelope, this setting is NOT a measure
 of time.  This is a coefficient to multiply the volume by
 during the sustain portion of the notes that are being played
-on this voice.  (i.e. 0.5 would mean &#8220;sustain at half volume&#8221;).</p>
+on this voice.  (i.e. 0.5 would mean “sustain at half volume”).</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:VOICE:RELEASE">
-Voice:<code class="descname">RELEASE</code><a class="headerlink" href="#attribute:VOICE:RELEASE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (seconds)</td>
-</tr>
-</tbody>
-</table>
-<p>The <em>Release</em> setting of the SKID voice&#8217;s
-<a class="reference internal" href="../../general/skid.html#skid-envelope"><span>ADSR Envelope</span></a>.  This value is
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:VOICE:RELEASE">
+<span class="pre">Voice:</span><span class="sig-name descname"><span class="pre">RELEASE</span></span><a class="headerlink" href="#attribute:VOICE:RELEASE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (seconds)</p>
+</dd>
+</dl>
+<p>The <em>Release</em> setting of the SKID voice’s
+<a class="reference internal" href="../../general/skid.html#skid-envelope"><span class="std std-ref">ADSR Envelope</span></a>.  This value is
 in seconds (usually a fractional portion of a second).
 Note, that in order for this setting to have any real
 effect, the notes that are being played have to
-have their <a class="reference internal" href="note.html#attribute:NOTE:KEYDOWNLENGTH" title="NOTE:KEYDOWNLENGTH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">KeyDownLength</span></code></a> set to be shorter than
-their <code class="xref ks ks-attr docutils literal"><span class="pre">Duration&lt;Note:DURATION</span></code>, otherwise the notes will still cut
+have their <a class="reference internal" href="note.html#attribute:NOTE:KEYDOWNLENGTH" title="NOTE:KEYDOWNLENGTH attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">KeyDownLength</span></code></a> set to be shorter than
+their <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Duration&lt;Note:DURATION</span></code>, otherwise the notes will still cut
 off before the Release has a chance to happen.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:VOICE:VOLUME">
-Voice:<code class="descname">VOLUME</code><a class="headerlink" href="#attribute:VOICE:VOLUME" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>The &#8220;peak&#8221; volume of the notes played on this voice, when they
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:VOICE:VOLUME">
+<span class="pre">Voice:</span><span class="sig-name descname"><span class="pre">VOLUME</span></span><a class="headerlink" href="#attribute:VOICE:VOLUME" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+</dl>
+<p>The “peak” volume of the notes played on this voice, when they
 hit the top of their initial spike in the
-<a class="reference internal" href="../../general/skid.html#skid-envelope"><span>ADSR Envelope</span></a>.  While conceptually the
+<a class="reference internal" href="../../general/skid.html#skid-envelope"><span class="std std-ref">ADSR Envelope</span></a>.  While conceptually the
 max value is 1.0, in practice it can often go higher because
 the KSP game setting for User Interface volume is usually only
 at 50%, and in that scenario putting a 1.0 here would put the
 max at 50%, <em>really</em>.  Setting this value to 0 will silence the voice.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:VOICE:WAVE">
-Voice:<code class="descname">WAVE</code><a class="headerlink" href="#attribute:VOICE:WAVE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">string</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>To select which of the SKID chip&#8217;s
-<a class="reference internal" href="../../general/skid.html#skid-waveform"><span>waveform generators</span></a> you want this voice
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:VOICE:WAVE">
+<span class="pre">Voice:</span><span class="sig-name descname"><span class="pre">WAVE</span></span><a class="headerlink" href="#attribute:VOICE:WAVE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+</dl>
+<p>To select which of the SKID chip’s
+<a class="reference internal" href="../../general/skid.html#skid-waveform"><span class="std std-ref">waveform generators</span></a> you want this voice
 to use, set this to the string name of that waveform.  If you
-use a string that isn&#8217;t one of the ones listed there (i.e.
-&#8220;triangle&#8221;, &#8220;noise&#8221;, &#8220;square&#8221;, etc) then the attempt to set this
+use a string that isn’t one of the ones listed there (i.e.
+“triangle”, “noise”, “square”, etc) then the attempt to set this
 value will be ignored and it will remain at its previous value.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:VOICE:PLAY">
-Voice:<code class="descname">PLAY</code><span class="sig-paren">(</span>note_or_list<span class="sig-paren">)</span><a class="headerlink" href="#method:VOICE:PLAY" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body"><p class="first">Call (method)</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>note_or_list</strong> &#8211; Either one <a class="reference internal" href="note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Note</span></code></a> or a <a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Note</span></code></a>&#8216;s</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:VOICE:PLAY">
+<span class="pre">Voice:</span><span class="sig-name descname"><span class="pre">PLAY</span></span><span class="sig-paren">(</span><span class="pre">note_or_list</span><span class="sig-paren">)</span><a class="headerlink" href="#method:VOICE:PLAY" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Call (method)</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>note_or_list</strong> – Either one <a class="reference internal" href="note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Note</span></code></a> or a <a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Note</span></code></a>’s</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
 <p>To cause the SKID chip to actually emit a sound, you need to
 use this suffix method.  There are two ways it can be called:</p>
 <p><strong>Play just one note</strong> : To play a single note, you can call
 PLAY(), passing it one note object.  Usually you construct
 the note object on the fly as you call Play, like so:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">V0</span> <span class="ow">to</span> <span class="nv">GetVoice</span><span class="p">(</span><span class="mf">0</span><span class="p">).</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">V0</span> <span class="ow">to</span> <span class="nv">GetVoice</span><span class="p">(</span><span class="mf">0</span><span class="p">).</span>
 <span class="nv">V0</span><span class="p">:</span><span class="nv">PLAY</span><span class="p">(</span><span class="nv">NOTE</span><span class="p">(</span><span class="mf">440</span><span class="p">,</span><span class="mf">0</span><span class="p">.</span><span class="mf">5</span><span class="p">)).</span>
 </pre></div>
 </div>
 <p><strong>Play a list of notes</strong> : To play a full list of notes (which
 could even encode an entire song), you can call PLAY, passing it
-a <a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Note</span></code></a>&#8216;s.  It will recognize that it
+a <a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Note</span></code></a>’s.  It will recognize that it
 is receiving a list of notes, and begin playing through them
 one at a time, only playing the next note when the previous
-note&#8217;s <a class="reference internal" href="note.html#attribute:NOTE:DURATION" title="NOTE:DURATION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DURATION</span></code></a> is finished:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">V0</span> <span class="ow">to</span> <span class="nv">GetVoice</span><span class="p">(</span><span class="mf">0</span><span class="p">).</span>
+note’s <a class="reference internal" href="note.html#attribute:NOTE:DURATION" title="NOTE:DURATION attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">DURATION</span></code></a> is finished:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">V0</span> <span class="ow">to</span> <span class="nv">GetVoice</span><span class="p">(</span><span class="mf">0</span><span class="p">).</span>
 <span class="nv">V0</span><span class="p">:</span><span class="nv">PLAY</span><span class="p">(</span>
     <span class="k">LIST</span><span class="p">(</span>
         <span class="nv">NOTE</span><span class="p">(</span><span class="mf">440</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">5</span><span class="p">),</span>
@@ -503,102 +410,94 @@ note&#8217;s <a class="reference internal" href="note.html#attribute:NOTE:DURATI
 </pre></div>
 </div>
 <p><strong>Notes play in the background</strong>:  In <em>either case</em>, whether
-playing a single note or a list of notes, the <code class="docutils literal"><span class="pre">PLAY()</span></code>
+playing a single note or a list of notes, the <code class="docutils literal notranslate"><span class="pre">PLAY()</span></code>
 method will return immediately, <em>before even the first note
 has begun playing</em>.  It queues the note(s) to play, rather
 than waiting for them to finish.  This lets your main program
 continue doing its work without waiting for the sound to finish.</p>
 <p><strong>Calling PLAY() again on the same voice aborts the previous
-PLAY()</strong>:  Because the notes play in the background, it&#8217;s possible
-to execute another PLAY() call while a previous one hasn&#8217;t
+PLAY()</strong>:  Because the notes play in the background, it’s possible
+to execute another PLAY() call while a previous one hasn’t
 finished its work yet.  If you do this, then the previous thing
 that was playing will quit, to be replaced by the new thing.</p>
 <p><strong>But PLAY() can be called simultaneously on different voices</strong>:
-(In fact that&#8217;s the whole point of having different voices.).
+(In fact that’s the whole point of having different voices.).
 Calling PLAY() again on a <em>different</em> voice number will not
 abort the previous call to PLAY().  It only aborts the previous
-PLAY() when it&#8217;s being done on the <em>same</em> voice.</p>
+PLAY() when it’s being done on the <em>same</em> voice.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:VOICE:STOP">
-Voice:<code class="descname">STOP</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:VOICE:STOP" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Call (method)</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:VOICE:STOP">
+<span class="pre">Voice:</span><span class="sig-name descname"><span class="pre">STOP</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:VOICE:STOP" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Call (method)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 <p>Calling this method will tell the voice to stop playing notes.  If there are
 any notes queued to be played, they will not be played.  If a note is
 currently being played, that note will be stopped.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:VOICE:LOOP">
-Voice:<code class="descname">LOOP</code><a class="headerlink" href="#attribute:VOICE:LOOP" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:VOICE:LOOP">
+<span class="pre">Voice:</span><span class="sig-name descname"><span class="pre">LOOP</span></span><a class="headerlink" href="#attribute:VOICE:LOOP" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>If this is set to true, then the PLAY() method of this voice will
 keep on playing the same list of notes continually (starting over
 with the first note after the last note has finished).  Note that
 for the purpose of this, a play command that was only given a single
-note to play still counts as a &#8216;song&#8217; that is one note long (i.e.
+note to play still counts as a ‘song’ that is one note long (i.e.
 it will keep repeating the same note continually).</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:VOICE:ISPLAYING">
-Voice:<code class="descname">ISPLAYING</code><a class="headerlink" href="#attribute:VOICE:ISPLAYING" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">boolean</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:VOICE:ISPLAYING">
+<span class="pre">Voice:</span><span class="sig-name descname"><span class="pre">ISPLAYING</span></span><a class="headerlink" href="#attribute:VOICE:ISPLAYING" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p><strong>Get</strong>: If this voice is currently playing a note or list of notes
-that was previously passed in to the <code class="docutils literal"><span class="pre">PLAY()</span></code> method, then this
-returns true.  Note that if <a class="reference internal" href="#attribute:VOICE:LOOP" title="VOICE:LOOP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LOOP</span></code></a> is true, then this
+that was previously passed in to the <code class="docutils literal notranslate"><span class="pre">PLAY()</span></code> method, then this
+returns true.  Note that if <a class="reference internal" href="#attribute:VOICE:LOOP" title="VOICE:LOOP attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">LOOP</span></code></a> is true, then this
 will never become false unless you set it to become false.</p>
 <p><strong>Set</strong>: If you set this value to FALSE, that will force the voice
 to stop playing whatever it was playing, and shut it up.  (Setting
-it to true doesn&#8217;t really mean anything.  It becomes true because
-the PLAY() method was called.  You can&#8217;t restart a song just by
+it to true doesn’t really mean anything.  It becomes true because
+the PLAY() method was called.  You can’t restart a song just by
 setting this to true because when it becomes false, the voice
-&#8220;throws away&#8221; its memory of the song it was playing.)</p>
+“throws away” its memory of the song it was playing.)</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:VOICE:TEMPO">
-Voice:<code class="descname">TEMPO</code><a class="headerlink" href="#attribute:VOICE:TEMPO" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>When the voice is playing a <a class="reference internal" href="note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Note</span></code></a> or (more usefully) a
-<a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Note</span></code></a>&#8216;s, it will stretch or shrink the
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:VOICE:TEMPO">
+<span class="pre">Voice:</span><span class="sig-name descname"><span class="pre">TEMPO</span></span><a class="headerlink" href="#attribute:VOICE:TEMPO" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+</dl>
+<p>When the voice is playing a <a class="reference internal" href="note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Note</span></code></a> or (more usefully) a
+<a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Note</span></code></a>’s, it will stretch or shrink the
 durations of those notes by multiplying them by this scaling
 factor.  At 1.0 (the default), that means that when a note
 <em>says</em> it lasts for 1 second, then it really does.  But if
@@ -606,32 +505,32 @@ this tempo was set to, say 1.5, then that would mean that each
 time a note claims it wants to play for 1 second, it would really
 end up playing for 1.5 seconds on this voice.  (or if you set
 the tempo to 0.5, then all songs will play their notes at double
-speed (each note only lasting half as long as it &#8220;should&#8221;).)</p>
+speed (each note only lasting half as long as it “should”).)</p>
 <p>In other words, setting this to a value less than 1.0 will
 speed up the song, and setting it to a value greater than 1.0
-will slow it down (which might be the opposite of what you&#8217;d
-expect with it being called &#8220;tempo&#8221;, but what else should
-we have called it?  &#8220;slowpo&#8221;?)</p>
+will slow it down (which might be the opposite of what you’d
+expect with it being called “tempo”, but what else should
+we have called it?  “slowpo”?)</p>
 <p>Changes to this value take effect as soon as the next note in
 the song starts. (You do not need to re-run the PLAY() method.
 It will change the speed in mid-song.)</p>
-<p>Be aware that this <em>only</em> scales the timings of the <a class="reference internal" href="note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Note</span></code></a>&#8216;s
-<a class="reference internal" href="note.html#attribute:NOTE:KEYDOWNLENGTH" title="NOTE:KEYDOWNLENGTH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">KEYDOWNLENGTH</span></code></a> and <a class="reference internal" href="note.html#attribute:NOTE:DURATION" title="NOTE:DURATION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DURATION</span></code></a>
+<p>Be aware that this <em>only</em> scales the timings of the <a class="reference internal" href="note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Note</span></code></a>’s
+<a class="reference internal" href="note.html#attribute:NOTE:KEYDOWNLENGTH" title="NOTE:KEYDOWNLENGTH attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">KEYDOWNLENGTH</span></code></a> and <a class="reference internal" href="note.html#attribute:NOTE:DURATION" title="NOTE:DURATION attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">DURATION</span></code></a>
 timings.  It does not
-affect the timings in the <a class="reference internal" href="../../general/skid.html#skid-envelope"><span>ADSR Envelope</span></a>, as
+affect the timings in the <a class="reference internal" href="../../general/skid.html#skid-envelope"><span class="std std-ref">ADSR Envelope</span></a>, as
 those represent what are meant to be physical properties of the
-&#8220;instrument&#8221; the voice is playing on.  This means if you set the
+“instrument” the voice is playing on.  This means if you set the
 tempo too fast, it will start cutting off the full duration of the
-&#8220;envelope&#8221; of the notes, if you are playing the notes with settings
+“envelope” of the notes, if you are playing the notes with settings
 that have a slow attack or decay.</p>
 </dd></dl>
 
-</div>
-<div class="section" id="example-song">
-<span id="voicesong"></span><h2><a class="toc-backref" href="#id5">Example Song</a><a class="headerlink" href="#example-song" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="example-song">
+<span id="voicesong"></span><h2><a class="toc-backref" href="#id5" role="doc-backlink">Example Song</a><a class="headerlink" href="#example-song" title="Permalink to this heading">¶</a></h2>
 <p>Below is a more complex full example that demonstrates the chip a bit more.
 Type it in (or cut and paste it) to see the system at work:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">brakes</span> <span class="nb">on</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">brakes</span> <span class="nb">on</span><span class="p">.</span>
 <span class="k">set</span> <span class="nv">song</span> <span class="ow">to</span> <span class="k">list</span><span class="p">().</span>
 <span class="nv">song</span><span class="p">:</span><span class="k">add</span><span class="p">(</span><span class="nv">note</span><span class="p">(</span><span class="s">&quot;b4&quot;</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">25</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">20</span><span class="p">)).</span> <span class="c1">// Ma-</span>
 <span class="nv">song</span><span class="p">:</span><span class="k">add</span><span class="p">(</span><span class="nv">note</span><span class="p">(</span><span class="s">&quot;a4&quot;</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">25</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">20</span><span class="p">)).</span> <span class="c1">// -ry</span>
@@ -677,76 +576,38 @@ Type it in (or cut and paste it) to see the system at work:</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="../waypoint.html" class="btn btn-neutral float-right" title="Waypoints" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="versioninfo.html" class="btn btn-neutral" title="Structure" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="versioninfo.html" class="btn btn-neutral float-left" title="Structure" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../waypoint.html" class="btn btn-neutral float-right" title="Waypoints" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

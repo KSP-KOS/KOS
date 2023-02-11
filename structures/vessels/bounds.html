@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>BOUNDS &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BOUNDS &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../../about.html"/>
-        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
-        <link rel="next" title="ConsumedResource" href="consumedresource.html"/>
-        <link rel="prev" title="ALT" href="alt.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="ConsumedResource" href="consumedresource.html" />
+    <link rel="prev" title="ALT" href="alt.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
@@ -107,9 +58,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="aggregateresource.html">AggregateResource</a></li>
 <li class="toctree-l3"><a class="reference internal" href="alt.html">ALT</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">BOUNDS</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">BOUNDS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="consumedresource.html">ConsumedResource</a></li>
 <li class="toctree-l3"><a class="reference internal" href="consumedresourcercs.html">ConsumedResourceRCS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="core.html">Core</a></li>
@@ -128,9 +77,11 @@
 <li class="toctree-l3"><a class="reference internal" href="partmodule.html">PartModule</a></li>
 <li class="toctree-l3"><a class="reference internal" href="rcs.html">RCS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="resource.html">Resource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sciencecontainermodule.html">ScienceContainerModule</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sciencedatavalue.html">ScienceData</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scienceexperiment.html">ScienceExperimentModule</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sensor.html">Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="separator.html">Separator</a></li>
 <li class="toctree-l3"><a class="reference internal" href="stage.html">Stage</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vessel.html">Vessel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vesselsensors.html">VesselSensors</a></li>
@@ -151,81 +102,61 @@
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
-      
           <li><a href="../vessels.html">Vessels and Parts</a> &raquo;</li>
-      
-    <li>BOUNDS</li>
+      <li>BOUNDS</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/structures/vessels/bounds.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../../_sources/structures/vessels/bounds.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="bounds">
-<span id="id1"></span><h1>BOUNDS<a class="headerlink" href="#bounds" title="Permalink to this headline">¶</a></h1>
-<p>kOS can return information about the &#8220;bounding box&#8221; around either a whole
+             
+  <section id="bounds">
+<span id="id1"></span><h1>BOUNDS<a class="headerlink" href="#bounds" title="Permalink to this heading">¶</a></h1>
+<p>kOS can return information about the “bounding box” around either a whole
 vessel, or a part on a vessel.  When it does so, the structure it uses
-to tell your script about it is called a &#8220;Bounds&#8221;.</p>
-<p>You can obtain a <code class="docutils literal"><span class="pre">Bounds</span></code> one of two ways:</p>
+to tell your script about it is called a “Bounds”.</p>
+<p>You can obtain a <code class="docutils literal notranslate"><span class="pre">Bounds</span></code> one of two ways:</p>
 <ul class="simple">
-<li>By calling <a class="reference internal" href="vessel.html#attribute:VESSEL:BOUNDS" title="VESSEL:BOUNDS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Vessel:Bounds</span></code></a></li>
-<li>By calling <a class="reference internal" href="part.html#attribute:PART:BOUNDS" title="PART:BOUNDS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Part:Bounds</span></code></a></li>
+<li><p>By calling <a class="reference internal" href="vessel.html#attribute:VESSEL:BOUNDS" title="VESSEL:BOUNDS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Vessel:Bounds</span></code></a></p></li>
+<li><p>By calling <a class="reference internal" href="part.html#attribute:PART:BOUNDS" title="PART:BOUNDS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Part:Bounds</span></code></a></p></li>
 </ul>
 <p>The bounds for a whole vessel and the bounds for one part work almost
 exactly the same way.  Places where they differ will be explained below
 as they arise.</p>
 <p>The reason this could be useful to a kerboscript program is that it lets
-you get a partial &#8220;picture&#8221; of the size of a ship, or a part, or check
-more precisely when landing &#8220;<em>what is the altitude of my landing leg&#8217;s foot
-above the ground?</em>&#8221; instead of &#8220;what is the altitude of my ship in general
-above the ground?&#8221;</p>
+you get a partial “picture” of the size of a ship, or a part, or check
+more precisely when landing “<em>what is the altitude of my landing leg’s foot
+above the ground?</em>” instead of “what is the altitude of my ship in general
+above the ground?”</p>
 <p>Before you use a Bounds be certain you have read the section
-below on this page about <a class="reference internal" href="#reuse-bounds"><span>why you should re-use bounds
+below on this page about <a class="reference internal" href="#reuse-bounds"><span class="std std-ref">why you should re-use bounds
 if you can</span></a> (instead of re-getting them again and again
 with the :BOUNDS suffix call.)</p>
-<div class="section" id="quick-start-1-radar-altitude-the-most-useful-thing">
-<h2>Quick start 1 - Radar altitude: the most useful thing<a class="headerlink" href="#quick-start-1-radar-altitude-the-most-useful-thing" title="Permalink to this headline">¶</a></h2>
-<p>The explanation of the &#8220;Bounds&#8221; structure might get a bit involved below.</p>
+<section id="quick-start-1-radar-altitude-the-most-useful-thing">
+<h2>Quick start 1 - Radar altitude: the most useful thing<a class="headerlink" href="#quick-start-1-radar-altitude-the-most-useful-thing" title="Permalink to this heading">¶</a></h2>
+<p>The explanation of the “Bounds” structure might get a bit involved below.</p>
 <p>For most players, probably the only thing you really really care deeply
 about is the distance of the landing legs to the ground.</p>
-<p>And you get that with the suffix <code class="xref ks ks-attr docutils literal"><span class="pre">BOTTOMALTRADAR</span></code>.  Here&#8217;s an example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// How to get the distance of the bottom corner of the vessel&#39;s</span>
+<p>And you get that with the suffix <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">BOTTOMALTRADAR</span></code>.  Here’s an example:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// How to get the distance of the bottom corner of the vessel&#39;s</span>
 <span class="c1">// bounding box to the ground.</span>
 <span class="c1">// As an example, try running this while you manually land,</span>
 <span class="c1">// so you can see it working as you fly the lander:</span>
@@ -242,9 +173,9 @@ about is the distance of the landing legs to the ground.</p>
 </pre></div>
 </div>
 <p>It may be more useful to choose a specific landing leg part and test with it
-instead of the whole vessel&#8217;s box, by doing something akin to this at the
+instead of the whole vessel’s box, by doing something akin to this at the
 top of the above script instead:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// DELETE THIS LINE:</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// DELETE THIS LINE:</span>
 <span class="c1">//    local bounds_box is ship:bounds. // IMPORTANT! do this up front, not in the loop.</span>
 <span class="c1">//</span>
 <span class="c1">// REPLACE WITH THESE LINES:</span>
@@ -256,72 +187,72 @@ top of the above script instead:</p>
 <span class="c1">// (rest of the example is the same as above).</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="quick-start-2-finding-the-corner-you-care-about">
-<h2>Quick start 2 - Finding the corner you care about<a class="headerlink" href="#quick-start-2-finding-the-corner-you-care-about" title="Permalink to this headline">¶</a></h2>
-<p>The most universally helpful suffix of a <code class="docutils literal"><span class="pre">Bounds</span></code>, if you want
+</section>
+<section id="quick-start-2-finding-the-corner-you-care-about">
+<h2>Quick start 2 - Finding the corner you care about<a class="headerlink" href="#quick-start-2-finding-the-corner-you-care-about" title="Permalink to this heading">¶</a></h2>
+<p>The most universally helpful suffix of a <code class="docutils literal notranslate"><span class="pre">Bounds</span></code>, if you want
 to just learn one suffix and ignore the others, is probably the
-<a class="reference internal" href="#method:BOUNDS:FURTHESTCORNER" title="BOUNDS:FURTHESTCORNER method"><code class="xref ks ks-meth docutils literal"><span class="pre">Bounds:FURTHESTCORNER(ray)</span></code></a> suffix.</p>
-<p>It lets you say &#8220;I just want to know where is the corner of
-this bounding box that is the furthest &#8216;that way&#8217;&#8221;.</p>
+<a class="reference internal" href="#method:BOUNDS:FURTHESTCORNER" title="BOUNDS:FURTHESTCORNER method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">Bounds:FURTHESTCORNER(ray)</span></code></a> suffix.</p>
+<p>It lets you say “I just want to know where is the corner of
+this bounding box that is the furthest ‘that way’”.</p>
 <p>For example, this gives you a position which is the bottom-most
-vertex of your ship&#8217;s bounding box:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">B</span> <span class="ow">to</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">BOUNDS</span><span class="p">.</span>
+vertex of your ship’s bounding box:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">B</span> <span class="ow">to</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">BOUNDS</span><span class="p">.</span>
 
 <span class="c1">// The furthest corner of the box in the downward (negative up) direction:</span>
 <span class="k">set</span> <span class="nv">bottom</span> <span class="ow">to</span> <span class="nv">B</span><span class="p">:</span><span class="nv">FURTHESTCORNER</span><span class="p">(</span> <span class="o">-</span> <span class="nv">up</span><span class="p">:</span><span class="nv">vector</span> <span class="p">).</span>
 </pre></div>
 </div>
-<p>With this one suffix you can answer a lot of the relevant &#8220;ship size&#8221;
-questions like &#8220;Am i getting too close to that ship?, well, lets find
-out which vertex of its bounding box is closest to me...&#8221;.</p>
-</div>
-<div class="section" id="quick-start-3-a-complex-visual-example-drawing-the-bounds">
-<h2>Quick Start 3 - A complex visual example drawing the bounds<a class="headerlink" href="#quick-start-3-a-complex-visual-example-drawing-the-bounds" title="Permalink to this headline">¶</a></h2>
+<p>With this one suffix you can answer a lot of the relevant “ship size”
+questions like “Am i getting too close to that ship?, well, lets find
+out which vertex of its bounding box is closest to me…”.</p>
+</section>
+<section id="quick-start-3-a-complex-visual-example-drawing-the-bounds">
+<h2>Quick Start 3 - A complex visual example drawing the bounds<a class="headerlink" href="#quick-start-3-a-complex-visual-example-drawing-the-bounds" title="Permalink to this heading">¶</a></h2>
 <p>There is an example program in the tutorials section that
 brings this all together to show you the bounds boxes
 visually on screen:</p>
-<p><a class="reference internal" href="../../tutorials/display_bounds.html#display-bounds"><span>Click here for an example program that displays bounds</span></a></p>
+<p><a class="reference internal" href="../../tutorials/display_bounds.html#display-bounds"><span class="std std-ref">Click here for an example program that displays bounds</span></a></p>
 <p>Trying that first (without necessarily understaand it right away)
 will help give you a visual guide to what is happening here.</p>
-</div>
-<div class="section" id="a-part-bounds-or-vessel-bounds-will-move-and-rotate-with-the-object">
-<h2>A Part:BOUNDS or Vessel:BOUNDS will move and rotate with the object<a class="headerlink" href="#a-part-bounds-or-vessel-bounds-will-move-and-rotate-with-the-object" title="Permalink to this headline">¶</a></h2>
-<p>If you get a <code class="docutils literal"><span class="pre">Bounds</span></code> from calling either <a class="reference internal" href="part.html#attribute:PART:BOUNDS" title="PART:BOUNDS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Part:BOUNDS</span></code></a>
-or <a class="reference internal" href="vessel.html#attribute:VESSEL:BOUNDS" title="VESSEL:BOUNDS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Vessel:BOUNDS</span></code></a>, then that &#8220;bounds&#8221; is magically tied
+</section>
+<section id="a-part-bounds-or-vessel-bounds-will-move-and-rotate-with-the-object">
+<h2>A Part:BOUNDS or Vessel:BOUNDS will move and rotate with the object<a class="headerlink" href="#a-part-bounds-or-vessel-bounds-will-move-and-rotate-with-the-object" title="Permalink to this heading">¶</a></h2>
+<p>If you get a <code class="docutils literal notranslate"><span class="pre">Bounds</span></code> from calling either <a class="reference internal" href="part.html#attribute:PART:BOUNDS" title="PART:BOUNDS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Part:BOUNDS</span></code></a>
+or <a class="reference internal" href="vessel.html#attribute:VESSEL:BOUNDS" title="VESSEL:BOUNDS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Vessel:BOUNDS</span></code></a>, then that “bounds” is magically tied
 to the vessel or part it came from.</p>
-<p>Internally, kOS is doing some &#8220;magic&#8221; to ensure that the
-<code class="docutils literal"><span class="pre">Bounds</span></code> structure &#8220;remembers&#8221; the part, or vessel, that it is
+<p>Internally, kOS is doing some “magic” to ensure that the
+<code class="docutils literal notranslate"><span class="pre">Bounds</span></code> structure “remembers” the part, or vessel, that it is
 associated with, and keeps itself updated to that part or
-vessel&#8217;s new moved position and orientation.  This means
-the values for the &#8220;absolute&#8221; suffixes described in the
-table below (namely <code class="xref ks ks-attr docutils literal"><span class="pre">ABSMIN</span></code>, <code class="xref ks ks-attr docutils literal"><span class="pre">ABSMAX</span></code>,
-<code class="xref ks ks-attr docutils literal"><span class="pre">ABSCENTER</span></code>, <code class="xref ks ks-attr docutils literal"><span class="pre">ABSORIGIN</span></code>, <code class="xref ks ks-attr docutils literal"><span class="pre">FACING</span></code>,
-<code class="xref ks ks-attr docutils literal"><span class="pre">FURTHESTCORNER</span></code>, <code class="xref ks ks-attr docutils literal"><span class="pre">BOTTOMALT</span></code>, and <code class="xref ks ks-attr docutils literal"><span class="pre">BOTTOMALTRADAR</span></code>)
+vessel’s new moved position and orientation.  This means
+the values for the “absolute” suffixes described in the
+table below (namely <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ABSMIN</span></code>, <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ABSMAX</span></code>,
+<code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ABSCENTER</span></code>, <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ABSORIGIN</span></code>, <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">FACING</span></code>,
+<code class="xref ks ks-attr docutils literal notranslate"><span class="pre">FURTHESTCORNER</span></code>, <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">BOTTOMALT</span></code>, and <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">BOTTOMALTRADAR</span></code>)
 will always be kept up to date every time you get their value
 it will be newly calculated and correct even though
 the part or vessel has been rotating or moving since you
-last called the <code class="docutils literal"><span class="pre">:BOUNDS</span></code> suffix.</p>
-<div class="section" id="setting-a-suffix-of-bounds-can-break-the-link-to-its-object">
-<h3>SETTING a suffix of Bounds can break the link to its object<a class="headerlink" href="#setting-a-suffix-of-bounds-can-break-the-link-to-its-object" title="Permalink to this headline">¶</a></h3>
-<p>This &#8220;magically keep updating things&#8221; is only guaranteed to
+last called the <code class="docutils literal notranslate"><span class="pre">:BOUNDS</span></code> suffix.</p>
+<section id="setting-a-suffix-of-bounds-can-break-the-link-to-its-object">
+<h3>SETTING a suffix of Bounds can break the link to its object<a class="headerlink" href="#setting-a-suffix-of-bounds-can-break-the-link-to-its-object" title="Permalink to this heading">¶</a></h3>
+<p>This “magically keep updating things” is only guaranteed to
 keep happening if you restrict yourself to only using GET access
-on Bounds suffixes.  If you ever SET the <code class="xref ks ks-attr docutils literal"><span class="pre">ABSORIGIN</span></code>
-or <code class="xref ks ks-attr docutils literal"><span class="pre">FACING</span></code> suffixes to some other value, then Bounds will
+on Bounds suffixes.  If you ever SET the <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ABSORIGIN</span></code>
+or <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">FACING</span></code> suffixes to some other value, then Bounds will
 no longer keep updating that suffix to match the object it came from.
-(and consequently the other suffixes won&#8217;t be updating themselves
+(and consequently the other suffixes won’t be updating themselves
 properly either, as they depend on calculations from these two).
-This is not a bug.  It&#8217;s intentional.  When you SET a suffix of a
+This is not a bug.  It’s intentional.  When you SET a suffix of a
 Bounds, you are explicitly telling it to use your new value
 instead of its usual practice of always re-calculating it from
 the part or vessel it came from.</p>
-</div>
-</div>
-<div class="section" id="a-bounds-structure-is-re-usable-please-do-re-use-it">
-<span id="reuse-bounds"></span><h2>A Bounds structure is re-usable.  Please do re-use it.<a class="headerlink" href="#a-bounds-structure-is-re-usable-please-do-re-use-it" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="a-bounds-structure-is-re-usable-please-do-re-use-it">
+<span id="reuse-bounds"></span><h2>A Bounds structure is re-usable.  Please do re-use it.<a class="headerlink" href="#a-bounds-structure-is-re-usable-please-do-re-use-it" title="Permalink to this heading">¶</a></h2>
 <p>While it may seem like these two examples below are the same, the second
 example is MUCH less of a burden on the KSP game than the first one:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Example 1: An expensive example using :BOUNDS again and again:</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// Example 1: An expensive example using :BOUNDS again and again:</span>
 <span class="c1">//                (THIS IS A BAD PRACTICE):</span>
 <span class="c1">// Please set the ship rotating before doing this, to prove that</span>
 <span class="c1">// it is indeed seeing the new rotated positions:</span>
@@ -333,7 +264,7 @@ example is MUCH less of a burden on the KSP game than the first one:</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Example 2: The exact same thing, done more efficiently:</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// Example 2: The exact same thing, done more efficiently:</span>
 <span class="c1">//                (THIS IS BETTER PRACTICE):</span>
 <span class="c1">// Please set the ship rotating before doing this, to prove that</span>
 <span class="c1">// it is indeed seeing the new rotated positions:</span>
@@ -348,83 +279,83 @@ example is MUCH less of a burden on the KSP game than the first one:</p>
 </div>
 <p>The reason example 1 is more expensive is that every time you call
 the :bounds suffix, you make kOS under the hood re-run some coordinate
-transformations, and the <code class="docutils literal"><span class="pre">Bounds</span></code> structure is explicitly designed
-to make it so you don&#8217;t have to keep doing that to make it accurate.
-It &#8220;remembers&#8221; which object&#8217;s orientation it needs to be using, and
+transformations, and the <code class="docutils literal notranslate"><span class="pre">Bounds</span></code> structure is explicitly designed
+to make it so you don’t have to keep doing that to make it accurate.
+It “remembers” which object’s orientation it needs to be using, and
 it keeps re-correcting itself to that objects orientation for you
 every time you use it.</p>
-<p>The expense of calling <code class="docutils literal"><span class="pre">Part:BOUNDS</span></code> isn&#8217;t that bad and calling it
-repeatedly probably won&#8217;t really make your script suffer noticably.
-But when you do it for the whole vessel, calling <code class="docutils literal"><span class="pre">Vessel:BOUNDS</span></code>
+<p>The expense of calling <code class="docutils literal notranslate"><span class="pre">Part:BOUNDS</span></code> isn’t that bad and calling it
+repeatedly probably won’t really make your script suffer noticably.
+But when you do it for the whole vessel, calling <code class="docutils literal notranslate"><span class="pre">Vessel:BOUNDS</span></code>
 repeatedly, that can definitely result in noticable unnecessary
 computations being done by your computer.</p>
-<p>For a more in-depth explanation of why it&#8217;s expensive to re-call
+<p>For a more in-depth explanation of why it’s expensive to re-call
 the Bounds suffix over and over, if you care, see
-<a class="reference internal" href="#bounds-expense"><span>The bottom of this page</span></a>.  For now, it is
-sufficient to say &#8220;it&#8217;s expensive, don&#8217;t do it&#8221;.</p>
-</div>
-<div class="section" id="things-that-will-invalidate-an-existing-bounds">
-<span id="bounds-invalidate"></span><h2>Things that will invalidate an existing Bounds<a class="headerlink" href="#things-that-will-invalidate-an-existing-bounds" title="Permalink to this headline">¶</a></h2>
+<a class="reference internal" href="#bounds-expense"><span class="std std-ref">The bottom of this page</span></a>.  For now, it is
+sufficient to say “it’s expensive, don’t do it”.</p>
+</section>
+<section id="things-that-will-invalidate-an-existing-bounds">
+<span id="bounds-invalidate"></span><h2>Things that will invalidate an existing Bounds<a class="headerlink" href="#things-that-will-invalidate-an-existing-bounds" title="Permalink to this heading">¶</a></h2>
 <p>As explained elsewhere on this page, it is much faster
-and less taxing on the KSP game to re-use a <code class="docutils literal"><span class="pre">Bounds</span></code>
-instead of obtaining a new one.  The <code class="docutils literal"><span class="pre">Bounds</span></code> object
+and less taxing on the KSP game to re-use a <code class="docutils literal notranslate"><span class="pre">Bounds</span></code>
+instead of obtaining a new one.  The <code class="docutils literal notranslate"><span class="pre">Bounds</span></code> object
 contains some internal logic to track rotation and movement
 of the ship so the bounds box will rotate properly with it,
 and the bounds boxes of individual parts will rotate if
 the part rotates.</p>
 <p>However, be aware of these following situations that can
-cause a previously - obtained <code class="docutils literal"><span class="pre">Bounds</span></code> to become incorrect,
+cause a previously - obtained <code class="docutils literal notranslate"><span class="pre">Bounds</span></code> to become incorrect,
 and require you to get a new Bounds with the suffix.  Because
-doing so is expensive, don&#8217;t fall to the temptation of just
+doing so is expensive, don’t fall to the temptation of just
 making your script easy to write by unconditionally re-getting
-the <code class="docutils literal"><span class="pre">Bounds</span></code> suffix all the time.  Instead be aware of what
-makes you have to get a new Bounds, and don&#8217;t do so if these
-events aren&#8217;t happening:</p>
-<p>A list of events that can make a <code class="docutils literal"><span class="pre">Bounds</span></code> become incorrect:</p>
+the <code class="docutils literal notranslate"><span class="pre">Bounds</span></code> suffix all the time.  Instead be aware of what
+makes you have to get a new Bounds, and don’t do so if these
+events aren’t happening:</p>
+<p>A list of events that can make a <code class="docutils literal notranslate"><span class="pre">Bounds</span></code> become incorrect:</p>
 <ul>
-<li><p class="first">A Part Bounds will need to be recalculated if the part shrinks
+<li><p>A Part Bounds will need to be recalculated if the part shrinks
 or grows through actions such as these:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Extending or retracting solar panels.</li>
-<li>Extending or retracting Landing Gear.</li>
-<li>Opening or closing cargo bay doors.</li>
-<li>Moving robotic parts from the Breaking Ground DLC.</li>
-<li>etc.</li>
+<li><p>Extending or retracting solar panels.</p></li>
+<li><p>Extending or retracting Landing Gear.</p></li>
+<li><p>Opening or closing cargo bay doors.</p></li>
+<li><p>Moving robotic parts from the Breaking Ground DLC.</p></li>
+<li><p>etc.</p></li>
 </ul>
 </div></blockquote>
 </li>
-<li><p class="first">A Vessel Bounds will need to be recalculated if any Part Bounds
+<li><p>A Vessel Bounds will need to be recalculated if any Part Bounds
 inside the vessel needs to be recalculated (see above list).
 In addition, the items on the following list will require a
-Vessel&#8217;s Bounds (but not individual parts&#8217; bounds) to be
+Vessel’s Bounds (but not individual parts’ bounds) to be
 recaculated:</p>
 <blockquote>
 <div><ul>
-<li><p class="first">Anything that adds/removes parts obviously alters the
+<li><p>Anything that adds/removes parts obviously alters the
 bounding box of the vessel.  These are examples but not an
 exhuastive list:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Docking and Undocking</li>
-<li>Decoupling stages</li>
-<li>Explosions</li>
-<li>Using the asteroid grabber claw.</li>
+<li><p>Docking and Undocking</p></li>
+<li><p>Decoupling stages</p></li>
+<li><p>Explosions</p></li>
+<li><p>Using the asteroid grabber claw.</p></li>
 </ul>
 </div></blockquote>
 </li>
-<li><p class="first">Anything that changes the vessel&#8217;s &#8220;control&#8221; orientation.
+<li><p>Anything that changes the vessel’s “control” orientation.
 (As in anything that makes the navball jump to a new
 orientation all at once).  That invalidates the old bounding box
 because it swaps the meaning of which axis of the ship is
-the &#8220;fore&#8221; and which is the &#8220;starboard&#8221; and so on.  These are
+the “fore” and which is the “starboard” and so on.  These are
 examples but not an exhaustive list:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Right-clicking a docking port and saying &#8220;control from here&#8221;.</li>
-<li>Right-clicking a lander can and choosing a new control orientation.</li>
-<li>Entering IVA view (which has the side effect of making the game
-do a &#8220;control from here&#8221; on the cockpit part).</li>
+<li><p>Right-clicking a docking port and saying “control from here”.</p></li>
+<li><p>Right-clicking a lander can and choosing a new control orientation.</p></li>
+<li><p>Entering IVA view (which has the side effect of making the game
+do a “control from here” on the cockpit part).</p></li>
 </ul>
 </div></blockquote>
 </li>
@@ -432,40 +363,40 @@ do a &#8220;control from here&#8221; on the cockpit part).</li>
 </div></blockquote>
 </li>
 </ul>
-<p>Also, be aware that getting a new <a class="reference internal" href="part.html#attribute:PART:BOUNDS" title="PART:BOUNDS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Part:BOUNDS</span></code></a> is a LOT
-less expensive than getting a whole new <a class="reference internal" href="vessel.html#attribute:VESSEL:BOUNDS" title="VESSEL:BOUNDS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Vessel:BOUNDS</span></code></a>,
+<p>Also, be aware that getting a new <a class="reference internal" href="part.html#attribute:PART:BOUNDS" title="PART:BOUNDS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Part:BOUNDS</span></code></a> is a LOT
+less expensive than getting a whole new <a class="reference internal" href="vessel.html#attribute:VESSEL:BOUNDS" title="VESSEL:BOUNDS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Vessel:BOUNDS</span></code></a>,
 so if your script task does need to constantly re-get the
 bounds, try writing it in such a way that it only needs to
 re-get the bounds of one or two parts, not the whole vessel.
 (For example, for a landing script, maybe try to have your script learn
-which part of your vessel is the bottom-most part you&#8217;ll be landing on,
-and just use that one part&#8217;s bounds to test the height to the ground
-instead of the entire vessel&#8217;s bounds.)</p>
-</div>
-<div class="section" id="making-your-own-bounds">
-<h2>Making your own Bounds<a class="headerlink" href="#making-your-own-bounds" title="Permalink to this headline">¶</a></h2>
+which part of your vessel is the bottom-most part you’ll be landing on,
+and just use that one part’s bounds to test the height to the ground
+instead of the entire vessel’s bounds.)</p>
+</section>
+<section id="making-your-own-bounds">
+<h2>Making your own Bounds<a class="headerlink" href="#making-your-own-bounds" title="Permalink to this heading">¶</a></h2>
 <p>There are a few suffixes of Bounds that are settable.
-Doing so isn&#8217;t very useful for Bounds coming from the vessel
+Doing so isn’t very useful for Bounds coming from the vessel
 or a part.  But the reason they are settable is so you can make
 your own bounds objects if you feel the need to.</p>
 <p>At minimum to make your own bounds you will need these pieces
 of information:</p>
 <blockquote>
 <div><ul class="simple">
-<li>The ABSORIGIN of the bounds.</li>
-<li>The FACING of the bounds.</li>
-<li>The RELMIN of the bounds.</li>
-<li>The RELMAX of the bounds.</li>
+<li><p>The ABSORIGIN of the bounds.</p></li>
+<li><p>The FACING of the bounds.</p></li>
+<li><p>The RELMIN of the bounds.</p></li>
+<li><p>The RELMAX of the bounds.</p></li>
 </ul>
 </div></blockquote>
 <p>The following function will let you construct your own Bounds,
-although it&#8217;s not clear what use this would have yet:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">my_bounds</span> <span class="ow">is</span> <span class="nv">BOUNDS</span><span class="p">(</span> <span class="nv">ABSORIGIN</span><span class="p">,</span> <span class="nv">FACING</span><span class="p">,</span> <span class="nv">RELMIN</span><span class="p">,</span> <span class="nv">RELMAX</span> <span class="p">).</span>
+although it’s not clear what use this would have yet:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">my_bounds</span> <span class="ow">is</span> <span class="nv">BOUNDS</span><span class="p">(</span> <span class="nv">ABSORIGIN</span><span class="p">,</span> <span class="nv">FACING</span><span class="p">,</span> <span class="nv">RELMIN</span><span class="p">,</span> <span class="nv">RELMAX</span> <span class="p">).</span>
 </pre></div>
 </div>
 <p>The other suffixes are derived from calculations based on these.</p>
 <p>Example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Makes a bounds that is centered around a flag,</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// Makes a bounds that is centered around a flag,</span>
 <span class="c1">// oriented in that flag&#39;s UP direction, which</span>
 <span class="c1">// goes a lot further up into the sky than it does down</span>
 <span class="c1">// into the ground (to demonstrate that the bounds box</span>
@@ -484,305 +415,297 @@ although it&#8217;s not clear what use this would have yet:</p>
   <span class="p">).</span>
 </pre></div>
 </div>
-<p>Again, it&#8217;s unclear how a script might use this, but it&#8217;s there
+<p>Again, it’s unclear how a script might use this, but it’s there
 for completeness.</p>
 <p>Obviously, a bounds box you make manually yourself this way does not
-have the &#8220;magic&#8221; linkage to a vessel or part that the ones kOS makes have,
+have the “magic” linkage to a vessel or part that the ones kOS makes have,
 and therefore its position is more fixed in space unless your script
 manually re-assignes its properties.</p>
-</div>
-<div class="section" id="diagram">
-<h2>Diagram<a class="headerlink" href="#diagram" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="diagram">
+<h2>Diagram<a class="headerlink" href="#diagram" title="Permalink to this heading">¶</a></h2>
 <p>When looking at the suffix explanations below, these diagrams may help
 illustrate what is being talked about:</p>
-<div class="figure" id="id2">
+<figure class="align-default" id="id2">
 <img alt="Showing bounding box around a Vessel" src="../../_images/bounding_vessel.png" />
-<p class="caption"><span class="caption-text">What some of the terms mean for a bounding box around a vessel.</span></p>
-</div>
-<div class="figure" id="id3">
+<figcaption>
+<p><span class="caption-text">What some of the terms mean for a bounding box around a vessel.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id3">
 <img alt="Showing bounding box around a Part" src="../../_images/bounding_part.png" />
-<p class="caption"><span class="caption-text">What some of the terms mean for a bounding box around a part.</span></p>
-</div>
-<dl class="structure">
-<dt id="structure:BOUNDS">
-<em class="property">structure </em><code class="descname">Bounds</code><a class="headerlink" href="#structure:BOUNDS" title="Permalink to this definition">¶</a></dt>
-<dd><table border="1" class="docutils">
+<figcaption>
+<p><span class="caption-text">What some of the terms mean for a bounding box around a part.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:BOUNDS">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">Bounds</span></span><a class="headerlink" href="#structure:BOUNDS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils align-default">
 <colgroup>
-<col width="25%" />
-<col width="13%" />
-<col width="13%" />
-<col width="50%" />
+<col style="width: 25.0%" />
+<col style="width: 12.5%" />
+<col style="width: 12.5%" />
+<col style="width: 50.0%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type</th>
-<th class="head">Access</th>
-<th class="head">Description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Access</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#attribute:BOUNDS:ABSORIGIN" title="BOUNDS:ABSORIGIN attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ABSORIGIN</span></code></a></td>
-<td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
-<td>Get/Set</td>
-<td>origin point of box, in absolute ship-raw coords.</td>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:BOUNDS:ABSORIGIN" title="BOUNDS:ABSORIGIN attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ABSORIGIN</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p></td>
+<td><p>Get/Set</p></td>
+<td><p>origin point of box, in absolute ship-raw coords.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:BOUNDS:FACING" title="BOUNDS:FACING attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">FACING</span></code></a></td>
-<td><a class="reference internal" href="../../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Direction`</span></code></a></td>
-<td>Get/Set</td>
-<td>The orientation of the box&#8217;s own reference frame.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:BOUNDS:FACING" title="BOUNDS:FACING attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">FACING</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Direction</span></code></a></p></td>
+<td><p>Get/Set</p></td>
+<td><p>The orientation of the box’s own reference frame.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:BOUNDS:RELMIN" title="BOUNDS:RELMIN attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RELMIN</span></code></a></td>
-<td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
-<td>Get/Set</td>
-<td>a corner of the box in box&#8217;s own reference frame.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:BOUNDS:RELMIN" title="BOUNDS:RELMIN attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">RELMIN</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p></td>
+<td><p>Get/Set</p></td>
+<td><p>a corner of the box in box’s own reference frame.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:BOUNDS:RELMAX" title="BOUNDS:RELMAX attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RELMAX</span></code></a></td>
-<td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
-<td>Get/Set</td>
-<td>opposite corner of the box from RELMIN, in box&#8217;s own reference frame.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:BOUNDS:RELMAX" title="BOUNDS:RELMAX attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">RELMAX</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p></td>
+<td><p>Get/Set</p></td>
+<td><p>opposite corner of the box from RELMIN, in box’s own reference frame.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:BOUNDS:ABSMIN" title="BOUNDS:ABSMIN attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ABSMIN</span></code></a></td>
-<td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
-<td>Get only</td>
-<td>a corner of the box in absolute (ship-raw) reference frame.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:BOUNDS:ABSMIN" title="BOUNDS:ABSMIN attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ABSMIN</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p></td>
+<td><p>Get only</p></td>
+<td><p>a corner of the box in absolute (ship-raw) reference frame.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:BOUNDS:ABSMAX" title="BOUNDS:ABSMAX attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ABSMAX</span></code></a></td>
-<td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
-<td>Get only</td>
-<td>opposite corner of the box from RELMIN, in absolute (ship-raw) reference frame.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:BOUNDS:ABSMAX" title="BOUNDS:ABSMAX attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ABSMAX</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p></td>
+<td><p>Get only</p></td>
+<td><p>opposite corner of the box from RELMIN, in absolute (ship-raw) reference frame.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:BOUNDS:ABSCENTER" title="BOUNDS:ABSCENTER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ABSCENTER</span></code></a></td>
-<td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
-<td>Get only</td>
-<td>center of the box (not its origin), in absolute (ship-raw) frame.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:BOUNDS:ABSCENTER" title="BOUNDS:ABSCENTER attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ABSCENTER</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p></td>
+<td><p>Get only</p></td>
+<td><p>center of the box (not its origin), in absolute (ship-raw) frame.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:BOUNDS:RELCENTER" title="BOUNDS:RELCENTER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RELCENTER</span></code></a></td>
-<td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
-<td>Get only</td>
-<td>center of the box (not its origin), in box&#8217;s own reference frame.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:BOUNDS:RELCENTER" title="BOUNDS:RELCENTER attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">RELCENTER</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p></td>
+<td><p>Get only</p></td>
+<td><p>center of the box (not its origin), in box’s own reference frame.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:BOUNDS:EXTENTS" title="BOUNDS:EXTENTS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">EXTENTS</span></code></a></td>
-<td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
-<td>Get/Set</td>
-<td>A vector from box center to max corner, in box&#8217;s reference frame.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:BOUNDS:EXTENTS" title="BOUNDS:EXTENTS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">EXTENTS</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p></td>
+<td><p>Get/Set</p></td>
+<td><p>A vector from box center to max corner, in box’s reference frame.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:BOUNDS:SIZE" title="BOUNDS:SIZE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SIZE</span></code></a></td>
-<td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
-<td>Get/Set</td>
-<td>Exactly 2 times EXTENTS - the vector from min corner to max, in box&#8217;s reference frame.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:BOUNDS:SIZE" title="BOUNDS:SIZE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">SIZE</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p></td>
+<td><p>Get/Set</p></td>
+<td><p>Exactly 2 times EXTENTS - the vector from min corner to max, in box’s reference frame.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:BOUNDS:FURTHESTCORNER" title="BOUNDS:FURTHESTCORNER method"><code class="xref ks ks-meth docutils literal"><span class="pre">FURTHESTCORNER(Vector</span> <span class="pre">ray)</span></code></a></td>
-<td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
-<td>Get only</td>
-<td>Position (in absolute ship-raw coords) of the box corner most &#8220;that-a-way&#8221;.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#method:BOUNDS:FURTHESTCORNER" title="BOUNDS:FURTHESTCORNER method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">FURTHESTCORNER(Vector</span> <span class="pre">ray)</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p></td>
+<td><p>Get only</p></td>
+<td><p>Position (in absolute ship-raw coords) of the box corner most “that-a-way”.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:BOUNDS:BOTTOMALT" title="BOUNDS:BOTTOMALT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">BOTTOMALT</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>Scalar</span></a></td>
-<td>Get Only</td>
-<td>Sea-level altitude of bottom-most corner of box.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:BOUNDS:BOTTOMALT" title="BOUNDS:BOTTOMALT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">BOTTOMALT</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Get Only</p></td>
+<td><p>Sea-level altitude of bottom-most corner of box.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:BOUNDS:BOTTOMALTRADAR" title="BOUNDS:BOTTOMALTRADAR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">BOTTOMALTRADAR</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>Scalar</span></a></td>
-<td>Get Only</td>
-<td>Radar altitude of bottom-most corner of box.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:BOUNDS:BOTTOMALTRADAR" title="BOUNDS:BOTTOMALTRADAR attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">BOTTOMALTRADAR</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Get Only</p></td>
+<td><p>Radar altitude of bottom-most corner of box.</p></td>
 </tr>
-<tr class="row-odd"><td>RELORIGIN is missing</td>
-<td>n/a</td>
-<td>DOES NOT EXIST</td>
-<td>This suffix is deliberately missing because it would always be V(0,0,0).</td>
+<tr class="row-odd"><td><p>RELORIGIN is missing</p></td>
+<td><p>n/a</p></td>
+<td><p>DOES NOT EXIST</p></td>
+<td><p>This suffix is deliberately missing because it would always be V(0,0,0).</p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:BOUNDS:ABSORIGIN">
-Bounds:<code class="descname">ABSORIGIN</code><a class="headerlink" href="#attribute:BOUNDS:ABSORIGIN" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set but read the note below before you SET it.</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:BOUNDS:ABSORIGIN">
+<span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">ABSORIGIN</span></span><a class="headerlink" href="#attribute:BOUNDS:ABSORIGIN" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set but read the note below before you SET it.</p>
+</dd>
+</dl>
 <p>The position of the origin point of the bounding box, expressed
 in absolute coordinates (what kOS calls the ship-raw reference
 frame, that the rest of the position vectors in kOS use.)</p>
 <p>If this bounding box came from a Part, this will be the same as
-that part&#8217;s <code class="docutils literal"><span class="pre">Part:POSITION</span></code>, and will keep being &#8220;magically&#8221;
-updated to stay with that part&#8217;s position if it moves or rotates
+that part’s <code class="docutils literal notranslate"><span class="pre">Part:POSITION</span></code>, and will keep being “magically”
+updated to stay with that part’s position if it moves or rotates
 (but see note below).</p>
 <p>If this bounding box came from a vessel, this will be the same as
-that vessel&#8217;s <code class="docutils literal"><span class="pre">Vessel:PARTS[0]:POSITION</span></code> (the position of its
-root part) and be &#8220;magically&#8221; updated to stay with that part&#8217;s
+that vessel’s <code class="docutils literal notranslate"><span class="pre">Vessel:PARTS[0]:POSITION</span></code> (the position of its
+root part) and be “magically” updated to stay with that part’s
 position if it moves or rotates (but see note below).  It is
-NOT <code class="docutils literal"><span class="pre">Vessel:position</span></code>, which is important.  <code class="docutils literal"><span class="pre">Vessel:position</span></code>
+NOT <code class="docutils literal notranslate"><span class="pre">Vessel:position</span></code>, which is important.  <code class="docutils literal notranslate"><span class="pre">Vessel:position</span></code>
 is the <em>center of mass</em> of a vessel.  While kOS prefers to use
 CoM as the official position of a vessel most of the time, the fact
 that using fuel shifts the position of the CoM within the vessel made
-it impractical to use CoM for the vessel&#8217;s bounding box origin.</p>
+it impractical to use CoM for the vessel’s bounding box origin.</p>
 <p><strong>WARNING about using SET with this suffix:</strong> <em>If this bounds box
 was obtained using :attr:`Part:BOUNDS` or :attr:`Vessel:BOUNDS`,
 then this suffix keeps changing its value to remain correct as the
 vessel rotates or moves.  But ONLY if you restrict your use of this
 suffix to GET-only.  If you ever SET this suffix, kOS stops that
-auto-updating so it won&#8217;t override the value you gave.  Generally,
+auto-updating so it won’t override the value you gave.  Generally,
 using SET on this suffix was only ever intended for Bounds you
 created manually with the BOUNDS() function.</em></p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:BOUNDS:RELORIGIN">
-Bounds:<code class="descname">RELORIGIN</code><a class="headerlink" href="#attribute:BOUNDS:RELORIGIN" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Nonexistent</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Nonexistent</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:BOUNDS:RELORIGIN">
+<span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">RELORIGIN</span></span><a class="headerlink" href="#attribute:BOUNDS:RELORIGIN" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Nonexistent</p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nonexistent</p>
+</dd>
+</dl>
 <p><strong>This suffix does not exist</strong>.  It is mentioned here simply because you
 might be trying to look up a suffix with this name, thinking
-it should exist, wondering &#8220;well, there&#8217;s an ABSMIN and a
-RELMIN, an ABSCENTER and a RELCENTER... where&#8217;s the RELORIGIN that
-should go with ABSORIGIN?&#8221;.</p>
-<p>The reason there is no RELORIGIN is that given how a <code class="docutils literal"><span class="pre">Bounds</span></code> stores
+it should exist, wondering “well, there’s an ABSMIN and a
+RELMIN, an ABSCENTER and a RELCENTER… where’s the RELORIGIN that
+should go with ABSORIGIN?”.</p>
+<p>The reason there is no RELORIGIN is that given how a <code class="docutils literal notranslate"><span class="pre">Bounds</span></code> stores
 values, by its very definition the RELORIGIN would be V(0,0,0), always.
-It&#8217;s the origin of the bounding box, in the bounding box&#8217;s own reference
+It’s the origin of the bounding box, in the bounding box’s own reference
 frame - a reference frame with this spot as its origin.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:BOUNDS:FACING">
-Bounds:<code class="descname">FACING</code><a class="headerlink" href="#attribute:BOUNDS:FACING" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set but read the note below before you SET it.</td>
-</tr>
-</tbody>
-</table>
-<p>This defines the orientation of this bounding box&#8217;s local
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:BOUNDS:FACING">
+<span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">FACING</span></span><a class="headerlink" href="#attribute:BOUNDS:FACING" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Direction</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set but read the note below before you SET it.</p>
+</dd>
+</dl>
+<p>This defines the orientation of this bounding box’s local
 reference frame, by providing a rotation that will get you
 from the bounding-box relative orientation (in which the
-X, Y, and Z axes are parallel to the bounding box&#8217;s edges)
+X, Y, and Z axes are parallel to the bounding box’s edges)
 to the absolute orientation (the ship-raw orientation the
 rest of kOS uses).</p>
 <p>If this bounding box came from a Part, this will be the same as
-that part&#8217;s <code class="docutils literal"><span class="pre">Part:FACING</span></code>, and will keep being &#8220;magically&#8221;
-updated to stay aligned with that part&#8217;s facing if it moves or
+that part’s <code class="docutils literal notranslate"><span class="pre">Part:FACING</span></code>, and will keep being “magically”
+updated to stay aligned with that part’s facing if it moves or
 rotates (but see note below).</p>
 <p>If this bounding box came from a Vessel, this will be the same as
-that Vessel&#8217;s <code class="docutils literal"><span class="pre">Vessel:FACING</span></code>, and will keep being &#8220;magically&#8221;
-updated to stay aligned with that part&#8217;s facing if it moves or
+that Vessel’s <code class="docutils literal notranslate"><span class="pre">Vessel:FACING</span></code>, and will keep being “magically”
+updated to stay aligned with that part’s facing if it moves or
 rotates (but see note below).</p>
 <p><strong>WARNING about using SET with this suffix:</strong> <em>If this bounds box
 was obtained using :attr:`Part:BOUNDS` or :attr:`Vessel:BOUNDS`,
 then this suffix keeps changing its value to remain correct as the
 vessel rotates or moves.  But ONLY if you restrict your use of this
 suffix to GET-only.  If you ever SET this suffix, kOS stops that
-auto-updating so it won&#8217;t override the value you gave.  Generally,
+auto-updating so it won’t override the value you gave.  Generally,
 using SET on this suffix was only ever intended for Bounds you
 created manually with the BOUNDS() function.</em></p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:BOUNDS:RELMIN">
-Bounds:<code class="descname">RELMIN</code><a class="headerlink" href="#attribute:BOUNDS:RELMIN" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> <strong>in bounding-box relative reference frame</strong></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:BOUNDS:RELMIN">
+<span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">RELMIN</span></span><a class="headerlink" href="#attribute:BOUNDS:RELMIN" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a> <strong>in bounding-box relative reference frame</strong></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
 <p>A vector expressed in the bounding-box-relative reference frame
-(where the XYZ axes are parallel to the bounding box&#8217;s edges).</p>
+(where the XYZ axes are parallel to the bounding box’s edges).</p>
 <p>This defines one corner of the bounding box.  It is the
-&#8220;negative-most&#8221; corner of the box.  If you drew a vector from
-the box&#8217;s origin point to its &#8220;negative-most&#8221; corner, that would
-be this vector.  By &#8220;negative-most&#8221; that simply means the corner
+“negative-most” corner of the box.  If you drew a vector from
+the box’s origin point to its “negative-most” corner, that would
+be this vector.  By “negative-most” that simply means the corner
 where the X, Y, and Z coordinates have their smallest values.
-(again, in the bounding box&#8217;s own reference frame, not the absolute
+(again, in the bounding box’s own reference frame, not the absolute
 world (ship-raw) frame.)</p>
 <p>This corner will always be the diagonally opposite corner from
-<a class="reference internal" href="#attribute:BOUNDS:RELMAX" title="BOUNDS:RELMAX attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Bounds:RELMAX</span></code></a>.</p>
+<a class="reference internal" href="#attribute:BOUNDS:RELMAX" title="BOUNDS:RELMAX attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Bounds:RELMAX</span></code></a>.</p>
 <p>If you SET this value, you are changing the size of the
 bounding box, making it larger (or smaller), as well as
 stretching or shrinking it, depending on the new value
-you pick.  Doing so doesn&#8217;t <em>actually</em> change the size of
+you pick.  Doing so doesn’t <em>actually</em> change the size of
 a part or vessel, and is really only useful if you are
-working with your own <code class="docutils literal"><span class="pre">Bounds</span></code> you created manually with
-the <code class="docutils literal"><span class="pre">Bounds()</span></code> built-in function.</p>
-<p>Be careful when trying to &#8220;add&#8221; the RELMIN vector to other
-vectors in the game.  It&#8217;s not oriented in ship-raw coords.
+working with your own <code class="docutils literal notranslate"><span class="pre">Bounds</span></code> you created manually with
+the <code class="docutils literal notranslate"><span class="pre">Bounds()</span></code> built-in function.</p>
+<p>Be careful when trying to “add” the RELMIN vector to other
+vectors in the game.  It’s not oriented in ship-raw coords.
 To rotate it into ship-raw coords you can multiply it by
-the bounds facing like so: <code class="docutils literal"><span class="pre">MyBounds:FACING</span> <span class="pre">*</span> <span class="pre">MyBounds:RELMIN</span></code>.</p>
+the bounds facing like so: <code class="docutils literal notranslate"><span class="pre">MyBounds:FACING</span> <span class="pre">*</span> <span class="pre">MyBounds:RELMIN</span></code>.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:BOUNDS:RELMAX">
-Bounds:<code class="descname">RELMAX</code><a class="headerlink" href="#attribute:BOUNDS:RELMAX" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> <strong>in bounding-box relative reference frame</strong></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:BOUNDS:RELMAX">
+<span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">RELMAX</span></span><a class="headerlink" href="#attribute:BOUNDS:RELMAX" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a> <strong>in bounding-box relative reference frame</strong></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
 <p>A vector expressed in the bounding-box-relative reference frame
-(where the XYZ axes are parallel to the bounding box&#8217;s edges).</p>
+(where the XYZ axes are parallel to the bounding box’s edges).</p>
 <p>This defines one corner of the bounding box.  It is the
-&#8220;positive-most&#8221; corner of the box.  If you drew a vector from
-the box&#8217;s origin point to its &#8220;positive-most&#8221; corner, that would
-be this vector.  By &#8220;positive-most&#8221; that simply means the corner
+“positive-most” corner of the box.  If you drew a vector from
+the box’s origin point to its “positive-most” corner, that would
+be this vector.  By “positive-most” that simply means the corner
 where the X, Y, and Z coordinates have their greatest values.
-(again, in the bounding box&#8217;s own reference frame, not the absolute
+(again, in the bounding box’s own reference frame, not the absolute
 world (ship-raw) frame.)</p>
 <p>This corner will always be the diagonally opposite corner from
-<a class="reference internal" href="#attribute:BOUNDS:RELMIN" title="BOUNDS:RELMIN attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Bounds:RELMIN</span></code></a>.</p>
+<a class="reference internal" href="#attribute:BOUNDS:RELMIN" title="BOUNDS:RELMIN attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Bounds:RELMIN</span></code></a>.</p>
 <p>If you SET this value, you are changing the size of the
 bounding box, making it larger (or smaller), as well as
 stretching or shrinking it, depending on the new value
-you pick.  Doing so doesn&#8217;t <em>actually</em> change the size of
+you pick.  Doing so doesn’t <em>actually</em> change the size of
 a part or vessel, and is really only useful if you are
-working with your own <code class="docutils literal"><span class="pre">Bounds</span></code> you created manually with
-the <code class="docutils literal"><span class="pre">Bounds()</span></code> built-in function.</p>
-<p>Be careful when trying to &#8220;add&#8221; the RELMAX vector to other
-vectors in the game.  It&#8217;s not oriented in ship-raw coords.
+working with your own <code class="docutils literal notranslate"><span class="pre">Bounds</span></code> you created manually with
+the <code class="docutils literal notranslate"><span class="pre">Bounds()</span></code> built-in function.</p>
+<p>Be careful when trying to “add” the RELMAX vector to other
+vectors in the game.  It’s not oriented in ship-raw coords.
 To rotate it into ship-raw coords you can multiply it by
-the bounds facing like so: <code class="docutils literal"><span class="pre">MyBounds:FACING</span> <span class="pre">*</span> <span class="pre">MyBounds:RELMAX</span></code>.</p>
+the bounds facing like so: <code class="docutils literal notranslate"><span class="pre">MyBounds:FACING</span> <span class="pre">*</span> <span class="pre">MyBounds:RELMAX</span></code>.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:BOUNDS:ABSMIN">
-Bounds:<code class="descname">ABSMIN</code><a class="headerlink" href="#attribute:BOUNDS:ABSMIN" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
-</tr>
-</tbody>
-</table>
-<p>This is the same point as <a class="reference internal" href="#attribute:BOUNDS:RELMIN" title="BOUNDS:RELMIN attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Bounds:RELMIN</span></code></a>, except it has
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:BOUNDS:ABSMIN">
+<span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">ABSMIN</span></span><a class="headerlink" href="#attribute:BOUNDS:ABSMIN" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get</p>
+</dd>
+</dl>
+<p>This is the same point as <a class="reference internal" href="#attribute:BOUNDS:RELMIN" title="BOUNDS:RELMIN attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Bounds:RELMIN</span></code></a>, except it has
 been rotated and translated into absolute coordinates (what
 kOS calls the ship-raw reference frame, that the rest of the
 position vectors in kOS use.)</p>
@@ -791,7 +714,7 @@ from the ABSORIGIN, the FACING, and the RELMIN.</p>
 <p>Calculating the ABSMIN could be done in kerboscript from the
 other Bounds suffixes (see example below), but this is provided
 for convenience:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// The following two print lines should print</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// The following two print lines should print</span>
 <span class="c1">// the same vector, within reason.  (There may be a</span>
 <span class="c1">// small floating point precision variance between them):</span>
 <span class="k">set</span> <span class="nv">B</span> <span class="ow">to</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">bounds</span><span class="p">.</span>
@@ -801,20 +724,18 @@ for convenience:</p>
 </div>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:BOUNDS:ABSMAX">
-Bounds:<code class="descname">ABSMAX</code><a class="headerlink" href="#attribute:BOUNDS:ABSMAX" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
-</tr>
-</tbody>
-</table>
-<p>This is the same point as <a class="reference internal" href="#attribute:BOUNDS:RELMAX" title="BOUNDS:RELMAX attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Bounds:RELMAX</span></code></a>, except it has
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:BOUNDS:ABSMAX">
+<span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">ABSMAX</span></span><a class="headerlink" href="#attribute:BOUNDS:ABSMAX" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get</p>
+</dd>
+</dl>
+<p>This is the same point as <a class="reference internal" href="#attribute:BOUNDS:RELMAX" title="BOUNDS:RELMAX attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Bounds:RELMAX</span></code></a>, except it has
 been rotated and translated into absolute coordinates (what
 kOS calls the ship-raw reference frame, that the rest of the
 position vectors in kOS use.)</p>
@@ -823,7 +744,7 @@ from the ABSORIGIN, the FACING, and the RELMAX.</p>
 <p>Calculating the ABSMAX could be done in kerboscript from the
 other Bounds suffixes (see example below), but this is provided
 for convenience:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// The following two print lines should print</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// The following two print lines should print</span>
 <span class="c1">// the same vector, within reason.  (There may be a</span>
 <span class="c1">// small floating point precision variance between them):</span>
 <span class="k">set</span> <span class="nv">B</span> <span class="ow">to</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">bounds</span><span class="p">.</span>
@@ -833,126 +754,114 @@ for convenience:</p>
 </div>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:BOUNDS:RELCENTER">
-Bounds:<code class="descname">RELCENTER</code><a class="headerlink" href="#attribute:BOUNDS:RELCENTER" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> <strong>in bounding-box relative reference frame</strong></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get-only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:BOUNDS:RELCENTER">
+<span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">RELCENTER</span></span><a class="headerlink" href="#attribute:BOUNDS:RELCENTER" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a> <strong>in bounding-box relative reference frame</strong></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get-only</p>
+</dd>
+</dl>
 <p>The center of the bounding box, in its own relative reference frame.
 (Not the absolute ship-raw reference frame the rest of kOS uses.)</p>
-<p>This is the offset between the bounding box&#8217;s origin and its center.</p>
+<p>This is the offset between the bounding box’s origin and its center.</p>
 <p>The origin of a bounding box is often not at its center because a
 bounding box can extend further in one direction than the other.
-For example a vessel&#8217;s root part is often up at the top of the rocket,
-such a vessel&#8217;s bounding box will extend much further in the &#8220;aft&#8221;
-direction than it does in the &#8220;fore&#8221; direction.  The wing parts in the
+For example a vessel’s root part is often up at the top of the rocket,
+such a vessel’s bounding box will extend much further in the “aft”
+direction than it does in the “fore” direction.  The wing parts in the
 game are often defined with their origin point at the base where they
 glue to the fuselage, not out in the middle of the wing.</p>
 <p>Instead of being provided directly, this value could be calculated
-from the RELMIN and RELMAX.  It&#8217;s simply the point exactly halfway
+from the RELMIN and RELMAX.  It’s simply the point exactly halfway
 between those two opposite corners.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:BOUNDS:ABSCENTER">
-Bounds:<code class="descname">ABSCENTER</code><a class="headerlink" href="#attribute:BOUNDS:ABSCENTER" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get-only</td>
-</tr>
-</tbody>
-</table>
-<p>This is just the same thing as <a class="reference internal" href="#attribute:BOUNDS:RELCENTER" title="BOUNDS:RELCENTER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Bounds:RELCENTER</span></code></a>, but
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:BOUNDS:ABSCENTER">
+<span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">ABSCENTER</span></span><a class="headerlink" href="#attribute:BOUNDS:ABSCENTER" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get-only</p>
+</dd>
+</dl>
+<p>This is just the same thing as <a class="reference internal" href="#attribute:BOUNDS:RELCENTER" title="BOUNDS:RELCENTER attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Bounds:RELCENTER</span></code></a>, but
 in the absolute (ship-raw) reference frame which scripts might find
 more useful.</p>
-<p>It&#8217;s exactly equivalent to doing this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">MyBounds</span><span class="p">:</span><span class="nv">ABSORIGIN</span> <span class="o">+</span> <span class="p">(</span><span class="nv">MyBounds</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">MyBounds</span><span class="p">:</span><span class="nv">RELCENTER</span><span class="p">).</span>
+<p>It’s exactly equivalent to doing this:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">MyBounds</span><span class="p">:</span><span class="nv">ABSORIGIN</span> <span class="o">+</span> <span class="p">(</span><span class="nv">MyBounds</span><span class="p">:</span><span class="nv">FACING</span> <span class="o">*</span> <span class="nv">MyBounds</span><span class="p">:</span><span class="nv">RELCENTER</span><span class="p">).</span>
 </pre></div>
 </div>
 <p>Instead of being provided directly, this value could be calculated
-from the ABSMIN and ABSMAX.  It&#8217;s simply the point exactly halfway
+from the ABSMIN and ABSMAX.  It’s simply the point exactly halfway
 between those two opposite corners.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:BOUNDS:EXTENTS">
-Bounds:<code class="descname">EXTENTS</code><a class="headerlink" href="#attribute:BOUNDS:EXTENTS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> <strong>in bounding-box relative reference frame</strong></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get-only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:BOUNDS:EXTENTS">
+<span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">EXTENTS</span></span><a class="headerlink" href="#attribute:BOUNDS:EXTENTS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a> <strong>in bounding-box relative reference frame</strong></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get-only</p>
+</dd>
+</dl>
 <p>A vector (in bounding-box relative reference frame, NOT the
 absolute (ship-raw) reference frame the rest of kOS uses)
-that describes where <a class="reference internal" href="#attribute:BOUNDS:RELMAX" title="BOUNDS:RELMAX attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Bounds:RELMAX</span></code></a> is, relative to
-to the box&#8217;s center (rather than to its origin).</p>
-<p>Note that the vector in the inverse direction of this one (that you&#8217;d
+that describes where <a class="reference internal" href="#attribute:BOUNDS:RELMAX" title="BOUNDS:RELMAX attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Bounds:RELMAX</span></code></a> is, relative to
+to the box’s center (rather than to its origin).</p>
+<p>Note that the vector in the inverse direction of this one (that you’d
 get by multiplying it by -1), points from the center to
-the oppposite corner, the <a class="reference internal" href="#attribute:BOUNDS:RELMIN" title="BOUNDS:RELMIN attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Bounds:RELMIN</span></code></a>.</p>
+the oppposite corner, the <a class="reference internal" href="#attribute:BOUNDS:RELMIN" title="BOUNDS:RELMIN attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Bounds:RELMIN</span></code></a>.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:BOUNDS:SIZE">
-Bounds:<code class="descname">SIZE</code><a class="headerlink" href="#attribute:BOUNDS:SIZE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> <strong>in bounding-box relative reference frame</strong></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get-only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:BOUNDS:SIZE">
+<span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">SIZE</span></span><a class="headerlink" href="#attribute:BOUNDS:SIZE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a> <strong>in bounding-box relative reference frame</strong></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get-only</p>
+</dd>
+</dl>
 <p>A vector (in bounding-box relative reference frame, NOT the
 absolute (ship-raw) reference frame the rest of kOS uses)
 that describes the ray from RELMIN to RELMAX that goes diagonally
-across the whole box.  It&#8217;s always just the same thing you&#8217;d
-get if you took the <a class="reference internal" href="#attribute:BOUNDS:EXTENTS" title="BOUNDS:EXTENTS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Bounds:EXTENTS</span></code></a> vector and multiplied
+across the whole box.  It’s always just the same thing you’d
+get if you took the <a class="reference internal" href="#attribute:BOUNDS:EXTENTS" title="BOUNDS:EXTENTS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Bounds:EXTENTS</span></code></a> vector and multiplied
 it by the scalar 2.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:BOUNDS:FURTHESTCORNER">
-Bounds:<code class="descname">FURTHESTCORNER</code><span class="sig-paren">(</span>ray<span class="sig-paren">)</span><a class="headerlink" href="#method:BOUNDS:FURTHESTCORNER" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>ray</strong> &#8211; The &#8220;that-a-way&#8221; <a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> in absolute (ship-raw) reference frame.</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:BOUNDS:FURTHESTCORNER">
+<span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">FURTHESTCORNER</span></span><span class="sig-paren">(</span><span class="pre">ray</span><span class="sig-paren">)</span><a class="headerlink" href="#method:BOUNDS:FURTHESTCORNER" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ray</strong> – The “that-a-way” <a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a> in absolute (ship-raw) reference frame.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> in absolute (ship-raw) referece frame.</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a> in absolute (ship-raw) referece frame.</p>
+</dd>
+</dl>
 <p>Returns the position (in absolute (ship-raw) reference frame) of
-whichever of the 8 corners of this bounding box is &#8220;furthest&#8221; in
+whichever of the 8 corners of this bounding box is “furthest” in
 the direction the ray vector is pointing.  Useful when you want
 to know the furthest a bounding box extends in some gameworld
 direction.</p>
 <p>Examples:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Assume other_vessel has been set to some vessel nearby</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// Assume other_vessel has been set to some vessel nearby</span>
 <span class="c1">// other than the current SHIP:</span>
 <span class="c1">//</span>
 <span class="k">local</span> <span class="nv">ves_box</span> <span class="ow">is</span> <span class="nv">other_vessel</span><span class="p">:</span><span class="nv">bounds</span><span class="p">.</span>
@@ -977,68 +886,64 @@ direction.</p>
 </div>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:BOUNDS:BOTTOMALT">
-Bounds:<code class="descname">BOTTOMALT</code><a class="headerlink" href="#attribute:BOUNDS:BOTTOMALT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>Scalar</span></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get-only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:BOUNDS:BOTTOMALT">
+<span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">BOTTOMALT</span></span><a class="headerlink" href="#attribute:BOUNDS:BOTTOMALT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get-only</p>
+</dd>
+</dl>
 <p>The above-sea-level altitude reading from the bottom-most corner of
 this bounding box, toward whichever Body the current CPU vessel is
 orbiting.</p>
-<p>Note that it&#8217;s always using the CPU vessel&#8217;s <em>current</em>
+<p>Note that it’s always using the CPU vessel’s <em>current</em>
 body to decide which body is the one that defines the bounding
-box&#8217;s &#8220;downward&#8221; direction for picking its bottom-most corner,
-and it uses that same body to decide what counts as &#8220;altitude&#8221;,
+box’s “downward” direction for picking its bottom-most corner,
+and it uses that same body to decide what counts as “altitude”,
 regardless of wether the bounds box is a bounds box of the current
 CPU vessel or something else.</p>
-<p>To put it another way: You can&#8217;t &#8220;read&#8221; what the altitude of a
+<p>To put it another way: You can’t “read” what the altitude of a
 bounding box above the Mun is if your ship is currently
-in Kerbin&#8217;s sphere of influence.  If you are currently orbiting
-Kerbin, it will assume that the &#8220;bottom&#8221; of any Bounds box you
-refer to means &#8220;corner closest to Kerbin&#8221; and &#8220;altitude&#8221; means
-&#8220;distance from Kerbin&#8217;s Sea level&#8221;.  Once your CPU vessel moves
-into the Mun&#8217;s sphere of influence this will change it it will
-now assume that the &#8220;bottom&#8221; of a Bounds is the corner closest
+in Kerbin’s sphere of influence.  If you are currently orbiting
+Kerbin, it will assume that the “bottom” of any Bounds box you
+refer to means “corner closest to Kerbin” and “altitude” means
+“distance from Kerbin’s Sea level”.  Once your CPU vessel moves
+into the Mun’s sphere of influence this will change it it will
+now assume that the “bottom” of a Bounds is the corner closest
 to the Mun and the altitude you care about is the altitude above
 the Mun.</p>
-<p>This may seem like a limitation, but it really isn&#8217;t, since you
-wouldn&#8217;t be able to query a vessel or a part for its bounding
+<p>This may seem like a limitation, but it really isn’t, since you
+wouldn’t be able to query a vessel or a part for its bounding
 box if that vessel was far enough away to be outside the loading
-distance and thus its full set of parts isn&#8217;t &#8220;there&#8221;.
+distance and thus its full set of parts isn’t “there”.
 It would only be a limitation for cases where you are inventing
 your own bounds boxes from scratch.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:BOUNDS:BOTTOMALTRADAR">
-Bounds:<code class="descname">BOTTOMALTRADAR</code><a class="headerlink" href="#attribute:BOUNDS:BOTTOMALTRADAR" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>Scalar</span></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get-only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:BOUNDS:BOTTOMALTRADAR">
+<span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">BOTTOMALTRADAR</span></span><a class="headerlink" href="#attribute:BOUNDS:BOTTOMALTRADAR" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get-only</p>
+</dd>
+</dl>
 <p>The radar-altitude reading from the bottom-most corner of
 this bounding box, toward whichever Body the current CPU vessel is
-orbiting.  Same as <a class="reference internal" href="#attribute:BOUNDS:BOTTOMALT" title="BOUNDS:BOTTOMALT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Bounds:BOTTOMALT</span></code></a> except for the
+orbiting.  Same as <a class="reference internal" href="#attribute:BOUNDS:BOTTOMALT" title="BOUNDS:BOTTOMALT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Bounds:BOTTOMALT</span></code></a> except for the
 difference between above-sea-level altitude versus radar altitude.</p>
 </dd></dl>
 
-</div>
-<div class="section" id="side-topic-what-is-a-bounding-box-and-how-does-kos-know-about-it">
-<h2>Side topic - what is a bounding box and how does kOS know about it?<a class="headerlink" href="#side-topic-what-is-a-bounding-box-and-how-does-kos-know-about-it" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="side-topic-what-is-a-bounding-box-and-how-does-kos-know-about-it">
+<h2>Side topic - what is a bounding box and how does kOS know about it?<a class="headerlink" href="#side-topic-what-is-a-bounding-box-and-how-does-kos-know-about-it" title="Permalink to this heading">¶</a></h2>
 <p>A bounding box is a rectangular box around an item that represents the
 smallest space that contains all verteces of the item yet is still
 shaped like a box.  It is common in graphics and video games for the
@@ -1046,131 +951,93 @@ GPU and/or game engine to maintain information about the bounding boxes
 of items in the game.  Knowing this information is part of what they
 do to reduce their large workload.  When checking if two items are
 colliding, or checking if part of object A blocks the line of sight
-between the camera and part of object B it&#8217;s trying to draw, a check
+between the camera and part of object B it’s trying to draw, a check
 against the bounding box first is quick and simple.  If the thing
-you&#8217;re checking isn&#8217;t even intersecting the bounding box, then it&#8217;s
+you’re checking isn’t even intersecting the bounding box, then it’s
 impossible for it to be a hit on the actual complex shape inside it.
-The expensive check that looks at the exact shape of the object&#8217;s
-mesh can be skipped when you&#8217;re not even intersecting the bounding
+The expensive check that looks at the exact shape of the object’s
+mesh can be skipped when you’re not even intersecting the bounding
 box around it.</p>
-<div class="section" id="why-is-calling-bounds-repeatedly-a-slow-thing-to-do">
-<span id="bounds-expense"></span><h3>Why is calling :bounds repeatedly a slow thing to do?<a class="headerlink" href="#why-is-calling-bounds-repeatedly-a-slow-thing-to-do" title="Permalink to this headline">¶</a></h3>
+<section id="why-is-calling-bounds-repeatedly-a-slow-thing-to-do">
+<span id="bounds-expense"></span><h3>Why is calling :bounds repeatedly a slow thing to do?<a class="headerlink" href="#why-is-calling-bounds-repeatedly-a-slow-thing-to-do" title="Permalink to this heading">¶</a></h3>
 <p>The bounding box Unity tracks for items is aligned with the XYZ axes
-of the game&#8217;s world coordinates, what kOS calls the &#8220;ship-raw&#8221; reference
-frame.  This is vital for the game engine&#8217;s needs, as the speedy quick
+of the game’s world coordinates, what kOS calls the “ship-raw” reference
+frame.  This is vital for the game engine’s needs, as the speedy quick
 bounding box intersection tests work by doing simple greater-than
 and less-than tests of the coordinates.  This means the box will also be
-&#8220;too big&#8221; if the item is rotated from the world&#8217;s XYZ axes, as the
-world-aligned box has to accomodate the item&#8217;s &#8220;diagonal&#8221; corners pushing
-the box bigger.  For the purposes of a graphics engine, that&#8217;s fine, since
-erring on the side of a too-big bounding box is okay, since it&#8217;s nothing
+“too big” if the item is rotated from the world’s XYZ axes, as the
+world-aligned box has to accomodate the item’s “diagonal” corners pushing
+the box bigger.  For the purposes of a graphics engine, that’s fine, since
+erring on the side of a too-big bounding box is okay, since it’s nothing
 more than a time savings to short-circuit work, and not the final say-so
 on whether item A is touching item B.</p>
-<p>To get a rotated box like is needed for kOS&#8217;s needs, where its tightly
+<p>To get a rotated box like is needed for kOS’s needs, where its tightly
 snug against the object in question, kOS has to go a bit more low-level
 and look at the actual meshes that make up the object, and look at
-<em>their</em> bounding boxes, which are aligned in the mesh&#8217;s own locally
+<em>their</em> bounding boxes, which are aligned in the mesh’s own locally
 rotated XYZ axes, rather than world axes.  Some ugly transforms
 of each of the 8 vertices of the mesh bounding box Unity knows about are
-needed, and there isn&#8217;t really a good way to do this without running a
+needed, and there isn’t really a good way to do this without running a
 loop across all vertices of the box, which is what kOS does internally.
-For the whole vessel&#8217;s bounding box, this means doing those 8 vertices
+For the whole vessel’s bounding box, this means doing those 8 vertices
 per part, on every part on the ship.</p>
-</div>
-<div class="section" id="why-then-is-it-faster-to-re-use-the-bounds-suffix">
-<h3>Why then is it faster to re-use the BOUNDS suffix?<a class="headerlink" href="#why-then-is-it-faster-to-re-use-the-bounds-suffix" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="why-then-is-it-faster-to-re-use-the-bounds-suffix">
+<h3>Why then is it faster to re-use the BOUNDS suffix?<a class="headerlink" href="#why-then-is-it-faster-to-re-use-the-bounds-suffix" title="Permalink to this heading">¶</a></h3>
 <p>Internally, kOS stores the <em>relative</em> bounds <em>in</em> the reference
 frame of the object (the <em>facing</em> suffix), and uses a delegate to
 keep getting the new orientation and origin of that object every
-time you ask for a Bounds&#8217; suffix.  Thus it doesn&#8217;t have to keep
+time you ask for a Bounds’ suffix.  Thus it doesn’t have to keep
 re-doing the transformations described above as the part rotates
 or shifts.  It only has to apply the rotation and translation to
 the existing relative bounds it already calculated the expensive
 way the first time.</p>
-</div>
-<div class="section" id="credit-to-krpc">
-<h3>Credit to kRPC<a class="headerlink" href="#credit-to-krpc" title="Permalink to this headline">¶</a></h3>
-<p>The messy problem described above wasn&#8217;t solved until peeking at the
+</section>
+<section id="credit-to-krpc">
+<h3>Credit to kRPC<a class="headerlink" href="#credit-to-krpc" title="Permalink to this heading">¶</a></h3>
+<p>The messy problem described above wasn’t solved until peeking at the
 code inside the kRPC mod, which also offers bounding box information.
 That peek showed a hint at the similar steps kOS would need to do to
-support the same thing, and gave an explanation why the &#8220;raw&#8221; bounding
+support the same thing, and gave an explanation why the “raw” bounding
 box that Unity gave was always too big and seemed wrong.  That led to a
 lot of looking at answers on the Unity forum from other people who had
 the same problem, and did similar solutions to what kRPC was doing,
 indicating that despite looking like a lot of work, this was really
 the only way to do it.  (Since kRPC and kOS are both GPL3, this peeking
 is totally legit.)</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="consumedresource.html" class="btn btn-neutral float-right" title="ConsumedResource" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="alt.html" class="btn btn-neutral" title="ALT" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="alt.html" class="btn btn-neutral float-left" title="ALT" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="consumedresource.html" class="btn btn-neutral float-right" title="ConsumedResource" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

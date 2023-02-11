@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>PIDLoop &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PIDLoop &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../../about.html"/>
-        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
-        <link rel="next" title="Resource Transfer" href="resource_transfer.html"/>
-        <link rel="prev" title="Note" href="note.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Resource Transfer" href="resource_transfer.html" />
+    <link rel="prev" title="Note" href="note.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
@@ -119,9 +70,7 @@
 <li class="toctree-l3"><a class="reference internal" href="loaddistance.html">Vessel Load Distance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="loaddistance.html#situation-load-distance">Situation Load Distance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="note.html">Note</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">PIDLoop</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">PIDLoop</a></li>
 <li class="toctree-l3"><a class="reference internal" href="resource_transfer.html">Resource Transfer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="steeringmanager.html">SteeringManager</a></li>
 <li class="toctree-l3"><a class="reference internal" href="string.html">String</a></li>
@@ -148,138 +97,118 @@
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
-      
           <li><a href="../misc.html">Configurations and Miscellany</a> &raquo;</li>
-      
-    <li>PIDLoop</li>
+      <li>PIDLoop</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/structures/misc/pidloop.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../../_sources/structures/misc/pidloop.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="pidloop">
-<span id="id1"></span><h1>PIDLoop<a class="headerlink" href="#pidloop" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="pidloop">
+<span id="id1"></span><h1>PIDLoop<a class="headerlink" href="#pidloop" title="Permalink to this heading">¶</a></h1>
 <p>A PID loop is a standard control mechanism taught in many control
-theory textbooks.  It&#8217;s a simple way to deal with a scenario where
+theory textbooks.  It’s a simple way to deal with a scenario where
 you want a program to move a control lever of some sort in order
 to cause a measured phenomenon to settle on a target value.  That
 base description actually covers many scenarios:</p>
 <blockquote>
 <div><ul class="simple">
-<li>A car&#8217;s cruise control moving the accelerator
-pedal to seek a target speed.</li>
-<li>A ship at sea moving the rudder to seek a target
-compass heading.</li>
-<li>An electric oven changing the amount of current to
-the heating element to seek a target temperature.</li>
+<li><p>A car’s cruise control moving the accelerator
+pedal to seek a target speed.</p></li>
+<li><p>A ship at sea moving the rudder to seek a target
+compass heading.</p></li>
+<li><p>An electric oven changing the amount of current to
+the heating element to seek a target temperature.</p></li>
 <li></li>
 </ul>
 </div></blockquote>
 <p>It should be clear why such a thing would come up a lot in kOS,
 which is all about having a computer move the controls to seek
 some kind of target result.</p>
-<p>PID stands for &#8220;Proportional, Integral, Derivative&#8221;.  It tracks
+<p>PID stands for “Proportional, Integral, Derivative”.  It tracks
 the thing you are measuring and how it changes over time, and
 uses that to decide how you should set the control.</p>
 <p>The kOS documenation has a
-<a class="reference internal" href="../../tutorials/pidloops.html#pidloops"><span>tutorial about what PID loops are</span></a> that goes over the
+<a class="reference internal" href="../../tutorials/pidloops.html#pidloops"><span class="std std-ref">tutorial about what PID loops are</span></a> that goes over the
 general principles and shows code examples of how to create your
 own PID loop with your own script code.</p>
-<p>But, you don&#8217;t actually need to do that (make your own PID loop code)
+<p>But, you don’t actually need to do that (make your own PID loop code)
 because kOS comes with a built-in PID loop type you can use, which is
 what this page describes.  However, to make sense out of what these
-terms mean and what they are for, it&#8217;s still recommended that you
-read the <a class="reference internal" href="../../tutorials/pidloops.html#pidloops"><span>tutorial about what PID loops are</span></a> first.</p>
-<div class="section" id="constructors">
-<h2>Constructors<a class="headerlink" href="#constructors" title="Permalink to this headline">¶</a></h2>
+terms mean and what they are for, it’s still recommended that you
+read the <a class="reference internal" href="../../tutorials/pidloops.html#pidloops"><span class="std std-ref">tutorial about what PID loops are</span></a> first.</p>
+<section id="constructors">
+<h2>Constructors<a class="headerlink" href="#constructors" title="Permalink to this heading">¶</a></h2>
 <p>The <cite>PIDLoop</cite> constructor function has a number of parametres, and
 they can be left off, leaving optional defaults.</p>
 <p>The full version is this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">MYPID</span> <span class="ow">TO</span> <span class="nv">PIDLOOP</span><span class="p">(</span><span class="nv">Kp</span><span class="p">,</span> <span class="nv">Ki</span><span class="p">,</span> <span class="nv">Kd</span><span class="p">,</span> <span class="nv">min_output</span><span class="p">,</span> <span class="nv">max_output</span><span class="p">,</span> <span class="nv">epsilon</span><span class="p">).</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">MYPID</span> <span class="ow">TO</span> <span class="nv">PIDLOOP</span><span class="p">(</span><span class="nv">Kp</span><span class="p">,</span> <span class="nv">Ki</span><span class="p">,</span> <span class="nv">Kd</span><span class="p">,</span> <span class="nv">min_output</span><span class="p">,</span> <span class="nv">max_output</span><span class="p">,</span> <span class="nv">epsilon</span><span class="p">).</span>
 </pre></div>
 </div>
 <p>With these defaults:</p>
 <blockquote>
-<div><table border="1" class="docutils">
+<div><table class="docutils align-default">
 <colgroup>
-<col width="17%" />
-<col width="33%" />
-<col width="50%" />
+<col style="width: 16.7%" />
+<col style="width: 33.3%" />
+<col style="width: 50.0%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Parameter</th>
-<th class="head">Default if left off</th>
-<th class="head">Meaning</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default if left off</p></th>
+<th class="head"><p>Meaning</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>Kp</td>
-<td>1.0</td>
-<td>Proportional gain</td>
+<tbody>
+<tr class="row-even"><td><p>Kp</p></td>
+<td><p>1.0</p></td>
+<td><p>Proportional gain</p></td>
 </tr>
-<tr class="row-odd"><td>Ki</td>
-<td>0.0</td>
-<td>Integral gain</td>
+<tr class="row-odd"><td><p>Ki</p></td>
+<td><p>0.0</p></td>
+<td><p>Integral gain</p></td>
 </tr>
-<tr class="row-even"><td>Kd</td>
-<td>0.0</td>
-<td>Derivative gain</td>
+<tr class="row-even"><td><p>Kd</p></td>
+<td><p>0.0</p></td>
+<td><p>Derivative gain</p></td>
 </tr>
-<tr class="row-odd"><td>min_output</td>
-<td>Very Big negative number. about -1.7e308</td>
-<td>The minimum value this PIDLoop will output.</td>
+<tr class="row-odd"><td><p>min_output</p></td>
+<td><p>Very Big negative number. about -1.7e308</p></td>
+<td><p>The minimum value this PIDLoop will output.</p></td>
 </tr>
-<tr class="row-even"><td>max_output</td>
-<td>Very Big positive number. about -1.7e308</td>
-<td>The maximum value this PIDLoop will output.</td>
+<tr class="row-even"><td><p>max_output</p></td>
+<td><p>Very Big positive number. about -1.7e308</p></td>
+<td><p>The maximum value this PIDLoop will output.</p></td>
 </tr>
-<tr class="row-odd"><td>epsilon</td>
-<td>0.0</td>
-<td>The PIDLoop will ignore any input error smaller than this.</td>
+<tr class="row-odd"><td><p>epsilon</p></td>
+<td><p>0.0</p></td>
+<td><p>The PIDLoop will ignore any input error smaller than this.</p></td>
 </tr>
 </tbody>
 </table>
 </div></blockquote>
-<div class="section" id="examples">
-<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// With zero parameters, the PIDLoop has default parameters:</span>
+<section id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// With zero parameters, the PIDLoop has default parameters:</span>
 <span class="c1">// kp = 1, ki = 0, kd = 0</span>
 <span class="c1">// maxoutput = maximum number value</span>
 <span class="c1">// minoutput = minimum number value</span>
@@ -291,10 +220,10 @@ they can be left off, leaving optional defaults.</p>
 <span class="k">SET</span> <span class="nv">PID</span> <span class="ow">TO</span> <span class="nv">PIDLOOP</span><span class="p">(</span><span class="mf">2</span><span class="p">.</span><span class="mf">0</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">05</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">).</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="example-of-using-it">
-<h3>Example of using it:<a class="headerlink" href="#example-of-using-it" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Throttle up when below target altitude, throttle down when above</span>
+</section>
+<section id="example-of-using-it">
+<h3>Example of using it:<a class="headerlink" href="#example-of-using-it" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// Throttle up when below target altitude, throttle down when above</span>
 <span class="c1">// target altitude, trying to hover:</span>
 <span class="k">local</span> <span class="nv">target_alt</span> <span class="ow">is</span> <span class="mf">100</span><span class="p">.</span>
 <span class="k">set</span> <span class="nv">HOVERPID</span> <span class="ow">to</span> <span class="nv">PIDLOOP</span><span class="p">(</span>
@@ -313,14 +242,14 @@ they can be left off, leaving optional defaults.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Please see the bottom of this page for information on the derivation of the loop&#8217;s output.</p>
-</div>
-</div>
-<div class="section" id="basic-pidloop-example">
-<span id="id2"></span><h2>Basic PIDloop Example<a class="headerlink" href="#basic-pidloop-example" title="Permalink to this headline">¶</a></h2>
+<p>Please see the bottom of this page for information on the derivation of the loop’s output.</p>
+</section>
+</section>
+<section id="basic-pidloop-example">
+<span id="id2"></span><h2>Basic PIDloop Example<a class="headerlink" href="#basic-pidloop-example" title="Permalink to this heading">¶</a></h2>
 <p>Here is a simple example that would move a throttle on a hovering
-rocket to get it to settle in at an <code class="docutils literal"><span class="pre">alt:radar</span></code> of 100 meters:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Example PIDLoop usage to hover a rocket at 100 meters off the ground:</span>
+rocket to get it to settle in at an <code class="docutils literal notranslate"><span class="pre">alt:radar</span></code> of 100 meters:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// Example PIDLoop usage to hover a rocket at 100 meters off the ground:</span>
 <span class="c1">// Please use it with a rocket that has lots of fuel to test it,</span>
 <span class="c1">// and a TWR between about 1.75 and 2.0.</span>
 
@@ -343,17 +272,17 @@ rocket to get it to settle in at an <code class="docutils literal"><span class="
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="using-setpoint-is-better-than-using-zero">
-<span id="please-use-setpoint"></span><h2>Using SETPOINT is better than using Zero<a class="headerlink" href="#using-setpoint-is-better-than-using-zero" title="Permalink to this headline">¶</a></h2>
-<p>The <a class="reference internal" href="#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PIDloop</span></code></a> type has a <code class="xref ks ks-attr docutils literal"><span class="pre">SETPOINT</span></code> suffix, which tells the
+</section>
+<section id="using-setpoint-is-better-than-using-zero">
+<span id="please-use-setpoint"></span><h2>Using SETPOINT is better than using Zero<a class="headerlink" href="#using-setpoint-is-better-than-using-zero" title="Permalink to this heading">¶</a></h2>
+<p>The <a class="reference internal" href="#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">PIDloop</span></code></a> type has a <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">SETPOINT</span></code> suffix, which tells the
 loop what the desired target value is that the loop should be seeking.
-In most cases the result of using <code class="xref ks ks-attr docutils literal"><span class="pre">SETPOINT</span></code> would be the
+In most cases the result of using <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">SETPOINT</span></code> would be the
 same as just adjusting the value yourself to center it around zero,
-and you&#8217;d think the following two would product identical results,
-but they don&#8217;t:</p>
+and you’d think the following two would product identical results,
+but they don’t:</p>
 <p>Version (A):</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// assume `wanted` is a variable with the desired target value:</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// assume `wanted` is a variable with the desired target value:</span>
 <span class="c1">// when initializing, do:</span>
 <span class="k">set</span> <span class="nv">myPid</span> <span class="ow">to</span> <span class="nv">PIDLOOP</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">2</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">02</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">).</span>
 
@@ -362,7 +291,7 @@ but they don&#8217;t:</p>
 </pre></div>
 </div>
 <p>Version (B):</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// assume `wanted` is a variable with the desired target value:</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// assume `wanted` is a variable with the desired target value:</span>
 <span class="c1">// when initializing, do:</span>
 <span class="k">set</span> <span class="nv">myPid</span> <span class="ow">to</span> <span class="nv">PIDLOOP</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">2</span><span class="p">,</span> <span class="mf">0</span><span class="p">.</span><span class="mf">02</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">).</span>
 <span class="k">set</span> <span class="nv">myPid</span><span class="p">:</span><span class="nv">SETPOINT</span> <span class="ow">to</span> <span class="nv">wanted</span><span class="p">.</span>
@@ -371,449 +300,403 @@ but they don&#8217;t:</p>
 <span class="k">set</span> <span class="nv">ctrl</span> <span class="ow">to</span> <span class="nv">myPid</span><span class="p">:</span><span class="nv">UPDATE</span><span class="p">(</span><span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span><span class="p">,</span> <span class="nv">measurement</span><span class="p">).</span>
 </pre></div>
 </div>
-<p>Actually, with kOS&#8217;s PIDLoop, the second version, Version(B), works a bit better
+<p>Actually, with kOS’s PIDLoop, the second version, Version(B), works a bit better
 and should be preferred.  The reason is that when calcualting the D term,
-<a class="reference internal" href="#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></code></a> uses the change in the raw measure, not the error of the
+<a class="reference internal" href="#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">PIDLoop</span></code></a> uses the change in the raw measure, not the error of the
 the measure, to calculate the rate of change of the value.  This becomes
 relevant when your script suddenly changes its mind what the target value is
 supposed to be.  If you change your mind when using Version(B) above, by
-saying <code class="docutils literal"><span class="pre">Set</span> <span class="pre">MyPid:SETPOINT</span> <span class="pre">to</span> <span class="pre">newValue.</span></code>, then the PIDLoop is aware that
-the D value didn&#8217;t actually suddenly change to an enormously large number,
+saying <code class="docutils literal notranslate"><span class="pre">Set</span> <span class="pre">MyPid:SETPOINT</span> <span class="pre">to</span> <span class="pre">newValue.</span></code>, then the PIDLoop is aware that
+the D value didn’t actually suddenly change to an enormously large number,
 because it measures the change in raw value not the change in error.  If
 using Version(A), the PIDLoop would think there has been a huge sudden
 large change all at once, and thus the D term calculation would take
 that to mean it needs to violently counteract that change.  Using Version(B)
-with kOS&#8217;s PIDLoop allows it to respond to the change less violently
-because it knows the actual raw value didn&#8217;t suddenly jump - just the
+with kOS’s PIDLoop allows it to respond to the change less violently
+because it knows the actual raw value didn’t suddenly jump - just the
 desired target value did.</p>
-</div>
-<div class="section" id="structure">
-<h2>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
-<dl class="structure">
-<dt id="structure:PIDLOOP">
-<em class="property">structure </em><code class="descname">PIDLoop</code><a class="headerlink" href="#structure:PIDLOOP" title="Permalink to this definition">¶</a></dt>
-<dd><table border="1" class="docutils">
-<colgroup>
-<col width="35%" />
-<col width="24%" />
-<col width="42%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type</th>
-<th class="head">Description</th>
+</section>
+<section id="structure">
+<h2>Structure<a class="headerlink" href="#structure" title="Permalink to this heading">¶</a></h2>
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:PIDLOOP">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">PIDLoop</span></span><a class="headerlink" href="#structure:PIDLOOP" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#attribute:PIDLOOP:LASTSAMPLETIME" title="PIDLOOP:LASTSAMPLETIME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LASTSAMPLETIME</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-<td>decimal value of the last sample time</td>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:PIDLOOP:LASTSAMPLETIME" title="PIDLOOP:LASTSAMPLETIME attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">LASTSAMPLETIME</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>decimal value of the last sample time</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:PIDLOOP:KP" title="PIDLOOP:KP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">KP</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-<td>The proportional gain factor</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:PIDLOOP:KP" title="PIDLOOP:KP attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">KP</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>The proportional gain factor</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:PIDLOOP:KI" title="PIDLOOP:KI attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">KI</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-<td>The integral gain factor</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:PIDLOOP:KI" title="PIDLOOP:KI attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">KI</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>The integral gain factor</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:PIDLOOP:KD" title="PIDLOOP:KD attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">KD</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-<td>The derivative gain factor</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:PIDLOOP:KD" title="PIDLOOP:KD attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">KD</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>The derivative gain factor</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:PIDLOOP:INPUT" title="PIDLOOP:INPUT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">INPUT</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-<td>The most recent input value</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:PIDLOOP:INPUT" title="PIDLOOP:INPUT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">INPUT</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>The most recent input value</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:PIDLOOP:SETPOINT" title="PIDLOOP:SETPOINT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SETPOINT</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-<td>The current setpoint</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:PIDLOOP:SETPOINT" title="PIDLOOP:SETPOINT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">SETPOINT</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>The current setpoint</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:PIDLOOP:ERROR" title="PIDLOOP:ERROR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ERROR</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-<td>The most recent error value</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:PIDLOOP:ERROR" title="PIDLOOP:ERROR attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ERROR</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>The most recent error value</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:PIDLOOP:OUTPUT" title="PIDLOOP:OUTPUT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">OUTPUT</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-<td>The most recent output value</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:PIDLOOP:OUTPUT" title="PIDLOOP:OUTPUT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">OUTPUT</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>The most recent output value</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:PIDLOOP:MAXOUTPUT" title="PIDLOOP:MAXOUTPUT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MAXOUTPUT</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-<td>The maximum output value</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:PIDLOOP:MAXOUTPUT" title="PIDLOOP:MAXOUTPUT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">MAXOUTPUT</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>The maximum output value</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:PIDLOOP:MINOUTPUT" title="PIDLOOP:MINOUTPUT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MINOUTPUT</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-<td>The maximum output value</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:PIDLOOP:MINOUTPUT" title="PIDLOOP:MINOUTPUT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">MINOUTPUT</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>The maximum output value</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:PIDLOOP:EPSILON" title="PIDLOOP:EPSILON attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">EPSILON</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-<td>The &#8220;don&#8217;t care&#8221; tolerance of error</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:PIDLOOP:EPSILON" title="PIDLOOP:EPSILON attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">EPSILON</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>The “don’t care” tolerance of error</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:PIDLOOP:IGNOREERROR" title="PIDLOOP:IGNOREERROR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">IGNOREERROR</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-<td>Alias for <a class="reference internal" href="#attribute:PIDLOOP:EPSILON" title="PIDLOOP:EPSILON attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">EPSILON</span></code></a>.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:PIDLOOP:IGNOREERROR" title="PIDLOOP:IGNOREERROR attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">IGNOREERROR</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Alias for <a class="reference internal" href="#attribute:PIDLOOP:EPSILON" title="PIDLOOP:EPSILON attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">EPSILON</span></code></a>.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:PIDLOOP:ERRORSUM" title="PIDLOOP:ERRORSUM attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ERRORSUM</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-<td>The time weighted sum of error</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:PIDLOOP:ERRORSUM" title="PIDLOOP:ERRORSUM attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ERRORSUM</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>The time weighted sum of error</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:PIDLOOP:PTERM" title="PIDLOOP:PTERM attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PTERM</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-<td>The proportional component of output</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:PIDLOOP:PTERM" title="PIDLOOP:PTERM attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">PTERM</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>The proportional component of output</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:PIDLOOP:ITERM" title="PIDLOOP:ITERM attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ITERM</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-<td>The integral component of output</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:PIDLOOP:ITERM" title="PIDLOOP:ITERM attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ITERM</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>The integral component of output</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:PIDLOOP:DTERM" title="PIDLOOP:DTERM attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DTERM</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-<td>The derivative component of output</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:PIDLOOP:DTERM" title="PIDLOOP:DTERM attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">DTERM</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>The derivative component of output</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:PIDLOOP:CHANGERATE" title="PIDLOOP:CHANGERATE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CHANGERATE</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a> (/s)</td>
-<td>The most recent input rate of change</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:PIDLOOP:CHANGERATE" title="PIDLOOP:CHANGERATE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">CHANGERATE</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (/s)</p></td>
+<td><p>The most recent input rate of change</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:PIDLOOP:RESET" title="PIDLOOP:RESET method"><code class="xref ks ks-meth docutils literal"><span class="pre">RESET</span></code></a></td>
-<td>none</td>
-<td>Reset the integral and derivative components</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:PIDLOOP:RESET" title="PIDLOOP:RESET method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">RESET</span></code></a></p></td>
+<td><p>none</p></td>
+<td><p>Reset the integral and derivative components</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:PIDLOOP:UPDATE" title="PIDLOOP:UPDATE method"><code class="xref ks ks-meth docutils literal"><span class="pre">UPDATE(time,</span> <span class="pre">input)</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-<td>Returns output based on time and input</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#method:PIDLOOP:UPDATE" title="PIDLOOP:UPDATE method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">UPDATE(time,</span> <span class="pre">input)</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Returns output based on time and input</p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PIDLOOP:LASTSAMPLETIME">
-PIDLoop:<code class="descname">LASTSAMPLETIME</code><a class="headerlink" href="#attribute:PIDLOOP:LASTSAMPLETIME" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
-<p>The value representing the time of the last sample.  This value is equal to the time parameter of the <code class="xref ks ks-meth docutils literal"><span class="pre">UPDATE</span></code> method.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:PIDLOOP:LASTSAMPLETIME">
+<span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">LASTSAMPLETIME</span></span><a class="headerlink" href="#attribute:PIDLOOP:LASTSAMPLETIME" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
+<p>The value representing the time of the last sample.  This value is equal to the time parameter of the <code class="xref ks ks-meth docutils literal notranslate"><span class="pre">UPDATE</span></code> method.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PIDLOOP:KP">
-PIDLoop:<code class="descname">KP</code><a class="headerlink" href="#attribute:PIDLOOP:KP" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:PIDLOOP:KP">
+<span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">KP</span></span><a class="headerlink" href="#attribute:PIDLOOP:KP" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
 <p>The proportional gain factor.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PIDLOOP:KI">
-PIDLoop:<code class="descname">KI</code><a class="headerlink" href="#attribute:PIDLOOP:KI" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:PIDLOOP:KI">
+<span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">KI</span></span><a class="headerlink" href="#attribute:PIDLOOP:KI" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
 <p>The integral gain factor.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PIDLOOP:KD">
-PIDLoop:<code class="descname">KD</code><a class="headerlink" href="#attribute:PIDLOOP:KD" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:PIDLOOP:KD">
+<span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">KD</span></span><a class="headerlink" href="#attribute:PIDLOOP:KD" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
 <p>The derivative gain factor.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PIDLOOP:INPUT">
-PIDLoop:<code class="descname">INPUT</code><a class="headerlink" href="#attribute:PIDLOOP:INPUT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
-<p>The value representing the input of the last sample.  This value is equal to the input parameter of the <code class="xref ks ks-meth docutils literal"><span class="pre">UPDATE</span></code> method.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:PIDLOOP:INPUT">
+<span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">INPUT</span></span><a class="headerlink" href="#attribute:PIDLOOP:INPUT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
+<p>The value representing the input of the last sample.  This value is equal to the input parameter of the <code class="xref ks ks-meth docutils literal notranslate"><span class="pre">UPDATE</span></code> method.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PIDLOOP:SETPOINT">
-PIDLoop:<code class="descname">SETPOINT</code><a class="headerlink" href="#attribute:PIDLOOP:SETPOINT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
-<p>The current setpoint.  This is the value to which input is compared when <code class="xref ks ks-meth docutils literal"><span class="pre">UPDATE</span></code> is called.  It may not be synced with the last sample.</p>
-<p>It is desirable to use <code class="xref ks ks-attr docutils literal"><span class="pre">SETPOINT</span></code> for the
-<a class="reference internal" href="#please-use-setpoint"><span>reasons described above</span></a>.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:PIDLOOP:SETPOINT">
+<span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">SETPOINT</span></span><a class="headerlink" href="#attribute:PIDLOOP:SETPOINT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
+<p>The current setpoint.  This is the value to which input is compared when <code class="xref ks ks-meth docutils literal notranslate"><span class="pre">UPDATE</span></code> is called.  It may not be synced with the last sample.</p>
+<p>It is desirable to use <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">SETPOINT</span></code> for the
+<a class="reference internal" href="#please-use-setpoint"><span class="std std-ref">reasons described above</span></a>.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PIDLOOP:ERROR">
-PIDLoop:<code class="descname">ERROR</code><a class="headerlink" href="#attribute:PIDLOOP:ERROR" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:PIDLOOP:ERROR">
+<span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">ERROR</span></span><a class="headerlink" href="#attribute:PIDLOOP:ERROR" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>The calculated error from the last sample (setpoint - input).</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PIDLOOP:OUTPUT">
-PIDLoop:<code class="descname">OUTPUT</code><a class="headerlink" href="#attribute:PIDLOOP:OUTPUT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:PIDLOOP:OUTPUT">
+<span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">OUTPUT</span></span><a class="headerlink" href="#attribute:PIDLOOP:OUTPUT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>The calculated output from the last sample.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PIDLOOP:MAXOUTPUT">
-PIDLoop:<code class="descname">MAXOUTPUT</code><a class="headerlink" href="#attribute:PIDLOOP:MAXOUTPUT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:PIDLOOP:MAXOUTPUT">
+<span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">MAXOUTPUT</span></span><a class="headerlink" href="#attribute:PIDLOOP:MAXOUTPUT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
 <p>The current maximum output value.  This value also helps with regulating integral wind up mitigation.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PIDLOOP:MINOUTPUT">
-PIDLoop:<code class="descname">MINOUTPUT</code><a class="headerlink" href="#attribute:PIDLOOP:MINOUTPUT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:PIDLOOP:MINOUTPUT">
+<span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">MINOUTPUT</span></span><a class="headerlink" href="#attribute:PIDLOOP:MINOUTPUT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
 <p>The current minimum output value.  This value also helps with regulating integral wind up mitigation.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PIDLOOP:EPSILON">
-PIDLoop:<code class="descname">EPSILON</code><a class="headerlink" href="#attribute:PIDLOOP:EPSILON" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:PIDLOOP:EPSILON">
+<span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">EPSILON</span></span><a class="headerlink" href="#attribute:PIDLOOP:EPSILON" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
 <p>Default = 0.</p>
-<p>The size of the &#8220;don&#8217;t care&#8221; tolerance window of the error measurement.</p>
+<p>The size of the “don’t care” tolerance window of the error measurement.</p>
 <p>When the error measurement (difference between input and setpoint) is smaller
 than this number, then this PID loop will simply <em>pretend</em> the error is
-actually zero and react accordingly (it won&#8217;t output any control deflection
-to bother correcting the error until after it&#8217;s bigger than epsilon.)
+actually zero and react accordingly (it won’t output any control deflection
+to bother correcting the error until after it’s bigger than epsilon.)
 This can be handy when you want a null zone in the input measure.  (This is
 different from having a null zone in the output, as in having a lever
-that can&#8217;t do anything unless it&#8217;s moved far enough.  This is more of a
+that can’t do anything unless it’s moved far enough.  This is more of a
 null zone on the input measurement.)</p>
 <p>(In the PIDLoops that are contained internally within the
-<a class="reference internal" href="steeringmanager.html#structure:STEERINGMANAGER" title="STEERINGMANAGER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">SteeringManager</span></code></a> that <code class="docutils literal"><span class="pre">lock</span> <span class="pre">steering</span></code> uses, they use this
+<a class="reference internal" href="steeringmanager.html#structure:STEERINGMANAGER" title="STEERINGMANAGER structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">SteeringManager</span></code></a> that <code class="docutils literal notranslate"><span class="pre">lock</span> <span class="pre">steering</span></code> uses, they use this
 epsilon to try to reduce the use of RCS propellant that comes from
 wiggling the controls unnecessarily.)</p>
 <p>Because the PIDloop will pretend any error smaller than epsilon is zero,
-it also will not incur any &#8220;integral windup&#8221; for that error.</p>
+it also will not incur any “integral windup” for that error.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PIDLOOP:IGNOREERROR">
-PIDLoop:<code class="descname">IGNOREERROR</code><a class="headerlink" href="#attribute:PIDLOOP:IGNOREERROR" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
-<p>This is just an alias that is the same thing as <code class="xref ks ks-attr docutils literal"><span class="pre">EPSILON</span></code>.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:PIDLOOP:IGNOREERROR">
+<span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">IGNOREERROR</span></span><a class="headerlink" href="#attribute:PIDLOOP:IGNOREERROR" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
+<p>This is just an alias that is the same thing as <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">EPSILON</span></code>.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PIDLOOP:ERRORSUM">
-PIDLoop:<code class="descname">ERRORSUM</code><a class="headerlink" href="#attribute:PIDLOOP:ERRORSUM" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
-<p>The value representing the time weighted sum of all errrors.  It will be equal to <code class="xref ks ks-attr docutils literal"><span class="pre">ITERM</span></code> / <code class="xref ks ks-attr docutils literal"><span class="pre">KI</span></code>.  This value is adjusted by the integral windup mitigation logic.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:PIDLOOP:ERRORSUM">
+<span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">ERRORSUM</span></span><a class="headerlink" href="#attribute:PIDLOOP:ERRORSUM" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
+<p>The value representing the time weighted sum of all errrors.  It will be equal to <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ITERM</span></code> / <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">KI</span></code>.  This value is adjusted by the integral windup mitigation logic.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PIDLOOP:PTERM">
-PIDLoop:<code class="descname">PTERM</code><a class="headerlink" href="#attribute:PIDLOOP:PTERM" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
-<p>The value representing the proportional component of <code class="xref ks ks-attr docutils literal"><span class="pre">OUTPUT</span></code>.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:PIDLOOP:PTERM">
+<span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">PTERM</span></span><a class="headerlink" href="#attribute:PIDLOOP:PTERM" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
+<p>The value representing the proportional component of <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">OUTPUT</span></code>.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PIDLOOP:ITERM">
-PIDLoop:<code class="descname">ITERM</code><a class="headerlink" href="#attribute:PIDLOOP:ITERM" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
-<p>The value representing the integral component of <code class="xref ks ks-attr docutils literal"><span class="pre">OUTPUT</span></code>.  This value is adjusted by the integral windup mitigation logic.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:PIDLOOP:ITERM">
+<span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">ITERM</span></span><a class="headerlink" href="#attribute:PIDLOOP:ITERM" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
+<p>The value representing the integral component of <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">OUTPUT</span></code>.  This value is adjusted by the integral windup mitigation logic.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PIDLOOP:DTERM">
-PIDLoop:<code class="descname">DTERM</code><a class="headerlink" href="#attribute:PIDLOOP:DTERM" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
-<p>The value representing the derivative component of <code class="xref ks ks-attr docutils literal"><span class="pre">OUTPUT</span></code>.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:PIDLOOP:DTERM">
+<span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">DTERM</span></span><a class="headerlink" href="#attribute:PIDLOOP:DTERM" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
+<p>The value representing the derivative component of <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">OUTPUT</span></code>.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PIDLOOP:CHANGERATE">
-PIDLoop:<code class="descname">CHANGERATE</code><a class="headerlink" href="#attribute:PIDLOOP:CHANGERATE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
-<p>The rate of change of the <code class="xref ks ks-attr docutils literal"><span class="pre">INPUT</span></code> during the last sample.  It will be equal to (input - last input) / (change in time).</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:PIDLOOP:CHANGERATE">
+<span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">CHANGERATE</span></span><a class="headerlink" href="#attribute:PIDLOOP:CHANGERATE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
+<p>The rate of change of the <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">INPUT</span></code> during the last sample.  It will be equal to (input - last input) / (change in time).</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:PIDLOOP:RESET">
-PIDLoop:<code class="descname">RESET</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PIDLOOP:RESET" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">none</td>
-</tr>
-</tbody>
-</table>
-<p>Call this method to clear the <code class="xref ks ks-attr docutils literal"><span class="pre">ERRORSUM</span></code>, <code class="xref ks ks-attr docutils literal"><span class="pre">ITERM</span></code>, and <code class="xref ks ks-attr docutils literal"><span class="pre">LASTSAMPLETIME</span></code> components of the PID calculation.</p>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:PIDLOOP:RESET">
+<span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">RESET</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PIDLOOP:RESET" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>none</p>
+</dd>
+</dl>
+<p>Call this method to clear the <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ERRORSUM</span></code>, <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ITERM</span></code>, and <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">LASTSAMPLETIME</span></code> components of the PID calculation.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:PIDLOOP:UPDATE">
-PIDLoop:<code class="descname">UPDATE</code><span class="sig-paren">(</span>time, input<span class="sig-paren">)</span><a class="headerlink" href="#method:PIDLOOP:UPDATE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>time</strong> &#8211; (<a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a>) the decimal time in seconds</li>
-<li><strong>input</strong> &#8211; (<a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a>) the input variable to compare to the setpoint</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:PIDLOOP:UPDATE">
+<span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">UPDATE</span></span><span class="sig-paren">(</span><span class="pre">time,</span> <span class="pre">input</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PIDLOOP:UPDATE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> – (<a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>) the decimal time in seconds</p></li>
+<li><p><strong>input</strong> – (<a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>) the input variable to compare to the setpoint</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a> representing the calculated output</p>
-</td>
-</tr>
-</tbody>
-</table>
-<p>Upon calling this method, the PIDLoop will calculate the output based on this this basic framework (see below for detailed derivation): output = error * kp + errorsum * ki + (change in input) / (change in time) * kd.  This method is usually called with the current time in seconds (<cite>TIME:SECONDS</cite>), however it may be called using whatever rate measurement you prefer.  Windup mitigation is included, based on <code class="xref ks ks-attr docutils literal"><span class="pre">MAXOUTPUT</span></code> and <code class="xref ks ks-attr docutils literal"><span class="pre">MINOUTPUT</span></code>.  Both integral components and derivative components are guarded against a change in time greater than 1s, and will not be calculated on the first iteration.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> representing the calculated output</p>
+</dd>
+</dl>
+<p>Upon calling this method, the PIDLoop will calculate the output based on this this basic framework (see below for detailed derivation): output = error * kp + errorsum * ki + (change in input) / (change in time) * kd.  This method is usually called with the current time in seconds (<cite>TIME:SECONDS</cite>), however it may be called using whatever rate measurement you prefer.  Windup mitigation is included, based on <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">MAXOUTPUT</span></code> and <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">MINOUTPUT</span></code>.  Both integral components and derivative components are guarded against a change in time greater than 1s, and will not be calculated on the first iteration.</p>
 </dd></dl>
 
-</div>
-<div class="section" id="pidloop-update-derivation">
-<h2>PIDLoop Update Derivation<a class="headerlink" href="#pidloop-update-derivation" title="Permalink to this headline">¶</a></h2>
-<p>The internal update method of the <a class="reference internal" href="#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></code></a> structure is the equivalent of the following in kerboscript</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// assume that the terms LastInput, LastSampleTime, ErrorSum, Kp, Ki, Kd, Setpoint, MinOutput, MaxOutput, and Epsilon are previously defined</span>
+</section>
+<section id="pidloop-update-derivation">
+<h2>PIDLoop Update Derivation<a class="headerlink" href="#pidloop-update-derivation" title="Permalink to this heading">¶</a></h2>
+<p>The internal update method of the <a class="reference internal" href="#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">PIDLoop</span></code></a> structure is the equivalent of the following in kerboscript</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// assume that the terms LastInput, LastSampleTime, ErrorSum, Kp, Ki, Kd, Setpoint, MinOutput, MaxOutput, and Epsilon are previously defined</span>
 <span class="k">declare</span> <span class="kd">function</span> <span class="nv">Update</span> <span class="p">{</span>
     <span class="k">declare</span> <span class="kd">parameter</span> <span class="nv">sampleTime</span><span class="p">,</span> <span class="nv">input</span><span class="p">.</span>
     <span class="k">set</span> <span class="nv">Error</span> <span class="ow">to</span> <span class="nv">Setpoint</span> <span class="o">-</span> <span class="nv">input</span><span class="p">.</span>
@@ -861,76 +744,38 @@ PIDLoop:<code class="descname">UPDATE</code><span class="sig-paren">(</span>time
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="resource_transfer.html" class="btn btn-neutral float-right" title="Resource Transfer" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="note.html" class="btn btn-neutral" title="Note" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="note.html" class="btn btn-neutral float-left" title="Note" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="resource_transfer.html" class="btn btn-neutral float-right" title="Resource Transfer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

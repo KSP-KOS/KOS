@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>TextField &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TextField &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../../about.html"/>
-        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Creating GUIs" href="../gui.html"/>
-        <link rel="next" title="TipDisplay" href="tipdisplay.html"/>
-        <link rel="prev" title="StyleState" href="stylestate.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="TipDisplay" href="tipdisplay.html" />
+    <link rel="prev" title="StyleState" href="stylestate.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
@@ -123,7 +74,7 @@
 <li class="toctree-l3"><a class="reference internal" href="style.html">Style</a></li>
 <li class="toctree-l3"><a class="reference internal" href="stylerecoffset.html">StyleRectOffset</a></li>
 <li class="toctree-l3"><a class="reference internal" href="stylestate.html">StyleState</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">TextField</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">TextField</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tipdisplay.html">TipDisplay</a></li>
 <li class="toctree-l3"><a class="reference internal" href="widget.html">Widget</a></li>
 </ul>
@@ -139,334 +90,261 @@
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
-      
           <li><a href="../gui.html">Creating GUIs</a> &raquo;</li>
-      
-    <li>TextField</li>
+      <li>TextField</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/structures/gui_widgets/textfield.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../../_sources/structures/gui_widgets/textfield.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="textfield">
-<span id="gui-textfield"></span><h1>TextField<a class="headerlink" href="#textfield" title="Permalink to this headline">¶</a></h1>
-<dl class="structure">
-<dt id="structure:TEXTFIELD">
-<em class="property">structure </em><code class="descname">TextField</code><a class="headerlink" href="#structure:TEXTFIELD" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">TextField</span></code> objects are created via <a class="reference internal" href="box.html#method:BOX:ADDTEXTFIELD" title="BOX:ADDTEXTFIELD method"><code class="xref ks ks-meth docutils literal"><span class="pre">BOX:ADDTEXTFIELD</span></code></a>.</p>
-<p>A <code class="docutils literal"><span class="pre">TextField</span></code> is a special kind of <a class="reference internal" href="label.html#structure:LABEL" title="LABEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Label</span></code></a> that can be
-edited by the user.  Unlike a normal <a class="reference internal" href="label.html#structure:LABEL" title="LABEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Label</span></code></a>, a <code class="docutils literal"><span class="pre">TextField</span></code>
-can only be textual (it can&#8217;t be used for image files).</p>
-<p>A <code class="docutils literal"><span class="pre">TextField</span></code> has a default style that looks different from a
-passive <a class="reference internal" href="label.html#structure:LABEL" title="LABEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Label</span></code></a>.  In the default style, a <code class="docutils literal"><span class="pre">TextField</span></code> shows
+             
+  <section id="textfield">
+<span id="gui-textfield"></span><h1>TextField<a class="headerlink" href="#textfield" title="Permalink to this heading">¶</a></h1>
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:TEXTFIELD">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">TextField</span></span><a class="headerlink" href="#structure:TEXTFIELD" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">TextField</span></code> objects are created via <a class="reference internal" href="box.html#method:BOX:ADDTEXTFIELD" title="BOX:ADDTEXTFIELD method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">BOX:ADDTEXTFIELD</span></code></a>.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">TextField</span></code> is a special kind of <a class="reference internal" href="label.html#structure:LABEL" title="LABEL structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Label</span></code></a> that can be
+edited by the user.  Unlike a normal <a class="reference internal" href="label.html#structure:LABEL" title="LABEL structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Label</span></code></a>, a <code class="docutils literal notranslate"><span class="pre">TextField</span></code>
+can only be textual (it can’t be used for image files).</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">TextField</span></code> has a default style that looks different from a
+passive <a class="reference internal" href="label.html#structure:LABEL" title="LABEL structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Label</span></code></a>.  In the default style, a <code class="docutils literal notranslate"><span class="pre">TextField</span></code> shows
 the area the user can click on and type into, using a recessed
 background.</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="26%" />
-<col width="28%" />
-<col width="46%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type</th>
-<th class="head">Description</th>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td colspan="3">Every suffix of <a class="reference internal" href="label.html#structure:LABEL" title="LABEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">LABEL</span></code></a>.  Note you read <a class="reference internal" href="label.html#attribute:LABEL:TEXT" title="LABEL:TEXT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Label:TEXT</span></code></a> to see the TextField&#8217;s current value.</td>
+<tbody>
+<tr class="row-even"><td colspan="3"><p>Every suffix of <a class="reference internal" href="label.html#structure:LABEL" title="LABEL structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">LABEL</span></code></a>.  Note you read <a class="reference internal" href="label.html#attribute:LABEL:TEXT" title="LABEL:TEXT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Label:TEXT</span></code></a> to see the TextField’s current value.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:TEXTFIELD:CHANGED" title="TEXTFIELD:CHANGED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CHANGED</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>Has the text been edited?</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:TEXTFIELD:CHANGED" title="TEXTFIELD:CHANGED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">CHANGED</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Has the text been edited?</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:TEXTFIELD:ONCHANGE" title="TEXTFIELD:ONCHANGE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ONCHANGE</span></code></a></td>
-<td><a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a> (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a>)</td>
-<td>Your function called whenever the <a class="reference internal" href="#attribute:TEXTFIELD:CHANGED" title="TEXTFIELD:CHANGED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CHANGED</span></code></a> state changes.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:TEXTFIELD:ONCHANGE" title="TEXTFIELD:ONCHANGE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ONCHANGE</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegate</span></code></a> (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>)</p></td>
+<td><p>Your function called whenever the <a class="reference internal" href="#attribute:TEXTFIELD:CHANGED" title="TEXTFIELD:CHANGED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">CHANGED</span></code></a> state changes.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:TEXTFIELD:CONFIRMED" title="TEXTFIELD:CONFIRMED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CONFIRMED</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>Has the user pressed Return in the field?</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:TEXTFIELD:CONFIRMED" title="TEXTFIELD:CONFIRMED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">CONFIRMED</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Has the user pressed Return in the field?</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:TEXTFIELD:ONCONFIRM" title="TEXTFIELD:ONCONFIRM attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ONCONFIRM</span></code></a></td>
-<td><a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a> (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a>)</td>
-<td>Your function called whenever the <a class="reference internal" href="#attribute:TEXTFIELD:CONFIRMED" title="TEXTFIELD:CONFIRMED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CONFIRMED</span></code></a> state changes.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:TEXTFIELD:ONCONFIRM" title="TEXTFIELD:ONCONFIRM attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ONCONFIRM</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegate</span></code></a> (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>)</p></td>
+<td><p>Your function called whenever the <a class="reference internal" href="#attribute:TEXTFIELD:CONFIRMED" title="TEXTFIELD:CONFIRMED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">CONFIRMED</span></code></a> state changes.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:TEXTFIELD:TOOLTIP" title="TEXTFIELD:TOOLTIP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TOOLTIP</span></code></a></td>
-<td><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-<td>Hint Text to appear in the field when it&#8217;s empty.</td>
-</tr>
-</tbody>
-</table>
-<dl class="attribute">
-<dt id="attribute:TEXTFIELD:CHANGED">
-TextField:<code class="descname">CHANGED</code><a class="headerlink" href="#attribute:TEXTFIELD:CHANGED" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:TEXTFIELD:TOOLTIP" title="TEXTFIELD:TOOLTIP attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">TOOLTIP</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>Hint Text to appear in the field when it’s empty.</p></td>
 </tr>
 </tbody>
 </table>
-<p>Tells you whether <a class="reference internal" href="label.html#attribute:LABEL:TEXT" title="LABEL:TEXT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Label:TEXT</span></code></a> has been edited at all
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:TEXTFIELD:CHANGED">
+<span class="pre">TextField:</span><span class="sig-name descname"><span class="pre">CHANGED</span></span><a class="headerlink" href="#attribute:TEXTFIELD:CHANGED" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
+<p>Tells you whether <a class="reference internal" href="label.html#attribute:LABEL:TEXT" title="LABEL:TEXT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Label:TEXT</span></code></a> has been edited at all
 since the last time you checked.  Note that any edit counts.  If a
-user is trying to type &#8220;123&#8221; into the <code class="docutils literal"><span class="pre">TextField</span></code> and has so far
-written &#8220;1&#8221; and has just pressed the &#8220;2&#8221;, then this will be true.
-If they then press &#8220;4&#8221; this will be true again.  If they then press
-&#8220;backspace&#8221; because this was type, this will be true again.  If
-they then press &#8220;3&#8221; this will be true again.  Literally <em>every</em>
+user is trying to type “123” into the <code class="docutils literal notranslate"><span class="pre">TextField</span></code> and has so far
+written “1” and has just pressed the “2”, then this will be true.
+If they then press “4” this will be true again.  If they then press
+“backspace” because this was type, this will be true again.  If
+they then press “3” this will be true again.  Literally <em>every</em>
 edit to the text counts, even if the user has not finished using
 the textfield.</p>
 <p>As soon as you read this suffix and it returns true, it will
 be reset to false again until the next time an edit happens.</p>
 <p>This suffix is intended to be used with the
-<a class="reference internal" href="../gui.html#gui-polling-technique"><span>polling technique</span></a> of widget
+<a class="reference internal" href="../gui.html#gui-polling-technique"><span class="std std-ref">polling technique</span></a> of widget
 interaction.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:TEXTFIELD:ONCHANGE">
-TextField:<code class="descname">ONCHANGE</code><a class="headerlink" href="#attribute:TEXTFIELD:ONCHANGE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
-<p>This <a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a> expects one parameter, a <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a>, and returns nothing.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:TEXTFIELD:ONCHANGE">
+<span class="pre">TextField:</span><span class="sig-name descname"><span class="pre">ONCHANGE</span></span><a class="headerlink" href="#attribute:TEXTFIELD:ONCHANGE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegate</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
+<p>This <a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegate</span></code></a> expects one parameter, a <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>, and returns nothing.</p>
 <p>This allows you to set a callback delegate to be called
-whenever the value of <a class="reference internal" href="label.html#attribute:LABEL:TEXT" title="LABEL:TEXT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Label:TEXT</span></code></a> changes in any
-way, whether that&#8217;s inserting a character or deleting a
+whenever the value of <a class="reference internal" href="label.html#attribute:LABEL:TEXT" title="LABEL:TEXT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Label:TEXT</span></code></a> changes in any
+way, whether that’s inserting a character or deleting a
 character.</p>
-<p>The <a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a> you use must be made to expect
+<p>The <a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegate</span></code></a> you use must be made to expect
 one parameter, the new string value, and return nothing.</p>
 <p>Example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">myTextField</span><span class="p">:</span><span class="nv">ONCHANGE</span> <span class="ow">to</span> <span class="p">{</span><span class="kd">parameter</span> <span class="nv">str</span><span class="p">.</span> <span class="k">print</span> <span class="s">&quot;Value is now: &quot;</span> <span class="o">+</span> <span class="nv">str</span><span class="p">.}.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">myTextField</span><span class="p">:</span><span class="nv">ONCHANGE</span> <span class="ow">to</span> <span class="p">{</span><span class="kd">parameter</span> <span class="nv">str</span><span class="p">.</span> <span class="k">print</span> <span class="s">&quot;Value is now: &quot;</span> <span class="o">+</span> <span class="nv">str</span><span class="p">.}.</span>
 </pre></div>
 </div>
 <p>This suffix is intended to be used with the
-<a class="reference internal" href="../gui.html#gui-callback-technique"><span>callback technique</span></a> of widget
+<a class="reference internal" href="../gui.html#gui-callback-technique"><span class="std std-ref">callback technique</span></a> of widget
 interaction.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:TEXTFIELD:CONFIRMED">
-TextField:<code class="descname">CONFIRMED</code><a class="headerlink" href="#attribute:TEXTFIELD:CONFIRMED" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
-<p>Tells you whether the user is finished editing <a class="reference internal" href="label.html#attribute:LABEL:TEXT" title="LABEL:TEXT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Label:TEXT</span></code></a>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:TEXTFIELD:CONFIRMED">
+<span class="pre">TextField:</span><span class="sig-name descname"><span class="pre">CONFIRMED</span></span><a class="headerlink" href="#attribute:TEXTFIELD:CONFIRMED" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
+<p>Tells you whether the user is finished editing <a class="reference internal" href="label.html#attribute:LABEL:TEXT" title="LABEL:TEXT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Label:TEXT</span></code></a>
 since the last time you checked.  This does not become true merely
 because the user typed one character into the field or deleted
-one character (unlike <a class="reference internal" href="#attribute:TEXTFIELD:CHANGED" title="TEXTFIELD:CHANGED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CHANGED</span></code></a>, which does).  This only
+one character (unlike <a class="reference internal" href="#attribute:TEXTFIELD:CHANGED" title="TEXTFIELD:CHANGED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">CHANGED</span></code></a>, which does).  This only
 becomes true when the user does one of the following things:</p>
 <ul class="simple">
-<li>Presses <code class="docutils literal"><span class="pre">Enter</span></code> or <code class="docutils literal"><span class="pre">Return</span></code> on the field.</li>
-<li>Leaves the field (clicks on another field, tabs out, etc).</li>
+<li><p>Presses <code class="docutils literal notranslate"><span class="pre">Enter</span></code> or <code class="docutils literal notranslate"><span class="pre">Return</span></code> on the field.</p></li>
+<li><p>Leaves the field (clicks on another field, tabs out, etc).</p></li>
 </ul>
 <p>As soon as you read this suffix and it returns true, it will
 be reset to false again until the next time the user commits
 a change to this field.</p>
 <p>This suffix is intended to be used with the
-<a class="reference internal" href="../gui.html#gui-polling-technique"><span>polling technique</span></a> of widget
+<a class="reference internal" href="../gui.html#gui-polling-technique"><span class="std std-ref">polling technique</span></a> of widget
 interaction.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:TEXTFIELD:ONCONFIRM">
-TextField:<code class="descname">ONCONFIRM</code><a class="headerlink" href="#attribute:TEXTFIELD:ONCONFIRM" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
-<p>This <a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a> expects one parameter, a <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a>, and returns nothing.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:TEXTFIELD:ONCONFIRM">
+<span class="pre">TextField:</span><span class="sig-name descname"><span class="pre">ONCONFIRM</span></span><a class="headerlink" href="#attribute:TEXTFIELD:ONCONFIRM" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegate</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
+<p>This <a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegate</span></code></a> expects one parameter, a <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>, and returns nothing.</p>
 <p>This allows you to set a callback delegate to be called
-whenever the user has finished editing <a class="reference internal" href="label.html#attribute:LABEL:TEXT" title="LABEL:TEXT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Label:TEXT</span></code></a>.
-Unlike <a class="reference internal" href="#attribute:TEXTFIELD:CHANGED" title="TEXTFIELD:CHANGED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CHANGED</span></code></a>, this does not get called every
+whenever the user has finished editing <a class="reference internal" href="label.html#attribute:LABEL:TEXT" title="LABEL:TEXT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Label:TEXT</span></code></a>.
+Unlike <a class="reference internal" href="#attribute:TEXTFIELD:CHANGED" title="TEXTFIELD:CHANGED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">CHANGED</span></code></a>, this does not get called every
 time the user types a key into the field.  It only gets
 called when one of the following things happens reasons:</p>
 <ul class="simple">
-<li>User presses <code class="docutils literal"><span class="pre">Enter</span></code> or <code class="docutils literal"><span class="pre">Return</span></code> on the field.</li>
-<li>User leaves the field (clicks on another field, tabs out, etc).</li>
+<li><p>User presses <code class="docutils literal notranslate"><span class="pre">Enter</span></code> or <code class="docutils literal notranslate"><span class="pre">Return</span></code> on the field.</p></li>
+<li><p>User leaves the field (clicks on another field, tabs out, etc).</p></li>
 </ul>
-<p>The <a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a> you use must be made to expect
+<p>The <a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegate</span></code></a> you use must be made to expect
 one parameter, the new string value, and return nothing.</p>
 <p>Example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">myTextField</span><span class="p">:</span><span class="nv">ONCONFIRM</span> <span class="ow">to</span> <span class="p">{</span><span class="kd">parameter</span> <span class="nv">str</span><span class="p">.</span> <span class="k">print</span> <span class="s">&quot;Value is now: &quot;</span> <span class="o">+</span> <span class="nv">str</span><span class="p">.}.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">myTextField</span><span class="p">:</span><span class="nv">ONCONFIRM</span> <span class="ow">to</span> <span class="p">{</span><span class="kd">parameter</span> <span class="nv">str</span><span class="p">.</span> <span class="k">print</span> <span class="s">&quot;Value is now: &quot;</span> <span class="o">+</span> <span class="nv">str</span><span class="p">.}.</span>
 </pre></div>
 </div>
 <p>This suffix is intended to be used with the
-<a class="reference internal" href="../gui.html#gui-callback-technique"><span>callback technique</span></a> of widget
+<a class="reference internal" href="../gui.html#gui-callback-technique"><span class="std std-ref">callback technique</span></a> of widget
 interaction.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:TEXTFIELD:TOOLTIP">
-TextField:<code class="descname">TOOLTIP</code><a class="headerlink" href="#attribute:TEXTFIELD:TOOLTIP" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
-<p>(Technically this is inherited from <a class="reference internal" href="label.html#structure:LABEL" title="LABEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Label</span></code></a>, but it behaves
-quite differently in <a class="reference internal" href="#structure:TEXTFIELD" title="TEXTFIELD structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TEXTFIELD</span></code></a> &#8220;Labels&#8221; than it does for
-other more &#8220;normal&#8221; types of label.)</p>
-<p>Unity3d&#8217;s IMGUI system cannot quite work with proper mouse hover
-tooltips on typing text fields.  kOS can&#8217;t help this.  It&#8217;s a limit
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:TEXTFIELD:TOOLTIP">
+<span class="pre">TextField:</span><span class="sig-name descname"><span class="pre">TOOLTIP</span></span><a class="headerlink" href="#attribute:TEXTFIELD:TOOLTIP" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get/Set</p>
+</dd>
+</dl>
+<p>(Technically this is inherited from <a class="reference internal" href="label.html#structure:LABEL" title="LABEL structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Label</span></code></a>, but it behaves
+quite differently in <a class="reference internal" href="#structure:TEXTFIELD" title="TEXTFIELD structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">TEXTFIELD</span></code></a> “Labels” than it does for
+other more “normal” types of label.)</p>
+<p>Unity3d’s IMGUI system cannot quite work with proper mouse hover
+tooltips on typing text fields.  kOS can’t help this.  It’s a limit
 of the Unity3d tool under the hood.  So instead, when you set a
-Tooltip for a <a class="reference internal" href="#structure:TEXTFIELD" title="TEXTFIELD structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TEXTFIELD</span></code></a>, kOS uses that field differently
-than it does for other kinds of &#8220;label&#8221;.</p>
-<p>In the case of a <a class="reference internal" href="#structure:TEXTFIELD" title="TEXTFIELD structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TEXTFIELD</span></code></a>, the TOOLTIP, instead of being
+Tooltip for a <a class="reference internal" href="#structure:TEXTFIELD" title="TEXTFIELD structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">TEXTFIELD</span></code></a>, kOS uses that field differently
+than it does for other kinds of “label”.</p>
+<p>In the case of a <a class="reference internal" href="#structure:TEXTFIELD" title="TEXTFIELD structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">TEXTFIELD</span></code></a>, the TOOLTIP, instead of being
 a string that is set when you hover the mouse over the widget, is
 the string that will appear inside the field as a hint in a
 greyed-out way when the field is empty-string.  If the user empties
 the value of the field, then kOS will show this TOOLTIP value inside
 the field as the hint about what they should type there.  (The actual
-value of the field&#8217;s <code class="docutils literal"><span class="pre">:TEXT</span></code> attribute will still be <code class="docutils literal"><span class="pre">&quot;&quot;</span></code>, even
+value of the field’s <code class="docutils literal notranslate"><span class="pre">:TEXT</span></code> attribute will still be <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code>, even
 when the TOOLTIP is showing in the widget.)</p>
 <p>Example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">myTextField</span><span class="p">:</span><span class="nv">TOOLTIP</span> <span class="ow">to</span> <span class="s">&quot;Type a Planet Name Here&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">myTextField</span><span class="p">:</span><span class="nv">TOOLTIP</span> <span class="ow">to</span> <span class="s">&quot;Type a Planet Name Here&quot;</span><span class="p">.</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The values of <a class="reference internal" href="#attribute:TEXTFIELD:CHANGED" title="TEXTFIELD:CHANGED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CHANGED</span></code></a> and <a class="reference internal" href="#attribute:TEXTFIELD:CONFIRMED" title="TEXTFIELD:CONFIRMED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CONFIRMED</span></code></a> reset to False as soon as their value is accessed.</p>
+<p class="admonition-title">Note</p>
+<p>The values of <a class="reference internal" href="#attribute:TEXTFIELD:CHANGED" title="TEXTFIELD:CHANGED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">CHANGED</span></code></a> and <a class="reference internal" href="#attribute:TEXTFIELD:CONFIRMED" title="TEXTFIELD:CONFIRMED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">CONFIRMED</span></code></a> reset to False as soon as their value is accessed.</p>
 </div>
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="tipdisplay.html" class="btn btn-neutral float-right" title="TipDisplay" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="stylestate.html" class="btn btn-neutral" title="StyleState" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="stylestate.html" class="btn btn-neutral float-left" title="StyleState" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tipdisplay.html" class="btn btn-neutral float-right" title="TipDisplay" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

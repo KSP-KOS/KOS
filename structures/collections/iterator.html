@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Iterator &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iterator &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../../about.html"/>
-        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Collections" href="../collections.html"/>
-        <link rel="next" title="Lexicon" href="lexicon.html"/>
-        <link rel="prev" title="Enumerable" href="enumerable.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Lexicon" href="lexicon.html" />
+    <link rel="prev" title="Enumerable" href="enumerable.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
@@ -104,9 +55,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../reflection.html">Generic Structure</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../collections.html">Collections</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="enumerable.html">Enumerable</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Iterator</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Iterator</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lexicon.html">Lexicon</a></li>
 <li class="toctree-l3"><a class="reference internal" href="list.html">List</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">Queue</a></li>
@@ -132,64 +81,44 @@
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
-      
           <li><a href="../collections.html">Collections</a> &raquo;</li>
-      
-    <li>Iterator</li>
+      <li>Iterator</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/structures/collections/iterator.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../../_sources/structures/collections/iterator.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="iterator">
-<span id="id1"></span><h1>Iterator<a class="headerlink" href="#iterator" title="Permalink to this headline">¶</a></h1>
-<p>An iterator can be obtained from <code class="xref ks ks-attr docutils literal"><span class="pre">List:ITERATOR</span></code> as well as from other places.
+             
+  <section id="iterator">
+<span id="id1"></span><h1>Iterator<a class="headerlink" href="#iterator" title="Permalink to this heading">¶</a></h1>
+<p>An iterator can be obtained from <a class="reference internal" href="enumerable.html#attribute:ENUMERABLE:ITERATOR" title="ENUMERABLE:ITERATOR attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Enumerable:ITERATOR</span></code></a> as well as from other places.
 An ITERATOR is a
 <a class="reference external" href="http://en.wikipedia.org/wiki/Iterator">generic computer programming concept</a>.
-In the general case it&#8217;s a variable type that allows you to get
+In the general case it’s a variable type that allows you to get
 the value at a position in some collection, as well as increment
 to the next item in the collection in order to operate on all
 objects in the collection one at a time. In kOS it operates
-on <a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Lists</span></code></a> and most other collection types.</p>
-<p>A loop using an <a class="reference internal" href="#structure:ITERATOR" title="ITERATOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></code></a> on a <a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> might look like this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Starting with a list that was built like this</span>
+on <a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Lists</span></code></a> and most other collection types.</p>
+<p>A loop using an <a class="reference internal" href="#structure:ITERATOR" title="ITERATOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Iterator</span></code></a> on a <a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> might look like this:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// Starting with a list that was built like this</span>
 <span class="k">SET</span> <span class="nv">MyList</span> <span class="ow">To</span> <span class="k">LIST</span><span class="p">(</span> <span class="s">&quot;Hello&quot;</span><span class="p">,</span> <span class="s">&quot;Aloha&quot;</span><span class="p">,</span> <span class="s">&quot;Bonjour&quot;</span><span class="p">).</span>
 
 <span class="c1">// It could be looped over like this</span>
@@ -201,213 +130,163 @@ on <a class="reference internal" href="list.html#structure:LIST" title="LIST str
 </pre></div>
 </div>
 <p>Which would result in this output:</p>
-<div class="highlight-none"><div class="highlight"><pre><span></span>before the first NEXT, position = -1.
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>before the first NEXT, position = -1.
 Item at position 0 is [Hello].
 Item at position 1 is [Aloha].
 Item at position 2 is [Bonjour].
 </pre></div>
 </div>
 <p>When you first create an iterator by using an ITERATOR suffix of some collection
-type like <a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a>, <a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a>, or even <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a>, the
+type like <a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a>, <a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a>, or even <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>, the
 initial position of the index is always -1, and the current value is always
 invalid.  This represents a position just <em>before the start</em> of the list of
-items.  Only after the first time <code class="xref ks ks-attr docutils literal"><span class="pre">NEXT</span></code> is called does the value of
-<code class="xref ks ks-attr docutils literal"><span class="pre">VALUE</span></code> become usable as the first thing in the collection.</p>
-<p>If you want to restart an iteration you must call the <code class="docutils literal"><span class="pre">:ITERATOR</span></code> suffix of
-the collection again to obtain a new iterator.  Older versions of kOS had a <code class="docutils literal"><span class="pre">:RESET</span></code> suffix but it was removed as it could not be supported on all types.</p>
-<div class="section" id="members">
-<h2>Members<a class="headerlink" href="#members" title="Permalink to this headline">¶</a></h2>
-<dl class="structure">
-<dt id="structure:ITERATOR">
-<em class="property">structure </em><code class="descname">Iterator</code><a class="headerlink" href="#structure:ITERATOR" title="Permalink to this definition">¶</a></dt>
-<dd><table border="1" class="docutils" id="id2">
+items.  Only after the first time <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">NEXT</span></code> is called does the value of
+<code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VALUE</span></code> become usable as the first thing in the collection.</p>
+<p>If you want to restart an iteration you must call the <code class="docutils literal notranslate"><span class="pre">:ITERATOR</span></code> suffix of
+the collection again to obtain a new iterator.  Older versions of kOS had a <code class="docutils literal notranslate"><span class="pre">:RESET</span></code> suffix but it was removed as it could not be supported on all types.</p>
+<section id="members">
+<h2>Members<a class="headerlink" href="#members" title="Permalink to this heading">¶</a></h2>
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:ITERATOR">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">Iterator</span></span><a class="headerlink" href="#structure:ITERATOR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils align-default" id="id2">
 <caption><span class="caption-text">Members</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="29%" />
-<col width="14%" />
-<col width="57%" />
+<col style="width: 28.6%" />
+<col style="width: 14.3%" />
+<col style="width: 57.1%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type</th>
-<th class="head">Description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#method:ITERATOR:RESET" title="ITERATOR:RESET method"><code class="xref ks ks-meth docutils literal"><span class="pre">RESET</span></code></a></td>
-<td>n/a</td>
-<td>(This method has been removed)</td>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#method:ITERATOR:RESET" title="ITERATOR:RESET method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">RESET</span></code></a></p></td>
+<td><p>n/a</p></td>
+<td><p>(This method has been removed)</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:ITERATOR:NEXT" title="ITERATOR:NEXT method"><code class="xref ks ks-meth docutils literal"><span class="pre">NEXT</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>boolean</span></a></td>
-<td>Move iterator to the next item</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:ITERATOR:NEXT" title="ITERATOR:NEXT method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">NEXT</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Move iterator to the next item</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:ITERATOR:ATEND" title="ITERATOR:ATEND attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ATEND</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>boolean</span></a></td>
-<td>Check if iterator is at the end of the list</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:ITERATOR:ATEND" title="ITERATOR:ATEND attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ATEND</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Check if iterator is at the end of the list</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:ITERATOR:INDEX" title="ITERATOR:INDEX attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">INDEX</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-<td>Current index starting from zero</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:ITERATOR:INDEX" title="ITERATOR:INDEX attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">INDEX</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Current index starting from zero</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:ITERATOR:VALUE" title="ITERATOR:VALUE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VALUE</span></code></a></td>
-<td>varies</td>
-<td>The object currently being pointed to</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:ITERATOR:VALUE" title="ITERATOR:VALUE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VALUE</span></code></a></p></td>
+<td><p>varies</p></td>
+<td><p>The object currently being pointed to</p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:ITERATOR:RESET">
-Iterator:<code class="descname">RESET</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:ITERATOR:RESET" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">n/a</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:ITERATOR:RESET">
+<span class="pre">Iterator:</span><span class="sig-name descname"><span class="pre">RESET</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:ITERATOR:RESET" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>n/a</p>
+</dd>
+</dl>
 <p>This suffix has been deleted from kOS.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:ITERATOR:NEXT">
-Iterator:<code class="descname">NEXT</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:ITERATOR:NEXT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>boolean</span></a></td>
-</tr>
-</tbody>
-</table>
-<p>Call this to move the iterator to the next item in the list. Returns true if there is such an item, or false if no such item exists because it&#8217;s already at the end of the list.</p>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:ITERATOR:NEXT">
+<span class="pre">Iterator:</span><span class="sig-name descname"><span class="pre">NEXT</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:ITERATOR:NEXT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
+<p>Call this to move the iterator to the next item in the list. Returns true if there is such an item, or false if no such item exists because it’s already at the end of the list.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:ITERATOR:ATEND">
-Iterator:<code class="descname">ATEND</code><a class="headerlink" href="#attribute:ITERATOR:ATEND" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>boolean</span></a></td>
-</tr>
-</tbody>
-</table>
-<p>Returns true if the iterator is at the end of the list and therefore cannot be &#8220;NEXTed&#8221;, false otherwise.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:ITERATOR:ATEND">
+<span class="pre">Iterator:</span><span class="sig-name descname"><span class="pre">ATEND</span></span><a class="headerlink" href="#attribute:ITERATOR:ATEND" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
+<p>Returns true if the iterator is at the end of the list and therefore cannot be “NEXTed”, false otherwise.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:ITERATOR:INDEX">
-Iterator:<code class="descname">INDEX</code><a class="headerlink" href="#attribute:ITERATOR:INDEX" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (integer)</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:ITERATOR:INDEX">
+<span class="pre">Iterator:</span><span class="sig-name descname"><span class="pre">INDEX</span></span><a class="headerlink" href="#attribute:ITERATOR:INDEX" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer)</p>
+</dd>
+</dl>
 <p>Returns the numerical index of how far you are into the list, starting the counting at 0 for the first item in the list. The last item in the list is numbered N-1, where N is the number of items in the list.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">If you have just created the ITERATOR, then the value of <a class="reference internal" href="#attribute:ITERATOR:INDEX" title="ITERATOR:INDEX attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Iterator:INDEX</span></code></a> is -1. It only becomes 0 after the first call to <a class="reference internal" href="#method:ITERATOR:NEXT" title="ITERATOR:NEXT method"><code class="xref ks ks-meth docutils literal"><span class="pre">Iterator:NEXT</span></code></a>.</p>
+<p class="admonition-title">Note</p>
+<p>If you have just created the ITERATOR, then the value of <a class="reference internal" href="#attribute:ITERATOR:INDEX" title="ITERATOR:INDEX attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Iterator:INDEX</span></code></a> is -1. It only becomes 0 after the first call to <a class="reference internal" href="#method:ITERATOR:NEXT" title="ITERATOR:NEXT method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">Iterator:NEXT</span></code></a>.</p>
 </div>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:ITERATOR:VALUE">
-Iterator:<code class="descname">VALUE</code><a class="headerlink" href="#attribute:ITERATOR:VALUE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">varies</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:ITERATOR:VALUE">
+<span class="pre">Iterator:</span><span class="sig-name descname"><span class="pre">VALUE</span></span><a class="headerlink" href="#attribute:ITERATOR:VALUE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>varies</p>
+</dd>
+</dl>
 <p>Returns the thing stored at the current position in the list.</p>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="lexicon.html" class="btn btn-neutral float-right" title="Lexicon" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="enumerable.html" class="btn btn-neutral" title="Enumerable" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="enumerable.html" class="btn btn-neutral float-left" title="Enumerable" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lexicon.html" class="btn btn-neutral float-right" title="Lexicon" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

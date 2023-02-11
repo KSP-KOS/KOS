@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>RCS &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RCS &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../../about.html"/>
-        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
-        <link rel="next" title="Resource" href="resource.html"/>
-        <link rel="prev" title="PartModule" href="partmodule.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Resource" href="resource.html" />
+    <link rel="prev" title="PartModule" href="partmodule.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
@@ -124,11 +75,13 @@
 <li class="toctree-l3"><a class="reference internal" href="node.html">Maneuver Node</a></li>
 <li class="toctree-l3"><a class="reference internal" href="part.html">Part</a></li>
 <li class="toctree-l3"><a class="reference internal" href="partmodule.html">PartModule</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">RCS</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RCS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="resource.html">Resource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sciencecontainermodule.html">ScienceContainerModule</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sciencedatavalue.html">ScienceData</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scienceexperiment.html">ScienceExperimentModule</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sensor.html">Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="separator.html">Separator</a></li>
 <li class="toctree-l3"><a class="reference internal" href="stage.html">Stage</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vessel.html">Vessel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vesselsensors.html">VesselSensors</a></li>
@@ -149,350 +102,310 @@
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
-      
           <li><a href="../vessels.html">Vessels and Parts</a> &raquo;</li>
-      
-    <li>RCS</li>
+      <li>RCS</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/structures/vessels/rcs.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../../_sources/structures/vessels/rcs.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="rcs">
-<span id="id1"></span><h1>RCS<a class="headerlink" href="#rcs" title="Permalink to this headline">¶</a></h1>
-<p>Some of the Parts returned by <a class="reference internal" href="../../commands/list.html#list-command"><span>LIST PARTS</span></a> will be of type RCS. It is also possible to get just the RCS parts by executing <code class="docutils literal"><span class="pre">LIST</span> <span class="pre">RCS</span></code>, for example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LIST</span> <span class="nv">RCS</span> <span class="nv">IN</span> <span class="nv">myVariable</span><span class="p">.</span>
+             
+  <section id="rcs">
+<span id="id1"></span><h1>RCS<a class="headerlink" href="#rcs" title="Permalink to this heading">¶</a></h1>
+<p>Some of the Parts returned by <a class="reference internal" href="../../commands/list.html#list-command"><span class="std std-ref">LIST PARTS</span></a> will be of type RCS. It is also possible to get just the RCS parts by executing <code class="docutils literal notranslate"><span class="pre">LIST</span> <span class="pre">RCS</span></code>, for example:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">LIST</span> <span class="nv">RCS</span> <span class="nv">IN</span> <span class="nv">myVariable</span><span class="p">.</span>
 <span class="k">FOR</span> <span class="nv">rcs</span> <span class="nv">IN</span> <span class="nv">myVariable</span> <span class="p">{</span>
     <span class="k">print</span> <span class="s">&quot;An rcs thruster exists with ISP = &quot;</span> <span class="o">+</span> <span class="nv">rcs</span><span class="p">:</span><span class="nv">ISP</span><span class="p">.</span>
 <span class="p">}.</span>
 </pre></div>
 </div>
-<dl class="structure">
-<dt id="structure:RCS">
-<em class="property">structure </em><code class="descname">RCS</code><a class="headerlink" href="#structure:RCS" title="Permalink to this definition">¶</a></dt>
-<dd><table border="1" class="docutils">
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:RCS">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">RCS</span></span><a class="headerlink" href="#structure:RCS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils align-default">
 <colgroup>
-<col width="25%" />
-<col width="25%" />
-<col width="50%" />
+<col style="width: 25.0%" />
+<col style="width: 25.0%" />
+<col style="width: 50.0%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type (units)</th>
-<th class="head">Description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type (units)</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>All suffixes of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a></td>
-<td>&nbsp;</td>
-<td><a class="reference internal" href="#structure:RCS" title="RCS structure"><code class="xref ks ks-struct docutils literal"><span class="pre">RCS</span></code></a> objects are a type of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a></td>
+<tbody>
+<tr class="row-even"><td><p>All suffixes of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a></p></td>
+<td></td>
+<td><p><a class="reference internal" href="#structure:RCS" title="RCS structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">RCS</span></code></a> objects are a type of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:RCS:ENABLED" title="RCS:ENABLED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ENABLED</span></code></a></td>
-<td>&nbsp;</td>
-<td>Is this thruster enabled.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:RCS:ENABLED" title="RCS:ENABLED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ENABLED</span></code></a></p></td>
+<td></td>
+<td><p>Is this thruster enabled.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RCS:YAWENABLED" title="RCS:YAWENABLED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">YAWENABLED</span></code></a></td>
-<td>&nbsp;</td>
-<td>Is yaw control enabled for this thruster.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:RCS:YAWENABLED" title="RCS:YAWENABLED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">YAWENABLED</span></code></a></p></td>
+<td></td>
+<td><p>Is yaw control enabled for this thruster.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:RCS:PITCHENABLED" title="RCS:PITCHENABLED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PITCHENABLED</span></code></a></td>
-<td>&nbsp;</td>
-<td>Is pitch control enabled for this thruster.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:RCS:PITCHENABLED" title="RCS:PITCHENABLED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">PITCHENABLED</span></code></a></p></td>
+<td></td>
+<td><p>Is pitch control enabled for this thruster.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RCS:ROLLENABLED" title="RCS:ROLLENABLED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROLLENABLED</span></code></a></td>
-<td>&nbsp;</td>
-<td>Is roll control enabled for this thruster.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:RCS:ROLLENABLED" title="RCS:ROLLENABLED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ROLLENABLED</span></code></a></p></td>
+<td></td>
+<td><p>Is roll control enabled for this thruster.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:RCS:FOREENABLED" title="RCS:FOREENABLED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">FOREENABLED</span></code></a></td>
-<td>&nbsp;</td>
-<td>Is fore/aft control enabled for this thruster.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:RCS:FOREENABLED" title="RCS:FOREENABLED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">FOREENABLED</span></code></a></p></td>
+<td></td>
+<td><p>Is fore/aft control enabled for this thruster.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RCS:STARBOARDENABLED" title="RCS:STARBOARDENABLED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">STARBOARDENABLED</span></code></a></td>
-<td>&nbsp;</td>
-<td>Is port/starboard control enabled for this thruster.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:RCS:STARBOARDENABLED" title="RCS:STARBOARDENABLED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">STARBOARDENABLED</span></code></a></p></td>
+<td></td>
+<td><p>Is port/starboard control enabled for this thruster.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:RCS:TOPENABLED" title="RCS:TOPENABLED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TOPENABLED</span></code></a></td>
-<td>&nbsp;</td>
-<td>Is dorsal/ventral control enabled for this thruster.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:RCS:TOPENABLED" title="RCS:TOPENABLED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">TOPENABLED</span></code></a></p></td>
+<td></td>
+<td><p>Is dorsal/ventral control enabled for this thruster.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RCS:FOREBYTHROTTLE" title="RCS:FOREBYTHROTTLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">FOREBYTHROTTLE</span></code></a></td>
-<td>&nbsp;</td>
-<td>Does this thruster apply fore thrust when the ship throttled up.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:RCS:FOREBYTHROTTLE" title="RCS:FOREBYTHROTTLE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">FOREBYTHROTTLE</span></code></a></p></td>
+<td></td>
+<td><p>Does this thruster apply fore thrust when the ship throttled up.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:RCS:FULLTHRUST" title="RCS:FULLTHRUST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">FULLTHRUST</span></code></a></td>
-<td>&nbsp;</td>
-<td>Does this thruster always apply full thrust.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:RCS:FULLTHRUST" title="RCS:FULLTHRUST attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">FULLTHRUST</span></code></a></p></td>
+<td></td>
+<td><p>Does this thruster always apply full thrust.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RCS:THRUSTLIMIT" title="RCS:THRUSTLIMIT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">THRUSTLIMIT</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (%)</td>
-<td>Tweaked thrust limit.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:RCS:THRUSTLIMIT" title="RCS:THRUSTLIMIT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">THRUSTLIMIT</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (%)</p></td>
+<td><p>Tweaked thrust limit.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:RCS:DEADBAND" title="RCS:DEADBAND attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DEADBAND</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-<td>The game&#8217;s built-in RCS input null zone for this RCS thruster.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:RCS:DEADBAND" title="RCS:DEADBAND attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">DEADBAND</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>The game’s built-in RCS input null zone for this RCS thruster.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RCS:MAXTHRUST" title="RCS:MAXTHRUST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MAXTHRUST</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</td>
-<td>Untweaked thrust limit.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:RCS:MAXTHRUST" title="RCS:MAXTHRUST attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">MAXTHRUST</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (kN)</p></td>
+<td><p>Untweaked thrust limit.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:RCS:MAXTHRUSTAT" title="RCS:MAXTHRUSTAT method"><code class="xref ks ks-meth docutils literal"><span class="pre">MAXTHRUSTAT(pressure)</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</td>
-<td>Max thrust at the specified pressure (in standard Kerbin atmospheres).</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:RCS:MAXTHRUSTAT" title="RCS:MAXTHRUSTAT method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">MAXTHRUSTAT(pressure)</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (kN)</p></td>
+<td><p>Max thrust at the specified pressure (in standard Kerbin atmospheres).</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RCS:AVAILABLETHRUST" title="RCS:AVAILABLETHRUST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">AVAILABLETHRUST</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</td>
-<td>Available thrust at full throttle accounting for thrust limiter.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:RCS:AVAILABLETHRUST" title="RCS:AVAILABLETHRUST attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">AVAILABLETHRUST</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (kN)</p></td>
+<td><p>Available thrust at full throttle accounting for thrust limiter.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:RCS:AVAILABLETHRUSTAT" title="RCS:AVAILABLETHRUSTAT method"><code class="xref ks ks-meth docutils literal"><span class="pre">AVAILABLETHRUSTAT(pressure)</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</td>
-<td>Available thrust at the specified pressure (in standard Kerbin atmospheres).</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:RCS:AVAILABLETHRUSTAT" title="RCS:AVAILABLETHRUSTAT method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">AVAILABLETHRUSTAT(pressure)</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (kN)</p></td>
+<td><p>Available thrust at the specified pressure (in standard Kerbin atmospheres).</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RCS:MAXFUELFLOW" title="RCS:MAXFUELFLOW attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MAXFUELFLOW</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (unit/s)</td>
-<td>Untweaked maximum volumetric flow rate of fuel at full throttle.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:RCS:MAXFUELFLOW" title="RCS:MAXFUELFLOW attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">MAXFUELFLOW</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (unit/s)</p></td>
+<td><p>Untweaked maximum volumetric flow rate of fuel at full throttle.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:RCS:MAXMASSFLOW" title="RCS:MAXMASSFLOW attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MAXMASSFLOW</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (Mg/s)</td>
-<td>Untweaked maximum mass flow rate of fuel at full throttle.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:RCS:MAXMASSFLOW" title="RCS:MAXMASSFLOW attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">MAXMASSFLOW</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (Mg/s)</p></td>
+<td><p>Untweaked maximum mass flow rate of fuel at full throttle.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RCS:ISP" title="RCS:ISP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ISP</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-<td><a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">Specific impulse</a></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:RCS:ISP" title="RCS:ISP attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ISP</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p><a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">Specific impulse</a></p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:RCS:ISPAT" title="RCS:ISPAT method"><code class="xref ks ks-meth docutils literal"><span class="pre">ISPAT(pressure)</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-<td><a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">Specific impulse</a> at the given pressure (in standard Kerbin atmospheres).</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:RCS:ISPAT" title="RCS:ISPAT method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">ISPAT(pressure)</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p><a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">Specific impulse</a> at the given pressure (in standard Kerbin atmospheres).</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RCS:VACUUMISP" title="RCS:VACUUMISP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VACUUMISP</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-<td>Vacuum <a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">specific impulse</a></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:RCS:VACUUMISP" title="RCS:VACUUMISP attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VACUUMISP</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Vacuum <a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">specific impulse</a></p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:RCS:VISP" title="RCS:VISP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VISP</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-<td>Synonym for VACUUMISP</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:RCS:VISP" title="RCS:VISP attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">VISP</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Synonym for VACUUMISP</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RCS:SEALEVELISP" title="RCS:SEALEVELISP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SEALEVELISP</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-<td><a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">Specific impulse</a> at Kerbin sealevel</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:RCS:SEALEVELISP" title="RCS:SEALEVELISP attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">SEALEVELISP</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p><a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">Specific impulse</a> at Kerbin sealevel</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:RCS:SLISP" title="RCS:SLISP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SLISP</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-<td>Synonym for SEALEVELISP</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:RCS:SLISP" title="RCS:SLISP attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">SLISP</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></td>
+<td><p>Synonym for SEALEVELISP</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RCS:FLAMEOUT" title="RCS:FLAMEOUT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">FLAMEOUT</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
-<td>Check if no more fuel.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:RCS:FLAMEOUT" title="RCS:FLAMEOUT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">FLAMEOUT</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Check if no more fuel.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:RCS:THRUSTVECTORS" title="RCS:THRUSTVECTORS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">THRUSTVECTORS</span></code></a></td>
-<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
-<td>List of thrust <a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vectors</span></code></a> for this RCS module.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:RCS:THRUSTVECTORS" title="RCS:THRUSTVECTORS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">THRUSTVECTORS</span></code></a></p></td>
+<td><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a></p></td>
+<td><p>List of thrust <a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vectors</span></code></a> for this RCS module.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RCS:CONSUMEDRESOURCES" title="RCS:CONSUMEDRESOURCES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CONSUMEDRESOURCES</span></code></a></td>
-<td><a class="reference internal" href="../collections/lexicon.html#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Lexicon</span></code></a></td>
-<td>Lexicon of resources consumed by this thruster, keyed by resource name.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:RCS:CONSUMEDRESOURCES" title="RCS:CONSUMEDRESOURCES attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">CONSUMEDRESOURCES</span></code></a></p></td>
+<td><p><a class="reference internal" href="../collections/lexicon.html#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Lexicon</span></code></a></p></td>
+<td><p>Lexicon of resources consumed by this thruster, keyed by resource name.</p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">A <a class="reference internal" href="#structure:RCS" title="RCS structure"><code class="xref ks ks-struct docutils literal"><span class="pre">RCS</span></code></a> is a type of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a>, and therefore can use all the suffixes of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a>.</p>
+<p class="admonition-title">Note</p>
+<p>A <a class="reference internal" href="#structure:RCS" title="RCS structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">RCS</span></code></a> is a type of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a>, and therefore can use all the suffixes of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a>.</p>
 </div>
-<dl class="attribute">
-<dt id="attribute:RCS:ENABLED">
-RCS:<code class="descname">ENABLED</code><a class="headerlink" href="#attribute:RCS:ENABLED" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RCS:ENABLED">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">ENABLED</span></span><a class="headerlink" href="#attribute:RCS:ENABLED" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Is this rcs thruster enabled.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:RCS:YAWENABLED">
-RCS:<code class="descname">YAWENABLED</code><a class="headerlink" href="#attribute:RCS:YAWENABLED" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RCS:YAWENABLED">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">YAWENABLED</span></span><a class="headerlink" href="#attribute:RCS:YAWENABLED" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Is yaw control enabled for this rcs thruster.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:RCS:PITCHENABLED">
-RCS:<code class="descname">PITCHENABLED</code><a class="headerlink" href="#attribute:RCS:PITCHENABLED" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RCS:PITCHENABLED">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">PITCHENABLED</span></span><a class="headerlink" href="#attribute:RCS:PITCHENABLED" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Is pitch control enabled for this rcs thruster.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:RCS:ROLLENABLED">
-RCS:<code class="descname">ROLLENABLED</code><a class="headerlink" href="#attribute:RCS:ROLLENABLED" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RCS:ROLLENABLED">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">ROLLENABLED</span></span><a class="headerlink" href="#attribute:RCS:ROLLENABLED" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Is roll control enabled for this rcs thruster.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:RCS:FOREENABLED">
-RCS:<code class="descname">FOREENABLED</code><a class="headerlink" href="#attribute:RCS:FOREENABLED" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RCS:FOREENABLED">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">FOREENABLED</span></span><a class="headerlink" href="#attribute:RCS:FOREENABLED" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Is fore/aft control enabled for this rcs thruster.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:RCS:STARBOARDENABLED">
-RCS:<code class="descname">STARBOARDENABLED</code><a class="headerlink" href="#attribute:RCS:STARBOARDENABLED" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RCS:STARBOARDENABLED">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">STARBOARDENABLED</span></span><a class="headerlink" href="#attribute:RCS:STARBOARDENABLED" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Is port/starboard control enabled for this rcs thruster.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:RCS:TOPENABLED">
-RCS:<code class="descname">TOPENABLED</code><a class="headerlink" href="#attribute:RCS:TOPENABLED" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RCS:TOPENABLED">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">TOPENABLED</span></span><a class="headerlink" href="#attribute:RCS:TOPENABLED" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Is dorsal/ventral control enabled for this rcs thruster.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:RCS:FOREBYTHROTTLE">
-RCS:<code class="descname">FOREBYTHROTTLE</code><a class="headerlink" href="#attribute:RCS:FOREBYTHROTTLE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RCS:FOREBYTHROTTLE">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">FOREBYTHROTTLE</span></span><a class="headerlink" href="#attribute:RCS:FOREBYTHROTTLE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Does this thruster apply fore thrust when the ship throttled up.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:RCS:FULLTHRUST">
-RCS:<code class="descname">FULLTHRUST</code><a class="headerlink" href="#attribute:RCS:FULLTHRUST" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RCS:FULLTHRUST">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">FULLTHRUST</span></span><a class="headerlink" href="#attribute:RCS:FULLTHRUST" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Does this thruster always apply full thrust.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:RCS:THRUSTLIMIT">
-RCS:<code class="descname">THRUSTLIMIT</code><a class="headerlink" href="#attribute:RCS:THRUSTLIMIT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (%)</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RCS:THRUSTLIMIT">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">THRUSTLIMIT</span></span><a class="headerlink" href="#attribute:RCS:THRUSTLIMIT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (%)</p>
+</dd>
+</dl>
 <p>If this is a thruster with a thrust limiter (tweakable) enabled, what
 percentage is it limited to?  Note that this is expressed as a
 percentage, not a simple 0..1 coefficient.  e.g. To set thrustlimit
@@ -503,41 +416,39 @@ attempt to do so, it will be clamped down into the allowed range.</p>
 very precise number (for example 10.5123), the stock in-game display
 widget that pops up when you right-click the rcs will automatically
 round it to the nearest 0.5 whenever you open the panel.  So if you
-do something like <code class="docutils literal"><span class="pre">set</span> <span class="pre">ship:part[20]:thrustlimit</span> <span class="pre">to</span> <span class="pre">10.5123.</span></code> in
+do something like <code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">ship:part[20]:thrustlimit</span> <span class="pre">to</span> <span class="pre">10.5123.</span></code> in
 your script, then look at the rightclick menu for the rcs, the very
 act of just looking at the menu will cause it to become 10.5 instead
-of 10.5123.  There isn&#8217;t much that kOS can do to change this.  It&#8217;s a
+of 10.5123.  There isn’t much that kOS can do to change this.  It’s a
 user interface decision baked into the stock game.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:RCS:DEADBAND">
-RCS:<code class="descname">DEADBAND</code><a class="headerlink" href="#attribute:RCS:DEADBAND" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set (but Note the Warning on SET below)</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RCS:DEADBAND">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">DEADBAND</span></span><a class="headerlink" href="#attribute:RCS:DEADBAND" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get/Set (but Note the Warning on SET below)</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+</dl>
 <p>Default: 0.05.</p>
 <p><strong>Please note the warning below before you try to SET this.</strong></p>
 <p>The stock game imposes a large dead zone on RCS thrusters.  By
 default they will not respond to any inputs less than this value.
 For example, at the default value of 0.05, the RCS thruster
 will ignore this statement:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">control</span><span class="p">:</span><span class="nv">yaw</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span><span class="mf">049</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">control</span><span class="p">:</span><span class="nv">yaw</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span><span class="mf">049</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>but it will respond to this statement:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">control</span><span class="p">:</span><span class="nv">yaw</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span><span class="mf">051</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">control</span><span class="p">:</span><span class="nv">yaw</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span><span class="mf">051</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>The reason this limit exists is apparently (this is speculation,
-warning) that it&#8217;s how the stock game prevents SAS from spending
+warning) that it’s how the stock game prevents SAS from spending
 a lot of monopropellant when it wiggles the controls small amounts.
 When control inputs are smaller than this value, then the RCS
 thrusters ignore them and only the reaction wheels and engine
@@ -551,12 +462,12 @@ the RCS thrusters to operate at a value less than this, is
 to pulse the input intermittently on and off at 0.05 to achieve
 amounts smaller than 0.05, rather than trying to solve it by
 setting this value.  (Remember that in the real world, thrusters
-have a minimum thrust they can&#8217;t go below so it&#8217;s not entirely
+have a minimum thrust they can’t go below so it’s not entirely
 unrealistic for this deadband to exist in the game.)</p>
 </dd></dl>
 
 <div class="admonition warning">
-<p class="first admonition-title">Warning</p>
+<p class="admonition-title">Warning</p>
 <p><strong>BEWARE if you want to Set this:</strong>
 Although this can be set and changing it works okay in the current
 version of KSP as of this writing (KSP 1.10.1), it is exactly the
@@ -564,364 +475,288 @@ sort of thing that seems could break in future versions of KSP.</p>
 <p>Be aware of that when deciding to change it. (If you are a programmer,
 you might understand the next sentence and get a clear picture of
 why this warning is here:  The value in the KSP class that this
-affects is marked <code class="docutils literal"><span class="pre">private</span></code> and kOS is using &#8220;Reflection&#8221; to bypass
+affects is marked <code class="docutils literal notranslate"><span class="pre">private</span></code> and kOS is using “Reflection” to bypass
 that access rule.)</p>
-<p class="last">If you are tempted to change this value, please first consider
+<p>If you are tempted to change this value, please first consider
 coming up with a solution where your script pulses the input
 on and off between 0.05 and 0 to simulate inputs less than 0.05.</p>
 </div>
 <div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last"><strong>BEWARE if you want to Set this:</strong>
+<p class="admonition-title">Warning</p>
+<p><strong>BEWARE if you want to Set this:</strong>
 Setting this value too small on your RCS thrusters will cause the
 stock SAS to wastefully spend RCS propellant wiggling the controls
 when it tries to hold position.  (If you ever played KSP back in
 its alpha pre-release days you might remember SAS behaving like
 this in the old days.)</p>
 </div>
-<span class="target" id="rcs-maxthrust"></span><dl class="attribute">
-<dt id="attribute:RCS:MAXTHRUST">
-RCS:<code class="descname">MAXTHRUST</code><a class="headerlink" href="#attribute:RCS:MAXTHRUST" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</td>
-</tr>
-</tbody>
-</table>
-<p>How much thrust would this rcs thruster give at its current atmospheric pressure if one of the control axes that activates it (yaw, pitch, roll, fore, aft, or top) was maxxed, and the thrust limiter was max at 100%.  Note this might not be the thruster&#8217;s actual max thrust it could have under other air pressure conditions.  Some thrusters have a very different value for MAXTHRUST in vacuum as opposed to at sea level pressure.</p>
+<span class="target" id="rcs-maxthrust"></span><dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RCS:MAXTHRUST">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">MAXTHRUST</span></span><a class="headerlink" href="#attribute:RCS:MAXTHRUST" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (kN)</p>
+</dd>
+</dl>
+<p>How much thrust would this rcs thruster give at its current atmospheric pressure if one of the control axes that activates it (yaw, pitch, roll, fore, aft, or top) was maxxed, and the thrust limiter was max at 100%.  Note this might not be the thruster’s actual max thrust it could have under other air pressure conditions.  Some thrusters have a very different value for MAXTHRUST in vacuum as opposed to at sea level pressure.</p>
 </dd></dl>
 
-<span class="target" id="rcs-maxthrustat"></span><dl class="method">
-<dt id="method:RCS:MAXTHRUSTAT">
-RCS:<code class="descname">MAXTHRUSTAT</code><span class="sig-paren">(</span>pressure<span class="sig-paren">)</span><a class="headerlink" href="#method:RCS:MAXTHRUSTAT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>pressure</strong> &#8211; atmospheric pressure (in standard Kerbin atmospheres)</li>
+<span class="target" id="rcs-maxthrustat"></span><dl class="ks method">
+<dt class="sig sig-object ks" id="method:RCS:MAXTHRUSTAT">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">MAXTHRUSTAT</span></span><span class="sig-paren">(</span><span class="pre">pressure</span><span class="sig-paren">)</span><a class="headerlink" href="#method:RCS:MAXTHRUSTAT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pressure</strong> – atmospheric pressure (in standard Kerbin atmospheres)</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (kN)</p>
+</dd>
+</dl>
 <p>How much thrust would this rcs thruster give if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxxed and thrust limiter was max at the given atmospheric pressure.  Use a pressure of 0.0 for vacuum, and 1.0 for sea level (on Kerbin) (or more than 1 for thicker atmospheres like on Eve).
 (Pressure must be greater than or equal to zero.  If you pass in a
 negative value, it will be treated as if you had given a zero instead.)</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:RCS:THRUST">
-RCS:<code class="descname">THRUST</code><a class="headerlink" href="#attribute:RCS:THRUST" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RCS:THRUST">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">THRUST</span></span><a class="headerlink" href="#attribute:RCS:THRUST" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (kN)</p>
+</dd>
+</dl>
 <p>How much thrust is this rcs thruster is giving at this very moment.</p>
 </dd></dl>
 
-<span class="target" id="rcs-availablethrust"></span><dl class="attribute">
-<dt id="attribute:RCS:AVAILABLETHRUST">
-RCS:<code class="descname">AVAILABLETHRUST</code><a class="headerlink" href="#attribute:RCS:AVAILABLETHRUST" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</td>
-</tr>
-</tbody>
-</table>
+<span class="target" id="rcs-availablethrust"></span><dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RCS:AVAILABLETHRUST">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">AVAILABLETHRUST</span></span><a class="headerlink" href="#attribute:RCS:AVAILABLETHRUST" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (kN)</p>
+</dd>
+</dl>
 <p>Taking into account the thrust limiter tweakable setting, how much thrust would this rcs thruster give at its current thrust limit setting and atmospheric pressure conditions, if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxxed .</p>
 </dd></dl>
 
-<span class="target" id="rcs-availablethrustat"></span><dl class="method">
-<dt id="method:RCS:AVAILABLETHRUSTAT">
-RCS:<code class="descname">AVAILABLETHRUSTAT</code><span class="sig-paren">(</span>pressure<span class="sig-paren">)</span><a class="headerlink" href="#method:RCS:AVAILABLETHRUSTAT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>pressure</strong> &#8211; atmospheric pressure (in standard Kerbin atmospheres)</li>
+<span class="target" id="rcs-availablethrustat"></span><dl class="ks method">
+<dt class="sig sig-object ks" id="method:RCS:AVAILABLETHRUSTAT">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">AVAILABLETHRUSTAT</span></span><span class="sig-paren">(</span><span class="pre">pressure</span><span class="sig-paren">)</span><a class="headerlink" href="#method:RCS:AVAILABLETHRUSTAT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pressure</strong> – atmospheric pressure (in standard Kerbin atmospheres)</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (kN)</p>
+</dd>
+</dl>
 <p>Taking into account the thrust limiter tweakable setting, how much thrust at the given atmospheric pressure would this rcs thruster give at its current thrust limit setting if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxxed.   The pressure is measured in ATMs, meaning 0.0 is a vacuum, 1.0 is sea level at Kerbin.
 (Pressure must be greater than or equal to zero.  If you pass in a
 negative value, it will be treated as if you had given a zero instead.)</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:RCS:MAXFUELFLOW">
-RCS:<code class="descname">MAXFUELFLOW</code><a class="headerlink" href="#attribute:RCS:MAXFUELFLOW" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (units/s)</td>
-</tr>
-</tbody>
-</table>
-<p>How much fuel volume would this rcs thruster consume at standard pressure and velocity if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxxed, and the thrust limiter was max at 100%.  Note this might not be the engine&#8217;s actual max fuel flow it could have under other air pressure conditions.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RCS:MAXFUELFLOW">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">MAXFUELFLOW</span></span><a class="headerlink" href="#attribute:RCS:MAXFUELFLOW" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (units/s)</p>
+</dd>
+</dl>
+<p>How much fuel volume would this rcs thruster consume at standard pressure and velocity if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxxed, and the thrust limiter was max at 100%.  Note this might not be the engine’s actual max fuel flow it could have under other air pressure conditions.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:RCS:MAXMASSFLOW">
-RCS:<code class="descname">MAXMASSFLOW</code><a class="headerlink" href="#attribute:RCS:MAXMASSFLOW" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (Mg/s)</td>
-</tr>
-</tbody>
-</table>
-<p>How much fuel mass would this rcs thruster consume at standard pressure and velocity if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxxed, and the thrust limiter was max at 100%.  Note this might not be the engine&#8217;s actual max fuel flow it could have under other air pressure conditions.</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RCS:MAXMASSFLOW">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">MAXMASSFLOW</span></span><a class="headerlink" href="#attribute:RCS:MAXMASSFLOW" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (Mg/s)</p>
+</dd>
+</dl>
+<p>How much fuel mass would this rcs thruster consume at standard pressure and velocity if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxxed, and the thrust limiter was max at 100%.  Note this might not be the engine’s actual max fuel flow it could have under other air pressure conditions.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:RCS:ISP">
-RCS:<code class="descname">ISP</code><a class="headerlink" href="#attribute:RCS:ISP" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RCS:ISP">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">ISP</span></span><a class="headerlink" href="#attribute:RCS:ISP" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+</dl>
 <p><a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">Specific impulse</a></p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:RCS:ISPAT">
-RCS:<code class="descname">ISPAT</code><span class="sig-paren">(</span>pressure<span class="sig-paren">)</span><a class="headerlink" href="#method:RCS:ISPAT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>pressure</strong> &#8211; atmospheric pressure (in standard Kerbin atmospheres)</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:RCS:ISPAT">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">ISPAT</span></span><span class="sig-paren">(</span><span class="pre">pressure</span><span class="sig-paren">)</span><a class="headerlink" href="#method:RCS:ISPAT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pressure</strong> – atmospheric pressure (in standard Kerbin atmospheres)</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+</dl>
 <p><a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">Specific impulse</a> at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
 (Pressure must be greater than or equal to zero.  If you pass in a
 negative value, it will be treated as if you had given a zero instead.)</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:RCS:VACUUMISP">
-RCS:<code class="descname">VACUUMISP</code><a class="headerlink" href="#attribute:RCS:VACUUMISP" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RCS:VACUUMISP">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">VACUUMISP</span></span><a class="headerlink" href="#attribute:RCS:VACUUMISP" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+</dl>
 <p>Vacuum <a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">specific impulse</a></p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:RCS:VISP">
-RCS:<code class="descname">VISP</code><a class="headerlink" href="#attribute:RCS:VISP" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RCS:VISP">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">VISP</span></span><a class="headerlink" href="#attribute:RCS:VISP" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+</dl>
 <p>Synonym for :VACUUMISP</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:RCS:SEALEVELISP">
-RCS:<code class="descname">SEALEVELISP</code><a class="headerlink" href="#attribute:RCS:SEALEVELISP" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RCS:SEALEVELISP">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">SEALEVELISP</span></span><a class="headerlink" href="#attribute:RCS:SEALEVELISP" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+</dl>
 <p><a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">Specific impulse</a> at Kerbin sealevel.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:RCS:SLISP">
-RCS:<code class="descname">SLISP</code><a class="headerlink" href="#attribute:RCS:SLISP" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RCS:SLISP">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">SLISP</span></span><a class="headerlink" href="#attribute:RCS:SLISP" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
+</dd>
+</dl>
 <p>Synonym for :SEALEVELISP</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:RCS:FLAMEOUT">
-RCS:<code class="descname">FLAMEOUT</code><a class="headerlink" href="#attribute:RCS:FLAMEOUT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RCS:FLAMEOUT">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">FLAMEOUT</span></span><a class="headerlink" href="#attribute:RCS:FLAMEOUT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>Is this rcs thruster failed because it is starved of a resource (monopropellant)?</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:RCS:THRUSTVECTORS">
-RCS:<code class="descname">THRUSTVECTORS</code><a class="headerlink" href="#attribute:RCS:THRUSTVECTORS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vectors</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>This gives a list of all the vectors that this RCS module can thrust along. Vectors returned are of unit length.  The vectors are returned in Ship-Raw coordinates, rather than relative to the ship.  (i.e. if it thrusts along the ship&#8217;s fore axis, and the ship&#8217;s current <code class="docutils literal"><span class="pre">ship:facing:forevector</span></code> is <code class="docutils literal"><span class="pre">V(0.7071,</span> <span class="pre">0.7071,</span> <span class="pre">0)</span></code>, then the value this returns would be <code class="docutils literal"><span class="pre">V(0.7071,</span> <span class="pre">0.7071,</span> <span class="pre">0)</span></code>, not <code class="docutils literal"><span class="pre">V(0,0,1)</span></code>).</p>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RCS:THRUSTVECTORS">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">THRUSTVECTORS</span></span><a class="headerlink" href="#attribute:RCS:THRUSTVECTORS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vectors</span></code></a></p>
+</dd>
+</dl>
+<p>This gives a list of all the vectors that this RCS module can thrust along. Vectors returned are of unit length.  The vectors are returned in Ship-Raw coordinates, rather than relative to the ship.  (i.e. if it thrusts along the ship’s fore axis, and the ship’s current <code class="docutils literal notranslate"><span class="pre">ship:facing:forevector</span></code> is <code class="docutils literal notranslate"><span class="pre">V(0.7071,</span> <span class="pre">0.7071,</span> <span class="pre">0)</span></code>, then the value this returns would be <code class="docutils literal notranslate"><span class="pre">V(0.7071,</span> <span class="pre">0.7071,</span> <span class="pre">0)</span></code>, not <code class="docutils literal notranslate"><span class="pre">V(0,0,1)</span></code>).</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:RCS:CONSUMEDRESOURCES">
-RCS:<code class="descname">CONSUMEDRESOURCES</code><a class="headerlink" href="#attribute:RCS:CONSUMEDRESOURCES" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../collections/lexicon.html#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Lexicon</span></code></a> of <a class="reference internal" href="consumedresourcercs.html#structure:CONSUMEDRESOURCERCS" title="CONSUMEDRESOURCERCS structure"><code class="xref ks ks-struct docutils literal"><span class="pre">CONSUMEDRESOURCERCS</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:RCS:CONSUMEDRESOURCES">
+<span class="pre">RCS:</span><span class="sig-name descname"><span class="pre">CONSUMEDRESOURCES</span></span><a class="headerlink" href="#attribute:RCS:CONSUMEDRESOURCES" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../collections/lexicon.html#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Lexicon</span></code></a> of <a class="reference internal" href="consumedresourcercs.html#structure:CONSUMEDRESOURCERCS" title="CONSUMEDRESOURCERCS structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">CONSUMEDRESOURCERCS</span></code></a></p>
+</dd>
+</dl>
 <p>This gives a lexicon of all the resources this rcs thruster consumes, keyed by resource name.</p>
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="resource.html" class="btn btn-neutral float-right" title="Resource" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="partmodule.html" class="btn btn-neutral" title="PartModule" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="partmodule.html" class="btn btn-neutral float-left" title="PartModule" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="resource.html" class="btn btn-neutral float-right" title="Resource" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

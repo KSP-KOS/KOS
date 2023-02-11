@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>ScienceExperimentModule &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ScienceExperimentModule &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../../about.html"/>
-        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
-        <link rel="next" title="Sensor" href="sensor.html"/>
-        <link rel="prev" title="ScienceData" href="sciencedatavalue.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Sensor" href="sensor.html" />
+    <link rel="prev" title="ScienceData" href="sciencedatavalue.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
@@ -126,9 +77,11 @@
 <li class="toctree-l3"><a class="reference internal" href="partmodule.html">PartModule</a></li>
 <li class="toctree-l3"><a class="reference internal" href="rcs.html">RCS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="resource.html">Resource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sciencecontainermodule.html">ScienceContainerModule</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sciencedatavalue.html">ScienceData</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">ScienceExperimentModule</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ScienceExperimentModule</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sensor.html">Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="separator.html">Separator</a></li>
 <li class="toctree-l3"><a class="reference internal" href="stage.html">Stage</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vessel.html">Vessel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vesselsensors.html">VesselSensors</a></li>
@@ -149,319 +102,251 @@
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
-      
           <li><a href="../vessels.html">Vessels and Parts</a> &raquo;</li>
-      
-    <li>ScienceExperimentModule</li>
+      <li>ScienceExperimentModule</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/structures/vessels/scienceexperiment.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../../_sources/structures/vessels/scienceexperiment.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="scienceexperimentmodule">
-<span id="id1"></span><h1>ScienceExperimentModule<a class="headerlink" href="#scienceexperimentmodule" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="scienceexperimentmodule">
+<span id="id1"></span><h1>ScienceExperimentModule<a class="headerlink" href="#scienceexperimentmodule" title="Permalink to this heading">¶</a></h1>
 <p>The type of structures returned by kOS when querying a module that contains a science experiment.</p>
 <p>Some of the science-related tasks are normally not available to kOS scripts. It is for
 example possible to deploy a science experiment:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">P</span> <span class="ow">TO</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">PARTSNAMED</span><span class="p">(</span><span class="s">&quot;GooExperiment&quot;</span><span class="p">)[</span><span class="mf">1</span><span class="p">].</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">P</span> <span class="ow">TO</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">PARTSNAMED</span><span class="p">(</span><span class="s">&quot;GooExperiment&quot;</span><span class="p">)[</span><span class="mf">1</span><span class="p">].</span>
 <span class="k">SET</span> <span class="nv">M</span> <span class="ow">TO</span> <span class="nv">P</span><span class="p">:</span><span class="nv">GETMODULE</span><span class="p">(</span><span class="s">&quot;ModuleScienceExperiment&quot;</span><span class="p">).</span>
 <span class="nv">M</span><span class="p">:</span><span class="nv">DOEVENT</span><span class="p">(</span><span class="s">&quot;observe mystery goo&quot;</span><span class="p">).</span>
 </pre></div>
 </div>
 <p>Hovewer, this results in a dialog being shown to the user. Only from that dialog it is possible
 to reset the experiment or transmit the experiment results back to Kerbin.
-<a class="reference internal" href="#structure:SCIENCEEXPERIMENTMODULE" title="SCIENCEEXPERIMENTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ScienceExperimentModule</span></code></a> structure introduces a few suffixes that allow the player
+<a class="reference internal" href="#structure:SCIENCEEXPERIMENTMODULE" title="SCIENCEEXPERIMENTMODULE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">ScienceExperimentModule</span></code></a> structure introduces a few suffixes that allow the player
 to perform all science-related tasks without any manual intervention:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">P</span> <span class="ow">TO</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">PARTSNAMED</span><span class="p">(</span><span class="s">&quot;GooExperiment&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">].</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">P</span> <span class="ow">TO</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">PARTSNAMED</span><span class="p">(</span><span class="s">&quot;GooExperiment&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">].</span>
 <span class="k">SET</span> <span class="nv">M</span> <span class="ow">TO</span> <span class="nv">P</span><span class="p">:</span><span class="nv">GETMODULE</span><span class="p">(</span><span class="s">&quot;ModuleScienceExperiment&quot;</span><span class="p">).</span>
 <span class="nv">M</span><span class="p">:</span><span class="nv">DEPLOY</span><span class="p">.</span>
 <span class="k">WAIT</span> <span class="k">UNTIL</span> <span class="nv">M</span><span class="p">:</span><span class="nv">HASDATA</span><span class="p">.</span>
 <span class="nv">M</span><span class="p">:</span><span class="nv">TRANSMIT</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>Please note the use of <code class="code docutils literal"><span class="pre">WAIT</span> <span class="pre">UNTIL</span> <span class="pre">M:HASDATA</span></code>.</p>
+<p>Please note the use of <code class="code docutils literal notranslate"><span class="pre">WAIT</span> <span class="pre">UNTIL</span> <span class="pre">M:HASDATA</span></code>.</p>
 <p>This structure should work well with stock science experiments. Mods that introduce their own
 science parts might not be compatible with it. One notable example is SCANsat. Even though
 SCANsat parts look and behave very similarly to stock science experiments under the hood
 they work very differently. Other mods can cause problems as well, please test them before use.</p>
-<p><a class="reference internal" href="../../addons/OrbitalScience.html#orbitalscience"><span>DMagic Orbital Science</span></a> has dedicated support in kOS and should work
+<p><a class="reference internal" href="../../addons/OrbitalScience.html#orbitalscience"><span class="std std-ref">DMagic Orbital Science</span></a> has dedicated support in kOS and should work
 properly.</p>
-<dl class="structure">
-<dt id="structure:SCIENCEEXPERIMENTMODULE">
-<em class="property">structure </em><code class="descname">ScienceExperimentModule</code><a class="headerlink" href="#structure:SCIENCEEXPERIMENTMODULE" title="Permalink to this definition">¶</a></dt>
-<dd><table border="1" class="docutils">
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:SCIENCEEXPERIMENTMODULE">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">ScienceExperimentModule</span></span><a class="headerlink" href="#structure:SCIENCEEXPERIMENTMODULE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils align-default">
 <colgroup>
-<col width="29%" />
-<col width="14%" />
-<col width="57%" />
+<col style="width: 28.6%" />
+<col style="width: 14.3%" />
+<col style="width: 57.1%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type</th>
-<th class="head">Description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>All suffixes of <a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></code></a></td>
-<td>&nbsp;</td>
-<td><a class="reference internal" href="#structure:SCIENCEEXPERIMENTMODULE" title="SCIENCEEXPERIMENTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ScienceExperimentModule</span></code></a> objects are a type of <a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></code></a></td>
+<tbody>
+<tr class="row-even"><td><p>All suffixes of <a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">PartModule</span></code></a></p></td>
+<td></td>
+<td><p><a class="reference internal" href="#structure:SCIENCEEXPERIMENTMODULE" title="SCIENCEEXPERIMENTMODULE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">ScienceExperimentModule</span></code></a> objects are a type of <a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">PartModule</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:SCIENCEEXPERIMENTMODULE:DEPLOY" title="SCIENCEEXPERIMENTMODULE:DEPLOY method"><code class="xref ks ks-meth docutils literal"><span class="pre">DEPLOY()</span></code></a></td>
-<td>&nbsp;</td>
-<td>Deploy and run the science experiment</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:SCIENCEEXPERIMENTMODULE:DEPLOY" title="SCIENCEEXPERIMENTMODULE:DEPLOY method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">DEPLOY()</span></code></a></p></td>
+<td></td>
+<td><p>Deploy and run the science experiment</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:SCIENCEEXPERIMENTMODULE:RESET" title="SCIENCEEXPERIMENTMODULE:RESET method"><code class="xref ks ks-meth docutils literal"><span class="pre">RESET()</span></code></a></td>
-<td>&nbsp;</td>
-<td>Reset this experiment if possible</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#method:SCIENCEEXPERIMENTMODULE:RESET" title="SCIENCEEXPERIMENTMODULE:RESET method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">RESET()</span></code></a></p></td>
+<td></td>
+<td><p>Reset this experiment if possible</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:SCIENCEEXPERIMENTMODULE:TRANSMIT" title="SCIENCEEXPERIMENTMODULE:TRANSMIT method"><code class="xref ks ks-meth docutils literal"><span class="pre">TRANSMIT()</span></code></a></td>
-<td>&nbsp;</td>
-<td>Transmit the scientific data back to Kerbin</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:SCIENCEEXPERIMENTMODULE:TRANSMIT" title="SCIENCEEXPERIMENTMODULE:TRANSMIT method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">TRANSMIT()</span></code></a></p></td>
+<td></td>
+<td><p>Transmit the scientific data back to Kerbin</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:SCIENCEEXPERIMENTMODULE:DUMP" title="SCIENCEEXPERIMENTMODULE:DUMP method"><code class="xref ks ks-meth docutils literal"><span class="pre">DUMP()</span></code></a></td>
-<td>&nbsp;</td>
-<td>Discard the data</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#method:SCIENCEEXPERIMENTMODULE:DUMP" title="SCIENCEEXPERIMENTMODULE:DUMP method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">DUMP()</span></code></a></p></td>
+<td></td>
+<td><p>Discard the data</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:SCIENCEEXPERIMENTMODULE:INOPERABLE" title="SCIENCEEXPERIMENTMODULE:INOPERABLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">INOPERABLE</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
-<td>Is this experiment inoperable</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:SCIENCEEXPERIMENTMODULE:INOPERABLE" title="SCIENCEEXPERIMENTMODULE:INOPERABLE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">INOPERABLE</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Is this experiment inoperable</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:SCIENCEEXPERIMENTMODULE:RERUNNABLE" title="SCIENCEEXPERIMENTMODULE:RERUNNABLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RERUNNABLE</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
-<td>Can this experiment be run multiple times</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:SCIENCEEXPERIMENTMODULE:RERUNNABLE" title="SCIENCEEXPERIMENTMODULE:RERUNNABLE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">RERUNNABLE</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Can this experiment be run multiple times</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:SCIENCEEXPERIMENTMODULE:DEPLOYED" title="SCIENCEEXPERIMENTMODULE:DEPLOYED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DEPLOYED</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
-<td>Is this experiment deployed</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:SCIENCEEXPERIMENTMODULE:DEPLOYED" title="SCIENCEEXPERIMENTMODULE:DEPLOYED attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">DEPLOYED</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Is this experiment deployed</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:SCIENCEEXPERIMENTMODULE:HASDATA" title="SCIENCEEXPERIMENTMODULE:HASDATA attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HASDATA</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
-<td>Does the experiment have scientific data</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:SCIENCEEXPERIMENTMODULE:HASDATA" title="SCIENCEEXPERIMENTMODULE:HASDATA attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">HASDATA</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Does the experiment have scientific data</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:SCIENCEEXPERIMENTMODULE:DATA" title="SCIENCEEXPERIMENTMODULE:DATA attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DATA</span></code></a></td>
-<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="sciencedatavalue.html#structure:SCIENCEDATA" title="SCIENCEDATA structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ScienceData</span></code></a></td>
-<td>List of scientific data obtained by this experiment</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:SCIENCEEXPERIMENTMODULE:DATA" title="SCIENCEEXPERIMENTMODULE:DATA attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">DATA</span></code></a></p></td>
+<td><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="sciencedatavalue.html#structure:SCIENCEDATA" title="SCIENCEDATA structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">ScienceData</span></code></a></p></td>
+<td><p>List of scientific data obtained by this experiment</p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">A <a class="reference internal" href="#structure:SCIENCEEXPERIMENTMODULE" title="SCIENCEEXPERIMENTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ScienceExperimentModule</span></code></a> is a type of <a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></code></a>, and therefore can use all the suffixes of <a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></code></a>.</p>
+<p class="admonition-title">Note</p>
+<p>A <a class="reference internal" href="#structure:SCIENCEEXPERIMENTMODULE" title="SCIENCEEXPERIMENTMODULE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">ScienceExperimentModule</span></code></a> is a type of <a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">PartModule</span></code></a>, and therefore can use all the suffixes of <a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">PartModule</span></code></a>.</p>
 </div>
-<dl class="method">
-<dt id="method:SCIENCEEXPERIMENTMODULE:DEPLOY">
-ScienceExperimentModule:<code class="descname">DEPLOY</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:SCIENCEEXPERIMENTMODULE:DEPLOY" title="Permalink to this definition">¶</a></dt>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:SCIENCEEXPERIMENTMODULE:DEPLOY">
+<span class="pre">ScienceExperimentModule:</span><span class="sig-name descname"><span class="pre">DEPLOY</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:SCIENCEEXPERIMENTMODULE:DEPLOY" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call this method to deploy and run this science experiment. This method will fail if the experiment already contains scientific
 data or is inoperable.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:SCIENCEEXPERIMENTMODULE:RESET">
-ScienceExperimentModule:<code class="descname">RESET</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:SCIENCEEXPERIMENTMODULE:RESET" title="Permalink to this definition">¶</a></dt>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:SCIENCEEXPERIMENTMODULE:RESET">
+<span class="pre">ScienceExperimentModule:</span><span class="sig-name descname"><span class="pre">RESET</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:SCIENCEEXPERIMENTMODULE:RESET" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call this method to reset this experiment. This method will fail if the experiment is inoperable.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:SCIENCEEXPERIMENTMODULE:TRANSMIT">
-ScienceExperimentModule:<code class="descname">TRANSMIT</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:SCIENCEEXPERIMENTMODULE:TRANSMIT" title="Permalink to this definition">¶</a></dt>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:SCIENCEEXPERIMENTMODULE:TRANSMIT">
+<span class="pre">ScienceExperimentModule:</span><span class="sig-name descname"><span class="pre">TRANSMIT</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:SCIENCEEXPERIMENTMODULE:TRANSMIT" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call this method to transmit the results of the experiment back to Kerbin. This will render the experiment
 inoperable if it is not rerunnable. This method will fail if there is no data to send.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:SCIENCEEXPERIMENTMODULE:DUMP">
-ScienceExperimentModule:<code class="descname">DUMP</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:SCIENCEEXPERIMENTMODULE:DUMP" title="Permalink to this definition">¶</a></dt>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:SCIENCEEXPERIMENTMODULE:DUMP">
+<span class="pre">ScienceExperimentModule:</span><span class="sig-name descname"><span class="pre">DUMP</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:SCIENCEEXPERIMENTMODULE:DUMP" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call this method to discard the data obtained as a result of running this experiment.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:SCIENCEEXPERIMENTMODULE:INOPERABLE">
-ScienceExperimentModule:<code class="descname">INOPERABLE</code><a class="headerlink" href="#attribute:SCIENCEEXPERIMENTMODULE:INOPERABLE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:SCIENCEEXPERIMENTMODULE:INOPERABLE">
+<span class="pre">ScienceExperimentModule:</span><span class="sig-name descname"><span class="pre">INOPERABLE</span></span><a class="headerlink" href="#attribute:SCIENCEEXPERIMENTMODULE:INOPERABLE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>True if this experiment is no longer operable.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:SCIENCEEXPERIMENTMODULE:RERUNNABLE">
-ScienceExperimentModule:<code class="descname">RERUNNABLE</code><a class="headerlink" href="#attribute:SCIENCEEXPERIMENTMODULE:RERUNNABLE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:SCIENCEEXPERIMENTMODULE:RERUNNABLE">
+<span class="pre">ScienceExperimentModule:</span><span class="sig-name descname"><span class="pre">RERUNNABLE</span></span><a class="headerlink" href="#attribute:SCIENCEEXPERIMENTMODULE:RERUNNABLE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>True if this experiment can be run multiple times.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:SCIENCEEXPERIMENTMODULE:DEPLOYED">
-ScienceExperimentModule:<code class="descname">DEPLOYED</code><a class="headerlink" href="#attribute:SCIENCEEXPERIMENTMODULE:DEPLOYED" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:SCIENCEEXPERIMENTMODULE:DEPLOYED">
+<span class="pre">ScienceExperimentModule:</span><span class="sig-name descname"><span class="pre">DEPLOYED</span></span><a class="headerlink" href="#attribute:SCIENCEEXPERIMENTMODULE:DEPLOYED" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>True if this experiment is deployed.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:SCIENCEEXPERIMENTMODULE:HASDATA">
-ScienceExperimentModule:<code class="descname">HASDATA</code><a class="headerlink" href="#attribute:SCIENCEEXPERIMENTMODULE:HASDATA" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:SCIENCEEXPERIMENTMODULE:HASDATA">
+<span class="pre">ScienceExperimentModule:</span><span class="sig-name descname"><span class="pre">HASDATA</span></span><a class="headerlink" href="#attribute:SCIENCEEXPERIMENTMODULE:HASDATA" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+</dl>
 <p>True if this experiment has scientific data stored.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:SCIENCEEXPERIMENTMODULE:DATA">
-ScienceExperimentModule:<code class="descname">DATA</code><a class="headerlink" href="#attribute:SCIENCEEXPERIMENTMODULE:DATA" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="sciencedatavalue.html#structure:SCIENCEDATA" title="SCIENCEDATA structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ScienceData</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:SCIENCEEXPERIMENTMODULE:DATA">
+<span class="pre">ScienceExperimentModule:</span><span class="sig-name descname"><span class="pre">DATA</span></span><a class="headerlink" href="#attribute:SCIENCEEXPERIMENTMODULE:DATA" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="sciencedatavalue.html#structure:SCIENCEDATA" title="SCIENCEDATA structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">ScienceData</span></code></a></p>
+</dd>
+</dl>
 <p>List of scientific data obtained by this experiment</p>
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="sensor.html" class="btn btn-neutral float-right" title="Sensor" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="sciencedatavalue.html" class="btn btn-neutral" title="ScienceData" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="sciencedatavalue.html" class="btn btn-neutral float-left" title="ScienceData" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="sensor.html" class="btn btn-neutral float-right" title="Sensor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

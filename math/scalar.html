@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Scalar &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scalar &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../about.html"/>
-        <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../index.html"/>
-        <link rel="up" title="Mathematics and Basic Geometry" href="../math.html"/>
-        <link rel="next" title="Vectors" href="vector.html"/>
-        <link rel="prev" title="Basic Math Functions" href="basic.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="next" title="Vectors" href="vector.html" />
+    <link rel="prev" title="Basic Math Functions" href="basic.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
@@ -100,9 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../math.html">Mathematics</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="basic.html">Basic Math Functions</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Scalar</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Scalar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vector.html">Vectors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="direction.html">Directions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geocoordinates.html">Geographic Coordinates</a></li>
@@ -118,259 +67,199 @@
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../math.html">Mathematics and Basic Geometry</a> &raquo;</li>
-      
-    <li>Scalar</li>
+      <li>Scalar</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../_sources/math/scalar.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../_sources/math/scalar.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="scalar">
-<span id="id1"></span><h1>Scalar<a class="headerlink" href="#scalar" title="Permalink to this headline">¶</a></h1>
-<dl class="structure">
-<dt id="structure:SCALAR">
-<em class="property">structure </em><code class="descname">Scalar</code><a class="headerlink" href="#structure:SCALAR" title="Permalink to this definition">¶</a></dt>
-<dd><table border="1" class="docutils" id="id3">
+             
+  <section id="scalar">
+<span id="id1"></span><h1>Scalar<a class="headerlink" href="#scalar" title="Permalink to this heading">¶</a></h1>
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:SCALAR">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">Scalar</span></span><a class="headerlink" href="#structure:SCALAR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils align-default" id="id3">
 <caption><span class="caption-text"><strong>Members</strong></span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>(Scalar values have no suffixes other than the ones inherited from <a class="reference internal" href="../structures/reflection/structure.html#structure:STRUCTURE" title="STRUCTURE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Structure</span></code></a>.)</td>
+<tbody>
+<tr class="row-odd"><td><p>(Scalar values have no suffixes other than the ones inherited from <a class="reference internal" href="../structures/reflection/structure.html#structure:STRUCTURE" title="STRUCTURE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Structure</span></code></a>.)</p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <p>A Scalar value is the kind the system gives you whenever you are working
-with a number of some sort which, unlike with a <a class="reference internal" href="vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a>,
+with a number of some sort which, unlike with a <a class="reference internal" href="vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a>,
 does not have a pointing orientation in 3D space.</p>
-<p>In other words, it&#8217;s just a number.  A plain, no-frills, ordinary number.</p>
+<p>In other words, it’s just a number.  A plain, no-frills, ordinary number.</p>
 <p>Experienced programmers will be aware of the concept of there being
 different kinds of number depending on what you want to do with it.
-There&#8217;s &#8220;integer&#8221; versus &#8220;floating point&#8221; versus &#8220;fixed point&#8221;,
+There’s “integer” versus “floating point” versus “fixed point”,
 and theres single-precision, double-precision and so on.</p>
 <p>kOS tries to be friendly to the new person just playing around with
 simple programming without a lot of expertise, and to that end, the
 difference between these types is abstracted away as much as possible.</p>
-<div class="section" id="scalar-syntax">
-<span id="id2"></span><h2>Scalar Syntax<a class="headerlink" href="#scalar-syntax" title="Permalink to this headline">¶</a></h2>
+<section id="scalar-syntax">
+<span id="id2"></span><h2>Scalar Syntax<a class="headerlink" href="#scalar-syntax" title="Permalink to this heading">¶</a></h2>
 <p>Scalar numbers are allowed to be represented in any number of ways, both
-in the source code and in strings passed in to the <code class="xref ks ks-attr docutils literal"><span class="pre">String:TOSCALAR</span></code>
+in the source code and in strings passed in to the <code class="xref ks ks-attr docutils literal notranslate"><span class="pre">String:TOSCALAR</span></code>
 method.</p>
-<p>Underscores are allowed as visual spacers provided you don&#8217;t
+<p>Underscores are allowed as visual spacers provided you don’t
 lead with an underscore. The purpose of the underscores is to
 group numbers apart, similar to how some cultures use
-a comma in numbers like &#8216;1,234,567&#8217; (and others use a
+a comma in numbers like ‘1,234,567’ (and others use a
 dot).  There is no enforcement of rules for where you can
 and cannot put the underscores for grouping.  kerboscript
 just strips them out and ignores them anyway:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// These are all the same number, shown different ways:</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// These are all the same number, shown different ways:</span>
 <span class="mf">1234567</span>
 <span class="err">1_234_567</span>
 <span class="err">1_2__3456_7</span>
 </pre></div>
 </div>
 <p>One decimal point is allowed to show fractional parts, but
-you must lead with a digit, even it&#8217;s just to say &#8220;0.&#8221;:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="mf">1234</span>
+you must lead with a digit, even it’s just to say “0.”:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="mf">1234</span>
 <span class="mf">12</span><span class="p">.</span><span class="mf">34</span>
 <span class="p">.</span><span class="mf">1234</span>
 <span class="mf">0</span><span class="p">.</span><span class="mf">1234</span>
 <span class="mf">0</span><span class="p">.</span><span class="err">123_4</span> <span class="c1">// underscore ignored.</span>
 </pre></div>
 </div>
-<p>You may use scientific notation (with an &#8216;e&#8217; and an optional
+<p>You may use scientific notation (with an ‘e’ and an optional
 sign, and a string of digits) to shift the decimal place:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="mf">123.4e4</span>   <span class="c1">// = 1234000</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="mf">123.4e4</span>   <span class="c1">// = 1234000</span>
 <span class="mf">1.234e+4</span>  <span class="c1">// = 12340</span>
 <span class="mf">1.234e-14</span>  <span class="c1">// = 0.00000000000001234</span>
 <span class="err">123_456</span><span class="p">.</span><span class="mf">78e-4</span>  <span class="c1">// = 12.345678  (note, again, the ignored underscore)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="operators">
-<h2>Operators<a class="headerlink" href="#operators" title="Permalink to this headline">¶</a></h2>
-<p>The following basic arithmetic operators are defined when both <code class="docutils literal"><span class="pre">a</span></code> and
-<code class="docutils literal"><span class="pre">b</span></code> are scalars:</p>
-<table border="1" class="docutils">
+</section>
+<section id="operators">
+<h2>Operators<a class="headerlink" href="#operators" title="Permalink to this heading">¶</a></h2>
+<p>The following basic arithmetic operators are defined when both <code class="docutils literal notranslate"><span class="pre">a</span></code> and
+<code class="docutils literal notranslate"><span class="pre">b</span></code> are scalars:</p>
+<table class="docutils align-default">
 <colgroup>
-<col width="33%" />
-<col width="67%" />
+<col style="width: 33.3%" />
+<col style="width: 66.7%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">a</span> <span class="pre">^</span> <span class="pre">b</span></code></td>
-<td>exponent: <code class="docutils literal"><span class="pre">a</span></code> to the power <code class="docutils literal"><span class="pre">b</span></code></td>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">^</span> <span class="pre">b</span></code></p></td>
+<td><p>exponent: <code class="docutils literal notranslate"><span class="pre">a</span></code> to the power <code class="docutils literal notranslate"><span class="pre">b</span></code></p></td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">-a</span></code></td>
-<td>negative of <code class="docutils literal"><span class="pre">a</span></code></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">-a</span></code></p></td>
+<td><p>negative of <code class="docutils literal notranslate"><span class="pre">a</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">a</span> <span class="pre">*</span> <span class="pre">b</span></code> <code class="docutils literal"><span class="pre">a</span> <span class="pre">/</span> <span class="pre">b</span></code></td>
-<td>muiltiply or divide two numbers</td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">*</span> <span class="pre">b</span></code> <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">/</span> <span class="pre">b</span></code></p></td>
+<td><p>muiltiply or divide two numbers</p></td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">a</span> <span class="pre">+</span> <span class="pre">b</span></code> <code class="docutils literal"><span class="pre">a</span> <span class="pre">-</span> <span class="pre">b</span></code></td>
-<td>add or subtract two numbers</td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">+</span> <span class="pre">b</span></code> <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">-</span> <span class="pre">b</span></code></p></td>
+<td><p>add or subtract two numbers</p></td>
 </tr>
 </tbody>
 </table>
 <p>The order of operations is in the order of the table listing above.
 For example, multiplication and division happen before subtraction
 and addition.</p>
-</div>
-<div class="section" id="scientific-notation">
-<h2>Scientific Notation<a class="headerlink" href="#scientific-notation" title="Permalink to this headline">¶</a></h2>
-<p>You can specify a number using scientific notation using the letter <code class="docutils literal"><span class="pre">e</span></code>,
+</section>
+<section id="scientific-notation">
+<h2>Scientific Notation<a class="headerlink" href="#scientific-notation" title="Permalink to this heading">¶</a></h2>
+<p>You can specify a number using scientific notation using the letter <code class="docutils literal notranslate"><span class="pre">e</span></code>,
 as shown:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="mf">1.23e5</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="mf">1.23e5</span><span class="p">.</span>
 <span class="k">print</span> <span class="nv">x</span><span class="p">.</span>  <span class="c1">// prints 123000</span>
 <span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="mf">1.23e-5</span><span class="p">.</span>
 <span class="k">print</span> <span class="nv">x</span><span class="p">.</span>  <span class="c1">// prints 0.0000123</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="limitations-of-scalars">
-<h2>Limitations of Scalars<a class="headerlink" href="#limitations-of-scalars" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="limitations-of-scalars">
+<h2>Limitations of Scalars<a class="headerlink" href="#limitations-of-scalars" title="Permalink to this heading">¶</a></h2>
 <p>The implementation of Scalars can currently only store values that fit
 the following criteria:</p>
-<div class="section" id="the-value-is-a-real-number">
-<h3>The value is a <em>real number</em><a class="headerlink" href="#the-value-is-a-real-number" title="Permalink to this headline">¶</a></h3>
-<p>Or &#8220;What the heck does &#8216;attempted to push NaN onto the stack&#8217; mean?&#8221;.</p>
+<section id="the-value-is-a-real-number">
+<h3>The value is a <em>real number</em><a class="headerlink" href="#the-value-is-a-real-number" title="Permalink to this heading">¶</a></h3>
+<p>Or “What the heck does ‘attempted to push NaN onto the stack’ mean?”.</p>
 <p>kOS does not have a numeric type designed to deal with
 <em>imaginary numbers</em> or <em>complex numbers</em>.  Therefore, for
-example, if you attempted to perform <code class="docutils literal"><span class="pre">sqrt(-4)</span></code>, you would get
-a &#8220;NaN error&#8221;, rather than the imaginary number <code class="docutils literal"><span class="pre">2i</span></code>.  &#8220;NaN&#8221; stands
-for &#8220;Not a Number&#8221; and it means the system is incapable of storing the
-correct answer.  Another example of where you will get a &#8220;NaN error&#8221;
-is if you attempt to perform <code class="docutils literal"><span class="pre">arcsin(1.01)</span></code>, since there is no such
+example, if you attempted to perform <code class="docutils literal notranslate"><span class="pre">sqrt(-4)</span></code>, you would get
+a “NaN error”, rather than the imaginary number <code class="docutils literal notranslate"><span class="pre">2i</span></code>.  “NaN” stands
+for “Not a Number” and it means the system is incapable of storing the
+correct answer.  Another example of where you will get a “NaN error”
+is if you attempt to perform <code class="docutils literal notranslate"><span class="pre">arcsin(1.01)</span></code>, since there is no such
 thing as the angle that gives a sine of 1.01.</p>
-</div>
-<div class="section" id="the-value-must-be-a-rational-number">
-<h3>The value must be a <em>rational number</em><a class="headerlink" href="#the-value-must-be-a-rational-number" title="Permalink to this headline">¶</a></h3>
-<p>When you ask kOS to tell you <code class="docutils literal"><span class="pre">constant:pi</span></code>, you are technically not
+</section>
+<section id="the-value-must-be-a-rational-number">
+<h3>The value must be a <em>rational number</em><a class="headerlink" href="#the-value-must-be-a-rational-number" title="Permalink to this heading">¶</a></h3>
+<p>When you ask kOS to tell you <code class="docutils literal notranslate"><span class="pre">constant:pi</span></code>, you are technically not
 getting the <em>actual</em> correct value.  Instead you are getting a rational
 number approximation that is accurate to about 15 decimal places.  In
 kOS, scalar values cannot store irrational numbers.</p>
-</div>
-<div class="section" id="the-larger-the-magnitude-the-less-the-precision">
-<h3>The larger the magnitude, the less the precision<a class="headerlink" href="#the-larger-the-magnitude-the-less-the-precision" title="Permalink to this headline">¶</a></h3>
-<p>For example, while it <em>is</em> possible to store exactly the number <code class="docutils literal"><span class="pre">99.001</span></code>,
-it is not possible to store exactly the number <code class="docutils literal"><span class="pre">999999999999999.001</span></code>, even
+</section>
+<section id="the-larger-the-magnitude-the-less-the-precision">
+<h3>The larger the magnitude, the less the precision<a class="headerlink" href="#the-larger-the-magnitude-the-less-the-precision" title="Permalink to this heading">¶</a></h3>
+<p>For example, while it <em>is</em> possible to store exactly the number <code class="docutils literal notranslate"><span class="pre">99.001</span></code>,
+it is not possible to store exactly the number <code class="docutils literal notranslate"><span class="pre">999999999999999.001</span></code>, even
 though both numbers are only precise up to the thousandths place.</p>
-<p>If you attempt to <code class="docutils literal"><span class="pre">set</span> <span class="pre">x</span> <span class="pre">to</span> <span class="pre">999999999999999.001.</span></code> and then <code class="docutils literal"><span class="pre">print</span> <span class="pre">x.</span></code>,
-you&#8217;ll find that the value you get back has been rounded off a bit.</p>
+<p>If you attempt to <code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">x</span> <span class="pre">to</span> <span class="pre">999999999999999.001.</span></code> and then <code class="docutils literal notranslate"><span class="pre">print</span> <span class="pre">x.</span></code>,
+you’ll find that the value you get back has been rounded off a bit.</p>
 <p>In a nutshell, what really matters is how many significant digits there are,
-not how many places after the decimal point.  You can&#8217;t have more than
-roughly 15 significant decimal digits. (It&#8217;s not exactly 15 because of
+not how many places after the decimal point.  You can’t have more than
+roughly 15 significant decimal digits. (It’s not exactly 15 because of
 differences between binary and decimal counting, but that gives you
 a rough estimate.)</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="vector.html" class="btn btn-neutral float-right" title="Vectors" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="basic.html" class="btn btn-neutral" title="Basic Math Functions" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="basic.html" class="btn btn-neutral float-left" title="Basic Math Functions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="vector.html" class="btn btn-neutral float-right" title="Vectors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

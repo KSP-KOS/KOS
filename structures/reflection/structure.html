@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Structure: &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Structure &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../../about.html"/>
-        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Reflection" href="../reflection.html"/>
-        <link rel="next" title="Collections" href="../collections.html"/>
-        <link rel="prev" title="Reflection" href="../reflection.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Collections" href="../collections.html" />
+    <link rel="prev" title="Reflection" href="../reflection.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
@@ -102,9 +53,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../commands.html">Commands</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../reflection.html">Generic Structure</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="">Structure:</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Structure</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../collections.html">Collections</a></li>
@@ -125,71 +74,51 @@
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
-      
           <li><a href="../reflection.html">Reflection</a> &raquo;</li>
-      
-    <li>Structure:</li>
+      <li>Structure</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/structures/reflection/structure.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../../_sources/structures/reflection/structure.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="structure">
-<span id="id1"></span><h1>Structure:<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="structure">
+<span id="id1"></span><h1>Structure<a class="headerlink" href="#structure" title="Permalink to this heading">¶</a></h1>
 <p>The root of all kOS data types.</p>
-<div class="contents local topic" id="contents">
+<nav class="contents local" id="contents">
 <ul class="simple">
-<li><a class="reference internal" href="#overview" id="id2">Overview</a></li>
+<li><p><a class="reference internal" href="#overview" id="id2">Overview</a></p></li>
 </ul>
-</div>
-<div class="section" id="overview">
-<h2><a class="toc-backref" href="#id2">Overview</a><a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Overview</a><a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
 <p>All types of data that a kOS program can access, either via a variable, or
-a suffix return value, or really just any expression&#8217;s temporary result,
+a suffix return value, or really just any expression’s temporary result,
 are now directly or indirectly derived from this one base type called just
-<code class="docutils literal"><span class="pre">Structure</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">Structure</span></code>.</p>
 <p>That means that there are a few generic suffixes that you should be able
 to use on any value anywhere.  This page documents those suffixes.</p>
-<p>This is true even of primitive value types such as <code class="docutils literal"><span class="pre">1.0</span></code> or <code class="docutils literal"><span class="pre">false</span></code>
-or <code class="docutils literal"><span class="pre">42</span></code> or <code class="docutils literal"><span class="pre">&quot;abc&quot;</span></code>.  For example, you can do:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">Mun</span><span class="p">:</span><span class="nv">typename</span><span class="p">().</span>
+<p>This is true even of primitive value types such as <code class="docutils literal notranslate"><span class="pre">1.0</span></code> or <code class="docutils literal notranslate"><span class="pre">false</span></code>
+or <code class="docutils literal notranslate"><span class="pre">42</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;abc&quot;</span></code>.  For example, you can do:</p>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">Mun</span><span class="p">:</span><span class="nv">typename</span><span class="p">().</span>
 <span class="nv">Body</span>   <span class="c1">// &lt;--- system prints this</span>
 
 <span class="k">print</span> <span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">):</span><span class="nv">typename</span><span class="p">().</span>
@@ -199,139 +128,131 @@ or <code class="docutils literal"><span class="pre">42</span></code> or <code cl
 <span class="nv">Scalar</span> <span class="c1">// &lt;--- system prints this</span>
 </pre></div>
 </div>
-<dl class="structure">
-<dt id="structure:STRUCTURE">
-<em class="property">structure </em><code class="descname">Structure</code><a class="headerlink" href="#structure:STRUCTURE" title="Permalink to this definition">¶</a></dt>
-<dd><table border="1" class="docutils">
+<dl class="ks structure">
+<dt class="sig sig-object ks" id="structure:STRUCTURE">
+<em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">Structure</span></span><a class="headerlink" href="#structure:STRUCTURE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils align-default">
 <colgroup>
-<col width="29%" />
-<col width="14%" />
-<col width="57%" />
+<col style="width: 28.6%" />
+<col style="width: 14.3%" />
+<col style="width: 57.1%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Suffix</th>
-<th class="head">Type</th>
-<th class="head">Description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Suffix</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#attribute:STRUCTURE:TOSTRING" title="STRUCTURE:TOSTRING attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TOSTRING</span></code></a></td>
-<td><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-<td>The string that gets shown on-screen when doing the PRINT command.</td>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:STRUCTURE:TOSTRING" title="STRUCTURE:TOSTRING attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">TOSTRING</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>The string that gets shown on-screen when doing the PRINT command.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:STRUCTURE:HASSUFFIX" title="STRUCTURE:HASSUFFIX method"><code class="xref ks ks-meth docutils literal"><span class="pre">HASSUFFIX(name)</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>Test whether or not this value has a suffix with the given name.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#method:STRUCTURE:HASSUFFIX" title="STRUCTURE:HASSUFFIX method"><code class="xref ks ks-meth docutils literal notranslate"><span class="pre">HASSUFFIX(name)</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Test whether or not this value has a suffix with the given name.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:STRUCTURE:SUFFIXNAMES" title="STRUCTURE:SUFFIXNAMES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SUFFIXNAMES</span></code></a></td>
-<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">strings</span></code></a></td>
-<td>Gives a list of all the names of all the suffixes this thing has.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:STRUCTURE:SUFFIXNAMES" title="STRUCTURE:SUFFIXNAMES attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">SUFFIXNAMES</span></code></a></p></td>
+<td><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">strings</span></code></a></p></td>
+<td><p>Gives a list of all the names of all the suffixes this thing has.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:STRUCTURE:ISSERIALIZABLE" title="STRUCTURE:ISSERIALIZABLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ISSERIALIZABLE</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>Is true if this type is one that works with <a class="reference internal" href="../../commands/files.html#writejson"><span>WRITEJSON</span></a></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:STRUCTURE:ISSERIALIZABLE" title="STRUCTURE:ISSERIALIZABLE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ISSERIALIZABLE</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>Is true if this type is one that works with <a class="reference internal" href="../../commands/files.html#writejson"><span class="std std-ref">WRITEJSON</span></a></p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:STRUCTURE:TYPENAME" title="STRUCTURE:TYPENAME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TYPENAME</span></code></a></td>
-<td><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-<td>Gives a string for the name of the type of this object.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:STRUCTURE:TYPENAME" title="STRUCTURE:TYPENAME attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">TYPENAME</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>Gives a string for the name of the type of this object.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:STRUCTURE:ISTYPE" title="STRUCTURE:ISTYPE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ISTYPE(name)</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>true if this value is of the given type name, or is derived from the given type name</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute:STRUCTURE:ISTYPE" title="STRUCTURE:ISTYPE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ISTYPE(name)</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p></td>
+<td><p>true if this value is of the given type name, or is derived from the given type name</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:STRUCTURE:INHERITANCE" title="STRUCTURE:INHERITANCE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">INHERITANCE</span></code></a></td>
-<td><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-<td>Gives a string describing the kOS type, and the kOS types it is inherited from.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#attribute:STRUCTURE:INHERITANCE" title="STRUCTURE:INHERITANCE attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">INHERITANCE</span></code></a></p></td>
+<td><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></td>
+<td><p>Gives a string describing the kOS type, and the kOS types it is inherited from.</p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:STRUCTURE:TOSTRING">
-Structure:<code class="descname">TOSTRING</code><a class="headerlink" href="#attribute:STRUCTURE:TOSTRING" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
-<p>When issuing the command <code class="docutils literal"><span class="pre">PRINT</span> <span class="pre">aaa.</span></code>, the variable <code class="docutils literal"><span class="pre">aaa</span></code> gets
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:STRUCTURE:TOSTRING">
+<span class="pre">Structure:</span><span class="sig-name descname"><span class="pre">TOSTRING</span></span><a class="headerlink" href="#attribute:STRUCTURE:TOSTRING" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
+<p>When issuing the command <code class="docutils literal notranslate"><span class="pre">PRINT</span> <span class="pre">aaa.</span></code>, the variable <code class="docutils literal notranslate"><span class="pre">aaa</span></code> gets
 converted to a string and then the string is shown on the screen.
 This suffix universally lets you get that string version of any item,
 rather than showing it on the screen.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="method:STRUCTURE:HASSUFFIX">
-Structure:<code class="descname">HASSUFFIX</code><span class="sig-paren">(</span>name<span class="sig-paren">)</span><a class="headerlink" href="#method:STRUCTURE:HASSUFFIX" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> &#8211; <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> name of the suffix being tested for</li>
+<dl class="ks method">
+<dt class="sig sig-object ks" id="method:STRUCTURE:HASSUFFIX">
+<span class="pre">Structure:</span><span class="sig-name descname"><span class="pre">HASSUFFIX</span></span><span class="sig-paren">(</span><span class="pre">name</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRUCTURE:HASSUFFIX" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> name of the suffix being tested for</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body"><p class="first last">Get only</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+</dl>
 <p>Given the name of a suffix, returns true if the object has a suffix
 by that name.  For example, if you have a variable that might be a
-<a class="reference internal" href="../vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">vessel</span></code></a>, or might be a <a class="reference internal" href="../celestial_bodies/body.html#structure:BODY" title="BODY structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Body</span></code></a>,
+<a class="reference internal" href="../vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">vessel</span></code></a>, or might be a <a class="reference internal" href="../celestial_bodies/body.html#structure:BODY" title="BODY structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Body</span></code></a>,
 then this example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">thingy</span><span class="p">:</span><span class="nv">hassuffix</span><span class="p">(</span><span class="s">&quot;maxthrust&quot;</span><span class="p">).</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="nv">thingy</span><span class="p">:</span><span class="nv">hassuffix</span><span class="p">(</span><span class="s">&quot;maxthrust&quot;</span><span class="p">).</span>
 </pre></div>
 </div>
-<p>would print <code class="docutils literal"><span class="pre">True</span></code> if <code class="docutils literal"><span class="pre">thingy</span></code> was a vessel of some sort, but
-<code class="docutils literal"><span class="pre">False</span></code> if <code class="docutils literal"><span class="pre">thingy</span></code> was a body, because there exists a maxthrust
+<p>would print <code class="docutils literal notranslate"><span class="pre">True</span></code> if <code class="docutils literal notranslate"><span class="pre">thingy</span></code> was a vessel of some sort, but
+<code class="docutils literal notranslate"><span class="pre">False</span></code> if <code class="docutils literal notranslate"><span class="pre">thingy</span></code> was a body, because there exists a maxthrust
 suffix for vessels but not for bodies.</p>
 <p>When searching for suffix names, the search is performed in a
-case-insensitive way.  Kerboscript cannot distinguish &#8221;:AAA&#8221;
-and &#8221;:aaa&#8221; as being two different suffixes.  In kerboscript,
-they&#8217;d be the same suffix.</p>
-<p>(Note that because a <a class="reference internal" href="../collections/lexicon.html#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Lexicon</span></code></a> can use a special
-<a class="reference internal" href="../collections/lexicon.html#lexicon-suffix"><span>Lexicon suffix syntax</span></a>, it will also
+case-insensitive way.  Kerboscript cannot distinguish “:AAA”
+and “:aaa” as being two different suffixes.  In kerboscript,
+they’d be the same suffix.</p>
+<p>(Note that because a <a class="reference internal" href="../collections/lexicon.html#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Lexicon</span></code></a> can use a special
+<a class="reference internal" href="../collections/lexicon.html#lexicon-suffix"><span class="std std-ref">Lexicon suffix syntax</span></a>, it will also
 return true for suffix-usable keys when you call its
 HASSUFFIX method.)</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:STRUCTURE:SUFFIXNAMES">
-Structure:<code class="descname">SUFFIXNAMES</code><a class="headerlink" href="#attribute:STRUCTURE:SUFFIXNAMES" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">strings</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:STRUCTURE:SUFFIXNAMES">
+<span class="pre">Structure:</span><span class="sig-name descname"><span class="pre">SUFFIXNAMES</span></span><a class="headerlink" href="#attribute:STRUCTURE:SUFFIXNAMES" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">strings</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>Returns a list of all the string names of the suffixes that can
 be used by the thing you call it on.  As of this release, no
 information is shown about the parameters the suffix expects, or
 about the return value it gives.  All you see is the suffix names.</p>
-<p>If this object&#8217;s type is inherited from other types (for example, a
-<a class="reference internal" href="../celestial_bodies/body.html#structure:BODY" title="BODY structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Body</span></code></a> is also a kind of <a class="reference internal" href="../orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></code></a>.)
+<p>If this object’s type is inherited from other types (for example, a
+<a class="reference internal" href="../celestial_bodies/body.html#structure:BODY" title="BODY structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Body</span></code></a> is also a kind of <a class="reference internal" href="../orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Orbitable</span></code></a>.)
 then what you see here contains the list of all the suffixes from the base
 type as well.  (Therefore the suffixes described here on this very page
 always appear in the list for any type.)</p>
 <p>Note, for some objects, like Vessels, this can be a rather long list.</p>
 <p>The list is returned sorted in alphabetical order.</p>
 <p>Example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">v1</span> <span class="ow">to</span> <span class="nv">V</span><span class="p">(</span><span class="mf">12</span><span class="p">,</span><span class="mf">41</span><span class="p">,</span><span class="mf">0</span><span class="p">.</span><span class="mf">1</span><span class="p">).</span> <span class="c1">// v1 is a vector</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">v1</span> <span class="ow">to</span> <span class="nv">V</span><span class="p">(</span><span class="mf">12</span><span class="p">,</span><span class="mf">41</span><span class="p">,</span><span class="mf">0</span><span class="p">.</span><span class="mf">1</span><span class="p">).</span> <span class="c1">// v1 is a vector</span>
 <span class="k">print</span> <span class="nv">v1</span><span class="p">:</span><span class="nv">suffixnames</span><span class="p">.</span>
 <span class="k">List</span> <span class="nv">of</span> <span class="mf">14</span> <span class="nv">items</span><span class="p">:</span>
 <span class="p">[</span><span class="mf">0</span><span class="p">]</span> <span class="o">=</span> <span class="nv">DIRECTION</span>
@@ -350,31 +271,29 @@ always appear in the list for any type.)</p>
 <span class="p">[</span><span class="mf">13</span><span class="p">]</span> <span class="o">=</span> <span class="nv">Z</span>
 </pre></div>
 </div>
-<p>(Note that because a <a class="reference internal" href="../collections/lexicon.html#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Lexicon</span></code></a> can use a special
-<a class="reference internal" href="../collections/lexicon.html#lexicon-suffix"><span>Lexicon suffix syntax</span></a>, it will also
+<p>(Note that because a <a class="reference internal" href="../collections/lexicon.html#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Lexicon</span></code></a> can use a special
+<a class="reference internal" href="../collections/lexicon.html#lexicon-suffix"><span class="std std-ref">Lexicon suffix syntax</span></a>, it will also
 include all of its suffix-usable keys when you call its
 SUFFIXNAMES method.)</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:STRUCTURE:TYPENAME">
-Structure:<code class="descname">TYPENAME</code><a class="headerlink" href="#attribute:STRUCTURE:TYPENAME" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:STRUCTURE:TYPENAME">
+<span class="pre">Structure:</span><span class="sig-name descname"><span class="pre">TYPENAME</span></span><a class="headerlink" href="#attribute:STRUCTURE:TYPENAME" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>Gives the name of the type of the object, in kOS terminology.</p>
 <p>Type names correspond to the types mentioned throughout these
 documentation pages, at the tops of the tables that list
 suffixes.</p>
 <p>Examples:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="mf">1</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="mf">1</span><span class="p">.</span>
 <span class="k">print</span> <span class="nv">x</span><span class="p">:</span><span class="nv">typename</span>
 <span class="nv">Scalar</span>
 
@@ -393,33 +312,32 @@ suffixes.</p>
 </div>
 <p>The kOS types described in these documentaion pages correspond
 one-to-one with underlying types in the C# code the implements
-them.  However they don&#8217;t have the same name as the underlying
+them.  However they don’t have the same name as the underlying
 C# names.  This returns an abstraction of the C# name.  There
 are a few places in the C# code where an error message will
 mention the C# type name instead of the kOS type name.  This is
 an issue that might be resolved in a later release.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:STRUCTURE:ISTYPE">
-Structure:<code class="descname">ISTYPE</code><a class="headerlink" href="#attribute:STRUCTURE:ISTYPE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameter name:</th><td class="field-body">string name of the type being checked for</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
-<p>This is <code class="docutils literal"><span class="pre">True</span></code> if the value is of the type mentioned in the name, or
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:STRUCTURE:ISTYPE">
+<span class="pre">Structure:</span><span class="sig-name descname"><span class="pre">ISTYPE</span></span><a class="headerlink" href="#attribute:STRUCTURE:ISTYPE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameter name<span class="colon">:</span></dt>
+<dd class="field-odd"><p>string name of the type being checked for</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Get only</p>
+</dd>
+</dl>
+<p>This is <code class="docutils literal notranslate"><span class="pre">True</span></code> if the value is of the type mentioned in the name, or
 if it is a type that is derived from the type mentioned in the name.
-Otherwise it is <code class="docutils literal"><span class="pre">False</span></code>.</p>
+Otherwise it is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
 <p>Example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="nv">SHIP</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="nv">SHIP</span><span class="p">.</span>
 <span class="k">print</span> <span class="nv">x</span><span class="p">:</span><span class="nv">istype</span><span class="p">(</span><span class="s">&quot;Vessel&quot;</span><span class="p">).</span>
 <span class="nb">True</span>
 <span class="k">print</span> <span class="nv">x</span><span class="p">:</span><span class="nv">istype</span><span class="p">(</span><span class="s">&quot;Orbitable&quot;</span><span class="p">).</span>
@@ -437,123 +355,81 @@ Otherwise it is <code class="docutils literal"><span class="pre">False</span></c
 <p>The type name is searched in a case-insensitive way.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:STRUCTURE:INHERITANCE">
-Structure:<code class="descname">INHERITANCE</code><a class="headerlink" href="#attribute:STRUCTURE:INHERITANCE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:STRUCTURE:INHERITANCE">
+<span class="pre">Structure:</span><span class="sig-name descname"><span class="pre">INHERITANCE</span></span><a class="headerlink" href="#attribute:STRUCTURE:INHERITANCE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>Gives a string describing the typename of this value, and the
 typename of the type this value is inherited from, and the typename
 of the type that type is inherited from, etc all the way to
-this root type of <code class="docutils literal"><span class="pre">Structure</span></code> that all values share.</p>
+this root type of <code class="docutils literal notranslate"><span class="pre">Structure</span></code> that all values share.</p>
 <p>Example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="nv">SHIP</span><span class="p">.</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="nv">SHIP</span><span class="p">.</span>
 <span class="k">print</span> <span class="nv">x</span><span class="p">:</span><span class="nv">inheritance</span><span class="p">.</span>
 <span class="nv">Vessel</span> <span class="nv">derived</span> <span class="k">from</span> <span class="nv">Orbitable</span> <span class="nv">derived</span> <span class="k">from</span> <span class="nv">Structure</span>
 </pre></div>
 </div>
 <p>(The kOS types described in that string are an abstraction of the
-underlying C# names in the mod&#8217;s implementation, and a few of the
+underlying C# names in the mod’s implementation, and a few of the
 C# types the mod uses to abstract a few things are skipped along
-the way, as they are types the script code can&#8217;t see directly.)</p>
+the way, as they are types the script code can’t see directly.)</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:STRUCTURE:ISSERIALIZABLE">
-Structure:<code class="descname">ISSERIALIZABLE</code><a class="headerlink" href="#attribute:STRUCTURE:ISSERIALIZABLE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
+<dl class="ks attribute">
+<dt class="sig sig-object ks" id="attribute:STRUCTURE:ISSERIALIZABLE">
+<span class="pre">Structure:</span><span class="sig-name descname"><span class="pre">ISSERIALIZABLE</span></span><a class="headerlink" href="#attribute:STRUCTURE:ISSERIALIZABLE" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
+</dd>
+<dt class="field-even">Access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Get only</p>
+</dd>
+</dl>
 <p>Not all types can be saved using the built-in serialization function
-<a class="reference internal" href="../../commands/files.html#writejson"><span>WRITEJSON</span></a>.  For those that can, values of that
-type will return <code class="docutils literal"><span class="pre">True</span></code> for this suffix, otherwise it returns <code class="docutils literal"><span class="pre">False</span></code>.</p>
+<a class="reference internal" href="../../commands/files.html#writejson"><span class="std std-ref">WRITEJSON</span></a>.  For those that can, values of that
+type will return <code class="docutils literal notranslate"><span class="pre">True</span></code> for this suffix, otherwise it returns <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="../collections.html" class="btn btn-neutral float-right" title="Collections" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="../reflection.html" class="btn btn-neutral" title="Reflection" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../reflection.html" class="btn btn-neutral float-left" title="Reflection" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../collections.html" class="btn btn-neutral float-right" title="Collections" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

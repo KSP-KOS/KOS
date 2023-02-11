@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Creating Reusable GUI Elements &mdash; kOS 1.3.0.0 documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creating Reusable GUI Elements &mdash; kOS 1.3.3.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="author" title="About these documents"
-              href="../about.html"/>
-        <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.3.0.0 documentation" href="../index.html"/>
-        <link rel="up" title="Tutorials" href="../tutorials.html"/>
-        <link rel="next" title="Community Examples Library" href="../library.html"/>
-        <link rel="prev" title="Testbounds" href="display_bounds.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="next" title="Community Examples Library" href="../library.html" />
+    <link rel="prev" title="Testbounds" href="display_bounds.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
+        <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
-          
-
-          
-            
-            <img src="../_static/kos_logo_small.png" class="logo" />
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.3.0.0
+                1.3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,15 +40,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
@@ -101,9 +52,7 @@
 <li class="toctree-l2"><a class="reference internal" href="pidloops.html">PID Loops</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exenode.html">Execute Node script</a></li>
 <li class="toctree-l2"><a class="reference internal" href="display_bounds.html">Drawing VecDraws, and showing Bounds Boxes</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Making a tabbed GUI</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Making a tabbed GUI</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../library.html">Community Example Library</a></li>
@@ -119,108 +68,91 @@
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../contents.html">kOS</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents.html">kOS</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../contents.html">Docs</a> &raquo;</li>
-      
+      <li><a href="../contents.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../tutorials.html">Tutorials</a> &raquo;</li>
-      
-    <li>Creating Reusable GUI Elements</li>
+      <li>Creating Reusable GUI Elements</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../_sources/tutorials/gui.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../_sources/tutorials/gui.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="creating-reusable-gui-elements">
-<span id="gui-tutorial"></span><h1>Creating Reusable GUI Elements<a class="headerlink" href="#creating-reusable-gui-elements" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="creating-reusable-gui-elements">
+<span id="gui-tutorial"></span><h1>Creating Reusable GUI Elements<a class="headerlink" href="#creating-reusable-gui-elements" title="Permalink to this heading">¶</a></h1>
 <p>In this tutorial, we describe how to make a TabWidget that can be reused as a general-purpose widget.</p>
-<div class="contents local topic" id="contents">
-<p class="topic-title first">Contents</p>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#the-end-result" id="id2">The End Result</a><ul>
-<li><a class="reference internal" href="#import-the-functionality-into-our-script" id="id3">1. &#8220;Import&#8221; the functionality into our script</a></li>
-<li><a class="reference internal" href="#create-a-gui" id="id4">2. Create a GUI</a></li>
-<li><a class="reference internal" href="#add-tabs" id="id5">3. Add tabs</a></li>
-<li><a class="reference internal" href="#choose-tab-programmatically" id="id6">4. Choose tab programmatically</a></li>
-<li><a class="reference internal" href="#handling-the-widgets-on-the-tabs" id="id7">5. Handling the widgets on the tabs</a></li>
+<li><p><a class="reference internal" href="#the-end-result" id="id2">The End Result</a></p>
+<ul>
+<li><p><a class="reference internal" href="#import-the-functionality-into-our-script" id="id3">1. “Import” the functionality into our script</a></p></li>
+<li><p><a class="reference internal" href="#create-a-gui" id="id4">2. Create a GUI</a></p></li>
+<li><p><a class="reference internal" href="#add-tabs" id="id5">3. Add tabs</a></p></li>
+<li><p><a class="reference internal" href="#choose-tab-programmatically" id="id6">4. Choose tab programmatically</a></p></li>
+<li><p><a class="reference internal" href="#handling-the-widgets-on-the-tabs" id="id7">5. Handling the widgets on the tabs</a></p></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#the-implementation" id="id8">The Implementation</a><ul>
-<li><a class="reference internal" href="#creating-the-tabwidget" id="id9">1. Creating the TabWidget</a></li>
-<li><a class="reference internal" href="#images-for-the-tabs-and-panels" id="id10">2. Images for the Tabs and Panels</a></li>
-<li><a class="reference internal" href="#adding-a-tab" id="id11">3. Adding a Tab</a></li>
-<li><a class="reference internal" href="#id1" id="id12">3. Adding a Tab</a></li>
-<li><a class="reference internal" href="#running-the-tabwidget" id="id13">4. Running the TabWidget</a></li>
-<li><a class="reference internal" href="#testing-with-communication-delay" id="id14">5. Testing with Communication Delay</a></li>
+<li><p><a class="reference internal" href="#the-implementation" id="id8">The Implementation</a></p>
+<ul>
+<li><p><a class="reference internal" href="#creating-the-tabwidget" id="id9">1. Creating the TabWidget</a></p></li>
+<li><p><a class="reference internal" href="#images-for-the-tabs-and-panels" id="id10">2. Images for the Tabs and Panels</a></p></li>
+<li><p><a class="reference internal" href="#adding-a-tab" id="id11">3. Adding a Tab</a></p></li>
+<li><p><a class="reference internal" href="#id1" id="id12">3. Adding a Tab</a></p></li>
+<li><p><a class="reference internal" href="#running-the-tabwidget" id="id13">4. Running the TabWidget</a></p></li>
+<li><p><a class="reference internal" href="#testing-with-communication-delay" id="id14">5. Testing with Communication Delay</a></p></li>
 </ul>
 </li>
 </ul>
-</div>
-<div class="section" id="the-end-result">
-<h2><a class="toc-backref" href="#id2">The End Result</a><a class="headerlink" href="#the-end-result" title="Permalink to this headline">¶</a></h2>
+</nav>
+<section id="the-end-result">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">The End Result</a><a class="headerlink" href="#the-end-result" title="Permalink to this heading">¶</a></h2>
 <p>Starting from the end - how the user would like to <em>use</em> the TabWidget - is a good way to drive good
 encapsulation and to avoid forcing implementation details upon the end user.</p>
 <p>You should have an image of what the final result will look like, and a feel for how it would be used.
-If you&#8217;re reproducing concepts that already exist, you can use existing art as a guide. Here, we just
+If you’re reproducing concepts that already exist, you can use existing art as a guide. Here, we just
 cheat and show a picture of the end result:</p>
-<div class="figure">
+<figure class="align-default">
 <a class="reference internal image-reference" href="../_images/TabWidget.png"><img alt="../_images/TabWidget.png" src="../_images/TabWidget.png" style="width: 100%;" /></a>
-</div>
+</figure>
 <p>Now, from the coding side, how would we like to <em>use</em> our TabWidget?</p>
-<div class="section" id="import-the-functionality-into-our-script">
-<h3><a class="toc-backref" href="#id3">1. &#8220;Import&#8221; the functionality into our script</a><a class="headerlink" href="#import-the-functionality-into-our-script" title="Permalink to this headline">¶</a></h3>
-<p>The implementation is all contained in the single &#8220;TabWidget&#8221; directory. This allows us to easily
+<section id="import-the-functionality-into-our-script">
+<h3><a class="toc-backref" href="#id3" role="doc-backlink">1. “Import” the functionality into our script</a><a class="headerlink" href="#import-the-functionality-into-our-script" title="Permalink to this heading">¶</a></h3>
+<p>The implementation is all contained in the single “TabWidget” directory. This allows us to easily
 share the implementation with multiple KSP installs, and with others online:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">RUNONCEPATH</span><span class="p">(</span><span class="s">&quot;TabWidget/tabwidget&quot;</span><span class="p">).</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">RUNONCEPATH</span><span class="p">(</span><span class="s">&quot;TabWidget/tabwidget&quot;</span><span class="p">).</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="create-a-gui">
-<h3><a class="toc-backref" href="#id4">2. Create a GUI</a><a class="headerlink" href="#create-a-gui" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="create-a-gui">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">2. Create a GUI</a><a class="headerlink" href="#create-a-gui" title="Permalink to this heading">¶</a></h3>
 <p>Our TabWidget should be usable in any context, but in this example, we just create it at the top-level.
 The AddTabWidget function should however accept any VBOX as the parameter:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LOCAL</span> <span class="nv">gui</span> <span class="ow">IS</span> <span class="nv">GUI</span><span class="p">(</span><span class="mf">500</span><span class="p">).</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">LOCAL</span> <span class="nv">gui</span> <span class="ow">IS</span> <span class="nv">GUI</span><span class="p">(</span><span class="mf">500</span><span class="p">).</span>
 <span class="k">LOCAL</span> <span class="nv">tabwidget</span> <span class="ow">IS</span> <span class="nv">AddTabWidget</span><span class="p">(</span><span class="nv">gui</span><span class="p">).</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="add-tabs">
-<h3><a class="toc-backref" href="#id5">3. Add tabs</a><a class="headerlink" href="#add-tabs" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="add-tabs">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">3. Add tabs</a><a class="headerlink" href="#add-tabs" title="Permalink to this heading">¶</a></h3>
 <p>We will want a function that adds a tab with a title on it, and returns a box into which we can
 put whatever widgets we want:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LOCAL</span> <span class="nv">page</span> <span class="ow">IS</span> <span class="nv">AddTab</span><span class="p">(</span><span class="nv">tabwidget</span><span class="p">,</span><span class="s">&quot;One&quot;</span><span class="p">).</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">LOCAL</span> <span class="nv">page</span> <span class="ow">IS</span> <span class="nv">AddTab</span><span class="p">(</span><span class="nv">tabwidget</span><span class="p">,</span><span class="s">&quot;One&quot;</span><span class="p">).</span>
 <span class="nv">page</span><span class="p">:</span><span class="nv">ADDLABEL</span><span class="p">(</span><span class="s">&quot;This is page 1&quot;</span><span class="p">).</span>
 <span class="nv">page</span><span class="p">:</span><span class="nv">ADDLABEL</span><span class="p">(</span><span class="s">&quot;Put stuff here!&quot;</span><span class="p">).</span>
 
@@ -233,21 +165,21 @@ put whatever widgets we want:</p>
 <span class="nv">page</span><span class="p">:</span><span class="nv">ADDLABEL</span><span class="p">(</span><span class="s">&quot;Put even stuff here!&quot;</span><span class="p">).</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="choose-tab-programmatically">
-<h3><a class="toc-backref" href="#id6">4. Choose tab programmatically</a><a class="headerlink" href="#choose-tab-programmatically" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="choose-tab-programmatically">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">4. Choose tab programmatically</a><a class="headerlink" href="#choose-tab-programmatically" title="Permalink to this heading">¶</a></h3>
 <p>Sometimes we might want a tab other than the first to be the one shown. For example, the first tab might
 be for launching into orbit from the surface, but if the vessel reboots and finds itself in space, the
 tab for setting up Maneuver Nodes might be a better default:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">ChooseTab</span><span class="p">(</span><span class="nv">tabwidget</span><span class="p">,</span><span class="mf">1</span><span class="p">).</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">ChooseTab</span><span class="p">(</span><span class="nv">tabwidget</span><span class="p">,</span><span class="mf">1</span><span class="p">).</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="handling-the-widgets-on-the-tabs">
-<h3><a class="toc-backref" href="#id7">5. Handling the widgets on the tabs</a><a class="headerlink" href="#handling-the-widgets-on-the-tabs" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="handling-the-widgets-on-the-tabs">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">5. Handling the widgets on the tabs</a><a class="headerlink" href="#handling-the-widgets-on-the-tabs" title="Permalink to this heading">¶</a></h3>
 <p>The rest here is just boilerplate - we add a Close button to the top level, then show and run the GUI until
 the user presses the Close button:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LOCAL</span> <span class="nv">close</span> <span class="ow">IS</span> <span class="nv">gui</span><span class="p">:</span><span class="nv">ADDBUTTON</span><span class="p">(</span><span class="s">&quot;Close&quot;</span><span class="p">).</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">LOCAL</span> <span class="nv">close</span> <span class="ow">IS</span> <span class="nv">gui</span><span class="p">:</span><span class="nv">ADDBUTTON</span><span class="p">(</span><span class="s">&quot;Close&quot;</span><span class="p">).</span>
 <span class="nv">gui</span><span class="p">:</span><span class="nv">SHOW</span><span class="p">().</span>
 <span class="k">UNTIL</span> <span class="nv">close</span><span class="p">:</span><span class="nv">PRESSED</span> <span class="p">{</span>
     <span class="c1">// Handle processing of all the widgets on all the tabs.</span>
@@ -256,17 +188,17 @@ the user presses the Close button:</p>
 <span class="nv">gui</span><span class="p">:</span><span class="nv">HIDE</span><span class="p">().</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="the-implementation">
-<h2><a class="toc-backref" href="#id8">The Implementation</a><a class="headerlink" href="#the-implementation" title="Permalink to this headline">¶</a></h2>
-<p>We now move on to the implementation of this desired functionality. We put everything below in the &#8220;TabWidget/tabwidget.ks&#8221;
+</section>
+</section>
+<section id="the-implementation">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">The Implementation</a><a class="headerlink" href="#the-implementation" title="Permalink to this heading">¶</a></h2>
+<p>We now move on to the implementation of this desired functionality. We put everything below in the “TabWidget/tabwidget.ks”
 file, as suggested in the RUNONCEPATH above.</p>
-<div class="section" id="creating-the-tabwidget">
-<h3><a class="toc-backref" href="#id9">1. Creating the TabWidget</a><a class="headerlink" href="#creating-the-tabwidget" title="Permalink to this headline">¶</a></h3>
-<p>First, we implement the required &#8220;AddTabWidget&#8221; function. This function takes any box as a parameter (eg. the top level GUI,
+<section id="creating-the-tabwidget">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">1. Creating the TabWidget</a><a class="headerlink" href="#creating-the-tabwidget" title="Permalink to this heading">¶</a></h3>
+<p>First, we implement the required “AddTabWidget” function. This function takes any box as a parameter (eg. the top level GUI,
 or one created by GUI:ADDVLAYOUT, GUI:ADDSCROLLBOX, etc.:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">DECLARE</span> <span class="kd">FUNCTION</span> <span class="nv">AddTabWidget</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">DECLARE</span> <span class="kd">FUNCTION</span> <span class="nv">AddTabWidget</span>
 <span class="p">{</span>
         <span class="c1">// Any box is allowed</span>
         <span class="k">DECLARE</span> <span class="kd">PARAMETER</span> <span class="nv">box</span><span class="p">.</span>
@@ -310,39 +242,34 @@ or one created by GUI:ADDVLAYOUT, GUI:ADDSCROLLBOX, etc.:</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="images-for-the-tabs-and-panels">
-<h3><a class="toc-backref" href="#id10">2. Images for the Tabs and Panels</a><a class="headerlink" href="#images-for-the-tabs-and-panels" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="images-for-the-tabs-and-panels">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">2. Images for the Tabs and Panels</a><a class="headerlink" href="#images-for-the-tabs-and-panels" title="Permalink to this heading">¶</a></h3>
 <p>The images are based on other elements to make them suit the style.</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="37%" />
-<col width="19%" />
-<col width="44%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>The tab when in front:</td>
-<td><img alt="fronttabimage" src="../_images/front.png" /></td>
-<td>Based on Button normal state</td>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>The tab when in front:</p></td>
+<td><p><img alt="fronttabimage" src="../_images/front.png" /></p></td>
+<td><p>Based on Button normal state</p></td>
 </tr>
-<tr class="row-even"><td>The tab when in the back</td>
-<td><img alt="backtabimage" src="../_images/back.png" /></td>
-<td>Based on Button normal_on state</td>
+<tr class="row-even"><td><p>The tab when in the back</p></td>
+<td><p><img alt="backtabimage" src="../_images/back.png" /></p></td>
+<td><p>Based on Button normal_on state</p></td>
 </tr>
-<tr class="row-odd"><td>The panel below the tabs:</td>
-<td><img alt="paneltabimage" src="../_images/panel.png" /></td>
-<td>Based on the GUI window background</td>
+<tr class="row-odd"><td><p>The panel below the tabs:</p></td>
+<td><p><img alt="paneltabimage" src="../_images/panel.png" /></p></td>
+<td><p>Based on the GUI window background</p></td>
 </tr>
 </tbody>
 </table>
-<p>Note that these images need to be in the &#8220;TabWidget/images&#8221; directory, as referred to in the code above.</p>
-</div>
-<div class="section" id="adding-a-tab">
-<h3><a class="toc-backref" href="#id11">3. Adding a Tab</a><a class="headerlink" href="#adding-a-tab" title="Permalink to this headline">¶</a></h3>
-<p>Next, we implement the required &#8220;AddTab&#8221; function. This function takes a TabWidget created by the previous function
+<p>Note that these images need to be in the “TabWidget/images” directory, as referred to in the code above.</p>
+</section>
+<section id="adding-a-tab">
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">3. Adding a Tab</a><a class="headerlink" href="#adding-a-tab" title="Permalink to this heading">¶</a></h3>
+<p>Next, we implement the required “AddTab” function. This function takes a TabWidget created by the previous function
 and adds another tab to the end with a given name. It returns a VBOX into which widgets for that page of the TabWidget
 can be added.:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">DECLARE</span> <span class="kd">FUNCTION</span> <span class="nv">AddTab</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">DECLARE</span> <span class="kd">FUNCTION</span> <span class="nv">AddTab</span>
 <span class="p">{</span>
         <span class="k">DECLARE</span> <span class="kd">PARAMETER</span> <span class="nv">tabwidget</span><span class="p">.</span> <span class="c1">// (the vbox)</span>
         <span class="k">DECLARE</span> <span class="kd">PARAMETER</span> <span class="nv">tabname</span><span class="p">.</span> <span class="c1">// title for the tab</span>
@@ -389,12 +316,12 @@ can be added.:</p>
 <span class="k">GLOBAL</span> <span class="nv">TabWidget_allpanels</span> <span class="ow">TO</span> <span class="k">LIST</span><span class="p">().</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="id1">
-<h3><a class="toc-backref" href="#id12">3. Adding a Tab</a><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="id1">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">3. Adding a Tab</a><a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
 <p>We want to be able to choose a specific tab to be shown, so we add a simple function to encapsulate
 that:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">DECLARE</span> <span class="kd">FUNCTION</span> <span class="nv">ChooseTab</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">DECLARE</span> <span class="kd">FUNCTION</span> <span class="nv">ChooseTab</span>
 <span class="p">{</span>
         <span class="k">DECLARE</span> <span class="kd">PARAMETER</span> <span class="nv">tabwidget</span><span class="p">.</span> <span class="c1">// The tab</span>
         <span class="k">DECLARE</span> <span class="kd">PARAMETER</span> <span class="nv">tabnum</span><span class="p">.</span> <span class="c1">// Which tab to choose (0 is first)</span>
@@ -406,13 +333,13 @@ that:</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="running-the-tabwidget">
-<h3><a class="toc-backref" href="#id13">4. Running the TabWidget</a><a class="headerlink" href="#running-the-tabwidget" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="running-the-tabwidget">
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">4. Running the TabWidget</a><a class="headerlink" href="#running-the-tabwidget" title="Permalink to this heading">¶</a></h3>
 <p>Rather than ask the user to repeatedly call a function to run the TabWidget (which would also be fine,
-but not in our original design), we instead use a &#8220;trick&#8221; to watch the tab buttons to see if they get
+but not in our original design), we instead use a “trick” to watch the tab buttons to see if they get
 pressed, and raise the corresponding tab if they are:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">WHEN</span> <span class="nb">True</span> <span class="k">THEN</span> <span class="p">{</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">WHEN</span> <span class="nb">True</span> <span class="k">THEN</span> <span class="p">{</span>
         <span class="k">FROM</span> <span class="p">{</span> <span class="k">LOCAL</span> <span class="nv">x</span> <span class="ow">IS</span> <span class="mf">0</span><span class="p">.}</span> <span class="k">UNTIL</span> <span class="nv">x</span> <span class="o">&gt;=</span> <span class="nv">TabWidget_alltabs</span><span class="p">:</span><span class="nv">LENGTH</span> <span class="k">STEP</span> <span class="p">{</span> <span class="k">SET</span> <span class="nv">x</span> <span class="ow">TO</span> <span class="nv">x</span><span class="o">+</span><span class="mf">1</span><span class="p">.}</span> <span class="k">DO</span>
         <span class="p">{</span>
                 <span class="c1">// Earlier, we were careful to hide the panels that were not the current</span>
@@ -426,96 +353,58 @@ pressed, and raise the corresponding tab if they are:</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>By using &#8220;WHEN True&#8221; and &#8220;PRESERVE&#8221;, this code effectively runs once every frame. It looks at all the tabs that
+<p>By using “WHEN True” and “PRESERVE”, this code effectively runs once every frame. It looks at all the tabs that
 have been created (even in multiple TabWidgets), and calls SHOWONLY on the STACK, giving it the panel that
 corresponds to the tab that was pressed. Since this code is executed every frame (but only once, since RUNONCEPATH
 ensures this WHEN statement only starts once), we are careful to do the minimum amount of processing necessary.</p>
-</div>
-<div class="section" id="testing-with-communication-delay">
-<h3><a class="toc-backref" href="#id14">5. Testing with Communication Delay</a><a class="headerlink" href="#testing-with-communication-delay" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="testing-with-communication-delay">
+<h3><a class="toc-backref" href="#id14" role="doc-backlink">5. Testing with Communication Delay</a><a class="headerlink" href="#testing-with-communication-delay" title="Permalink to this heading">¶</a></h3>
 <p>When playing with communication delay enabled (eg. with RemoteTech), you will want to ensure that the GUI is still
 usable with interaction delays, and ensure it does not cause continuous communication on the link. For example, if
 you constantly show a label with very high precision decimal, it will probably be updating the label continuously,
 which would mean the communication delay icon is constantly shown. We can test our GUI without flying to Jool by
 artificially adding extra delay, and testing on the launch pad:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="p">...</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="p">...</span>
 <span class="k">SET</span> <span class="nv">gui</span><span class="p">:</span><span class="nv">EXTRADELAY</span> <span class="ow">TO</span> <span class="mf">2</span><span class="p">.</span>
 <span class="p">...</span>
 </pre></div>
 </div>
 <p>The widget continues to work perfectly. Even if the user rapidly changes tab, the pages change as expected, though
 of course delayed.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="../library.html" class="btn btn-neutral float-right" title="Community Examples Library" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="display_bounds.html" class="btn btn-neutral" title="Testbounds" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="display_bounds.html" class="btn btn-neutral float-left" title="Testbounds" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../library.html" class="btn btn-neutral float-right" title="Community Examples Library" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.
-
-    </p>
+    <p>&#169; <a href="../copyright.html">Copyright</a> 2013-2021, Developed and maintained by kOS Team, Originally By Nivekk.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'1.3.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>
