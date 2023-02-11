@@ -33,16 +33,18 @@ namespace kOS.Suffixed.PartModuleField
                 return new RemoteTechAntennaModuleFields(mod, shared);
             }
 
-            if (mod.moduleName.Equals("ModuleScienceContainer")) {
-                return new ScienceContainerFields(mod, shared);
-            }
-
             var scienceExperimentFields = ScienceExperimentFieldsFactory.Construct(mod, shared);
 
             if (scienceExperimentFields != null)
             {
                 return scienceExperimentFields;
             }
+
+            if (mod.moduleName.Equals("ModuleScienceContainer"))
+            {
+                return new ScienceContainerFields(mod, shared);
+            }
+
 
             return new PartModuleFields(mod, shared);
         }

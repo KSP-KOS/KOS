@@ -532,13 +532,25 @@ for this purpose.
 For Kerbals, it refers to a more arbitrary line in space, pointing at a fixed
 point in the firmament, also known as the "skybox".
 
+.. _opcodesleft:
+
 OPCODESLEFT
 -----------
 
-This returns the amount of IPU that are left in this physics tick. This means
-that if you receive the value 20, you can run 20 more instructions. After this
-amount of instructions, other CPUs will run their instructions and then
-`TIME:SECONDS` will increase.
+This returns the amount of IPU (instructions per update) that are
+left in this physics tick. For example, if this gives you the value
+20, you can run 20 more instructions within this physics update
+before the game will let the rest of the game run and advance time.
+After this amount of instructions, other CPUs will run their
+instructions, and the game will do the rest of its work, and then
+`TIME:SECONDS` will increase and you'll get another physics update
+in which to run more of the program.
+
+Another way to think of this is "For the next ``OPCODESLEFT``
+instructions, the universe is still physically frozen, giving
+frozen values for time, position, velocity, etc.  After that
+it will be the next physics tick and those things will have moved
+ahead to the next physics tick."
 
 OPCODESLEFT can be used to try to make sure you run a block of code in one
 physics tick. This is useful when working with vectors or when interacting

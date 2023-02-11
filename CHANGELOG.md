@@ -1,6 +1,205 @@
 kOS Mod Changelog
 =================
 
+# v1.4.0.0 - Catch-up for over a year of little things
+
+It's been 3 years since the last kOS release, and a lot of
+small changes have trickled in.  None were big enough on
+their own for a full release but there's been enough of
+them and it's been long enough that a release has been
+needed for a while now.  Since KSP 2 is about to start
+hitting early access, it seemed right to get all these little
+things out for kOS for KSP 1 just before that happens.
+
+This will also make it so people won't have to keep
+overriding the complaints of CKAN for trying to use
+kOS on KSP 1.11.x or KSP 1.12.x.  (Which it worked for
+but CKAN didn't know that. Now it should know that.)
+
+### BREAKING CHANGES
+
+- The bugfix to prevent a local variable from clobbering a
+  builtin name could make existing scripts have to rename
+  a variable or two.
+
+  Previously if you tried to create a variable that matches
+  the name of a built-in variable, it would let you but then
+  the built-in variable would be permanently masked and
+  unreachable.
+
+  Now by default it won't let you.  BUT you can get the old
+  behavior back again if you use the @CLOBBERBUILTINS directive,
+  if you really want to let yourself do that.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/3016)
+
+### NEW FEATURES
+
+- kOS parts are now findable by typing "kos" into the
+  VAB's part search bar.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2980)
+
+- kOS parts can be placed inside the KSP cargo inventory system.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2916)
+
+- Comma-separated list of LOCAL or SET declarations can
+  now be parsed.  Example:
+
+  old: ``local a is 3. local b is 5. local c is 10.``
+  can now be: ``local a is 3, b is 5, c is 10.``
+
+  This is similar to how it works with PARAMETER.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2975)
+
+- Added VESSEL:THRUST, VESSEL:ENGINES, VESSEL:RCS.
+
+  ``VESSEL:THRUST`` is the sum of the engine:THRUST of all
+  the engines.
+
+  ``VESSEL:ENGINES`` is the same list returned by LIST ENGINES,
+  but using a somewhat nicer syntax.
+
+  ``VESSEL:RCS`` is the list of all the RCS parts on the vessel.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2977)
+
+- Added OPCODESLEFT bound variable.  This bound variable
+  returns the number of instructions yet to execute (how
+  much of CONFIG:IPU's instructions there are to go in
+  this fixedupdate).  Intended to help decide if a `WAIT 0.`
+  would be prudent before entering a critical section of
+  code.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2890)
+
+- Better integration with RP-1's avionics tech progression.
+  (No longer have to buy into the tech from the R&D building
+  to cause the kOS cores in avionics parts to get the upgrade.)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2955)
+
+- Better integration with RP-1's avionics lockouts when the
+  avionics doesn't support the mass.  (Previously kOS couldn't
+  use ANY of the controls when avionics were insufficient, even
+  ones RP-1 meant to still work with insuficient avionics,
+  like RCS fore and aft.)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2971)
+
+- kOS parts are now findable by typing "kos" into the
+  VAB's part search bar.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2980)
+
+- Can now read a binary file as a LIST of numeric values (one
+  per byte).
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2986)
+
+### BUG FIXES
+
+- Documentation: Many small one-line documentation fixes that are
+  too numerous to mention all of them one by one.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2886)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2951)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2960)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2962)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2967)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/3070)
+
+- A change to make it backward compatible with a call
+  kOSPropMonitor was doing.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2865)
+
+- Cause the mod RocketSoundEnhancement to stop muffling
+  kOS's sounds.  (By explicitly telling Unity those
+  sounds don't emit from the kOS Part's "location" and
+  instead are ambient.)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2866)
+
+- Make PART:DECOUPLER behave more consistently with what the
+  documentation says about docking ports.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2864)
+
+- Reduce excessive repeats of GUI ONCONFIRM calls being triggered
+  when they werent' supposed to be triggered.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2872)
+
+- Remove legacy old version of kOS's computer from the parts
+  definition file so it can't appear by accident in the parts bin.
+  This is no longer needed for backward compatibility like it
+  was before because this version of kOS cannot run on the
+  very old versions of KSP that part was for anyway.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2893)
+
+- When reporting the terrainheight of a geoposition, it no
+  longer returns false results caused by seeing certain
+  stock parts that put trigger colliders on the "terrain layer".
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2900)
+
+- Fix SteeringManager believing RCS blocks were capable of
+  more thrust than they were (causing steering to be tuned
+  wrong when steering via RCS).  Problem was caused when stock
+  parts now have multiple alternate RCS nozzle arrangements,
+  and kOS was summing up all the thrust all the nozzle variants
+  can do even though only a subset of those nozzles actually
+  exist in any given variant.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2923)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2974)
+ 
+- When setting the volume name for a disk drive by copying the
+  vessel's name to the volume's name, it now strips out
+  characters that are not allowed in volume names (but are 
+  in vessel names, thus the bug).
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2944)
+
+- BOUNDS now does a better job of calculating based on
+  part's *colliders* rather than their visual meshes which
+  don't always agree with the colliders.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2945)
+
+- No longer bogs down as much when someone creates the same
+  LOCK expression repeatedly in a loop. (Still not a good idea,
+  but kOS tolerates it better now.)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2965)
+
+- Performance:  No longer pays the cost of tracking a stopwatch
+  when the user doesn't even have profiling turned on so they're
+  not looking at the timings anyway.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2969)
+
+- A VOICE's volume is now persisting properly after playing a
+  NOTE.  Previously playing the NOTE caused the VOICE volume
+  setting to get clobbered by the NOTE's volume.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2978)
+
+- Make it so kOS's ModuleCargoPart settings don't break in
+  older KSP 1.10.x (which doesn't have ModuleCargoPart).
+  [pull request](https://github.com/KSP-KOS/KOS/pull/3003)
+
+- Fix a bug when a thing that is locked is used as the
+  left side of a suffix when setting the suffix.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/3010)
+
+- Prevent a local variable from clobbering a builtin name
+  [pull request](https://github.com/KSP-KOS/KOS/pull/3016)
+
+- Allow kOS code to "see" a change to a manuever node's ETA
+  made outside the script, after having obtained the node
+  in a variable.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/3040)
+
+- Fix Compiler exceptions not showing the filename correctly.
+  [pull request](https://github.com/KSP-KOS/KOS/issues/3018)
+
+- Fix ALT:RADAR sometimes wrong when high above ground.
+  [pull request](https://github.com/KSP-KOS/KOS/issues/2902)
+
+- Fix race condition that caused terminal to spam the log
+  on scene changes and sometimes spam the log enough to
+  lag the game for some people.
+  [pull request](https://github.com/KSP-KOS/KOS/issues/2925)
+
+- Fix throwing exception when setting SASMODE while the
+  navball is hidden.
+  [pull request](https://github.com/KSP-KOS/KOS/issues/3045)
+
+- Made the doc generation scripts work on python 3.x
+  [pull request](https://github.com/KSP-KOS/KOS/issues/3069)
+
 # v1.3.2.0 - Don't Steer Me wronger
 
 A quick patch to v1.3.0.0 that fixes issue #2857 that would
@@ -10,7 +209,7 @@ reboot had occurred while raw controls were in use.  Most
 players won't notice a single physics frame of zeroed
 controls, but if you're using realism mods with limited
 engine ignitions, it would unfairly consume an engine
-ignition when the throttle zeroed for an instant. (Which
+
 was disasterous for those engines that only get one
 ignition.)
 

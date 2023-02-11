@@ -45,12 +45,33 @@ class KOSObject(ObjectDescription):
             objects = self.env.domaindata['ks']['objects']
             key = (self.objtype, name.upper())
             if key in objects:
-                self.env.warn(self.env.docname,
-                              'duplicate description of %s %s, ' %
-                              (self.objtype, name.upper()) +
-                              'other instance in ' +
-                              self.env.doc2path(objects[key]),
-                              self.lineno)
+                # this previously used:
+                #     self.env.warn()
+                # But that apparently doesn't exist anymore in
+                # Sphinx and I couldn't find with Google any
+                # examples of what you're supposed to update it to
+                # use instead from Sphinx.
+                # So I just replced it with a few dumb print
+                # statements so at least it won't crash and will
+                # show the actual message on screen:
+                #
+                # If anyone else can figure out what sphinx changed
+                # self.app.warn() to that should be used here
+                # instead, great - go ahead and fix this kludge:
+                print(".------ WARNING ----------")
+                print("| Warning in " + self.env.docname + " line", end=" ")
+                print(f"line {self.lineno}")
+                print("|   duplicate description of ")
+                print("|     " + self.objtype + " " + name.upper())
+                print("|   other instance in ")
+                print("|     " +  self.env.doc2path(objects[key]))
+                print("`-------------------------")
+                #self.app.warn(self.env.docname,
+                #              'duplicate description of %s %s, ' %
+                #              (self.objtype, name.upper()) +
+                #              'other instance in ' +
+                #              self.env.doc2path(objects[key]),
+                #              self.lineno)
 
             objects[key] = self.env.docname
         indextext = self.get_index_text(self.objtype, name)

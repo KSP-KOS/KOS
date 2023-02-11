@@ -43,14 +43,14 @@ The type of structures returned by kOS when querying a module that stores scienc
 
     Call this method to run the unit's "collect all" action
 
-.. attribute:: ScienceExperimentModule:HASDATA
+.. attribute:: ScienceContainerModule:HASDATA
 
     :access: Get only
     :type: :ref:`Boolean <boolean>`
 
     True if this container has scientific data stored.
 
-.. attribute:: ScienceExperimentModule:DATA
+.. attribute:: ScienceContainerModule:DATA
 
     :access: Get only
     :type: :struct:`List` of :struct:`ScienceData`
