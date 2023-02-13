@@ -66,6 +66,13 @@ Added :attr:`FileContent:BINARY` to let you read a binary
 file as a LIST of numbers 0-255 for the byte values in the
 file.  
 
+Function BODYATMOSPHERE
+:::::::::::::::::::::::
+
+Added :function:`BODYATMOSPHERE` as an alternate way to 
+obtain the atmosphere information about a body.  Actually
+this function had already existed.  It just hadn't been
+documented.
 
 Changes in 1.3
 --------------
