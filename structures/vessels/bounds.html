@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BOUNDS &mdash; kOS 1.3.3.0 documentation</title>
+  <title>BOUNDS &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
+            <img src="../../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -441,12 +446,12 @@ illustrate what is being talked about:</p>
 <dl class="ks structure">
 <dt class="sig sig-object ks" id="structure:BOUNDS">
 <em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">Bounds</span></span><a class="headerlink" href="#structure:BOUNDS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils align-default">
+<dd><table class="colwidths-given docutils align-default">
 <colgroup>
-<col style="width: 25.0%" />
-<col style="width: 12.5%" />
-<col style="width: 12.5%" />
-<col style="width: 50.0%" />
+<col style="width: 25%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 50%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suffix</p></th>
@@ -534,10 +539,10 @@ illustrate what is being talked about:</p>
 <dt class="sig sig-object ks" id="attribute:BOUNDS:ABSORIGIN">
 <span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">ABSORIGIN</span></span><a class="headerlink" href="#attribute:BOUNDS:ABSORIGIN" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get/Set but read the note below before you SET it.</p>
 </dd>
 </dl>
@@ -571,10 +576,10 @@ created manually with the BOUNDS() function.</em></p>
 <dt class="sig sig-object ks" id="attribute:BOUNDS:RELORIGIN">
 <span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">RELORIGIN</span></span><a class="headerlink" href="#attribute:BOUNDS:RELORIGIN" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>Nonexistent</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Nonexistent</p>
 </dd>
 </dl>
@@ -593,10 +598,10 @@ frame - a reference frame with this spot as its origin.</p>
 <dt class="sig sig-object ks" id="attribute:BOUNDS:FACING">
 <span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">FACING</span></span><a class="headerlink" href="#attribute:BOUNDS:FACING" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Direction</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get/Set but read the note below before you SET it.</p>
 </dd>
 </dl>
@@ -628,10 +633,10 @@ created manually with the BOUNDS() function.</em></p>
 <dt class="sig sig-object ks" id="attribute:BOUNDS:RELMIN">
 <span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">RELMIN</span></span><a class="headerlink" href="#attribute:BOUNDS:RELMIN" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a> <strong>in bounding-box relative reference frame</strong></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get/Set</p>
 </dd>
 </dl>
@@ -663,10 +668,10 @@ the bounds facing like so: <code class="docutils literal notranslate"><span clas
 <dt class="sig sig-object ks" id="attribute:BOUNDS:RELMAX">
 <span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">RELMAX</span></span><a class="headerlink" href="#attribute:BOUNDS:RELMAX" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a> <strong>in bounding-box relative reference frame</strong></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get/Set</p>
 </dd>
 </dl>
@@ -698,10 +703,10 @@ the bounds facing like so: <code class="docutils literal notranslate"><span clas
 <dt class="sig sig-object ks" id="attribute:BOUNDS:ABSMIN">
 <span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">ABSMIN</span></span><a class="headerlink" href="#attribute:BOUNDS:ABSMIN" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get</p>
 </dd>
 </dl>
@@ -728,10 +733,10 @@ for convenience:</p>
 <dt class="sig sig-object ks" id="attribute:BOUNDS:ABSMAX">
 <span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">ABSMAX</span></span><a class="headerlink" href="#attribute:BOUNDS:ABSMAX" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get</p>
 </dd>
 </dl>
@@ -758,10 +763,10 @@ for convenience:</p>
 <dt class="sig sig-object ks" id="attribute:BOUNDS:RELCENTER">
 <span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">RELCENTER</span></span><a class="headerlink" href="#attribute:BOUNDS:RELCENTER" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a> <strong>in bounding-box relative reference frame</strong></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get-only</p>
 </dd>
 </dl>
@@ -784,10 +789,10 @@ between those two opposite corners.</p>
 <dt class="sig sig-object ks" id="attribute:BOUNDS:ABSCENTER">
 <span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">ABSCENTER</span></span><a class="headerlink" href="#attribute:BOUNDS:ABSCENTER" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get-only</p>
 </dd>
 </dl>
@@ -807,10 +812,10 @@ between those two opposite corners.</p>
 <dt class="sig sig-object ks" id="attribute:BOUNDS:EXTENTS">
 <span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">EXTENTS</span></span><a class="headerlink" href="#attribute:BOUNDS:EXTENTS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a> <strong>in bounding-box relative reference frame</strong></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get-only</p>
 </dd>
 </dl>
@@ -827,10 +832,10 @@ the oppposite corner, the <a class="reference internal" href="#attribute:BOUNDS:
 <dt class="sig sig-object ks" id="attribute:BOUNDS:SIZE">
 <span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">SIZE</span></span><a class="headerlink" href="#attribute:BOUNDS:SIZE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a> <strong>in bounding-box relative reference frame</strong></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get-only</p>
 </dd>
 </dl>
@@ -846,12 +851,12 @@ it by the scalar 2.</p>
 <dt class="sig sig-object ks" id="method:BOUNDS:FURTHESTCORNER">
 <span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">FURTHESTCORNER</span></span><span class="sig-paren">(</span><span class="pre">ray</span><span class="sig-paren">)</span><a class="headerlink" href="#method:BOUNDS:FURTHESTCORNER" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ray</strong> – The “that-a-way” <a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a> in absolute (ship-raw) reference frame.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a> in absolute (ship-raw) referece frame.</p>
 </dd>
 </dl>
@@ -890,10 +895,10 @@ direction.</p>
 <dt class="sig sig-object ks" id="attribute:BOUNDS:BOTTOMALT">
 <span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">BOTTOMALT</span></span><a class="headerlink" href="#attribute:BOUNDS:BOTTOMALT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get-only</p>
 </dd>
 </dl>
@@ -928,10 +933,10 @@ your own bounds boxes from scratch.</p>
 <dt class="sig sig-object ks" id="attribute:BOUNDS:BOTTOMALTRADAR">
 <span class="pre">Bounds:</span><span class="sig-name descname"><span class="pre">BOTTOMALTRADAR</span></span><a class="headerlink" href="#attribute:BOUNDS:BOTTOMALTRADAR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get-only</p>
 </dd>
 </dl>

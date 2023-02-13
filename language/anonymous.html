@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Anonymous Functions (A kind of Delegate) &mdash; kOS 1.3.3.0 documentation</title>
+  <title>Anonymous Functions (A kind of Delegate) &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
+            <img src="../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -104,7 +109,7 @@
 this page did not exist prior to kOS 1.0.0</p>
 </div>
 </div>
-<nav class="contents local" id="contents">
+<div class="contents local topic" id="contents">
 <p class="topic-title">Contents</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#overview" id="id1">Overview</a></p></li>
@@ -112,9 +117,9 @@ this page did not exist prior to kOS 1.0.0</p>
 <li><p><a class="reference internal" href="#passing-in-to-other-functions" id="id3">Passing in to other functions</a></p></li>
 <li><p><a class="reference internal" href="#lexicon-of-functions" id="id4">Lexicon of functions</a></p></li>
 </ul>
-</nav>
+</div>
 <section id="overview">
-<h2><a class="toc-backref" href="#id1" role="doc-backlink">Overview</a><a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id1">Overview</a><a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
 <p>There is a certain kind of <a class="reference internal" href="delegates.html#delegates"><span class="std std-ref">Delegate</span></a> in which you
 don’t need to actually name the function in question, and can just
 assign it right into a variable <em>as</em> a delegate to begin with, or
@@ -123,7 +128,7 @@ pass it <em>as</em> a delegate to another function call.</p>
 <a class="reference external" href="https://en.wikipedia.org/wiki/Anonymous_function">Anonymous Function</a>.</p>
 </section>
 <section id="syntax">
-<h2><a class="toc-backref" href="#id2" role="doc-backlink">Syntax</a><a class="headerlink" href="#syntax" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id2">Syntax</a><a class="headerlink" href="#syntax" title="Permalink to this heading">¶</a></h2>
 <p>In kerboscript, you can use this ability and it looks like this:</p>
 <p>Given any <a class="reference internal" href="user_functions.html#user-functions"><span class="std std-ref">user function</span></a> like so:</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">my_function_name</span> <span class="p">{</span>
@@ -157,7 +162,7 @@ the curly braces by itself, like in this example:</p>
 </div>
 </section>
 <section id="passing-in-to-other-functions">
-<h2><a class="toc-backref" href="#id3" role="doc-backlink">Passing in to other functions</a><a class="headerlink" href="#passing-in-to-other-functions" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id3">Passing in to other functions</a><a class="headerlink" href="#passing-in-to-other-functions" title="Permalink to this heading">¶</a></h2>
 <p>Where this is often useful is in passing a small function into another
 function.  Here’s an example.  Let’s say you have a function that
 returns a list of all the <a class="reference internal" href="../structures/celestial_bodies/body.html#body"><span class="std std-ref">bodies</span></a> in your game that fit
@@ -206,7 +211,7 @@ some criteria that are unspecified until it gets used, like so:</p>
 an anonymous function in its place instead.</p>
 </section>
 <section id="lexicon-of-functions">
-<h2><a class="toc-backref" href="#id4" role="doc-backlink">Lexicon of functions</a><a class="headerlink" href="#lexicon-of-functions" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id4">Lexicon of functions</a><a class="headerlink" href="#lexicon-of-functions" title="Permalink to this heading">¶</a></h2>
 <p>One example of a useful way to use anonymous functions is to create for
 yourself a collection of delegates:</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">make_vessel_utilities</span> <span class="p">{</span>

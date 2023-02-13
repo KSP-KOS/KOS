@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Design Patterns and Considerations with kOS &mdash; kOS 1.3.3.0 documentation</title>
+  <title>Design Patterns and Considerations with kOS &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
+            <img src="../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -99,7 +104,7 @@
 <figure class="align-default">
 <img alt="../_images/designpatterns_rocket.png" src="../_images/designpatterns_rocket.png" />
 </figure>
-<nav class="contents local" id="contents">
+<div class="contents local topic" id="contents">
 <p class="topic-title">Contents</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#the-major-design-patterns-of-kos-control-programs" id="id2">The Major Design Patterns of kOS Control Programs</a></p>
@@ -117,9 +122,9 @@
 </ul>
 </li>
 </ul>
-</nav>
+</div>
 <section id="the-major-design-patterns-of-kos-control-programs">
-<h2><a class="toc-backref" href="#id2" role="doc-backlink">The Major Design Patterns of kOS Control Programs</a><a class="headerlink" href="#the-major-design-patterns-of-kos-control-programs" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id2">The Major Design Patterns of kOS Control Programs</a><a class="headerlink" href="#the-major-design-patterns-of-kos-control-programs" title="Permalink to this heading">¶</a></h2>
 <p>The design of a program is usually determined by the flow-control statements used. I.e., the WHEN/THEN, ON, WAIT, UNTIL, IF and FOR constructs. Here is a list of the major styles of control programs that can be written in kOS:</p>
 <ol class="arabic simple">
 <li><p>Sequential</p></li>
@@ -128,7 +133,7 @@
 </ol>
 <p>Of course, one style does not fit all scenarios and the programmer will typically want to use a combination of these all at once. Also, there may be other design patterns not listed here which can be perfectly valid, but this is a start.</p>
 <section id="sequential-programs">
-<h3><a class="toc-backref" href="#id3" role="doc-backlink">1. Sequential Programs</a><a class="headerlink" href="#sequential-programs" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id3">1. Sequential Programs</a><a class="headerlink" href="#sequential-programs" title="Permalink to this heading">¶</a></h3>
 <p>These are programs that rely almost exclusively on WAIT UNTIL statements to go from one phase to the next.</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">LOCK</span> <span class="nv">STEERING</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">90</span><span class="p">).</span>
 <span class="k">LOCK</span> <span class="nv">THROTTLE</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
@@ -145,7 +150,7 @@
 <p>This example will take a two stage rocket up to 20km. The immediate thing to notice is that the programmer must have known that the first stage would cutoff between 10km and 20km. This is fine for a specific rocket but not too general and could end in disaster if the first stage cutoff occurs at say 5km. Certainly, one can write a program using this technique to take a specific rocket, put it into orbit and even perform a lot of fancy maneuvers, but adapting the code to different rockets may get complicated quickly.</p>
 </section>
 <section id="loops-with-condition-checking">
-<h3><a class="toc-backref" href="#id4" role="doc-backlink">2. Loops with Condition Checking</a><a class="headerlink" href="#loops-with-condition-checking" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id4">2. Loops with Condition Checking</a><a class="headerlink" href="#loops-with-condition-checking" title="Permalink to this heading">¶</a></h3>
 <p>Here, we introduce IF/ELSE logic into UNTIL loops:</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">LOCK</span> <span class="nv">STEERING</span> <span class="ow">TO</span> <span class="nv">R</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="o">-</span><span class="mf">90</span><span class="p">)</span> <span class="o">+</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">90</span><span class="p">).</span>
 <span class="k">LOCK</span> <span class="nv">THROTTLE</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
@@ -166,7 +171,7 @@
 <p>One can imagine that these types of UNTIL loops can become very complex with many layers of IF/ELSE blocks. Once this happens it is usually good to reduce the frequency of the loop by adding a WAIT statement at the end of the loop. This wait could be anywhere from 0.001 (every physics tick), to 60 (every minute) or even longer for inter-planetary transfers if desired.</p>
 </section>
 <section id="loops-with-triggers">
-<h3><a class="toc-backref" href="#id5" role="doc-backlink">3. Loops with Triggers</a><a class="headerlink" href="#loops-with-triggers" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id5">3. Loops with Triggers</a><a class="headerlink" href="#loops-with-triggers" title="Permalink to this heading">¶</a></h3>
 <p>In the above example, once the rocket reaches 10km, the steering is constantly being re-locked to HEADING(90,45). This works, but it only needs to be locked once. A possible improvement is to set up a trigger using a WHEN/THEN statement:</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">LOCK</span> <span class="nv">STEERING</span> <span class="ow">TO</span> <span class="nv">R</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="o">-</span><span class="mf">90</span><span class="p">)</span> <span class="o">+</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">90</span><span class="p">).</span>
 <span class="k">LOCK</span> <span class="nv">THROTTLE</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
@@ -202,15 +207,15 @@
 <p>Notice that the UNTIL loop was changed to a WAIT UNTIL statement since the program is small and all the logic of the triggers can be handled in a reasonable amount of time - there will be more on this topic later.</p>
 </section>
 <section id="bringing-it-all-together">
-<h3><a class="toc-backref" href="#id6" role="doc-backlink">Bringing It All Together</a><a class="headerlink" href="#bringing-it-all-together" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id6">Bringing It All Together</a><a class="headerlink" href="#bringing-it-all-together" title="Permalink to this heading">¶</a></h3>
 <p>Typically, the programmer will find all of these constructs are useful at the same time and kOS scripts will naturally contain some sequential parts in combination with long-term and short-term triggers which can modify states in complex loops of varying frequency. If you didn’t follow that bit of gobbledygook, don’t worry. The next section will discuss a few recommendations for beginning kOS programmers to follow when setting up any program.</p>
 </section>
 </section>
 <section id="general-guidelines-for-kos-scripts">
-<span id="general-guidlines"></span><h2><a class="toc-backref" href="#id7" role="doc-backlink">General Guidelines for kOS Scripts</a><a class="headerlink" href="#general-guidelines-for-kos-scripts" title="Permalink to this heading">¶</a></h2>
+<span id="general-guidlines"></span><h2><a class="toc-backref" href="#id7">General Guidelines for kOS Scripts</a><a class="headerlink" href="#general-guidelines-for-kos-scripts" title="Permalink to this heading">¶</a></h2>
 <p>This section discusses two general guidelines to follow when starting out with more complicated kOS scripts. These are not meant to be absolute and there will certainly be cases when they can be stretched, though one should never totally ignore them.</p>
 <section id="minimize-time-spent-in-when-then-blocks">
-<span id="minimize-trigger-bodies"></span><h3><a class="toc-backref" href="#id8" role="doc-backlink">1. Minimize Time Spent in WHEN/THEN Blocks</a><a class="headerlink" href="#minimize-time-spent-in-when-then-blocks" title="Permalink to this heading">¶</a></h3>
+<span id="minimize-trigger-bodies"></span><h3><a class="toc-backref" href="#id8">1. Minimize Time Spent in WHEN/THEN Blocks</a><a class="headerlink" href="#minimize-time-spent-in-when-then-blocks" title="Permalink to this heading">¶</a></h3>
 <p>Remember that WAIT statements are ignored when inside WHEN/THEN blocks. It is OK to loop over small lists (engines for example), but don’t let it get out of hand. The WHEN/THEN construct was designed to accommodate quick bits of code. Consider this bit of (non-working) code which tries to adjust the throttle based on the g-force as measured by a combination of the accelerometer and the negative gravioli detector:</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">thrott</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
 <span class="k">LOCK</span> <span class="nv">THROTTLE</span> <span class="ow">TO</span> <span class="nv">thrott</span><span class="p">.</span>
@@ -260,7 +265,7 @@
 <p>Finally, as a bit of foreshadowing, this bit of code is actually a “<a class="reference external" href="http://en.wikipedia.org/wiki/PID_controller">proportional feedback loop</a>.” From an altitude of 1km up to 40km, the total g-force exerted on the ship is kept near 1.2 by constantly adjusting the throttle. The value of 1.2 is called the “setpoint,” the measured g-force is called the “process variable,” and the mystical 0.05 is called the “proportional gain.” Please take a look at the <a class="reference external" href="pidloops.html">PID Loop Tutorial</a> which takes this script as a starting point and develops a full PID-loop in kOS.</p>
 </section>
 <section id="minimize-trigger-conditions">
-<span id="id1"></span><h3><a class="toc-backref" href="#id9" role="doc-backlink">2. Minimize Trigger Conditions</a><a class="headerlink" href="#minimize-trigger-conditions" title="Permalink to this heading">¶</a></h3>
+<span id="id1"></span><h3><a class="toc-backref" href="#id9">2. Minimize Trigger Conditions</a><a class="headerlink" href="#minimize-trigger-conditions" title="Permalink to this heading">¶</a></h3>
 <p>There is a lot of power in developing multi-level LOCK variables in combination with WHEN/THEN triggers. However, it can be easy to hit kOS’s hard limit in the number of operations allowed for trigger checking. This will happen when several WHEN/THEN triggers are dependent on the same complex LOCK variable. This results in the LOCK variable being calculated multiple times every update. If the LOCK is deep enough, the calculations become too expensive to do and kOS stops executing and complains.</p>
 <p>With this in mind, consider an extension of the example script in the previous section. This time, the g-force setpoint changes as the rocket climbs through 10km, 20km and 30km:</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">WHEN</span> <span class="k">STAGE</span><span class="p">:</span><span class="nv">LIQUIDFUEL</span> <span class="o">&lt;</span> <span class="mf">0</span><span class="p">.</span><span class="mf">1</span> <span class="k">THEN</span> <span class="p">{</span>

@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WARP &mdash; kOS 1.3.3.0 documentation</title>
+  <title>WARP &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
+            <img src="../../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -125,16 +130,16 @@
              
   <section id="warp">
 <span id="id1"></span><h1>WARP<a class="headerlink" href="#warp" title="Permalink to this heading">¶</a></h1>
-<nav class="contents local" id="contents">
+<div class="contents local topic" id="contents">
 <p class="topic-title">CONTENTS</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#timewarp-structure" id="id5">TimeWarp structure</a></p></li>
 <li><p><a class="reference internal" href="#suffixes" id="id6">Suffixes</a></p></li>
 <li><p><a class="reference internal" href="#backward-compatible-time-warping" id="id7">Backward Compatible Time Warping</a></p></li>
 </ul>
-</nav>
+</div>
 <section id="timewarp-structure">
-<span id="timewarp"></span><h2><a class="toc-backref" href="#id5" role="doc-backlink">TimeWarp structure</a><a class="headerlink" href="#timewarp-structure" title="Permalink to this heading">¶</a></h2>
+<span id="timewarp"></span><h2><a class="toc-backref" href="#id5">TimeWarp structure</a><a class="headerlink" href="#timewarp-structure" title="Permalink to this heading">¶</a></h2>
 <dl class="ks structure">
 <dt class="sig sig-object ks" id="structure:TIMEWARP">
 <em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">TimeWarp</span></span><a class="headerlink" href="#structure:TIMEWARP" title="Permalink to this definition">¶</a></dt>
@@ -142,13 +147,13 @@
 time warping abilities.  You can obtain the <code class="docutils literal notranslate"><span class="pre">TimeWarp</span></code> structure
 by using the <a class="reference internal" href="kuniverse.html#attribute:KUNIVERSE:TIMEWARP" title="KUNIVERSE:TIMEWARP attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">TimeWarp</span></code></a> suffix of
 <a class="reference internal" href="kuniverse.html#structure:KUNIVERSE" title="KUNIVERSE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">kuniverse</span></code></a>.</p>
-<table class="docutils align-default" id="id2">
+<table class="colwidths-given docutils align-default" id="id2">
 <caption><span class="caption-text">Members and Methods</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col style="width: 22.2%" />
-<col style="width: 22.2%" />
-<col style="width: 11.1%" />
-<col style="width: 44.4%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+<col style="width: 11%" />
+<col style="width: 44%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suffix</p></th>
@@ -214,15 +219,15 @@ by using the <a class="reference internal" href="kuniverse.html#attribute:KUNIVE
 
 </section>
 <section id="suffixes">
-<h2><a class="toc-backref" href="#id6" role="doc-backlink">Suffixes</a><a class="headerlink" href="#suffixes" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id6">Suffixes</a><a class="headerlink" href="#suffixes" title="Permalink to this heading">¶</a></h2>
 <dl class="ks attribute">
 <dt class="sig sig-object ks" id="attribute:TIMEWARP:RATELIST">
 <span class="pre">TimeWarp:</span><span class="sig-name descname"><span class="pre">RATELIST</span></span><a class="headerlink" href="#attribute:TIMEWARP:RATELIST" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -235,10 +240,10 @@ If <a class="reference internal" href="#attribute:TIMEWARP:MODE" title="TIMEWARP
 <dt class="sig sig-object ks" id="attribute:TIMEWARP:RAILSRATELIST">
 <span class="pre">TimeWarp:</span><span class="sig-name descname"><span class="pre">RAILSRATELIST</span></span><a class="headerlink" href="#attribute:TIMEWARP:RAILSRATELIST" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> values</p>
 </dd>
 </dl>
@@ -249,6 +254,10 @@ below, but the base KSP game could change these at any time.  The
 following table is not a guarantee.)</p>
 <table class="docutils align-default" id="id3">
 <caption><span class="caption-text">RAILS WARP RATE LIST</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 64%" />
+</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>WARP</p></th>
 <th class="head"><p>RATE</p></th>
@@ -287,10 +296,10 @@ following table is not a guarantee.)</p>
 <dt class="sig sig-object ks" id="attribute:TIMEWARP:PHYSICSRATELIST">
 <span class="pre">TimeWarp:</span><span class="sig-name descname"><span class="pre">PHYSICSRATELIST</span></span><a class="headerlink" href="#attribute:TIMEWARP:PHYSICSRATELIST" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> values</p>
 </dd>
 </dl>
@@ -301,6 +310,10 @@ below, but the base KSP game could change these at any time.  The
 following table is not a guarantee.)</p>
 <table class="docutils align-default" id="id4">
 <caption><span class="caption-text">PHYSICS WARP RATE LIST</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>WARP</p></th>
 <th class="head"><p>RATE</p></th>
@@ -327,10 +340,10 @@ following table is not a guarantee.)</p>
 <dt class="sig sig-object ks" id="attribute:TIMEWARP:MODE">
 <span class="pre">TimeWarp:</span><span class="sig-name descname"><span class="pre">MODE</span></span><a class="headerlink" href="#attribute:TIMEWARP:MODE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -350,10 +363,10 @@ positions of objects based on the Keplerian elliptical parameters only.)</p>
 <dt class="sig sig-object ks" id="attribute:TIMEWARP:WARP">
 <span class="pre">TimeWarp:</span><span class="sig-name descname"><span class="pre">WARP</span></span><a class="headerlink" href="#attribute:TIMEWARP:WARP" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -371,10 +384,10 @@ along with it to agree with it.  (See the full explanation in
 <dt class="sig sig-object ks" id="attribute:TIMEWARP:RATE">
 <span class="pre">TimeWarp:</span><span class="sig-name descname"><span class="pre">RATE</span></span><a class="headerlink" href="#attribute:TIMEWARP:RATE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -423,15 +436,15 @@ in-between values indefintiely.</p>
 <dt class="sig sig-object ks" id="method:TIMEWARP:WARPTO">
 <span class="pre">TimeWarp:</span><span class="sig-name descname"><span class="pre">WARPTO</span></span><span class="sig-paren">(</span><span class="pre">timestamp</span><span class="sig-paren">)</span><a class="headerlink" href="#method:TIMEWARP:WARPTO" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Method</p>
 </dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dt class="field-even">Parameters</dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>timestamp</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></li>
 </ul>
 </dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -447,10 +460,10 @@ the warping is happening.</p>
 <dt class="sig sig-object ks" id="method:TIMEWARP:CANCELWARP">
 <span class="pre">TimeWarp:</span><span class="sig-name descname"><span class="pre">CANCELWARP</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:TIMEWARP:CANCELWARP" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Method</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -464,10 +477,10 @@ used the <code class="docutils literal notranslate"><span class="pre">SET</span>
 <dt class="sig sig-object ks" id="attribute:TIMEWARP:PHYSICSDELTAT">
 <span class="pre">TimeWarp:</span><span class="sig-name descname"><span class="pre">PHYSICSDELTAT</span></span><a class="headerlink" href="#attribute:TIMEWARP:PHYSICSDELTAT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -486,10 +499,10 @@ shouldn’t trust.</p>
 <dt class="sig sig-object ks" id="attribute:TIMEWARP:ISSETTLED">
 <span class="pre">TimeWarp:</span><span class="sig-name descname"><span class="pre">ISSETTLED</span></span><a class="headerlink" href="#attribute:TIMEWARP:ISSETTLED" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -553,7 +566,7 @@ rate has finally settled on the desired amount yet.</p>
 
 </section>
 <section id="backward-compatible-time-warping">
-<h2><a class="toc-backref" href="#id7" role="doc-backlink">Backward Compatible Time Warping</a><a class="headerlink" href="#backward-compatible-time-warping" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id7">Backward Compatible Time Warping</a><a class="headerlink" href="#backward-compatible-time-warping" title="Permalink to this heading">¶</a></h2>
 <blockquote>
 <div><p>Time warping is accomplished using the <a class="reference internal" href="#structure:TIMEWARP" title="TIMEWARP structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">TimeWarp</span></code></a> structure
 described above on this page.</p>

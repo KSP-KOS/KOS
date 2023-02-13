@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Geographic Coordinates &mdash; kOS 1.3.3.0 documentation</title>
+  <title>Geographic Coordinates &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
+            <img src="../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -94,28 +99,28 @@
              
   <section id="geographic-coordinates">
 <span id="geocoordinates"></span><h1>Geographic Coordinates<a class="headerlink" href="#geographic-coordinates" title="Permalink to this heading">¶</a></h1>
-<nav class="contents local" id="contents">
+<div class="contents local topic" id="contents">
 <p class="topic-title">Contents</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#creation" id="id1">Creation</a></p></li>
 <li><p><a class="reference internal" href="#structure" id="id2">Structure</a></p></li>
 <li><p><a class="reference internal" href="#example-usage" id="id3">Example Usage</a></p></li>
 </ul>
-</nav>
+</div>
 <p>The <code class="docutils literal notranslate"><span class="pre">GeoCoordinates</span></code> object (also <code class="docutils literal notranslate"><span class="pre">LATLNG</span></code>) represents a latitude and longitude pair, which is a location on the surface of a <a class="reference internal" href="../structures/celestial_bodies/body.html#body"><span class="std std-ref">Body</span></a>.</p>
 <section id="creation">
-<h2><a class="toc-backref" href="#id1" role="doc-backlink">Creation</a><a class="headerlink" href="#creation" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id1">Creation</a><a class="headerlink" href="#creation" title="Permalink to this heading">¶</a></h2>
 <dl class="ks function">
 <dt class="sig sig-object ks" id="function:LATLNG">
 <span class="sig-name descname"><span class="pre">LATLNG</span></span><span class="sig-paren">(</span><span class="pre">lat,lng</span><span class="sig-paren">)</span><a class="headerlink" href="#function:LATLNG" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>lat</strong> – (deg) Latitude</p></li>
 <li><p><strong>lng</strong> – (deg) Longitude</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="#structure:GEOCOORDINATES" title="GEOCOORDINATES structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">GeoCoordinates</span></code></a></p>
 </dd>
 </dl>
@@ -136,16 +141,16 @@ of influence body, see <a class="reference internal" href="../structures/celesti
 
 </section>
 <section id="structure">
-<h2><a class="toc-backref" href="#id2" role="doc-backlink">Structure</a><a class="headerlink" href="#structure" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id2">Structure</a><a class="headerlink" href="#structure" title="Permalink to this heading">¶</a></h2>
 <dl class="ks structure">
 <dt class="sig sig-object ks" id="structure:GEOCOORDINATES">
 <em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">GeoCoordinates</span></span><a class="headerlink" href="#structure:GEOCOORDINATES" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils align-default">
+<dd><table class="colwidths-given docutils align-default">
 <colgroup>
-<col style="width: 22.2%" />
-<col style="width: 11.1%" />
-<col style="width: 22.2%" />
-<col style="width: 44.4%" />
+<col style="width: 22%" />
+<col style="width: 11%" />
+<col style="width: 22%" />
+<col style="width: 44%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suffix</p></th>
@@ -301,7 +306,7 @@ on a locaton affixed to the body the farther that location is from the body’s 
 
 </section>
 <section id="example-usage">
-<h2><a class="toc-backref" href="#id3" role="doc-backlink">Example Usage</a><a class="headerlink" href="#example-usage" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id3">Example Usage</a><a class="headerlink" href="#example-usage" title="Permalink to this heading">¶</a></h2>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">spot</span> <span class="ow">TO</span> <span class="nv">LATLNG</span><span class="p">(</span><span class="mf">10</span><span class="p">,</span> <span class="mf">20</span><span class="p">).</span>     <span class="c1">// Initialize point at latitude 10,</span>
                                 <span class="c1">// longitude 20</span>
 

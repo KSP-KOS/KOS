@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Running Programs &mdash; kOS 1.3.3.0 documentation</title>
+  <title>Running Programs &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
+            <img src="../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -98,7 +103,7 @@
              
   <section id="running-programs">
 <span id="running"></span><h1>Running Programs<a class="headerlink" href="#running-programs" title="Permalink to this heading">¶</a></h1>
-<nav class="contents local" id="contents">
+<div class="contents local topic" id="contents">
 <p class="topic-title">Contents</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#run-functions" id="id1">Run Functions</a></p></li>
@@ -111,7 +116,7 @@
 </ul>
 </li>
 </ul>
-</nav>
+</div>
 <p>KerboScript supports running executing code saved in files on the local or
 archive disks. The terms “program” and “script” are generally used
 interchangably when describing this behavior. Programs can either be run using
@@ -151,7 +156,7 @@ every time that a script file is run from the terminal it is recompiled,
 even if the script file has not changed.</p>
 </div>
 <section id="run-functions">
-<span id="runfunctions"></span><h2><a class="toc-backref" href="#id1" role="doc-backlink">Run Functions</a><a class="headerlink" href="#run-functions" title="Permalink to this heading">¶</a></h2>
+<span id="runfunctions"></span><h2><a class="toc-backref" href="#id1">Run Functions</a><a class="headerlink" href="#run-functions" title="Permalink to this heading">¶</a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <div class="versionchanged">
@@ -179,7 +184,7 @@ command existed.</p>
 <dt class="sig sig-object ks">
 <span class="sig-name descname"><span class="pre">RUNONCEPATH</span></span><span class="sig-paren">(</span><span class="pre">path,</span> <span class="pre">commaSeperatedArgs...</span><span class="sig-paren">)</span></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>path</strong> (<a class="reference internal" href="../structures/misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> or <a class="reference internal" href="../structures/volumes_and_files/path.html#structure:PATH" title="PATH structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Path</span></code></a>) – Path information pointing to the script file. May be an
 <a class="reference internal" href="files.html#absolute-paths"><span class="std std-ref">Absolute</span></a> or <a class="reference internal" href="files.html#relative-paths"><span class="std std-ref">Relative</span></a> path.</p></li>
@@ -221,7 +226,7 @@ filename as long as it results in a string:</p>
 
 </section>
 <section id="run-keyword">
-<span id="run"></span><h2><a class="toc-backref" href="#id2" role="doc-backlink">Run Keyword</a><a class="headerlink" href="#run-keyword" title="Permalink to this heading">¶</a></h2>
+<span id="run"></span><h2><a class="toc-backref" href="#id2">Run Keyword</a><a class="headerlink" href="#run-keyword" title="Permalink to this heading">¶</a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>You should prefer RUNPATH over RUN</strong></p>
@@ -247,7 +252,7 @@ of <code class="docutils literal notranslate"><span class="pre">RUN</span></code
 <dt class="sig sig-object ks" id="keyword:RUN">
 <span class="sig-name descname"><span class="pre">RUN</span> <span class="pre">[ONCE]</span> <span class="pre">path</span> <span class="pre">[(commaSeperatedArgs...)]</span></span><a class="headerlink" href="#keyword:RUN" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>once</strong> – By using the optional <code class="docutils literal notranslate"><span class="pre">ONCE</span></code> keyword parameter you can modify the
 behavior of the <code class="docutils literal notranslate"><span class="pre">RUN</span></code> keyword to obey the <a class="reference internal" href="#run-once"><span class="std std-ref">run once logic</span></a></p></li>
@@ -280,9 +285,9 @@ end of the syntax, like so:</p>
 
 </section>
 <section id="details-of-running-programs">
-<h2><a class="toc-backref" href="#id3" role="doc-backlink">Details Of Running Programs</a><a class="headerlink" href="#details-of-running-programs" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id3">Details Of Running Programs</a><a class="headerlink" href="#details-of-running-programs" title="Permalink to this heading">¶</a></h2>
 <section id="running-a-program-once">
-<span id="run-once"></span><h3><a class="toc-backref" href="#id4" role="doc-backlink">Running a program “ONCE”</a><a class="headerlink" href="#running-a-program-once" title="Permalink to this heading">¶</a></h3>
+<span id="run-once"></span><h3><a class="toc-backref" href="#id4">Running a program “ONCE”</a><a class="headerlink" href="#running-a-program-once" title="Permalink to this heading">¶</a></h3>
 <p>If the <code class="docutils literal notranslate"><span class="pre">RUNONCEPATH</span></code> function is used instead of the <code class="docutils literal notranslate"><span class="pre">RUNPATH</span></code> function, or
 the optional <code class="docutils literal notranslate"><span class="pre">ONCE</span></code> keyword is added to the <code class="docutils literal notranslate"><span class="pre">RUN</span></code> command, it means the run
 will not actually occur if the program has already been run once during the
@@ -301,7 +306,7 @@ control to the terminal.</p>
 </div>
 </section>
 <section id="automatic-guessing-of-full-filename">
-<h3><a class="toc-backref" href="#id5" role="doc-backlink">Automatic guessing of full filename</a><a class="headerlink" href="#automatic-guessing-of-full-filename" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id5">Automatic guessing of full filename</a><a class="headerlink" href="#automatic-guessing-of-full-filename" title="Permalink to this heading">¶</a></h3>
 <p>For all 3 types of run command (<code class="docutils literal notranslate"><span class="pre">RUN</span></code>, <code class="docutils literal notranslate"><span class="pre">RUNPATH</span></code>, and <code class="docutils literal notranslate"><span class="pre">RUNONCEPATH</span></code>),
 the following filename “guess” rules are used when the filename given is
 incomplete:</p>
@@ -317,7 +322,7 @@ to find a file with the “.ks” extension appended to it.</p></li>
 </ul>
 </section>
 <section id="arguments">
-<h3><a class="toc-backref" href="#id6" role="doc-backlink">Arguments</a><a class="headerlink" href="#arguments" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id6">Arguments</a><a class="headerlink" href="#arguments" title="Permalink to this heading">¶</a></h3>
 <p>Although the syntax is a bit different for <code class="docutils literal notranslate"><span class="pre">RUN</span></code> versus
 <code class="docutils literal notranslate"><span class="pre">RUNPATH</span></code> (and <code class="docutils literal notranslate"><span class="pre">RUNONCEPATH</span></code>), all 3 techniques allow you to
 pass arguments into the program that it sees as its main script

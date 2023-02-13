@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ScienceExperimentModule &mdash; kOS 1.3.3.0 documentation</title>
+  <title>ScienceExperimentModule &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
+            <img src="../../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -159,11 +164,11 @@ properly.</p>
 <dl class="ks structure">
 <dt class="sig sig-object ks" id="structure:SCIENCEEXPERIMENTMODULE">
 <em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">ScienceExperimentModule</span></span><a class="headerlink" href="#structure:SCIENCEEXPERIMENTMODULE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils align-default">
+<dd><table class="colwidths-given docutils align-default">
 <colgroup>
-<col style="width: 28.6%" />
-<col style="width: 14.3%" />
-<col style="width: 57.1%" />
+<col style="width: 29%" />
+<col style="width: 14%" />
+<col style="width: 57%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suffix</p></th>
@@ -250,10 +255,10 @@ inoperable if it is not rerunnable. This method will fail if there is no data to
 <dt class="sig sig-object ks" id="attribute:SCIENCEEXPERIMENTMODULE:INOPERABLE">
 <span class="pre">ScienceExperimentModule:</span><span class="sig-name descname"><span class="pre">INOPERABLE</span></span><a class="headerlink" href="#attribute:SCIENCEEXPERIMENTMODULE:INOPERABLE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -264,10 +269,10 @@ inoperable if it is not rerunnable. This method will fail if there is no data to
 <dt class="sig sig-object ks" id="attribute:SCIENCEEXPERIMENTMODULE:RERUNNABLE">
 <span class="pre">ScienceExperimentModule:</span><span class="sig-name descname"><span class="pre">RERUNNABLE</span></span><a class="headerlink" href="#attribute:SCIENCEEXPERIMENTMODULE:RERUNNABLE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -278,10 +283,10 @@ inoperable if it is not rerunnable. This method will fail if there is no data to
 <dt class="sig sig-object ks" id="attribute:SCIENCEEXPERIMENTMODULE:DEPLOYED">
 <span class="pre">ScienceExperimentModule:</span><span class="sig-name descname"><span class="pre">DEPLOYED</span></span><a class="headerlink" href="#attribute:SCIENCEEXPERIMENTMODULE:DEPLOYED" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -292,10 +297,10 @@ inoperable if it is not rerunnable. This method will fail if there is no data to
 <dt class="sig sig-object ks" id="attribute:SCIENCEEXPERIMENTMODULE:HASDATA">
 <span class="pre">ScienceExperimentModule:</span><span class="sig-name descname"><span class="pre">HASDATA</span></span><a class="headerlink" href="#attribute:SCIENCEEXPERIMENTMODULE:HASDATA" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -306,10 +311,10 @@ inoperable if it is not rerunnable. This method will fail if there is no data to
 <dt class="sig sig-object ks" id="attribute:SCIENCEEXPERIMENTMODULE:DATA">
 <span class="pre">ScienceExperimentModule:</span><span class="sig-name descname"><span class="pre">DATA</span></span><a class="headerlink" href="#attribute:SCIENCEEXPERIMENTMODULE:DATA" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="sciencedatavalue.html#structure:SCIENCEDATA" title="SCIENCEDATA structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">ScienceData</span></code></a></p>
 </dd>
 </dl>

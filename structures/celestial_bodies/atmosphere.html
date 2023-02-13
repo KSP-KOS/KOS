@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Atmosphere &mdash; kOS 1.3.3.0 documentation</title>
+  <title>Atmosphere &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
+            <img src="../../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -124,11 +129,11 @@ can’t change the value of a body’s atmosphere.</p>
 <dl class="ks structure">
 <dt class="sig sig-object ks" id="structure:ATMOSPHERE">
 <em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">Atmosphere</span></span><a class="headerlink" href="#structure:ATMOSPHERE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils align-default">
+<dd><table class="colwidths-given docutils align-default">
 <colgroup>
-<col style="width: 16.7%" />
-<col style="width: 16.7%" />
-<col style="width: 66.7%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 67%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suffix</p></th>
@@ -193,10 +198,10 @@ can’t change the value of a body’s atmosphere.</p>
 <dt class="sig sig-object ks" id="attribute:ATMOSPHERE:BODY">
 <span class="pre">Atmosphere:</span><span class="sig-name descname"><span class="pre">BODY</span></span><a class="headerlink" href="#attribute:ATMOSPHERE:BODY" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -207,10 +212,10 @@ can’t change the value of a body’s atmosphere.</p>
 <dt class="sig sig-object ks" id="attribute:ATMOSPHERE:EXISTS">
 <span class="pre">Atmosphere:</span><span class="sig-name descname"><span class="pre">EXISTS</span></span><a class="headerlink" href="#attribute:ATMOSPHERE:EXISTS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -221,10 +226,10 @@ can’t change the value of a body’s atmosphere.</p>
 <dt class="sig sig-object ks" id="attribute:ATMOSPHERE:OXYGEN">
 <span class="pre">Atmosphere:</span><span class="sig-name descname"><span class="pre">OXYGEN</span></span><a class="headerlink" href="#attribute:ATMOSPHERE:OXYGEN" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -235,10 +240,10 @@ can’t change the value of a body’s atmosphere.</p>
 <dt class="sig sig-object ks" id="attribute:ATMOSPHERE:SEALEVELPRESSURE">
 <span class="pre">Atmosphere:</span><span class="sig-name descname"><span class="pre">SEALEVELPRESSURE</span></span><a class="headerlink" href="#attribute:ATMOSPHERE:SEALEVELPRESSURE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (atm)</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -259,12 +264,12 @@ which has now been changed to Atmospheres.</p>
 <dt class="sig sig-object ks" id="method:ATMOSPHERE:ALTITUDEPRESSURE">
 <span class="pre">Atmosphere:</span><span class="sig-name descname"><span class="pre">ALTITUDEPRESSURE</span></span><span class="sig-paren">(</span><span class="pre">altitude</span><span class="sig-paren">)</span><a class="headerlink" href="#method:ATMOSPHERE:ALTITUDEPRESSURE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>altitude</strong> – The altitude above sea level (in meters) you want to know the pressure for.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (atm)</p>
 </dd>
 </dl>
@@ -282,10 +287,10 @@ If you prefer to see the answer in KiloPascals, multiply the answer by
 <dt class="sig sig-object ks" id="attribute:ATMOSPHERE:HEIGHT">
 <span class="pre">Atmosphere:</span><span class="sig-name descname"><span class="pre">HEIGHT</span></span><a class="headerlink" href="#attribute:ATMOSPHERE:HEIGHT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (m)</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -296,10 +301,10 @@ If you prefer to see the answer in KiloPascals, multiply the answer by
 <dt class="sig sig-object ks" id="attribute:ATMOSPHERE:MOLARMASS">
 <span class="pre">Atmosphere:</span><span class="sig-name descname"><span class="pre">MOLARMASS</span></span><a class="headerlink" href="#attribute:ATMOSPHERE:MOLARMASS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Acces<span class="colon">:</span></dt>
+<dt class="field-even">Acces</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -312,10 +317,10 @@ Units are in kg/mol.
 <dt class="sig sig-object ks" id="attribute:ATMOSPHERE:ADIABATICINDEX">
 <span class="pre">Atmosphere:</span><span class="sig-name descname"><span class="pre">ADIABATICINDEX</span></span><a class="headerlink" href="#attribute:ATMOSPHERE:ADIABATICINDEX" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -327,10 +332,10 @@ Units are in kg/mol.
 <dt class="sig sig-object ks" id="attribute:ATMOSPHERE:ADBIDX">
 <span class="pre">Atmosphere:</span><span class="sig-name descname"><span class="pre">ADBIDX</span></span><a class="headerlink" href="#attribute:ATMOSPHERE:ADBIDX" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -341,10 +346,10 @@ Units are in kg/mol.
 <dt class="sig sig-object ks" id="method:ATMOSPHERE:ALTITUDETEMPERATURE">
 <span class="pre">Atmosphere:</span><span class="sig-name descname"><span class="pre">ALTITUDETEMPERATURE</span></span><span class="sig-paren">(</span><span class="pre">altitude</span><span class="sig-paren">)</span><a class="headerlink" href="#method:ATMOSPHERE:ALTITUDETEMPERATURE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dt class="field-odd">Parameter</dt>
 <dd class="field-odd"><p>altitude (<a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>) the altitude to query temperature at.</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -366,10 +371,10 @@ on the sun position in the sky (i.e. your latitude and what time of day it is).<
 <dt class="sig sig-object ks" id="attribute:ATMOSPHERE:SCALE">
 <span class="pre">Atmosphere:</span><span class="sig-name descname"><span class="pre">SCALE</span></span><a class="headerlink" href="#attribute:ATMOSPHERE:SCALE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>

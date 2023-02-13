@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PIDLoop &mdash; kOS 1.3.3.0 documentation</title>
+  <title>PIDLoop &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
+            <img src="../../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -166,11 +171,11 @@ they can be left off, leaving optional defaults.</p>
 </div>
 <p>With these defaults:</p>
 <blockquote>
-<div><table class="docutils align-default">
+<div><table class="colwidths-given docutils align-default">
 <colgroup>
-<col style="width: 16.7%" />
-<col style="width: 33.3%" />
-<col style="width: 50.0%" />
+<col style="width: 17%" />
+<col style="width: 33%" />
+<col style="width: 50%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Parameter</p></th>
@@ -322,6 +327,11 @@ desired target value did.</p>
 <dt class="sig sig-object ks" id="structure:PIDLOOP">
 <em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">PIDLoop</span></span><a class="headerlink" href="#structure:PIDLOOP" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 24%" />
+<col style="width: 42%" />
+</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suffix</p></th>
 <th class="head"><p>Type</p></th>
@@ -413,10 +423,10 @@ desired target value did.</p>
 <dt class="sig sig-object ks" id="attribute:PIDLOOP:LASTSAMPLETIME">
 <span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">LASTSAMPLETIME</span></span><a class="headerlink" href="#attribute:PIDLOOP:LASTSAMPLETIME" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -427,10 +437,10 @@ desired target value did.</p>
 <dt class="sig sig-object ks" id="attribute:PIDLOOP:KP">
 <span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">KP</span></span><a class="headerlink" href="#attribute:PIDLOOP:KP" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get/Set</p>
 </dd>
 </dl>
@@ -441,10 +451,10 @@ desired target value did.</p>
 <dt class="sig sig-object ks" id="attribute:PIDLOOP:KI">
 <span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">KI</span></span><a class="headerlink" href="#attribute:PIDLOOP:KI" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get/Set</p>
 </dd>
 </dl>
@@ -455,10 +465,10 @@ desired target value did.</p>
 <dt class="sig sig-object ks" id="attribute:PIDLOOP:KD">
 <span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">KD</span></span><a class="headerlink" href="#attribute:PIDLOOP:KD" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get/Set</p>
 </dd>
 </dl>
@@ -469,10 +479,10 @@ desired target value did.</p>
 <dt class="sig sig-object ks" id="attribute:PIDLOOP:INPUT">
 <span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">INPUT</span></span><a class="headerlink" href="#attribute:PIDLOOP:INPUT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -483,10 +493,10 @@ desired target value did.</p>
 <dt class="sig sig-object ks" id="attribute:PIDLOOP:SETPOINT">
 <span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">SETPOINT</span></span><a class="headerlink" href="#attribute:PIDLOOP:SETPOINT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get/Set</p>
 </dd>
 </dl>
@@ -499,10 +509,10 @@ desired target value did.</p>
 <dt class="sig sig-object ks" id="attribute:PIDLOOP:ERROR">
 <span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">ERROR</span></span><a class="headerlink" href="#attribute:PIDLOOP:ERROR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -513,10 +523,10 @@ desired target value did.</p>
 <dt class="sig sig-object ks" id="attribute:PIDLOOP:OUTPUT">
 <span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">OUTPUT</span></span><a class="headerlink" href="#attribute:PIDLOOP:OUTPUT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -527,10 +537,10 @@ desired target value did.</p>
 <dt class="sig sig-object ks" id="attribute:PIDLOOP:MAXOUTPUT">
 <span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">MAXOUTPUT</span></span><a class="headerlink" href="#attribute:PIDLOOP:MAXOUTPUT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get/Set</p>
 </dd>
 </dl>
@@ -541,10 +551,10 @@ desired target value did.</p>
 <dt class="sig sig-object ks" id="attribute:PIDLOOP:MINOUTPUT">
 <span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">MINOUTPUT</span></span><a class="headerlink" href="#attribute:PIDLOOP:MINOUTPUT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get/Set</p>
 </dd>
 </dl>
@@ -555,10 +565,10 @@ desired target value did.</p>
 <dt class="sig sig-object ks" id="attribute:PIDLOOP:EPSILON">
 <span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">EPSILON</span></span><a class="headerlink" href="#attribute:PIDLOOP:EPSILON" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get/Set</p>
 </dd>
 </dl>
@@ -584,10 +594,10 @@ it also will not incur any “integral windup” for that error.</p>
 <dt class="sig sig-object ks" id="attribute:PIDLOOP:IGNOREERROR">
 <span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">IGNOREERROR</span></span><a class="headerlink" href="#attribute:PIDLOOP:IGNOREERROR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get/Set</p>
 </dd>
 </dl>
@@ -598,10 +608,10 @@ it also will not incur any “integral windup” for that error.</p>
 <dt class="sig sig-object ks" id="attribute:PIDLOOP:ERRORSUM">
 <span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">ERRORSUM</span></span><a class="headerlink" href="#attribute:PIDLOOP:ERRORSUM" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -612,10 +622,10 @@ it also will not incur any “integral windup” for that error.</p>
 <dt class="sig sig-object ks" id="attribute:PIDLOOP:PTERM">
 <span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">PTERM</span></span><a class="headerlink" href="#attribute:PIDLOOP:PTERM" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -626,10 +636,10 @@ it also will not incur any “integral windup” for that error.</p>
 <dt class="sig sig-object ks" id="attribute:PIDLOOP:ITERM">
 <span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">ITERM</span></span><a class="headerlink" href="#attribute:PIDLOOP:ITERM" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -640,10 +650,10 @@ it also will not incur any “integral windup” for that error.</p>
 <dt class="sig sig-object ks" id="attribute:PIDLOOP:DTERM">
 <span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">DTERM</span></span><a class="headerlink" href="#attribute:PIDLOOP:DTERM" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -654,10 +664,10 @@ it also will not incur any “integral windup” for that error.</p>
 <dt class="sig sig-object ks" id="attribute:PIDLOOP:CHANGERATE">
 <span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">CHANGERATE</span></span><a class="headerlink" href="#attribute:PIDLOOP:CHANGERATE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -668,7 +678,7 @@ it also will not incur any “integral windup” for that error.</p>
 <dt class="sig sig-object ks" id="method:PIDLOOP:RESET">
 <span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">RESET</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PIDLOOP:RESET" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>none</p>
 </dd>
 </dl>
@@ -679,13 +689,13 @@ it also will not incur any “integral windup” for that error.</p>
 <dt class="sig sig-object ks" id="method:PIDLOOP:UPDATE">
 <span class="pre">PIDLoop:</span><span class="sig-name descname"><span class="pre">UPDATE</span></span><span class="sig-paren">(</span><span class="pre">time,</span> <span class="pre">input</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PIDLOOP:UPDATE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>time</strong> – (<a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>) the decimal time in seconds</p></li>
 <li><p><strong>input</strong> – (<a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>) the input variable to compare to the setpoint</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> representing the calculated output</p>
 </dd>
 </dl>

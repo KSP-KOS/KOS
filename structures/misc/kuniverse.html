@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KUniverse 4th wall methods &mdash; kOS 1.3.3.0 documentation</title>
+  <title>KUniverse 4th wall methods &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
+            <img src="../../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -129,12 +134,12 @@
 <dt class="sig sig-object ks" id="structure:KUNIVERSE">
 <em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">KUniverse</span></span><a class="headerlink" href="#structure:KUNIVERSE" title="Permalink to this definition">¶</a></dt>
 <dd><p><a class="reference internal" href="#structure:KUNIVERSE" title="KUNIVERSE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KUniverse</span></code></a> is a special structure that allows your Kerboscript programs to access some of the functions that break the “4th Wall”.  It serves as a place to access object directly connected to the KSP game itself, rather than the interaction with the KSP world (vessels, planets, orbits, etc.).</p>
-<table class="docutils align-default">
+<table class="colwidths-given docutils align-default">
 <colgroup>
-<col style="width: 33.3%" />
-<col style="width: 11.1%" />
-<col style="width: 11.1%" />
-<col style="width: 44.4%" />
+<col style="width: 33%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 44%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suffix</p></th>
@@ -287,10 +292,10 @@
 <dt class="sig sig-object ks" id="attribute:KUNIVERSE:CANREVERT">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">CANREVERT</span></span><a class="headerlink" href="#attribute:KUNIVERSE:CANREVERT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a>.</p>
 </dd>
 </dl>
@@ -301,10 +306,10 @@
 <dt class="sig sig-object ks" id="attribute:KUNIVERSE:CANREVERTTOLAUNCH">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">CANREVERTTOLAUNCH</span></span><a class="headerlink" href="#attribute:KUNIVERSE:CANREVERTTOLAUNCH" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a>.</p>
 </dd>
 </dl>
@@ -315,10 +320,10 @@
 <dt class="sig sig-object ks" id="attribute:KUNIVERSE:CANREVERTTOEDITOR">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">CANREVERTTOEDITOR</span></span><a class="headerlink" href="#attribute:KUNIVERSE:CANREVERTTOEDITOR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a>.</p>
 </dd>
 </dl>
@@ -331,10 +336,10 @@ already in existence in the saved file when you loaded the game.</p>
 <dt class="sig sig-object ks" id="method:KUNIVERSE:REVERTTOLAUNCH">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">REVERTTOLAUNCH</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:REVERTTOLAUNCH" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Method</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p>None.</p>
 </dd>
 </dl>
@@ -345,10 +350,10 @@ already in existence in the saved file when you loaded the game.</p>
 <dt class="sig sig-object ks" id="method:KUNIVERSE:REVERTTOEDITOR">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">REVERTTOEDITOR</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:REVERTTOEDITOR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Method</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p>None.</p>
 </dd>
 </dl>
@@ -359,12 +364,12 @@ already in existence in the saved file when you loaded the game.</p>
 <dt class="sig sig-object ks" id="method:KUNIVERSE:REVERTTO">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">REVERTTO</span></span><span class="sig-paren">(</span><span class="pre">editor</span><span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:REVERTTO" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>editor</strong> – The editor identifier</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -375,10 +380,10 @@ already in existence in the saved file when you loaded the game.</p>
 <dt class="sig sig-object ks" id="attribute:KUNIVERSE:ORIGINEDITOR">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">ORIGINEDITOR</span></span><a class="headerlink" href="#attribute:KUNIVERSE:ORIGINEDITOR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>.</p>
 </dd>
 </dl>
@@ -395,10 +400,10 @@ The value is one of:</p>
 <dt class="sig sig-object ks" id="method:KUNIVERSE:PAUSE">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">PAUSE</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:PAUSE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Method</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p>None.</p>
 </dd>
 </dl>
@@ -428,10 +433,10 @@ can be a way to break out of this problem.</p>
 <dt class="sig sig-object ks" id="attribute:KUNIVERSE:CANQUICKSAVE">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">CANQUICKSAVE</span></span><a class="headerlink" href="#attribute:KUNIVERSE:CANQUICKSAVE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -442,10 +447,10 @@ can be a way to break out of this problem.</p>
 <dt class="sig sig-object ks" id="method:KUNIVERSE:QUICKSAVE">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">QUICKSAVE</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:QUICKSAVE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Method</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p>None.</p>
 </dd>
 </dl>
@@ -457,10 +462,10 @@ state to the default quicksave file.</p>
 <dt class="sig sig-object ks" id="method:KUNIVERSE:QUICKLOAD">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">QUICKLOAD</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:QUICKLOAD" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Method</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p>None.</p>
 </dd>
 </dl>
@@ -472,12 +477,12 @@ state from the default quickload file.</p>
 <dt class="sig sig-object ks" id="method:KUNIVERSE:QUICKSAVETO">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">QUICKSAVETO</span></span><span class="sig-paren">(</span><span class="pre">name</span><span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:QUICKSAVETO" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> – The name of the save file</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -489,12 +494,12 @@ state to a quicksave file matching the name parameter.</p>
 <dt class="sig sig-object ks" id="method:KUNIVERSE:QUICKLOADFROM">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">QUICKLOADFROM</span></span><span class="sig-paren">(</span><span class="pre">name</span><span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:QUICKLOADFROM" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> – The name of the save file</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -506,10 +511,10 @@ state from the quicksave file matching the name parameter.</p>
 <dt class="sig sig-object ks" id="attribute:KUNIVERSE:QUICKSAVELIST">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">QUICKSAVELIST</span></span><a class="headerlink" href="#attribute:KUNIVERSE:QUICKSAVELIST" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -520,10 +525,10 @@ state from the quicksave file matching the name parameter.</p>
 <dt class="sig sig-object ks" id="attribute:KUNIVERSE:DEFAULTLOADDISTANCE">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">DEFAULTLOADDISTANCE</span></span><a class="headerlink" href="#attribute:KUNIVERSE:DEFAULTLOADDISTANCE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="loaddistance.html#structure:LOADDISTANCE" title="LOADDISTANCE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">LoadDistance</span></code></a>.</p>
 </dd>
 </dl>
@@ -542,10 +547,10 @@ you have to use the :LOADDISTANCE suffix of the Vessel structure.)</p>
 <dt class="sig sig-object ks" id="attribute:KUNIVERSE:TIMEWARP">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">TIMEWARP</span></span><a class="headerlink" href="#attribute:KUNIVERSE:TIMEWARP" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="timewarp.html#structure:TIMEWARP" title="TIMEWARP structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">TimeWarp</span></code></a>.</p>
 </dd>
 </dl>
@@ -559,10 +564,10 @@ on <a class="reference internal" href="timewarp.html#structure:TIMEWARP" title="
 <dt class="sig sig-object ks" id="attribute:KUNIVERSE:ACTIVEVESSEL">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">ACTIVEVESSEL</span></span><a class="headerlink" href="#attribute:KUNIVERSE:ACTIVEVESSEL" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vessel</span></code></a>.</p>
 </dd>
 </dl>
@@ -573,12 +578,12 @@ on <a class="reference internal" href="timewarp.html#structure:TIMEWARP" title="
 <dt class="sig sig-object ks" id="method:KUNIVERSE:FORCESETACTIVEVESSEL">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">FORCESETACTIVEVESSEL</span></span><span class="sig-paren">(</span><span class="pre">vessel</span><span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:FORCESETACTIVEVESSEL" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>vessel</strong> – <a class="reference internal" href="../vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vessel</span></code></a> to switch to.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -589,12 +594,12 @@ on <a class="reference internal" href="timewarp.html#structure:TIMEWARP" title="
 <dt class="sig sig-object ks" id="method:KUNIVERSE:FORCEACTIVE">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">FORCEACTIVE</span></span><span class="sig-paren">(</span><span class="pre">vessel</span><span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:FORCEACTIVE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>vessel</strong> – <a class="reference internal" href="../vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vessel</span></code></a> to switch to.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -605,10 +610,10 @@ on <a class="reference internal" href="timewarp.html#structure:TIMEWARP" title="
 <dt class="sig sig-object ks" id="attribute:KUNIVERSE:HOURSPERDAY">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">HOURSPERDAY</span></span><a class="headerlink" href="#attribute:KUNIVERSE:HOURSPERDAY" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer)</p>
 </dd>
 </dl>
@@ -639,13 +644,13 @@ assumption would be true.</p>
 <dt class="sig sig-object ks" id="method:KUNIVERSE:GETCRAFT">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">GETCRAFT</span></span><span class="sig-paren">(</span><span class="pre">name,</span> <span class="pre">editor</span><span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:GETCRAFT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> – <a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> craft name.</p></li>
 <li><p><strong>facility</strong> – <a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> editor name.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="../vessels/crafttemplate.html#structure:CRAFTTEMPLATE" title="CRAFTTEMPLATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">CraftTemplate</span></code></a></p>
 </dd>
 </dl>
@@ -657,7 +662,7 @@ the given editor.  Valid values for editor include <code class="docutils literal
 <dt class="sig sig-object ks" id="method:KUNIVERSE:LAUNCHCRAFT">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">LAUNCHCRAFT</span></span><span class="sig-paren">(</span><span class="pre">template</span><span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:LAUNCHCRAFT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>template</strong> – <a class="reference internal" href="../vessels/crafttemplate.html#structure:CRAFTTEMPLATE" title="CRAFTTEMPLATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">CraftTemplate</span></code></a> craft template object.</p></li>
 </ul>
@@ -677,7 +682,7 @@ physics range of the launch site.</p>
 <dt class="sig sig-object ks" id="method:KUNIVERSE:LAUNCHCRAFTFROM">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">LAUNCHCRAFTFROM</span></span><span class="sig-paren">(</span><span class="pre">template,</span> <span class="pre">site</span><span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:LAUNCHCRAFTFROM" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>template</strong> – <a class="reference internal" href="../vessels/crafttemplate.html#structure:CRAFTTEMPLATE" title="CRAFTTEMPLATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">CraftTemplate</span></code></a> craft template object.</p></li>
 <li><p><strong>site</strong> – <a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> launch site name.</p></li>
@@ -699,7 +704,7 @@ physics range of the launch site.</p>
 <dt class="sig sig-object ks" id="method:KUNIVERSE:LAUNCHCRAFTWITHCREWFROM">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">LAUNCHCRAFTWITHCREWFROM</span></span><span class="sig-paren">(</span><span class="pre">template,</span> <span class="pre">crewlist,</span> <span class="pre">site</span><span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:LAUNCHCRAFTWITHCREWFROM" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>template</strong> – <a class="reference internal" href="../vessels/crafttemplate.html#structure:CRAFTTEMPLATE" title="CRAFTTEMPLATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">CraftTemplate</span></code></a> craft template object.</p></li>
 <li><p><strong>crewlist</strong> – <a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> kerbal names.</p></li>
@@ -722,7 +727,7 @@ physics range of the launch site.</p>
 <dt class="sig sig-object ks" id="method:KUNIVERSE:CRAFTLIST">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">CRAFTLIST</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:CRAFTLIST" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="../vessels/crafttemplate.html#structure:CRAFTTEMPLATE" title="CRAFTTEMPLATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">CraftTemplate</span></code></a></p>
 </dd>
 </dl>
@@ -734,12 +739,12 @@ and SPH folders of the stock Ships folder and the save specific Ships folder.</p
 <dt class="sig sig-object ks" id="method:KUNIVERSE:DEBUGLOG">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">DEBUGLOG</span></span><span class="sig-paren">(</span><span class="pre">message</span><span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:DEBUGLOG" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>message</strong> – <a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> message to append to the log.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -794,10 +799,10 @@ each OS.  Consult the list below to see where it is on your platform.</p>
 <dt class="sig sig-object ks" id="attribute:KUNIVERSE:REALTIME">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">REALTIME</span></span><a class="headerlink" href="#attribute:KUNIVERSE:REALTIME" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get Only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -810,10 +815,10 @@ of seconds since the start of 1970, right at midnight, 1st January.</p>
 <dt class="sig sig-object ks" id="attribute:KUNIVERSE:REALWORLDTIME">
 <span class="pre">KUniverse:</span><span class="sig-name descname"><span class="pre">REALWORLDTIME</span></span><a class="headerlink" href="#attribute:KUNIVERSE:REALWORLDTIME" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get Only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>

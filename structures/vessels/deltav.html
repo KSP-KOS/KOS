@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DeltaV &mdash; kOS 1.3.3.0 documentation</title>
+  <title>DeltaV &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
+            <img src="../../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -179,13 +184,13 @@ be right for the one you are looking at, and wrong for the other one.)</p></li>
 <dl class="ks structure">
 <dt class="sig sig-object ks" id="structure:DELTAV">
 <em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">DeltaV</span></span><a class="headerlink" href="#structure:DELTAV" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils align-default" id="id2">
+<dd><table class="colwidths-given docutils align-default" id="id2">
 <caption><span class="caption-text">Members</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col style="width: 20.0%" />
-<col style="width: 20.0%" />
-<col style="width: 20.0%" />
-<col style="width: 40.0%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 40%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suffix</p></th>
@@ -228,10 +233,10 @@ be right for the one you are looking at, and wrong for the other one.)</p></li>
 <dt class="sig sig-object ks" id="attribute:DELTAV:CURRENT">
 <span class="pre">DeltaV:</span><span class="sig-name descname"><span class="pre">CURRENT</span></span><a class="headerlink" href="#attribute:DELTAV:CURRENT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> in m/s</p>
 </dd>
 </dl>
@@ -248,10 +253,10 @@ calculated if this vessel is not the currently active vessel.</p>
 <dt class="sig sig-object ks" id="attribute:DELTAV:ASL">
 <span class="pre">DeltaV:</span><span class="sig-name descname"><span class="pre">ASL</span></span><a class="headerlink" href="#attribute:DELTAV:ASL" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> in m/s</p>
 </dd>
 </dl>
@@ -269,10 +274,10 @@ calculated if this vessel is not the currently active vessel.</p>
 <dt class="sig sig-object ks" id="attribute:DELTAV:VACUUM">
 <span class="pre">DeltaV:</span><span class="sig-name descname"><span class="pre">VACUUM</span></span><a class="headerlink" href="#attribute:DELTAV:VACUUM" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> in m/s</p>
 </dd>
 </dl>
@@ -290,10 +295,10 @@ calculated if this vessel is not the currently active vessel.</p>
 <dt class="sig sig-object ks" id="attribute:DELTAV:DURATION">
 <span class="pre">DeltaV:</span><span class="sig-name descname"><span class="pre">DURATION</span></span><a class="headerlink" href="#attribute:DELTAV:DURATION" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> in seconds</p>
 </dd>
 </dl>
@@ -310,7 +315,7 @@ calculated if this vessel is not the currently active vessel.</p>
 <dt class="sig sig-object ks" id="method:DELTAV:FORCECALC">
 <span class="pre">DeltaV:</span><span class="sig-name descname"><span class="pre">FORCECALC</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:DELTAV:FORCECALC" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>none (void)</p>
 </dd>
 </dl>

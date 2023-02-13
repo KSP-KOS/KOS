@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Delegates (function references) &mdash; kOS 1.3.3.0 documentation</title>
+  <title>Delegates (function references) &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
+            <img src="../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -97,7 +102,7 @@
              
   <section id="delegates-function-references">
 <span id="delegates"></span><h1>Delegates (function references)<a class="headerlink" href="#delegates-function-references" title="Permalink to this heading">¶</a></h1>
-<nav class="contents local" id="contents">
+<div class="contents local topic" id="contents">
 <p class="topic-title">Contents</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#overview" id="id1">Overview</a></p>
@@ -111,9 +116,9 @@
 <li><p><a class="reference internal" href="#anonymous-functions" id="id6">Anonymous functions</a></p></li>
 <li><p><a class="reference internal" href="#lib-enum-in-kslib" id="id7">lib_enum in KSLib</a></p></li>
 </ul>
-</nav>
+</div>
 <section id="overview">
-<h2><a class="toc-backref" href="#id1" role="doc-backlink">Overview</a><a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id1">Overview</a><a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
 <p>There are times it would be useful to be able to store, not the
 result of calling a function, but rather a reference to the function
 itself without calling it yet.  Then you can use this value to call
@@ -137,7 +142,7 @@ feature described here does not work on structure suffixes as of
 this release of kOS.  See the bottom of this page for more details.</p>
 </div>
 <section id="syntax-symbol">
-<span id="kosdelegate-atsign"></span><h3><a class="toc-backref" href="#id2" role="doc-backlink">Syntax: &#64; symbol</a><a class="headerlink" href="#syntax-symbol" title="Permalink to this heading">¶</a></h3>
+<span id="kosdelegate-atsign"></span><h3><a class="toc-backref" href="#id2">Syntax: &#64; symbol</a><a class="headerlink" href="#syntax-symbol" title="Permalink to this heading">¶</a></h3>
 <p>To obtain a <em>delegate</em> of a function in kOS, you place a single
 at-sign (<code class="docutils literal notranslate"><span class="pre">&#64;</span></code>) to the right of the function name, where the
 parentheses and arguments would normally have gone, as shown
@@ -175,7 +180,7 @@ have expected, which might look something like this:</p>
 </div>
 </section>
 <section id="omitting-call">
-<h3><a class="toc-backref" href="#id3" role="doc-backlink">Omitting :CALL</a><a class="headerlink" href="#omitting-call" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id3">Omitting :CALL</a><a class="headerlink" href="#omitting-call" title="Permalink to this heading">¶</a></h3>
 <p>You can call a KOSDelegate without the use of the <code class="docutils literal notranslate"><span class="pre">:call</span></code> suffix,
 instead just using parentheses directly abutted against the variable
 name like a normal function call:</p>
@@ -190,7 +195,7 @@ name like a normal function call:</p>
 </div>
 </section>
 <section id="why-the-sign">
-<h3><a class="toc-backref" href="#id4" role="doc-backlink">Why the ‘&#64;’ sign?</a><a class="headerlink" href="#why-the-sign" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id4">Why the ‘&#64;’ sign?</a><a class="headerlink" href="#why-the-sign" title="Permalink to this heading">¶</a></h3>
 <p>In Kerboscript, often when you mention a function’s name and don’t provide
 any empty parentheses, if it’s a function that takes zero arguments, it
 ends up being called anyway.  Thus <code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">x</span> <span class="pre">to</span> <span class="pre">myfunc.</span></code> ends up doing
@@ -202,7 +207,7 @@ function that would have occurred if you had left it bare.</p>
 </section>
 </section>
 <section id="why">
-<h2><a class="toc-backref" href="#id5" role="doc-backlink">Why?</a><a class="headerlink" href="#why" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id5">Why?</a><a class="headerlink" href="#why" title="Permalink to this heading">¶</a></h2>
 <p>There are several reasons this feature can be useful.  Some experienced
 programmers will already know them, but here is an example of a useful
 case as an illustration for people new to programming.  Let’s say you
@@ -314,7 +319,7 @@ some limited concepts of functional programming style are possible through the u
 of these delegates.</p>
 </section>
 <section id="anonymous-functions">
-<h2><a class="toc-backref" href="#id6" role="doc-backlink">Anonymous functions</a><a class="headerlink" href="#anonymous-functions" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id6">Anonymous functions</a><a class="headerlink" href="#anonymous-functions" title="Permalink to this heading">¶</a></h2>
 <p>Kerboscript also allows you to make a Delegate from an
 <a class="reference internal" href="anonymous.html#anonymous-functions"><span class="std std-ref">Anonymous function</span></a> (see the link
 for the full description of the syntax and its use), as in this
@@ -331,7 +336,7 @@ actually make an entire program library out of delegates
 rather than normal functions.</p>
 </section>
 <section id="lib-enum-in-kslib">
-<h2><a class="toc-backref" href="#id7" role="doc-backlink">lib_enum in KSLib</a><a class="headerlink" href="#lib-enum-in-kslib" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id7">lib_enum in KSLib</a><a class="headerlink" href="#lib-enum-in-kslib" title="Permalink to this heading">¶</a></h2>
 <p>There is a library in the kslib that can be used to perform many data
 set enumeration operations like the one described in the above section.
 It was written to be released coinciding with the addition of this feature

@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Using the Sound/Kerbal Interface Device (SKID) &mdash; kOS 1.3.3.0 documentation</title>
+  <title>Using the Sound/Kerbal Interface Device (SKID) &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
+            <img src="../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -110,7 +115,7 @@ your terminal’s speaker.  (Note, you can’t hear the sound over
 <a class="reference internal" href="telnet.html#telnet"><span class="std std-ref">telnet connections</span></a>.)</p>
 <p>This page will explain what we have discovered about how to use
 this interesting little device.</p>
-<nav class="contents local" id="contents">
+<div class="contents local topic" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#quick-and-dirty-sound-example" id="id7">Quick and dirty sound example:</a></p></li>
 <li><p><a class="reference internal" href="#hardware-capabilities-of-skid" id="id8">Hardware Capabilities of SKID</a></p>
@@ -137,9 +142,9 @@ this interesting little device.</p>
 </ul>
 </li>
 </ul>
-</nav>
+</div>
 <section id="quick-and-dirty-sound-example">
-<h2><a class="toc-backref" href="#id7" role="doc-backlink">Quick and dirty sound example:</a><a class="headerlink" href="#quick-and-dirty-sound-example" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id7">Quick and dirty sound example:</a><a class="headerlink" href="#quick-and-dirty-sound-example" title="Permalink to this heading">¶</a></h2>
 <p>If you just want to hurry up and hear something, without understanding
 all the features of the SKID chip, type the lines below into a program
 file and run it:</p>
@@ -153,14 +158,14 @@ file and run it:</p>
 <p>If you wish to do something more complex than that, then read on:</p>
 </section>
 <section id="hardware-capabilities-of-skid">
-<h2><a class="toc-backref" href="#id8" role="doc-backlink">Hardware Capabilities of SKID</a><a class="headerlink" href="#hardware-capabilities-of-skid" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id8">Hardware Capabilities of SKID</a><a class="headerlink" href="#hardware-capabilities-of-skid" title="Permalink to this heading">¶</a></h2>
 <p>Below we describe, to the best of our knowledge, the sound capabilities
 of the SKID chip.  Further below after this section, we’ll describe
 the programming interface we’ve added to Kerboscript to let you access
 these abilities.  For now, don’t think about how to access these
 abilities, just look at what they are.</p>
 <section id="voices">
-<span id="skid-voice"></span><h3><a class="toc-backref" href="#id9" role="doc-backlink">Voices</a><a class="headerlink" href="#voices" title="Permalink to this heading">¶</a></h3>
+<span id="skid-voice"></span><h3><a class="toc-backref" href="#id9">Voices</a><a class="headerlink" href="#voices" title="Permalink to this heading">¶</a></h3>
 <p>The SKID chip contains up to 10 simultaneous “voices” that can
 emit sounds together.  (The voices are numbered 0 through 9).
 Each of these so-called “voices” can be set up with a particular
@@ -172,7 +177,7 @@ Kerbals speaking just because we called them “voices”.  They’re
 just electronic bloopity-blopity sounds.</p>
 </section>
 <section id="frequency-range">
-<h3><a class="toc-backref" href="#id10" role="doc-backlink">Frequency Range</a><a class="headerlink" href="#frequency-range" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id10">Frequency Range</a><a class="headerlink" href="#frequency-range" title="Permalink to this heading">¶</a></h3>
 <p>The SKID chip appears to be capable of producing sounds in the
 range of as low as 1 Hertz (not like you’d ever hear that) and
 as high as up to 14000 Hertz.  Most people can hear higher notes
@@ -182,7 +187,7 @@ enough to hear the entire range of a piano’s 88 notes, and then
 some.</p>
 </section>
 <section id="amplitude-volume-control">
-<h3><a class="toc-backref" href="#id11" role="doc-backlink">Amplitude (volume) Control</a><a class="headerlink" href="#amplitude-volume-control" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id11">Amplitude (volume) Control</a><a class="headerlink" href="#amplitude-volume-control" title="Permalink to this heading">¶</a></h3>
 <p>The SKID chip can put out any range of volume levels between
 0.0 and 1.0, within the accuracy of floating point numbers.
 It is noted that it can also amplify the volume to levels
@@ -190,7 +195,7 @@ higher than 1.0, to boost the signal when needed, although
 this feature is not well understood.</p>
 </section>
 <section id="waveforms">
-<span id="skid-waveform"></span><h3><a class="toc-backref" href="#id12" role="doc-backlink">Waveforms</a><a class="headerlink" href="#waveforms" title="Permalink to this heading">¶</a></h3>
+<span id="skid-waveform"></span><h3><a class="toc-backref" href="#id12">Waveforms</a><a class="headerlink" href="#waveforms" title="Permalink to this heading">¶</a></h3>
 <p>Each voice can be set to one of several possible sound waveform
 patterns.  As of this writing, our engineers have uncovered
 5 such wave forms, displayed here.</p>
@@ -236,7 +241,7 @@ sound is like random static on a walkie-talkie.</span><a class="headerlink" href
 </figure>
 </section>
 <section id="adsr-envelope">
-<span id="skid-envelope"></span><h3><a class="toc-backref" href="#id13" role="doc-backlink">ADSR “Envelope”</a><a class="headerlink" href="#adsr-envelope" title="Permalink to this heading">¶</a></h3>
+<span id="skid-envelope"></span><h3><a class="toc-backref" href="#id13">ADSR “Envelope”</a><a class="headerlink" href="#adsr-envelope" title="Permalink to this heading">¶</a></h3>
 <p>The SKID chip will play a note in the background unattended
 while the CPU continues with its work.  Thus you don’t have
 to have the main program pause while it plays a note.</p>
@@ -329,7 +334,7 @@ have to hold a note in for a half second or so before you really hear it:</p>
 </ul>
 </section>
 <section id="letter-frequency-notation">
-<span id="skid-letter-frequency"></span><h3><a class="toc-backref" href="#id14" role="doc-backlink">Letter Frequency Notation</a><a class="headerlink" href="#letter-frequency-notation" title="Permalink to this heading">¶</a></h3>
+<span id="skid-letter-frequency"></span><h3><a class="toc-backref" href="#id14">Letter Frequency Notation</a><a class="headerlink" href="#letter-frequency-notation" title="Permalink to this heading">¶</a></h3>
 <p>The SKID chip contains an interior lookup system that makes it possible,
 anywhere the chip expects you to give a frequency in Hertz, to instead
 specify its frequency using the more familiar
@@ -364,7 +369,7 @@ as an E-sharp), the resulting frequency will just be zero Hertz, the
 same as for a rest note.</p>
 </section>
 <section id="the-note-format">
-<span id="skid-note"></span><h3><a class="toc-backref" href="#id15" role="doc-backlink">The Note format</a><a class="headerlink" href="#the-note-format" title="Permalink to this heading">¶</a></h3>
+<span id="skid-note"></span><h3><a class="toc-backref" href="#id15">The Note format</a><a class="headerlink" href="#the-note-format" title="Permalink to this heading">¶</a></h3>
 <p>When telling the SKID chip to begin a note, the following data is
 passed into it, to let it know the parameters of that one note:</p>
 <dl>
@@ -432,7 +437,7 @@ the voice’s main volume doesn’t exceed 1.0 or you might get some
 </dl>
 </section>
 <section id="tempo">
-<span id="skid-tempo"></span><h3><a class="toc-backref" href="#id16" role="doc-backlink">Tempo</a><a class="headerlink" href="#tempo" title="Permalink to this heading">¶</a></h3>
+<span id="skid-tempo"></span><h3><a class="toc-backref" href="#id16">Tempo</a><a class="headerlink" href="#tempo" title="Permalink to this heading">¶</a></h3>
 <p>The SKID chip allows you to set a tempo multiplier (a coefficient
 multiplier that can be a fractional number like 0.5, 2.0, 1.1, etc).
 This tempo multiplier causes all sound durations mentioned in specific
@@ -451,7 +456,7 @@ and then setting the chip’s Tempo to set how long you mean for a whole
 note to last.</p>
 </section>
 <section id="songs-lists-of-notes">
-<span id="skid-song"></span><h3><a class="toc-backref" href="#id17" role="doc-backlink">Songs (Lists of Notes)</a><a class="headerlink" href="#songs-lists-of-notes" title="Permalink to this heading">¶</a></h3>
+<span id="skid-song"></span><h3><a class="toc-backref" href="#id17">Songs (Lists of Notes)</a><a class="headerlink" href="#songs-lists-of-notes" title="Permalink to this heading">¶</a></h3>
 <p>It is possible to point the SKID chip at an array of these
 <a class="reference internal" href="#skid-note"><span class="std std-ref">notes</span></a> to make it play several notes back to
 back without further intervention of the main CPU.  When the
@@ -472,7 +477,7 @@ be.  In our testing, the engineers haven’t discovered an upper
 limit yet.</p>
 </section>
 <section id="looping">
-<span id="skid-loop"></span><h3><a class="toc-backref" href="#id18" role="doc-backlink">Looping</a><a class="headerlink" href="#looping" title="Permalink to this heading">¶</a></h3>
+<span id="skid-loop"></span><h3><a class="toc-backref" href="#id18">Looping</a><a class="headerlink" href="#looping" title="Permalink to this heading">¶</a></h3>
 <p>The SKID chip contains a flag that can be used to set whether or not
 it should start again with the first note in a list when it
 reaches the last note in the list.  If this flag is true, then it
@@ -482,7 +487,7 @@ this looping flag.  Yes, the SKID chip can play the same note over and
 over if that’s what you really want.</p>
 </section>
 <section id="chords">
-<span id="skid-chords"></span><h3><a class="toc-backref" href="#id19" role="doc-backlink">Chords</a><a class="headerlink" href="#chords" title="Permalink to this heading">¶</a></h3>
+<span id="skid-chords"></span><h3><a class="toc-backref" href="#id19">Chords</a><a class="headerlink" href="#chords" title="Permalink to this heading">¶</a></h3>
 <p>Each of the 10 voices of a SKID chip can only play a single note at a
 time.  But you may wish to transcribe some music into a song (list of
 notes) in which the notes of the sheet music contained chords - that
@@ -506,7 +511,7 @@ played.</p>
 </section>
 </section>
 <section id="kerboscript-interface-synopsis">
-<h2><a class="toc-backref" href="#id20" role="doc-backlink">Kerboscript Interface Synopsis</a><a class="headerlink" href="#kerboscript-interface-synopsis" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id20">Kerboscript Interface Synopsis</a><a class="headerlink" href="#kerboscript-interface-synopsis" title="Permalink to this heading">¶</a></h2>
 <p>In order that you don’t need to send individual bits and bytes to the
 SKID chip, we’ve added a user interface in the Kerboscript language
 that interfaces with all these features for you.  Keep the above
@@ -517,7 +522,7 @@ the kerboscript interface to SKID.  To really fully exploit it, you
 need to follow the links below and read the detailed documentation
 on the <a class="reference internal" href="../structures/misc/note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Note</span></code></a> structure and the <a class="reference internal" href="../structures/misc/voice.html#structure:VOICE" title="VOICE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Voice</span></code></a> structure.</p>
 <section id="getvoice">
-<span id="skid-getvoice"></span><h3><a class="toc-backref" href="#id21" role="doc-backlink">GetVoice()</a><a class="headerlink" href="#getvoice" title="Permalink to this heading">¶</a></h3>
+<span id="skid-getvoice"></span><h3><a class="toc-backref" href="#id21">GetVoice()</a><a class="headerlink" href="#getvoice" title="Permalink to this heading">¶</a></h3>
 <p>The basic starting point of any Kerboscript program that works with
 the SKID chip is the <a class="reference internal" href="../structures/misc/voice.html#function:GETVOICE" title="GETVOICE function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">GetVoice()</span></code></a> built-in function.
 <code class="docutils literal notranslate"><span class="pre">GetVoice(n)</span></code>, given any N within the range of 0 through 9 for the
@@ -532,7 +537,7 @@ needs:</p>
 used to do everything else you need after that.</p>
 </section>
 <section id="voice-object">
-<h3><a class="toc-backref" href="#id22" role="doc-backlink">Voice object</a><a class="headerlink" href="#voice-object" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id22">Voice object</a><a class="headerlink" href="#voice-object" title="Permalink to this heading">¶</a></h3>
 <p>If you take a moment to look at the documentation for <a class="reference internal" href="../structures/misc/voice.html#structure:VOICE" title="VOICE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Voice</span></code></a>,
 you can see that almost everything it lets you do has a one-to-one
 correspondence to the hardware features mentioned above in this document.</p>
@@ -548,7 +553,7 @@ suffix that corresponds to them, as given in the example below:</p>
 </div>
 </section>
 <section id="note">
-<h3><a class="toc-backref" href="#id23" role="doc-backlink">Note()</a><a class="headerlink" href="#note" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id23">Note()</a><a class="headerlink" href="#note" title="Permalink to this heading">¶</a></h3>
 <p>When asking one of SKID’s voices to play a note, you have to specify
 which note you meant, and you do so by constructing a <a class="reference internal" href="../structures/misc/note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Note</span></code></a>
 object using the <a class="reference internal" href="../structures/misc/note.html#function:NOTE" title="NOTE function"><code class="xref ks ks-func docutils literal notranslate"><span class="pre">Note()</span></code></a> built-in function, or the
@@ -574,7 +579,7 @@ pass it right into the <cite>Play()</cite> method, or to make it part of a
 <a class="reference internal" href="../structures/collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of notes for making a song.</p>
 </section>
 <section id="voice-play">
-<h3><a class="toc-backref" href="#id24" role="doc-backlink">Voice:Play()</a><a class="headerlink" href="#voice-play" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id24">Voice:Play()</a><a class="headerlink" href="#voice-play" title="Permalink to this heading">¶</a></h3>
 <p>The heart of the Kerboscript interface to the SKID chip is the <cite>Play()</cite>
 suffix method of the <a class="reference internal" href="../structures/misc/voice.html#structure:VOICE" title="VOICE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Voice</span></code></a> object.</p>
 <p>You either construct a single <a class="reference internal" href="../structures/misc/note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Note</span></code></a> and tell Play() to play it,

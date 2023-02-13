@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Engine &mdash; kOS 1.3.3.0 documentation</title>
+  <title>Engine &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
+            <img src="../../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -140,12 +145,12 @@
 <dl class="ks structure">
 <dt class="sig sig-object ks" id="structure:ENGINE">
 <em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">Engine</span></span><a class="headerlink" href="#structure:ENGINE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils align-default" id="id9">
+<dd><table class="colwidths-given docutils align-default" id="id9">
 <caption><span class="caption-text">Members</span><a class="headerlink" href="#id9" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col style="width: 25.0%" />
-<col style="width: 25.0%" />
-<col style="width: 50.0%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 50%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suffix</p></th>
@@ -342,10 +347,10 @@
 <dt class="sig sig-object ks" id="attribute:ENGINE:THRUSTLIMIT">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">THRUSTLIMIT</span></span><a class="headerlink" href="#attribute:ENGINE:THRUSTLIMIT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (%)</p>
 </dd>
 </dl>
@@ -370,10 +375,10 @@ user interface decision baked into the stock game.</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:MAXTHRUST">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">MAXTHRUST</span></span><a class="headerlink" href="#attribute:ENGINE:MAXTHRUST" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (kN)</p>
 </dd>
 </dl>
@@ -384,12 +389,12 @@ user interface decision baked into the stock game.</p>
 <dt class="sig sig-object ks" id="method:ENGINE:MAXTHRUSTAT">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">MAXTHRUSTAT</span></span><span class="sig-paren">(</span><span class="pre">pressure</span><span class="sig-paren">)</span><a class="headerlink" href="#method:ENGINE:MAXTHRUSTAT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pressure</strong> – atmospheric pressure (in standard Kerbin atmospheres)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (kN)</p>
 </dd>
 </dl>
@@ -402,10 +407,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:THRUST">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">THRUST</span></span><a class="headerlink" href="#attribute:ENGINE:THRUST" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (kN)</p>
 </dd>
 </dl>
@@ -416,10 +421,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:AVAILABLETHRUST">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">AVAILABLETHRUST</span></span><a class="headerlink" href="#attribute:ENGINE:AVAILABLETHRUST" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (kN)</p>
 </dd>
 </dl>
@@ -430,12 +435,12 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="method:ENGINE:AVAILABLETHRUSTAT">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">AVAILABLETHRUSTAT</span></span><span class="sig-paren">(</span><span class="pre">pressure</span><span class="sig-paren">)</span><a class="headerlink" href="#method:ENGINE:AVAILABLETHRUSTAT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pressure</strong> – atmospheric pressure (in standard Kerbin atmospheres)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (kN)</p>
 </dd>
 </dl>
@@ -448,10 +453,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:POSSIBLETHRUST">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">POSSIBLETHRUST</span></span><a class="headerlink" href="#attribute:ENGINE:POSSIBLETHRUST" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (kN)</p>
 </dd>
 </dl>
@@ -462,12 +467,12 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="method:ENGINE:POSSIBLETHRUSTAT">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">POSSIBLETHRUSTAT</span></span><span class="sig-paren">(</span><span class="pre">pressure</span><span class="sig-paren">)</span><a class="headerlink" href="#method:ENGINE:POSSIBLETHRUSTAT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pressure</strong> – atmospheric pressure (in standard Kerbin atmospheres)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (kN)</p>
 </dd>
 </dl>
@@ -480,10 +485,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:FUELFLOW">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">FUELFLOW</span></span><a class="headerlink" href="#attribute:ENGINE:FUELFLOW" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (units/s)</p>
 </dd>
 </dl>
@@ -494,10 +499,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:MAXFUELFLOW">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">MAXFUELFLOW</span></span><a class="headerlink" href="#attribute:ENGINE:MAXFUELFLOW" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (units/s)</p>
 </dd>
 </dl>
@@ -508,10 +513,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:MASSFLOW">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">MASSFLOW</span></span><a class="headerlink" href="#attribute:ENGINE:MASSFLOW" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (Mg/s)</p>
 </dd>
 </dl>
@@ -522,10 +527,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:MAXMASSFLOW">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">MAXMASSFLOW</span></span><a class="headerlink" href="#attribute:ENGINE:MAXMASSFLOW" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (Mg/s)</p>
 </dd>
 </dl>
@@ -536,10 +541,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:ISP">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">ISP</span></span><a class="headerlink" href="#attribute:ENGINE:ISP" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -550,12 +555,12 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="method:ENGINE:ISPAT">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">ISPAT</span></span><span class="sig-paren">(</span><span class="pre">pressure</span><span class="sig-paren">)</span><a class="headerlink" href="#method:ENGINE:ISPAT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pressure</strong> – atmospheric pressure (in standard Kerbin atmospheres)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -568,10 +573,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:VACUUMISP">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">VACUUMISP</span></span><a class="headerlink" href="#attribute:ENGINE:VACUUMISP" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -582,10 +587,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:VISP">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">VISP</span></span><a class="headerlink" href="#attribute:ENGINE:VISP" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -596,10 +601,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:SEALEVELISP">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">SEALEVELISP</span></span><a class="headerlink" href="#attribute:ENGINE:SEALEVELISP" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -610,10 +615,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:SLISP">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">SLISP</span></span><a class="headerlink" href="#attribute:ENGINE:SLISP" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -624,10 +629,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:FLAMEOUT">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">FLAMEOUT</span></span><a class="headerlink" href="#attribute:ENGINE:FLAMEOUT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -638,10 +643,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:IGNITION">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">IGNITION</span></span><a class="headerlink" href="#attribute:ENGINE:IGNITION" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -652,10 +657,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:ALLOWRESTART">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">ALLOWRESTART</span></span><a class="headerlink" href="#attribute:ENGINE:ALLOWRESTART" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -666,10 +671,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:ALLOWSHUTDOWN">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">ALLOWSHUTDOWN</span></span><a class="headerlink" href="#attribute:ENGINE:ALLOWSHUTDOWN" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -680,10 +685,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:THROTTLELOCK">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">THROTTLELOCK</span></span><a class="headerlink" href="#attribute:ENGINE:THROTTLELOCK" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -694,10 +699,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:MULTIMODE">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">MULTIMODE</span></span><a class="headerlink" href="#attribute:ENGINE:MULTIMODE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -708,10 +713,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:MODES">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">MODES</span></span><a class="headerlink" href="#attribute:ENGINE:MODES" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of strings</p>
 </dd>
 </dl>
@@ -722,10 +727,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:MODE">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">MODE</span></span><a class="headerlink" href="#attribute:ENGINE:MODE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -742,10 +747,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:PRIMARYMODE">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">PRIMARYMODE</span></span><a class="headerlink" href="#attribute:ENGINE:PRIMARYMODE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -756,10 +761,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:AUTOSWITCH">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">AUTOSWITCH</span></span><a class="headerlink" href="#attribute:ENGINE:AUTOSWITCH" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -770,10 +775,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:HASGIMBAL">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">HASGIMBAL</span></span><a class="headerlink" href="#attribute:ENGINE:HASGIMBAL" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -784,10 +789,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:GIMBAL">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">GIMBAL</span></span><a class="headerlink" href="#attribute:ENGINE:GIMBAL" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="gimbal.html#structure:GIMBAL" title="GIMBAL structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Gimbal</span></code></a></p>
 </dd>
 </dl>
@@ -798,10 +803,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:ENGINE:ULLAGE">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">ULLAGE</span></span><a class="headerlink" href="#attribute:ENGINE:ULLAGE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -813,10 +818,10 @@ Note: this is a static property of the engine, for current fuel status, check <c
 <dt class="sig sig-object ks" id="attribute:ENGINE:FUELSTABILITY">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">FUELSTABILITY</span></span><a class="headerlink" href="#attribute:ENGINE:FUELSTABILITY" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -828,10 +833,10 @@ Engines that don’t require ullage will always return 1, unless they are pressu
 <dt class="sig sig-object ks" id="attribute:ENGINE:PRESSUREFED">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">PRESSUREFED</span></span><a class="headerlink" href="#attribute:ENGINE:PRESSUREFED" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -842,10 +847,10 @@ Engines that don’t require ullage will always return 1, unless they are pressu
 <dt class="sig sig-object ks" id="attribute:ENGINE:IGNITIONS">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">IGNITIONS</span></span><a class="headerlink" href="#attribute:ENGINE:IGNITIONS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -856,10 +861,10 @@ Engines that don’t require ullage will always return 1, unless they are pressu
 <dt class="sig sig-object ks" id="attribute:ENGINE:MINTHROTTLE">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">MINTHROTTLE</span></span><a class="headerlink" href="#attribute:ENGINE:MINTHROTTLE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -870,10 +875,10 @@ Engines that don’t require ullage will always return 1, unless they are pressu
 <dt class="sig sig-object ks" id="attribute:ENGINE:CONFIG">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">CONFIG</span></span><a class="headerlink" href="#attribute:ENGINE:CONFIG" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -884,10 +889,10 @@ Engines that don’t require ullage will always return 1, unless they are pressu
 <dt class="sig sig-object ks" id="attribute:ENGINE:CONSUMEDRESOURCES">
 <span class="pre">Engine:</span><span class="sig-name descname"><span class="pre">CONSUMEDRESOURCES</span></span><a class="headerlink" href="#attribute:ENGINE:CONSUMEDRESOURCES" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../collections/lexicon.html#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Lexicon</span></code></a> of <a class="reference internal" href="consumedresource.html#structure:CONSUMEDRESOURCE" title="CONSUMEDRESOURCE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">ConsumedResource</span></code></a></p>
 </dd>
 </dl>

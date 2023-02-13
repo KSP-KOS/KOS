@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Drawing Vectors on the Screen &mdash; kOS 1.3.3.0 documentation</title>
+  <title>Drawing Vectors on the Screen &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
+            <img src="../../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -209,11 +214,11 @@ will be given a default:</p>
 </pre></div>
 </div>
 <p>Causes it to have these defaults:</p>
-<table class="docutils align-default" id="id1">
+<table class="colwidths-given docutils align-default" id="id1">
 <caption><span class="caption-text">Defaults</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col style="width: 25.0%" />
-<col style="width: 75.0%" />
+<col style="width: 25%" />
+<col style="width: 75%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suffix</p></th>
@@ -299,12 +304,12 @@ polygons where one of that polygons’ vertices is very far away.</p>
 <dt class="sig sig-object ks" id="structure:VECDRAW">
 <em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">VecDraw</span></span><a class="headerlink" href="#structure:VECDRAW" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is a structure that allows you to make a drawing of a vector on the screen in map view or in flight view.</p>
-<table class="docutils align-default" id="id2">
+<table class="colwidths-given docutils align-default" id="id2">
 <caption><span class="caption-text">Members</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col style="width: 16.7%" />
-<col style="width: 16.7%" />
-<col style="width: 66.7%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 67%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suffix</p></th>
@@ -377,10 +382,10 @@ polygons where one of that polygons’ vertices is very far away.</p>
 <dt class="sig sig-object ks" id="attribute:VECDRAW:START">
 <span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">START</span></span><a class="headerlink" href="#attribute:VECDRAW:START" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
 </dd>
 </dl>
@@ -391,10 +396,10 @@ polygons where one of that polygons’ vertices is very far away.</p>
 <dt class="sig sig-object ks" id="attribute:VECDRAW:VEC">
 <span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">VEC</span></span><a class="headerlink" href="#attribute:VECDRAW:VEC" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
 </dd>
 </dl>
@@ -405,10 +410,10 @@ polygons where one of that polygons’ vertices is very far away.</p>
 <dt class="sig sig-object ks" id="attribute:VECDRAW:COLOR">
 <span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">COLOR</span></span><a class="headerlink" href="#attribute:VECDRAW:COLOR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="colors.html#color"><span class="std std-ref">Color</span></a></p>
 </dd>
 </dl>
@@ -424,10 +429,10 @@ would like the line to never be fully opaque even at the tip.)</p>
 <dt class="sig sig-object ks" id="attribute:VECDRAW:COLOUR">
 <span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">COLOUR</span></span><a class="headerlink" href="#attribute:VECDRAW:COLOUR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="colors.html#color"><span class="std std-ref">Color</span></a></p>
 </dd>
 </dl>
@@ -438,10 +443,10 @@ would like the line to never be fully opaque even at the tip.)</p>
 <dt class="sig sig-object ks" id="attribute:VECDRAW:LABEL">
 <span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">LABEL</span></span><a class="headerlink" href="#attribute:VECDRAW:LABEL" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -454,10 +459,10 @@ change the <code class="xref ks ks-attr docutils literal notranslate"><span clas
 <dt class="sig sig-object ks" id="attribute:VECDRAW:SCALE">
 <span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">SCALE</span></span><a class="headerlink" href="#attribute:VECDRAW:SCALE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -469,10 +474,10 @@ but not the START.</p>
 <dt class="sig sig-object ks" id="attribute:VECDRAW:SHOW">
 <span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">SHOW</span></span><a class="headerlink" href="#attribute:VECDRAW:SHOW" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -483,10 +488,10 @@ but not the START.</p>
 <dt class="sig sig-object ks" id="attribute:VECDRAW:WIDTH">
 <span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">WIDTH</span></span><a class="headerlink" href="#attribute:VECDRAW:WIDTH" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -499,10 +504,10 @@ to match if set to a value larger than 0.2.</p>
 <dt class="sig sig-object ks" id="attribute:VECDRAW:POINTY">
 <span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">POINTY</span></span><a class="headerlink" href="#attribute:VECDRAW:POINTY" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -516,10 +521,10 @@ then Vecdraw draws just a thick line, instead of an arrow.</p>
 <dt class="sig sig-object ks" id="attribute:VECDRAW:WIPING">
 <span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">WIPING</span></span><a class="headerlink" href="#attribute:VECDRAW:WIPING" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -540,10 +545,10 @@ you use an RGBA() and provide the alpha value.)</p>
 <dt class="sig sig-object ks" id="attribute:VECDRAW:STARTUPDATER">
 <span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">STARTUPDATER</span></span><a class="headerlink" href="#attribute:VECDRAW:STARTUPDATER" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KosDelegate</span></code></a> with no parameters, returning a <a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
 </dd>
 </dl>
@@ -578,10 +583,10 @@ keyword <a class="reference internal" href="kosdelegate.html#global:DONOTHING" t
 <dt class="sig sig-object ks" id="attribute:VECDRAW:VECUPDATER">
 <span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">VECUPDATER</span></span><a class="headerlink" href="#attribute:VECDRAW:VECUPDATER" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KosDelegate</span></code></a> with no parameters, returning a <a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
 </dd>
 </dl>
@@ -623,10 +628,10 @@ keyword <a class="reference internal" href="kosdelegate.html#global:DONOTHING" t
 <dt class="sig sig-object ks" id="attribute:VECDRAW:COLORUPDATER">
 <span class="pre">VecDraw:</span><span class="sig-name descname"><span class="pre">COLORUPDATER</span></span><a class="headerlink" href="#attribute:VECDRAW:COLORUPDATER" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KosDelegate</span></code></a> with no parameters, returning a <code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Color</span></code></p>
 </dd>
 </dl>

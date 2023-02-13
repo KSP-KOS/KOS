@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Terminal Input &mdash; kOS 1.3.3.0 documentation</title>
+  <title>Terminal Input &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
+            <img src="../../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -128,7 +133,7 @@
 <p>You can read the user’s keyboard input into the kOS terminal
 using this structure.  You obtain this structure by calling
 <a class="reference internal" href="terminal.html#attribute:TERMINAL:INPUT" title="TERMINAL:INPUT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Terminal:INPUT</span></code></a>.</p>
-<nav class="contents local" id="contents">
+<div class="contents local topic" id="contents">
 <p class="topic-title">CONTENTS</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#input-is-buffered" id="id2">Input is buffered</a></p></li>
@@ -138,9 +143,9 @@ using this structure.  You obtain this structure by calling
 <li><p><a class="reference internal" href="#cannot-read-shift-or-alt" id="id6">Cannot read “shift” or “alt”</a></p></li>
 <li><p><a class="reference internal" href="#structure" id="id7">Structure</a></p></li>
 </ul>
-</nav>
+</div>
 <section id="input-is-buffered">
-<h2><a class="toc-backref" href="#id2" role="doc-backlink">Input is buffered</a><a class="headerlink" href="#input-is-buffered" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id2">Input is buffered</a><a class="headerlink" href="#input-is-buffered" title="Permalink to this heading">¶</a></h2>
 <p>Input is buffered if the user types faster than you process
 the input.  (For example, if you have code that reads 1
 character per second, and the user types faster than 1
@@ -153,7 +158,7 @@ program, which means that you must clear the buffer using
 contents are in response to a prompt.</p>
 </section>
 <section id="input-is-blocking">
-<h2><a class="toc-backref" href="#id3" role="doc-backlink">Input is blocking</a><a class="headerlink" href="#input-is-blocking" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id3">Input is blocking</a><a class="headerlink" href="#input-is-blocking" title="Permalink to this heading">¶</a></h2>
 <p>If you attempt to read a character of input and there are
 none available (because the user hasn’t typed anything
 yet for you to read), then your program will pause and
@@ -163,7 +168,7 @@ you read it, use the <a class="reference internal" href="#attribute:TERMINALINPU
 suffix described below.</p>
 </section>
 <section id="detecting-special-keys">
-<h2><a class="toc-backref" href="#id4" role="doc-backlink">Detecting special keys</a><a class="headerlink" href="#detecting-special-keys" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id4">Detecting special keys</a><a class="headerlink" href="#detecting-special-keys" title="Permalink to this heading">¶</a></h2>
 <p>You can detect some special keys that don’t form normal
 ASCII codes, such as the Left arrow, Page Up, and so on.</p>
 <p>Internally KOS uses its own mapping of these characters to
@@ -185,12 +190,12 @@ suffixes to <a class="reference internal" href="#structure:TERMINALINPUT" title=
 </div>
 </section>
 <section id="cannot-read-control-c">
-<h2><a class="toc-backref" href="#id5" role="doc-backlink">Cannot read control-C</a><a class="headerlink" href="#cannot-read-control-c" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id5">Cannot read control-C</a><a class="headerlink" href="#cannot-read-control-c" title="Permalink to this heading">¶</a></h2>
 <p>You cannot read the control-C character in your program, because it
 causes your program to break.</p>
 </section>
 <section id="cannot-read-shift-or-alt">
-<h2><a class="toc-backref" href="#id6" role="doc-backlink">Cannot read “shift” or “alt”</a><a class="headerlink" href="#cannot-read-shift-or-alt" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id6">Cannot read “shift” or “alt”</a><a class="headerlink" href="#cannot-read-shift-or-alt" title="Permalink to this heading">¶</a></h2>
 <p>You cannot read the “shift” or “alt” keypresses pressed by themselves
 because they send no characters to the terminal until combined with
 other characters.  (For example “shift A” sends an “A” character, while
@@ -201,17 +206,17 @@ window, and you can’t “send” these sorts of keypresses as characters
 down a stream.</p>
 </section>
 <section id="structure">
-<h2><a class="toc-backref" href="#id7" role="doc-backlink">Structure</a><a class="headerlink" href="#structure" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id7">Structure</a><a class="headerlink" href="#structure" title="Permalink to this heading">¶</a></h2>
 <dl class="ks structure">
 <dt class="sig sig-object ks" id="structure:TERMINALINPUT">
 <em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">TerminalInput</span></span><a class="headerlink" href="#structure:TERMINALINPUT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils align-default" id="id1">
+<dd><table class="colwidths-given docutils align-default" id="id1">
 <caption><span class="caption-text">Members</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col style="width: 25.0%" />
-<col style="width: 12.5%" />
-<col style="width: 12.5%" />
-<col style="width: 50.0%" />
+<col style="width: 25%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 50%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suffix</p></th>
@@ -304,10 +309,10 @@ down a stream.</p>
 <dt class="sig sig-object ks" id="method:TERMINALINPUT:GETCHAR">
 <span class="pre">TerminalInput:</span><span class="sig-name descname"><span class="pre">GETCHAR</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:TERMINALINPUT:GETCHAR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get (Method call)</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -326,10 +331,10 @@ in this structure.</p>
 <dt class="sig sig-object ks" id="attribute:TERMINALINPUT:HASCHAR">
 <span class="pre">TerminalInput:</span><span class="sig-name descname"><span class="pre">HASCHAR</span></span><a class="headerlink" href="#attribute:TERMINALINPUT:HASCHAR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get (method call)</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -350,10 +355,10 @@ to call <a class="reference internal" href="#method:TERMINALINPUT:GETCHAR" title
 <dt class="sig sig-object ks" id="method:TERMINALINPUT:CLEAR">
 <span class="pre">TerminalInput:</span><span class="sig-name descname"><span class="pre">CLEAR</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:TERMINALINPUT:CLEAR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get (method call)</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -365,10 +370,10 @@ the input queue.</p>
 <dt class="sig sig-object ks" id="attribute:TERMINALINPUT:BACKSPACE">
 <span class="pre">TerminalInput:</span><span class="sig-name descname"><span class="pre">BACKSPACE</span></span><a class="headerlink" href="#attribute:TERMINALINPUT:BACKSPACE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -379,10 +384,10 @@ the input queue.</p>
 <dt class="sig sig-object ks" id="attribute:TERMINALINPUT:DELETERIGHT">
 <span class="pre">TerminalInput:</span><span class="sig-name descname"><span class="pre">DELETERIGHT</span></span><a class="headerlink" href="#attribute:TERMINALINPUT:DELETERIGHT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -393,10 +398,10 @@ the input queue.</p>
 <dt class="sig sig-object ks" id="attribute:TERMINALINPUT:RETURN">
 <span class="pre">TerminalInput:</span><span class="sig-name descname"><span class="pre">RETURN</span></span><a class="headerlink" href="#attribute:TERMINALINPUT:RETURN" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -407,10 +412,10 @@ the input queue.</p>
 <dt class="sig sig-object ks" id="attribute:TERMINALINPUT:ENTER">
 <span class="pre">TerminalInput:</span><span class="sig-name descname"><span class="pre">ENTER</span></span><a class="headerlink" href="#attribute:TERMINALINPUT:ENTER" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -420,10 +425,10 @@ the input queue.</p>
 <dt class="sig sig-object ks" id="attribute:TERMINALINPUT:UPCURSORONE">
 <span class="pre">TerminalInput:</span><span class="sig-name descname"><span class="pre">UPCURSORONE</span></span><a class="headerlink" href="#attribute:TERMINALINPUT:UPCURSORONE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -434,10 +439,10 @@ the input queue.</p>
 <dt class="sig sig-object ks" id="attribute:TERMINALINPUT:DOWNCURSORONE">
 <span class="pre">TerminalInput:</span><span class="sig-name descname"><span class="pre">DOWNCURSORONE</span></span><a class="headerlink" href="#attribute:TERMINALINPUT:DOWNCURSORONE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -448,10 +453,10 @@ the input queue.</p>
 <dt class="sig sig-object ks" id="attribute:TERMINALINPUT:LEFTCURSORONE">
 <span class="pre">TerminalInput:</span><span class="sig-name descname"><span class="pre">LEFTCURSORONE</span></span><a class="headerlink" href="#attribute:TERMINALINPUT:LEFTCURSORONE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -462,10 +467,10 @@ the input queue.</p>
 <dt class="sig sig-object ks" id="attribute:TERMINALINPUT:RIGHTCURSORONE">
 <span class="pre">TerminalInput:</span><span class="sig-name descname"><span class="pre">RIGHTCURSORONE</span></span><a class="headerlink" href="#attribute:TERMINALINPUT:RIGHTCURSORONE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -476,10 +481,10 @@ the input queue.</p>
 <dt class="sig sig-object ks" id="attribute:TERMINALINPUT:HOMECURSOR">
 <span class="pre">TerminalInput:</span><span class="sig-name descname"><span class="pre">HOMECURSOR</span></span><a class="headerlink" href="#attribute:TERMINALINPUT:HOMECURSOR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -490,10 +495,10 @@ the input queue.</p>
 <dt class="sig sig-object ks" id="attribute:TERMINALINPUT:ENDCURSOR">
 <span class="pre">TerminalInput:</span><span class="sig-name descname"><span class="pre">ENDCURSOR</span></span><a class="headerlink" href="#attribute:TERMINALINPUT:ENDCURSOR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -504,10 +509,10 @@ the input queue.</p>
 <dt class="sig sig-object ks" id="attribute:TERMINALINPUT:PAGEUPCURSOR">
 <span class="pre">TerminalInput:</span><span class="sig-name descname"><span class="pre">PAGEUPCURSOR</span></span><a class="headerlink" href="#attribute:TERMINALINPUT:PAGEUPCURSOR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -518,10 +523,10 @@ the input queue.</p>
 <dt class="sig sig-object ks" id="attribute:TERMINALINPUT:PAGEDOWNCURSOR">
 <span class="pre">TerminalInput:</span><span class="sig-name descname"><span class="pre">PAGEDOWNCURSOR</span></span><a class="headerlink" href="#attribute:TERMINALINPUT:PAGEDOWNCURSOR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>

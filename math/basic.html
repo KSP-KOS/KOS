@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Basic Math Functions &mdash; kOS 1.3.3.0 documentation</title>
+  <title>Basic Math Functions &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -30,9 +34,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
+            <img src="../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -100,10 +105,10 @@
 <span id="index-0"></span><h2>Fundamental Constants<a class="headerlink" href="#fundamental-constants" title="Permalink to this heading">¶</a></h2>
 <p>There is a bound variable called <cite>CONSTANT</cite> which contains some basic fundamental
 constants about the universe that you may find handy in your math operations.  Prior to kOS version 0.18, <cite>CONSTANT</cite> was implemented as a function call, so values were accessed as <cite>CONSTANT():PI</cite> and the like.  This functionality has been retained for backward compatibility, but new code should instead call <cite>CONSTANT:PI</cite>.</p>
-<table class="docutils align-default">
+<table class="colwidths-given docutils align-default">
 <colgroup>
-<col style="width: 20.0%" />
-<col style="width: 80.0%" />
+<col style="width: 20%" />
+<col style="width: 80%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Identifier</p></th>
@@ -341,6 +346,10 @@ which can be a rather advanced topic.
 <section id="mathematical-functions">
 <span id="index-1"></span><h2>Mathematical Functions<a class="headerlink" href="#mathematical-functions" title="Permalink to this heading">¶</a></h2>
 <table class="docutils align-default">
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 72%" />
+</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Function</p></th>
 <th class="head"><p>Description</p></th>
@@ -647,12 +656,12 @@ a new one using the new seed.  You can use this to reset the sequence.</p>
 <dt class="sig sig-object ks" id="function:CHAR">
 <span class="sig-name descname"><span class="pre">CHAR</span></span><span class="sig-paren">(</span><span class="pre">a</span><span class="sig-paren">)</span><a class="headerlink" href="#function:CHAR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>a</strong> – (number)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>(string) single-character string containing the unicode character specified</p>
 </dd>
 </dl>
@@ -665,12 +674,12 @@ a new one using the new seed.  You can use this to reset the sequence.</p>
 <dt class="sig sig-object ks" id="function:UNCHAR">
 <span class="sig-name descname"><span class="pre">UNCHAR</span></span><span class="sig-paren">(</span><span class="pre">a</span><span class="sig-paren">)</span><a class="headerlink" href="#function:UNCHAR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>a</strong> – (string)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>(number) unicode number representing the character specified</p>
 </dd>
 </dl>
@@ -681,9 +690,9 @@ a new one using the new seed.  You can use this to reset the sequence.</p>
 
 <span class="target" id="trig"></span><section id="trigonometric-functions">
 <span id="index-2"></span><h3>Trigonometric Functions<a class="headerlink" href="#trigonometric-functions" title="Permalink to this heading">¶</a></h3>
-<table class="docutils align-default">
+<table class="colwidths-given docutils align-default">
 <colgroup>
-<col style="width: 100.0%" />
+<col style="width: 100%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Function</p></th>
@@ -710,12 +719,12 @@ a new one using the new seed.  You can use this to reset the sequence.</p>
 <dt class="sig sig-object ks" id="function:SIN">
 <span class="sig-name descname"><span class="pre">SIN</span></span><span class="sig-paren">(</span><span class="pre">a</span><span class="sig-paren">)</span><a class="headerlink" href="#function:SIN" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>a</strong> – (deg) angle</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>sine of the angle</p>
 </dd>
 </dl>
@@ -728,12 +737,12 @@ a new one using the new seed.  You can use this to reset the sequence.</p>
 <dt class="sig sig-object ks" id="function:COS">
 <span class="sig-name descname"><span class="pre">COS</span></span><span class="sig-paren">(</span><span class="pre">a</span><span class="sig-paren">)</span><a class="headerlink" href="#function:COS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>a</strong> – (deg) angle</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>cosine of the angle</p>
 </dd>
 </dl>
@@ -746,12 +755,12 @@ a new one using the new seed.  You can use this to reset the sequence.</p>
 <dt class="sig sig-object ks" id="function:TAN">
 <span class="sig-name descname"><span class="pre">TAN</span></span><span class="sig-paren">(</span><span class="pre">a</span><span class="sig-paren">)</span><a class="headerlink" href="#function:TAN" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>a</strong> – (deg) angle</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>tangent of the angle</p>
 </dd>
 </dl>
@@ -764,12 +773,12 @@ a new one using the new seed.  You can use this to reset the sequence.</p>
 <dt class="sig sig-object ks" id="function:ARCSIN">
 <span class="sig-name descname"><span class="pre">ARCSIN</span></span><span class="sig-paren">(</span><span class="pre">x</span><span class="sig-paren">)</span><a class="headerlink" href="#function:ARCSIN" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x</strong> – (<a class="reference internal" href="scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>(deg) angle whose sine is x</p>
 </dd>
 </dl>
@@ -782,12 +791,12 @@ a new one using the new seed.  You can use this to reset the sequence.</p>
 <dt class="sig sig-object ks" id="function:ARCCOS">
 <span class="sig-name descname"><span class="pre">ARCCOS</span></span><span class="sig-paren">(</span><span class="pre">x</span><span class="sig-paren">)</span><a class="headerlink" href="#function:ARCCOS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x</strong> – (<a class="reference internal" href="scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>(deg) angle whose cosine is x</p>
 </dd>
 </dl>
@@ -800,12 +809,12 @@ a new one using the new seed.  You can use this to reset the sequence.</p>
 <dt class="sig sig-object ks" id="function:ARCTAN">
 <span class="sig-name descname"><span class="pre">ARCTAN</span></span><span class="sig-paren">(</span><span class="pre">x</span><span class="sig-paren">)</span><a class="headerlink" href="#function:ARCTAN" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x</strong> – (<a class="reference internal" href="scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>(deg) angle whose tangent is x</p>
 </dd>
 </dl>
@@ -818,13 +827,13 @@ a new one using the new seed.  You can use this to reset the sequence.</p>
 <dt class="sig sig-object ks" id="function:ARCTAN2">
 <span class="sig-name descname"><span class="pre">ARCTAN2</span></span><span class="sig-paren">(</span><span class="pre">y,x</span><span class="sig-paren">)</span><a class="headerlink" href="#function:ARCTAN2" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>y</strong> – (<a class="reference internal" href="scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>)</p></li>
 <li><p><strong>x</strong> – (<a class="reference internal" href="scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>(deg) angle whose tangent is <span class="math notranslate nohighlight">\(\frac{y}{x}\)</span></p>
 </dd>
 </dl>

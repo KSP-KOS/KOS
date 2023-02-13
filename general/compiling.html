@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KerboScript Machine Code &mdash; kOS 1.3.3.0 documentation</title>
+  <title>KerboScript Machine Code &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
+            <img src="../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -102,7 +107,7 @@
              
   <section id="kerboscript-machine-code">
 <span id="compiling"></span><h1>KerboScript Machine Code<a class="headerlink" href="#kerboscript-machine-code" title="Permalink to this heading">¶</a></h1>
-<nav class="contents local" id="contents">
+<div class="contents local topic" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#compiling-to-a-ksm-file" id="id1">Compiling to a KSM File</a></p></li>
 <li><p><a class="reference internal" href="#how-to-use-ksm-files" id="id2">How to Use KSM Files</a></p></li>
@@ -110,9 +115,9 @@
 <li><p><a class="reference internal" href="#downsides-to-using-ksm-files" id="id4">Downsides to Using KSM Files</a></p></li>
 <li><p><a class="reference internal" href="#more-reading-and-fiddling-with-your-bits" id="id5">More Reading and Fiddling with Your Bits</a></p></li>
 </ul>
-</nav>
+</div>
 <section id="compiling-to-a-ksm-file">
-<h2><a class="toc-backref" href="#id1" role="doc-backlink">Compiling to a KSM File</a><a class="headerlink" href="#compiling-to-a-ksm-file" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id1">Compiling to a KSM File</a><a class="headerlink" href="#compiling-to-a-ksm-file" title="Permalink to this heading">¶</a></h2>
 <p>When you run your Kerboscript programs, behind the scenes they get compiled into a form in memory that runs much smoother but at the same time is quite hard for a Kerbal to read and understand. The actual computer hardware built by your friends at Compotronix incorporated actually run the program using these tiny instructions called “opcodes”. In the early days of room-sized computers before we were able to get them down to the compact size of just a meter or so across, all programmers had to use this difficult system, referred to as “machine language”. Ah, those were heady days, but they were hard.</p>
 <p>The commands you actually write when you say something like <code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">X</span> <span class="pre">TO</span> <span class="pre">1.0.</span></code> are really a euphemism for these “machine language” opcodes under the surface.</p>
 <p>When you try to run your script, the first thing that kOS does is transform your script into this ancient and arcane “machine language” form, storing it in its memory, and from then on it runs using that.</p>
@@ -142,17 +147,17 @@ making them instantaneous in the universe.</p>
 <dt class="sig sig-object ks" id="keyword:COMPILE">
 <span class="sig-name descname"><span class="pre">COMPILE</span> <span class="pre">sourcePath</span> <span class="pre">[TO</span> <span class="pre">destinationPath]</span></span><a class="headerlink" href="#keyword:COMPILE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>sourcePath</strong> – Path information pointing to the source script file</p></li>
 <li><p><strong>destinationPath</strong> – Path information pointing to the destination
 compiled machine language file</p></li>
 </ul>
 </dd>
-<dt class="field-even">Parametertype sourcePath<span class="colon">:</span></dt>
+<dt class="field-even">Parametertype sourcePath</dt>
 <dd class="field-even"><p><a class="reference internal" href="../structures/misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> or bare word string</p>
 </dd>
-<dt class="field-odd">Parametertype destinationPath<span class="colon">:</span></dt>
+<dt class="field-odd">Parametertype destinationPath</dt>
 <dd class="field-odd"><p><em>Optional</em> <a class="reference internal" href="../structures/misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> or bare word string</p>
 </dd>
 </dl>
@@ -177,7 +182,7 @@ compressed, and saved in the destination file.</p>
 </section>
 </section>
 <section id="how-to-use-ksm-files">
-<h2><a class="toc-backref" href="#id2" role="doc-backlink">How to Use KSM Files</a><a class="headerlink" href="#how-to-use-ksm-files" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id2">How to Use KSM Files</a><a class="headerlink" href="#how-to-use-ksm-files" title="Permalink to this heading">¶</a></h2>
 <p>Let’s say that you have 3 programs your probe needs, called:</p>
 <ul class="simple">
 <li><p>myprog1.ks</p></li>
@@ -210,7 +215,7 @@ compressed, and saved in the destination file.</p>
 </div>
 </section>
 <section id="default-file-naming-conventions">
-<h2><a class="toc-backref" href="#id3" role="doc-backlink">Default File Naming Conventions</a><a class="headerlink" href="#default-file-naming-conventions" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id3">Default File Naming Conventions</a><a class="headerlink" href="#default-file-naming-conventions" title="Permalink to this heading">¶</a></h2>
 <p>When you have both a .ks and a .ksm file, the RUN (or RUNPATH) command allows you to specify which one you meant explicitly, like so:</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">RUNPATH</span><span class="p">(</span><span class="s">&quot;myprog1.ks&quot;</span><span class="p">).</span>
 <span class="c1">// or this alternate way to say it:</span>
@@ -231,7 +236,7 @@ compressed, and saved in the destination file.</p>
 <p>In this way, if you decide to take the plunge and attempt the use of KSM files, you shouldn’t have to change the way any of your scripts call each other, provided you just used versions of the filenames without mentioning the file extensions.</p>
 </section>
 <section id="downsides-to-using-ksm-files">
-<h2><a class="toc-backref" href="#id4" role="doc-backlink">Downsides to Using KSM Files</a><a class="headerlink" href="#downsides-to-using-ksm-files" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id4">Downsides to Using KSM Files</a><a class="headerlink" href="#downsides-to-using-ksm-files" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic simple">
 <li><p>Be aware that if you use this feature, you do lose the ability to have the line of code printed out for you when the kOS computer finds an error in your program. It will still tell you what line number the error happened on, but it cannot show you the line of code. Just the number.</p></li>
 <li><p>Know that you cannot view the program inside the in-game editor anymore when you do this. A KSM file will not appear right in the editor. It requires a magic tool called a “hex editor” to properly see what’s happening inside the file.</p></li>
@@ -239,7 +244,7 @@ compressed, and saved in the destination file.</p>
 </ol>
 </section>
 <section id="more-reading-and-fiddling-with-your-bits">
-<h2><a class="toc-backref" href="#id5" role="doc-backlink">More Reading and Fiddling with Your Bits</a><a class="headerlink" href="#more-reading-and-fiddling-with-your-bits" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id5">More Reading and Fiddling with Your Bits</a><a class="headerlink" href="#more-reading-and-fiddling-with-your-bits" title="Permalink to this heading">¶</a></h2>
 <p>So, if you are intrigued by all this and want to see how it all <em>REALLY</em> works under the hood, Computronix has deciced to make <a class="reference external" href="https://github.com/KSP-KOS/KOS/blob/develop/src/kOS.Safe/Compilation/CompiledObject-doc.md">internal document MLfile-zx1/a</a> on the basic plan of the ML file system open for public viewing, if you are one of those rare Kerbals that enjoys fiddling with your bits. No, not THOSE kind of bits, the computery kind!</p>
 </section>
 </section>

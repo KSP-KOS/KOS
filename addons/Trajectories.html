@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Trajectories &mdash; kOS 1.3.3.0 documentation</title>
+  <title>Trajectories &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
+            <img src="../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -137,6 +142,11 @@ newer versions of Trajectories are noted below in the suffix table.</p>
 <dt class="sig sig-object ks" id="structure:TRADDON">
 <em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">TRAddon</span></span><a class="headerlink" href="#structure:TRADDON" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 21%" />
+<col style="width: 58%" />
+</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suffix</p></th>
 <th class="head"><p>Type</p></th>
@@ -252,10 +262,10 @@ newer versions of Trajectories are noted below in the suffix table.</p>
 <dt class="sig sig-object ks" id="attribute:TRADDON:AVAILABLE">
 <span class="pre">TRAddon:</span><span class="sig-name descname"><span class="pre">AVAILABLE</span></span><a class="headerlink" href="#attribute:TRADDON:AVAILABLE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get</p>
 </dd>
 </dl>
@@ -268,10 +278,10 @@ call (they can cause error and program crash).</p>
 <dt class="sig sig-object ks" id="attribute:TRADDON:GETVERSION">
 <span class="pre">TRAddon:</span><span class="sig-name descname"><span class="pre">GETVERSION</span></span><a class="headerlink" href="#attribute:TRADDON:GETVERSION" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../structures/misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get</p>
 </dd>
 </dl>
@@ -296,10 +306,10 @@ for that version (for example, <a class="reference internal" href="#attribute:TR
 <dt class="sig sig-object ks" id="attribute:TRADDON:GETVERSIONMAJOR">
 <span class="pre">TRAddon:</span><span class="sig-name descname"><span class="pre">GETVERSIONMAJOR</span></span><a class="headerlink" href="#attribute:TRADDON:GETVERSIONMAJOR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get</p>
 </dd>
 </dl>
@@ -321,10 +331,10 @@ for that version (for example, <a class="reference internal" href="#attribute:TR
 <dt class="sig sig-object ks" id="attribute:TRADDON:GETVERSIONMINOR">
 <span class="pre">TRAddon:</span><span class="sig-name descname"><span class="pre">GETVERSIONMINOR</span></span><a class="headerlink" href="#attribute:TRADDON:GETVERSIONMINOR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get</p>
 </dd>
 </dl>
@@ -346,10 +356,10 @@ for that version (for example, <a class="reference internal" href="#attribute:TR
 <dt class="sig sig-object ks" id="attribute:TRADDON:GETVERSIONPATCH">
 <span class="pre">TRAddon:</span><span class="sig-name descname"><span class="pre">GETVERSIONPATCH</span></span><a class="headerlink" href="#attribute:TRADDON:GETVERSIONPATCH" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get</p>
 </dd>
 </dl>
@@ -371,10 +381,10 @@ for that version (for example, <a class="reference internal" href="#attribute:TR
 <dt class="sig sig-object ks" id="attribute:TRADDON:ISVERTWO">
 <span class="pre">TRAddon:</span><span class="sig-name descname"><span class="pre">ISVERTWO</span></span><a class="headerlink" href="#attribute:TRADDON:ISVERTWO" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get</p>
 </dd>
 </dl>
@@ -385,10 +395,10 @@ for that version (for example, <a class="reference internal" href="#attribute:TR
 <dt class="sig sig-object ks" id="attribute:TRADDON:ISVERTWOTWO">
 <span class="pre">TRAddon:</span><span class="sig-name descname"><span class="pre">ISVERTWOTWO</span></span><a class="headerlink" href="#attribute:TRADDON:ISVERTWOTWO" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get</p>
 </dd>
 </dl>
@@ -399,10 +409,10 @@ for that version (for example, <a class="reference internal" href="#attribute:TR
 <dt class="sig sig-object ks" id="attribute:TRADDON:ISVERTWOFOUR">
 <span class="pre">TRAddon:</span><span class="sig-name descname"><span class="pre">ISVERTWOFOUR</span></span><a class="headerlink" href="#attribute:TRADDON:ISVERTWOFOUR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get</p>
 </dd>
 </dl>
@@ -413,10 +423,10 @@ for that version (for example, <a class="reference internal" href="#attribute:TR
 <dt class="sig sig-object ks" id="attribute:TRADDON:HASIMPACT">
 <span class="pre">TRAddon:</span><span class="sig-name descname"><span class="pre">HASIMPACT</span></span><a class="headerlink" href="#attribute:TRADDON:HASIMPACT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get</p>
 </dd>
 </dl>
@@ -427,10 +437,10 @@ for that version (for example, <a class="reference internal" href="#attribute:TR
 <dt class="sig sig-object ks" id="attribute:TRADDON:IMPACTPOS">
 <span class="pre">TRAddon:</span><span class="sig-name descname"><span class="pre">IMPACTPOS</span></span><a class="headerlink" href="#attribute:TRADDON:IMPACTPOS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../math/geocoordinates.html#structure:GEOCOORDINATES" title="GEOCOORDINATES structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">GeoCoordinates</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get</p>
 </dd>
 </dl>
@@ -441,10 +451,10 @@ for that version (for example, <a class="reference internal" href="#attribute:TR
 <dt class="sig sig-object ks" id="attribute:TRADDON:TIMETILLIMPACT">
 <span class="pre">TRAddon:</span><span class="sig-name descname"><span class="pre">TIMETILLIMPACT</span></span><a class="headerlink" href="#attribute:TRADDON:TIMETILLIMPACT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get</p>
 </dd>
 </dl>
@@ -459,12 +469,12 @@ on ground or water.</p>
 <dt class="sig sig-object ks" id="method:TRADDON:RESETDESCENTPROFILE">
 <span class="pre">TRAddon:</span><span class="sig-name descname"><span class="pre">RESETDESCENTPROFILE</span></span><span class="sig-paren">(</span><span class="pre">AoA</span><span class="sig-paren">)</span><a class="headerlink" href="#method:TRADDON:RESETDESCENTPROFILE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>AoA</strong> – <a class="reference internal" href="../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -480,10 +490,10 @@ otherwise sets to Prograde.</p>
 <dt class="sig sig-object ks" id="attribute:TRADDON:DESCENTANGLES">
 <span class="pre">TRAddon:</span><span class="sig-name descname"><span class="pre">DESCENTANGLES</span></span><a class="headerlink" href="#attribute:TRADDON:DESCENTANGLES" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get/Set</p>
 </dd>
 </dl>
@@ -503,10 +513,10 @@ if needed and passing AoA values as displayed in the gui with max 90 degrees
 <dt class="sig sig-object ks" id="attribute:TRADDON:DESCENTGRADES">
 <span class="pre">TRAddon:</span><span class="sig-name descname"><span class="pre">DESCENTGRADES</span></span><a class="headerlink" href="#attribute:TRADDON:DESCENTGRADES" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get/Set</p>
 </dd>
 </dl>
@@ -522,10 +532,10 @@ True = Retrograde, False = Prograde.</p>
 <dt class="sig sig-object ks" id="attribute:TRADDON:DESCENTMODES">
 <span class="pre">TRAddon:</span><span class="sig-name descname"><span class="pre">DESCENTMODES</span></span><a class="headerlink" href="#attribute:TRADDON:DESCENTMODES" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get/Set</p>
 </dd>
 </dl>
@@ -541,10 +551,10 @@ True = AoA, False = Horizon.</p>
 <dt class="sig sig-object ks" id="attribute:TRADDON:PROGRADE">
 <span class="pre">TRAddon:</span><span class="sig-name descname"><span class="pre">PROGRADE</span></span><a class="headerlink" href="#attribute:TRADDON:PROGRADE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get/Set</p>
 </dd>
 </dl>
@@ -566,10 +576,10 @@ Also resets all AoA values to 0.</p>
 <dt class="sig sig-object ks" id="attribute:TRADDON:RETROGRADE">
 <span class="pre">TRAddon:</span><span class="sig-name descname"><span class="pre">RETROGRADE</span></span><a class="headerlink" href="#attribute:TRADDON:RETROGRADE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get/Set</p>
 </dd>
 </dl>
@@ -591,10 +601,10 @@ Also resets all AoA values to 0.</p>
 <dt class="sig sig-object ks" id="attribute:TRADDON:PLANNEDVEC">
 <span class="pre">TRAddon:</span><span class="sig-name descname"><span class="pre">PLANNEDVEC</span></span><a class="headerlink" href="#attribute:TRADDON:PLANNEDVEC" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get</p>
 </dd>
 </dl>
@@ -607,10 +617,10 @@ Trajectories descent profile.</p>
 <dt class="sig sig-object ks" id="attribute:TRADDON:PLANNEDVECTOR">
 <span class="pre">TRAddon:</span><span class="sig-name descname"><span class="pre">PLANNEDVECTOR</span></span><a class="headerlink" href="#attribute:TRADDON:PLANNEDVECTOR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get</p>
 </dd>
 </dl>
@@ -621,12 +631,12 @@ Trajectories descent profile.</p>
 <dt class="sig sig-object ks" id="method:TRADDON:SETTARGET">
 <span class="pre">TRAddon:</span><span class="sig-name descname"><span class="pre">SETTARGET</span></span><span class="sig-paren">(</span><span class="pre">position</span><span class="sig-paren">)</span><a class="headerlink" href="#method:TRADDON:SETTARGET" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>position</strong> – <a class="reference internal" href="../math/geocoordinates.html#structure:GEOCOORDINATES" title="GEOCOORDINATES structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">GeoCoordinates</span></code></a></p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -637,10 +647,10 @@ Trajectories descent profile.</p>
 <dt class="sig sig-object ks" id="attribute:TRADDON:HASTARGET">
 <span class="pre">TRAddon:</span><span class="sig-name descname"><span class="pre">HASTARGET</span></span><a class="headerlink" href="#attribute:TRADDON:HASTARGET" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get</p>
 </dd>
 </dl>
@@ -655,10 +665,10 @@ This is true if such a position is set, or false if it is not.</p>
 <dt class="sig sig-object ks" id="attribute:TRADDON:GETTARGET">
 <span class="pre">TRAddon:</span><span class="sig-name descname"><span class="pre">GETTARGET</span></span><a class="headerlink" href="#attribute:TRADDON:GETTARGET" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../math/geocoordinates.html#structure:GEOCOORDINATES" title="GEOCOORDINATES structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">GeoCoordinates</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get</p>
 </dd>
 </dl>
@@ -683,10 +693,10 @@ a runtime error.</em></p>
 <dt class="sig sig-object ks" id="attribute:TRADDON:CORRECTEDVEC">
 <span class="pre">TRAddon:</span><span class="sig-name descname"><span class="pre">CORRECTEDVEC</span></span><a class="headerlink" href="#attribute:TRADDON:CORRECTEDVEC" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get</p>
 </dd>
 </dl>
@@ -704,10 +714,10 @@ pitch the nose up or down.</p>
 <dt class="sig sig-object ks" id="attribute:TRADDON:CORRECTEDVECTOR">
 <span class="pre">TRAddon:</span><span class="sig-name descname"><span class="pre">CORRECTEDVECTOR</span></span><a class="headerlink" href="#attribute:TRADDON:CORRECTEDVECTOR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get</p>
 </dd>
 </dl>

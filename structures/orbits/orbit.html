@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Orbit &mdash; kOS 1.3.3.0 documentation</title>
+  <title>Orbit &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
+            <img src="../../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -105,7 +110,7 @@
              
   <section id="orbit">
 <span id="id1"></span><h1>Orbit<a class="headerlink" href="#orbit" title="Permalink to this heading">¶</a></h1>
-<nav class="contents local" id="contents">
+<div class="contents local topic" id="contents">
 <p class="topic-title">Contents</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#creation" id="id3">Creation</a></p></li>
@@ -113,7 +118,7 @@
 <li><p><a class="reference internal" href="#deprecated-suffix" id="id5">Deprecated Suffix</a></p></li>
 <li><p><a class="reference internal" href="#transition-names" id="id6">Transition Names</a></p></li>
 </ul>
-</nav>
+</div>
 <p>Variables of type <a class="reference internal" href="#structure:ORBIT" title="ORBIT structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Orbit</span></code></a> hold descriptive information about the elliptical shape of a predicted orbit. Whenever there are multiple patches of orbit ellipses strung together, for example, when an encounter with a body is expected to alter the path, or when a maneuver node is planned, then each individual patch of the path is represented by one <a class="reference internal" href="#structure:ORBIT" title="ORBIT structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Orbit</span></code></a> object.</p>
 <p>Each <a class="reference internal" href="orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Orbitable</span></code></a> item such as a <a class="reference internal" href="../vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vessel</span></code></a> or celestial <a class="reference internal" href="../celestial_bodies/body.html#structure:BODY" title="BODY structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Body</span></code></a> has an <code class="docutils literal notranslate"><span class="pre">:ORBIT</span></code> suffix that can be used to obtain its current <a class="reference internal" href="#structure:ORBIT" title="ORBIT structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Orbit</span></code></a>.</p>
 <p>Whenever you get the <a class="reference internal" href="#structure:ORBIT" title="ORBIT structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Orbit</span></code></a> of a <a class="reference internal" href="../vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vessel</span></code></a>, be aware that its just the current <a class="reference internal" href="#structure:ORBIT" title="ORBIT structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Orbit</span></code></a> patch that doesn’t take into account any planetary encounters (slingshots) or maneuver nodes that may occur. For example, your vessel might never reach <code class="docutils literal notranslate"><span class="pre">SHIP:ORBIT:APOAPSIS</span></code> if you’re going to intersect the Mun and be flung by it into a new orbit.</p>
@@ -123,7 +128,7 @@
 <p>Some of the parameters listed below come directly from KSP’s API and there is a bit of inconsistency with whether it uses radians or degrees for angles. As much as possible we have tried to present everything in kOS as degrees for consistency, but some of these may have slipped through. If you see any of these being reported in radians, please make a bug report.</p>
 </div>
 <section id="creation">
-<h2><a class="toc-backref" href="#id3" role="doc-backlink">Creation</a><a class="headerlink" href="#creation" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id3">Creation</a><a class="headerlink" href="#creation" title="Permalink to this heading">¶</a></h2>
 <p>It is possible to make an :struct`Orbit` object without it coming from
 either a <a class="reference internal" href="../vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vessel</span></code></a> or a <a class="reference internal" href="../celestial_bodies/body.html#structure:BODY" title="BODY structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Body</span></code></a>.  This could be useful when
 you want to be able to get information about a hypothetical orbit that
@@ -141,7 +146,7 @@ like its apoapsis, periapsis, etc.</p>
 <dt class="sig sig-object ks" id="function:CREATEORBIT">
 <span class="sig-name descname"><span class="pre">CREATEORBIT</span></span><span class="sig-paren">(</span><span class="pre">inc,</span> <span class="pre">e,</span> <span class="pre">sma,</span> <span class="pre">lan,</span> <span class="pre">argPe,</span> <span class="pre">mEp,</span> <span class="pre">t,</span> <span class="pre">body</span><span class="sig-paren">)</span><a class="headerlink" href="#function:CREATEORBIT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>inc</strong> – (<a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>) inclination, in degrees.</p></li>
 <li><p><strong>e</strong> – (<a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>) eccentricity</p></li>
@@ -153,7 +158,7 @@ like its apoapsis, periapsis, etc.</p>
 <li><p><strong>body</strong> – (<a class="reference internal" href="../celestial_bodies/body.html#structure:BODY" title="BODY structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Body</span></code></a>) body to orbit around</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="#structure:ORBIT" title="ORBIT structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Orbit</span></code></a></p>
 </dd>
 </dl>
@@ -168,7 +173,7 @@ like its apoapsis, periapsis, etc.</p>
 <dt class="sig sig-object ks">
 <span class="sig-name descname"><span class="pre">CREATEORBIT</span></span><span class="sig-paren">(</span><span class="pre">pos,</span> <span class="pre">vel,</span> <span class="pre">body,</span> <span class="pre">ut</span><span class="sig-paren">)</span></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pos</strong> – (<a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a>) position (relative to center of body, NOT the usual relative to current ship most positions in kOS use.  Remember to offset a kOS position from the body’s position when calculating what to pass in here.)</p></li>
 <li><p><strong>vel</strong> – (<a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a>) velocity</p></li>
@@ -176,7 +181,7 @@ like its apoapsis, periapsis, etc.</p>
 <li><p><strong>ut</strong> – (<a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>) time (universal)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="#structure:ORBIT" title="ORBIT structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Orbit</span></code></a></p>
 </dd>
 </dl>
@@ -188,16 +193,16 @@ like its apoapsis, periapsis, etc.</p>
 
 </section>
 <section id="structure">
-<h2><a class="toc-backref" href="#id4" role="doc-backlink">Structure</a><a class="headerlink" href="#structure" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id4">Structure</a><a class="headerlink" href="#structure" title="Permalink to this heading">¶</a></h2>
 <dl class="ks structure">
 <dt class="sig sig-object ks" id="structure:ORBIT">
 <em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">Orbit</span></span><a class="headerlink" href="#structure:ORBIT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils align-default" id="id2">
+<dd><table class="colwidths-given docutils align-default" id="id2">
 <caption><span class="caption-text"><strong>Members</strong></span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col style="width: 28.6%" />
-<col style="width: 14.3%" />
-<col style="width: 57.1%" />
+<col style="width: 29%" />
+<col style="width: 14%" />
+<col style="width: 57%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suffix</p></th>
@@ -302,10 +307,10 @@ like its apoapsis, periapsis, etc.</p>
 <dt class="sig sig-object ks" id="attribute:ORBIT:NAME">
 <span class="pre">Orbit:</span><span class="sig-name descname"><span class="pre">NAME</span></span><a class="headerlink" href="#attribute:ORBIT:NAME" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -316,10 +321,10 @@ like its apoapsis, periapsis, etc.</p>
 <dt class="sig sig-object ks" id="attribute:ORBIT:APOAPSIS">
 <span class="pre">Orbit:</span><span class="sig-name descname"><span class="pre">APOAPSIS</span></span><a class="headerlink" href="#attribute:ORBIT:APOAPSIS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (m)</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -330,10 +335,10 @@ like its apoapsis, periapsis, etc.</p>
 <dt class="sig sig-object ks" id="attribute:ORBIT:PERIAPSIS">
 <span class="pre">Orbit:</span><span class="sig-name descname"><span class="pre">PERIAPSIS</span></span><a class="headerlink" href="#attribute:ORBIT:PERIAPSIS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (m)</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -344,10 +349,10 @@ like its apoapsis, periapsis, etc.</p>
 <dt class="sig sig-object ks" id="attribute:ORBIT:BODY">
 <span class="pre">Orbit:</span><span class="sig-name descname"><span class="pre">BODY</span></span><a class="headerlink" href="#attribute:ORBIT:BODY" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../celestial_bodies/body.html#structure:BODY" title="BODY structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Body</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -358,10 +363,10 @@ like its apoapsis, periapsis, etc.</p>
 <dt class="sig sig-object ks" id="attribute:ORBIT:PERIOD">
 <span class="pre">Orbit:</span><span class="sig-name descname"><span class="pre">PERIOD</span></span><a class="headerlink" href="#attribute:ORBIT:PERIOD" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (seconds)</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -372,10 +377,10 @@ like its apoapsis, periapsis, etc.</p>
 <dt class="sig sig-object ks" id="attribute:ORBIT:INCLINATION">
 <span class="pre">Orbit:</span><span class="sig-name descname"><span class="pre">INCLINATION</span></span><a class="headerlink" href="#attribute:ORBIT:INCLINATION" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (degree)</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -386,10 +391,10 @@ like its apoapsis, periapsis, etc.</p>
 <dt class="sig sig-object ks" id="attribute:ORBIT:ECCENTRICITY">
 <span class="pre">Orbit:</span><span class="sig-name descname"><span class="pre">ECCENTRICITY</span></span><a class="headerlink" href="#attribute:ORBIT:ECCENTRICITY" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -400,10 +405,10 @@ like its apoapsis, periapsis, etc.</p>
 <dt class="sig sig-object ks" id="attribute:ORBIT:SEMIMAJORAXIS">
 <span class="pre">Orbit:</span><span class="sig-name descname"><span class="pre">SEMIMAJORAXIS</span></span><a class="headerlink" href="#attribute:ORBIT:SEMIMAJORAXIS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (m)</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -414,10 +419,10 @@ like its apoapsis, periapsis, etc.</p>
 <dt class="sig sig-object ks" id="attribute:ORBIT:SEMIMINORAXIS">
 <span class="pre">Orbit:</span><span class="sig-name descname"><span class="pre">SEMIMINORAXIS</span></span><a class="headerlink" href="#attribute:ORBIT:SEMIMINORAXIS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (m)</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -434,10 +439,10 @@ like its apoapsis, periapsis, etc.</p>
 <dt class="sig sig-object ks" id="attribute:ORBIT:LONGITUDEOFASCENDINGNODE">
 <span class="pre">Orbit:</span><span class="sig-name descname"><span class="pre">LONGITUDEOFASCENDINGNODE</span></span><a class="headerlink" href="#attribute:ORBIT:LONGITUDEOFASCENDINGNODE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (deg)</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -457,10 +462,10 @@ rotate by the time you get there.</p>
 <dt class="sig sig-object ks" id="attribute:ORBIT:ARGUMENTOFPERIAPSIS">
 <span class="pre">Orbit:</span><span class="sig-name descname"><span class="pre">ARGUMENTOFPERIAPSIS</span></span><a class="headerlink" href="#attribute:ORBIT:ARGUMENTOFPERIAPSIS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -471,10 +476,10 @@ rotate by the time you get there.</p>
 <dt class="sig sig-object ks" id="attribute:ORBIT:TRUEANOMALY">
 <span class="pre">Orbit:</span><span class="sig-name descname"><span class="pre">TRUEANOMALY</span></span><a class="headerlink" href="#attribute:ORBIT:TRUEANOMALY" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -507,10 +512,10 @@ to find out which it is.</p>
 <dt class="sig sig-object ks" id="attribute:ORBIT:MEANANOMALYATEPOCH">
 <span class="pre">Orbit:</span><span class="sig-name descname"><span class="pre">MEANANOMALYATEPOCH</span></span><a class="headerlink" href="#attribute:ORBIT:MEANANOMALYATEPOCH" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> degrees</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -552,10 +557,10 @@ as “closed” even though they don’t look like it on the map.</p>
 <dt class="sig sig-object ks" id="attribute:ORBIT:EPOCH">
 <span class="pre">Orbit:</span><span class="sig-name descname"><span class="pre">EPOCH</span></span><a class="headerlink" href="#attribute:ORBIT:EPOCH" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> universal timestamp (seconds)</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -577,10 +582,10 @@ re-check what it is.  It’s not a hardcoded constant.</p>
 <dt class="sig sig-object ks" id="attribute:ORBIT:TRANSITION">
 <span class="pre">Orbit:</span><span class="sig-name descname"><span class="pre">TRANSITION</span></span><a class="headerlink" href="#attribute:ORBIT:TRANSITION" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -591,10 +596,10 @@ re-check what it is.  It’s not a hardcoded constant.</p>
 <dt class="sig sig-object ks" id="attribute:ORBIT:POSITION">
 <span class="pre">Orbit:</span><span class="sig-name descname"><span class="pre">POSITION</span></span><a class="headerlink" href="#attribute:ORBIT:POSITION" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -605,10 +610,10 @@ re-check what it is.  It’s not a hardcoded constant.</p>
 <dt class="sig sig-object ks" id="attribute:ORBIT:VELOCITY">
 <span class="pre">Orbit:</span><span class="sig-name descname"><span class="pre">VELOCITY</span></span><a class="headerlink" href="#attribute:ORBIT:VELOCITY" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="orbitablevelocity.html#structure:ORBITABLEVELOCITY" title="ORBITABLEVELOCITY structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">OrbitableVelocity</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -621,10 +626,10 @@ orbital and surface velocity vectors as a pair.  (See <a class="reference intern
 <dt class="sig sig-object ks" id="attribute:ORBIT:NEXTPATCH">
 <span class="pre">Orbit:</span><span class="sig-name descname"><span class="pre">NEXTPATCH</span></span><a class="headerlink" href="#attribute:ORBIT:NEXTPATCH" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#structure:ORBIT" title="ORBIT structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Orbit</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -638,10 +643,10 @@ until your tracking station is upgraded a level.</p>
 <dt class="sig sig-object ks" id="attribute:ORBIT:NEXTPATCHETA">
 <span class="pre">Orbit:</span><span class="sig-name descname"><span class="pre">NEXTPATCHETA</span></span><a class="headerlink" href="#attribute:ORBIT:NEXTPATCHETA" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -660,10 +665,10 @@ patches setting in your <strong>Kerbal Space Program</strong> Settings.cfg file.
 <dt class="sig sig-object ks" id="attribute:ORBIT:ETA">
 <span class="pre">Orbit:</span><span class="sig-name descname"><span class="pre">ETA</span></span><a class="headerlink" href="#attribute:ORBIT:ETA" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="eta.html#structure:ORBITETA" title="ORBITETA structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">OrbitEta</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -676,10 +681,10 @@ to next orbit).</p>
 <dt class="sig sig-object ks" id="attribute:ORBIT:HASNEXTPATCH">
 <span class="pre">Orbit:</span><span class="sig-name descname"><span class="pre">HASNEXTPATCH</span></span><a class="headerlink" href="#attribute:ORBIT:HASNEXTPATCH" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -692,16 +697,16 @@ until your tracking station is upgraded a level.</p>
 <p>Both <a class="reference internal" href="#attribute:ORBIT:NEXTPATCH" title="ORBIT:NEXTPATCH attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">NEXTPATCH</span></code></a> and <a class="reference internal" href="#attribute:ORBIT:HASNEXTPATCH" title="ORBIT:HASNEXTPATCH attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">HASNEXTPATCH</span></code></a> both only operate on the <strong>current</strong> momentum of the object, and do <strong>not</strong> take into account any potential changes planned with maneuver nodes. To see the possible new path you would have if a maneuver node gets executed exactly as planned, you need to first get the orbit that follows the manuever node, by looking at the maneuver node’s <a class="reference internal" href="../vessels/node.html#attribute:MANEUVERNODE:ORBIT" title="MANEUVERNODE:ORBIT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">:ORBIT</span></code></a> suffix, and then look at <strong>its</strong> <a class="reference internal" href="#attribute:ORBIT:NEXTPATCH" title="ORBIT:NEXTPATCH attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">:NEXTPATCH</span></code></a> and <a class="reference internal" href="#attribute:ORBIT:HASNEXTPATCH" title="ORBIT:HASNEXTPATCH attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">:HASNEXTPATCH</span></code></a>.</p>
 </section>
 <section id="deprecated-suffix">
-<h2><a class="toc-backref" href="#id5" role="doc-backlink">Deprecated Suffix</a><a class="headerlink" href="#deprecated-suffix" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id5">Deprecated Suffix</a><a class="headerlink" href="#deprecated-suffix" title="Permalink to this heading">¶</a></h2>
 <blockquote>
 <div><dl class="ks attribute">
 <dt class="sig sig-object ks" id="attribute:ORBIT:PATCHES">
 <span class="pre">Orbit:</span><span class="sig-name descname"><span class="pre">PATCHES</span></span><a class="headerlink" href="#attribute:ORBIT:PATCHES" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="#structure:ORBIT" title="ORBIT structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Orbit</span></code></a> Objects</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -716,7 +721,7 @@ until your tracking station is upgraded a level.</p>
 </div></blockquote>
 </section>
 <section id="transition-names">
-<span id="transitions"></span><h2><a class="toc-backref" href="#id6" role="doc-backlink">Transition Names</a><a class="headerlink" href="#transition-names" title="Permalink to this heading">¶</a></h2>
+<span id="transitions"></span><h2><a class="toc-backref" href="#id6">Transition Names</a><a class="headerlink" href="#transition-names" title="Permalink to this heading">¶</a></h2>
 <dl class="simple">
 <dt>INITIAL</dt><dd><p>Refers to the pure of a new orbit, which is a value you will never see from the <a class="reference internal" href="#attribute:ORBIT:TRANSITION" title="ORBIT:TRANSITION attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Orbit:TRANSITION</span></code></a> suffix (it refers to the start of the orbit patch, and <a class="reference internal" href="#attribute:ORBIT:TRANSITION" title="ORBIT:TRANSITION attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Orbit:TRANSITION</span></code></a> only refers to the end of the patch.</p>
 </dd>

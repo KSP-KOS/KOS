@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Variables &amp; Statements &mdash; kOS 1.3.3.0 documentation</title>
+  <title>Variables &amp; Statements &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
+            <img src="../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -97,7 +102,7 @@
              
   <section id="variables-statements">
 <h1>Variables &amp; Statements<a class="headerlink" href="#variables-statements" title="Permalink to this heading">¶</a></h1>
-<nav class="contents local" id="contents">
+<div class="contents local topic" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#declare-to-is" id="id8"><code class="docutils literal notranslate"><span class="pre">DECLARE</span> <span class="pre">..</span> <span class="pre">TO/IS</span></code></a></p>
 <ul>
@@ -146,16 +151,16 @@
 </ul>
 </li>
 </ul>
-</nav>
+</div>
 <section id="declare-to-is">
-<span id="declare"></span><h2><a class="toc-backref" href="#id8" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">DECLARE</span> <span class="pre">..</span> <span class="pre">TO/IS</span></code></a><a class="headerlink" href="#declare-to-is" title="Permalink to this heading">¶</a></h2>
+<span id="declare"></span><h2><a class="toc-backref" href="#id8"><code class="docutils literal notranslate"><span class="pre">DECLARE</span> <span class="pre">..</span> <span class="pre">TO/IS</span></code></a><a class="headerlink" href="#declare-to-is" title="Permalink to this heading">¶</a></h2>
 <section id="what-it-does">
-<h3><a class="toc-backref" href="#id9" role="doc-backlink">What it does:</a><a class="headerlink" href="#what-it-does" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id9">What it does:</a><a class="headerlink" href="#what-it-does" title="Permalink to this heading">¶</a></h3>
 <p>Declares a variable, explicitly or implicitly defining what scope it
 has, and gives it an initial value.</p>
 </section>
 <section id="allowed-syntax">
-<h3><a class="toc-backref" href="#id10" role="doc-backlink">Allowed Syntax:</a><a class="headerlink" href="#allowed-syntax" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id10">Allowed Syntax:</a><a class="headerlink" href="#allowed-syntax" title="Permalink to this heading">¶</a></h3>
 <section id="all-the-following-are-legal-declare-statements">
 <h4>All the following are legal “declare” statements:<a class="headerlink" href="#all-the-following-are-legal-declare-statements" title="Permalink to this heading">¶</a></h4>
 <p id="declare-syntax">The following alternate versions have identical meaning to each other:</p>
@@ -249,7 +254,7 @@ separated by commas, as shown below:</p>
 </section>
 </section>
 <section id="see-scoping">
-<h3><a class="toc-backref" href="#id11" role="doc-backlink">See Scoping:</a><a class="headerlink" href="#see-scoping" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id11">See Scoping:</a><a class="headerlink" href="#see-scoping" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><p>If you don’t know what the terms “global” or “local” mean, it’s
 important to read the <a class="reference internal" href="#scope"><span class="std std-ref">section below about scoping.</span></a></p>
@@ -280,7 +285,7 @@ be referred to as a “declare statement”, even though the word
 </div>
 </section>
 <section id="initializer-required-in-declare">
-<h3><a class="toc-backref" href="#id12" role="doc-backlink">Initializer required in DECLARE</a><a class="headerlink" href="#initializer-required-in-declare" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id12">Initializer required in DECLARE</a><a class="headerlink" href="#initializer-required-in-declare" title="Permalink to this heading">¶</a></h3>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <div class="versionadded">
@@ -299,7 +304,7 @@ there to exist any uninitialized variables in a script.</p>
 </section>
 </section>
 <section id="declare-parameter">
-<span id="id1"></span><h2><a class="toc-backref" href="#id13" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></code></a><a class="headerlink" href="#declare-parameter" title="Permalink to this heading">¶</a></h2>
+<span id="id1"></span><h2><a class="toc-backref" href="#id13"><code class="docutils literal notranslate"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></code></a><a class="headerlink" href="#declare-parameter" title="Permalink to this heading">¶</a></h2>
 <p>If you put this statement in the main part of your script, it
 declares variables to be used as a parameter that can be passed
 in using the <code class="docutils literal notranslate"><span class="pre">RUN</span></code> command.</p>
@@ -350,7 +355,7 @@ are always local to the location they were declared at, the keyword
 <code class="docutils literal notranslate"><span class="pre">GLOBAL</span></code> is illegal to use in a <code class="docutils literal notranslate"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></code> statement.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></code> statements can appear anywhere in a program as long as they are in the file at a point earlier than the point at which the parameter is being used. The order the arguments need to be passed in by the caller is the order the <code class="docutils literal notranslate"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></code> statements appear in the program being called.</p>
 <section id="optional-parameters-defaulted-parameters">
-<h3><a class="toc-backref" href="#id14" role="doc-backlink">Optional Parameters (defaulted parameters)</a><a class="headerlink" href="#optional-parameters-defaulted-parameters" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id14">Optional Parameters (defaulted parameters)</a><a class="headerlink" href="#optional-parameters-defaulted-parameters" title="Permalink to this heading">¶</a></h3>
 <p>If you wish, you may make some of the parameters of a program or a user
 function optional by defaulting them to a starting value with the <code class="docutils literal notranslate"><span class="pre">IS</span></code> keyword, as follows:</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// Imagine this is a file called MYPROG</span>
@@ -396,7 +401,7 @@ only gets executed if the system needed to pad a missing argument.</p>
 </section>
 </section>
 <section id="set">
-<span id="id2"></span><h2><a class="toc-backref" href="#id15" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">SET</span></code></a><a class="headerlink" href="#set" title="Permalink to this heading">¶</a></h2>
+<span id="id2"></span><h2><a class="toc-backref" href="#id15"><code class="docutils literal notranslate"><span class="pre">SET</span></code></a><a class="headerlink" href="#set" title="Permalink to this heading">¶</a></h2>
 <p>Sets the value of a variable. Implicitly creates a global variable if it doesn’t already exist,
 unless <a class="reference internal" href="#lazyglobal"><span class="std std-ref">the &#64;lazyglobal off</span></a> directive has been given:</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">X</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
@@ -413,7 +418,7 @@ by separating the assignments with commas, as shown below:</p>
 </div>
 </section>
 <section id="unset">
-<span id="id3"></span><h2><a class="toc-backref" href="#id16" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">UNSET</span></code></a><a class="headerlink" href="#unset" title="Permalink to this heading">¶</a></h2>
+<span id="id3"></span><h2><a class="toc-backref" href="#id16"><code class="docutils literal notranslate"><span class="pre">UNSET</span></code></a><a class="headerlink" href="#unset" title="Permalink to this heading">¶</a></h2>
 <p>Removes a user-defined variable, if one exists with the given name.</p>
 <blockquote>
 <div><p>UNSET X.
@@ -433,7 +438,7 @@ it will NOT generate an error.  It will simply quietly move on to the
 next statement, doing nothing.</p>
 </section>
 <section id="defined">
-<span id="id4"></span><h2><a class="toc-backref" href="#id17" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">DEFINED</span></code></a><a class="headerlink" href="#defined" title="Permalink to this heading">¶</a></h2>
+<span id="id4"></span><h2><a class="toc-backref" href="#id17"><code class="docutils literal notranslate"><span class="pre">DEFINED</span></code></a><a class="headerlink" href="#defined" title="Permalink to this heading">¶</a></h2>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">DEFINED</span> <span class="nv">identifier</span>
 </pre></div>
 </div>
@@ -469,7 +474,7 @@ for example:</p>
 <p>is going to end up printing “False” because it’s looking for pure identifiers,
 not complex suffix chains, and there’s no identifier called “var1:suffix1”.</p>
 <section id="difference-between-set-and-declare-local-and-declare-global">
-<h3><a class="toc-backref" href="#id18" role="doc-backlink">Difference between SET and DECLARE LOCAL and DECLARE GLOBAL</a><a class="headerlink" href="#difference-between-set-and-declare-local-and-declare-global" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id18">Difference between SET and DECLARE LOCAL and DECLARE GLOBAL</a><a class="headerlink" href="#difference-between-set-and-declare-local-and-declare-global" title="Permalink to this heading">¶</a></h3>
 <p>The following three examples look very similar and you might ask
 why you’d pick one instead of the other:</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">X</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
@@ -505,7 +510,7 @@ Set it to 1.</p></li>
 </div></blockquote>
 </section>
 <section id="when-to-use-global">
-<h3><a class="toc-backref" href="#id19" role="doc-backlink">When to use GLOBAL</a><a class="headerlink" href="#when-to-use-global" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id19">When to use GLOBAL</a><a class="headerlink" href="#when-to-use-global" title="Permalink to this heading">¶</a></h3>
 <p>You should use a <code class="docutils literal notranslate"><span class="pre">DECLARE</span> <span class="pre">GLOBAL</span></code> statement only sparingly.  It
 mostly exists so that a function can store values “in the caller”
 for the caller to get its hands on.  It’s generally a “sloppy” design
@@ -514,7 +519,7 @@ and only pass back things to the caller as return values.</p>
 </section>
 </section>
 <section id="lock">
-<h2><a class="toc-backref" href="#id20" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">LOCK</span></code></a><a class="headerlink" href="#lock" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id20"><code class="docutils literal notranslate"><span class="pre">LOCK</span></code></a><a class="headerlink" href="#lock" title="Permalink to this heading">¶</a></h2>
 <p>Declares that the identifier will refer to an expression that is always re-evaluated on the fly every time it is used (See also <a class="reference internal" href="flow.html#lock"><span class="std std-ref">Flow Control documentation</span></a>):</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">Y</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
 <span class="k">LOCK</span> <span class="nv">X</span> <span class="ow">TO</span> <span class="nv">Y</span> <span class="o">+</span> <span class="mf">1</span><span class="p">.</span>
@@ -530,7 +535,7 @@ necessary for backward compatibility with older scripts that use
 LOCK STEERING from inside triggers, loops, etc, and expect it to
 affect the global steering value.</p>
 <section id="calling-a-lock-that-was-created-in-another-file">
-<h3><a class="toc-backref" href="#id21" role="doc-backlink">Calling a LOCK that was created in another file</a><a class="headerlink" href="#calling-a-lock-that-was-created-in-another-file" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id21">Calling a LOCK that was created in another file</a><a class="headerlink" href="#calling-a-lock-that-was-created-in-another-file" title="Permalink to this heading">¶</a></h3>
 <p>If you try to call a lock that is declared in another program
 file you run, it does not work.  You can make it work
 by inserting empty parentheses after the lock name to help give
@@ -547,7 +552,7 @@ the compiler the hint that you expected x to be a function call
 <p>and it should work.</p>
 </section>
 <section id="local-lock">
-<h3><a class="toc-backref" href="#id22" role="doc-backlink">Local lock</a><a class="headerlink" href="#local-lock" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id22">Local lock</a><a class="headerlink" href="#local-lock" title="Permalink to this heading">¶</a></h3>
 <p>You can explicitly make a <code class="docutils literal notranslate"><span class="pre">LOCK</span></code> statement be LOCAL with the <code class="docutils literal notranslate"><span class="pre">LOCAL</span></code>
 keyword, like so:</p>
 <p><code class="docutils literal notranslate"><span class="pre">LOCAL</span> <span class="pre">LOCK</span></code> identifier <code class="docutils literal notranslate"><span class="pre">TO</span></code> expression.</p>
@@ -580,7 +585,7 @@ section of code is over, make it a local lock.</p>
 </section>
 </section>
 <section id="toggle">
-<span id="id5"></span><h2><a class="toc-backref" href="#id23" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">TOGGLE</span></code></a><a class="headerlink" href="#toggle" title="Permalink to this heading">¶</a></h2>
+<span id="id5"></span><h2><a class="toc-backref" href="#id23"><code class="docutils literal notranslate"><span class="pre">TOGGLE</span></code></a><a class="headerlink" href="#toggle" title="Permalink to this heading">¶</a></h2>
 <p>Toggles a variable between <code class="docutils literal notranslate"><span class="pre">TRUE</span></code> or <code class="docutils literal notranslate"><span class="pre">FALSE</span></code>. If the variable in question starts out as a number, it will be converted to a boolean and then toggled. This is useful for setting action groups, which are activated whenever their values are inverted:</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">TOGGLE</span> <span class="nv">AG1</span><span class="p">.</span> <span class="c1">// Fires action group 1.</span>
 <span class="k">TOGGLE</span> <span class="nv">SAS</span><span class="p">.</span> <span class="c1">// Toggles SAS on or off.</span>
@@ -591,7 +596,7 @@ question doesn’t already exist, it will end up creating it as a global
 variable.</p>
 </section>
 <section id="on">
-<span id="id6"></span><h2><a class="toc-backref" href="#id24" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">ON</span></code></a><a class="headerlink" href="#on" title="Permalink to this heading">¶</a></h2>
+<span id="id6"></span><h2><a class="toc-backref" href="#id24"><code class="docutils literal notranslate"><span class="pre">ON</span></code></a><a class="headerlink" href="#on" title="Permalink to this heading">¶</a></h2>
 <p>Sets a variable to <code class="docutils literal notranslate"><span class="pre">TRUE</span></code>. This is useful for the <code class="docutils literal notranslate"><span class="pre">RCS</span></code> and <code class="docutils literal notranslate"><span class="pre">SAS</span></code> bindings:</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">RCS</span> <span class="nb">ON</span><span class="p">.</span>  <span class="c1">// Turns on the RCS</span>
 </pre></div>
@@ -601,7 +606,7 @@ question doesn’t already exist, it will end up creating it as a global
 variable.</p>
 </section>
 <section id="off">
-<span id="id7"></span><h2><a class="toc-backref" href="#id25" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">OFF</span></code></a><a class="headerlink" href="#off" title="Permalink to this heading">¶</a></h2>
+<span id="id7"></span><h2><a class="toc-backref" href="#id25"><code class="docutils literal notranslate"><span class="pre">OFF</span></code></a><a class="headerlink" href="#off" title="Permalink to this heading">¶</a></h2>
 <p>Sets a variable to <code class="docutils literal notranslate"><span class="pre">FALSE</span></code>. This is useful for the <code class="docutils literal notranslate"><span class="pre">RCS</span></code> and <code class="docutils literal notranslate"><span class="pre">SAS</span></code> bindings:</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">RCS</span> <span class="nb">OFF</span><span class="p">.</span>  <span class="c1">// Turns off the RCS</span>
 </pre></div>
@@ -611,7 +616,7 @@ question doesn’t already exist, it will end up creating it as a global
 variable.</p>
 </section>
 <section id="clobbering-built-in-names">
-<span id="masking-builtins"></span><h2><a class="toc-backref" href="#id26" role="doc-backlink">Clobbering Built-in names:</a><a class="headerlink" href="#clobbering-built-in-names" title="Permalink to this heading">¶</a></h2>
+<span id="masking-builtins"></span><h2><a class="toc-backref" href="#id26">Clobbering Built-in names:</a><a class="headerlink" href="#clobbering-built-in-names" title="Permalink to this heading">¶</a></h2>
 <p>kOS has several identifiers that are built-in and should never be
 used by programs for their own variable names and function names. Doing
 so has the potential to make the built-in things in kOS impossible to
@@ -657,7 +662,7 @@ that clobber built-ins, then you can re-enable clobbering
 built-ins using <a class="reference internal" href="#clobberbuiltins"><span class="std std-ref">the &#64;CLOBBERBUILTINS directive</span></a>
 or the <a class="reference internal" href="../structures/misc/config.html#attribute:CONFIG:CLOBBERBUILTINS" title="CONFIG:CLOBBERBUILTINS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Config:CLOBBERBUILTINS</span></code></a> configuration setting.</p>
 <section id="clobberbuiltins-directive">
-<span id="clobberbuiltins"></span><h3><a class="toc-backref" href="#id27" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">&#64;CLOBBERBUILTINS</span></code> directive</a><a class="headerlink" href="#clobberbuiltins-directive" title="Permalink to this heading">¶</a></h3>
+<span id="clobberbuiltins"></span><h3><a class="toc-backref" href="#id27"><code class="docutils literal notranslate"><span class="pre">&#64;CLOBBERBUILTINS</span></code> directive</a><a class="headerlink" href="#clobberbuiltins-directive" title="Permalink to this heading">¶</a></h3>
 <p>If you wish to turn off the enforcement that prevents clobbering
 over the top of built-in names, and allow a scripts to mask a
 built-in name with a variable of the same name, you can do so
@@ -675,7 +680,7 @@ The intended use for this is to make kOS still work with older scripts
 that may have been written before this enforcement existed.</p>
 </section>
 <section id="changing-clobberbuiltins-globally-in-config">
-<h3><a class="toc-backref" href="#id28" role="doc-backlink">Changing &#64;CLOBBERBUILTINS globally in CONFIG</a><a class="headerlink" href="#changing-clobberbuiltins-globally-in-config" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id28">Changing &#64;CLOBBERBUILTINS globally in CONFIG</a><a class="headerlink" href="#changing-clobberbuiltins-globally-in-config" title="Permalink to this heading">¶</a></h3>
 <p>If you don’t want to have to put a <code class="docutils literal notranslate"><span class="pre">&#64;CLOBBERBUILTINS</span> <span class="pre">on.</span></code> directive
 at the top of every program file, you can globally change the behavior
 for all of kOS by using the config option <a class="reference internal" href="../structures/misc/config.html#attribute:CONFIG:CLOBBERBUILTINS" title="CONFIG:CLOBBERBUILTINS attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Config:CLOBBERBUILTINS</span></code></a>,
@@ -684,7 +689,7 @@ kOS settings, or by directly changing it in a script command.</p>
 </section>
 </section>
 <section id="scoping-terms">
-<span id="scope"></span><h2><a class="toc-backref" href="#id29" role="doc-backlink">Scoping terms</a><a class="headerlink" href="#scoping-terms" title="Permalink to this heading">¶</a></h2>
+<span id="scope"></span><h2><a class="toc-backref" href="#id29">Scoping terms</a><a class="headerlink" href="#scoping-terms" title="Permalink to this heading">¶</a></h2>
 <dl class="simple">
 <dt>What is Scope?</dt><dd><p>The term <em>Scope</em> simply refers to asking the question “where in the
 code can this variable be used, and how long does it last before it
@@ -728,9 +733,9 @@ local scope to allow for recursive function calls, then you use the
 the variables.</p>
 </section>
 <section id="scoping-syntax">
-<h2><a class="toc-backref" href="#id30" role="doc-backlink">Scoping syntax</a><a class="headerlink" href="#scoping-syntax" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id30">Scoping syntax</a><a class="headerlink" href="#scoping-syntax" title="Permalink to this heading">¶</a></h2>
 <section id="presumed-defaults">
-<h3><a class="toc-backref" href="#id31" role="doc-backlink">Presumed defaults</a><a class="headerlink" href="#presumed-defaults" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id31">Presumed defaults</a><a class="headerlink" href="#presumed-defaults" title="Permalink to this heading">¶</a></h3>
 <p>The DECLARE keyword and the LOCK keyword have some default
 presumed scoping behaviors:</p>
 <p><code class="docutils literal notranslate"><span class="pre">DECLARE</span></code> is assumed to always be LOCAL when used with a variable
@@ -755,7 +760,7 @@ this is necessary to preserve backward compatibility with how cooked
 controls such as LOCK STEERING and LOCK THROTTLE work.</p>
 </section>
 <section id="explicit-scoping-keywords">
-<h3><a class="toc-backref" href="#id32" role="doc-backlink">Explicit scoping keywords</a><a class="headerlink" href="#explicit-scoping-keywords" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id32">Explicit scoping keywords</a><a class="headerlink" href="#explicit-scoping-keywords" title="Permalink to this heading">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">DECLARE</span></code>, <code class="docutils literal notranslate"><span class="pre">FUNCTION</span></code>, and <code class="docutils literal notranslate"><span class="pre">LOCK</span></code> commands can be given
 explicit <code class="docutils literal notranslate"><span class="pre">GLOBAL</span></code> or <code class="docutils literal notranslate"><span class="pre">LOCAL</span></code> keywords to define their intended
 scoping level (however in the case of functions, <code class="docutils literal notranslate"><span class="pre">GLOBAL</span></code> will be
@@ -783,7 +788,7 @@ by the use of LOCAL or GLOBAL and you are allowed to leave it off
 merely to reduce verbosity.</p>
 </section>
 <section id="explicit-scoping-required-for-lazyglobal-off">
-<h3><a class="toc-backref" href="#id33" role="doc-backlink">Explicit Scoping required for &#64;lazyglobal off</a><a class="headerlink" href="#explicit-scoping-required-for-lazyglobal-off" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id33">Explicit Scoping required for &#64;lazyglobal off</a><a class="headerlink" href="#explicit-scoping-required-for-lazyglobal-off" title="Permalink to this heading">¶</a></h3>
 <p>Note that when operating under the <a class="reference internal" href="#lazyglobal"><span class="std std-ref">&#64;LAZYGLOBAL OFF</span></a>
 directive the keywords LOCAL and GLOBAL are no longer optional for
 <strong>declare identifier</strong> statements, and are in fact required.  You
@@ -846,7 +851,7 @@ implicitly created.</p>
 </section>
 </section>
 <section id="scoping-and-triggers">
-<span id="trigger-scope"></span><h3><a class="toc-backref" href="#id34" role="doc-backlink">Scoping and Triggers:</a><a class="headerlink" href="#scoping-and-triggers" title="Permalink to this heading">¶</a></h3>
+<span id="trigger-scope"></span><h3><a class="toc-backref" href="#id34">Scoping and Triggers:</a><a class="headerlink" href="#scoping-and-triggers" title="Permalink to this heading">¶</a></h3>
 <p>Triggers such as:</p>
 <blockquote>
 <div><ul class="simple">
@@ -898,7 +903,7 @@ can use any local variables.</p>
 </div>
 </section>
 <section id="lazyglobal-directive">
-<span id="lazyglobal"></span><h3><a class="toc-backref" href="#id35" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">&#64;LAZYGLOBAL</span></code> directive</a><a class="headerlink" href="#lazyglobal-directive" title="Permalink to this heading">¶</a></h3>
+<span id="lazyglobal"></span><h3><a class="toc-backref" href="#id35"><code class="docutils literal notranslate"><span class="pre">&#64;LAZYGLOBAL</span></code> directive</a><a class="headerlink" href="#lazyglobal-directive" title="Permalink to this heading">¶</a></h3>
 <p>Often the fact that you can get an implicit global variable declared
 without intending to can lead to a lot of code maintenance headaches
 down the road.  If you make a typo in a variable name, you end up

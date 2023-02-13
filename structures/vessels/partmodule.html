@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PartModule &mdash; kOS 1.3.3.0 documentation</title>
+  <title>PartModule &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
+            <img src="../../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -136,12 +141,12 @@
 <dl class="ks structure">
 <dt class="sig sig-object ks" id="structure:PARTMODULE">
 <em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">PartModule</span></span><a class="headerlink" href="#structure:PARTMODULE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils align-default" id="id1">
+<dd><table class="colwidths-given docutils align-default" id="id1">
 <caption><span class="caption-text">Members</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col style="width: 28.6%" />
-<col style="width: 14.3%" />
-<col style="width: 57.1%" />
+<col style="width: 29%" />
+<col style="width: 14%" />
+<col style="width: 57%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suffix</p></th>
@@ -218,10 +223,10 @@
 <dt class="sig sig-object ks" id="attribute:PARTMODULE:NAME">
 <span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">NAME</span></span><a class="headerlink" href="#attribute:PARTMODULE:NAME" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Test<span class="colon">:</span></dt>
+<dt class="field-even">Test</dt>
 <dd class="field-even"><p>string</p>
 </dd>
 </dl>
@@ -232,10 +237,10 @@
 <dt class="sig sig-object ks" id="attribute:PARTMODULE:PART">
 <span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">PART</span></span><a class="headerlink" href="#attribute:PARTMODULE:PART" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Test<span class="colon">:</span></dt>
+<dt class="field-even">Test</dt>
 <dd class="field-even"><p><a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a></p>
 </dd>
 </dl>
@@ -246,10 +251,10 @@
 <dt class="sig sig-object ks" id="attribute:PARTMODULE:ALLFIELDS">
 <span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">ALLFIELDS</span></span><a class="headerlink" href="#attribute:PARTMODULE:ALLFIELDS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Test<span class="colon">:</span></dt>
+<dt class="field-even">Test</dt>
 <dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of strings</p>
 </dd>
 </dl>
@@ -260,10 +265,10 @@
 <dt class="sig sig-object ks" id="attribute:PARTMODULE:ALLFIELDNAMES">
 <span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">ALLFIELDNAMES</span></span><a class="headerlink" href="#attribute:PARTMODULE:ALLFIELDNAMES" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Test<span class="colon">:</span></dt>
+<dt class="field-even">Test</dt>
 <dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of strings</p>
 </dd>
 </dl>
@@ -274,10 +279,10 @@
 <dt class="sig sig-object ks" id="attribute:PARTMODULE:ALLEVENTS">
 <span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">ALLEVENTS</span></span><a class="headerlink" href="#attribute:PARTMODULE:ALLEVENTS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Test<span class="colon">:</span></dt>
+<dt class="field-even">Test</dt>
 <dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of strings</p>
 </dd>
 </dl>
@@ -288,10 +293,10 @@
 <dt class="sig sig-object ks" id="attribute:PARTMODULE:ALLEVENTNAMES">
 <span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">ALLEVENTNAMES</span></span><a class="headerlink" href="#attribute:PARTMODULE:ALLEVENTNAMES" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Test<span class="colon">:</span></dt>
+<dt class="field-even">Test</dt>
 <dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of strings</p>
 </dd>
 </dl>
@@ -302,10 +307,10 @@
 <dt class="sig sig-object ks" id="attribute:PARTMODULE:ALLACTIONS">
 <span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">ALLACTIONS</span></span><a class="headerlink" href="#attribute:PARTMODULE:ALLACTIONS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Test<span class="colon">:</span></dt>
+<dt class="field-even">Test</dt>
 <dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of strings</p>
 </dd>
 </dl>
@@ -316,10 +321,10 @@
 <dt class="sig sig-object ks" id="attribute:PARTMODULE:ALLACTIONNAMES">
 <span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">ALLACTIONNAMES</span></span><a class="headerlink" href="#attribute:PARTMODULE:ALLACTIONNAMES" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Test<span class="colon">:</span></dt>
+<dt class="field-even">Test</dt>
 <dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of strings</p>
 </dd>
 </dl>
@@ -330,12 +335,12 @@
 <dt class="sig sig-object ks" id="method:PARTMODULE:GETFIELD">
 <span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">GETFIELD</span></span><span class="sig-paren">(</span><span class="pre">name</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:GETFIELD" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> – (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>) Name of the field</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>varies</p>
 </dd>
 </dl>
@@ -346,7 +351,7 @@
 <dt class="sig sig-object ks" id="method:PARTMODULE:SETFIELD">
 <span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">SETFIELD</span></span><span class="sig-paren">(</span><span class="pre">name,value</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:SETFIELD" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> – (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>) Name of the field</p></li>
 </ul>
@@ -372,7 +377,7 @@ them one at a time.</p>
 <dt class="sig sig-object ks" id="method:PARTMODULE:DOEVENT">
 <span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">DOEVENT</span></span><span class="sig-paren">(</span><span class="pre">name</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:DOEVENT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> – (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>) Name of the event</p></li>
 </ul>
@@ -386,7 +391,7 @@ them one at a time.</p>
 <dt class="sig sig-object ks" id="method:PARTMODULE:DOACTION">
 <span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">DOACTION</span></span><span class="sig-paren">(</span><span class="pre">name,bool</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:DOACTION" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> – (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>) Name of the action</p></li>
 <li><p><strong>bool</strong> – (<a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a>) Value to set: True or False</p></li>
@@ -401,12 +406,12 @@ them one at a time.</p>
 <dt class="sig sig-object ks" id="method:PARTMODULE:HASFIELD">
 <span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">HASFIELD</span></span><span class="sig-paren">(</span><span class="pre">name</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:HASFIELD" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> – (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>) Name of the field</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -417,12 +422,12 @@ them one at a time.</p>
 <dt class="sig sig-object ks" id="method:PARTMODULE:HASEVENT">
 <span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">HASEVENT</span></span><span class="sig-paren">(</span><span class="pre">name</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:HASEVENT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> – (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>) Name of the event</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -433,12 +438,12 @@ them one at a time.</p>
 <dt class="sig sig-object ks" id="method:PARTMODULE:HASACTION">
 <span class="pre">PartModule:</span><span class="sig-name descname"><span class="pre">HASACTION</span></span><span class="sig-paren">(</span><span class="pre">name</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:HASACTION" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> – (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>) Name of the action</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>

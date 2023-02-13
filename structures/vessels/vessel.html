@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vessel &mdash; kOS 1.3.3.0 documentation</title>
+  <title>Vessel &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
+            <img src="../../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -149,6 +154,11 @@
 <dt class="sig sig-object ks" id="structure:VESSEL">
 <em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">Vessel</span></span><a class="headerlink" href="#structure:VESSEL" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 16%" />
+<col style="width: 63%" />
+</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suffix</p></th>
 <th class="head"><p>Type</p></th>
@@ -430,10 +440,10 @@
 <dt class="sig sig-object ks" id="attribute:VESSEL:CONTROL">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">CONTROL</span></span><a class="headerlink" href="#attribute:VESSEL:CONTROL" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../commands/flight/pilot.html#structure:CONTROL" title="CONTROL structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Control</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -445,10 +455,10 @@
 <dt class="sig sig-object ks" id="attribute:VESSEL:BEARING">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">BEARING</span></span><a class="headerlink" href="#attribute:VESSEL:BEARING" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -459,10 +469,10 @@
 <dt class="sig sig-object ks" id="attribute:VESSEL:HEADING">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">HEADING</span></span><a class="headerlink" href="#attribute:VESSEL:HEADING" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -473,10 +483,10 @@
 <dt class="sig sig-object ks" id="attribute:VESSEL:THRUST">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">THRUST</span></span><a class="headerlink" href="#attribute:VESSEL:THRUST" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -487,10 +497,10 @@
 <dt class="sig sig-object ks" id="attribute:VESSEL:MAXTHRUST">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">MAXTHRUST</span></span><a class="headerlink" href="#attribute:VESSEL:MAXTHRUST" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -501,12 +511,12 @@
 <dt class="sig sig-object ks" id="method:VESSEL:MAXTHRUSTAT">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">MAXTHRUSTAT</span></span><span class="sig-paren">(</span><span class="pre">pressure</span><span class="sig-paren">)</span><a class="headerlink" href="#method:VESSEL:MAXTHRUSTAT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pressure</strong> – atmospheric pressure (in standard Kerbin atmospheres)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (kN)</p>
 </dd>
 </dl>
@@ -519,10 +529,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:AVAILABLETHRUST">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">AVAILABLETHRUST</span></span><a class="headerlink" href="#attribute:VESSEL:AVAILABLETHRUST" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -533,12 +543,12 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="method:VESSEL:AVAILABLETHRUSTAT">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">AVAILABLETHRUSTAT</span></span><span class="sig-paren">(</span><span class="pre">pressure</span><span class="sig-paren">)</span><a class="headerlink" href="#method:VESSEL:AVAILABLETHRUSTAT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pressure</strong> – atmospheric pressure (in standard Kerbin atmospheres)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (kN)</p>
 </dd>
 </dl>
@@ -551,10 +561,10 @@ negative value, it will be treated as if you had given a zero instead.)</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:FACING">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">FACING</span></span><a class="headerlink" href="#attribute:VESSEL:FACING" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Direction</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -570,10 +580,10 @@ ship is pointed (it’s Z-axis) in absolute ship-raw coordinates</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:BOUNDS">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">BOUNDS</span></span><a class="headerlink" href="#attribute:VESSEL:BOUNDS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="bounds.html#structure:BOUNDS" title="BOUNDS structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Bounds</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -604,10 +614,10 @@ bounds box, is found on the documentation page for <a class="reference internal"
 <dt class="sig sig-object ks" id="attribute:VESSEL:MASS">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">MASS</span></span><a class="headerlink" href="#attribute:VESSEL:MASS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (metric tons)</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -618,10 +628,10 @@ bounds box, is found on the documentation page for <a class="reference internal"
 <dt class="sig sig-object ks" id="attribute:VESSEL:WETMASS">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">WETMASS</span></span><a class="headerlink" href="#attribute:VESSEL:WETMASS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (metric tons)</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -632,10 +642,10 @@ bounds box, is found on the documentation page for <a class="reference internal"
 <dt class="sig sig-object ks" id="attribute:VESSEL:DRYMASS">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">DRYMASS</span></span><a class="headerlink" href="#attribute:VESSEL:DRYMASS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (metric tons)</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -646,10 +656,10 @@ bounds box, is found on the documentation page for <a class="reference internal"
 <dt class="sig sig-object ks" id="attribute:VESSEL:DYNAMICPRESSURE">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">DYNAMICPRESSURE</span></span><a class="headerlink" href="#attribute:VESSEL:DYNAMICPRESSURE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (ATM’s)</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -664,10 +674,10 @@ kPA.  You can convert this value into kPa by multiplying it by
 <dt class="sig sig-object ks" id="attribute:VESSEL:Q">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">Q</span></span><a class="headerlink" href="#attribute:VESSEL:Q" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (ATM’s)</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -678,10 +688,10 @@ kPA.  You can convert this value into kPa by multiplying it by
 <dt class="sig sig-object ks" id="attribute:VESSEL:VERTICALSPEED">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">VERTICALSPEED</span></span><a class="headerlink" href="#attribute:VESSEL:VERTICALSPEED" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (m/s)</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -692,10 +702,10 @@ kPA.  You can convert this value into kPa by multiplying it by
 <dt class="sig sig-object ks" id="attribute:VESSEL:GROUNDSPEED">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">GROUNDSPEED</span></span><a class="headerlink" href="#attribute:VESSEL:GROUNDSPEED" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (m/s)</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -717,10 +727,10 @@ it ignores the vertical component.</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:AIRSPEED">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">AIRSPEED</span></span><a class="headerlink" href="#attribute:VESSEL:AIRSPEED" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (m/s)</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -731,10 +741,10 @@ it ignores the vertical component.</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:SHIPNAME">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">SHIPNAME</span></span><a class="headerlink" href="#attribute:VESSEL:SHIPNAME" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get/Set</p>
 </dd>
 </dl>
@@ -751,10 +761,10 @@ it ignores the vertical component.</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:STATUS">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">STATUS</span></span><a class="headerlink" href="#attribute:VESSEL:STATUS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>get only</p>
 </dd>
 </dl>
@@ -765,10 +775,10 @@ it ignores the vertical component.</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:DELTAV">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">DELTAV</span></span><a class="headerlink" href="#attribute:VESSEL:DELTAV" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="deltav.html#structure:DELTAV" title="DELTAV structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">DeltaV</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>get only</p>
 </dd>
 </dl>
@@ -779,12 +789,12 @@ it ignores the vertical component.</p>
 <dt class="sig sig-object ks" id="method:VESSEL:STAGEDELTAV">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">STAGEDELTAV</span></span><span class="sig-paren">(</span><span class="pre">num</span><span class="sig-paren">)</span><a class="headerlink" href="#method:VESSEL:STAGEDELTAV" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>num</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> the stage number to query for</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="deltav.html#structure:DELTAV" title="DELTAV structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">DeltaV</span></code></a></p>
 </dd>
 </dl>
@@ -802,10 +812,10 @@ and passing in stage 9999 gets you stage 5.</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:STAGENUM">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">STAGENUM</span></span><a class="headerlink" href="#attribute:VESSEL:STAGENUM" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>get only</p>
 </dd>
 </dl>
@@ -820,10 +830,10 @@ numbered 4, 3, 2, 1, and 0.</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:TYPE">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">TYPE</span></span><a class="headerlink" href="#attribute:VESSEL:TYPE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get/Set</p>
 </dd>
 </dl>
@@ -834,7 +844,7 @@ numbered 4, 3, 2, 1, and 0.</p>
 <dt class="sig sig-object ks" id="method:VESSEL:STARTTRACKING">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">STARTTRACKING</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:VESSEL:STARTTRACKING" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -857,7 +867,7 @@ assteroids, in a different system. As a result, the value kOS reads for
 <dt class="sig sig-object ks" id="method:VESSEL:STOPTRACKING">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">STOPTRACKING</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:VESSEL:STOPTRACKING" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -872,10 +882,10 @@ to clean it up to avoid clutter.</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:SIZECLASS">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">SIZECLASS</span></span><a class="headerlink" href="#attribute:VESSEL:SIZECLASS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -893,10 +903,10 @@ back as “UNKNOWN” rather than one of the known class sizes.</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:ANGULARMOMENTUM">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">ANGULARMOMENTUM</span></span><a class="headerlink" href="#attribute:VESSEL:ANGULARMOMENTUM" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Direction</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -944,10 +954,10 @@ backward compatibility with older kOS scripts.</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:SENSORS">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">SENSORS</span></span><a class="headerlink" href="#attribute:VESSEL:SENSORS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="vesselsensors.html#structure:VESSELSENSORS" title="VESSELSENSORS structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">VesselSensors</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -958,10 +968,10 @@ backward compatibility with older kOS scripts.</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:LOADED">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">LOADED</span></span><a class="headerlink" href="#attribute:VESSEL:LOADED" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -973,10 +983,10 @@ See <a class="reference internal" href="../misc/loaddistance.html#structure:LOAD
 <dt class="sig sig-object ks" id="attribute:VESSEL:UNPACKED">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">UNPACKED</span></span><a class="headerlink" href="#attribute:VESSEL:UNPACKED" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -989,10 +999,10 @@ actions/events on parts will actually trigger.  See <a class="reference internal
 <dt class="sig sig-object ks" id="attribute:VESSEL:LOADDISTANCE">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">LOADDISTANCE</span></span><a class="headerlink" href="#attribute:VESSEL:LOADDISTANCE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../misc/loaddistance.html#structure:LOADDISTANCE" title="LOADDISTANCE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">LoadDistance</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -1003,10 +1013,10 @@ actions/events on parts will actually trigger.  See <a class="reference internal
 <dt class="sig sig-object ks" id="attribute:VESSEL:ISDEAD">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">ISDEAD</span></span><a class="headerlink" href="#attribute:VESSEL:ISDEAD" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -1023,10 +1033,10 @@ valid isn’t valid anymore.</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:PATCHES">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">PATCHES</span></span><a class="headerlink" href="#attribute:VESSEL:PATCHES" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -1037,10 +1047,10 @@ valid isn’t valid anymore.</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:ROOTPART">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">ROOTPART</span></span><a class="headerlink" href="#attribute:VESSEL:ROOTPART" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -1051,10 +1061,10 @@ valid isn’t valid anymore.</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:CONTROLPART">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">CONTROLPART</span></span><a class="headerlink" href="#attribute:VESSEL:CONTROLPART" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -1071,10 +1081,10 @@ control reference, and the control has not been directly selected.</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:PARTS">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">PARTS</span></span><a class="headerlink" href="#attribute:VESSEL:PARTS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a> objects</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -1085,10 +1095,10 @@ control reference, and the control has not been directly selected.</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:ENGINES">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">ENGINES</span></span><a class="headerlink" href="#attribute:VESSEL:ENGINES" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="engine.html#structure:ENGINE" title="ENGINE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Engine</span></code></a> objects</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -1099,10 +1109,10 @@ control reference, and the control has not been directly selected.</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:RCS">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">RCS</span></span><a class="headerlink" href="#attribute:VESSEL:RCS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="rcs.html#structure:RCS" title="RCS structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">RCS</span></code></a> objects</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -1113,10 +1123,10 @@ control reference, and the control has not been directly selected.</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:DOCKINGPORTS">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">DOCKINGPORTS</span></span><a class="headerlink" href="#attribute:VESSEL:DOCKINGPORTS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="dockingport.html#structure:DOCKINGPORT" title="DOCKINGPORT structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">DockingPort</span></code></a> objects</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -1127,10 +1137,10 @@ control reference, and the control has not been directly selected.</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:ELEMENTS">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">ELEMENTS</span></span><a class="headerlink" href="#attribute:VESSEL:ELEMENTS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="element.html#structure:ELEMENT" title="ELEMENT structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Element</span></code></a> objects</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -1141,10 +1151,10 @@ control reference, and the control has not been directly selected.</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:RESOURCES">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">RESOURCES</span></span><a class="headerlink" href="#attribute:VESSEL:RESOURCES" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="aggregateresource.html#structure:AGGREGATERESOURCE" title="AGGREGATERESOURCE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">AggregateResource</span></code></a> objects</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -1155,12 +1165,12 @@ control reference, and the control has not been directly selected.</p>
 <dt class="sig sig-object ks" id="method:VESSEL:PARTSNAMED">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">PARTSNAMED</span></span><span class="sig-paren">(</span><span class="pre">name</span><span class="sig-paren">)</span><a class="headerlink" href="#method:VESSEL:PARTSNAMED" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> – (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>) Name of the parts</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a> objects</p>
 </dd>
 </dl>
@@ -1172,12 +1182,12 @@ control reference, and the control has not been directly selected.</p>
 <dt class="sig sig-object ks" id="method:VESSEL:PARTSNAMEDPATTERN">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">PARTSNAMEDPATTERN</span></span><span class="sig-paren">(</span><span class="pre">namePattern</span><span class="sig-paren">)</span><a class="headerlink" href="#method:VESSEL:PARTSNAMEDPATTERN" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>namePattern</strong> – (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>) Pattern of the name of the parts</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a> objects</p>
 </dd>
 </dl>
@@ -1189,12 +1199,12 @@ control reference, and the control has not been directly selected.</p>
 <dt class="sig sig-object ks" id="method:VESSEL:PARTSTITLED">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">PARTSTITLED</span></span><span class="sig-paren">(</span><span class="pre">title</span><span class="sig-paren">)</span><a class="headerlink" href="#method:VESSEL:PARTSTITLED" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>title</strong> – (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>) Title of the parts</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a> objects</p>
 </dd>
 </dl>
@@ -1206,12 +1216,12 @@ control reference, and the control has not been directly selected.</p>
 <dt class="sig sig-object ks" id="method:VESSEL:PARTSTITLEDPATTERN">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">PARTSTITLEDPATTERN</span></span><span class="sig-paren">(</span><span class="pre">titlePattern</span><span class="sig-paren">)</span><a class="headerlink" href="#method:VESSEL:PARTSTITLEDPATTERN" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>titlePattern</strong> – (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>) Patern of the title of the parts</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a> objects</p>
 </dd>
 </dl>
@@ -1223,12 +1233,12 @@ control reference, and the control has not been directly selected.</p>
 <dt class="sig sig-object ks" id="method:VESSEL:PARTSTAGGED">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">PARTSTAGGED</span></span><span class="sig-paren">(</span><span class="pre">tag</span><span class="sig-paren">)</span><a class="headerlink" href="#method:VESSEL:PARTSTAGGED" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tag</strong> – (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>) Tag of the parts</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a> objects</p>
 </dd>
 </dl>
@@ -1240,12 +1250,12 @@ control reference, and the control has not been directly selected.</p>
 <dt class="sig sig-object ks" id="method:VESSEL:PARTSTAGGEDPATTERN">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">PARTSTAGGEDPATTERN</span></span><span class="sig-paren">(</span><span class="pre">tagPattern</span><span class="sig-paren">)</span><a class="headerlink" href="#method:VESSEL:PARTSTAGGEDPATTERN" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tagPattern</strong> – (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>) Pattern of the tag of the parts</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a> objects</p>
 </dd>
 </dl>
@@ -1257,12 +1267,12 @@ control reference, and the control has not been directly selected.</p>
 <dt class="sig sig-object ks" id="method:VESSEL:PARTSDUBBED">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">PARTSDUBBED</span></span><span class="sig-paren">(</span><span class="pre">name</span><span class="sig-paren">)</span><a class="headerlink" href="#method:VESSEL:PARTSDUBBED" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> – (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>) name, title or tag of the parts</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a> objects</p>
 </dd>
 </dl>
@@ -1274,12 +1284,12 @@ name regardless of whether that name is the Part:Name, the Part:Tag, or the Part
 <dt class="sig sig-object ks" id="method:VESSEL:PARTSDUBBEDPATTERN">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">PARTSDUBBEDPATTERN</span></span><span class="sig-paren">(</span><span class="pre">namePattern</span><span class="sig-paren">)</span><a class="headerlink" href="#method:VESSEL:PARTSDUBBEDPATTERN" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>namePattern</strong> – (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>) Pattern of the name, title or tag of the parts</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a> objects</p>
 </dd>
 </dl>
@@ -1291,12 +1301,12 @@ regardless of whether that name is the Part:Name, the Part:Tag, or the Part:Titl
 <dt class="sig sig-object ks" id="method:VESSEL:MODULESNAMED">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">MODULESNAMED</span></span><span class="sig-paren">(</span><span class="pre">name</span><span class="sig-paren">)</span><a class="headerlink" href="#method:VESSEL:MODULESNAMED" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> – (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a>) Name of the part modules</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">PartModule</span></code></a> objects</p>
 </dd>
 </dl>
@@ -1308,12 +1318,12 @@ match the given name. The matching is done case-insensitively. For more informat
 <dt class="sig sig-object ks" id="method:VESSEL:PARTSINGROUP">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">PARTSINGROUP</span></span><span class="sig-paren">(</span><span class="pre">group</span><span class="sig-paren">)</span><a class="headerlink" href="#method:VESSEL:PARTSINGROUP" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>group</strong> – (integer) the action group number</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a> objects</p>
 </dd>
 </dl>
@@ -1324,12 +1334,12 @@ match the given name. The matching is done case-insensitively. For more informat
 <dt class="sig sig-object ks" id="method:VESSEL:MODULESINGROUP">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">MODULESINGROUP</span></span><span class="sig-paren">(</span><span class="pre">group</span><span class="sig-paren">)</span><a class="headerlink" href="#method:VESSEL:MODULESINGROUP" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>group</strong> – (integer) the action group number</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">PartModule</span></code></a> objects</p>
 </dd>
 </dl>
@@ -1340,7 +1350,7 @@ match the given name. The matching is done case-insensitively. For more informat
 <dt class="sig sig-object ks" id="method:VESSEL:ALLTAGGEDPARTS">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">ALLTAGGEDPARTS</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:VESSEL:ALLTAGGEDPARTS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Part</span></code></a> objects</p>
 </dd>
 </dl>
@@ -1352,10 +1362,10 @@ For more information, see <a class="reference internal" href="../../general/part
 <dt class="sig sig-object ks" id="attribute:VESSEL:CREWCAPACITY">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">CREWCAPACITY</span></span><a class="headerlink" href="#attribute:VESSEL:CREWCAPACITY" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -1366,7 +1376,7 @@ For more information, see <a class="reference internal" href="../../general/part
 <dt class="sig sig-object ks" id="method:VESSEL:CREW">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">CREW</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:VESSEL:CREW" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="crewmember.html#structure:CREWMEMBER" title="CREWMEMBER structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">CrewMember</span></code></a> objects</p>
 </dd>
 </dl>
@@ -1377,7 +1387,7 @@ For more information, see <a class="reference internal" href="../../general/part
 <dt class="sig sig-object ks" id="attribute:VESSEL:CONNECTION">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">CONNECTION</span></span><a class="headerlink" href="#attribute:VESSEL:CONNECTION" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Return<span class="colon">:</span></dt>
+<dt class="field-odd">Return</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../communication/connection.html#structure:CONNECTION" title="CONNECTION structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Connection</span></code></a></p>
 </dd>
 </dl>
@@ -1388,7 +1398,7 @@ For more information, see <a class="reference internal" href="../../general/part
 <dt class="sig sig-object ks" id="attribute:VESSEL:MESSAGES">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">MESSAGES</span></span><a class="headerlink" href="#attribute:VESSEL:MESSAGES" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Return<span class="colon">:</span></dt>
+<dt class="field-odd">Return</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../communication/message_queue.html#structure:MESSAGEQUEUE" title="MESSAGEQUEUE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">MessageQueue</span></code></a></p>
 </dd>
 </dl>
@@ -1399,7 +1409,7 @@ For more information, see <a class="reference internal" href="../../general/part
 <dt class="sig sig-object ks">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">DELTAV</span></span></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Return<span class="colon">:</span></dt>
+<dt class="field-odd">Return</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -1412,7 +1422,7 @@ as accurate as the stock KSP game’s numbers are.</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:DELTAVASL">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">DELTAVASL</span></span><a class="headerlink" href="#attribute:VESSEL:DELTAVASL" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Return<span class="colon">:</span></dt>
+<dt class="field-odd">Return</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -1425,7 +1435,7 @@ as accurate as the stock KSP game’s numbers are.</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:DELTAVVACUUM">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">DELTAVVACUUM</span></span><a class="headerlink" href="#attribute:VESSEL:DELTAVVACUUM" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Return<span class="colon">:</span></dt>
+<dt class="field-odd">Return</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -1438,7 +1448,7 @@ as accurate as the stock KSP game’s numbers are.</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:BURNTIME">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">BURNTIME</span></span><a class="headerlink" href="#attribute:VESSEL:BURNTIME" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Return<span class="colon">:</span></dt>
+<dt class="field-odd">Return</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -1453,10 +1463,10 @@ as accurate as the stock KSP game’s numbers are.</p>
 <dt class="sig sig-object ks" id="attribute:VESSEL:TERMVELOCITY">
 <span class="pre">Vessel:</span><span class="sig-name descname"><span class="pre">TERMVELOCITY</span></span><a class="headerlink" href="#attribute:VESSEL:TERMVELOCITY" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (m/s)</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>

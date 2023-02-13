@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KOS and programming introduction &mdash; kOS 1.3.3.0 documentation</title>
+  <title>KOS and programming introduction &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
+            <img src="../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -96,7 +101,7 @@
   <section id="kos-and-programming-introduction">
 <h1>KOS and programming introduction<a class="headerlink" href="#kos-and-programming-introduction" title="Permalink to this heading">¶</a></h1>
 <p>This tutorial is for people who are new to programming and want to start programming using KOS.</p>
-<nav class="contents local" id="contents">
+<div class="contents local topic" id="contents">
 <p class="topic-title">Contents</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#accessing-the-kos-terminal" id="id1">Accessing the KOS terminal</a></p>
@@ -131,16 +136,16 @@
 </ul>
 </li>
 </ul>
-</nav>
+</div>
 <section id="accessing-the-kos-terminal">
-<h2><a class="toc-backref" href="#id1" role="doc-backlink">Accessing the KOS terminal</a><a class="headerlink" href="#accessing-the-kos-terminal" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id1">Accessing the KOS terminal</a><a class="headerlink" href="#accessing-the-kos-terminal" title="Permalink to this heading">¶</a></h2>
 <p>To use KOS you need to have a KOS processor on your vessel, they can be found under the ‘control’ tab in the editor and are under
 the same tab as the RCS thrusters and the reaction wheels.
 Right clicking the KOS processor in the editor after adding it to your vessel shows a screen where you can tweak settings of the
 KOS processor.</p>
 <p>There are two ways you can create KOS scripts: either you make them in game and edit them in game or you use a text editor.</p>
 <section id="making-scripts-in-game">
-<h3><a class="toc-backref" href="#id2" role="doc-backlink">Making scripts in-game</a><a class="headerlink" href="#making-scripts-in-game" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id2">Making scripts in-game</a><a class="headerlink" href="#making-scripts-in-game" title="Permalink to this heading">¶</a></h3>
 <p>First we’ll look at making and editing scripts in-game.
 Put your vessel with KOS processor on the launchpad and right click the processor.
 Press the button that says ‘open terminal’ and click on the window that just popped up.</p>
@@ -156,7 +161,7 @@ working script. Keep in mind that files made in game dissapear after the vessel 
 </div>
 </section>
 <section id="making-scrips-with-an-editor">
-<h3><a class="toc-backref" href="#id3" role="doc-backlink">Making scrips with an editor</a><a class="headerlink" href="#making-scrips-with-an-editor" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id3">Making scrips with an editor</a><a class="headerlink" href="#making-scrips-with-an-editor" title="Permalink to this heading">¶</a></h3>
 <p>To use a text editor instead go to your KSP folder and go to <code class="docutils literal notranslate"><span class="pre">Ships/Script/</span></code> and create an empty file and name it whatever you want
 (be cautious using spaces in filenames because this might mess stuff up, also, avoid using capital letters in .ks files if you are running Linux). Not sure where your KSP folder is? If you used steam to install KSP, go to your steam library and right click Kerbal Space Program in the list of games. Next click on <code class="docutils literal notranslate"><span class="pre">properties</span></code> and go to the <code class="docutils literal notranslate"><span class="pre">local</span> <span class="pre">files</span></code> tab. Finally, press on the <code class="docutils literal notranslate"><span class="pre">browse</span> <span class="pre">local</span> <span class="pre">files</span></code> button. (KSP doesn’t require you to use steam, you can copy the KSP folder from the Steam folder to your desktop so you can play without using Steam).</p>
 <p>All KOS script files should end with <code class="docutils literal notranslate"><span class="pre">.ks</span></code>.
@@ -178,7 +183,7 @@ space for data.</p>
 </section>
 </section>
 <section id="print-and-set">
-<h2><a class="toc-backref" href="#id4" role="doc-backlink">Print and set</a><a class="headerlink" href="#print-and-set" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id4">Print and set</a><a class="headerlink" href="#print-and-set" title="Permalink to this heading">¶</a></h2>
 <p>Before we can send ships to space we first need to know the basic features of KOS.
 Let’s begin with the <code class="docutils literal notranslate"><span class="pre">print</span></code> command. Type the following in your terminal and press <code class="docutils literal notranslate"><span class="pre">ENTER</span></code> to enter the piece of code. Keep in mind that <strong>ALL</strong> lines of code require a period
 at the end of the line, there are some exceptions but more about that later.</p>
@@ -254,7 +259,7 @@ both you could do:</p>
 </div>
 </section>
 <section id="if-statements">
-<h2><a class="toc-backref" href="#id5" role="doc-backlink">If statements</a><a class="headerlink" href="#if-statements" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id5">If statements</a><a class="headerlink" href="#if-statements" title="Permalink to this heading">¶</a></h2>
 <p>Now we know how to set certain text to a variable we can explore more stuff.
 For instance <code class="docutils literal notranslate"><span class="pre">if</span></code>, this checks if a certain value matches the given value.</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="mf">1</span><span class="p">.</span>
@@ -319,10 +324,10 @@ then check the following <code class="docutils literal notranslate"><span class=
 <p>This would print <code class="docutils literal notranslate"><span class="pre">this</span> <span class="pre">is</span> <span class="pre">a</span> <span class="pre">dog</span></code>.</p>
 </section>
 <section id="if-vs-else-if">
-<h2><a class="toc-backref" href="#id6" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">if</span></code> vs <code class="docutils literal notranslate"><span class="pre">else</span> <span class="pre">if</span></code></a><a class="headerlink" href="#if-vs-else-if" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id6"><code class="docutils literal notranslate"><span class="pre">if</span></code> vs <code class="docutils literal notranslate"><span class="pre">else</span> <span class="pre">if</span></code></a><a class="headerlink" href="#if-vs-else-if" title="Permalink to this heading">¶</a></h2>
 <p>Hopefully you now know the basics of how <code class="docutils literal notranslate"><span class="pre">if</span></code> works. You might be wondering why use <code class="docutils literal notranslate"><span class="pre">else</span> <span class="pre">if</span></code> if it’s the same as <code class="docutils literal notranslate"><span class="pre">if</span></code>.</p>
 <section id="example-1-using-else-if">
-<h3><a class="toc-backref" href="#id7" role="doc-backlink">Example 1, using <code class="docutils literal notranslate"><span class="pre">else</span> <span class="pre">if</span></code></a><a class="headerlink" href="#example-1-using-else-if" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id7">Example 1, using <code class="docutils literal notranslate"><span class="pre">else</span> <span class="pre">if</span></code></a><a class="headerlink" href="#example-1-using-else-if" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nv">distance</span> <span class="o">&lt;=</span> <span class="mf">1</span> <span class="p">{</span>
   <span class="k">print</span> <span class="s">&quot;Distance is within a meter.&quot;</span><span class="p">.</span>
 <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="nv">distance</span> <span class="o">&lt;=</span> <span class="mf">100</span> <span class="p">{</span>
@@ -334,7 +339,7 @@ then check the following <code class="docutils literal notranslate"><span class=
 </div>
 </section>
 <section id="example-2-only-using-if">
-<h3><a class="toc-backref" href="#id8" role="doc-backlink">Example 2, only using <code class="docutils literal notranslate"><span class="pre">if</span></code></a><a class="headerlink" href="#example-2-only-using-if" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id8">Example 2, only using <code class="docutils literal notranslate"><span class="pre">if</span></code></a><a class="headerlink" href="#example-2-only-using-if" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nv">distance</span> <span class="o">&lt;=</span> <span class="mf">1</span> <span class="p">{</span>
   <span class="k">print</span> <span class="s">&quot;Distance is within a meter.&quot;</span><span class="p">.</span>
 <span class="p">}</span>
@@ -385,7 +390,7 @@ than 100 meters show up we have a big problem. This could be fixed by doing the 
 </section>
 </section>
 <section id="until-lock-and-wait">
-<h2><a class="toc-backref" href="#id9" role="doc-backlink">Until, lock and wait</a><a class="headerlink" href="#until-lock-and-wait" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id9">Until, lock and wait</a><a class="headerlink" href="#until-lock-and-wait" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">wait</span></code> command is pretty straight forward:</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">wait</span> <span class="mf">10</span><span class="p">.</span>
 <span class="k">print</span> <span class="s">&quot;done waiting&quot;</span><span class="p">.</span>
@@ -428,7 +433,7 @@ Here’s an example of what the <code class="docutils literal notranslate"><span
 <p>If you print <code class="docutils literal notranslate"><span class="pre">TimeSecondsPlusTen</span></code> at 60 seconds it will show 70, if you print
 <code class="docutils literal notranslate"><span class="pre">TimeSecondsPlusTen</span></code> at 4000 seconds it will show 4010.</p>
 <section id="using-until-lock-and-wait-in-an-example">
-<h3><a class="toc-backref" href="#id10" role="doc-backlink">Using until, lock and wait in an example</a><a class="headerlink" href="#using-until-lock-and-wait-in-an-example" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id10">Using until, lock and wait in an example</a><a class="headerlink" href="#using-until-lock-and-wait-in-an-example" title="Permalink to this heading">¶</a></h3>
 <p>If we now combine all the command we can make the following piece of code:</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">Adder</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span>
 <span class="k">lock</span> <span class="nv">Multiplier</span> <span class="ow">to</span> <span class="nv">Adder</span> <span class="o">*</span> <span class="mf">2</span><span class="p">.</span>
@@ -455,7 +460,7 @@ In this case that’d be: print <code class="docutils literal notranslate"><span
 </div>
 </section>
 <section id="wait-until">
-<h3><a class="toc-backref" href="#id11" role="doc-backlink">Wait until</a><a class="headerlink" href="#wait-until" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id11">Wait until</a><a class="headerlink" href="#wait-until" title="Permalink to this heading">¶</a></h3>
 <p>You can also use the <code class="docutils literal notranslate"><span class="pre">wait</span> <span class="pre">until</span></code> command, this pauses the current script until the
 conditions have been met.</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">TimePlusFive</span> <span class="ow">to</span> <span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span> <span class="o">+</span> <span class="mf">5</span><span class="p">.</span>
@@ -468,7 +473,7 @@ Note: the <code class="docutils literal notranslate"><span class="pre">wait</spa
 </section>
 </section>
 <section id="lists-and-lexicons">
-<h2><a class="toc-backref" href="#id12" role="doc-backlink">Lists and lexicons</a><a class="headerlink" href="#lists-and-lexicons" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id12">Lists and lexicons</a><a class="headerlink" href="#lists-and-lexicons" title="Permalink to this heading">¶</a></h2>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">Value1</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span>
 <span class="k">set</span> <span class="nv">Value2</span> <span class="ow">to</span> <span class="mf">5</span><span class="p">.</span>
 <span class="k">set</span> <span class="nv">Value3</span> <span class="ow">to</span> <span class="mf">10</span><span class="p">.</span>
@@ -533,7 +538,7 @@ This checks each item in a given list (now called <code class="docutils literal 
 </pre></div>
 </div>
 <section id="lexicons">
-<h3><a class="toc-backref" href="#id13" role="doc-backlink">Lexicons</a><a class="headerlink" href="#lexicons" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id13">Lexicons</a><a class="headerlink" href="#lexicons" title="Permalink to this heading">¶</a></h3>
 <p>Lexicons are in a way the same as lists but they have some crucial differences.
 Lexicons can store a pair of information, for example:</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">MyLexicon</span> <span class="ow">to</span> <span class="nv">lexicon</span><span class="p">(</span><span class="s">&quot;MyValue1&quot;</span><span class="p">,</span> <span class="mf">100</span><span class="p">,</span> <span class="s">&quot;MyValue2&quot;</span><span class="p">,</span> <span class="mf">200</span><span class="p">,</span> <span class="s">&quot;MyValue3&quot;</span><span class="p">,</span> <span class="mf">300</span><span class="p">).</span>
@@ -556,7 +561,7 @@ Lexicons can store a pair of information, for example:</p>
 </section>
 </section>
 <section id="functions">
-<h2><a class="toc-backref" href="#id14" role="doc-backlink">Functions</a><a class="headerlink" href="#functions" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id14">Functions</a><a class="headerlink" href="#functions" title="Permalink to this heading">¶</a></h2>
 <p>Imagine you’re driving in a manual shift car for with an instructor for the first time.
 He helps you getting into first gear and tells you the following when you want to accelerate:</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">Let</span> <span class="nv">go</span> <span class="nv">of</span> <span class="nv">the</span> <span class="nv">gas</span> <span class="nv">pedal</span><span class="p">.</span>
@@ -641,7 +646,7 @@ To go from second to third you’d use:
 To go from third to second you’d use:
 <code class="docutils literal notranslate"><span class="pre">ShiftGear(third,</span> <span class="pre">second)</span></code>.</p>
 <section id="a-working-example-of-a-function">
-<h3><a class="toc-backref" href="#id15" role="doc-backlink">A working example of a function</a><a class="headerlink" href="#a-working-example-of-a-function" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id15">A working example of a function</a><a class="headerlink" href="#a-working-example-of-a-function" title="Permalink to this heading">¶</a></h3>
 <p>Here’s an example of a simple function which works in KOS:</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="kd">Function</span> <span class="nv">OneThroughFivePrint</span> <span class="p">{</span>
   <span class="k">print</span> <span class="mf">1</span><span class="p">.</span>
@@ -667,7 +672,7 @@ A function will do anything that’s inside of the curly brackets. To use this f
 </div>
 </section>
 <section id="a-more-complex-function">
-<h3><a class="toc-backref" href="#id16" role="doc-backlink">A more complex function</a><a class="headerlink" href="#a-more-complex-function" title="Permalink to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id16">A more complex function</a><a class="headerlink" href="#a-more-complex-function" title="Permalink to this heading">¶</a></h3>
 <p>Here’s an example of a more complex function which has a parameter and will also work in KOS:</p>
 <p>Let’s say we’re in a perfectly circular orbit around kerbin, we can use the following formula:
 <code class="docutils literal notranslate"><span class="pre">velocity</span> <span class="pre">=</span> <span class="pre">(2</span> <span class="pre">*</span> <span class="pre">pi</span> <span class="pre">*</span> <span class="pre">radius)</span> <span class="pre">/</span> <span class="pre">orbital</span> <span class="pre">period</span></code>

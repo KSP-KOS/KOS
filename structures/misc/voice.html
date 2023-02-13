@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Voice &mdash; kOS 1.3.3.0 documentation</title>
+  <title>Voice &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
+            <img src="../../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -132,21 +137,21 @@ have not already done so before reading this page.  The things mentioned
 here are just ways to access the features of the SKID chip so they won’t
 be fully explained on this page, instead just referring to the SKID
 documentation with links.</p>
-<nav class="contents local" id="contents">
+<div class="contents local topic" id="contents">
 <p class="topic-title">Contents</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#functions" id="id3">Functions</a></p></li>
 <li><p><a class="reference internal" href="#structure" id="id4">Structure</a></p></li>
 <li><p><a class="reference internal" href="#example-song" id="id5">Example Song</a></p></li>
 </ul>
-</nav>
+</div>
 <section id="functions">
-<h2><a class="toc-backref" href="#id3" role="doc-backlink">Functions</a><a class="headerlink" href="#functions" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id3">Functions</a><a class="headerlink" href="#functions" title="Permalink to this heading">¶</a></h2>
 <span class="target" id="getvoice"></span><dl class="ks function">
 <dt class="sig sig-object ks" id="function:GETVOICE">
 <span class="sig-name descname"><span class="pre">GETVOICE</span></span><span class="sig-paren">(</span><span class="pre">num</span><span class="sig-paren">)</span><a class="headerlink" href="#function:GETVOICE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#structure:VOICE" title="VOICE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Voice</span></code></a></p>
 </dd>
 </dl>
@@ -162,7 +167,7 @@ called 0).</p>
 <dt class="sig sig-object ks" id="function:STOPALLVOICES">
 <span class="sig-name descname"><span class="pre">STOPALLVOICES</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#function:STOPALLVOICES" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -178,17 +183,17 @@ you need to use multiple voices.  For simple one-voice situations,
 you probably only need to ever use voice 0.</p>
 </section>
 <section id="structure">
-<h2><a class="toc-backref" href="#id4" role="doc-backlink">Structure</a><a class="headerlink" href="#structure" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id4">Structure</a><a class="headerlink" href="#structure" title="Permalink to this heading">¶</a></h2>
 <dl class="ks structure">
 <dt class="sig sig-object ks" id="structure:VOICE">
 <em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">Voice</span></span><a class="headerlink" href="#structure:VOICE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils align-default" id="id2">
+<dd><table class="colwidths-given docutils align-default" id="id2">
 <caption><span class="caption-text">Members</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col style="width: 25.0%" />
-<col style="width: 12.5%" />
-<col style="width: 12.5%" />
-<col style="width: 50.0%" />
+<col style="width: 25%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 50%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suffix</p></th>
@@ -261,10 +266,10 @@ you probably only need to ever use voice 0.</p>
 <dt class="sig sig-object ks" id="attribute:VOICE:ATTACK">
 <span class="pre">Voice:</span><span class="sig-name descname"><span class="pre">ATTACK</span></span><a class="headerlink" href="#attribute:VOICE:ATTACK" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (seconds)</p>
 </dd>
 </dl>
@@ -277,10 +282,10 @@ in seconds (usually a fractional portion of a second).</p>
 <dt class="sig sig-object ks" id="attribute:VOICE:DECAY">
 <span class="pre">Voice:</span><span class="sig-name descname"><span class="pre">DECAY</span></span><a class="headerlink" href="#attribute:VOICE:DECAY" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (seconds)</p>
 </dd>
 </dl>
@@ -293,10 +298,10 @@ in seconds (usually a fractional portion of a second).</p>
 <dt class="sig sig-object ks" id="attribute:VOICE:SUSTAIN">
 <span class="pre">Voice:</span><span class="sig-name descname"><span class="pre">SUSTAIN</span></span><a class="headerlink" href="#attribute:VOICE:SUSTAIN" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> in the range [0..1]</p>
 </dd>
 </dl>
@@ -312,10 +317,10 @@ on this voice.  (i.e. 0.5 would mean “sustain at half volume”).</p>
 <dt class="sig sig-object ks" id="attribute:VOICE:RELEASE">
 <span class="pre">Voice:</span><span class="sig-name descname"><span class="pre">RELEASE</span></span><a class="headerlink" href="#attribute:VOICE:RELEASE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (seconds)</p>
 </dd>
 </dl>
@@ -333,10 +338,10 @@ off before the Release has a chance to happen.</p>
 <dt class="sig sig-object ks" id="attribute:VOICE:VOLUME">
 <span class="pre">Voice:</span><span class="sig-name descname"><span class="pre">VOLUME</span></span><a class="headerlink" href="#attribute:VOICE:VOLUME" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -353,10 +358,10 @@ max at 50%, <em>really</em>.  Setting this value to 0 will silence the voice.</p
 <dt class="sig sig-object ks" id="attribute:VOICE:WAVE">
 <span class="pre">Voice:</span><span class="sig-name descname"><span class="pre">WAVE</span></span><a class="headerlink" href="#attribute:VOICE:WAVE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -372,15 +377,15 @@ value will be ignored and it will remain at its previous value.</p>
 <dt class="sig sig-object ks" id="method:VOICE:PLAY">
 <span class="pre">Voice:</span><span class="sig-name descname"><span class="pre">PLAY</span></span><span class="sig-paren">(</span><span class="pre">note_or_list</span><span class="sig-paren">)</span><a class="headerlink" href="#method:VOICE:PLAY" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Call (method)</p>
 </dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dt class="field-even">Parameters</dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>note_or_list</strong> – Either one <a class="reference internal" href="note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Note</span></code></a> or a <a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Note</span></code></a>’s</p></li>
 </ul>
 </dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -431,10 +436,10 @@ PLAY() when it’s being done on the <em>same</em> voice.</p>
 <dt class="sig sig-object ks" id="method:VOICE:STOP">
 <span class="pre">Voice:</span><span class="sig-name descname"><span class="pre">STOP</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:VOICE:STOP" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Call (method)</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -447,10 +452,10 @@ currently being played, that note will be stopped.</p>
 <dt class="sig sig-object ks" id="attribute:VOICE:LOOP">
 <span class="pre">Voice:</span><span class="sig-name descname"><span class="pre">LOOP</span></span><a class="headerlink" href="#attribute:VOICE:LOOP" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -466,10 +471,10 @@ it will keep repeating the same note continually).</p>
 <dt class="sig sig-object ks" id="attribute:VOICE:ISPLAYING">
 <span class="pre">Voice:</span><span class="sig-name descname"><span class="pre">ISPLAYING</span></span><a class="headerlink" href="#attribute:VOICE:ISPLAYING" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -489,10 +494,10 @@ setting this to true because when it becomes false, the voice
 <dt class="sig sig-object ks" id="attribute:VOICE:TEMPO">
 <span class="pre">Voice:</span><span class="sig-name descname"><span class="pre">TEMPO</span></span><a class="headerlink" href="#attribute:VOICE:TEMPO" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -527,7 +532,7 @@ that have a slow attack or decay.</p>
 
 </section>
 <section id="example-song">
-<span id="voicesong"></span><h2><a class="toc-backref" href="#id5" role="doc-backlink">Example Song</a><a class="headerlink" href="#example-song" title="Permalink to this heading">¶</a></h2>
+<span id="voicesong"></span><h2><a class="toc-backref" href="#id5">Example Song</a><a class="headerlink" href="#example-song" title="Permalink to this heading">¶</a></h2>
 <p>Below is a more complex full example that demonstrates the chip a bit more.
 Type it in (or cut and paste it) to see the system at work:</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="nv">brakes</span> <span class="nb">on</span><span class="p">.</span>

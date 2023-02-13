@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Box &mdash; kOS 1.3.3.0 documentation</title>
+  <title>Box &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
+            <img src="../../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -133,6 +138,11 @@ contains widgets, that means you can also put a <code class="docutils literal no
 of a box.  Usually the reason to do this is to define exactly how you want
 a set of widgets laid out.</p>
 <table class="docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 21%" />
+<col style="width: 54%" />
+</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suffix</p></th>
 <th class="head"><p>Type</p></th>
@@ -228,12 +238,12 @@ a set of widgets laid out.</p>
 <dt class="sig sig-object ks" id="method:BOX:ADDLABEL">
 <span class="pre">Box:</span><span class="sig-name descname"><span class="pre">ADDLABEL</span></span><span class="sig-paren">(</span><span class="pre">text</span><span class="sig-paren">)</span><a class="headerlink" href="#method:BOX:ADDLABEL" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>text</strong> – <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="label.html#structure:LABEL" title="LABEL structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Label</span></code></a></p>
 </dd>
 </dl>
@@ -245,12 +255,12 @@ display the text message given in the parameter.</p>
 <dt class="sig sig-object ks" id="method:BOX:ADDBUTTON">
 <span class="pre">Box:</span><span class="sig-name descname"><span class="pre">ADDBUTTON</span></span><span class="sig-paren">(</span><span class="pre">text</span><span class="sig-paren">)</span><a class="headerlink" href="#method:BOX:ADDBUTTON" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>text</strong> – <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="button.html#structure:BUTTON" title="BUTTON structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Button</span></code></a></p>
 </dd>
 </dl>
@@ -261,13 +271,13 @@ display the text message given in the parameter.</p>
 <dt class="sig sig-object ks" id="method:BOX:ADDCHECKBOX">
 <span class="pre">Box:</span><span class="sig-name descname"><span class="pre">ADDCHECKBOX</span></span><span class="sig-paren">(</span><span class="pre">text,</span> <span class="pre">on</span><span class="sig-paren">)</span><a class="headerlink" href="#method:BOX:ADDCHECKBOX" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>text</strong> – <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> text to display</p></li>
 <li><p><strong>on</strong> – <a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a> state of the checkbox initially</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="button.html#structure:BUTTON" title="BUTTON structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Button</span></code></a></p>
 </dd>
 </dl>
@@ -281,13 +291,13 @@ depending on the state of the <code class="docutils literal notranslate"><span c
 <dt class="sig sig-object ks" id="method:BOX:ADDRADIOBUTTON">
 <span class="pre">Box:</span><span class="sig-name descname"><span class="pre">ADDRADIOBUTTON</span></span><span class="sig-paren">(</span><span class="pre">text,</span> <span class="pre">on</span><span class="sig-paren">)</span><a class="headerlink" href="#method:BOX:ADDRADIOBUTTON" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>text</strong> – <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> text to display</p></li>
 <li><p><strong>on</strong> – <a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a> state of the checkbox initially</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="button.html#structure:BUTTON" title="BUTTON structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Button</span></code></a></p>
 </dd>
 </dl>
@@ -311,12 +321,12 @@ among the whole set of buttons, you can use <a class="reference internal" href="
 <dt class="sig sig-object ks" id="method:BOX:ADDTEXTFIELD">
 <span class="pre">Box:</span><span class="sig-name descname"><span class="pre">ADDTEXTFIELD</span></span><span class="sig-paren">(</span><span class="pre">text</span><span class="sig-paren">)</span><a class="headerlink" href="#method:BOX:ADDTEXTFIELD" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>text</strong> – struct:<cite>String</cite> initial starting text in the field.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="textfield.html#structure:TEXTFIELD" title="TEXTFIELD structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">TextField</span></code></a></p>
 </dd>
 </dl>
@@ -330,7 +340,7 @@ The field will be a one-line string input.</p>
 <dt class="sig sig-object ks" id="method:BOX:ADDPOPUPMENU">
 <span class="pre">Box:</span><span class="sig-name descname"><span class="pre">ADDPOPUPMENU</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:BOX:ADDPOPUPMENU" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><a class="reference internal" href="popupmenu.html#structure:POPUPMENU" title="POPUPMENU structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">PopupMenu</span></code></a></p>
 </dd>
 </dl>
@@ -359,14 +369,14 @@ having called <code class="docutils literal notranslate"><span class="pre">ADDPO
 <dt class="sig sig-object ks" id="method:BOX:ADDHSLIDER">
 <span class="pre">Box:</span><span class="sig-name descname"><span class="pre">ADDHSLIDER</span></span><span class="sig-paren">(</span><span class="pre">init,</span> <span class="pre">min,</span> <span class="pre">max</span><span class="sig-paren">)</span><a class="headerlink" href="#method:BOX:ADDHSLIDER" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>init</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> starting value</p></li>
 <li><p><strong>min</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> left endpoint value</p></li>
 <li><p><strong>max</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> right endpoint value</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="slider.html#structure:SLIDER" title="SLIDER structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Slider</span></code></a></p>
 </dd>
 </dl>
@@ -383,14 +393,14 @@ at the right.</p>
 <dt class="sig sig-object ks" id="method:BOX:ADDVSLIDER">
 <span class="pre">Box:</span><span class="sig-name descname"><span class="pre">ADDVSLIDER</span></span><span class="sig-paren">(</span><span class="pre">init,</span> <span class="pre">min,</span> <span class="pre">max</span><span class="sig-paren">)</span><a class="headerlink" href="#method:BOX:ADDVSLIDER" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>init</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> starting value</p></li>
 <li><p><strong>min</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> top endpoint value</p></li>
 <li><p><strong>max</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> bottom endpoint value</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="slider.html#structure:SLIDER" title="SLIDER structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Slider</span></code></a></p>
 </dd>
 </dl>
@@ -407,7 +417,7 @@ at the top.</p>
 <dt class="sig sig-object ks" id="method:BOX:ADDHLAYOUT">
 <span class="pre">Box:</span><span class="sig-name descname"><span class="pre">ADDHLAYOUT</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:BOX:ADDHLAYOUT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#structure:BOX" title="BOX structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Box</span></code></a></p>
 </dd>
 </dl>
@@ -431,7 +441,7 @@ as a single rectangular chunk that gets arranged together as a unit.</p></li>
 <dt class="sig sig-object ks" id="method:BOX:ADDVLAYOUT">
 <span class="pre">Box:</span><span class="sig-name descname"><span class="pre">ADDVLAYOUT</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:BOX:ADDVLAYOUT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#structure:BOX" title="BOX structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Box</span></code></a></p>
 </dd>
 </dl>
@@ -458,7 +468,7 @@ as a single rectangular chunk that gets arranged together as a unit.</p></li>
 <dt class="sig sig-object ks" id="method:BOX:ADDHBOX">
 <span class="pre">Box:</span><span class="sig-name descname"><span class="pre">ADDHBOX</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:BOX:ADDHBOX" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#structure:BOX" title="BOX structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Box</span></code></a></p>
 </dd>
 </dl>
@@ -471,7 +481,7 @@ see the box.</p>
 <dt class="sig sig-object ks" id="method:BOX:ADDVBOX">
 <span class="pre">Box:</span><span class="sig-name descname"><span class="pre">ADDVBOX</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:BOX:ADDVBOX" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#structure:BOX" title="BOX structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Box</span></code></a></p>
 </dd>
 </dl>
@@ -484,7 +494,7 @@ see the box.</p>
 <dt class="sig sig-object ks" id="method:BOX:ADDSTACK">
 <span class="pre">Box:</span><span class="sig-name descname"><span class="pre">ADDSTACK</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:BOX:ADDSTACK" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#structure:BOX" title="BOX structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Box</span></code></a></p>
 </dd>
 </dl>
@@ -514,7 +524,7 @@ manipulate these kinds of sub-boxes.</p>
 <dt class="sig sig-object ks" id="method:BOX:ADDSCROLLBOX">
 <span class="pre">Box:</span><span class="sig-name descname"><span class="pre">ADDSCROLLBOX</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:BOX:ADDSCROLLBOX" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><a class="reference internal" href="scrollbox.html#structure:SCROLLBOX" title="SCROLLBOX structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">ScrollBox</span></code></a></p>
 </dd>
 </dl>
@@ -535,12 +545,12 @@ for <a class="reference internal" href="scrollbox.html#structure:SCROLLBOX" titl
 <dt class="sig sig-object ks" id="method:BOX:ADDSPACING">
 <span class="pre">Box:</span><span class="sig-name descname"><span class="pre">ADDSPACING</span></span><span class="sig-paren">(</span><span class="pre">size</span><span class="sig-paren">)</span><a class="headerlink" href="#method:BOX:ADDSPACING" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>size</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> the size of the area to take up with empty space.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="spacing.html#structure:SPACING" title="SPACING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Spacing</span></code></a></p>
 </dd>
 </dl>
@@ -573,10 +583,10 @@ was a <a class="reference internal" href="#method:BOX:ADDVLAYOUT" title="BOX:ADD
 <dt class="sig sig-object ks" id="attribute:BOX:WIDGETS">
 <span class="pre">Box:</span><span class="sig-name descname"><span class="pre">WIDGETS</span></span><a class="headerlink" href="#attribute:BOX:WIDGETS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List(Widget)</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get-only</p>
 </dd>
 </dl>
@@ -595,10 +605,10 @@ list the box itself uses internally.)</p>
 <dt class="sig sig-object ks" id="attribute:BOX:RADIOVALUE">
 <span class="pre">Box:</span><span class="sig-name descname"><span class="pre">RADIOVALUE</span></span><a class="headerlink" href="#attribute:BOX:RADIOVALUE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get-only</p>
 </dd>
 </dl>
@@ -618,10 +628,10 @@ will return a value of <code class="docutils literal notranslate"><span class="p
 <dt class="sig sig-object ks" id="attribute:BOX:ONRADIOCHANGE">
 <span class="pre">Box:</span><span class="sig-name descname"><span class="pre">ONRADIOCHANGE</span></span><a class="headerlink" href="#attribute:BOX:ONRADIOCHANGE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">KOSDelegate</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get/Set</p>
 </dd>
 </dl>
@@ -654,12 +664,12 @@ behaves as follows:</p>
 <dt class="sig sig-object ks" id="method:BOX:SHOWONLY">
 <span class="pre">Box:</span><span class="sig-name descname"><span class="pre">SHOWONLY</span></span><span class="sig-paren">(</span><span class="pre">widget</span><span class="sig-paren">)</span><a class="headerlink" href="#method:BOX:SHOWONLY" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>widget</strong> – </p></li>
 </ul>
 </dd>
-<dt class="field-even">Type widget<span class="colon">:</span></dt>
+<dt class="field-even">Type widget</dt>
 <dd class="field-even"><p><a class="reference internal" href="widget.html#structure:WIDGET" title="WIDGET structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Widget</span></code></a></p>
 </dd>
 </dl>
@@ -676,7 +686,7 @@ of them you are making visible at the moment.</p>
 <dt class="sig sig-object ks" id="method:BOX:CLEAR">
 <span class="pre">Box:</span><span class="sig-name descname"><span class="pre">CLEAR</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:BOX:CLEAR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>none</p>
 </dd>
 </dl>

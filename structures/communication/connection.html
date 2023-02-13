@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Connection &mdash; kOS 1.3.3.0 documentation</title>
+  <title>Connection &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
+            <img src="../../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -125,11 +130,11 @@ You can obtain a connection by using <cite>CONNECTION</cite> suffix. Assuming yo
 <dl class="ks structure">
 <dt class="sig sig-object ks" id="structure:CONNECTION">
 <em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">Connection</span></span><a class="headerlink" href="#structure:CONNECTION" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils align-default">
+<dd><table class="colwidths-given docutils align-default">
 <colgroup>
-<col style="width: 28.6%" />
-<col style="width: 14.3%" />
-<col style="width: 57.1%" />
+<col style="width: 29%" />
+<col style="width: 14%" />
+<col style="width: 57%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suffix</p></th>
@@ -162,7 +167,7 @@ You can obtain a connection by using <cite>CONNECTION</cite> suffix. Assuming yo
 <dt class="sig sig-object ks" id="attribute:CONNECTION:ISCONNECTED">
 <span class="pre">Connection:</span><span class="sig-name descname"><span class="pre">ISCONNECTED</span></span><a class="headerlink" href="#attribute:CONNECTION:ISCONNECTED" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -260,7 +265,7 @@ distances.</p></li>
 <dt class="sig sig-object ks" id="attribute:CONNECTION:DESTINATION">
 <span class="pre">Connection:</span><span class="sig-name descname"><span class="pre">DESTINATION</span></span><a class="headerlink" href="#attribute:CONNECTION:DESTINATION" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Vessel</span></code></a> or <a class="reference internal" href="../vessels/kosprocessor.html#structure:KOSPROCESSOR" title="KOSPROCESSOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">kOSProcessor</span></code></a></p>
 </dd>
 </dl>
@@ -271,12 +276,12 @@ distances.</p></li>
 <dt class="sig sig-object ks" id="method:CONNECTION:SENDMESSAGE">
 <span class="pre">Connection:</span><span class="sig-name descname"><span class="pre">SENDMESSAGE</span></span><span class="sig-paren">(</span><span class="pre">message</span><span class="sig-paren">)</span><a class="headerlink" href="#method:CONNECTION:SENDMESSAGE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>message</strong> – <a class="reference internal" href="../reflection/structure.html#structure:STRUCTURE" title="STRUCTURE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Structure</span></code></a></p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>(<a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a>) true if the message was successfully sent.</p>
 </dd>
 </dl>

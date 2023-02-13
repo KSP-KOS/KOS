@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The kOS Telnet Server &mdash; kOS 1.3.3.0 documentation</title>
+  <title>The kOS Telnet Server &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../contents.html" class="icon icon-home"> kOS
+            <img src="../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -128,7 +133,7 @@ in the section called <a class="reference internal" href="#telnet-clients">Telne
 first time you turn it on you will see some warning messages to this effect.
 If you want to read further about these concerns before deciding to turn it
 on, see the section called “<a class="reference internal" href="#security">Security</a>” at the bottom of this page.</p>
-<nav class="contents local" id="contents">
+<div class="contents local topic" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#telnet-clients" id="id4">Telnet clients</a></p></li>
 <li><p><a class="reference internal" href="#simulate-in-background" id="id5">Simulate in Background</a></p></li>
@@ -140,12 +145,12 @@ on, see the section called “<a class="reference internal" href="#security">Sec
 <li><p><a class="reference internal" href="#security" id="id11">Security</a></p></li>
 <li><p><a class="reference internal" href="#homemade-telnet-clients" id="id12">Homemade telnet clients</a></p></li>
 </ul>
-</nav>
+</div>
 <figure class="align-default">
 <a class="reference internal image-reference" href="../_images/telnet.png"><img alt="../_images/telnet.png" src="../_images/telnet.png" style="width: 95%;" /></a>
 </figure>
 <section id="telnet-clients">
-<h2><a class="toc-backref" href="#id4" role="doc-backlink">Telnet clients</a><a class="headerlink" href="#telnet-clients" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id4">Telnet clients</a><a class="headerlink" href="#telnet-clients" title="Permalink to this heading">¶</a></h2>
 <p>The telnet server for kOS requires the use of a
 <a class="reference external" href="http://www.telnet.org/htm/applications.htm">telnet client program</a>. We
 recommend the following programs, although you can use others:</p>
@@ -170,7 +175,7 @@ command, as described by the section titled “<a class="reference internal" hre
 </dl>
 </section>
 <section id="simulate-in-background">
-<h2><a class="toc-backref" href="#id5" role="doc-backlink">Simulate in Background</a><a class="headerlink" href="#simulate-in-background" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id5">Simulate in Background</a><a class="headerlink" href="#simulate-in-background" title="Permalink to this heading">¶</a></h2>
 <p>To use the kOS telnet feature, you must have the stock KSP game’s
 option called “Simulate in Background” turned on.  This option
 is found on Kerbal Space Program’s “General” settings screen
@@ -187,7 +192,7 @@ the focussed window instead of the KSP game, so this issue will
 come up the majority of the time.)</p>
 </section>
 <section id="using-it">
-<h2><a class="toc-backref" href="#id6" role="doc-backlink">Using it</a><a class="headerlink" href="#using-it" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id6">Using it</a><a class="headerlink" href="#using-it" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic">
 <li><p>Turn on the telnet server by going into the app control panel and clicking
 on the green circle next to the word “Telnet”.  Alternatively, you can
@@ -295,7 +300,7 @@ the telnet welcome menu again.</p></li>
 </ol>
 </section>
 <section id="special-keys">
-<h2><a class="toc-backref" href="#id7" role="doc-backlink">Special Keys</a><a class="headerlink" href="#special-keys" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id7">Special Keys</a><a class="headerlink" href="#special-keys" title="Permalink to this heading">¶</a></h2>
 <p>The following keys have special meaning in the telnet session:</p>
 <dl class="simple">
 <dt>Control-L</dt><dd><p><strong>Force refresh</strong> Pressing Control-L forces the kOS telnet server to
@@ -344,7 +349,7 @@ terminal code for it.</p>
 </dl>
 </section>
 <section id="howto-putty-client">
-<h2><a class="toc-backref" href="#id8" role="doc-backlink">HOWTO: Putty client</a><a class="headerlink" href="#howto-putty-client" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id8">HOWTO: Putty client</a><a class="headerlink" href="#howto-putty-client" title="Permalink to this heading">¶</a></h2>
 <p>(These instructions assume you use the default kOS Telnet server settings, of
 the loopback address 127.0.0.1, and port number 5410.  If you’ve changed those
 settings then alter the numbers you see here accordingly.)</p>
@@ -367,7 +372,7 @@ time there’s a problem, making it very hard to diagnose because you can’t se
 message the server was sending back to you just before the window went away.</p>
 </section>
 <section id="howto-command-line-client">
-<h2><a class="toc-backref" href="#id9" role="doc-backlink">HOWTO: Command-line client</a><a class="headerlink" href="#howto-command-line-client" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id9">HOWTO: Command-line client</a><a class="headerlink" href="#howto-command-line-client" title="Permalink to this heading">¶</a></h2>
 <figure class="align-default" id="id2">
 <a class="reference internal image-reference" href="../_images/telnet_xterm.png"><img alt="../_images/telnet_xterm.png" src="../_images/telnet_xterm.png" style="width: 75%;" /></a>
 <figcaption>
@@ -398,7 +403,7 @@ actually have the xterm program itself installed that you can use.</p></li>
 </ol>
 </section>
 <section id="howto-other-client">
-<h2><a class="toc-backref" href="#id10" role="doc-backlink">HOWTO: Other client</a><a class="headerlink" href="#howto-other-client" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id10">HOWTO: Other client</a><a class="headerlink" href="#howto-other-client" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic simple">
 <li><p>Set the IP address to 127.0.0.1 using whatever means the program has for it.</p></li>
 <li><p>Set the port number to 5410 using whatever means the program has for it.</p></li>
@@ -408,7 +413,7 @@ less good, but still perhaps workable option.</p></li>
 </ol>
 </section>
 <section id="security">
-<h2><a class="toc-backref" href="#id11" role="doc-backlink">Security</a><a class="headerlink" href="#security" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id11">Security</a><a class="headerlink" href="#security" title="Permalink to this heading">¶</a></h2>
 <p>The telnet protocol performs no encryption of its data, and as such any attempt
 at securing the system using a name/password combination would have been
 utterly pointless.  Rather than provide a false sense of security that’s not
@@ -458,7 +463,7 @@ of kOS.  (While implementing from scratch the server side of the older, simpler
 telnet protocol, while still work, was more doable).</p>
 </section>
 <section id="homemade-telnet-clients">
-<h2><a class="toc-backref" href="#id12" role="doc-backlink">Homemade telnet clients</a><a class="headerlink" href="#homemade-telnet-clients" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id12">Homemade telnet clients</a><a class="headerlink" href="#homemade-telnet-clients" title="Permalink to this heading">¶</a></h2>
 <p>This section is only of interest to hobbyists making Kerbal console hardware rigs
 and software developers trying to make interface mods that pretend to be
 kOS terminals.  If you are neither of those two, then don’t worry if this section

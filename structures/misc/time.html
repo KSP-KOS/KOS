@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Time &mdash; kOS 1.3.3.0 documentation</title>
+  <title>Time &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
+            <img src="../../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -207,15 +212,15 @@ the following points illustrate:</p>
 <dt class="sig sig-object ks" id="function:TIMESTAMP">
 <span class="sig-name descname"><span class="pre">TIMESTAMP</span></span><span class="sig-paren">(</span><span class="pre">universal_time</span><span class="sig-paren">)</span><a class="headerlink" href="#function:TIMESTAMP" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>universal_time</strong> – (<a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A :struct`TimeStamp` of the time represented by the seconds passed in.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#structure:TIMESTAMP" title="TIMESTAMP structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">TimeStamp</span></code></a></p>
 </dd>
 </dl>
@@ -234,7 +239,7 @@ gives you (without the parentheses).</p>
 <dt class="sig sig-object ks">
 <span class="sig-name descname"><span class="pre">TIMESTAMP</span></span><span class="sig-paren">(</span><span class="pre">year,day,hour,min,sec</span><span class="sig-paren">)</span></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>year</strong> – (<a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>)</p></li>
 <li><p><strong>day</strong> – (<a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>)</p></li>
@@ -243,10 +248,10 @@ gives you (without the parentheses).</p>
 <li><p><strong>sec</strong> – (<a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>) [optional]</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A :struct`TimeStamp` of the time represented by the values passed in.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#structure:TIMESTAMP" title="TIMESTAMP structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">TimeStamp</span></code></a></p>
 </dd>
 </dl>
@@ -273,15 +278,15 @@ the very start of that date, right at midnight 0:00:00 O’clock).</p>
 <dt class="sig sig-object ks" id="function:TIME">
 <span class="sig-name descname"><span class="pre">TIME</span></span><span class="sig-paren">(</span><span class="pre">universal_time</span><span class="sig-paren">)</span><a class="headerlink" href="#function:TIME" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>universal_time</strong> – (<a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A :struct`TimeStamp`</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#structure:TIMESTAMP" title="TIMESTAMP structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">TimeStamp</span></code></a></p>
 </dd>
 </dl>
@@ -297,10 +302,10 @@ written before this was renamed to <code class="docutils literal notranslate"><s
 <dt class="sig sig-object ks" id="global:TIME">
 <span class="sig-name descname"><span class="pre">TIME</span></span><a class="headerlink" href="#global:TIME" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="#structure:TIMESTAMP" title="TIMESTAMP structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">TimeStamp</span></code></a></p>
 </dd>
 </dl>
@@ -358,11 +363,11 @@ change too.</p>
 <section id="timestamp-structure">
 <h2>TimeStamp Structure<a class="headerlink" href="#timestamp-structure" title="Permalink to this heading">¶</a></h2>
 <blockquote>
-<div><table class="docutils align-default">
+<div><table class="colwidths-given docutils align-default">
 <colgroup>
-<col style="width: 16.7%" />
-<col style="width: 16.7%" />
-<col style="width: 66.7%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 67%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suffix</p></th>
@@ -418,10 +423,10 @@ change too.</p>
 <dt class="sig sig-object ks" id="attribute:TIMESTAMP:FULL">
 <span class="pre">TimeStamp:</span><span class="sig-name descname"><span class="pre">FULL</span></span><a class="headerlink" href="#attribute:TIMESTAMP:FULL" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -435,10 +440,10 @@ The format is:</p>
 <dt class="sig sig-object ks" id="attribute:TIMESTAMP:CLOCK">
 <span class="pre">TimeStamp:</span><span class="sig-name descname"><span class="pre">CLOCK</span></span><a class="headerlink" href="#attribute:TIMESTAMP:CLOCK" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -449,10 +454,10 @@ The format is:</p>
 <dt class="sig sig-object ks" id="attribute:TIMESTAMP:CALENDAR">
 <span class="pre">TimeStamp:</span><span class="sig-name descname"><span class="pre">CALENDAR</span></span><a class="headerlink" href="#attribute:TIMESTAMP:CALENDAR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -463,10 +468,10 @@ The format is:</p>
 <dt class="sig sig-object ks" id="attribute:TIMESTAMP:YEAR">
 <span class="pre">TimeStamp:</span><span class="sig-name descname"><span class="pre">YEAR</span></span><a class="headerlink" href="#attribute:TIMESTAMP:YEAR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -478,10 +483,10 @@ time is actullay year 1, not year 0.</p>
 <dt class="sig sig-object ks" id="attribute:TIMESTAMP:DAY">
 <span class="pre">TimeStamp:</span><span class="sig-name descname"><span class="pre">DAY</span></span><a class="headerlink" href="#attribute:TIMESTAMP:DAY" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (range varies by universe)</p>
 </dd>
 </dl>
@@ -499,10 +504,10 @@ be if it changes how long a year is in your solar system.</p>
 <dt class="sig sig-object ks" id="attribute:TIMESTAMP:HOUR">
 <span class="pre">TimeStamp:</span><span class="sig-name descname"><span class="pre">HOUR</span></span><a class="headerlink" href="#attribute:TIMESTAMP:HOUR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (0-5) or (0-23)</p>
 </dd>
 </dl>
@@ -515,10 +520,10 @@ from 0 to 23 (24 hour day).</p>
 <dt class="sig sig-object ks" id="attribute:TIMESTAMP:MINUTE">
 <span class="pre">TimeStamp:</span><span class="sig-name descname"><span class="pre">MINUTE</span></span><a class="headerlink" href="#attribute:TIMESTAMP:MINUTE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (0-59)</p>
 </dd>
 </dl>
@@ -529,10 +534,10 @@ from 0 to 23 (24 hour day).</p>
 <dt class="sig sig-object ks" id="attribute:TIMESTAMP:SECOND">
 <span class="pre">TimeStamp:</span><span class="sig-name descname"><span class="pre">SECOND</span></span><a class="headerlink" href="#attribute:TIMESTAMP:SECOND" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (0-59)</p>
 </dd>
 </dl>
@@ -543,10 +548,10 @@ from 0 to 23 (24 hour day).</p>
 <dt class="sig sig-object ks" id="attribute:TIMESTAMP:SECONDS">
 <span class="pre">TimeStamp:</span><span class="sig-name descname"><span class="pre">SECONDS</span></span><a class="headerlink" href="#attribute:TIMESTAMP:SECONDS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (float)</p>
 </dd>
 </dl>
@@ -580,15 +585,15 @@ for <a class="reference internal" href="#structure:TIMESTAMP" title="TIMESTAMP s
 <dt class="sig sig-object ks" id="function:TIMESPAN">
 <span class="sig-name descname"><span class="pre">TIMESPAN</span></span><span class="sig-paren">(</span><span class="pre">universal_time</span><span class="sig-paren">)</span><a class="headerlink" href="#function:TIMESPAN" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>universal_time</strong> – (<a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A :struct`TimeSpan` of the time represented by the seconds passed in.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#structure:TIMESPAN" title="TIMESPAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">TimeSpan</span></code></a></p>
 </dd>
 </dl>
@@ -602,7 +607,7 @@ passed in. Fractional seconds are allowed for more precise spans.</p>
 <dt class="sig sig-object ks">
 <span class="sig-name descname"><span class="pre">TIMESPAN</span></span><span class="sig-paren">(</span><span class="pre">year,day,hour,min,sec</span><span class="sig-paren">)</span></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>year</strong> – (<a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>)</p></li>
 <li><p><strong>day</strong> – (<a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>)</p></li>
@@ -611,10 +616,10 @@ passed in. Fractional seconds are allowed for more precise spans.</p>
 <li><p><strong>sec</strong> – (<a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>) [optional]</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A :struct`TimeSpan` of the time represented by the values passed in.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#structure:TIMESPAN" title="TIMESPAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">TimeSpan</span></code></a></p>
 </dd>
 </dl>
@@ -674,11 +679,11 @@ than one second.</p>
 <section id="timespan-structure">
 <h2>TimeSpan Structure<a class="headerlink" href="#timespan-structure" title="Permalink to this heading">¶</a></h2>
 <blockquote>
-<div><table class="docutils align-default">
+<div><table class="colwidths-given docutils align-default">
 <colgroup>
-<col style="width: 16.7%" />
-<col style="width: 16.7%" />
-<col style="width: 66.7%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 67%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suffix</p></th>
@@ -750,10 +755,10 @@ than one second.</p>
 <dt class="sig sig-object ks" id="attribute:TIMESPAN:FULL">
 <span class="pre">TimeSpan:</span><span class="sig-name descname"><span class="pre">FULL</span></span><a class="headerlink" href="#attribute:TIMESPAN:FULL" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -767,10 +772,10 @@ The format is:</p>
 <dt class="sig sig-object ks" id="attribute:TIMESPAN:CLOCK">
 <span class="pre">TimeSpan:</span><span class="sig-name descname"><span class="pre">CLOCK</span></span><a class="headerlink" href="#attribute:TIMESPAN:CLOCK" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -786,10 +791,10 @@ were looking for such a similar suffix for <a class="reference internal" href="#
 <dt class="sig sig-object ks" id="attribute:TIMESPAN:CALENDAR">
 <span class="pre">TimeSpan:</span><span class="sig-name descname"><span class="pre">CALENDAR</span></span><a class="headerlink" href="#attribute:TIMESPAN:CALENDAR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -805,10 +810,10 @@ case you were looking for such a similar suffix for <a class="reference internal
 <dt class="sig sig-object ks" id="attribute:TIMESPAN:YEAR">
 <span class="pre">TimeSpan:</span><span class="sig-name descname"><span class="pre">YEAR</span></span><a class="headerlink" href="#attribute:TIMESPAN:YEAR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -821,10 +826,10 @@ works for <a class="reference internal" href="#structure:TIMESTAMP" title="TIMES
 <dt class="sig sig-object ks" id="attribute:TIMESPAN:YEARS">
 <span class="pre">TimeSpan:</span><span class="sig-name descname"><span class="pre">YEARS</span></span><a class="headerlink" href="#attribute:TIMESPAN:YEARS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -841,10 +846,10 @@ as being <a class="reference internal" href="#attribute:TIMESPAN:SECONDS" title=
 <dt class="sig sig-object ks" id="attribute:TIMESPAN:DAY">
 <span class="pre">TimeSpan:</span><span class="sig-name descname"><span class="pre">DAY</span></span><a class="headerlink" href="#attribute:TIMESPAN:DAY" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (range varies by universe)</p>
 </dd>
 </dl>
@@ -865,10 +870,10 @@ works for <a class="reference internal" href="#structure:TIMESTAMP" title="TIMES
 <dt class="sig sig-object ks" id="attribute:TIMESPAN:DAYS">
 <span class="pre">TimeSpan:</span><span class="sig-name descname"><span class="pre">DAYS</span></span><a class="headerlink" href="#attribute:TIMESPAN:DAYS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -885,10 +890,10 @@ rather than <code class="docutils literal notranslate"><span class="pre">213</sp
 <dt class="sig sig-object ks" id="attribute:TIMESPAN:HOUR">
 <span class="pre">TimeSpan:</span><span class="sig-name descname"><span class="pre">HOUR</span></span><a class="headerlink" href="#attribute:TIMESPAN:HOUR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (0-5) or (0-23)</p>
 </dd>
 </dl>
@@ -902,10 +907,10 @@ from 0 to 23 (24 hour day).</p>
 <dt class="sig sig-object ks" id="attribute:TIMESPAN:HOURS">
 <span class="pre">TimeSpan:</span><span class="sig-name descname"><span class="pre">HOURS</span></span><a class="headerlink" href="#attribute:TIMESPAN:HOURS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -923,10 +928,10 @@ the <em>entire</em> span is 2 days of 6 hours each, plus 3 more hours, plus
 <dt class="sig sig-object ks" id="attribute:TIMESPAN:MINUTE">
 <span class="pre">TimeSpan:</span><span class="sig-name descname"><span class="pre">MINUTE</span></span><a class="headerlink" href="#attribute:TIMESPAN:MINUTE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (0-59)</p>
 </dd>
 </dl>
@@ -937,10 +942,10 @@ the <em>entire</em> span is 2 days of 6 hours each, plus 3 more hours, plus
 <dt class="sig sig-object ks" id="attribute:TIMESPAN:MINUTES">
 <span class="pre">TimeSpan:</span><span class="sig-name descname"><span class="pre">MINUTES</span></span><a class="headerlink" href="#attribute:TIMESPAN:MINUTES" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>
@@ -958,10 +963,10 @@ seconds which is half a minute gives 200.5.</p>
 <dt class="sig sig-object ks" id="attribute:TIMESPAN:SECOND">
 <span class="pre">TimeSpan:</span><span class="sig-name descname"><span class="pre">SECOND</span></span><a class="headerlink" href="#attribute:TIMESPAN:SECOND" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (0-59)</p>
 </dd>
 </dl>
@@ -973,10 +978,10 @@ Please note the difference between this and <a class="reference internal" href="
 <dt class="sig sig-object ks" id="attribute:TIMESPAN:SECONDS">
 <span class="pre">TimeSpan:</span><span class="sig-name descname"><span class="pre">SECONDS</span></span><a class="headerlink" href="#attribute:TIMESPAN:SECONDS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get only</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (float)</p>
 </dd>
 </dl>

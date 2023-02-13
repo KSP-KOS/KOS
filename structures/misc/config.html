@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Configuration of kOS &mdash; kOS 1.3.3.0 documentation</title>
+  <title>Configuration of kOS &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
+            <img src="../../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -160,13 +165,13 @@ specific settings are stored globally in kOS’s external config file.  These
 values are noted as <strong>global</strong> below, but all other values may be presumed
 to be local to the current save file.</p>
 <p>The config file may be found at <code class="file docutils literal notranslate"><em><span class="pre">[KSP</span> <span class="pre">Directory]</span></em><span class="pre">/GameData/kOS/Plugins/PluginData/kOS/</span></code></p>
-<table class="docutils align-default" id="id1">
+<table class="colwidths-given docutils align-default" id="id1">
 <caption><span class="caption-text">Members (all Gettable and Settable)</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col style="width: 25.0%" />
-<col style="width: 12.5%" />
-<col style="width: 12.5%" />
-<col style="width: 50.0%" />
+<col style="width: 25%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 50%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suffix</p></th>
@@ -274,10 +279,10 @@ to be local to the current save file.</p>
 <dt class="sig sig-object ks" id="attribute:CONFIG:IPU">
 <span class="pre">Config:</span><span class="sig-name descname"><span class="pre">IPU</span></span><a class="headerlink" href="#attribute:CONFIG:IPU" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> integer. range = [50,2000]</p>
 </dd>
 </dl>
@@ -290,10 +295,10 @@ to be local to the current save file.</p>
 <dt class="sig sig-object ks" id="attribute:CONFIG:UCP">
 <span class="pre">Config:</span><span class="sig-name descname"><span class="pre">UCP</span></span><a class="headerlink" href="#attribute:CONFIG:UCP" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -305,10 +310,10 @@ to be local to the current save file.</p>
 <dt class="sig sig-object ks" id="attribute:CONFIG:STAT">
 <span class="pre">Config:</span><span class="sig-name descname"><span class="pre">STAT</span></span><a class="headerlink" href="#attribute:CONFIG:STAT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -323,10 +328,10 @@ deep analysis of your program run, if you are so inclined.</p>
 <dt class="sig sig-object ks" id="attribute:CONFIG:ARCH">
 <span class="pre">Config:</span><span class="sig-name descname"><span class="pre">ARCH</span></span><a class="headerlink" href="#attribute:CONFIG:ARCH" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -338,10 +343,10 @@ deep analysis of your program run, if you are so inclined.</p>
 <dt class="sig sig-object ks" id="attribute:CONFIG:OBEYHIDEUI">
 <span class="pre">Config:</span><span class="sig-name descname"><span class="pre">OBEYHIDEUI</span></span><a class="headerlink" href="#attribute:CONFIG:OBEYHIDEUI" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -355,10 +360,10 @@ set to F2 by default key bindings).</p>
 <dt class="sig sig-object ks" id="attribute:CONFIG:SAFE">
 <span class="pre">Config:</span><span class="sig-name descname"><span class="pre">SAFE</span></span><a class="headerlink" href="#attribute:CONFIG:SAFE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -376,10 +381,10 @@ Tried to push Infinity into the stack.
 <dt class="sig sig-object ks" id="attribute:CONFIG:CLOBBERBUILTINS">
 <span class="pre">Config:</span><span class="sig-name descname"><span class="pre">CLOBBERBUILTINS</span></span><a class="headerlink" href="#attribute:CONFIG:CLOBBERBUILTINS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -412,10 +417,10 @@ The Config value here is merely the default you get for files that lack a
 <dt class="sig sig-object ks" id="attribute:CONFIG:AUDIOERR">
 <span class="pre">Config:</span><span class="sig-name descname"><span class="pre">AUDIOERR</span></span><a class="headerlink" href="#attribute:CONFIG:AUDIOERR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -430,10 +435,10 @@ hands-off and need to realize your autopilot script just died so</p>
 <dt class="sig sig-object ks" id="attribute:CONFIG:VERBOSE">
 <span class="pre">Config:</span><span class="sig-name descname"><span class="pre">VERBOSE</span></span><a class="headerlink" href="#attribute:CONFIG:VERBOSE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -445,10 +450,10 @@ hands-off and need to realize your autopilot script just died so</p>
 <dt class="sig sig-object ks" id="attribute:CONFIG:SUPPRESSAUTOPILOT">
 <span class="pre">Config:</span><span class="sig-name descname"><span class="pre">SUPPRESSAUTOPILOT</span></span><a class="headerlink" href="#attribute:CONFIG:SUPPRESSAUTOPILOT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -472,10 +477,10 @@ suppress action groups or staging.</p>
 <dt class="sig sig-object ks" id="attribute:CONFIG:TELNET">
 <span class="pre">Config:</span><span class="sig-name descname"><span class="pre">TELNET</span></span><a class="headerlink" href="#attribute:CONFIG:TELNET" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -503,10 +508,10 @@ clicking the button off then clicking it on.</p>
 <dt class="sig sig-object ks" id="attribute:CONFIG:TPORT">
 <span class="pre">Config:</span><span class="sig-name descname"><span class="pre">TPORT</span></span><a class="headerlink" href="#attribute:CONFIG:TPORT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer)</p>
 </dd>
 </dl>
@@ -523,10 +528,10 @@ stop, then restart the telnet server, as described above.</p>
 <dt class="sig sig-object ks" id="attribute:CONFIG:IPADDRESS">
 <span class="pre">Config:</span><span class="sig-name descname"><span class="pre">IPADDRESS</span></span><a class="headerlink" href="#attribute:CONFIG:IPADDRESS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -547,10 +552,10 @@ stop, then restart the telnet server, as described above.</p>
 <dt class="sig sig-object ks" id="attribute:CONFIG:BRIGHTNESS">
 <span class="pre">Config:</span><span class="sig-name descname"><span class="pre">BRIGHTNESS</span></span><a class="headerlink" href="#attribute:CONFIG:BRIGHTNESS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a>. range = [0,1]</p>
 </dd>
 </dl>
@@ -568,10 +573,10 @@ brightness slider widget on that terminal.</p>
 <dt class="sig sig-object ks" id="attribute:CONFIG:DEFAULTFONTSIZE">
 <span class="pre">Config:</span><span class="sig-name descname"><span class="pre">DEFAULTFONTSIZE</span></span><a class="headerlink" href="#attribute:CONFIG:DEFAULTFONTSIZE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> integer-only. range = [6,20]</p>
 </dd>
 </dl>
@@ -591,10 +596,10 @@ nearest integer when setting the value.</p>
 <dt class="sig sig-object ks" id="attribute:CONFIG:DEFAULTWIDTH">
 <span class="pre">Config:</span><span class="sig-name descname"><span class="pre">DEFAULTWIDTH</span></span><a class="headerlink" href="#attribute:CONFIG:DEFAULTWIDTH" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> integer-only. range = [15,255]</p>
 </dd>
 </dl>
@@ -611,10 +616,10 @@ resize corner of the terminal with the mouse.</p>
 <dt class="sig sig-object ks" id="attribute:CONFIG:DEFAULTHEIGHT">
 <span class="pre">Config:</span><span class="sig-name descname"><span class="pre">DEFAULTHEIGHT</span></span><a class="headerlink" href="#attribute:CONFIG:DEFAULTHEIGHT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> integer-only. range = [3,160]</p>
 </dd>
 </dl>
@@ -631,10 +636,10 @@ resize corner of the terminal with the mouse.</p>
 <dt class="sig sig-object ks" id="attribute:CONFIG:DEBUGEACHOPCODE">
 <span class="pre">Config:</span><span class="sig-name descname"><span class="pre">DEBUGEACHOPCODE</span></span><a class="headerlink" href="#attribute:CONFIG:DEBUGEACHOPCODE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Access<span class="colon">:</span></dt>
+<dt class="field-odd">Access</dt>
 <dd class="field-odd"><p>Get/Set</p>
 </dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
+<dt class="field-even">Type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>

@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>String &mdash; kOS 1.3.3.0 documentation</title>
+  <title>String &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
+            <img src="../../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -249,12 +254,12 @@ ordinal Unicode value with the <a class="reference internal" href="../../math/ba
 <dl class="ks structure">
 <dt class="sig sig-object ks" id="structure:STRING">
 <em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">String</span></span><a class="headerlink" href="#structure:STRING" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils align-default" id="id2">
+<dd><table class="colwidths-given docutils align-default" id="id2">
 <caption><span class="caption-text">Members</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col style="width: 28.6%" />
-<col style="width: 14.3%" />
-<col style="width: 57.1%" />
+<col style="width: 29%" />
+<col style="width: 14%" />
+<col style="width: 57%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suffix</p></th>
@@ -375,12 +380,12 @@ ordinal Unicode value with the <a class="reference internal" href="../../math/ba
 <dt class="sig sig-object ks" id="method:STRING:CONTAINS">
 <span class="pre">String:</span><span class="sig-name descname"><span class="pre">CONTAINS</span></span><span class="sig-paren">(</span><span class="pre">string</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:CONTAINS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>string</strong> – <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> to look for</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -391,12 +396,12 @@ ordinal Unicode value with the <a class="reference internal" href="../../math/ba
 <dt class="sig sig-object ks" id="method:STRING:ENDSWITH">
 <span class="pre">String:</span><span class="sig-name descname"><span class="pre">ENDSWITH</span></span><span class="sig-paren">(</span><span class="pre">string</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:ENDSWITH" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>string</strong> – <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> to look for</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -407,12 +412,12 @@ ordinal Unicode value with the <a class="reference internal" href="../../math/ba
 <dt class="sig sig-object ks" id="method:STRING:FIND">
 <span class="pre">String:</span><span class="sig-name descname"><span class="pre">FIND</span></span><span class="sig-paren">(</span><span class="pre">string</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:FIND" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>string</strong> – <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> to look for</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -426,13 +431,13 @@ successfully “found” that empty string at the start of the search.</p>
 <dt class="sig sig-object ks" id="method:STRING:FINDAT">
 <span class="pre">String:</span><span class="sig-name descname"><span class="pre">FINDAT</span></span><span class="sig-paren">(</span><span class="pre">string,</span> <span class="pre">startAt</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:FINDAT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>string</strong> – <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> to look for</p></li>
 <li><p><strong>startAt</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer) index to start searching at</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -446,12 +451,12 @@ successfully “found” that empty string at the start of the search.</p>
 <dt class="sig sig-object ks" id="method:STRING:FINDLAST">
 <span class="pre">String:</span><span class="sig-name descname"><span class="pre">FINDLAST</span></span><span class="sig-paren">(</span><span class="pre">string</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:FINDLAST" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>string</strong> – <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> to look for</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -465,13 +470,13 @@ successfully “found” that empty string at the beginning of the search.</p>
 <dt class="sig sig-object ks" id="method:STRING:FINDLASTAT">
 <span class="pre">String:</span><span class="sig-name descname"><span class="pre">FINDLASTAT</span></span><span class="sig-paren">(</span><span class="pre">string,</span> <span class="pre">startAt</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:FINDLASTAT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>string</strong> – <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> to look for</p></li>
 <li><p><strong>startAt</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer) index to start searching at</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -491,13 +496,13 @@ successfully “found” that empty string at the beginning of the search.</p>
 <dt class="sig sig-object ks" id="method:STRING:INSERT">
 <span class="pre">String:</span><span class="sig-name descname"><span class="pre">INSERT</span></span><span class="sig-paren">(</span><span class="pre">index,</span> <span class="pre">string</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:INSERT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>index</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer) index to add the string at</p></li>
 <li><p><strong>string</strong> – <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> to insert</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -508,10 +513,10 @@ successfully “found” that empty string at the beginning of the search.</p>
 <dt class="sig sig-object ks" id="attribute:STRING:ITERATOR">
 <span class="pre">String:</span><span class="sig-name descname"><span class="pre">ITERATOR</span></span><a class="headerlink" href="#attribute:STRING:ITERATOR" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../collections/iterator.html#structure:ITERATOR" title="ITERATOR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Iterator</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -532,10 +537,10 @@ to its characters one at a time.</p>
 <dt class="sig sig-object ks" id="attribute:STRING:LENGTH">
 <span class="pre">String:</span><span class="sig-name descname"><span class="pre">LENGTH</span></span><a class="headerlink" href="#attribute:STRING:LENGTH" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer)</p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -546,12 +551,12 @@ to its characters one at a time.</p>
 <dt class="sig sig-object ks" id="method:STRING:MATCHESPATTERN">
 <span class="pre">String:</span><span class="sig-name descname"><span class="pre">MATCHESPATTERN</span></span><span class="sig-paren">(</span><span class="pre">pattern</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:MATCHESPATTERN" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pattern</strong> – <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> pattern to be matched against the string</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -566,12 +571,12 @@ use the pattern <code class="docutils literal notranslate"><span class="pre">&qu
 <dt class="sig sig-object ks" id="method:STRING:PADLEFT">
 <span class="pre">String:</span><span class="sig-name descname"><span class="pre">PADLEFT</span></span><span class="sig-paren">(</span><span class="pre">width</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:PADLEFT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>width</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer) number of characters the resulting string will contain</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -582,12 +587,12 @@ use the pattern <code class="docutils literal notranslate"><span class="pre">&qu
 <dt class="sig sig-object ks" id="method:STRING:PADRIGHT">
 <span class="pre">String:</span><span class="sig-name descname"><span class="pre">PADRIGHT</span></span><span class="sig-paren">(</span><span class="pre">width</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:PADRIGHT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>width</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer) number of characters the resulting string will contain</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -598,13 +603,13 @@ use the pattern <code class="docutils literal notranslate"><span class="pre">&qu
 <dt class="sig sig-object ks" id="method:STRING:REMOVE">
 <span class="pre">String:</span><span class="sig-name descname"><span class="pre">REMOVE</span></span><span class="sig-paren">(</span><span class="pre">index,count</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:REMOVE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>index</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer) position of the string from which characters will be removed from the resulting string</p></li>
 <li><p><strong>count</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer) number of characters that will be removing from the resulting string</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -615,13 +620,13 @@ use the pattern <code class="docutils literal notranslate"><span class="pre">&qu
 <dt class="sig sig-object ks" id="method:STRING:REPLACE">
 <span class="pre">String:</span><span class="sig-name descname"><span class="pre">REPLACE</span></span><span class="sig-paren">(</span><span class="pre">oldString,newString</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:REPLACE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>oldString</strong> – <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> to search for</p></li>
 <li><p><strong>newString</strong> – <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> that all occurances of oldString will be replaced with</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -632,12 +637,12 @@ use the pattern <code class="docutils literal notranslate"><span class="pre">&qu
 <dt class="sig sig-object ks" id="method:STRING:SPLIT">
 <span class="pre">String:</span><span class="sig-name descname"><span class="pre">SPLIT</span></span><span class="sig-paren">(</span><span class="pre">separator</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:SPLIT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>separator</strong> – <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> delimiter on which this string will be split</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a></p>
 </dd>
 </dl>
@@ -649,12 +654,12 @@ list of strings, none of which will contain the separator character(s).</p>
 <dt class="sig sig-object ks" id="method:STRING:STARTSWITH">
 <span class="pre">String:</span><span class="sig-name descname"><span class="pre">STARTSWITH</span></span><span class="sig-paren">(</span><span class="pre">string</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:STARTSWITH" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>string</strong> – <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> to look for</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -665,13 +670,13 @@ list of strings, none of which will contain the separator character(s).</p>
 <dt class="sig sig-object ks" id="method:STRING:SUBSTRING">
 <span class="pre">String:</span><span class="sig-name descname"><span class="pre">SUBSTRING</span></span><span class="sig-paren">(</span><span class="pre">start,count</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:SUBSTRING" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>start</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer) starting index (from zero)</p></li>
 <li><p><strong>count</strong> – <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> (integer) resulting length of returned <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
 </dl>
@@ -682,10 +687,10 @@ list of strings, none of which will contain the separator character(s).</p>
 <dt class="sig sig-object ks" id="attribute:STRING:TOLOWER">
 <span class="pre">String:</span><span class="sig-name descname"><span class="pre">TOLOWER</span></span><a class="headerlink" href="#attribute:STRING:TOLOWER" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -696,10 +701,10 @@ list of strings, none of which will contain the separator character(s).</p>
 <dt class="sig sig-object ks" id="attribute:STRING:TOUPPER">
 <span class="pre">String:</span><span class="sig-name descname"><span class="pre">TOUPPER</span></span><a class="headerlink" href="#attribute:STRING:TOUPPER" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -710,10 +715,10 @@ list of strings, none of which will contain the separator character(s).</p>
 <dt class="sig sig-object ks" id="attribute:STRING:TRIM">
 <span class="pre">String:</span><span class="sig-name descname"><span class="pre">TRIM</span></span><a class="headerlink" href="#attribute:STRING:TRIM" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -724,10 +729,10 @@ list of strings, none of which will contain the separator character(s).</p>
 <dt class="sig sig-object ks" id="attribute:STRING:TRIMEND">
 <span class="pre">String:</span><span class="sig-name descname"><span class="pre">TRIMEND</span></span><a class="headerlink" href="#attribute:STRING:TRIMEND" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -738,10 +743,10 @@ list of strings, none of which will contain the separator character(s).</p>
 <dt class="sig sig-object ks" id="attribute:STRING:TRIMSTART">
 <span class="pre">String:</span><span class="sig-name descname"><span class="pre">TRIMSTART</span></span><a class="headerlink" href="#attribute:STRING:TRIMSTART" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -752,12 +757,12 @@ list of strings, none of which will contain the separator character(s).</p>
 <dt class="sig sig-object ks" id="method:STRING:TONUMBER">
 <span class="pre">String:</span><span class="sig-name descname"><span class="pre">TONUMBER</span></span><span class="sig-paren">(</span><span class="pre">defaultIfError</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:TONUMBER" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>defaultIfError</strong> – (optional argument) <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a> to return as a default value if the string format is in error.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
 </dl>

@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cooked Control &mdash; kOS 1.3.3.0 documentation</title>
+  <title>Cooked Control &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
+            <img src="../../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -105,7 +110,7 @@
              
   <section id="cooked-control">
 <span id="cooked"></span><h1>Cooked Control<a class="headerlink" href="#cooked-control" title="Permalink to this heading">¶</a></h1>
-<nav class="contents local" id="contents">
+<div class="contents local topic" id="contents">
 <p class="topic-title">Contents</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#config-suppressautopilot" id="id2">CONFIG:SUPPRESSAUTOPILOT</a></p></li>
@@ -115,7 +120,7 @@
 <li><p><a class="reference internal" href="#tuning-cooked-steering" id="id6">Tuning cooked steering</a></p></li>
 <li><p><a class="reference internal" href="#advantages-disadvantages" id="id7">Advantages/Disadvantages</a></p></li>
 </ul>
-</nav>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is possible for more than one processor part to control the cooked
@@ -129,7 +134,7 @@ of the same control.</p>
 <p>For more information, check out the documentation for the <a class="reference internal" href="../../structures/misc/steeringmanager.html#structure:STEERINGMANAGER" title="STEERINGMANAGER structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">SteeringManager</span></code></a> structure.</p>
 <p>In this style of controlling the craft, you do not steer the craft directly, but instead select a goal direction and let kOS pick the way to steer toward that goal. This method of controlling the craft consists primarily of the following two commands:</p>
 <section id="config-suppressautopilot">
-<h2><a class="toc-backref" href="#id2" role="doc-backlink">CONFIG:SUPPRESSAUTOPILOT</a><a class="headerlink" href="#config-suppressautopilot" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id2">CONFIG:SUPPRESSAUTOPILOT</a><a class="headerlink" href="#config-suppressautopilot" title="Permalink to this heading">¶</a></h2>
 <p>If <a class="reference internal" href="../../structures/misc/config.html#attribute:CONFIG:SUPPRESSAUTOPILOT" title="CONFIG:SUPPRESSAUTOPILOT attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">Config:SUPPRESSAUTOPILOT</span></code></a> is true, then none of the controls
 on this page will have an effect.  That setting is there to provide
 the player with an emergency way to quickly click a toggle on the
@@ -137,7 +142,7 @@ toolbar window to force kOS to stop taking control, letting the player
 move the controls manually.</p>
 </section>
 <section id="the-special-lock-variables-for-cooked-steering">
-<h2><a class="toc-backref" href="#id3" role="doc-backlink">The special LOCK variables for cooked steering</a><a class="headerlink" href="#the-special-lock-variables-for-cooked-steering" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id3">The special LOCK variables for cooked steering</a><a class="headerlink" href="#the-special-lock-variables-for-cooked-steering" title="Permalink to this heading">¶</a></h2>
 <span class="target" id="lock-throttle"></span><dl class="object">
 <dt class="sig sig-object">
 <span class="sig-name descname"><span class="pre">LOCK</span> <span class="pre">THROTTLE</span> <span class="pre">TO</span> <span class="pre">expression.</span> <span class="pre">//</span> <span class="pre">value</span> <span class="pre">range</span> <span class="pre">[0.0</span> <span class="pre">..</span> <span class="pre">1.0]</span></span></dt>
@@ -304,7 +309,7 @@ LOCK WHEELSTEERING.  See the note in the next section below.</p>
 </div>
 </section>
 <section id="don-t-wait-or-run-slow-script-code-during-cooked-control-calculation">
-<h2><a class="toc-backref" href="#id4" role="doc-backlink">Don’t ‘WAIT’ or run slow script code during cooked control calculation</a><a class="headerlink" href="#don-t-wait-or-run-slow-script-code-during-cooked-control-calculation" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id4">Don’t ‘WAIT’ or run slow script code during cooked control calculation</a><a class="headerlink" href="#don-t-wait-or-run-slow-script-code-during-cooked-control-calculation" title="Permalink to this heading">¶</a></h2>
 <p>Be aware that because LOCK THROTTLE, LOCK STEERING, LOCK
 WHEELTHROTTLE, and LOCK WHEELSTEERING are actually the
 highest priority types of <a class="reference internal" href="../../general/cpu_hardware.html#triggers"><span class="std std-ref">triggers</span></a> that
@@ -348,7 +353,7 @@ normal LOCKs, these LOCKs will be executed again and again even when
 you’re not explicitly trying to get their values.</p>
 </section>
 <section id="unlocking-controls">
-<h2><a class="toc-backref" href="#id5" role="doc-backlink">Unlocking controls</a><a class="headerlink" href="#unlocking-controls" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id5">Unlocking controls</a><a class="headerlink" href="#unlocking-controls" title="Permalink to this heading">¶</a></h2>
 <p>If you <code class="docutils literal notranslate"><span class="pre">LOCK</span></code> the <code class="docutils literal notranslate"><span class="pre">THROTTLE</span></code> or <code class="docutils literal notranslate"><span class="pre">STEERING</span></code>, be aware that this prevents the user from manually controlling them. Until they unlock, the manual controls are prevented from working. You can free up the controls by issuing these two commands:</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">UNLOCK</span> <span class="nv">STEERING</span><span class="p">.</span>
 <span class="k">UNLOCK</span> <span class="nv">THROTTLE</span><span class="p">.</span>
@@ -357,7 +362,7 @@ you’re not explicitly trying to get their values.</p>
 <p>When the program ends, these automatically unlock as well, which means that to control a craft you must make sure the program doesn’t end. The moment it ends it lets go of the controls.</p>
 </section>
 <section id="tuning-cooked-steering">
-<span id="cooked-tuning"></span><h2><a class="toc-backref" href="#id6" role="doc-backlink">Tuning cooked steering</a><a class="headerlink" href="#tuning-cooked-steering" title="Permalink to this heading">¶</a></h2>
+<span id="cooked-tuning"></span><h2><a class="toc-backref" href="#id6">Tuning cooked steering</a><a class="headerlink" href="#tuning-cooked-steering" title="Permalink to this heading">¶</a></h2>
 <p>While cooked steering tries to come balanced to perform decently without user
 interaction, there are some instances where you may need to help tune the
 behavior.  There are a number of settings you can adjust to tweak the
@@ -681,7 +686,7 @@ PITCHTORQUEFACTOR, YAWTORQUEFACTOR, ROLLTORQUEFACTOR</p>
 </section>
 </section>
 <section id="advantages-disadvantages">
-<h2><a class="toc-backref" href="#id7" role="doc-backlink">Advantages/Disadvantages</a><a class="headerlink" href="#advantages-disadvantages" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id7">Advantages/Disadvantages</a><a class="headerlink" href="#advantages-disadvantages" title="Permalink to this heading">¶</a></h2>
 <p>The advantage of “Cooked” control is that it is simpler to write scripts
 for, but the disadvantage is that you have only partial control over
 the details of the motion.</p>

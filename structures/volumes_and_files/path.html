@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Path &mdash; kOS 1.3.3.0 documentation</title>
+  <title>Path &mdash; kOS 1.4.0.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -29,9 +33,10 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../../contents.html" class="icon icon-home"> kOS
+            <img src="../../_static/kos_logo_small.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.3.0
+                1.4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -116,11 +121,11 @@
 <dl class="ks structure">
 <dt class="sig sig-object ks" id="structure:PATH">
 <em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">Path</span></span><a class="headerlink" href="#structure:PATH" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils align-default">
+<dd><table class="colwidths-given docutils align-default">
 <colgroup>
-<col style="width: 28.6%" />
-<col style="width: 14.3%" />
-<col style="width: 57.1%" />
+<col style="width: 29%" />
+<col style="width: 14%" />
+<col style="width: 57%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suffix</p></th>
@@ -185,10 +190,10 @@
 <dt class="sig sig-object ks" id="attribute:PATH:VOLUME">
 <span class="pre">Path:</span><span class="sig-name descname"><span class="pre">VOLUME</span></span><a class="headerlink" href="#attribute:PATH:VOLUME" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="volume.html#structure:VOLUME" title="VOLUME structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Volume</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -199,10 +204,10 @@
 <dt class="sig sig-object ks" id="attribute:PATH:SEGMENTS">
 <span class="pre">Path:</span><span class="sig-name descname"><span class="pre">SEGMENTS</span></span><a class="headerlink" href="#attribute:PATH:SEGMENTS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">List</span></code></a> of <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -214,10 +219,10 @@
 <dt class="sig sig-object ks" id="attribute:PATH:LENGTH">
 <span class="pre">Path:</span><span class="sig-name descname"><span class="pre">LENGTH</span></span><a class="headerlink" href="#attribute:PATH:LENGTH" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Scalar</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -228,10 +233,10 @@
 <dt class="sig sig-object ks" id="attribute:PATH:NAME">
 <span class="pre">Path:</span><span class="sig-name descname"><span class="pre">NAME</span></span><a class="headerlink" href="#attribute:PATH:NAME" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -242,10 +247,10 @@
 <dt class="sig sig-object ks" id="attribute:PATH:HASEXTENSION">
 <span class="pre">Path:</span><span class="sig-name descname"><span class="pre">HASEXTENSION</span></span><a class="headerlink" href="#attribute:PATH:HASEXTENSION" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -256,10 +261,10 @@
 <dt class="sig sig-object ks" id="attribute:PATH:EXTENSION">
 <span class="pre">Path:</span><span class="sig-name descname"><span class="pre">EXTENSION</span></span><a class="headerlink" href="#attribute:PATH:EXTENSION" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -270,10 +275,10 @@
 <dt class="sig sig-object ks" id="attribute:PATH:ROOT">
 <span class="pre">Path:</span><span class="sig-name descname"><span class="pre">ROOT</span></span><a class="headerlink" href="#attribute:PATH:ROOT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#structure:PATH" title="PATH structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Path</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -284,10 +289,10 @@
 <dt class="sig sig-object ks" id="attribute:PATH:PARENT">
 <span class="pre">Path:</span><span class="sig-name descname"><span class="pre">PARENT</span></span><a class="headerlink" href="#attribute:PATH:PARENT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#structure:PATH" title="PATH structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Path</span></code></a></p>
 </dd>
-<dt class="field-even">Access<span class="colon">:</span></dt>
+<dt class="field-even">Access</dt>
 <dd class="field-even"><p>Get only</p>
 </dd>
 </dl>
@@ -298,12 +303,12 @@
 <dt class="sig sig-object ks" id="method:PATH:CHANGENAME">
 <span class="pre">Path:</span><span class="sig-name descname"><span class="pre">CHANGENAME</span></span><span class="sig-paren">(</span><span class="pre">name</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PATH:CHANGENAME" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> – <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> new path name</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="#structure:PATH" title="PATH structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Path</span></code></a></p>
 </dd>
 </dl>
@@ -314,12 +319,12 @@
 <dt class="sig sig-object ks" id="method:PATH:CHANGEEXTENSION">
 <span class="pre">Path:</span><span class="sig-name descname"><span class="pre">CHANGEEXTENSION</span></span><span class="sig-paren">(</span><span class="pre">extension</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PATH:CHANGEEXTENSION" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>extension</strong> – <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> new path extension</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="#structure:PATH" title="PATH structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Path</span></code></a></p>
 </dd>
 </dl>
@@ -330,12 +335,12 @@
 <dt class="sig sig-object ks" id="method:PATH:ISPARENT">
 <span class="pre">Path:</span><span class="sig-name descname"><span class="pre">ISPARENT</span></span><span class="sig-paren">(</span><span class="pre">path</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PATH:ISPARENT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>path</strong> – <a class="reference internal" href="#structure:PATH" title="PATH structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Path</span></code></a> path to check</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Boolean</span></code></a></p>
 </dd>
 </dl>
@@ -346,12 +351,12 @@
 <dt class="sig sig-object ks" id="method:PATH:COMBINE">
 <span class="pre">Path:</span><span class="sig-name descname"><span class="pre">COMBINE</span></span><span class="sig-paren">(</span><span class="pre">name1,</span> <span class="pre">[name2,</span> <span class="pre">...]</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PATH:COMBINE" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> – <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">String</span></code></a> segments to add</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><a class="reference internal" href="#structure:PATH" title="PATH structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Path</span></code></a></p>
 </dd>
 </dl>
