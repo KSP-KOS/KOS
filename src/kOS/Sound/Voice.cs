@@ -14,9 +14,15 @@ namespace kOS.Sound
         public float Frequency { get; set; }
 
         /// <summary>
-        /// Value from 0.0f to 1.0f for the current *overall* volume (which gets adjusted by ADSR envelope settings).
+        /// Value from 0.0f to 1.0f for the volume of this <see cref="Voice"/>.
+        /// The final volume is computed by multiplying this value with <see cref="soundVolume"/> as specified by <see cref="BeginProceduralSound"/> and the ADSR envelope.
         /// </summary>
         public float Volume { get; set; }
+
+        /// <summary>
+        /// Value from 0.0f to 1.0f for the sound being played, as it is specified by <see cref="BeginProceduralSound"/>.
+        /// </summary>
+        private float soundVolume { get;set;}
 
         /// <summary>
         /// Duration in seconds of the "Attack" part of the sound envelope this voice is currently using.
@@ -77,6 +83,7 @@ namespace kOS.Sound
             source = gameObject.AddComponent<AudioSource>();
             source.loop = true;
             source.spatialBlend = 0; // Makes it ignore spatial position for calculating sound.
+            source.bypassListenerEffects = true; // Makes other mods like Rocket Sound Enhancement not affect it.
 
             // Dummy test stupid values:
             Attack = 0f;
@@ -101,7 +108,7 @@ namespace kOS.Sound
             SetWave(waveGen); // update the wave even if called for a rest note
             if (frequency > 0)
             {
-                Volume = volume;
+                soundVolume = volume;
                 noteAttackStart = Time.unscaledTime;
                 noteReleaseStart = Time.unscaledTime + duration;
                 needNoteInit = true;
@@ -125,7 +132,7 @@ namespace kOS.Sound
         {
             if (frequency > 0)
             {
-                Volume = volume;
+                soundVolume = volume;
                 noteAttackStart = Time.unscaledTime;
                 noteReleaseStart = Time.unscaledTime + duration;
                 needNoteInit = true;
@@ -266,7 +273,7 @@ namespace kOS.Sound
                     }
                 }
             }
-            source.volume = GameSettings.UI_VOLUME * Volume * envelopeVolume;
+            source.volume = GameSettings.UI_VOLUME * Volume * soundVolume * envelopeVolume;
         }
 
         /// <summary>Called whenever a new note starts, to get the AudioSource and ProceduralSoundWave

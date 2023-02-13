@@ -31,10 +31,10 @@ structure is defined as follows:
           - Description
 
         * - :COLOR
-          - :ref:`color <color>`
+          - :ref:`Color <color>`
           - the color that will be used by the highlight
         * - :ENABLED
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - controls the visibility of the highlight
 		
 Example::

@@ -510,9 +510,9 @@ These are the generic properties every PART has. You can obtain a list of values
           }
         }
 
-.. method:: Parts:PARTSNAMED(name)
+.. method:: Part:PARTSNAMED(name)
 
-    :parameter name: (:ref:`string <string>`) Name of the parts
+    :parameter name: (:struct:`String`) Name of the parts
     :return: :struct:`List` of :struct:`Part` objects
 
     Same as :meth:`Vessel:PARTSNAMED(name)` except that this version
@@ -522,7 +522,7 @@ These are the generic properties every PART has. You can obtain a list of values
 
 .. method:: Part:PARTSNAMEDPATTERN(namePattern)
 
-    :parameter namePattern: (:ref:`string <string>`) Pattern of the name of the parts
+    :parameter namePattern: (:struct:`String`) Pattern of the name of the parts
     :return: :struct:`List` of :struct:`Part` objects
 
     Same as :meth:`Vessel:PARTSNAMEDPATTERN(namePattern)` except that this version
@@ -532,7 +532,7 @@ These are the generic properties every PART has. You can obtain a list of values
 
 .. method:: Part:PARTSTITLED(title)
 
-    :parameter title: (:ref:`string <string>`) Title of the parts
+    :parameter title: (:struct:`String`) Title of the parts
     :return: :struct:`List` of :struct:`Part` objects
 
     Same as :meth:`Vessel:PARTSTITLED(title)` except that this version
@@ -542,7 +542,7 @@ These are the generic properties every PART has. You can obtain a list of values
 
 .. method:: Part:PARTSTITLEDPATTERN(titlePattern)
 
-    :parameter titlePattern: (:ref:`string <string>`) Patern of the title of the parts
+    :parameter titlePattern: (:struct:`String`) Patern of the title of the parts
     :return: :struct:`List` of :struct:`Part` objects
 
     Same as :meth:`Vessel:PARTSTITLEDPATTERN(titlePattern)` except that this version
@@ -552,7 +552,7 @@ These are the generic properties every PART has. You can obtain a list of values
 
 .. method:: Part:PARTSTAGGED(tag)
 
-    :parameter tag: (:ref:`string <string>`) Tag of the parts
+    :parameter tag: (:struct:`String`) Tag of the parts
     :return: :struct:`List` of :struct:`Part` objects
 
     Same as :meth:`Vessel:PARTSTAGGED(tag)` except that this version
@@ -562,7 +562,7 @@ These are the generic properties every PART has. You can obtain a list of values
 
 .. method:: Part:PARTSTAGGEDPATTERN(tagPattern)
 
-    :parameter tagPattern: (:ref:`string <string>`) Pattern of the tag of the parts
+    :parameter tagPattern: (:struct:`String`) Pattern of the tag of the parts
     :return: :struct:`List` of :struct:`Part` objects
 
     Same as :meth:`Vessel:PARTSTAGGEDPATTERN(tagPattern)` except that this version
@@ -572,7 +572,7 @@ These are the generic properties every PART has. You can obtain a list of values
 
 .. method:: Part:PARTSDUBBED(name)
 
-    :parameter name: (:ref:`string <string>`) name, title or tag of the parts
+    :parameter name: (:struct:`String`) name, title or tag of the parts
     :return: :struct:`List` of :struct:`Part` objects
 
     Same as :meth:`Vessel:PARTSDUBBED(name)` except that this version
@@ -582,7 +582,7 @@ These are the generic properties every PART has. You can obtain a list of values
 
 .. method:: Part:PARTSDUBBEDPATTERN(namePattern)
 
-    :parameter namePattern: (:ref:`string <string>`) Pattern of the name, title or tag of the parts
+    :parameter namePattern: (:struct:`String`) Pattern of the name, title or tag of the parts
     :return: :struct:`List` of :struct:`Part` objects
 
     Same as :meth:`Vessel:PARTSDUBBEDPATERN(namePattern)` except that this version
@@ -592,7 +592,7 @@ These are the generic properties every PART has. You can obtain a list of values
 
 .. method:: Part:MODULESNAMED(name)
 
-    :parameter name: (:ref:`string <string>`) Name of the part modules
+    :parameter name: (:struct:`String`) Name of the part modules
     :return: :struct:`List` of :struct:`PartModule` objects
 
     Same as :meth:`Vessel:MODULESNAMED(name)` except that this version
@@ -608,4 +608,3 @@ These are the generic properties every PART has. You can obtain a list of values
     doesn't search the entire vessel tree and instead it only searches the
     branch of the vessel's part tree from the current part down through
     its children and its children's children and so on.
-

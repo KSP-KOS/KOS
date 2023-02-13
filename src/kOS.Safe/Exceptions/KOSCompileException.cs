@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Compilation.KS;
+using kOS.Safe.Compilation.KS;
 
 namespace kOS.Safe.Exceptions
 {
@@ -50,7 +50,7 @@ namespace kOS.Safe.Exceptions
         /// info to the existing message in the exception.
         /// </summary>
         /// <param name="sourceText">Text of the entire file that was compiled</param>
-        public void AddSourceText(int startline, string sourceText)
+        public void AddSourceText(int startline, string sourceText, string filePath)
         {
             // special case for when the exception cannot show its source line:
             if (Location.Line <= 0 || Location.Column <= 0)
@@ -76,10 +76,10 @@ namespace kOS.Safe.Exceptions
                 }
             }
             message = string.Format(
-                "{0}\n{1}\nline {2}, col {3}: {4}",
+                "{0}\n{1}\n{2} line:{3} col:{4} {5}",
                 sourceText.Substring(startIndex, (endIndex - startIndex)),
                 "^".PadLeft(Location.Column), // put the caret under the right column of the source line
-                Location.Line, Location.Column, message);
+                filePath, Location.Line, Location.Column, message);
         }
     }
 }

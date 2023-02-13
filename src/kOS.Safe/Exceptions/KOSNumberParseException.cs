@@ -1,8 +1,13 @@
-﻿namespace kOS.Safe.Exceptions
+using kOS.Safe.Compilation.KS;
+
+namespace kOS.Safe.Exceptions
 {
     /// <summary>
     /// Indicates that KOS attempted to turn a string into a number but the
     /// string was not in a recognized number format.
+    /// This is to be thrown when parsing numbers anywhere NOT in the compiler,
+    /// because it lacks information to track the line and column of the error
+    /// location.
     /// </summary>
     public class KOSNumberParseException : KOSException
     {

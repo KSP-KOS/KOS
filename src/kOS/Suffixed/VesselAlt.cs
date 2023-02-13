@@ -39,7 +39,6 @@ namespace kOS.Suffixed
             // Note, this is -1 when ground is too far away, which is why it needs the "> 0" checks you see below
             // to fallback on sea level altitude when it isn't working.
             double groundAlt = shared.Vessel.heightFromTerrain;
-
             if (shared.Vessel.mainBody.ocean)
             {
                 return Convert.ToDouble(groundAlt > 0 ? Math.Min(groundAlt, seaAlt) : seaAlt);

@@ -3,7 +3,7 @@
 Iterator
 ========
 
-An iterator can be obtained from :attr:`List:ITERATOR` as well as from other places.
+An iterator can be obtained from :attr:`Enumerable:ITERATOR` as well as from other places.
 An ITERATOR is a
 `generic computer programming concept <http://en.wikipedia.org/wiki/Iterator>`__.
 In the general case it's a variable type that allows you to get
@@ -63,13 +63,13 @@ Members
           - n/a
           - (This method has been removed)
         * - :meth:`NEXT`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - Move iterator to the next item
         * - :attr:`ATEND`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - Check if iterator is at the end of the list
         * - :attr:`INDEX`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Current index starting from zero
         * - :attr:`VALUE`
           - varies
@@ -84,21 +84,21 @@ Members
 
 .. method:: Iterator:NEXT
 
-    :returns: :ref:`boolean <boolean>`
+    :returns: :struct:`Boolean`
 
     Call this to move the iterator to the next item in the list. Returns true if there is such an item, or false if no such item exists because it's already at the end of the list.
 
 .. attribute:: Iterator:ATEND
 
     :access: Get only
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
     Returns true if the iterator is at the end of the list and therefore cannot be "NEXTed", false otherwise.
 
 .. attribute:: Iterator:INDEX
 
     :access: Get only
-    :type: :ref:`scalar <scalar>` (integer)
+    :type: :struct:`Scalar` (integer)
 
     Returns the numerical index of how far you are into the list, starting the counting at 0 for the first item in the list. The last item in the list is numbered N-1, where N is the number of items in the list.
 

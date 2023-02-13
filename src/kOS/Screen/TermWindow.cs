@@ -627,7 +627,7 @@ namespace kOS.Screen
         /// doesn't get the order mixed up.  (I.e. use it for paste buffer dumps or telnet input, but not
         /// live GUI typed stuff.)</param>
         /// <returns>True if the input got consuemed or enqueued.  If the input was blocked and not ignored, it returns false.</returns>
-        public bool ProcessOneInputChar(char ch, TelnetSingletonServer whichTelnet, bool allowQueue = true, bool forceQueue = true)
+        public bool ProcessOneInputChar(char ch, TelnetSingletonServer whichTelnet, bool allowQueue, bool forceQueue)
         {
             // Weird exceptions for multi-char data combos that would have been begun on previous calls to this method:
             switch (inputExpected)
@@ -705,6 +705,38 @@ namespace kOS.Screen
             }
 
             // else ignore it - unimplemented char.
+        }
+
+        /// <summary>
+        /// This is identical to calling ProcessOneInputChar with forceQueue defaulted to true,
+        /// and it returns void instead of bool.
+        /// <para>This is being done this way because it has to match exactly to how the
+        /// signature of the method used to look, to keep it compatible with the DLL for
+        /// kOSPropMonitor without kOSPropMonitor being recompiled.</para>
+        /// </summary>
+        /// <param name="ch"></param>
+        /// <param name="whichTelnet"></param>
+        /// <param name="allowQueue"></param>
+        /// <returns></returns>
+        public void ProcessOneInputChar(char ch, TelnetSingletonServer whichTelnet, bool allowQueue)
+        {
+            ProcessOneInputChar(ch, whichTelnet, allowQueue, true);
+        }
+
+        /// <summary>
+        /// This is identical to calling ProcessOneInputChar with allowQueu and forceQueue both defaulted to true,
+        /// and it reutrns void instead of bool.
+        /// <para>This is being done this way because it has to match exactly to how the
+        /// signature of the method used to look, to keep it compatible with the DLL for
+        /// kOSPropMonitor without kOSPropMonitor being recompiled.</para>
+        /// </summary>
+        /// <param name="ch"></param>
+        /// <param name="whichTelnet"></param>
+        /// <param name="allowQueue"></param>
+        /// <returns></returns>
+        public void ProcessOneInputChar(char ch, TelnetSingletonServer whichTelnet)
+        {
+            ProcessOneInputChar(ch, whichTelnet, true, true);
         }
 
         /// <summary>
@@ -796,6 +828,10 @@ namespace kOS.Screen
         /// </summary>
         void ProcessUnconsumedInput()
         {
+            if (!shared.Processor.HasBooted)
+            {
+                return; // Fix race condition (Github issue #2925) where Update() calls this before FixedUpdate() has set up the CPU.
+            }
             if (shared != null && shared.Interpreter != null && shared.Interpreter.IsWaitingForCommand())
             {
                 Queue<char> q = shared.Screen.CharInputQueue;

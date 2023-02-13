@@ -526,6 +526,7 @@ namespace kOS.Screen
                 {
                     GUILayout.Label(key.Alias + " is a new type this dialog doesn't support.  Contact kOS devs.");
                 }
+
                 GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
                 GUILayout.Label(new GUIContent(labelText, toolTipText), panelSkin.label);
                 GUILayout.EndHorizontal();

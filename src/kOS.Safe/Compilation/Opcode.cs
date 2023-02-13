@@ -426,7 +426,7 @@ namespace kOS.Safe.Compilation
         }
         
         /// <summary>
-        /// Return the list of member Properties that are part of what gets stored to machine langauge
+        /// Return the list of member Properties that are part of what gets stored to machine language
         /// for this opcode.
         /// </summary>
         /// <returns></returns>

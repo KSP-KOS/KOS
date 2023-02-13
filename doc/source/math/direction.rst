@@ -139,9 +139,9 @@ Structure
     ========================= ======================= ================================
      Suffix                   Type                    Description
     ========================= ======================= ================================
-     :attr:`PITCH`            :struct:`scalar` (deg)  Rotation around :math:`x` axis
-     :attr:`YAW`              :struct:`scalar` (deg)  Rotation around :math:`y` axis
-     :attr:`ROLL`             :struct:`scalar` (deg)  Rotation around :math:`z` axis
+     :attr:`PITCH`            :struct:`Scalar` (deg)  Rotation around :math:`x` axis
+     :attr:`YAW`              :struct:`Scalar` (deg)  Rotation around :math:`y` axis
+     :attr:`ROLL`             :struct:`Scalar` (deg)  Rotation around :math:`z` axis
      :attr:`FOREVECTOR`       :struct:`Vector`        This Direction's forward vector (z axis after rotation).
      ``VECTOR``               :struct:`Vector`        Alias synonym for :attr:`FOREVECTOR`
      :attr:`TOPVECTOR`        :struct:`Vector`        This Direction's top vector (y axis after rotation).
@@ -222,20 +222,23 @@ You can use math operations on :struct:`Direction` objects as well. The next exa
 
 Supported Direction Operators:
 
-:Direction Multiplied by Direction:
+Direction Multiplied by Direction:
     ``Dir1 * Dir2`` - This operator returns the result of rotating Dir2 by the rotation of Dir1.  Note that the order of operations matters here.  ``Dir1*Dir2`` is not the same as ``Dir2*Dir1``.  Example::
 
-        // A direction pointing along compass heading 330, by rotating NORTH by 30 degrees around UP axis:
+        // A direction pointing along compass heading 330,
+        // by rotating NORTH by 30 degrees around UP axis:
         SET newDir TO ANGLEAXIS(30,SHIP:UP) * NORTH.
 
-:Direction Multiplied by Vector:
+Direction Multiplied by Vector:
     ``Dir * Vec`` - This operator returns the result of rotating the vector by Dir::
 
-        // What would the velocity of your ship be if it was angled 20 degrees to your left?
+        // What would the velocity of your ship be
+        // if it was angled 20 degrees to your left?
         SET Vel to ANGLEAXIS(-20,SHIP:TOPVECTOR) * SHIP:VELOCITY:ORBIT.
-        // At this point Vel:MAG and SHIP:VELOCITY:MAG should be the same, but they don't point the same way
+        // At this point Vel:MAG and SHIP:VELOCITY:MAG should be the same,
+        // but they don't point the same way
 
-:Direction Added to Direction:
+Direction Added to Direction:
     ``Dir1 + Dir2`` - This operator is less reliable because its exact behavior depends on the order of operations of the UnityEngine's X Y and Z axis rotations, and it can result in gimbal lock.
 
     It's supposed to perform a Euler rotation of one direction by another, but it's preferred to use ``Dir*Dir`` instead, as that doesn't experience gimbal lock, and does not require that you know the exact transformation order of Unity.

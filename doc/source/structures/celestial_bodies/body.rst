@@ -11,7 +11,7 @@ This is any sort of planet or moon. To get a variable referring to a Body, you c
     // like "Mun" for example.
     SET MY_VAR TO BODY("name").
 
-Bodies are also :ref:`Orbitable<orbitable>`, and as such have all the associated suffixes.
+Bodies are also :struct:`Orbitable`, and as such have all the associated suffixes.
 
 Bodies' names are added to the kerboscript language as variable names as well.
 This means you can use the variable ``Mun`` to mean the same thing as ``BODY("Mun")``,
@@ -72,23 +72,23 @@ All of the main celestial bodies in the game are reserved variable names. The fo
     ================================ ============
          Every Suffix of :struct:`Orbitable`
     ---------------------------------------------
-    :attr:`NAME`                     :ref:`string <string>`
-    :attr:`DESCRIPTION`              :ref:`string <string>`
-    :attr:`MASS`                     :ref:`scalar <scalar>` (kg)
-    :attr:`HASOCEAN`                 :ref:`boolean <boolean>`
-    :attr:`HASSOLIDSURFACE`          :ref:`boolean <boolean>`
+    :attr:`NAME`                     :struct:`String`
+    :attr:`DESCRIPTION`              :struct:`String`
+    :attr:`MASS`                     :struct:`Scalar` (kg)
+    :attr:`HASOCEAN`                 :struct:`Boolean`
+    :attr:`HASSOLIDSURFACE`          :struct:`Boolean`
     :attr:`ORBITINGCHILDREN`         :struct:`List`
-    :attr:`ALTITUDE`                 :ref:`scalar <scalar>` (m)
-    :attr:`ROTATIONPERIOD`           :ref:`scalar <scalar>` (s)
-    :attr:`RADIUS`                   :ref:`scalar <scalar>` (m)
-    :attr:`MU`                       :ref:`scalar <scalar>` (:math:`m^3 s^{−2}`)
+    :attr:`ALTITUDE`                 :struct:`Scalar` (m)
+    :attr:`ROTATIONPERIOD`           :struct:`Scalar` (s)
+    :attr:`RADIUS`                   :struct:`Scalar` (m)
+    :attr:`MU`                       :struct:`Scalar` (:math:`m^3 s^{−2}`)
     :attr:`ATM`                      :struct:`Atmosphere`
     :attr:`ANGULARVEL`               :struct:`Vector` in :ref:`SHIP-RAW <ship-raw>`
     :meth:`GEOPOSITIONOF`            :struct:`GeoCoordinates` given :ref:`SHIP-RAW <ship-raw>` position vector
     :meth:`GEOPOSITIONLATLNG`        :struct:`GeoCoordinates` given latitude and longitude values
-    :attr:`ALTITUDEOF`               :ref:`scalar <scalar>` (m)
-    :attr:`SOIRADIUS`                :ref:`scalar <scalar>` (m)
-    :attr:`ROTATIONANGLE`            :ref:`scalar <scalar>` (deg)
+    :attr:`ALTITUDEOF`               :struct:`Scalar` (m)
+    :attr:`SOIRADIUS`                :struct:`Scalar` (m)
+    :attr:`ROTATIONANGLE`            :struct:`Scalar` (deg)
     ================================ ============
 
 .. note::
@@ -129,7 +129,7 @@ All of the main celestial bodies in the game are reserved variable names. The fo
 .. attribute:: Body:ROTATIONPERIOD
 
     The number of seconds it takes the body to rotate around its own axis.
-    This is the sedereal rotation period which can differ from the length
+    This is the sidereal rotation period which can differ from the length
     of a day due to the fact that the body moves a bit further around the
     Sun while it's rotating around its own axis.
 
@@ -170,6 +170,7 @@ All of the main celestial bodies in the game are reserved variable names. The fo
 .. method:: Body:GEOPOSITIONOF(vectorPos)
 
     :parameter vectorPos: :struct:`Vector` input position in XYZ space.
+    :type: :struct:`GeoCoordinates`
 
     The geoposition underneath the given vector position.  SHIP:BODY:GEOPOSITIONOF(SHIP:POSITION) should, in principle, give the same thing as SHIP:GEOPOSITION, while SHIP:BODY:GEOPOSITIONOF(SHIP:POSITION + 1000*SHIP:NORTH) would give you the lat/lng of the position 1 kilometer north of you.  Be careful not to confuse this with :GEOPOSITION (no "OF" in the name), which is also a suffix of Body by virtue of the fact that Body is an Orbitable, but it doesn't mean the same thing.
 
@@ -202,7 +203,7 @@ All of the main celestial bodies in the game are reserved variable names. The fo
 
     The rotation angle is the number of degrees between the
     :ref:`Solar Prime Vector <solarprimevector>` and the
-    current positon of the body's prime meridian (body longitude
+    current position of the body's prime meridian (body longitude
     of zero).
 
     The value is in constant motion, and once per body's rotation

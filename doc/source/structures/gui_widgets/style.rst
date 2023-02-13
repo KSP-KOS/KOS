@@ -14,15 +14,15 @@ Style
     ===================================== =============================== =============
     :attr:`HSTRETCH`                      :struct:`Boolean`               Should the widget stretch horizontally? (default depends on widget subclass)
     :attr:`VSTRETCH`                      :struct:`Boolean`               Should the widget stretch vertically?
-    :attr:`WIDTH`                         :struct:`scalar` (pixels)       Fixed width (or 0 if flexible).
-    :attr:`HEIGHT`                        :struct:`scalar` (pixels)       Fixed height (or 0 if flexible).
+    :attr:`WIDTH`                         :struct:`Scalar` (pixels)       Fixed width (or 0 if flexible).
+    :attr:`HEIGHT`                        :struct:`Scalar` (pixels)       Fixed height (or 0 if flexible).
     :attr:`MARGIN`                        :struct:`StyleRectOffset`       Spacing between this and other widgets.
     :attr:`PADDING`                       :struct:`StyleRectOffset`       Spacing between the outside of the widget and its contents (text, etc.).
     :attr:`BORDER`                        :struct:`StyleRectOffset`       Size of the edges in the 9-slice image for BG images in NORMAL, HOVER, etc.
     :attr:`OVERFLOW`                      :struct:`StyleRectOffset`       Extra space added to the area of the background image. Allows the background to go beyond the widget's rectangle.
-    :attr:`ALIGN`                         :struct:`string`                One of "CENTER", "LEFT", or "RIGHT". See note below.
-    :attr:`FONT`                          :struct:`string`                The name of the font of the text on the content or "" if the default.
-    :attr:`FONTSIZE`                      :struct:`scalar`                The size of the text on the content.
+    :attr:`ALIGN`                         :struct:`String`                One of "CENTER", "LEFT", or "RIGHT". See note below.
+    :attr:`FONT`                          :struct:`String`                The name of the font of the text on the content or "" if the default.
+    :attr:`FONTSIZE`                      :struct:`Scalar`                The size of the text on the content.
     :attr:`RICHTEXT`                      :struct:`Boolean`               Set to False to disable rich-text (<i>...</i>, etc.)
     :attr:`NORMAL`                        :struct:`StyleState`            Properties for the widget normally.
     :attr:`ON`                            :struct:`StyleState`            Properties for when the widget is under the mouse and "on".
@@ -33,7 +33,7 @@ Style
     :attr:`ACTIVE_ON`                     :struct:`StyleState`            Properties for when the widget is active and "on".
     :attr:`FOCUSED`                       :struct:`StyleState`            Properties for when the widget has keyboard focus.
     :attr:`FOCUSED_ON`                    :struct:`StyleState`            Properties for when the widget has keyboard focus and is "on".
-    :attr:`BG`                            :struct:`string`                The same as NORMAL:BG. Name of a "9-slice" image file.
+    :attr:`BG`                            :struct:`String`                The same as NORMAL:BG. Name of a "9-slice" image file.
     :attr:`TEXTCOLOR`                     :ref:`Color <colors>`           The same as NORMAL:TEXTCOLOR. The color of the text on the label.
     :attr:`WORDWRAP`                      :struct:`Boolean`               Can labels be broken into multiple lines on word boundaries?
     ===================================== =============================== =============
@@ -54,14 +54,14 @@ Style
 
     .. attribute:: WIDTH
 
-        :type: :struct:`scalar`
+        :type: :struct:`Scalar`
         :access: Get/Set
 
         (pixels)       Fixed width (or 0 if flexible).
 
     .. attribute:: HEIGHT
 
-        :type: :struct:`scalar`
+        :type: :struct:`Scalar`
         :access: Get/Set
 
         (pixels)       Fixed height (or 0 if flexible).
@@ -96,7 +96,7 @@ Style
 
     .. attribute:: ALIGN
 
-        :type: :struct:`string`
+        :type: :struct:`String`
         :access: Get/Set
 
         One of "CENTER", "LEFT", or "RIGHT".
@@ -111,7 +111,7 @@ Style
 
     .. attribute:: FONT
 
-        :type: :struct:`string`
+        :type: :struct:`String`
         :access: Get/Set
 
         The name of the font of the text on the content or "" if the default.
@@ -129,7 +129,7 @@ Style
 
     .. attribute:: FONTSIZE
 
-        :type: :struct:`scalar`
+        :type: :struct:`Scalar`
         :access: Get/Set
 
         The size of the text on the content.
@@ -206,7 +206,7 @@ Style
 
     .. attribute:: BG
 
-        :type: :struct:`string`
+        :type: :struct:`String`
         :access: Get/Set
 
         The same as NORMAL:BG. Name of a "9-slice" image file.

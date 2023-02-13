@@ -280,21 +280,21 @@ than 100 meters show up we have a big problem. This could be fixed by doing the 
  if Done = false {
    if distance <= 1 {
      print "Distance is within a meter.".
-     set NotDone to false.
+     set Done to true.
    }
  }
 
  if Done = false {
    if distance <= 100 {
      print "Distance is within 100 meters.".
-     set NotDone to false.
+     set Done to true.
    }
  }
 
  if Done = false {
    if distance > 1000 {
      print "Distance is farther than 1 kilometer.".
-     set NotDone to false.
+     set Done to true.
    }
  }
 

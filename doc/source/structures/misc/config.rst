@@ -72,6 +72,10 @@ Configuration of kOS
           - :struct:`Boolean`
           - False
           - Enable safe mode
+        * - :attr:`CLOBBERBUILTINS`
+          - :struct:`Boolean`
+          - False
+          - If true, built-in identifiers can be masked with user identifiers.
         * - :attr:`AUDIOERR`
           - :struct:`Boolean`
           - False
@@ -124,7 +128,7 @@ Configuration of kOS
 
     Configures the ``InstructionsPerUpdate`` setting.
 
-    This is the number of kRISC psuedo-machine-langauge instructions that each kOS CPU will attempt to execute from the main program per :ref:`physics update tick <cpu hardware>`.
+    This is the number of kRISC psuedo-machine-language instructions that each kOS CPU will attempt to execute from the main program per :ref:`physics update tick <cpu hardware>`.
 
     This value is constrained to stay within the range [50..2000]. If you set it to a value outside that range, it will reset itself to remain in that range.
 
@@ -190,6 +194,40 @@ Configuration of kOS
 
 .. highlight:: kerboscript
 
+.. attribute:: Config:CLOBBERBUILTINS
+
+    :access: Get/Set
+    :type: :struct:`Boolean`
+
+    Setting this config option to TRUE will allow scripts to clobber
+    built-in idenifier names, re-enabling older behavior for backward
+    compatibility and disabling the compiler enforcement that was
+    introduced in kOS v 1.4.0.0 to stop this practice.
+
+    In kOS v1.4.0.0, the compiler started enforcing the rule that kerboscript
+    programs must never create a user variable, lock, or function with a
+    name that clashes with one of kOS's own built-in variable, lock, or
+    function names.  This rule was introduced to prevent common bugs where
+    a program masked over some vital kOS variable, rendering it inaccessible,
+    like for example ``SHIP``, or ``VELOCITY``.
+
+    Older scripts written before kOS 1.4.0.0 might need this config option
+    enabled to make the compiler accept them and not throw errors.
+
+    Before enabling this to make the error messages go away, first consider
+    going through the offeding script and editing it to rename the variable,
+    lock, or function that is causing the message.  That would be the better
+    solution.  This config option is only being presented as a dirty way
+    to make old scripts that are no longer being edited keep working on
+    newer versions of kOS.  In the long run, it's better to edit the scripts.
+
+    **Note: This can be over-ridden by @CLOBBERBUILTINS directive:**
+
+    Note that this config option can be over-ridden on a per-file basis by
+    using the compiler directive called :ref:`@CLOBBERBUILTINS <clobberbuiltins>`.
+    The Config value here is merely the default you get for files that lack a
+    :ref:`@CLOBBERBUILTINS <clobberbuiltins>` compiler directive.
+
 .. attribute:: Config:AUDIOERR
 
     :access: Get/Set
@@ -201,7 +239,7 @@ Configuration of kOS
     generte a sound effect of a short little warning bleep to remind you that
     an exception occurred.  This can be useful when you are flying
     hands-off and need to realize your autopilot script just died so
-    you can take over.
+    
 
 .. attribute:: Config:VERBOSE
 

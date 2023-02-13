@@ -27,30 +27,31 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
                    Every suffix of :struct:`Orbitable`
     --------------------------------------------------------------------------------------
     :attr:`CONTROL`                          :struct:`Control`               Raw flight controls
-    :attr:`BEARING`                          :struct:`scalar` (deg)          relative heading to this vessel
-    :attr:`HEADING`                          :struct:`scalar` (deg)          Absolute heading to this vessel
-    :attr:`MAXTHRUST`                        :struct:`scalar`                Sum of active maximum thrusts
-    :meth:`MAXTHRUSTAT(pressure)`            :struct:`scalar`                Sum of active maximum thrusts at the given atmospheric pressure
-    :attr:`AVAILABLETHRUST`                  :struct:`scalar`                Sum of active limited maximum thrusts
-    :meth:`AVAILABLETHRUSTAT(pressure)`      :struct:`scalar`                Sum of active limited maximum thrusts at the given atmospheric pressure
+    :attr:`BEARING`                          :struct:`Scalar` (deg)          relative heading to this vessel
+    :attr:`HEADING`                          :struct:`Scalar` (deg)          Absolute heading to this vessel
+    :attr:`THRUST`                           :struct:`Scalar`                Sum of active thrusts
+    :attr:`MAXTHRUST`                        :struct:`Scalar`                Sum of active maximum thrusts
+    :meth:`MAXTHRUSTAT(pressure)`            :struct:`Scalar`                Sum of active maximum thrusts at the given atmospheric pressure
+    :attr:`AVAILABLETHRUST`                  :struct:`Scalar`                Sum of active limited maximum thrusts
+    :meth:`AVAILABLETHRUSTAT(pressure)`      :struct:`Scalar`                Sum of active limited maximum thrusts at the given atmospheric pressure
     :attr:`FACING`                           :struct:`Direction`             The way the vessel is pointed
     :attr:`BOUNDS`                           :struct:`Bounds`                Construct bounding box information about the vessel
-    :attr:`MASS`                             :struct:`scalar` (metric tons)  Mass of the ship
-    :attr:`WETMASS`                          :struct:`scalar` (metric tons)  Mass of the ship fully fuelled
-    :attr:`DRYMASS`                          :struct:`scalar` (metric tons)  Mass of the ship with no resources
-    :attr:`DYNAMICPRESSURE`                  :struct:`scalar` (ATM's)        Air Pressure surrounding the vessel
-    :attr:`Q`                                :struct:`scalar` (ATM's)        Alias name for DYNAMICPRESSURE
-    :attr:`VERTICALSPEED`                    :struct:`scalar` (m/s)          How fast the ship is moving "up"
-    :attr:`GROUNDSPEED`                      :struct:`scalar` (m/s)          How fast the ship is moving "horizontally"
-    :attr:`AIRSPEED`                         :struct:`scalar` (m/s)          How fast the ship is moving relative to the air
-    :attr:`TERMVELOCITY` (DEPRECATED)        :struct:`scalar` (m/s)          terminal velocity of the vessel
-    :attr:`SHIPNAME`                         :struct:`string`                The name of the vessel
-    :attr:`NAME`                             :struct:`string`                Synonym for SHIPNAME
-    :attr:`STATUS`                           :struct:`string`                Current ship status
+    :attr:`MASS`                             :struct:`Scalar` (metric tons)  Mass of the ship
+    :attr:`WETMASS`                          :struct:`Scalar` (metric tons)  Mass of the ship fully fuelled
+    :attr:`DRYMASS`                          :struct:`Scalar` (metric tons)  Mass of the ship with no resources
+    :attr:`DYNAMICPRESSURE`                  :struct:`Scalar` (ATM's)        Air Pressure surrounding the vessel
+    :attr:`Q`                                :struct:`Scalar` (ATM's)        Alias name for DYNAMICPRESSURE
+    :attr:`VERTICALSPEED`                    :struct:`Scalar` (m/s)          How fast the ship is moving "up"
+    :attr:`GROUNDSPEED`                      :struct:`Scalar` (m/s)          How fast the ship is moving "horizontally"
+    :attr:`AIRSPEED`                         :struct:`Scalar` (m/s)          How fast the ship is moving relative to the air
+    :attr:`TERMVELOCITY` (DEPRECATED)        :struct:`Scalar` (m/s)          terminal velocity of the vessel
+    :attr:`SHIPNAME`                         :struct:`String`                The name of the vessel
+    :attr:`NAME`                             :struct:`String`                Synonym for SHIPNAME
+    :attr:`STATUS`                           :struct:`String`                Current ship status
     :attr:`DELTAV`                           :struct:`DeltaV`                Summed Delta-V info about the ship
     :meth:`STAGEDELTAV(num)`                 :struct:`DeltaV`                One stage's Delta-V info
     :attr:`STAGENUM`                         :struct:`Scalar`                Which stage number is current
-    :attr:`TYPE`                             :struct:`string`                Ship type
+    :attr:`TYPE`                             :struct:`String`                Ship type
     :meth:`STARTTRACKING`                    None                            Start tracking the asteroid "vessel" via the tracking station
     :meth:`STOPTRACKING`                     None                            Stop tracking the asteroid "vessel" via the tracking station
     :attr:`SIZECLASS`                        :struct:`String`                Return the size class for an asteroid-like object
@@ -65,6 +66,8 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :attr:`ROOTPART`                         :struct:`Part`                  Root :struct:`Part` of this vessel
     :attr:`CONTROLPART`                      :struct:`Part`                  Control reference :struct:`Part` of this vessel
     :attr:`PARTS`                            :struct:`List`                  all :struct:`Parts <Part>`
+    :attr:`ENGINES`                          :struct:`List`                  all :struct:`Engines <Engine>`
+    :attr:`RCS`                              :struct:`List`                  all :struct:`RCS <RCS>`
     :attr:`DOCKINGPORTS`                     :struct:`List`                  all :struct:`DockingPorts <DockingPort>`
     :attr:`ELEMENTS`                         :struct:`List`                  all :struct:`Elements <Element>`
     :attr:`RESOURCES`                        :struct:`List`                  all :struct:`AggrgateResources <AggregateResource>`
@@ -80,14 +83,14 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :meth:`PARTSINGROUP(group)`              :struct:`List`                  :struct:`Parts <Part>` by action group
     :meth:`MODULESINGROUP(group)`            :struct:`List`                  :struct:`PartModules <PartModule>` by action group
     :meth:`ALLTAGGEDPARTS()`                 :struct:`List`                  :struct:`Parts <Part>` that have non-blank nametags
-    :attr:`CREWCAPACITY`                     :struct:`scalar`                Crew capacity of this vessel
+    :attr:`CREWCAPACITY`                     :struct:`Scalar`                Crew capacity of this vessel
     :meth:`CREW()`                           :struct:`List`                  all :struct:`CrewMembers <CrewMember>`
     :attr:`CONNECTION`                       :struct:`Connection`            Returns your connection to this vessel
     :attr:`MESSAGES`                         :struct:`MessageQueue`          This vessel's message queue
-    :attr:`DELTAV`                           :struct:`scalar` (m/s)          The total delta-v of this vessel in its current situation
-    :attr:`DELTAVASL`                        :struct:`scalar` (m/s)          The total delta-v of this vessel if it were at sea level
-    :attr:`DELTAVVACUUM`                     :struct:`scalar` (m/s)          The total delta-v of this vessel if it were in a vacuum
-    :attr:`BURNTIME`                         :struct:`scalar` (s)            The total burn time of this vessel (or 5 if the vessel has 0 delta/v).
+    :attr:`DELTAV`                           :struct:`Scalar` (m/s)          The total delta-v of this vessel in its current situation
+    :attr:`DELTAVASL`                        :struct:`Scalar` (m/s)          The total delta-v of this vessel if it were at sea level
+    :attr:`DELTAVVACUUM`                     :struct:`Scalar` (m/s)          The total delta-v of this vessel if it were in a vacuum
+    :attr:`BURNTIME`                         :struct:`Scalar` (s)            The total burn time of this vessel (or 5 if the vessel has 0 delta/v).
     ======================================== =============================== =============
 
 .. note::
@@ -105,21 +108,28 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
 .. attribute:: Vessel:BEARING
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get only
 
     *relative* compass heading (degrees) to this vessel from the :ref:`CPU Vessel <cpu vessel>`, taking into account the CPU Vessel's own heading.
 
 .. attribute:: Vessel:HEADING
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get only
 
     *absolute* compass heading (degrees) to this vessel from the :ref:`CPU Vessel <cpu vessel>`
 
+.. attribute:: Vessel:THRUST
+
+    :type: :struct:`Scalar`
+    :access: Get only
+
+    Sum of all the :ref:`engines' THRUSTs <engine_THRUST>` of all the currently active engines In Kilonewtons.
+
 .. attribute:: Vessel:MAXTHRUST
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get only
 
     Sum of all the :ref:`engines' MAXTHRUSTs <engine_MAXTHRUST>` of all the currently active engines In Kilonewtons.
@@ -127,7 +137,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 .. method:: Vessel:MAXTHRUSTAT(pressure)
 
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
-    :type: :ref:`scalar <scalar>` (kN)
+    :type: :struct:`Scalar` (kN)
 
     Sum of all the :ref:`engines' MAXTHRUSTATs <engine_MAXTHRUSTAT>` of all the currently active engines In Kilonewtons at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
     (Pressure must be greater than or equal to zero.  If you pass in a
@@ -135,7 +145,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
 .. attribute:: Vessel:AVAILABLETHRUST
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get only
 
     Sum of all the :ref:`engines' AVAILABLETHRUSTs <engine_AVAILABLETHRUST>` of all the currently active engines taking into account their throttlelimits. Result is in Kilonewtons.
@@ -143,7 +153,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 .. method:: Vessel:AVAILABLETHRUSTAT(pressure)
 
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
-    :type: :ref:`scalar <scalar>` (kN)
+    :type: :struct:`Scalar` (kN)
 
     Sum of all the :ref:`engines' AVAILABLETHRUSTATs <engine_AVAILABLETHRUSTAT>` of all the currently active engines taking into account their throttlelimits at the given atmospheric pressure. Result is in Kilonewtons.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
     (Pressure must be greater than or equal to zero.  If you pass in a
@@ -193,28 +203,28 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
 .. attribute:: Vessel:MASS
 
-    :type: :ref:`scalar <scalar>` (metric tons)
+    :type: :struct:`Scalar` (metric tons)
     :access: Get only
 
     The mass of the ship
 
 .. attribute:: Vessel:WETMASS
 
-    :type: :ref:`scalar <scalar>` (metric tons)
+    :type: :struct:`Scalar` (metric tons)
     :access: Get only
 
     The mass of the ship if all resources were full
 
 .. attribute:: Vessel:DRYMASS
 
-    :type: :ref:`scalar <scalar>` (metric tons)
+    :type: :struct:`Scalar` (metric tons)
     :access: Get only
 
     The mass of the ship if all resources were empty
 
 .. attribute:: Vessel:DYNAMICPRESSURE
 
-    :type: :ref:`scalar <scalar>` (ATM's)
+    :type: :struct:`Scalar` (ATM's)
     :access: Get only
 
     Returns what the air pressure is in the atmosphere surrounding the vessel.
@@ -225,21 +235,21 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
 .. attribute:: Vessel:Q
 
-    :type: :ref:`scalar <scalar>` (ATM's)
+    :type: :struct:`Scalar` (ATM's)
     :access: Get only
 
     Alias for DYNAMICPRESSURE
 
 .. attribute:: Vessel:VERTICALSPEED
 
-    :type: :ref:`scalar <scalar>` (m/s)
+    :type: :struct:`Scalar` (m/s)
     :access: Get only
 
     How fast the ship is moving. in the "up" direction relative to the SOI Body's sea level surface.
 
 .. attribute:: Vessel:GROUNDSPEED
 
-    :type: :ref:`scalar <scalar>` (m/s)
+    :type: :struct:`Scalar` (m/s)
     :access: Get only
 
     How fast the ship is moving in the two dimensional plane horizontal
@@ -251,19 +261,19 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
        .. versionadded:: 0.18
            The old name for this value was SURFACESPEED.  The name was changed
            because it was confusing before.  "surface speed" implied it's the
-           :ref:`scalar <scalar>` magnitude of "surface velocity", but it wasn't, because of how
+           :struct:`Scalar` magnitude of "surface velocity", but it wasn't, because of how
            it ignores the vertical component.
 
 .. attribute:: Vessel:AIRSPEED
 
-    :type: :ref:`scalar <scalar>` (m/s)
+    :type: :struct:`Scalar` (m/s)
     :access: Get only
 
     How fast the ship is moving relative to the air. KSP models atmosphere as simply a solid block of air "glued" to the planet surface (the weather on Kerbin is boring and there's no wind). Therefore airspeed is generally the same thing as as the magnitude of the surface velocity.
 
 .. attribute:: Vessel:SHIPNAME
 
-    :type: :ref:`string <string>`
+    :type: :struct:`String`
     :access: Get/Set
 
     The name of the vessel as it appears in the tracking station. When you set this, it cannot be empty.
@@ -274,7 +284,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
 .. attribute:: Vessel:STATUS
 
-    :type: :ref:`string <string>`
+    :type: :struct:`String`
     :access: get only
 
     The current status of the vessel possible results are: `LANDED`, `SPLASHED`, `PRELAUNCH`, `FLYING`, `SUB_ORBITAL`, `ORBITING`, `ESCAPING` and `DOCKED`.
@@ -315,7 +325,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
 .. attribute:: Vessel:TYPE
 
-    :type: :ref:`string <string>`
+    :type: :struct:`String`
     :access: Get/Set
 
     The ship's type as described `on the KSP wiki <http://wiki.kerbalspaceprogram.com/wiki/Craft#Vessel_types>`_.
@@ -489,6 +499,20 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
     A List of all the :ref:`parts <part>` on the vessel. ``SET FOO TO SHIP:PARTS.`` has exactly the same effect as ``LIST PARTS IN FOO.``. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
 
+.. attribute:: Vessel:ENGINES
+
+    :type: :struct:`List` of :struct:`Engine` objects
+    :access: Get only
+
+    A List of all the :ref:`engines <Engine>` on the Vessel.
+    
+.. attribute:: Vessel:RCS
+
+    :type: :struct:`List` of :struct:`RCS` objects
+    :access: Get only
+
+    A List of all the :ref:`RCS thrusters <RCS>` on the Vessel.
+    
 .. attribute:: Vessel:DOCKINGPORTS
 
     :type: :struct:`List` of :struct:`DockingPort` objects
@@ -513,7 +537,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
 .. method:: Vessel:PARTSNAMED(name)
 
-    :parameter name: (:ref:`string <string>`) Name of the parts
+    :parameter name: (:struct:`String`) Name of the parts
     :return: :struct:`List` of :struct:`Part` objects
 
     Returns a list of all the parts that have this as their
@@ -521,7 +545,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
 .. method:: Vessel:PARTSNAMEDPATTERN(namePattern)
 
-    :parameter namePattern: (:ref:`string <string>`) Pattern of the name of the parts
+    :parameter namePattern: (:struct:`String`) Pattern of the name of the parts
     :return: :struct:`List` of :struct:`Part` objects
 
     Returns a list of all the parts that have this Regex pattern in their
@@ -529,7 +553,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
 .. method:: Vessel:PARTSTITLED(title)
 
-    :parameter title: (:ref:`string <string>`) Title of the parts
+    :parameter title: (:struct:`String`) Title of the parts
     :return: :struct:`List` of :struct:`Part` objects
 
     Returns a list of all the parts that have this as their
@@ -537,7 +561,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
 .. method:: Vessel:PARTSTITLEDPATTERN(titlePattern)
 
-    :parameter titlePattern: (:ref:`string <string>`) Patern of the title of the parts
+    :parameter titlePattern: (:struct:`String`) Patern of the title of the parts
     :return: :struct:`List` of :struct:`Part` objects
 
     Returns a list of all the parts that have this Regex pattern in their
@@ -545,7 +569,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
 .. method:: Vessel:PARTSTAGGED(tag)
 
-    :parameter tag: (:ref:`string <string>`) Tag of the parts
+    :parameter tag: (:struct:`String`) Tag of the parts
     :return: :struct:`List` of :struct:`Part` objects
 
     Returns a list of all the parts that have this name as their
@@ -553,7 +577,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
 .. method:: Vessel:PARTSTAGGEDPATTERN(tagPattern)
 
-    :parameter tagPattern: (:ref:`string <string>`) Pattern of the tag of the parts
+    :parameter tagPattern: (:struct:`String`) Pattern of the tag of the parts
     :return: :struct:`List` of :struct:`Part` objects
 
     Returns a list of all the parts that match this Regex pattern in their
@@ -561,7 +585,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
 .. method:: Vessel:PARTSDUBBED(name)
 
-    :parameter name: (:ref:`string <string>`) name, title or tag of the parts
+    :parameter name: (:struct:`String`) name, title or tag of the parts
     :return: :struct:`List` of :struct:`Part` objects
 
     Return a list of all the parts that match this
@@ -569,7 +593,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
 .. method:: Vessel:PARTSDUBBEDPATTERN(namePattern)
 
-    :parameter namePattern: (:ref:`string <string>`) Pattern of the name, title or tag of the parts
+    :parameter namePattern: (:struct:`String`) Pattern of the name, title or tag of the parts
     :return: :struct:`List` of :struct:`Part` objects
 
     Return a list of parts that match this Regex pattern
@@ -577,7 +601,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
 .. method:: Vessel:MODULESNAMED(name)
 
-    :parameter name: (:ref:`string <string>`) Name of the part modules
+    :parameter name: (:struct:`String`) Name of the part modules
     :return: :struct:`List` of :struct:`PartModule` objects
 
     Return a list of all the :struct:`PartModule` objects that
@@ -606,7 +630,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
 .. attribute:: Vessel:CREWCAPACITY
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get only
 
     crew capacity of this vessel
@@ -631,7 +655,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
 .. attribute:: Vessel:DELTAV
 
-    :return: :struct:`scalar`
+    :return: :struct:`Scalar`
 
     The total delta-v of this vessel in its current situation, using the stock
     calulations the KSP game shows in the staging list.  Note that this is only
@@ -639,7 +663,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
 .. attribute:: Vessel:DELTAVASL
 
-    :return: :struct:`scalar`
+    :return: :struct:`Scalar`
 
     The total delta-v of this vessel if it were at sea level, using the stock
     calulations the KSP game shows in the staging list.  Note that this is only
@@ -647,7 +671,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
 .. attribute:: Vessel:DELTAVVACUUM
 
-    :return: :struct:`scalar`
+    :return: :struct:`Scalar`
 
     The total delta-v of this vessel if it were at sea vacuum, using the stock
     calulations the KSP game shows in the staging list.  Note that this is only
@@ -655,7 +679,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
 .. attribute:: Vessel:BURNTIME
 
-    :return: :struct:`scalar`
+    :return: :struct:`Scalar`
 
     The total burn time, in seconds, of this vessel (or 5 if the vessel has 0 delta/v). Burn time is not affected by atmosphere.  This is using the stock
     calulations the KSP game shows in the staging list.  Note that this is only
@@ -667,7 +691,7 @@ Deprecated Suffix
 
 .. attribute:: Vessel:TERMVELOCITY
 
-    :type: :ref:`scalar <scalar>` (m/s)
+    :type: :struct:`Scalar` (m/s)
     :access: Get only
 
     (Deprecated with KSP 1.0 atmospheric model)

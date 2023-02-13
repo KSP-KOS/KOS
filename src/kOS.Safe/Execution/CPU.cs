@@ -16,6 +16,39 @@ namespace kOS.Safe.Execution
 {
     public class CPU : ICpu
     {
+        private struct PopContextNotifyeeContainer : IEquatable<PopContextNotifyeeContainer>
+        {
+            public readonly WeakReference popContextNotifyee;
+            private int innerHashCode;
+
+            public PopContextNotifyeeContainer(IPopContextNotifyee notifyee)
+            {
+                popContextNotifyee = new WeakReference(notifyee);
+                innerHashCode = notifyee.GetHashCode();
+            }
+            public override int GetHashCode()
+            {
+                return innerHashCode;
+            }
+
+            public override bool Equals(object other)
+            {
+                if (other is PopContextNotifyeeContainer)
+                    return Equals((PopContextNotifyeeContainer)other);
+                return false;
+            }
+            public bool Equals(PopContextNotifyeeContainer other)
+            {
+                if (popContextNotifyee.Target == null)
+                    return false;
+
+                if (other.popContextNotifyee.Target == null)
+                    return false;
+
+                return popContextNotifyee.Target == other.popContextNotifyee.Target;
+            }
+        }
+
         private readonly IStack stack;
         private readonly VariableScope globalVariables;
 
@@ -77,7 +110,8 @@ namespace kOS.Safe.Execution
         /// The objects which have chosen to register themselves as IPopContextNotifyees
         /// to be told when popping a context (ending a program).
         /// </summary>
-        private List<WeakReference> popContextNotifyees;
+        private HashSet<PopContextNotifyeeContainer> popContextNotifyees;
+        private int popContextNotifyeesCleanupCounter = 0;
 
         public CPU(SafeSharedObjects shared)
         {
@@ -88,7 +122,7 @@ namespace kOS.Safe.Execution
             contexts = new List<ProgramContext>();
             yields = new List<YieldFinishedWithPriority>();
             if (this.shared.UpdateHandler != null) this.shared.UpdateHandler.AddFixedObserver(this);
-            popContextNotifyees = new List<WeakReference>();
+            popContextNotifyees = new HashSet<PopContextNotifyeeContainer>();
         }
 
         public void Boot()
@@ -169,6 +203,8 @@ namespace kOS.Safe.Execution
                     {
                         LoadProgramsInSameAddressSpace = true,
                         FuncManager = shared.FunctionManager,
+                        BindManager = shared.BindingMgr,
+                        AllowClobberBuiltins = SafeHouse.Config.AllowClobberBuiltIns,
                         IsCalledFromRun = false
                     };
 
@@ -253,27 +289,29 @@ namespace kOS.Safe.Execution
         /// <param name="notifyee">Notifyee object that has an OnPopContext() callback.</param>
         public void AddPopContextNotifyee(IPopContextNotifyee notifyee)
         {
-            // Not sure what the definition of Equals is for a weak reference,
-            // this walks through looking if it's already registered, to avoid duplicates:
-            for (int i = 0; i < popContextNotifyees.Count; ++i)
-                if (popContextNotifyees[i].Target == notifyee)
-                    return;
+            PopContextNotifyeeContainer container = new PopContextNotifyeeContainer(notifyee);
+            popContextNotifyees.Add(container);
 
-            popContextNotifyees.Add(new WeakReference(notifyee));
+            popContextNotifyeesCleanupCounter++;
+            if (popContextNotifyeesCleanupCounter > 10000)
+            {
+                popContextNotifyeesCleanupCounter = 0;
+                popContextNotifyees = new HashSet<PopContextNotifyeeContainer>(popContextNotifyees.Where((c) => c.popContextNotifyee.IsAlive && c.popContextNotifyee.Target != null));
+            }
         }
 
         public void RemovePopContextNotifyee(IPopContextNotifyee notifyee)
         {
-            // Might as well also get rid of any that are stale references while we're here:
-            popContextNotifyees.RemoveAll((item)=>(!item.IsAlive) || item.Target == notifyee);
+            PopContextNotifyeeContainer container = new PopContextNotifyeeContainer(notifyee);
+            popContextNotifyees.Remove(container);
         }
 
         private void NotifyPopContextNotifyees(IProgramContext context)
         {
             // Notify them all:
-            for (int i = 0; i < popContextNotifyees.Count; ++i)
+            foreach (PopContextNotifyeeContainer container in popContextNotifyees)
             {
-                WeakReference current = popContextNotifyees[i];
+                WeakReference current = container.popContextNotifyee;
                 if (current.IsAlive) // Avoid resurrecting it if it's gone, and don't call its hook.
                 {
                     IPopContextNotifyee notifyee = current.Target as IPopContextNotifyee;
@@ -283,7 +321,7 @@ namespace kOS.Safe.Execution
             }
 
             // Remove the ones flagged for removal or that are stale anyway:
-            popContextNotifyees.RemoveAll((item)=>(!item.IsAlive) || item.Target == null);
+            popContextNotifyees.RemoveWhere((c) => !c.popContextNotifyee.IsAlive || c.popContextNotifyee.Target == null);
         }
 
         public void PushNewScope(Int16 scopeId, Int16 parentScopeId)
@@ -1502,8 +1540,8 @@ namespace kOS.Safe.Execution
                 }
                 else
                 {
-                    executeNext = ExecuteInstruction(currentContext, doProfiling);
                     ++InstructionsThisUpdate;
+                    executeNext = ExecuteInstruction(currentContext, doProfiling);
                     if (CurrentPriority == InterruptPriority.Normal)
                         ++howManyNormalPriority;
                 }
@@ -1542,16 +1580,21 @@ namespace kOS.Safe.Execution
                 {
                     opcode.ProfileTicksElapsed += instructionWatch.ElapsedTicks;
                     opcode.ProfileExecutionCount++;
-                    
                 }
-                // Add the time this took to the exeuction stats for current priority level:
-                if (! executionStats.ContainsKey(CurrentPriority))
-                    executionStats[CurrentPriority] = new ExecutionStatBlock();
-                executionStats[CurrentPriority].LogOneInstruction(instructionWatch.ElapsedTicks);
+                if (doProfiling || SafeHouse.Config.ShowStatistics)
+                {
+                    // Add the time this took to the exeuction stats for current priority level:
+                    if (! executionStats.ContainsKey(CurrentPriority))
+                        executionStats[CurrentPriority] = new ExecutionStatBlock();
+                    executionStats[CurrentPriority].LogOneInstruction(instructionWatch.ElapsedTicks);
+                }
 
                 // start the *next* instruction's timer right after this instruction ended
                 instructionWatch.Reset();
-                instructionWatch.Start();
+                if (doProfiling || SafeHouse.Config.ShowStatistics)
+                {
+                    instructionWatch.Start();
+                }
 
                 if (opcode.AbortProgram)
                 {

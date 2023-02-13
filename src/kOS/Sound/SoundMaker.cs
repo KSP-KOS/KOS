@@ -104,6 +104,7 @@ namespace kOS.Sound
             AudioSource source = soundObject.AddComponent<AudioSource>();
             source.clip = clip;
             source.spatialBlend = 0; // Makes it ignore spatial position for calculating sound.
+            source.bypassListenerEffects = true; // Makes other mods like Rocket Sound Enchancement not affect it.
             sounds[name] = source;
         }
 

@@ -119,7 +119,29 @@ namespace kOS.Binding
         
         public bool HasGetter(string name)
         {
-            return variables.ContainsKey(name);
+            BoundVariable boundVar;
+            if (variables.TryGetValue(name, out boundVar))
+                if (boundVar.Get != null)
+                    return true;
+            return false;
+        }
+
+        public bool HasSetter(string name)
+        {
+            BoundVariable boundVar;
+            if (variables.TryGetValue(name, out boundVar))
+                if (boundVar.Set != null)
+                    return true;
+            return false;
+        }
+
+        /// <summary>
+        /// Indicates that the binding should not be cached during execution
+        /// </summary>
+        /// <param name="name">The binding to modify</param>
+        public void MarkVolatile(string name)
+        {
+            variables[name].Volatile = true;
         }
 
         public void PreUpdate()
