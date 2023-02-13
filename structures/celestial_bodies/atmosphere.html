@@ -103,7 +103,24 @@
              
   <section id="atmosphere">
 <span id="id1"></span><h1>Atmosphere<a class="headerlink" href="#atmosphere" title="Permalink to this heading">¶</a></h1>
-<p>A Structure closely tied to <a class="reference internal" href="body.html#structure:BODY" title="BODY structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Body</span></code></a> A variable of type <a class="reference internal" href="#structure:ATMOSPHERE" title="ATMOSPHERE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Atmosphere</span></code></a> usually is obtained by the <a class="reference internal" href="body.html#attribute:BODY:ATM" title="BODY:ATM attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">:ATM</span></code></a> suffix of a <a class="reference internal" href="body.html#structure:BODY" title="BODY structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Body</span></code></a>. ALL The following values are read-only. You can’t change the value of a body’s atmosphere.</p>
+<p>A Structure closely tied to <a class="reference internal" href="body.html#structure:BODY" title="BODY structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Body</span></code></a>.  A variable of type <a class="reference internal" href="#structure:ATMOSPHERE" title="ATMOSPHERE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Atmosphere</span></code></a>
+contains information about the atmosphere (or lack of atmosphere) of a celestial body.</p>
+<p>A <a class="reference internal" href="#structure:ATMOSPHERE" title="ATMOSPHERE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Atmosphere</span></code></a> is usually is obtained by the <a class="reference internal" href="body.html#attribute:BODY:ATM" title="BODY:ATM attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">:ATM</span></code></a>
+suffix of a <a class="reference internal" href="body.html#structure:BODY" title="BODY structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Body</span></code></a>.</p>
+<p>A <a class="reference internal" href="#structure:ATMOSPHERE" title="ATMOSPHERE structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">Atmosphere</span></code></a> can also be obtained by using the following function:</p>
+<dl class="ks function">
+<dt class="sig sig-object ks" id="function:BODYATMOSPHERE">
+<span class="sig-name descname"><span class="pre">BODYATMOSPHERE</span></span><span class="sig-paren">(</span><span class="pre">name</span><span class="sig-paren">)</span><a class="headerlink" href="#function:BODYATMOSPHERE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Passing in a string (<code class="docutils literal notranslate"><span class="pre">name</span></code>) parameter, this function returns the
+<a class="reference internal" href="body.html#attribute:BODY:ATM" title="BODY:ATM attribute"><code class="xref ks ks-attr docutils literal notranslate"><span class="pre">ATM</span></code></a> of the body that has that name.  It’s identical
+to calling <code class="docutils literal notranslate"><span class="pre">BODY(name):ATM</span></code>, but accomplishes the goal in fewer steps.</p>
+<p>It will crash with an error if no such body is found in the game.</p>
+<section id="structure">
+<h2>Structure<a class="headerlink" href="#structure" title="Permalink to this heading">¶</a></h2>
+<p>ALL The following values are read-only. You
+can’t change the value of a body’s atmosphere.</p>
 <dl class="ks structure">
 <dt class="sig sig-object ks" id="structure:ATMOSPHERE">
 <em class="property"><span class="pre">structure</span> </em><span class="sig-name descname"><span class="pre">Atmosphere</span></span><a class="headerlink" href="#structure:ATMOSPHERE" title="Permalink to this definition">¶</a></dt>
@@ -342,6 +359,7 @@ on the sun position in the sky (i.e. your latitude and what time of day it is).<
 <dd><p>A shorthand alias for :meth:ALTITUDETEMPERATURE(altitude).</p>
 </dd></dl>
 
+</section>
 <section id="deprecated-suffix">
 <h2>Deprecated Suffix<a class="headerlink" href="#deprecated-suffix" title="Permalink to this heading">¶</a></h2>
 <dl class="ks attribute">
