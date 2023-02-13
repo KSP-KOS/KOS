@@ -69,7 +69,7 @@ file.
 Function BODYATMOSPHERE
 :::::::::::::::::::::::
 
-Added :function:`BODYATMOSPHERE` as an alternate way to 
+Added :func:`BODYATMOSPHERE` as an alternate way to 
 obtain the atmosphere information about a body.  Actually
 this function had already existed.  It just hadn't been
 documented.
