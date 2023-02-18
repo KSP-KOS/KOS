@@ -66,14 +66,14 @@ The "Hello World" program, version 1 with "callbacks"::
         // "Hello World" program for kOS GUI.
         //
         // Create a GUI window
-        LOCAL gui IS GUI(200).
+        LOCAL my_gui IS GUI(200).
         // Add widgets to the GUI
-        LOCAL label IS gui:ADDLABEL("Hello world!").
+        LOCAL label IS my_gui:ADDLABEL("Hello world!").
         SET label:STYLE:ALIGN TO "CENTER".
         SET label:STYLE:HSTRETCH TO True. // Fill horizontally
-        LOCAL ok TO gui:ADDBUTTON("OK").
+        LOCAL ok TO my_gui:ADDBUTTON("OK").
         // Show the GUI.
-        gui:SHOW().
+        my_gui:SHOW().
         // Handle GUI widget interactions.
         //
         // This is the technique known as "callbacks" - instead
@@ -91,21 +91,21 @@ The "Hello World" program, version 1 with "callbacks"::
 
         print "OK pressed.  Now closing demo.".
         // Hide when done (will also hide if power lost).
-        gui:HIDE().
+        my_gui:HIDE().
 
 The same "Hello World" program, version 2 with "polling"::
 
         // "Hello World" program for kOS GUI.
         //
         // Create a GUI window
-        LOCAL gui IS GUI(200).
+        LOCAL my_gui IS GUI(200).
         // Add widgets to the GUI
-        LOCAL label IS gui:ADDLABEL("Hello world!").
+        LOCAL label IS my_gui:ADDLABEL("Hello world!").
         SET label:STYLE:ALIGN TO "CENTER".
         SET label:STYLE:HSTRETCH TO True. // Fill horizontally
-        LOCAL ok TO gui:ADDBUTTON("OK").
+        LOCAL ok TO my_gui:ADDBUTTON("OK").
         // Show the GUI.
-        gui:SHOW().
+        my_gui:SHOW().
         // Handle GUI widget interactions.
         //
         // This is the technique known as "polling" - In a loop you
@@ -119,7 +119,7 @@ The same "Hello World" program, version 2 with "polling"::
         }
         print "OK pressed.  Now closing demo.".
         // Hide when done (will also hide if power lost).
-        gui:HIDE().
+        my_gui:HIDE().
 
 
 
@@ -135,11 +135,11 @@ manipulate to build up a GUI. If no height is specified, it will resize
 automatically to fit the contents you put inside it.  The width can be set
 to 0 to force automatic width resizing too::
 
-        SET gui TO GUI(200).
-        SET button TO gui:ADDBUTTON("OK").
-        gui:SHOW().
+        SET my_gui TO GUI(200).
+        SET button TO my_gui:ADDBUTTON("OK").
+        my_gui:SHOW().
         UNTIL button:TAKEPRESS WAIT(0.1).
-        gui:HIDE().
+        my_gui:HIDE().
 
 See the "ADD" functions in the :struct:`BOX` structure for
 the other widgets you can add.
