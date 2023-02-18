@@ -148,8 +148,8 @@ share the implementation with multiple KSP installs, and with others online:</p>
 <h3><a class="toc-backref" href="#id4">2. Create a GUI</a><a class="headerlink" href="#create-a-gui" title="Permalink to this heading">¶</a></h3>
 <p>Our TabWidget should be usable in any context, but in this example, we just create it at the top-level.
 The AddTabWidget function should however accept any VBOX as the parameter:</p>
-<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">LOCAL</span> <span class="nv">gui</span> <span class="ow">IS</span> <span class="nv">GUI</span><span class="p">(</span><span class="mf">500</span><span class="p">).</span>
-<span class="k">LOCAL</span> <span class="nv">tabwidget</span> <span class="ow">IS</span> <span class="nv">AddTabWidget</span><span class="p">(</span><span class="nv">gui</span><span class="p">).</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">LOCAL</span> <span class="nv">my_gui</span> <span class="ow">IS</span> <span class="nv">GUI</span><span class="p">(</span><span class="mf">500</span><span class="p">).</span>
+<span class="k">LOCAL</span> <span class="nv">tabwidget</span> <span class="ow">IS</span> <span class="nv">AddTabWidget</span><span class="p">(</span><span class="nv">my_gui</span><span class="p">).</span>
 </pre></div>
 </div>
 </section>
@@ -184,13 +184,13 @@ tab for setting up Maneuver Nodes might be a better default:</p>
 <h3><a class="toc-backref" href="#id7">5. Handling the widgets on the tabs</a><a class="headerlink" href="#handling-the-widgets-on-the-tabs" title="Permalink to this heading">¶</a></h3>
 <p>The rest here is just boilerplate - we add a Close button to the top level, then show and run the GUI until
 the user presses the Close button:</p>
-<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">LOCAL</span> <span class="nv">close</span> <span class="ow">IS</span> <span class="nv">gui</span><span class="p">:</span><span class="nv">ADDBUTTON</span><span class="p">(</span><span class="s">&quot;Close&quot;</span><span class="p">).</span>
-<span class="nv">gui</span><span class="p">:</span><span class="nv">SHOW</span><span class="p">().</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">LOCAL</span> <span class="nv">close</span> <span class="ow">IS</span> <span class="nv">my_gui</span><span class="p">:</span><span class="nv">ADDBUTTON</span><span class="p">(</span><span class="s">&quot;Close&quot;</span><span class="p">).</span>
+<span class="nv">my_gui</span><span class="p">:</span><span class="nv">SHOW</span><span class="p">().</span>
 <span class="k">UNTIL</span> <span class="nv">close</span><span class="p">:</span><span class="nv">PRESSED</span> <span class="p">{</span>
     <span class="c1">// Handle processing of all the widgets on all the tabs.</span>
     <span class="k">WAIT</span><span class="p">(</span><span class="mf">0</span><span class="p">).</span>
 <span class="p">}</span>
-<span class="nv">gui</span><span class="p">:</span><span class="nv">HIDE</span><span class="p">().</span>
+<span class="nv">my_gui</span><span class="p">:</span><span class="nv">HIDE</span><span class="p">().</span>
 </pre></div>
 </div>
 </section>
@@ -376,7 +376,7 @@ you constantly show a label with very high precision decimal, it will probably b
 which would mean the communication delay icon is constantly shown. We can test our GUI without flying to Jool by
 artificially adding extra delay, and testing on the launch pad:</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="p">...</span>
-<span class="k">SET</span> <span class="nv">gui</span><span class="p">:</span><span class="nv">EXTRADELAY</span> <span class="ow">TO</span> <span class="mf">2</span><span class="p">.</span>
+<span class="k">SET</span> <span class="nv">my_gui</span><span class="p">:</span><span class="nv">EXTRADELAY</span> <span class="ow">TO</span> <span class="mf">2</span><span class="p">.</span>
 <span class="p">...</span>
 </pre></div>
 </div>

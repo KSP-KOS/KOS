@@ -173,14 +173,14 @@ examples will be explained in detail later.</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// &quot;Hello World&quot; program for kOS GUI.</span>
 <span class="c1">//</span>
 <span class="c1">// Create a GUI window</span>
-<span class="k">LOCAL</span> <span class="nv">gui</span> <span class="ow">IS</span> <span class="nv">GUI</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span>
+<span class="k">LOCAL</span> <span class="nv">my_gui</span> <span class="ow">IS</span> <span class="nv">GUI</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span>
 <span class="c1">// Add widgets to the GUI</span>
-<span class="k">LOCAL</span> <span class="nv">label</span> <span class="ow">IS</span> <span class="nv">gui</span><span class="p">:</span><span class="nv">ADDLABEL</span><span class="p">(</span><span class="s">&quot;Hello world!&quot;</span><span class="p">).</span>
+<span class="k">LOCAL</span> <span class="nv">label</span> <span class="ow">IS</span> <span class="nv">my_gui</span><span class="p">:</span><span class="nv">ADDLABEL</span><span class="p">(</span><span class="s">&quot;Hello world!&quot;</span><span class="p">).</span>
 <span class="k">SET</span> <span class="nv">label</span><span class="p">:</span><span class="nv">STYLE</span><span class="p">:</span><span class="nv">ALIGN</span> <span class="ow">TO</span> <span class="s">&quot;CENTER&quot;</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">label</span><span class="p">:</span><span class="nv">STYLE</span><span class="p">:</span><span class="nv">HSTRETCH</span> <span class="ow">TO</span> <span class="nb">True</span><span class="p">.</span> <span class="c1">// Fill horizontally</span>
-<span class="k">LOCAL</span> <span class="nv">ok</span> <span class="ow">TO</span> <span class="nv">gui</span><span class="p">:</span><span class="nv">ADDBUTTON</span><span class="p">(</span><span class="s">&quot;OK&quot;</span><span class="p">).</span>
+<span class="k">LOCAL</span> <span class="nv">ok</span> <span class="ow">TO</span> <span class="nv">my_gui</span><span class="p">:</span><span class="nv">ADDBUTTON</span><span class="p">(</span><span class="s">&quot;OK&quot;</span><span class="p">).</span>
 <span class="c1">// Show the GUI.</span>
-<span class="nv">gui</span><span class="p">:</span><span class="nv">SHOW</span><span class="p">().</span>
+<span class="nv">my_gui</span><span class="p">:</span><span class="nv">SHOW</span><span class="p">().</span>
 <span class="c1">// Handle GUI widget interactions.</span>
 <span class="c1">//</span>
 <span class="c1">// This is the technique known as &quot;callbacks&quot; - instead</span>
@@ -198,21 +198,21 @@ examples will be explained in detail later.</p>
 
 <span class="k">print</span> <span class="s">&quot;OK pressed.  Now closing demo.&quot;</span><span class="p">.</span>
 <span class="c1">// Hide when done (will also hide if power lost).</span>
-<span class="nv">gui</span><span class="p">:</span><span class="nv">HIDE</span><span class="p">().</span>
+<span class="nv">my_gui</span><span class="p">:</span><span class="nv">HIDE</span><span class="p">().</span>
 </pre></div>
 </div>
 <p>The same “Hello World” program, version 2 with “polling”:</p>
 <div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="c1">// &quot;Hello World&quot; program for kOS GUI.</span>
 <span class="c1">//</span>
 <span class="c1">// Create a GUI window</span>
-<span class="k">LOCAL</span> <span class="nv">gui</span> <span class="ow">IS</span> <span class="nv">GUI</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span>
+<span class="k">LOCAL</span> <span class="nv">my_gui</span> <span class="ow">IS</span> <span class="nv">GUI</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span>
 <span class="c1">// Add widgets to the GUI</span>
-<span class="k">LOCAL</span> <span class="nv">label</span> <span class="ow">IS</span> <span class="nv">gui</span><span class="p">:</span><span class="nv">ADDLABEL</span><span class="p">(</span><span class="s">&quot;Hello world!&quot;</span><span class="p">).</span>
+<span class="k">LOCAL</span> <span class="nv">label</span> <span class="ow">IS</span> <span class="nv">my_gui</span><span class="p">:</span><span class="nv">ADDLABEL</span><span class="p">(</span><span class="s">&quot;Hello world!&quot;</span><span class="p">).</span>
 <span class="k">SET</span> <span class="nv">label</span><span class="p">:</span><span class="nv">STYLE</span><span class="p">:</span><span class="nv">ALIGN</span> <span class="ow">TO</span> <span class="s">&quot;CENTER&quot;</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">label</span><span class="p">:</span><span class="nv">STYLE</span><span class="p">:</span><span class="nv">HSTRETCH</span> <span class="ow">TO</span> <span class="nb">True</span><span class="p">.</span> <span class="c1">// Fill horizontally</span>
-<span class="k">LOCAL</span> <span class="nv">ok</span> <span class="ow">TO</span> <span class="nv">gui</span><span class="p">:</span><span class="nv">ADDBUTTON</span><span class="p">(</span><span class="s">&quot;OK&quot;</span><span class="p">).</span>
+<span class="k">LOCAL</span> <span class="nv">ok</span> <span class="ow">TO</span> <span class="nv">my_gui</span><span class="p">:</span><span class="nv">ADDBUTTON</span><span class="p">(</span><span class="s">&quot;OK&quot;</span><span class="p">).</span>
 <span class="c1">// Show the GUI.</span>
-<span class="nv">gui</span><span class="p">:</span><span class="nv">SHOW</span><span class="p">().</span>
+<span class="nv">my_gui</span><span class="p">:</span><span class="nv">SHOW</span><span class="p">().</span>
 <span class="c1">// Handle GUI widget interactions.</span>
 <span class="c1">//</span>
 <span class="c1">// This is the technique known as &quot;polling&quot; - In a loop you</span>
@@ -226,7 +226,7 @@ examples will be explained in detail later.</p>
 <span class="p">}</span>
 <span class="k">print</span> <span class="s">&quot;OK pressed.  Now closing demo.&quot;</span><span class="p">.</span>
 <span class="c1">// Hide when done (will also hide if power lost).</span>
-<span class="nv">gui</span><span class="p">:</span><span class="nv">HIDE</span><span class="p">().</span>
+<span class="nv">my_gui</span><span class="p">:</span><span class="nv">HIDE</span><span class="p">().</span>
 </pre></div>
 </div>
 </section>
@@ -242,11 +242,11 @@ examples will be explained in detail later.</p>
 manipulate to build up a GUI. If no height is specified, it will resize
 automatically to fit the contents you put inside it.  The width can be set
 to 0 to force automatic width resizing too:</p>
-<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">gui</span> <span class="ow">TO</span> <span class="nv">GUI</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span>
-<span class="k">SET</span> <span class="nv">button</span> <span class="ow">TO</span> <span class="nv">gui</span><span class="p">:</span><span class="nv">ADDBUTTON</span><span class="p">(</span><span class="s">&quot;OK&quot;</span><span class="p">).</span>
-<span class="nv">gui</span><span class="p">:</span><span class="nv">SHOW</span><span class="p">().</span>
+<div class="highlight-kerboscript notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">my_gui</span> <span class="ow">TO</span> <span class="nv">GUI</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span>
+<span class="k">SET</span> <span class="nv">button</span> <span class="ow">TO</span> <span class="nv">my_gui</span><span class="p">:</span><span class="nv">ADDBUTTON</span><span class="p">(</span><span class="s">&quot;OK&quot;</span><span class="p">).</span>
+<span class="nv">my_gui</span><span class="p">:</span><span class="nv">SHOW</span><span class="p">().</span>
 <span class="k">UNTIL</span> <span class="nv">button</span><span class="p">:</span><span class="nv">TAKEPRESS</span> <span class="k">WAIT</span><span class="p">(</span><span class="mf">0</span><span class="p">.</span><span class="mf">1</span><span class="p">).</span>
-<span class="nv">gui</span><span class="p">:</span><span class="nv">HIDE</span><span class="p">().</span>
+<span class="nv">my_gui</span><span class="p">:</span><span class="nv">HIDE</span><span class="p">().</span>
 </pre></div>
 </div>
 <p>See the “ADD” functions in the <a class="reference internal" href="gui_widgets/box.html#structure:BOX" title="BOX structure"><code class="xref ks ks-struct docutils literal notranslate"><span class="pre">BOX</span></code></a> structure for
