@@ -108,10 +108,10 @@ namespace kOS.Module
         [KSPField(isPersistant = false, guiName = "CPU/Disk Upgrade Mass", guiActive = false, guiActiveEditor = true, guiUnits = "Kg", guiFormat = "0.00", groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public float additionalMassGui = 0F;
 
-        [KSPField(isPersistant = false, guiActive = false, guiActiveEditor = false)]
+        [KSPField(isPersistant = true, guiActive = false, guiActiveEditor = false)]
         public float diskSpaceCostFactor = 0.0244140625F; //implies approx 100funds for 4096bytes of diskSpace
 
-        [KSPField(isPersistant = false, guiActive = false, guiActiveEditor = false)]
+        [KSPField(isPersistant = true, guiActive = false, guiActiveEditor = false)]
         public float diskSpaceMassFactor = 0.0000000048829F;  //implies approx 0.020kg for 4096bytes of diskSpace
 
         [KSPField(isPersistant = true, guiActive = false)]
@@ -123,7 +123,7 @@ namespace kOS.Module
         // for the kOS processor.  The only reason it's being given a value
         // here is as a fallback for those cases where an old legacy part
         // might be loaded from before the part files had this value.
-        [KSPField(isPersistant = false, guiActive = false)]
+        [KSPField(isPersistant = true, guiActive = false)]
         public float ECPerInstruction = 0.000004F;
 
         // This represents how much EC to consume per Byte of the current volume, per second.
@@ -131,7 +131,7 @@ namespace kOS.Module
         // when you change to another volume).
         // IMPORTANT: The value defaults to zero and must be overriden in the module
         // definition for any given part (within the part.cfg file).
-        [KSPField(isPersistant = false, guiActive = false)]
+        [KSPField(isPersistant = true, guiActive = false)]
         public float ECPerBytePerSecond = 0F;
 
         public kOSProcessor()
