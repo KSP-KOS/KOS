@@ -64,6 +64,8 @@ namespace kOS.Module
         private static readonly List<kOSProcessor> allMyInstances = new List<kOSProcessor>();
         public bool HasBooted { get; set; }
         private bool objectsInitialized = false;
+        private int  numUpdatesAfterStartHappened = 0;
+        private bool finishedRP1ProceduralAvionicsUpdate = false;
 
         public float AdditionalMass { get; set; }
 
@@ -385,7 +387,6 @@ namespace kOS.Module
         public float GetModuleMass(float defaultMass, ModifierStagingSituation sit)
         {
             // the 'sit' arg is irrelevant to us, but the interface requires it.
-            
             return baseModuleMass + AdditionalMass;
         }
         //implement IPartMassModifier component
@@ -396,11 +397,12 @@ namespace kOS.Module
 
         public override void OnStart(StartState state)
         {
+            numUpdatesAfterStartHappened = 0;
+            finishedRP1ProceduralAvionicsUpdate = false;
             try
             {
                 FindRP1Modules();
                 UpdateRP1TechLevel(state == StartState.Editor);
-
                 //if in Editor, populate boot script selector, diskSpace selector and etc.
                 if (state == StartState.Editor)
                 {
@@ -410,8 +412,11 @@ namespace kOS.Module
                     InitUI();
                 }
 
-
-                UpdateCostAndMass();
+                // Removed: UpdateCostAndMass();
+                // Please do not call UpdateCostAndMass() here because during OnStart() in RP-1, diskSpaceMassFactor is still
+                // the very heavy default value - ProceduralAvionics Tech has not yet been updated for tech level during OnStart(),
+                // so if we reported our mass now back to KSP, we'd have a super heavy probe core for just one physics frame that
+                // might unfairly break wheels and legs and joints, etc.
 
                 //Do not start from editor and at KSP first loading
                 if (state == StartState.Editor || state == StartState.None)
@@ -798,8 +803,10 @@ namespace kOS.Module
 
         public void Update()
         {
+            bool isInEditor = false;
             if (HighLogic.LoadedScene == GameScenes.EDITOR && EditorLogic.fetch != null)
             {
+                isInEditor = true;
                 if (bootListDirty)
                 {
                     InitUI();
@@ -814,8 +821,38 @@ namespace kOS.Module
                 RequiredPower = this.diskSpace * ECPerBytePerSecond + SafeHouse.Config.InstructionsPerUpdate * ECPerInstruction / Time.fixedDeltaTime;
             }
             if (!IsAlive()) return;
+
+            // Conceptually this next bit really belongs in OnStart() because it should only happen
+            // once up front during scene load, but when RP-1 is installed and this KOSProcessor
+            // is inside the same part as RP-1's ModuleProceduralAvionics, a race condition develops
+            // between the two if KOSProcessor.OnStart() tries to do the following work.
+            // The values queried from ModuleProceduralAvionics for mass cost per byte of disk
+            // are defaulted to the bottom rung starting 1950's tech *at first* until it has had a chance
+            // to run its OnStart() to correct those values to the actual avionics tech level of the part.
+            // Thus if KOSProcessor tried to do the following code in its OnStart(), and KOS's OnStart()
+            // happened before ModuleProceduralAvionics' OnStart(), the KOSProcessor would end up being
+            // several tonnes when it should only be a few kilograms. (Issue #3081)
+            //
+            // It is *hoped* that this work will occur before physics is turned on, so the part gets the
+            // corrected mass before it has a chance to start crushing landing legs and wheels and so on.
+            // Allegedly, Unity will invoke all the Update()s several times before KSP turns physics on so
+            // this *should* be okay.
+            if (!finishedRP1ProceduralAvionicsUpdate && !isInEditor )
+            {
+                float massFactorBefore = diskSpaceMassFactor;
+                UpdateRP1TechLevel(false);
+                UpdateCostAndMass();
+                // Stop wasting CPU time doing this recalculation when either the value has changed to a new number (proving
+                // that RP-1 has finally applied its tech upgrade which is why the value changed), or because we tried long
+                // enough to prove we really are at the default starting tech level so it's not going to change.)
+                if (diskSpaceMassFactor != massFactorBefore || numUpdatesAfterStartHappened > 60 )
+                {
+                    finishedRP1ProceduralAvionicsUpdate = true;
+                }
+            }
             UpdateVessel();
             UpdateObservers();
+            ++numUpdatesAfterStartHappened;
         }
 
         public void FixedUpdate()
