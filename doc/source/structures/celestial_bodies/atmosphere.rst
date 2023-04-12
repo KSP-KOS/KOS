@@ -3,7 +3,27 @@
 Atmosphere
 ==========
 
-A Structure closely tied to :struct:`Body` A variable of type :struct:`Atmosphere` usually is obtained by the :attr:`:ATM <Body:ATM>` suffix of a :struct:`Body`. ALL The following values are read-only. You can't change the value of a body's atmosphere.
+A Structure closely tied to :struct:`Body`.  A variable of type :struct:`Atmosphere`
+contains information about the atmosphere (or lack of atmosphere) of a celestial body.
+
+A :struct:`Atmosphere` is usually is obtained by the :attr:`:ATM <Body:ATM>`
+suffix of a :struct:`Body`.
+
+A :struct:`Atmosphere` can also be obtained by using the following function:
+
+.. function:: BODYATMOSPHERE(name)
+
+Passing in a string (``name``) parameter, this function returns the
+:attr:`ATM <Body:ATM>` of the body that has that name.  It's identical
+to calling ``BODY(name):ATM``, but accomplishes the goal in fewer steps.
+
+It will crash with an error if no such body is found in the game.
+
+Structure
+---------
+
+ALL The following values are read-only. You
+can't change the value of a body's atmosphere.  
 
 .. structure:: Atmosphere
 

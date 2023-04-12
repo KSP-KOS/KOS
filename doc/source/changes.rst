@@ -30,6 +30,50 @@ release.
 
 ****
 
+Changes in 1.4.0.0
+------------------
+
+CLOBBERBUILTINS
+:::::::::::::::
+
+The bugfix to prevent a local variable from clobbering a
+builtin name could make existing scripts have to rename
+a variable or two.  As such there is now a compiler directive,
+:ref:`@CLOBBERBUILTINS <clobberbuiltins>` to get the old
+behavior back again.  Use this if you don't want to rename any
+variables in old scripts.  But be warned that renaming those
+variables, rather than using this directive, is probably the
+better practice going forward.
+
+Documentation now describes that comma separated ``LOCAL`` and
+``SET`` declaration statements now allow initializers.
+
+VESSEL SUFFIXES THRUST, ENGINES, RCS
+::::::::::::::::::::::::::::::::::::
+
+Added :attr:`VESSEL:THRUST`, :attr:`VESSEL:ENGINES`, and
+:attr:`VESSEL:RCS`        
+
+OPCODESLEFT
+:::::::::::
+
+Added :ref:`OPCODESLEFT <opcodesleft>` bound variable
+
+BINARY MODE FILE READ
+:::::::::::::::::::::
+
+Added :attr:`FileContent:BINARY` to let you read a binary
+file as a LIST of numbers 0-255 for the byte values in the
+file.  
+
+Function BODYATMOSPHERE
+:::::::::::::::::::::::
+
+Added :func:`BODYATMOSPHERE` as an alternate way to 
+obtain the atmosphere information about a body.  Actually
+this function had already existed.  It just hadn't been
+documented.
+
 Changes in 1.3
 --------------
 

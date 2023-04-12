@@ -63,7 +63,7 @@ A single resource value an rcs thruster consumes (i.e. monopropellant, etc). Thi
     unit of this resource is 5 kilograms.  Megagrams [metric tonnes] is
     the usual unit that most mass in the game is represented in.)
 
-.. attribute:: ConsumedResource:RCSRATIO
+.. attribute:: ConsumedResourceRCS:RATIO
 
     :access: Get only
     :type: :struct:`Scalar`
