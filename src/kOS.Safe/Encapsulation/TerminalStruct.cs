@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Screen;
 using kOS.Safe.Execution;
+using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -161,6 +162,20 @@ namespace kOS.Safe.Encapsulation
                                                                     "Character height on in-game terminal screen in pixels"));
             AddSuffix("RESIZEWATCHERS", new NoArgsSuffix<UniqueSetValue<UserDelegate>>(() => resizeWatchers));
             AddSuffix("INPUT", new Suffix<TerminalInput>(GetTerminalInputInstance));
+            AddSuffix("CURSORCOL", new SetSuffix<ScalarValue>(() => Shared.Screen.CursorColumnShow,
+                                                              value => Shared.Screen.MoveCursor(Shared.Screen.AbsoluteCursorRow, (int)KOSMath.Clamp(value,0,Shared.Screen.ColumnCount)),
+                                                              "Current cursor column, between 0 and WIDTH-1."));
+            AddSuffix("CURSORROW", new SetSuffix<ScalarValue>(() => Shared.Screen.AbsoluteCursorRow,
+                                                              value => Shared.Screen.MoveCursor(value, Shared.Screen.CursorColumnShow),
+                                                              "Current cursor row, between 0 and HEIGHT-1."));
+            AddSuffix("MOVECURSOR", new TwoArgsSuffix<ScalarValue, ScalarValue>((ScalarValue col, ScalarValue row) => Shared.Screen.MoveCursor(row, col),
+                                                                                "Move cursor to (column, row)."));
+            AddSuffix("PUT", new OneArgsSuffix<Structure>(value => Shared.Screen.Print(value.ToString(),false),
+                                                            "Put string at current cursor position (without implied newline)."));
+            AddSuffix("PUTLN", new OneArgsSuffix<Structure>(value => Shared.Screen.Print(value.ToString()),
+                                                              "Put string at current cursor position (with implied newline)."));
+            AddSuffix("PUTAT", new ThreeArgsSuffix<Structure, ScalarValue, ScalarValue>((Structure value, ScalarValue col, ScalarValue row) => Shared.Screen.PrintAt(value.ToString(), row, col),
+                                                                                          "Put string at position without moving the cursor."));
         }
 
         private void CannotSetWidth(ScalarValue newWidth)

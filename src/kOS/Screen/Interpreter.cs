@@ -36,9 +36,6 @@ namespace kOS.Screen
                                                      // the command is present in the history to be found and printed in the
                                                      // error message.
                 ProcessCommand(commandText);
-                int numRows = LineSubBuffer.RowCount;
-                LineSubBuffer.Wipe();
-                LineSubBuffer.SetSize(numRows,ColumnCount); // refill it to its previous size
             }
             else
             {
@@ -112,7 +109,6 @@ namespace kOS.Screen
                     LineBuilder.Append(commandHistory[commandHistoryIndex]);
                     LineCursorIndex = LineBuilder.Length;
                     MarkRowsDirty(LineSubBuffer.PositionRow, LineSubBuffer.RowCount);
-                    LineSubBuffer.Wipe();
                     UpdateLineSubBuffer();
                 }
             }
@@ -181,13 +177,6 @@ namespace kOS.Screen
             commandHistory.Clear();
             commandHistoryIndex = 0;
             base.Reset();
-        }
-
-        public override void PrintAt(string textToPrint, int row, int column)
-        {
-            SaveCursorPos();
-            base.PrintAt(textToPrint, row, column);
-            RestoreCursorPos();
         }
 
         private class InterpreterPath : InternalPath

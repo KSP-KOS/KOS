@@ -46,6 +46,26 @@ namespace kOS.Safe.Screen
         public char this[int i] { get { return charArray[i]; } set { charArray[i] = value; TouchTime(); } }
 
         /// <summary>
+        /// Set a single character without changing the timestamp. Should be used carefully in conjunction with SetTimestamp,
+        /// e.g. by SubBuffer.MergeTo
+        /// </summary>
+        /// <param name="i">Target Index</param>
+        /// <param name="c">Value to set</param>
+        public void SetCharIgnoreTime(int i, char c)
+        {
+            charArray[i] = c;
+        }
+
+        /// <summary>
+        /// Manually set the change timestamp. Should be used carefully in conjunction with SetCharIgnoreTime, e.g. by SubBuffer.MergeTo
+        /// </summary>
+        /// <param name="timestamp">Timestamp to set</param>
+        public void SetTimestamp(ulong timestamp)
+        {
+            LastChangeTick = timestamp;
+        }
+
+        /// <summary>
         /// Constructor given the array size.  This fills the same role as doing:<br/>
         ///    new char[size];<br/>
         /// would in a normal vanilla char aray.<br/>

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using System;
 using kOS.Safe.UserIO;
@@ -7,16 +7,14 @@ namespace kOS.Safe.Screen
 {
     public class TextEditor : ScreenBuffer
     {
-        private int savedCursorRow;
-        private int savedCursorColumn;
         private int cursorColumnBuffer;
         private int cursorRowBuffer;
         
-        public override int CursorColumnShow { get { return cursorColumnBuffer; } }
-        public override int CursorRowShow { get { return CursorRow + cursorRowBuffer; } }
+        public override int CursorColumnShow { get { return cursorRowBuffer == 0 ? base.CursorColumnShow + cursorColumnBuffer : cursorColumnBuffer; } }
+        public override int CursorRowShow { get { return base.CursorRowShow + cursorRowBuffer; } }
 
         protected StringBuilder LineBuilder { get; set; }
-        protected SubBuffer LineSubBuffer { get; set; }
+        protected PrintingBuffer LineSubBuffer { get; set; }
         protected int LineCursorIndex { get; set; }
 
 
@@ -28,10 +26,26 @@ namespace kOS.Safe.Screen
 
         private void CreateSubBuffer()
         {
-            LineSubBuffer = new SubBuffer();
+            LineSubBuffer = new PrintingBuffer();
             LineSubBuffer.SetSize(1, ColumnCount);
             LineSubBuffer.Enabled = true;
+            LineSubBuffer.AutoExtend = true;
             AddSubBuffer(LineSubBuffer);
+        }
+
+        // Hook into MoveCursor to dirty the lines we leave behind
+        public override void MoveCursor(int row, int column)
+        {
+            if (row > AbsoluteCursorRow)
+            {
+                MarkRowsDirty(AbsoluteCursorRow, row - AbsoluteCursorRow);
+            }
+            else
+            {
+                MarkRowsDirty(row + LineSubBuffer.RowCount - 1, LineSubBuffer.RowCount + 2);
+            }
+            base.MoveCursor(row, column);
+            UpdateLineSubBuffer();
         }
 
         public virtual void Type(char ch)
@@ -92,19 +106,8 @@ namespace kOS.Safe.Screen
                     gotUsed = false;
                     break;
             }
+
             return gotUsed;
-        }
-
-        protected void SaveCursorPos()
-        {
-            savedCursorRow = AbsoluteCursorRow;
-            savedCursorColumn = CursorColumn;
-        }
-
-        protected void RestoreCursorPos()
-        {
-            AbsoluteCursorRow = savedCursorRow;
-            CursorColumn = savedCursorColumn;
         }
 
         protected void InsertChar(char character)
@@ -127,48 +130,38 @@ namespace kOS.Safe.Screen
             }
         }
 
-        private List<string> SplitIntoLinesPreserveNewLine(string text)
+        /// <summary> SplitIntoLines with our base cursor </summary>
+        private List<string> SplitIntoLines(string text)
         {
-            List<string> lines = SplitIntoLines(text);
-
-            if (text.EndsWith("\n"))
-            {
-                int newLinesCount = text.Length - text.TrimEnd('\n').Length;
-                while(newLinesCount-- > 0)
-                    lines.Add("");
-            }
-
-            return lines;
+            return SplitIntoLines(text, ColumnCount, base.CursorColumnShow);
         }
-
+        
         protected void UpdateLineSubBuffer()
         {
             string commandText = LineBuilder.ToString();
-            List<string> lines = SplitIntoLinesPreserveNewLine(commandText);
-                        
-            if (lines.Count != LineSubBuffer.RowCount)
-            {
-                LineSubBuffer.SetSize(lines.Count, LineSubBuffer.ColumnCount);
-            }
 
-            for (int lineIndex = 0; lineIndex < lines.Count; lineIndex++)
-            {
-                char[] lineCharArray = lines[lineIndex].PadRight(LineSubBuffer.ColumnCount, ' ').ToCharArray();
-                LineSubBuffer.Buffer[lineIndex].ArrayCopyFrom(lineCharArray, 0, 0);
-            }
+            LineSubBuffer.Wipe();
+            LineSubBuffer.PositionRow = AbsoluteCursorRow;
+            LineSubBuffer.MoveCursor(0, base.CursorColumnShow);
 
-            UpdateSubBufferCursor(lines);
+            if (commandText.Length == 0)
+            {
+                cursorColumnBuffer = 0;
+                cursorRowBuffer = 0;
+            }
+            else
+            {
+                LineSubBuffer.Print(commandText, false);
+
+                UpdateSubBufferCursor();
+            }
         }
 
         private void UpdateSubBufferCursor()
         {
             string commandText = LineBuilder.ToString();
-            List<string> lines = SplitIntoLinesPreserveNewLine(commandText);
-            UpdateSubBufferCursor(lines);
-        }
+            List<string> lines = SplitIntoLines(commandText);
 
-        private void UpdateSubBufferCursor(List<string> lines)
-        {
             int lineIndex = 0;
             int lineCursorIndex = LineCursorIndex;
 
@@ -178,8 +171,12 @@ namespace kOS.Safe.Screen
                 lineCursorIndex -= lines[lineIndex].Length;
                 // if the line is shorter than the width of the screen then move
                 // the cursor another position to compensate for the newline character
-                if (lines[lineIndex].Length < ColumnCount)
+                if (lines[lineIndex].Length < ColumnCount &&
+                    // we need to catch and not count the case where the line is actually full, because we didn't start on the first column
+                    !(lineIndex == 0 && lines[lineIndex].Length == ColumnCount - base.CursorColumnShow))
+                {
                     lineCursorIndex--;
+                }
                 lineIndex++;
             }
 
@@ -193,19 +190,12 @@ namespace kOS.Safe.Screen
         {
             // Check to see if wrapping or scrolling needs to be done
             // because the cursor went off the screen, and if so, do it:
-            if (CursorColumnShow >= ColumnCount)
+            if (CursorColumnShow == ColumnCount)
             {
-                int tooBigColumn = CursorColumnShow;
-                cursorColumnBuffer = (tooBigColumn % ColumnCount);
-                cursorRowBuffer += (tooBigColumn / ColumnCount); // truncating integer division.
+                cursorColumnBuffer = 0;
+                cursorRowBuffer++;
             }
-            if (CursorRowShow >= RowCount)
-            {
-                int rowsToScroll = (CursorRowShow-RowCount) + 1;
-                CursorRow -= rowsToScroll;
-                ScrollVertical(rowsToScroll);
-                AddNewBufferLines(rowsToScroll);
-            }
+            ScrollCursorVisible();
         }
 
         protected virtual void NewLine()
@@ -238,11 +228,7 @@ namespace kOS.Safe.Screen
         {
             LineBuilder = new StringBuilder();
             LineCursorIndex = 0;
-        }
-
-        protected override void UpdateSubBuffers()
-        {
-            LineSubBuffer.PositionRow = AbsoluteCursorRow;
+            UpdateLineSubBuffer();
         }
     }
 }

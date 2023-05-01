@@ -55,6 +55,36 @@ Structure
           - get and set
           - Height of a character cell in pixels.
 
+        * - :attr:`CURSORCOL`
+          - :struct:`Scalar`
+          - get and set
+          - Current cursor column, between 0 and WIDTH-1.
+        
+        * - :attr:`CURSORROW`
+          - :struct:`Scalar`
+          - get and set
+          - Current cursor row, between 0 and HEIGHT-1.
+
+        * - :meth:`MOVECURSOR(column,row)`
+          - None
+          - Method Call
+          - Move cursor to position.
+
+        * - :meth:`PUT(string)`
+          - None
+          - Method Call
+          - Output string without newline.
+
+        * - :meth:`PUTLN(string)`
+          - None
+          - Method Call
+          - Output string with newline.
+
+        * - :meth:`PUTAT(text,column,row)`
+          - None
+          - Method Call
+          - Output string at position
+
         * - :attr:`INPUT`
           - :struct:`TerminalInput`
           - get
@@ -165,6 +195,49 @@ Structure
     The value is forced to remain in the range [4..24] and be
     divisible by 2.  If you try to set it to any other value, it
     will snap to the allowed range and increment.
+
+.. attribute:: Terminal:CURSORCOL
+
+    :access: Get/Set
+    :type: :struct:`Scalar`
+
+    Current cursor column, between 0 and WIDTH-1.
+
+.. attribute:: Terminal:CURSORROW
+
+    :access: Get/Set
+    :type: :struct:`Scalar`
+
+    Current cursor row, between 0 and HEIGHT-1.
+
+.. method:: Terminal:MOVECURSOR(column,row)
+
+    :parameter column: (scalar) column to move to.
+    :parameter row: (scalar) row to move to.
+
+    Move both coordinates of the cursor at once.
+
+.. method:: Terminal:PUT(text)
+
+    :parameter text: (string) Text to print
+
+    Put string at current cursor position (without implied newline).
+
+.. method:: Terminal:PUTLN(text)
+
+    :parameter text: (string) Text to print
+
+    Put string at current cursor position (with implied newline).
+    This is an alias for :global:`PRINT`
+
+.. method:: Terminal:PUTAT(text,column,row)
+
+    :parameter text: (string) Text to print
+    :parameter column: (scalar) Horizontal starting position
+    :parameter row: (scalar) Vertical starting position
+
+    Put string at position without moving the cursor.
+    This is an alias for PRINT AT.
 
 .. attribute:: Terminal:INPUT
 

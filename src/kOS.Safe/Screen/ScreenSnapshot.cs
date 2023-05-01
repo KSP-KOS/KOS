@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using kOS.Safe.UserIO;
@@ -13,7 +13,8 @@ namespace kOS.Safe.Screen
         public List<IScreenBufferLine> Buffer { get; private set;}
         public int TopRow {get; private set;}
         public int CursorColumn {get; private set;}
-        public int CursorRow {get; private set;}
+        public int CursorRow {get; private set; }
+        public bool CursorVisible { get { var row = CursorRow; return row >= 0 && row < RowCount && CursorColumn < Buffer[row].Length; } }
         public int RowCount {get; private set;}
 
         // Tweakable setting:
@@ -106,6 +107,13 @@ namespace kOS.Safe.Screen
             int verticalScroll = TopRow - older.TopRow;
             int trackCursorColumn = older.CursorColumn; // track the movements that will occur as the outputs happen.
             int trackCursorRow = older.CursorRow; // track the movements that will occur as the outputs happen.
+
+            //invalidate the cursor tracking because the last send cursor position will not actually be there (see below)
+            if(!older.CursorVisible)
+            {
+                trackCursorColumn = -100;
+                trackCursorRow = -100;
+            }
 
             // First, output the command to make the terminal scroll to match:
             if (verticalScroll > 0) // scrolling text up (eyeballs panning down)
@@ -203,7 +211,7 @@ namespace kOS.Safe.Screen
                 }
                     
             }
-                    
+
             // Now set the cursor back to the right spot one more time, unless it's already there:
             if (trackCursorRow != CursorRow || trackCursorColumn != CursorColumn)
             {
@@ -212,6 +220,20 @@ namespace kOS.Safe.Screen
                                             (char)CursorColumn,
                                             (char)CursorRow));
             }
+
+            //Do cursor (un)hiding
+            if (CursorVisible != older.CursorVisible)
+            {
+                if(CursorVisible)
+                {
+                    output.Append((char)UnicodeCommand.SHOWCURSOR);
+                }
+                else
+                {
+                    output.Append((char)UnicodeCommand.HIDECURSOR);
+                }
+            }
+
             return output.ToString();
         }
         

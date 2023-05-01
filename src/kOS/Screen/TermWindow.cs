@@ -1030,7 +1030,7 @@ namespace kOS.Screen
                     // Only if the cursor is within terminal bounds, to avoid throwing array bounds exceptions.
                     // (Cursor can be temporarily out of bounds if the up-arrow recalled a long cmdline, or if
                     // the terminal just got resized.)
-                    cursorRow < screen.RowCount && cursorRow < buffer.Count &&  cursorCol < buffer[cursorRow].Length &&
+                    mostRecentScreen.CursorVisible &&
                     // Only when the CPU has power
                     IsPowered &&
                     // Only when expecting input

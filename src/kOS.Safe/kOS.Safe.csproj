@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>kOS.Safe</RootNamespace>
     <AssemblyName>kOS.Safe</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -217,6 +217,7 @@
     <Compile Include="Screen\IScreenBufferLine.cs" />
     <Compile Include="Screen\IScreenSnapshot.cs" />
     <Compile Include="Screen\ITermWindow.cs" />
+    <Compile Include="Screen\PrintingBuffer.cs" />
     <Compile Include="Screen\ScreenBuffer.cs" />
     <Compile Include="Screen\ScreenBufferLine.cs" />
     <Compile Include="Screen\ScreenSnapshot.cs" />

@@ -1,4 +1,4 @@
-using kOS.Safe.Binding;
+﻿using kOS.Safe.Binding;
 using kOS.Safe.Callback;
 using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;

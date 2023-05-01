@@ -20,7 +20,6 @@ namespace kOS.Safe.Screen
         void SetSize(int rowCount, int columnCount);
         int ScrollVertical(int deltaRows);
         void MoveCursor(int row, int column);
-        void MoveToNextLine();
         void PrintAt(string textToPrint, int row, int column);
         void Print(string textToPrint);
         void Print(string textToPrint, bool addNewLine);

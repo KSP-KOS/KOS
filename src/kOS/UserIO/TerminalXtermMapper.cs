@@ -77,6 +77,12 @@ namespace kOS.UserIO
                                 sb.AppendFormat("{0}?47h", ESCAPE_CHARACTER);                   // <-- Tells xterm to use fixed-buffer mode, not saving in scrollback.
                                 sb.AppendFormat("{0}2J{0}H", CSI);  // <-- The normal clear screen char from vt100.
                                 break;
+                            case (char)UnicodeCommand.SHOWCURSOR:
+                                sb.AppendFormat("{0}?25h", CSI);
+                                break;
+                            case (char)UnicodeCommand.HIDECURSOR:
+                                sb.AppendFormat("{0}?25l", CSI);
+                                break;
                             default: 
                                 sb.Append(t); // default passhtrough
                                 break;

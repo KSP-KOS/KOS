@@ -11,8 +11,13 @@ namespace kOS.Safe.Screen
         private const int DEFAULT_ROWS = 36;
         private const int DEFAULT_COLUMNS = 50;
         private int topRow;
-        private readonly List<IScreenBufferLine> buffer;
         private readonly List<SubBuffer> subBuffers;
+
+        /// <summary> The main output buffer </summary>
+        private readonly PrintingBuffer ScrollingOutput;
+
+        /// <summary> Used to print independently of the main cursor. Always merged into ScrollingOutput, not visible itself. </summary>
+        private readonly PrintingBuffer PositionalOutput;
 
         public Queue<char> CharInputQueue { get; private set; }
         
@@ -34,24 +39,20 @@ namespace kOS.Safe.Screen
         
         public int ColumnCount { get; private set; }
 
-        public virtual int CursorRowShow { get { return CursorRow; } }
+        public virtual int CursorRowShow { get { return ScrollingOutput.CursorRow - topRow; } }
 
-        public virtual int CursorColumnShow { get { return CursorColumn; } }
+        public virtual int CursorColumnShow { get { return ScrollingOutput.CursorColumn; } }
 
         public int RowCount { get; private set; }
 
         public int AbsoluteCursorRow
         {
-            get { return CursorRow + topRow; }
-            set { CursorRow = value - topRow; }
+            get { return ScrollingOutput.CursorRow; }
+            set { ScrollingOutput.MoveCursor(value, ScrollingOutput.CursorColumn); }
         }
 
         // Needed so the terminal knows when it's been scrolled, for its diffing purposes.
         public int TopRow { get { return topRow; } }
-
-        protected int CursorRow { get; set; }
-
-        protected int CursorColumn { get; set; }
 
         protected List<ResizeNotifier> Notifyees { get; set; }
 
@@ -62,10 +63,24 @@ namespace kOS.Safe.Screen
 
         public ScreenBuffer()
         {
-            buffer = new List<IScreenBufferLine>();
             Notifyees = new List<ResizeNotifier>();
 
             subBuffers = new List<SubBuffer>();
+
+            ScrollingOutput = new PrintingBuffer()
+            {
+                AutoExtend = true,
+                WillTruncate = false,
+                Enabled = true,
+                KeepShortenedLines = true
+            };
+            AddSubBuffer(ScrollingOutput);
+
+            PositionalOutput = new PrintingBuffer()
+            {
+                AutoExtend = true
+            };
+            AddSubBuffer(PositionalOutput);
             
             CharInputQueue = new Queue<char>();
 
@@ -94,11 +109,11 @@ namespace kOS.Safe.Screen
         {
             RowCount = rows;
             ColumnCount = columns;
-            ResizeBuffer();
             int scrollDiff = Notifyees
                 .Where(notifier => notifier != null)
                 .Sum(notifier => notifier(this));
             ScrollVertical(scrollDiff);
+            MoveCursor(ScrollingOutput.CursorRow, ScrollingOutput.CursorColumn); //synchronize cursors
         }
 
         public virtual int ScrollVertical(int deltaRows)
@@ -114,122 +129,48 @@ namespace kOS.Safe.Screen
         /// <param name="numRows">for this many rows, or up to the max row the buffer has if this number is too large</param>
         public void MarkRowsDirty(int startRow, int numRows)
         {
-            // Mark fewer rows than asked to if the reqeusted number would have blown past the end of the buffer:
-            int numSafeRows = (numRows + startRow <= buffer.Count) ? numRows : buffer.Count - startRow;
-            
-            for( int i = 0; i < numSafeRows ; ++i)
-                buffer[startRow + i].TouchTime();
+            ScrollingOutput.MarkRowsDirty(startRow, numRows);
         }
 
-        public void MoveCursor(int row, int column)
+        /// <summary> Move the cursor to the given absolute position, scrolling the screen to make it visible </summary>
+        public virtual void MoveCursor(int row, int column)
         {
-            if (row >= RowCount)
-            {
-                row = RowCount - 1;
-                MoveToNextLine();
-            }
-            if (row < 0) row = 0;
-
-            if (column >= ColumnCount) column = ColumnCount - 1;
-            if (column < 0) column = 0;
-
-            CursorRow = row;
-            CursorColumn = column;
+            ScrollingOutput.MoveCursor(row, column);
+            ScrollCursorVisible();
         }
 
-        public void MoveToNextLine()
-        {
-            if ((CursorRow + 1) >= RowCount)
-            {
-                // scrolling up
-                AddNewBufferLines();
-                ScrollVerticalInternal();
-            }
-            else
-            {
-                CursorRow++;
-            }
-
-            CursorColumn = 0;
-        }
-
+        /// <summary> Print text at the given position, not auto-scrolling the view </summary>
         public virtual void PrintAt(string textToPrint, int row, int column)
         {
-            MoveCursor(row, column);
-            Print(textToPrint, false);
+            PositionalOutput.MoveCursor(0, column);
+            PositionalOutput.PositionRow = row;
+            PositionalOutput.Print(StripUnprintables(textToPrint), false);
+            PositionalOutput.MergeTo(ScrollingOutput, topRow);
+            PositionalOutput.Wipe();
         }
 
+        /// <summary> 
+        /// Print text with a trailing newline at the cursor.
+        /// Scrolls the view to keep the cursor visible.
+        /// </summary>
         public void Print(string textToPrint)
         {
             Print(textToPrint, true);
         }
 
-        public void Print(string textToPrint, bool addNewLine)
+        /// <summary> Print text at the cursor, scrolling to keep the screen visible </summary>
+        public void Print(string textToPrint, bool trailingNewLine)
         {
-            List<string> lines = SplitIntoLines(textToPrint);
-            foreach (string line in lines)
-            {
-                PrintLine(line);
-
-                if (CursorColumn > 0 && addNewLine)
-                {
-                    MoveToNextLine();
-                    CursorColumn = 0;
-                }
-            }
+            ScrollingOutput.Print(StripUnprintables(textToPrint), trailingNewLine);
+            ScrollCursorVisible();
         }
-
-        protected void AddNewBufferLines(int howMany = 1)
-        {
-            while (howMany-- > 0)
-                buffer.Add(new ScreenBufferLine(ColumnCount));
-        }
-
-        protected void ResizeBuffer()
-        {
-            // Grow or shrink the width of the buffer lines to match the new
-            // value.  Note that this does not (yet) account for preserving lines and wrapping them.
-            for (int row = 0; row < buffer.Count; ++row)
-            {
-                var newRow = new ScreenBufferLine(ColumnCount);
-                newRow.ArrayCopyFrom(buffer[row], 0, 0, Math.Min(buffer[row].Length, ColumnCount));
-                buffer[row] = newRow;
-            }
-
-            // Add more buffer lines if needed to pad out the rest of the screen:
-            while (buffer.Count - topRow < RowCount)
-                buffer.Add(new ScreenBufferLine(ColumnCount));
-        }
-
-        protected List<string> SplitIntoLines(string textToPrint)
-        {
-            var lineList = new List<string>();
-            int availableColumns = ColumnCount - CursorColumn;
-
-            string[] lines = textToPrint.Trim(new[] { '\r', '\n' }).Split('\n');
-
-            foreach (string line in lines)
-            {
-                string lineToPrint = line.TrimEnd('\r');
-                int startIndex = 0;
-
-                while ((lineToPrint.Length - startIndex) > availableColumns)
-                {
-                    lineList.Add(lineToPrint.Substring(startIndex, availableColumns));
-                    startIndex += availableColumns;
-                    availableColumns = ColumnCount;
-                }
-
-                lineList.Add(lineToPrint.Substring(startIndex));
-                availableColumns = ColumnCount;
-            }
-
-            return lineList;
-        }
-
+        
         public void ClearScreen()
         {
-            buffer.Clear();
+            MoveCursor(0, 0);
+            ScrollingOutput.Wipe();
+            ScrollingOutput.SetSize(1, ColumnCount);
+            PositionalOutput.PositionRow = 0;
             InitializeBuffer();
         }
 
@@ -244,62 +185,33 @@ namespace kOS.Safe.Screen
             subBuffers.Remove(subBuffer);
         }
 
+        /// <summary> Merge all enabled SubBuffers, considering topRow, and return the resulting view </summary>
         public List<IScreenBufferLine> GetBuffer()
         {
-            // base buffer
-            int extraPadRows = Math.Max(0, (topRow + RowCount) - buffer.Count); // When screen extends past the buffer bottom., this is needed to prevent GetRange() exception.
-            var mergedBuffer = new List<IScreenBufferLine>(buffer.GetRange(topRow, RowCount - extraPadRows));
-            int lastLineWidth = mergedBuffer[mergedBuffer.Count - 1].Length;
-            while (extraPadRows > 0)
+            SubBuffer View = new SubBuffer()
             {
-                mergedBuffer.Add(new ScreenBufferLine(lastLineWidth));
-                --extraPadRows;
-            }
+                Fixed = true
+            };
+            View.SetSize(RowCount, ColumnCount);
 
             // merge sub buffers
             UpdateSubBuffers();
             foreach (SubBuffer subBuffer in subBuffers)
             {
-                if (subBuffer.RowCount > 0 && subBuffer.Enabled)
+                if (subBuffer.Enabled)
                 {
-                    int mergeRow = subBuffer.Fixed ? subBuffer.PositionRow : (subBuffer.PositionRow - topRow);
-
-                    if ((mergeRow + subBuffer.RowCount) > 0 && mergeRow < RowCount)
-                    {
-                        int startRow = (mergeRow < 0) ? -mergeRow : 0;
-                        int rowsToMerge = subBuffer.RowCount - startRow;
-                        if ((mergeRow + rowsToMerge) > RowCount) rowsToMerge = (RowCount - mergeRow);
-                        List<IScreenBufferLine> bufferRange = subBuffer.Buffer.GetRange(startRow, rowsToMerge);
-
-                        // Remove the replaced rows, but protect against the case where they didn't exist in
-                        // the first place because sizes just got changed in a window drag during the GUI pass:
-                        int mergeRowClamped = Math.Min(Math.Max(mergeRow, 0), mergedBuffer.Count - 1);
-                        int rowsToMergeClamped = Math.Min(Math.Max(rowsToMerge, 0), (mergedBuffer.Count - mergeRowClamped));
-                        mergedBuffer.RemoveRange(mergeRowClamped, rowsToMergeClamped);
-                        // Replace them:
-                        mergedBuffer.InsertRange(mergeRow, bufferRange);
-                    }
+                    subBuffer.MergeTo(View, topRow);
                 }
             }
 
-            return mergedBuffer;
+            return View.GetBuffer();
         }
 
         // This was handy when trying to figure out what was going on.
         public string DebugDump()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("DebugDump ScreenBuffer: RowCount=" + RowCount + ", ColumnCount=" + ColumnCount + ", topRow=" + topRow + ", buffer.count=" + buffer.Count + "\n");
-            for (int i = 0; i < buffer.Count; ++i)
-            {
-                sb.Append(" line " + i + " = [");
-                for (int j = 0; j < buffer[i].Length; ++j)
-                {
-                    char ch = buffer[i][j];
-                    sb.Append((int)ch < 32 ? (" \\" + (int)ch) : (" " + ch));
-                }
-                sb.Append("]\n");
-            }
+            sb.Append("DebugDump ScreenBuffer: RowCount=" + RowCount + ", ColumnCount=" + ColumnCount + ", topRow=" + topRow + "\n");
             foreach (SubBuffer sub in subBuffers)
                 sb.Append(sub.DebugDump());
             return sb.ToString();
@@ -312,50 +224,60 @@ namespace kOS.Safe.Screen
 
         private void InitializeBuffer()
         {
-            buffer.Clear();
-            AddNewBufferLines(RowCount);
-
             topRow = 0;
-            CursorRow = 0;
-            CursorColumn = 0;
+
+            ScrollingOutput.SetSize(1, ColumnCount);
+            PositionalOutput.SetSize(1, ColumnCount);
         }
 
+        /// <summary> Scroll so the cursor is visible, if neccessary </summary>
+        protected void ScrollCursorVisible()
+        {
+            if (CursorRowShow < 0)
+            {
+                ScrollVerticalInternal(CursorRowShow);
+            }
+            else if (CursorRowShow >= RowCount)
+            {
+                ScrollVerticalInternal(CursorRowShow - RowCount +1);
+            }
+        }
+
+        /// <summary>
+        /// Scroll the view. This does not scroll past 0 or the end of the last non-fixed buffer.
+        /// </summary>
+        /// <param name="deltaRows">Rows we want to scroll, positive for down</param>
+        /// <returns>Rows actually scrolled, positive for down</returns>
         private int ScrollVerticalInternal(int deltaRows = 1)
         {
-            int maxTopRow = buffer.Count - RowCount; // refuse to allow a scroll past the end of the visible buffer.
+            int maxTopRow = 0;
+            foreach(SubBuffer buf in subBuffers)
+            {
+                if(!buf.Fixed && buf.Enabled)
+                {
+                    int bufMaxTopRow = buf.PositionRow + buf.RowCount - RowCount;
+                    if(bufMaxTopRow > maxTopRow)
+                    {
+                        maxTopRow = bufMaxTopRow;
+                    }
+                }
+            }
 
             // boundary checks
             if (topRow + deltaRows < 0)
                 deltaRows = -topRow;
             else if (topRow + deltaRows > maxTopRow)
-                deltaRows = (maxTopRow - topRow);
-
+                deltaRows = maxTopRow - topRow;
+            
             topRow += deltaRows;
 
             return deltaRows;
         }
-
-        private void MoveColumn(int deltaPosition)
-        {
-            if (deltaPosition > 0)
-            {
-                CursorColumn += deltaPosition;
-                while (CursorColumn >= ColumnCount)
-                {
-                    CursorColumn -= ColumnCount;
-                    MoveToNextLine();
-                }
-            }
-        }
-
-        private void PrintLine(string textToPrint)
-        {
-            IScreenBufferLine lineBuffer = buffer[AbsoluteCursorRow];
-            textToPrint = StripUnprintables(textToPrint);
-            lineBuffer.ArrayCopyFrom(textToPrint.ToCharArray(), 0, CursorColumn);
-            MoveColumn(textToPrint.Length);
-        }
         
+        /// <summary>
+        /// Strip beeps from the text and add them to pending.
+        /// Everything else is handled by SubBuffer, which needs at least the newlines.
+        /// </summary>
         private string StripUnprintables(string textToPrint)
         {
             StringBuilder sb = new StringBuilder();
@@ -368,12 +290,60 @@ namespace kOS.Safe.Screen
                         ++BeepsPending;
                         break;
                     default:
-                        if (0x0020 <= ch)
-                            sb.Append(ch);
+                        sb.Append(ch);
                         break;
                 }
             }
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Split a text into lines, considering both newlines in the text, and wrapover.
+        /// </summary>
+        /// <param name="textToPrint">Text to split</param>
+        /// <param name="columnCount">Number of columns in a full line</param>
+        /// <param name="cursorColumn">Starting column, i.e. how many columns are already used in the first line</param>
+        public static List<string> SplitIntoLines(string textToPrint, int columnCount, int cursorColumn)
+        {
+            var lineList = new List<string>();
+            int availableColumns = columnCount - cursorColumn;
+
+            string[] lines = textToPrint.Trim(new[] { '\r' }).Split('\n');
+
+            foreach (string line in lines)
+            {
+                string lineToPrint = line.TrimEnd('\r');
+                int startIndex = 0;
+
+                while ((lineToPrint.Length - startIndex) > availableColumns)
+                {
+                    lineList.Add(lineToPrint.Substring(startIndex, availableColumns));
+                    startIndex += availableColumns;
+                    availableColumns = columnCount;
+                }
+
+                lineList.Add(lineToPrint.Substring(startIndex));
+                availableColumns = columnCount;
+            }
+
+            return lineList;
+        }
+
+        /// <summary>
+        /// Create debug output for a character
+        /// </summary>
+        /// <param name="c">Character to debug</param>
+        /// <returns>Character if it's definitly printable, the escaped code point otherwise</returns>
+        public static string DebugCharacter(char c)
+        {
+            if ((int)c >= 0x20 && (int)c < 0x80)
+            {
+                return c.ToString();
+            }
+            else
+            {
+                return "\\" + (int)c;
+            }
         }
     }
 }
