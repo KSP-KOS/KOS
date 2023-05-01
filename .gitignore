@@ -53,3 +53,16 @@ netkan.exe
 
 # .swp files from vim (temporary files that vim creates when editing a file)
 *.swp
+
+# KSPedia files
+src/kOS KSPedia/*.sln
+src/kOS KSPedia/*.csproj
+src/kOS KSPedia/AssetBundles/
+src/kOS KSPedia/Assets/PartTools/
+src/kOS KSPedia/Assets/Plugins/
+src/kOS KSPedia/Assets/SquadCore/
+src/kOS KSPedia/Assets/TextMesh Pro/
+src/kOS KSPedia/Assets/PartTools.meta
+src/kOS KSPedia/Assets/Plugins.meta
+src/kOS KSPedia/Assets/SquadCore.meta
+src/kOS KSPedia/PartTools.cfg
