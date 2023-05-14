@@ -185,8 +185,9 @@
     <Compile Include="Execution\TriggerInfo.cs" />
     <Compile Include="Execution\Variable.cs" />
     <Compile Include="Execution\VariableScope.cs" />
-    <Compile Include="Execution\YiedFinishedThreadedDetector.cs" />
+    <Compile Include="Execution\YieldFinishedThreadedDetector.cs" />
     <Compile Include="Execution\YieldFinishedCompile.cs" />
+    <Compile Include="Execution\YieldFinishedCompileBoot.cs" />
     <Compile Include="Execution\YieldFinishedDetector.cs" />
     <Compile Include="Execution\YieldFinishedGameTimer.cs" />
     <Compile Include="Execution\YieldFinishedGetChar.cs" />

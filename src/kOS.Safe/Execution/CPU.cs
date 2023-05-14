@@ -170,15 +170,13 @@ namespace kOS.Safe.Execution
                 shared.Screen.Print(bootMessage);
             }
 
-            if (!shared.Processor.CheckCanBoot()) return;
-
             VolumePath path = shared.Processor.BootFilePath;
             // Check to make sure the boot file name is valid, and then that the boot file exists.
             if (path == null)
             {
                 SafeHouse.Logger.Log("Boot file name is empty, skipping boot script");
             }
-            else
+            else if (shared.Processor.CheckCanBoot())
             {
                 // Boot is only called once right after turning the processor on,
                 // the volume cannot yet have been changed from that set based on
@@ -211,6 +209,25 @@ namespace kOS.Safe.Execution
                     YieldProgram(YieldFinishedCompile.RunScript(new BootGlobalPath(bootCommand), 1, bootCommand, bootContext, options));
                     
                 }
+            }
+            else //cannot boot right now
+            {
+                shared.Screen?.Print(string.Format(" \nWaiting for connection to boot from {0}.\n \n", path));
+                var bootContext = "program";
+                shared.ScriptHandler.ClearContext(bootContext);
+                IProgramContext programContext = SwitchToProgramContext();
+                programContext.Silent = true;
+
+                string bootCommand = string.Format("run \"{0}\".", path);
+
+                var options = new CompilerOptions
+                {
+                    LoadProgramsInSameAddressSpace = true,
+                    FuncManager = shared.FunctionManager,
+                    IsCalledFromRun = false
+                };
+
+                YieldProgram(YieldFinishedCompileBoot.RunScript(new BootGlobalPath(bootCommand), 1, bootCommand, bootContext, options));
             }
         }
 
