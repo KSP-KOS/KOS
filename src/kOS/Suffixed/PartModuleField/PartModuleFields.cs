@@ -468,6 +468,13 @@ namespace kOS.Suffixed.PartModuleField
             {
                 object convertedValue = Convert.ChangeType(newValue, field.FieldInfo.FieldType);
                 field.SetValue(convertedValue, partModule);
+
+                // Some mods rely on UI callback to be called when field value is changed
+                UI_Control control;
+                if (partModule.Fields.TryGetFieldUIControl(field.name, out control))
+                {
+                    control.onFieldChanged?.Invoke(field, convertedValue);
+                }
             }
             else
             {
