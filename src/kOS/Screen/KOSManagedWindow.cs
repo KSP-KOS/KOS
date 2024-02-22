@@ -147,6 +147,10 @@ namespace kOS.Screen
             set { mouseButtonDownPosRelative = value; }
         }
 
+        protected void OnDestroy()
+        {
+            depthSort.Remove(this);
+        }
 
         /// <summary>
         /// Implement this for how to make your widget get the keyboard focus.

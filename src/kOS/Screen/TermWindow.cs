@@ -204,11 +204,13 @@ namespace kOS.Screen
             return style;
         }
 
-        public void OnDestroy()
+        new public void OnDestroy()
         {
             LoseFocus();
             GameEvents.onHideUI.Remove(OnHideUI);
             GameEvents.onShowUI.Remove(OnShowUI);
+
+            base.OnDestroy();
         }
         
         public kOS.Safe.Sound.ISoundMaker GetSoundMaker()
