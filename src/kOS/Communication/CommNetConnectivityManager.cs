@@ -10,7 +10,9 @@ namespace kOS.Communication
     /// </summary>
     public class CommNetConnectivityManager : IConnectivityManager
     {
-        private CommPath tempPath = new CommPath();
+        // WARNING: you must call .Clear() on this object after using it!
+        // it will hold onto references to vessels even after they have been destroyed, causing a memory leak
+        private readonly CommPath tempPath = new CommPath();
 
         /// <summary>
         /// Checks to see if CommNet is enabled in the current game.  This should be checked often
@@ -83,9 +85,10 @@ namespace kOS.Communication
             if (!vessel.isActiveVessel)
             {
                 var net = CommNetNetwork.Instance.CommNet;
-                tempPath = new CommPath();
                 net.FindHome(vessel.Connection.Comm, tempPath);
-                return tempPath.signalStrength > 0;
+                bool result = tempPath.signalStrength > 0;
+                tempPath.Clear();
+                return result;
             }
             return vessel.Connection.IsConnectedHome;
         }
@@ -106,9 +109,10 @@ namespace kOS.Communication
             if (!vessel.isActiveVessel)
             {
                 var net = CommNetNetwork.Instance.CommNet;
-                tempPath = new CommPath();
                 net.FindClosestControlSource(vessel.Connection.Comm, tempPath);
-                return tempPath.signalStrength > 0 || vessel.CurrentControlLevel >= Vessel.ControlLevel.PARTIAL_MANNED;
+                bool result = tempPath.signalStrength > 0 || vessel.CurrentControlLevel >= Vessel.ControlLevel.PARTIAL_MANNED;
+                tempPath.Clear();
+                return result;
             }
             return vessel.Connection.IsConnected || vessel.CurrentControlLevel >= Vessel.ControlLevel.PARTIAL_MANNED;
         }
@@ -128,8 +132,9 @@ namespace kOS.Communication
             // This is a limitation put in place to improve performance in the stock game, and
             // there isn't a very good way around it.
             var net = CommNetNetwork.Instance.CommNet;
-            tempPath = new CommPath();
-            return vessel1.id == vessel2.id || net.FindPath(vessel1.Connection.Comm, tempPath, vessel2.Connection.Comm) || net.FindPath(vessel2.Connection.Comm, tempPath, vessel1.Connection.Comm);
+            bool result = vessel1.id == vessel2.id || net.FindPath(vessel1.Connection.Comm, tempPath, vessel2.Connection.Comm) || net.FindPath(vessel2.Connection.Comm, tempPath, vessel1.Connection.Comm);
+            tempPath.Clear();
+            return result;
         }
 
         public void AddAutopilotHook(Vessel vessel, FlightInputCallback hook)
