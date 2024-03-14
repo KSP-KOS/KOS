@@ -133,26 +133,26 @@ namespace kOS.Module
             if (SafeHouse.Logger != null)
             {
                 SafeHouse.Logger.SuperVerbose("kOSVesselModule OnDestroy()!");
-                if (initialized)
-                {
-                    UnHookEvents();
-                    ClearParts();
-                }
-                if (Vessel != null && allInstances.ContainsKey(ID) && ReferenceEquals(allInstances[ID], this))
-                {
-                    allInstances.Remove(ID);
-                }
-                foreach (var key in flightControlParameters.Keys.ToList())
-                {
-                    RemoveFlightControlParameter(key);
-                }
-                flightParametersAdded = false;
-                if (allInstances.Count == 0)
-                {
-                    partLookup.Clear();
-                }
-                initialized = false;
             }
+            UnHookEvents();
+            if (initialized)
+            {
+                ClearParts();
+            }
+            if (Vessel != null && allInstances.ContainsKey(ID) && ReferenceEquals(allInstances[ID], this))
+            {
+                allInstances.Remove(ID);
+            }
+            foreach (var key in flightControlParameters.Keys.ToList())
+            {
+                RemoveFlightControlParameter(key);
+            }
+            flightParametersAdded = false;
+            if (allInstances.Count == 0)
+            {
+                partLookup.Clear();
+            }
+            initialized = false;
         }
 
         /// <summary>
