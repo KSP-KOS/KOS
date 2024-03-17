@@ -25,10 +25,13 @@ namespace kOS
         }
         public Dictionary<int, VoiceValue> AllVoiceValues { get; private set; }
 
+        public Dictionary<ManeuverNode, Node> NodeLookup { get; private set; }
+
         public SharedObjects()
         {
             ManagedWindows = new List<KOSManagedWindow>();
             AllVoiceValues = new Dictionary<int, VoiceValue>();
+            NodeLookup = new Dictionary<ManeuverNode, Node>();
         }
 
         public void AddWindow(KOSManagedWindow w)
@@ -38,7 +41,10 @@ namespace kOS
 
         public void RemoveWindow(KOSManagedWindow w)
         {
-            ManagedWindows.Remove(w);
+            if (ManagedWindows != null)
+            {
+                ManagedWindows.Remove(w);
+            }
         }
 
         public void DestroyObjects()
@@ -52,7 +58,7 @@ namespace kOS
             IDisposable tempDisp;
             foreach (var prop in props)
             {
-                if (!prop.PropertyType.IsValueType && prop.GetSetMethod() != null)
+                if (!prop.PropertyType.IsValueType && prop.GetSetMethod(nonPublic: true) != null)
                 {
                     tempDisp = prop.GetValue(this, null) as IDisposable;
                     if (tempDisp != null)
