@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed.Part;
 
@@ -26,6 +26,10 @@ namespace kOS.Suffixed
             get { return crewMember.experienceTrait.Title; }
         }
 
+        public ProtoCrewMember ProtoCrewMember {
+            get { return crewMember; }
+        }
+
         public CrewMember(ProtoCrewMember crewMember, SharedObjects shared)
         {
             this.crewMember = crewMember;
@@ -41,6 +45,9 @@ namespace kOS.Suffixed
             AddSuffix("TRAIT", new Suffix<StringValue>(() => Trait));
             AddSuffix("EXPERIENCE", new Suffix<ScalarValue>(() => Experience));
             AddSuffix("PART", new Suffix<PartValue>(() => PartValueFactory.Construct(crewMember.seat.part, shared)));
+            AddSuffix("STATUS", new Suffix<StringValue>(() => crewMember.rosterStatus.ToString()));
+            AddSuffix("EXPERIENCEVALUE", new Suffix<ScalarValue>(() => crewMember.experience));
+            AddSuffix("KERBALTYPE", new Suffix<StringValue>(() => crewMember.type.ToString()));
         }
 
         public override string ToString()
