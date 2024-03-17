@@ -41,7 +41,10 @@ namespace kOS
 
         public void RemoveWindow(KOSManagedWindow w)
         {
-            ManagedWindows.Remove(w);
+            if (ManagedWindows != null)
+            {
+                ManagedWindows.Remove(w);
+            }
         }
 
         public void DestroyObjects()
