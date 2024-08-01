@@ -3,6 +3,7 @@ using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.AddOns.RemoteTech;
 using kOS.Module;
+using System;
 
 namespace kOS.Suffixed.PartModuleField
 {
@@ -34,14 +35,16 @@ namespace kOS.Suffixed.PartModuleField
                 return new kOSProcessorFields(processor, shared);
             }
 
-            // see if any addons have registered a constructor for this module
-            // TODO: handle module inheritance properly
-            if (constructionMethods.TryGetValue(mod.moduleName, out var constructionMethod))
+            // see if any addons have registered a constructor for this module; starting from most derived
+            for (Type moduleType = mod.GetType(); moduleType != typeof(PartModule); moduleType = moduleType.BaseType)
             {
-                var moduleFields = constructionMethod(mod, shared);
-                if (moduleFields != null)
+                if (constructionMethods.TryGetValue(moduleType, out var constructionMethod))
                 {
-                    return moduleFields;
+                    var moduleFields = constructionMethod(mod, shared);
+                    if (moduleFields != null)
+                    {
+                        return moduleFields;
+                    }
                 }
             }
 
@@ -66,12 +69,12 @@ namespace kOS.Suffixed.PartModuleField
             return new PartModuleFields(mod, shared);
         }
 
-        public static void RegisterConstructionMethod(string moduleName, ConstructPartModuleFieldsMethod method)
+        public static void RegisterConstructionMethod(Type moduleType, ConstructPartModuleFieldsMethod method)
         {
-            constructionMethods[moduleName] = method;
+            constructionMethods[moduleType] = method;
         }
 
         // maps a module name to a function
-        protected static Dictionary<string, ConstructPartModuleFieldsMethod> constructionMethods = new Dictionary<string, ConstructPartModuleFieldsMethod>();
+        protected static Dictionary<Type, ConstructPartModuleFieldsMethod> constructionMethods = new Dictionary<Type, ConstructPartModuleFieldsMethod>();
     }
 }
