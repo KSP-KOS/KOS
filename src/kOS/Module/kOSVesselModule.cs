@@ -133,26 +133,26 @@ namespace kOS.Module
             if (SafeHouse.Logger != null)
             {
                 SafeHouse.Logger.SuperVerbose("kOSVesselModule OnDestroy()!");
-                if (initialized)
-                {
-                    UnHookEvents();
-                    ClearParts();
-                }
-                if (Vessel != null && allInstances.ContainsKey(ID) && ReferenceEquals(allInstances[ID], this))
-                {
-                    allInstances.Remove(ID);
-                }
-                foreach (var key in flightControlParameters.Keys.ToList())
-                {
-                    RemoveFlightControlParameter(key);
-                }
-                flightParametersAdded = false;
-                if (allInstances.Count == 0)
-                {
-                    partLookup.Clear();
-                }
-                initialized = false;
             }
+            UnHookEvents();
+            if (initialized)
+            {
+                ClearParts();
+            }
+            if (Vessel != null && allInstances.ContainsKey(ID) && ReferenceEquals(allInstances[ID], this))
+            {
+                allInstances.Remove(ID);
+            }
+            foreach (var key in flightControlParameters.Keys.ToList())
+            {
+                RemoveFlightControlParameter(key);
+            }
+            flightParametersAdded = false;
+            if (allInstances.Count == 0)
+            {
+                partLookup.Clear();
+            }
+            initialized = false;
         }
 
         /// <summary>
@@ -304,7 +304,10 @@ namespace kOS.Module
         /// </summary>
         private void UnHookEvents()
         {
-            ConnectivityManager.RemoveAutopilotHook(Vessel, UpdateAutopilot);
+            if (ConnectivityManager.Instance != null)
+            {
+                ConnectivityManager.RemoveAutopilotHook(Vessel, UpdateAutopilot);
+            }
 
             if (workAroundEventsEnabled)
             {
@@ -312,8 +315,12 @@ namespace kOS.Module
                 TimingManager.FixedUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, resetControllable);
                 workAroundEventsEnabled = false;
             }
-            AutopilotMsgManager.Instance.TurnOffSuppressMessage(this);
-            AutopilotMsgManager.Instance.TurnOffSasMessage(this);
+
+            if (AutopilotMsgManager.Instance != null)
+            {
+                AutopilotMsgManager.Instance.TurnOffSuppressMessage(this);
+                AutopilotMsgManager.Instance.TurnOffSasMessage(this);
+            }
         }
 
         #region Hack to fix "Require Signal for Control"
