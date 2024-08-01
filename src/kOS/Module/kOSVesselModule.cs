@@ -123,9 +123,9 @@ namespace kOS.Module
             {
                 SafeHouse.Logger.SuperVerbose("kOSVesselModule OnDestroy()!");
             }
+            UnHookEvents();
             if (initialized)
             {
-                UnHookEvents();
                 ClearParts();
             }
             foreach (var key in flightControlParameters.Keys.ToList())
