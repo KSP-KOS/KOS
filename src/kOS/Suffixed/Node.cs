@@ -9,8 +9,6 @@ namespace kOS.Suffixed
     [kOS.Safe.Utilities.KOSNomenclature("Node")]
     public class Node : Structure
     {
-        private static readonly Dictionary<ManeuverNode, Node> nodeLookup;
-
         public ManeuverNode NodeRef { get; private set; }
         private Vessel vesselRef;
         private readonly SharedObjects shared;
@@ -18,11 +16,6 @@ namespace kOS.Suffixed
         private double prograde;
         private double radialOut;
         private double normal;
-
-        static Node()
-        {
-            nodeLookup = new Dictionary<ManeuverNode, Node>();
-        }
 
         public Node(double time, double radialOut, double normal, double prograde, SharedObjects sharedObj)
             : this(sharedObj)
@@ -53,7 +46,7 @@ namespace kOS.Suffixed
             NodeRef = existingNode;
             vesselRef = v;
 
-            nodeLookup.Add(existingNode, this);
+            shared.NodeLookup.Add(existingNode, this);
 
             FromNodeRef();
         }
@@ -141,7 +134,11 @@ namespace kOS.Suffixed
 
         public static Node FromExisting(Vessel v, ManeuverNode existingNode, SharedObjects shared)
         {
-            return nodeLookup.ContainsKey(existingNode) ? nodeLookup[existingNode] : new Node(v, existingNode, shared);
+            if (shared.NodeLookup.TryGetValue(existingNode, out Node kosNode))
+            {
+                return kosNode;
+            }
+            return new Node(v, existingNode, shared);
         }
 
         public void AddToVessel(Vessel v)
@@ -165,7 +162,7 @@ namespace kOS.Suffixed
 
             v.patchedConicSolver.UpdateFlightPlan();
 
-            nodeLookup.Add(NodeRef, this);
+            shared.NodeLookup.Add(NodeRef, this);
         }
 
         public Vector GetBurnVector()
@@ -184,7 +181,7 @@ namespace kOS.Suffixed
             if (! Career.CanMakeNodes(out careerReason))
                 throw new KOSLowTechException("use maneuver nodes", careerReason);
 
-            nodeLookup.Remove(NodeRef);
+            shared.NodeLookup.Remove(NodeRef);
 
             if (vesselRef.patchedConicSolver == null)
                 throw new KOSSituationallyInvalidException(
