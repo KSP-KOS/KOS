@@ -26,10 +26,6 @@ namespace kOS.Suffixed
             get { return crewMember.experienceTrait.Title; }
         }
 
-        public ProtoCrewMember ProtoCrewMember {
-            get { return crewMember; }
-        }
-
         public CrewMember(ProtoCrewMember crewMember, SharedObjects shared)
         {
             this.crewMember = crewMember;
