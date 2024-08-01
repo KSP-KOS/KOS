@@ -51,6 +51,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("UID", new Suffix<StringValue>(() => Part.flightID.ToString()));
             AddSuffix("ROTATION", new Suffix<Direction>(() => new Direction(Part.transform.rotation)));
             AddSuffix("POSITION", new Suffix<Vector>(() => GetPosition()));
+            AddSuffix("COM", new Suffix<Vector>(() => GetCOM()));
             AddSuffix("TAG", new SetSuffix<StringValue>(GetTagName, SetTagName));
             AddSuffix("FACING", new Suffix<Direction>(() => GetFacing()));
             AddSuffix("BOUNDS", new Suffix<BoundsValue>(GetBoundsValue));
@@ -278,6 +279,12 @@ namespace kOS.Suffixed.Part
         {
             Vector3d positionError = VesselTarget.CreateOrGetExisting(Part.vessel, Shared).GetPositionError();
             return new Vector(Part.transform.position - Shared.Vessel.CoMD + positionError);
+        }
+
+        public Vector GetCOM()
+        {
+            Vector3d positionError = VesselTarget.CreateOrGetExisting(Part.vessel, Shared).GetPositionError();
+            return new Vector(Part.transform.position - Shared.Vessel.CoMD + Part.transform.rotation * Part.CoMOffset + positionError);
         }
 
         private void ControlFrom()
