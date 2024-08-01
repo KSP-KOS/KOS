@@ -73,11 +73,13 @@ namespace kOS.Screen
             OptOutOfControlLocking = true;
         }
 
-        public void OnDestroy()
+        new public void OnDestroy()
         {
             if (shared != null) shared.RemoveWindow(this);
             GameEvents.onHideUI.Remove(OnHideUI);
             GameEvents.onShowUI.Remove(OnShowUI);
+
+            base.OnDestroy();
         }
 
         void OnHideUI()
