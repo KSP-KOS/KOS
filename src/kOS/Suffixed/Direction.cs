@@ -155,7 +155,7 @@ namespace kOS.Suffixed
             AddSuffix(new[] { "STARVECTOR", "RIGHTVECTOR" },
                       new Suffix<Vector>(() => new Vector(rotation * Vector3.right),
                                          "This direction's starboard direction expressed as a unit vector."));
-            AddSuffix("INVERSE", new Suffix<Direction>(() => new Direction(rotation.Inverse()), "Returns the inverse of this direction - meaning the rotation that would go FROM this direction TO the universe's raw orientation."));
+            AddSuffix("INVERSE", new Suffix<Direction>(() => new Direction(Quaternion.Inverse(rotation)), "Returns the inverse of this direction - meaning the rotation that would go FROM this direction TO the universe's raw orientation."));
         }
 
         public static Direction operator *(Direction a, Direction b)
@@ -195,7 +195,7 @@ namespace kOS.Suffixed
 
         public static Direction operator -(Direction a)
         {
-            return new Direction(a.rotation.Inverse());
+            return new Direction(Quaternion.Inverse(a.rotation));
         }
 
         public override bool Equals(object obj)

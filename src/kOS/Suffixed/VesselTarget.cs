@@ -352,7 +352,7 @@ namespace kOS.Suffixed
         public BoundsValue GetBoundsValue()
         {
             Direction myFacing = VesselUtils.GetFacing(Vessel);
-            Quaternion inverseMyFacing = myFacing.Rotation.Inverse();
+            Quaternion inverseMyFacing = Quaternion.Inverse(myFacing.Rotation);
             Vector rootOrigin = Parts[0].GetPosition();
             Bounds unionBounds = new Bounds();
             for (int pNum = 0; pNum < Parts.Count; ++pNum)

@@ -168,7 +168,7 @@ namespace kOS.Suffixed
             // Rotate the ray into the bounds box's local frame axes and that will make it clear which corner to use:
             // If that ray has a +x component, then you want the max X, if it has a -x component, then you want the min x,
             // etc for each of the 3 axes:
-            Vector3 orientedRay = Facing.Rotation.Inverse() * ray.Normalized().ToVector3();
+            Vector3 orientedRay = Quaternion.Inverse(Facing.Rotation) * ray.Normalized().ToVector3();
             float relX = orientedRay.x > 0 ? unityBounds.max.x : unityBounds.min.x;
             float relY = orientedRay.y > 0 ? unityBounds.max.y : unityBounds.min.y;
             float relZ = orientedRay.z > 0 ? unityBounds.max.z : unityBounds.min.z;
