@@ -257,7 +257,7 @@
     <WCFMetadata Include="Service References" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)..\KSPBuildTools\KSPCommon.targets" />
+  <Import Project="$(SolutionDir)KSPBuildTools\KSPCommon.targets" />
   <ItemGroup>
     <Reference Include="$(RepoRootPath)\$(BinariesOutputRelativePath)\ICSharpCode.SharpZipLib.dll" />
   </ItemGroup>

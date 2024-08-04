@@ -1,32 +1,51 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27428.2015
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kOS", "kOS\kOS.csproj", "{465EC87D-723D-4A6C-B116-9777AC641DE3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kOS", "src\kOS\kOS.csproj", "{465EC87D-723D-4A6C-B116-9777AC641DE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kOS.Safe", "kOS.Safe\kOS.Safe.csproj", "{590FFDA8-7B44-4BC3-A12A-5FFE2BB7D8FD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kOS.Safe", "src\kOS.Safe\kOS.Safe.csproj", "{590FFDA8-7B44-4BC3-A12A-5FFE2BB7D8FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kOS.Safe.Test", "kOS.Safe.Test\kOS.Safe.Test.csproj", "{C9A42A44-DDC8-4D6C-8A16-D7F30F494B46}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kOS.Safe.Test", "src\kOS.Safe.Test\kOS.Safe.Test.csproj", "{C9A42A44-DDC8-4D6C-8A16-D7F30F494B46}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E44F4203-5064-4B07-845E-D6372CD8E17B}"
+	ProjectSection(SolutionItems) = preProject
+		CHANGELOG.md = CHANGELOG.md
+		CONTRIBUTING.md = CONTRIBUTING.md
+		kOS.netkan = kOS.netkan
+		Resources\GameData\kOS\kOS.version.versiontemplate = Resources\GameData\kOS\kOS.version.versiontemplate
+		LICENSE.md = LICENSE.md
+		README.md = README.md
+		RELEASECHECKLIST.md = RELEASECHECKLIST.md
+		STYLEGUIDE.md = STYLEGUIDE.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		Shell|Any CPU = Shell|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{465EC87D-723D-4A6C-B116-9777AC641DE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{465EC87D-723D-4A6C-B116-9777AC641DE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{465EC87D-723D-4A6C-B116-9777AC641DE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{465EC87D-723D-4A6C-B116-9777AC641DE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{465EC87D-723D-4A6C-B116-9777AC641DE3}.Shell|Any CPU.ActiveCfg = Debug|Any CPU
+		{465EC87D-723D-4A6C-B116-9777AC641DE3}.Shell|Any CPU.Build.0 = Debug|Any CPU
 		{590FFDA8-7B44-4BC3-A12A-5FFE2BB7D8FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{590FFDA8-7B44-4BC3-A12A-5FFE2BB7D8FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{590FFDA8-7B44-4BC3-A12A-5FFE2BB7D8FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{590FFDA8-7B44-4BC3-A12A-5FFE2BB7D8FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{590FFDA8-7B44-4BC3-A12A-5FFE2BB7D8FD}.Shell|Any CPU.ActiveCfg = Shell|Any CPU
+		{590FFDA8-7B44-4BC3-A12A-5FFE2BB7D8FD}.Shell|Any CPU.Build.0 = Shell|Any CPU
 		{C9A42A44-DDC8-4D6C-8A16-D7F30F494B46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C9A42A44-DDC8-4D6C-8A16-D7F30F494B46}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9A42A44-DDC8-4D6C-8A16-D7F30F494B46}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9A42A44-DDC8-4D6C-8A16-D7F30F494B46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9A42A44-DDC8-4D6C-8A16-D7F30F494B46}.Shell|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9A42A44-DDC8-4D6C-8A16-D7F30F494B46}.Shell|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
