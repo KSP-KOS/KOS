@@ -1,5 +1,28 @@
 # kOS Mod Changelog
 
+## Unreleased
+
+### NEW FEATURES
+
+- New crewmember suffixes [commit](https://github.com/KSP-KOS/KOS/commit/8b6246d328f376f431df11f32edadde3d4db7035)
+- Added `COM` suffix to parts to get the accurate center of mass (thanks SofieBrink) [commit](https://github.com/KSP-KOS/KOS/commit/496bf3fe7e29b4b8917ec214a6d9d8ab3780cd46)
+- 3rd party addons can now add custom suffixes to PartModules [commit](https://github.com/KSP-KOS/KOS/commit/9b83c9ee01e0fb0ce2699f42ff71028d4db71b36)
+- Integrated KSPBuildTools for easier local setup and automated build process [commit](https://github.com/KSP-KOS/KOS/commit/7bde357c9d23c60f95f1d64b0490724a4b1544a4)
+
+### BUG FIXES
+
+- Documentation: renamed `gui` to `my_gui` to avoid conflict with global [commit](https://github.com/KSP-KOS/KOS/commit/bc2d2aad469d939b549e73a54b2f6d2f2741f376)
+- Fixed an issue where probe cores in RP-1 would get incorrect cost and mass [commit 1](https://github.com/KSP-KOS/KOS/commit/96baa4836bf16ab1bf1b67524c497ea7e0b8db87) [commit 2](https://github.com/KSP-KOS/KOS/commit/142a68c0ef511cacafaf9badc083ee735066cc56)
+- Quicksaveto no longer checks ClearToSave [commit](https://github.com/KSP-KOS/KOS/commit/3a24b86d9f50bc85e2aedfc1bc699dd9905e5b0b)
+- Several memory leak fixes  
+  - [when vessel is destroyed](https://github.com/KSP-KOS/KOS/commit/eb55ed8fb69fe58ba1c367d0403046406f4589eb)
+  - [function call results](https://github.com/KSP-KOS/KOS/commit/4aec51d6211ecb8f590fe8e8e169ddff47abf061)
+  - [maneuver nodes and vessels](https://github.com/KSP-KOS/KOS/commit/f66b51a04290b663f26c95d430cc0a47387eaa48)
+  - [commnet connectivity](https://github.com/KSP-KOS/KOS/commit/d77de08e9aa07de03954cba2c7575d3caac28af3)
+  - [managedwindow](https://github.com/KSP-KOS/KOS/commit/41a0a0665af6f2e6f55cc19a899f15b3cccfab09)
+  - [static part caches](https://github.com/KSP-KOS/KOS/commit/ba4098a08ca015bd72d66e2f3539ed3486c0596d)
+- Invoke UI field change callbacks when settings fields (thanks ricmatsui) [commit](https://github.com/KSP-KOS/KOS/commit/09864894469119004eb8c9a2eca7ca91ae058a32)
+
 ## v1.4.0.0 - Catch-up for over a year of little things
 
 It's been 3 years since the last kOS release, and a lot of
