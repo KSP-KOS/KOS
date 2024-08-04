@@ -263,5 +263,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Properties\AssemblyInfo.cs.versiontemplate" />
   </ItemGroup>
 </Project>

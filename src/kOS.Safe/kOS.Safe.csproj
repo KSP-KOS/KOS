@@ -284,6 +284,7 @@
     <None Include="Compilation\CompiledObject-doc.md" />
     <None Include="Compilation\KS\kRISC.tpg" />
     <None Include="packages.config" />
+    <None Include="Properties\AssemblyInfo.cs.versiontemplate" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
