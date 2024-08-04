@@ -11,11 +11,8 @@ on:
   workflow_dispatch:
   workflow_call:
 
-env:
-  SOLUTION_FILE_PATH: src/kOS.sln
-
 jobs:
   build:
     uses: KSPModdingLibs/KSPBuildTools/.github/workflows/build.yml@main
     with:
-      ksp-zip-url: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip
+      solution-file-path: ${{ vars.SOLUTION_FILE_PATH }}
