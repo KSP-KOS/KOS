@@ -15,5 +15,4 @@ jobs:
   build:
     uses: KSPModdingLibs/KSPBuildTools/.github/workflows/build.yml@main
     with:
-      solution-file-path: ${{ vars.SOLUTION_FILE_PATH }}
       artifacts: ${{ vars.BUILD_ARTIFACTS }}
