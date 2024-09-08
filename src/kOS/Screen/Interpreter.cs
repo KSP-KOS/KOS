@@ -17,12 +17,14 @@ namespace kOS.Screen
         private readonly List<string> commandHistory = new List<string>();
         private int commandHistoryIndex;
         private bool locked;
+        private readonly Lua.LuaInterpreter luaInterpreter;
 
         protected SharedObjects Shared { get; private set; }
 
         public Interpreter(SharedObjects shared)
         {
             Shared = shared;
+            luaInterpreter = new Lua.LuaInterpreter(shared);
         }
 
         protected override void NewLine()
@@ -134,7 +136,9 @@ namespace kOS.Screen
 
             try
             {
-                CompilerOptions options = new CompilerOptions
+                UnityEngine.Debug.Log("command: "+commandText);
+                luaInterpreter.ProcessCommand(commandText);
+/*                CompilerOptions options = new CompilerOptions
                 {
                     LoadProgramsInSameAddressSpace = false,
                     FuncManager = Shared.FunctionManager,
@@ -149,6 +153,7 @@ namespace kOS.Screen
 
                 var interpreterContext = ((CPU)Shared.Cpu).GetInterpreterContext();
                 interpreterContext.AddParts(commandParts);
+*/
             }
             catch (Exception e)
             {
