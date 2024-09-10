@@ -18,13 +18,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-
 using kOS.Safe.Execution;
 using UnityEngine;
 using kOS.Safe.Encapsulation;
 using KSP.UI;
 using kOS.Suffixed;
 using kOS.Safe.Function;
+using kOS.Lua;
+using kOS.Screen;
 
 namespace kOS.Module
 {
@@ -85,6 +86,9 @@ namespace kOS.Module
         private const int ARCHIVE_EFFECTIVE_BYTES = 50000;
 
         private const string BootDirectoryName = "boot";
+
+        [KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Interpreter", groupName = PAWGroup, groupDisplayName = PAWGroup), UI_ChooseOption(scene = UI_Scene.All)]
+        public string interpreterLanguage = "KerboScript";
 
         [KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Boot File", groupName = PAWGroup, groupDisplayName = PAWGroup), UI_ChooseOption(scene = UI_Scene.Editor)]
         public string bootFile = "None";
@@ -403,6 +407,7 @@ namespace kOS.Module
             {
                 FindRP1Modules();
                 UpdateRP1TechLevel(state == StartState.Editor);
+                InitInterpreterField(state);
                 //if in Editor, populate boot script selector, diskSpace selector and etc.
                 if (state == StartState.Editor)
                 {
@@ -436,6 +441,29 @@ namespace kOS.Module
         public static void SetBootListDirty()
         {
             bootListDirty = true;
+        }
+
+        private void InitInterpreterField(StartState state)
+        {
+            BaseField interpreterLanguageField = Fields["interpreterLanguage"];
+            List<string> interpreterOptions = new List<string> { "KerboScript", "Lua" };
+            if (state == StartState.Editor) // TODO: show available boot files based on the selected interpreter
+            {
+                var interpreterLanguageOption = (UI_ChooseOption)interpreterLanguageField.uiControlEditor;
+                interpreterLanguageOption.options = interpreterOptions.ToArray();
+            } else
+            {
+                var interpreterLanguageOption = (UI_ChooseOption)interpreterLanguageField.uiControlFlight;
+                interpreterLanguageOption.options = interpreterOptions.ToArray();
+                interpreterLanguageOption.onFieldChanged = OnInterpreterChanged;
+            }
+        }
+
+        private void OnInterpreterChanged(BaseField field, object prevValue)
+        {
+            UnityEngine.Debug.Log("interpreter changed. "+prevValue.ToString()+" to "+interpreterLanguage);
+            if (interpreterLanguage == "Lua") shared.InterpreterLink = new LuaInterpreter(shared);
+            else shared.InterpreterLink = new KSLink(shared);
         }
 
         private void InitUI()
@@ -588,6 +616,18 @@ namespace kOS.Module
             shared.Cpu = new CPU(shared);
             shared.AddonManager = new AddOns.AddonManager(shared);
             shared.GameEventDispatchManager = new GameEventDispatchManager(shared);
+
+            if (interpreterLanguage == "Lua") shared.InterpreterLink = new LuaInterpreter(shared);
+            else shared.InterpreterLink = new KSLink(shared);
+            // TODO: proper names. Interpreter class should probably be called Terminal now
+            // Interpreter -> Terminal
+            // ConnectivityInterpreter -> ConnectivityTerminal
+            // IInterpreter -> ITerminal
+            // IInterpreterLink -> IInterpreter
+            // KSLink -> KSInterpreter
+
+            // TODO: add methods like Boot, Shutdown to IInterpreterLink
+            // OnInterpreterChanged would call them to swap interpreters out so they dont run at the same time
 
             // Make the window that is going to correspond to this kOS part:
             shared.Window = gameObject.AddComponent<Screen.TermWindow>();
@@ -864,7 +904,7 @@ namespace kOS.Module
                 if (!HasBooted)
                 {
                     SafeHouse.Logger.LogWarning("First Update()");
-                    shared.Cpu.Boot();
+                    shared.Cpu.Boot(); // TODO: add to InterpreterLink
                     HasBooted = true;
                 }
                 UpdateVessel();
@@ -1096,7 +1136,7 @@ namespace kOS.Module
             {
                 // Because the processor is not STARVED, evaluate the power requirement based on actual operation.
                 // For EC drain purposes, always pretend atleast 1 instruction happened, so idle drain isn't quite zero:
-                int instructions = System.Math.Max(shared.Cpu.InstructionsThisUpdate, 1);
+                int instructions = System.Math.Max(shared.InterpreterLink.InstructionsThisUpdate(), 1);
                 var request = volumePower * time + instructions * ECPerInstruction;
                 if (request > 0)
                 {
@@ -1152,7 +1192,7 @@ namespace kOS.Module
 
                 case ProcessorModes.OFF:
                 case ProcessorModes.STARVED:
-                    if (shared.Cpu != null) shared.Cpu.BreakExecution(true);
+                    if (shared.Cpu != null) shared.InterpreterLink.BreakExecution(true);
                     if (shared.Interpreter != null) shared.Interpreter.SetInputLock(true);
                     if (shared.Window != null) shared.Window.IsPowered = false;
                     if (shared.SoundMaker != null) shared.SoundMaker.StopAllVoices();

@@ -97,6 +97,7 @@
     </Compile>
     <Compile Include="Screen\GUIWindow.cs" />
     <Compile Include="Lua\LuaInterpreter.cs" />
+    <Compile Include="Screen\KSLink.cs" />
     <Compile Include="Sound\NoiseSoundWave.cs" />
     <Compile Include="Sound\NoteValue.cs" />
     <Compile Include="Sound\ProceduralSoundWave.cs" />

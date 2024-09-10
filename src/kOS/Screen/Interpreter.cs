@@ -17,21 +17,21 @@ namespace kOS.Screen
         private readonly List<string> commandHistory = new List<string>();
         private int commandHistoryIndex;
         private bool locked;
-        private readonly Lua.LuaInterpreter luaInterpreter;
 
         protected SharedObjects Shared { get; private set; }
 
         public Interpreter(SharedObjects shared)
         {
             Shared = shared;
-            luaInterpreter = new Lua.LuaInterpreter(shared);
         }
+
+
 
         protected override void NewLine()
         {
             string commandText = LineBuilder.ToString();
 
-            if (Shared.ScriptHandler.IsCommandComplete(commandText))
+            if (Shared.InterpreterLink.IsCommandComplete(commandText))
             {
                 base.NewLine();
                 AddCommandHistoryEntry(commandText); // add to history first so that if ProcessCommand generates an exception,
@@ -69,7 +69,7 @@ namespace kOS.Screen
         {
             if (key == (char)UnicodeCommand.BREAK)
             {
-                Shared.Cpu.BreakExecution(true);
+                Shared.InterpreterLink.BreakExecution(true);
                 LineBuilder.Remove(0, LineBuilder.Length); // why isn't there a StringBuilder.Clear()?
 
                 NewLine(); // process the now emptied line, to make it do all the updates it normally
@@ -125,35 +125,19 @@ namespace kOS.Screen
             return commandHistory[absoluteIndex-1];
         }
 
-        protected virtual void ProcessCommand(string commandText)
+        public int GetCommandHistoryIndex()
         {
-            CompileCommand(commandText);
+            return commandHistoryIndex;
         }
 
-        protected void CompileCommand(string commandText)
+        protected virtual void ProcessCommand(string commandText)
         {
             if (Shared.ScriptHandler == null) return;
 
             try
             {
                 UnityEngine.Debug.Log("command: "+commandText);
-                luaInterpreter.ProcessCommand(commandText);
-/*                CompilerOptions options = new CompilerOptions
-                {
-                    LoadProgramsInSameAddressSpace = false,
-                    FuncManager = Shared.FunctionManager,
-                    BindManager = Shared.BindingMgr,
-                    AllowClobberBuiltins = SafeHouse.Config.AllowClobberBuiltIns,
-                    IsCalledFromRun = false
-                };
-
-                List<CodePart> commandParts = Shared.ScriptHandler.Compile(new InterpreterPath(this),
-                    commandHistoryIndex, commandText, InterpreterName, options);
-                if (commandParts == null) return;
-
-                var interpreterContext = ((CPU)Shared.Cpu).GetInterpreterContext();
-                interpreterContext.AddParts(commandParts);
-*/
+                Shared.InterpreterLink.ProcessCommand(commandText);
             }
             catch (Exception e)
             {
@@ -166,11 +150,7 @@ namespace kOS.Screen
 
         public bool IsWaitingForCommand()
         {
-            IProgramContext context = ((CPU)Shared.Cpu).GetInterpreterContext();
-            // If running from a boot script, there will be no interpreter instructions,
-            // only a single OpcodeEOF.  So we check to see if the interpreter is locked,
-            // which is a sign that a sub-program is running.
-            return !locked && context.Program[context.InstructionPointer] is OpcodeEOF;
+            return !locked && Shared.InterpreterLink.IsWaitingForCommand();
         }
 
         public void SetInputLock(bool isLocked)

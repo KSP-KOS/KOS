@@ -3,6 +3,7 @@ using kOS.Safe.Callback;
 using kOS.Safe.Compilation;
 using kOS.Safe.Execution;
 using kOS.Safe.Function;
+using kOS.Safe.Lua;
 using kOS.Safe.Module;
 using kOS.Safe.Persistence;
 using kOS.Safe.Screen;
@@ -13,6 +14,7 @@ namespace kOS.Safe
     public class SafeSharedObjects
     {
         public ICpu Cpu { get; set; }
+        public IInterpreterLink InterpreterLink { get; set; }
         public IScreenBuffer Screen { get; set; }
         public IInterpreter Interpreter { get; set; }
         public IBindingManager BindingMgr { get; set; }

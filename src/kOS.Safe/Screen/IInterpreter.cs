@@ -7,6 +7,7 @@ namespace kOS.Safe.Screen
         void Type(char ch);
         bool SpecialKey(char key);
         string GetCommandHistoryAbsolute(int absoluteIndex);
+        int GetCommandHistoryIndex();
         void SetInputLock(bool isLocked);
         bool IsAtStartOfCommand();
         bool IsWaitingForCommand();
