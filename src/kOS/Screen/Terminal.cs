@@ -11,16 +11,16 @@ using kOS.Safe.Utilities;
 
 namespace kOS.Screen
 {
-    public class Interpreter : TextEditor, IInterpreter
+    public class Terminal : TextEditor, ITerminal
     {
-        public const string InterpreterName = "interpreter";
+        public const string InterpreterName = "interpreter"; // TODONOW
         private readonly List<string> commandHistory = new List<string>();
         private int commandHistoryIndex;
         private bool locked;
 
         protected SharedObjects Shared { get; private set; }
 
-        public Interpreter(SharedObjects shared)
+        public Terminal(SharedObjects shared)
         {
             Shared = shared;
         }
@@ -31,7 +31,7 @@ namespace kOS.Screen
         {
             string commandText = LineBuilder.ToString();
 
-            if (Shared.InterpreterLink.IsCommandComplete(commandText))
+            if (Shared.Interpreter.IsCommandComplete(commandText))
             {
                 base.NewLine();
                 AddCommandHistoryEntry(commandText); // add to history first so that if ProcessCommand generates an exception,
@@ -69,7 +69,7 @@ namespace kOS.Screen
         {
             if (key == (char)UnicodeCommand.BREAK)
             {
-                Shared.InterpreterLink.BreakExecution(true);
+                Shared.Interpreter.BreakExecution(true);
                 LineBuilder.Remove(0, LineBuilder.Length); // why isn't there a StringBuilder.Clear()?
 
                 NewLine(); // process the now emptied line, to make it do all the updates it normally
@@ -137,7 +137,7 @@ namespace kOS.Screen
             try
             {
                 UnityEngine.Debug.Log("command: "+commandText);
-                Shared.InterpreterLink.ProcessCommand(commandText);
+                Shared.Interpreter.ProcessCommand(commandText);
             }
             catch (Exception e)
             {
@@ -150,7 +150,7 @@ namespace kOS.Screen
 
         public bool IsWaitingForCommand()
         {
-            return !locked && Shared.InterpreterLink.IsWaitingForCommand();
+            return !locked && Shared.Interpreter.IsWaitingForCommand();
         }
 
         public void SetInputLock(bool isLocked)
@@ -177,9 +177,9 @@ namespace kOS.Screen
 
         private class InterpreterPath : InternalPath
         {
-            private Interpreter interpreter;
+            private Terminal interpreter;
 
-            public InterpreterPath(Interpreter interpreter) : base()
+            public InterpreterPath(Terminal interpreter) : base()
             {
                 this.interpreter = interpreter;
             }

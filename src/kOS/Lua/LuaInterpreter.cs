@@ -13,13 +13,13 @@ using System.CodeDom;
 using NLua;
 using KeraLua;
 using kOS.Safe;
-using kOS.Safe.Lua;
 using kOS.Safe.Utilities;
 using Debug = UnityEngine.Debug;
+using kOS.Safe.Screen;
 
 namespace kOS.Lua
 {
-    public class LuaInterpreter : ILuaInterpreter
+    public class LuaInterpreter : IInterpreter, IFixedUpdateObserver
     {
         private NLua.Lua state;
         private KeraLua.Lua commandCoroutine;

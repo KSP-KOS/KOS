@@ -462,8 +462,8 @@ namespace kOS.Module
         private void OnInterpreterChanged(BaseField field, object prevValue)
         {
             UnityEngine.Debug.Log("interpreter changed. "+prevValue.ToString()+" to "+interpreterLanguage);
-            if (interpreterLanguage == "Lua") shared.InterpreterLink = new LuaInterpreter(shared);
-            else shared.InterpreterLink = new KSLink(shared);
+            if (interpreterLanguage == "Lua") shared.Interpreter = new LuaInterpreter(shared);
+            else shared.Interpreter = new KSInterpreter(shared);
         }
 
         private void InitUI()
@@ -605,8 +605,8 @@ namespace kOS.Module
             shared.KSPPart = part;
             shared.UpdateHandler = new UpdateHandler();
             shared.BindingMgr = new BindingManager(shared);
-            shared.Interpreter = new Screen.ConnectivityInterpreter(shared);
-            shared.Screen = shared.Interpreter;
+            shared.Terminal = new Screen.ConnectivityTerminal(shared);
+            shared.Screen = shared.Terminal;
             shared.ScriptHandler = new KSScript();
             shared.Logger = new KSPLogger(shared);
             shared.VolumeMgr = new ConnectivityVolumeManager(shared);
@@ -617,15 +617,8 @@ namespace kOS.Module
             shared.AddonManager = new AddOns.AddonManager(shared);
             shared.GameEventDispatchManager = new GameEventDispatchManager(shared);
 
-            if (interpreterLanguage == "Lua") shared.InterpreterLink = new LuaInterpreter(shared);
-            else shared.InterpreterLink = new KSLink(shared);
-            // TODO: proper names. Interpreter class should probably be called Terminal now
-            // Interpreter -> Terminal
-            // ConnectivityInterpreter -> ConnectivityTerminal
-            // IInterpreter -> ITerminal
-            // IInterpreterLink -> IInterpreter
-            // KSLink -> KSInterpreter
-
+            if (interpreterLanguage == "Lua") shared.Interpreter = new LuaInterpreter(shared);
+            else shared.Interpreter = new KSInterpreter(shared);
             // TODO: add methods like Boot, Shutdown to IInterpreterLink
             // OnInterpreterChanged would call them to swap interpreters out so they dont run at the same time
 
@@ -1136,7 +1129,7 @@ namespace kOS.Module
             {
                 // Because the processor is not STARVED, evaluate the power requirement based on actual operation.
                 // For EC drain purposes, always pretend atleast 1 instruction happened, so idle drain isn't quite zero:
-                int instructions = System.Math.Max(shared.InterpreterLink.InstructionsThisUpdate(), 1);
+                int instructions = System.Math.Max(shared.Interpreter.InstructionsThisUpdate(), 1);
                 var request = volumePower * time + instructions * ECPerInstruction;
                 if (request > 0)
                 {
@@ -1185,15 +1178,15 @@ namespace kOS.Module
                         shared.VolumeMgr.SwitchTo(HardDisk);
                     }
                     HasBooted = false; // When FixedUpdate() first happesn, then the boot will happen.
-                    if (shared.Interpreter != null) shared.Interpreter.SetInputLock(false);
+                    if (shared.Terminal != null) shared.Terminal.SetInputLock(false);
                     if (shared.Window != null) shared.Window.IsPowered = true;
                     foreach (var w in shared.ManagedWindows) w.IsPowered = true;
                     break;
 
                 case ProcessorModes.OFF:
                 case ProcessorModes.STARVED:
-                    if (shared.Cpu != null) shared.InterpreterLink.BreakExecution(true);
-                    if (shared.Interpreter != null) shared.Interpreter.SetInputLock(true);
+                    if (shared.Cpu != null) shared.Interpreter.BreakExecution(true);
+                    if (shared.Terminal != null) shared.Terminal.SetInputLock(true);
                     if (shared.Window != null) shared.Window.IsPowered = false;
                     if (shared.SoundMaker != null) shared.SoundMaker.StopAllVoices();
                     foreach (var w in shared.ManagedWindows) w.IsPowered = false;

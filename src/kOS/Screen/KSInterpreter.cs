@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace kOS.Screen
 {
-    public class KSLink : IInterpreterLink
+    public class KSInterpreter : IInterpreter
     {
         public const string InterpreterName = "interpreter";
 
         protected SharedObjects Shared { get; private set; }
 
-        public KSLink(SharedObjects shared)
+        public KSInterpreter(SharedObjects shared)
         {
             Shared = shared;            
         }
@@ -32,8 +32,8 @@ namespace kOS.Screen
                 IsCalledFromRun = false
             };
 
-            List<CodePart> commandParts = Shared.ScriptHandler.Compile(new InterpreterPath(Shared.Interpreter as Interpreter),
-                Shared.Interpreter.GetCommandHistoryIndex(), commandText, InterpreterName, options);
+            List<CodePart> commandParts = Shared.ScriptHandler.Compile(new InterpreterPath(Shared.Terminal as Terminal),
+                Shared.Terminal.GetCommandHistoryIndex(), commandText, InterpreterName, options);
             if (commandParts == null) return;
 
             var interpreterContext = ((CPU)Shared.Cpu).GetInterpreterContext();
@@ -66,9 +66,9 @@ namespace kOS.Screen
 
         private class InterpreterPath : InternalPath
         {
-            private Interpreter interpreter;
+            private Terminal interpreter;
 
-            public InterpreterPath(Interpreter interpreter) : base()
+            public InterpreterPath(Terminal interpreter) : base()
             {
                 this.interpreter = interpreter;
             }

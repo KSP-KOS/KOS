@@ -197,7 +197,6 @@
     <Compile Include="Function\IFunctionManager.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="IUpdateObserver.cs" />
-    <Compile Include="Lua\ILuaInterpreter.cs" />
     <Compile Include="Module\IProcessor.cs" />
     <Compile Include="Persistence\Archive.cs" />
     <Compile Include="Persistence\FileCategory.cs" />
@@ -213,8 +212,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Screen\ITerminal.cs" />
     <Compile Include="Screen\IInterpreter.cs" />
-    <Compile Include="Screen\IInterpreterLink.cs" />
     <Compile Include="Screen\IScreenBuffer.cs" />
     <Compile Include="Screen\IScreenBufferLine.cs" />
     <Compile Include="Screen\IScreenSnapshot.cs" />

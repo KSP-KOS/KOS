@@ -97,14 +97,14 @@
     </Compile>
     <Compile Include="Screen\GUIWindow.cs" />
     <Compile Include="Lua\LuaInterpreter.cs" />
-    <Compile Include="Screen\KSLink.cs" />
+    <Compile Include="Screen\KSInterpreter.cs" />
     <Compile Include="Sound\NoiseSoundWave.cs" />
     <Compile Include="Sound\NoteValue.cs" />
     <Compile Include="Sound\ProceduralSoundWave.cs" />
     <Compile Include="Sound\SquareSoundWave.cs" />
     <Compile Include="Sound\SawtoothSoundWave.cs" />
     <Compile Include="Sound\SineSoundWave.cs" />
-    <Compile Include="Screen\ConnectivityInterpreter.cs" />
+    <Compile Include="Screen\ConnectivityTerminal.cs" />
     <Compile Include="Sound\SoundMaker.cs" />
     <Compile Include="Sound\TriangleSoundWave.cs" />
     <Compile Include="Sound\Voice.cs" />
@@ -144,7 +144,7 @@
     <Compile Include="Suffixed\ElementValue.cs" />
     <Compile Include="Suffixed\FlightControl.cs" />
     <Compile Include="Suffixed\GeoCoordinates.cs" />
-    <Compile Include="Screen\Interpreter.cs" />
+    <Compile Include="Screen\Terminal.cs" />
     <Compile Include="Module\kOSProcessor.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Suffixed\IKOSTargetable.cs" />

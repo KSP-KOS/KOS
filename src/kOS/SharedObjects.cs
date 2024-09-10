@@ -53,7 +53,7 @@ namespace kOS
             if (SoundMaker != null) { SoundMaker.StopAllVoices(); }
             if (UpdateHandler != null) { UpdateHandler.ClearAllObservers(); }
             if (GameEventDispatchManager != null) { GameEventDispatchManager.Clear(); }
-            if (Interpreter != null) { Interpreter.RemoveAllResizeNotifiers(); }
+            if (Terminal != null) { Terminal.RemoveAllResizeNotifiers(); }
             var props = typeof(SharedObjects).GetProperties();
             IDisposable tempDisp;
             foreach (var prop in props)

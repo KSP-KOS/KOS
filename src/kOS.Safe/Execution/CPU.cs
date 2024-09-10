@@ -139,7 +139,7 @@ namespace kOS.Safe.Execution
             // clear global variables
             globalVariables.Clear();
             // clear interpreter
-            if (shared.Interpreter != null) shared.Interpreter.Reset();
+            if (shared.Terminal != null) shared.Terminal.Reset();
             // load functions
             if (shared.FunctionManager != null) shared.FunctionManager.Load();
             // load bindings
@@ -233,7 +233,7 @@ namespace kOS.Safe.Execution
 
             if (contexts.Count > 1)
             {
-                shared.Interpreter.SetInputLock(true);
+                shared.Terminal.SetInputLock(true);
             }
         }
 
@@ -268,7 +268,7 @@ namespace kOS.Safe.Execution
 
                 if (contexts.Count == 1)
                 {
-                    shared.Interpreter.SetInputLock(false);
+                    shared.Terminal.SetInputLock(false);
                 }
             }
             IsPoppingContext = false;
