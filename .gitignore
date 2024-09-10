@@ -40,6 +40,9 @@ packages/
 # Symlink to KSP directory
 KSPdirlink
 
+# Part thumbnails added through the KSP symlink
+Resources/GameData/kOS/Parts/@thumbs/
+
 # OS Specific
 .DS_STORE*
 [Tt]humbs.db
