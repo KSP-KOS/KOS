@@ -67,6 +67,7 @@ namespace kOS.Module
         private bool objectsInitialized = false;
         private int  numUpdatesAfterStartHappened = 0;
         private bool finishedRP1ProceduralAvionicsUpdate = false;
+        private bool interpreterChanged = false;
 
         public float AdditionalMass { get; set; }
 
@@ -459,11 +460,23 @@ namespace kOS.Module
             }
         }
 
-        private void OnInterpreterChanged(BaseField field, object prevValue)
+        private void OnInterpreterChanged(BaseField field, object buggyPrevValue)
         {
-            UnityEngine.Debug.Log("interpreter changed. "+prevValue.ToString()+" to "+interpreterLanguage);
-            if (interpreterLanguage == "Lua") shared.Interpreter = new LuaInterpreter(shared);
+            // change the interpreter on the next fixed update instead of now because when you 'core:setfield("interpreter", "Lua").'
+            // it would OnInterpreterChanged() > SetMode(*off*) > ProcessorModeChanged() > Shared.Interpreter.Shutdown() > Shared.Cpu.BreakExecution(true)
+            // and kerboscript errors when you BreakExecution in the middle of executing
+            // the error is really harmless but its unplesant when it pops up
+            interpreterChanged = true;
+            var prevValue = shared.Interpreter is LuaInterpreter? "Lua" : "KerboScript";
+            UnityEngine.Debug.Log("interpreter changed. "+prevValue+" to "+interpreterLanguage);
+        }
+
+        private void ChangeInterpreter()
+        {
+            SetMode(ProcessorModes.OFF);
+            if (interpreterLanguage.ToLower() == "lua") shared.Interpreter = new LuaInterpreter(shared);
             else shared.Interpreter = new KSInterpreter(shared);
+            SetMode(ProcessorModes.READY);
         }
 
         private void InitUI()
@@ -897,8 +910,13 @@ namespace kOS.Module
                 if (!HasBooted)
                 {
                     SafeHouse.Logger.LogWarning("First Update()");
-                    shared.Cpu.Boot(); // TODO: add to InterpreterLink
+                    shared.Interpreter.Boot();
                     HasBooted = true;
+                }
+                if (interpreterChanged)
+                {
+                    interpreterChanged = false;
+                    ChangeInterpreter();
                 }
                 UpdateVessel();
                 UpdateFixedObservers();
@@ -1185,7 +1203,7 @@ namespace kOS.Module
 
                 case ProcessorModes.OFF:
                 case ProcessorModes.STARVED:
-                    if (shared.Cpu != null) shared.Interpreter.BreakExecution(true);
+                    if (shared.Interpreter != null) shared.Interpreter.Shutdown();
                     if (shared.Terminal != null) shared.Terminal.SetInputLock(true);
                     if (shared.Window != null) shared.Window.IsPowered = false;
                     if (shared.SoundMaker != null) shared.SoundMaker.StopAllVoices();
@@ -1197,6 +1215,7 @@ namespace kOS.Module
 
         }
 
+        // TODO: this never gets called? We can use it to run programs on other kosprocessors. Perhaps even ones that are using different interpreters
         public void ExecuteInterProcCommand(InterProcCommand command)
         {
             if (command != null)

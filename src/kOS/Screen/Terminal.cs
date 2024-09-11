@@ -13,7 +13,7 @@ namespace kOS.Screen
 {
     public class Terminal : TextEditor, ITerminal
     {
-        public const string InterpreterName = "interpreter"; // TODONOW
+        public const string InterpreterName = "interpreter"; // TODO: this is used by KSPLogger, get it from IInterpreter after separating tracing logic
         private readonly List<string> commandHistory = new List<string>();
         private int commandHistoryIndex;
         private bool locked;
@@ -24,8 +24,6 @@ namespace kOS.Screen
         {
             Shared = shared;
         }
-
-
 
         protected override void NewLine()
         {
@@ -162,7 +160,6 @@ namespace kOS.Screen
 
         public override void Reset()
         {
-            Shared.ScriptHandler.ClearContext(InterpreterName);
             commandHistory.Clear();
             commandHistoryIndex = 0;
             base.Reset();
@@ -173,26 +170,6 @@ namespace kOS.Screen
             SaveCursorPos();
             base.PrintAt(textToPrint, row, column);
             RestoreCursorPos();
-        }
-
-        private class InterpreterPath : InternalPath
-        {
-            private Terminal interpreter;
-
-            public InterpreterPath(Terminal interpreter) : base()
-            {
-                this.interpreter = interpreter;
-            }
-
-            public override string Line(int line)
-            {
-                return interpreter.GetCommandHistoryAbsolute(line);
-            }
-
-            public override string ToString()
-            {
-                return InterpreterName;
-            }
         }
     }
 }

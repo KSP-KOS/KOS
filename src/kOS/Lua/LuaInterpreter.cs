@@ -26,12 +26,18 @@ namespace kOS.Lua
         private bool commandPending = false;
         private static int instructionsPerUpdate = SafeHouse.Config.InstructionsPerUpdate;
         private static int instructionsThisUpdate = 0;
+        private const string version = "5.4";
 
         protected SharedObjects Shared { get; private set; }
 
         public LuaInterpreter(SharedObjects shared)
         {
             Shared = shared;
+        }
+
+        public void Boot()
+        {
+            state?.Dispose();
             state = new NLua.Lua();
             commandCoroutine = state.State.NewThread();
             state["Shared"] = Shared;
@@ -43,10 +49,28 @@ namespace kOS.Lua
                     Debug.LogException(e);
                 }
             }
+            // TODO: boot files
+
+            Shared.Cpu.Boot(); // TODO: do lua only booting when we figure out what lua needs to run
+
+            if (Shared.Terminal != null) Shared.Terminal.Reset();
+            // Booting message
+            if (Shared.Screen != null)
+            {
+                Shared.Screen.ClearScreen();
+                string bootMessage = string.Format("kOS Operating System\nLua v{0}\n(manual at {1})\n \nProceed.\n", version, SafeHouse.DocumentationURL);
+                Shared.Screen.Print(bootMessage);
+            }
             Shared.UpdateHandler.AddFixedObserver(this);
         }
 
-        // This function will be running in c++ land so be careful about stuff being garbage collected
+        public void Shutdown()
+        {
+            Shared.UpdateHandler.RemoveFixedObserver(this);
+            BreakExecution(true);
+        }
+
+        // This function will be running in lua land so be careful about stuff being garbage collected
         // Setting instructionsThisUpdate and instructionsPerUpdate to static somehow prevents them from being collected
         private void YieldHook(System.IntPtr L, System.IntPtr ar)
         {

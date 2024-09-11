@@ -21,6 +21,21 @@ namespace kOS.Screen
             Shared = shared;            
         }
 
+        public void Boot()
+        {
+            Shared.UpdateHandler.AddFixedObserver(Shared.Cpu);
+            Shared.ScriptHandler.ClearContext(InterpreterName);
+            // TODO: ^ this line was previously in Shared.Terminal.Reset() and was being called from
+            // v Shared.Cpu.Boot() putting this line here changes the order of operations. Make sure nothing got broken
+            Shared.Cpu.Boot();
+        }
+
+        public void Shutdown() // Shutdown stops execution of kerboscript but keeps it alive
+        {
+            Shared.UpdateHandler.RemoveFixedObserver(Shared.Cpu);
+            BreakExecution(true);
+        }
+
         public void ProcessCommand(string commandText)
         {
             CompilerOptions options = new CompilerOptions
@@ -56,7 +71,7 @@ namespace kOS.Screen
 
         public void BreakExecution(bool manual)
         {
-            Shared.Cpu.BreakExecution(manual);
+            Shared.Cpu?.BreakExecution(manual);
         }
 
         public int InstructionsThisUpdate()
@@ -66,16 +81,16 @@ namespace kOS.Screen
 
         private class InterpreterPath : InternalPath
         {
-            private Terminal interpreter;
+            private Terminal terminal;
 
-            public InterpreterPath(Terminal interpreter) : base()
+            public InterpreterPath(Terminal terminal) : base()
             {
-                this.interpreter = interpreter;
+                this.terminal = terminal;
             }
 
             public override string Line(int line)
             {
-                return interpreter.GetCommandHistoryAbsolute(line);
+                return terminal.GetCommandHistoryAbsolute(line);
             }
 
             public override string ToString()
