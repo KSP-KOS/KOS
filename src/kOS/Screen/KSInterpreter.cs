@@ -38,21 +38,32 @@ namespace kOS.Screen
 
         public void ProcessCommand(string commandText)
         {
-            CompilerOptions options = new CompilerOptions
+            if (Shared.ScriptHandler == null) return;
+            try
             {
-                LoadProgramsInSameAddressSpace = false,
-                FuncManager = Shared.FunctionManager,
-                BindManager = Shared.BindingMgr,
-                AllowClobberBuiltins = SafeHouse.Config.AllowClobberBuiltIns,
-                IsCalledFromRun = false
-            };
+                CompilerOptions options = new CompilerOptions
+                {
+                    LoadProgramsInSameAddressSpace = false,
+                    FuncManager = Shared.FunctionManager,
+                    BindManager = Shared.BindingMgr,
+                    AllowClobberBuiltins = SafeHouse.Config.AllowClobberBuiltIns,
+                    IsCalledFromRun = false
+                };
 
-            List<CodePart> commandParts = Shared.ScriptHandler.Compile(new InterpreterPath(Shared.Terminal as Terminal),
-                Shared.Terminal.GetCommandHistoryIndex(), commandText, InterpreterName, options);
-            if (commandParts == null) return;
+                List<CodePart> commandParts = Shared.ScriptHandler.Compile(new InterpreterPath(Shared.Terminal as Terminal),
+                    Shared.Terminal.GetCommandHistoryIndex(), commandText, InterpreterName, options);
+                if (commandParts == null) return;
 
-            var interpreterContext = ((CPU)Shared.Cpu).GetInterpreterContext();
-            interpreterContext.AddParts(commandParts);
+                var interpreterContext = ((CPU)Shared.Cpu).GetInterpreterContext();
+                interpreterContext.AddParts(commandParts);
+            }
+            catch (Exception e)
+            {
+                if (Shared.Logger != null)
+                {
+                    Shared.Logger.Log(e);
+                }
+            }
         }
 
         public bool IsCommandComplete(string commandText)

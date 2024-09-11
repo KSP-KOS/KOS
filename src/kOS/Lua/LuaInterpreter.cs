@@ -26,7 +26,7 @@ namespace kOS.Lua
         private bool commandPending = false;
         private static int instructionsPerUpdate = SafeHouse.Config.InstructionsPerUpdate;
         private static int instructionsThisUpdate = 0;
-        private const string version = "5.4";
+        public const string luaVersion = "5.4";
 
         protected SharedObjects Shared { get; private set; }
 
@@ -37,9 +37,9 @@ namespace kOS.Lua
 
         public void Boot()
         {
-            state?.Dispose();
             state = new NLua.Lua();
             commandCoroutine = state.State.NewThread();
+            commandCoroutine.SetHook(YieldHook, LuaHookMask.Count, 1);
             state["Shared"] = Shared;
             state["FlightGlobals"] = UnityEngine.MonoBehaviour.FindObjectOfType<FlightGlobals>();
             using (var streamReader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("kOS.Lua.init.lua"))) {
@@ -58,7 +58,7 @@ namespace kOS.Lua
             if (Shared.Screen != null)
             {
                 Shared.Screen.ClearScreen();
-                string bootMessage = string.Format("kOS Operating System\nLua v{0}\n(manual at {1})\n \nProceed.\n", version, SafeHouse.DocumentationURL);
+                string bootMessage = string.Format("kOS Operating System\nLua v{0}\n(manual at {1})\n \nProceed.\n", luaVersion, SafeHouse.DocumentationURL);
                 Shared.Screen.Print(bootMessage);
             }
             Shared.UpdateHandler.AddFixedObserver(this);
@@ -67,7 +67,7 @@ namespace kOS.Lua
         public void Shutdown()
         {
             Shared.UpdateHandler.RemoveFixedObserver(this);
-            BreakExecution(true);
+            state?.Dispose();
         }
 
         // This function will be running in lua land so be careful about stuff being garbage collected
@@ -82,31 +82,28 @@ namespace kOS.Lua
 
         public void ProcessCommand(string commandText)
         {
-            // TODO: use the chunk just created by IsCommandComplete and use C api instead of dostring
-            // reuse commandCoroutine?
-            state.DoString($@"
-commandCoroutine = coroutine.create(assert(load([=[{commandText}]=], ""chunk"", ""t"", _ENV)))
-            ");
-            state.State.GetGlobal("commandCoroutine");
-            commandCoroutine.Dispose();
-            commandCoroutine = state.State.ToThread(-1);
-            state.State.Pop(1);
-
-            // TODO: investigate performance and potentially find an alternative
-            // also make sure calling the yieldhook doesnt count as more instructions and if it does subtract them from instructionsThisUpdate
-            commandCoroutine.SetHook(YieldHook, LuaHookMask.Count, 1);
-            commandPending = true;
+            if ((LuaStatus)commandCoroutine.ResetThread() != LuaStatus.OK || commandCoroutine.LoadString(commandText, "command") != LuaStatus.OK)
+            {
+                var err = commandCoroutine.ToString(-1);
+                commandCoroutine.Pop(1);
+                DisplayError(err);
+            } else
+            {
+                commandPending = true;
+            }
         }
 
         public bool IsCommandComplete(string commandText)
         {
-            var status = commandCoroutine.LoadString(commandText);
-            if (status == LuaStatus.ErrSyntax)
+            if (commandCoroutine.LoadString(commandText) == LuaStatus.ErrSyntax)
             {
                 var err = commandCoroutine.ToString(-1);
+                commandCoroutine.Pop(1);
+                // if the error is not caused by leaving stuff like do('"{ open let it go to ProcessCommand to be displayed to the user
                 return !err.EndsWith("<eof>");
             }
-            return true; // TODO: do i need to pop?
+            commandCoroutine.Pop(1);
+            return true;
         }
 
         public bool IsWaitingForCommand()
@@ -116,13 +113,11 @@ commandCoroutine = coroutine.create(assert(load([=[{commandText}]=], ""chunk"", 
 
         public void BreakExecution(bool manual)
         {
-            commandCoroutine.Dispose();
-            commandCoroutine = state.State.NewThread();
+            commandCoroutine.ResetThread();
         }
 
         public int InstructionsThisUpdate()
         {
-            //Debug.Log(Shared.Processor.Tag+" instructionsThisUpdate: "+instructionsThisUpdate);
             return instructionsThisUpdate;
         }
 
@@ -137,7 +132,7 @@ commandCoroutine = coroutine.create(assert(load([=[{commandText}]=], ""chunk"", 
                 LuaStatus status = commandCoroutine.Resume(state.State, 0);
                 if (status != LuaStatus.OK & status != LuaStatus.Yield)
                 {
-                    Shared.Logger.Log(new Exception(commandCoroutine.ToString(-1)));
+                    DisplayError(commandCoroutine.ToString(-1));
                 }
             }
         }
@@ -146,6 +141,13 @@ commandCoroutine = coroutine.create(assert(load([=[{commandText}]=], ""chunk"", 
         {
             state.Dispose();
             Shared.UpdateHandler.RemoveFixedObserver(this);
+        }
+
+        private void DisplayError(string errorMessage)
+        {
+            Shared.Logger.Log("lua error: "+errorMessage);
+            Shared.SoundMaker.BeginFileSound("error");
+            Shared.Screen.Print(errorMessage);
         }
     }
 }

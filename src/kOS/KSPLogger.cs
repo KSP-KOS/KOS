@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -130,7 +130,7 @@ namespace kOS
                     else
                         msg += "Called from ";
                     
-                    msg += (thisOpcode is OpcodeEOF) ? Terminal.InterpreterName
+                    msg += (thisOpcode is OpcodeEOF) ? KSInterpreter.InterpreterName
                         : BuildLocationString(thisOpcode.SourcePath, thisOpcode.SourceLine);
                     msg += "\n" + textLine + "\n";
 

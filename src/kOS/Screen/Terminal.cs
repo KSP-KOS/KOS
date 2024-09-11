@@ -13,7 +13,6 @@ namespace kOS.Screen
 {
     public class Terminal : TextEditor, ITerminal
     {
-        public const string InterpreterName = "interpreter"; // TODO: this is used by KSPLogger, get it from IInterpreter after separating tracing logic
         private readonly List<string> commandHistory = new List<string>();
         private int commandHistoryIndex;
         private bool locked;
@@ -130,20 +129,7 @@ namespace kOS.Screen
 
         protected virtual void ProcessCommand(string commandText)
         {
-            if (Shared.ScriptHandler == null) return;
-
-            try
-            {
-                UnityEngine.Debug.Log("command: "+commandText);
-                Shared.Interpreter.ProcessCommand(commandText);
-            }
-            catch (Exception e)
-            {
-                if (Shared.Logger != null)
-                {
-                    Shared.Logger.Log(e);
-                }
-            }
+            Shared.Interpreter.ProcessCommand(commandText);
         }
 
         public bool IsWaitingForCommand()
