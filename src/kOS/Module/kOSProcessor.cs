@@ -89,10 +89,13 @@ namespace kOS.Module
         private const string BootDirectoryName = "boot";
 
         [KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Interpreter", groupName = PAWGroup, groupDisplayName = PAWGroup), UI_ChooseOption(scene = UI_Scene.All)]
-        public string interpreterLanguage = "KerboScript";
+        public string interpreterLanguage = "kerboscript";
 
         [KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Boot File", groupName = PAWGroup, groupDisplayName = PAWGroup), UI_ChooseOption(scene = UI_Scene.Editor)]
         public string bootFile = "None";
+
+        [KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Lua Boot File", groupName = PAWGroup, groupDisplayName = PAWGroup), UI_ChooseOption(scene = UI_Scene.Editor)]
+        public string luaBootFile = "None";
 
         [KSPField(isPersistant = true, guiName = "kOS Disk Space", guiActive = true, groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public int diskSpace = 1024;
@@ -150,9 +153,9 @@ namespace kOS.Module
         public VolumePath BootFilePath {
             get
             {
-                if (string.IsNullOrEmpty(bootFile) || bootFile.Equals("None", StringComparison.OrdinalIgnoreCase))
+                if (string.IsNullOrEmpty(BootFilename) || BootFilename.Equals("None", StringComparison.OrdinalIgnoreCase))
                     return null;
-                return VolumePath.FromString(bootFile);
+                return VolumePath.FromString(BootFilename);
             }
         }
 
@@ -447,17 +450,19 @@ namespace kOS.Module
         private void InitInterpreterField(StartState state)
         {
             BaseField interpreterLanguageField = Fields["interpreterLanguage"];
-            List<string> interpreterOptions = new List<string> { "KerboScript", "Lua" };
-            if (state == StartState.Editor) // TODO: show available boot files based on the selected interpreter
+            string[] interpreterDisplayNames = { "KerboScript", "Lua" };
+            UI_ChooseOption interpreterLanguageOption;
+            if (state == StartState.Editor)
             {
-                var interpreterLanguageOption = (UI_ChooseOption)interpreterLanguageField.uiControlEditor;
-                interpreterLanguageOption.options = interpreterOptions.ToArray();
+                interpreterLanguageOption = (UI_ChooseOption)interpreterLanguageField.uiControlEditor;
+                interpreterLanguageOption.onFieldChanged = (BaseField field, object obj) => InitUI();
             } else
             {
-                var interpreterLanguageOption = (UI_ChooseOption)interpreterLanguageField.uiControlFlight;
-                interpreterLanguageOption.options = interpreterOptions.ToArray();
+                interpreterLanguageOption = (UI_ChooseOption)interpreterLanguageField.uiControlFlight;
                 interpreterLanguageOption.onFieldChanged = OnInterpreterChanged;
             }
+            interpreterLanguageOption.display = interpreterDisplayNames;
+            interpreterLanguageOption.options = interpreterDisplayNames.Select((display) => display.ToLower()).ToArray();
         }
 
         private void OnInterpreterChanged(BaseField field, object buggyPrevValue)
@@ -466,23 +471,35 @@ namespace kOS.Module
             // it would OnInterpreterChanged() > SetMode(*off*) > ProcessorModeChanged() > Shared.Interpreter.Shutdown() > Shared.Cpu.BreakExecution(true)
             // and kerboscript errors when you BreakExecution in the middle of executing
             // the error is really harmless but its unplesant when it pops up
+            interpreterLanguage = interpreterLanguage.ToLower();
             interpreterChanged = true;
             var prevValue = shared.Interpreter is LuaInterpreter? "Lua" : "KerboScript";
-            UnityEngine.Debug.Log("interpreter changed. "+prevValue+" to "+interpreterLanguage);
+            shared.Logger.Log("interpreter changed. "+prevValue+" to "+interpreterLanguage);
         }
 
         private void ChangeInterpreter()
         {
-            SetMode(ProcessorModes.OFF);
             if (interpreterLanguage.ToLower() == "lua") shared.Interpreter = new LuaInterpreter(shared);
             else shared.Interpreter = new KSInterpreter(shared);
-            SetMode(ProcessorModes.READY);
         }
 
         private void InitUI()
         {
             //Populate selector for boot scripts
-            BaseField field = Fields["bootFile"];
+            BaseField ksField = Fields["bootFile"];
+            BaseField luaField = Fields["luaBootFile"];
+            BaseField field;
+            if (interpreterLanguage == "lua")
+            {
+                field = luaField;
+                ksField.guiActiveEditor = false;
+                ((UI_ChooseOption)ksField.uiControlEditor).controlEnabled = false;
+            } else
+            {
+                field = ksField;
+                luaField.guiActiveEditor = false;
+                ((UI_ChooseOption)luaField.uiControlEditor).controlEnabled = false;
+            }
             var options = (UI_ChooseOption)field.uiControlEditor;
 
             var bootFiles = new List<VolumePath>();
@@ -538,15 +555,15 @@ namespace kOS.Module
                 if (file != null)
                 {
                     // store the boot file information
-                    bootFile = file.Path.ToString();
+                    BootFilename = file.Path.ToString();
                     if (!bootFiles.Contains(file.Path))
                     {
-                        availableOptions.Insert(1, bootFile);
+                        availableOptions.Insert(1, BootFilename);
                         availableDisplays.Insert(1, "*" + file.Path.Name); // "*" is indication the file is not normally available
                     }
                 }
             }
-            SafeHouse.Logger.SuperVerbose("bootFile: " + bootFile);
+            SafeHouse.Logger.SuperVerbose("bootFile: " + BootFilename);
 
             options.options = availableOptions.ToArray();
             options.display = availableDisplays.ToArray();
@@ -588,8 +605,10 @@ namespace kOS.Module
 
             foreach (KeyValuePair<string, VolumeItem> pair in files)
             {
-                if (pair.Value is VolumeFile && (pair.Value.Extension.Equals(Volume.KERBOSCRIPT_EXTENSION)
-                    || pair.Value.Extension.Equals(Volume.KOS_MACHINELANGUAGE_EXTENSION)))
+                string[] filenameExtensions = interpreterLanguage == "lua" ?
+                    LuaInterpreter.FilenameExtensions :
+                    KSInterpreter.FilenameExtensions;
+                if (pair.Value is VolumeFile && filenameExtensions.Any(extension => extension == pair.Value.Extension))
                 {
                     result.Add(pair.Value.Path);
                 }
@@ -630,10 +649,7 @@ namespace kOS.Module
             shared.AddonManager = new AddOns.AddonManager(shared);
             shared.GameEventDispatchManager = new GameEventDispatchManager(shared);
 
-            if (interpreterLanguage == "Lua") shared.Interpreter = new LuaInterpreter(shared);
-            else shared.Interpreter = new KSInterpreter(shared);
-            // TODO: add methods like Boot, Shutdown to IInterpreterLink
-            // OnInterpreterChanged would call them to swap interpreters out so they dont run at the same time
+            ChangeInterpreter();
 
             // Make the window that is going to correspond to this kOS part:
             shared.Window = gameObject.AddComponent<Screen.TermWindow>();
@@ -916,7 +932,9 @@ namespace kOS.Module
                 if (interpreterChanged)
                 {
                     interpreterChanged = false;
+                    SetMode(ProcessorModes.OFF);
                     ChangeInterpreter();
+                    SetMode(ProcessorModes.READY);
                 }
                 UpdateVessel();
                 UpdateFixedObservers();
@@ -1232,8 +1250,8 @@ namespace kOS.Module
 
         public string BootFilename
         {
-            get { return bootFile; }
-            set { bootFile = value; }
+            get { return interpreterLanguage == "lua"? luaBootFile : bootFile; }
+            set { if (interpreterLanguage == "lua") luaBootFile = value; else bootFile = value; }
         }
 
         public bool CheckCanBoot()

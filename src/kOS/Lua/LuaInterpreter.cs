@@ -16,6 +16,7 @@ using kOS.Safe;
 using kOS.Safe.Utilities;
 using Debug = UnityEngine.Debug;
 using kOS.Safe.Screen;
+using kOS.Safe.Persistence;
 
 namespace kOS.Lua
 {
@@ -27,6 +28,7 @@ namespace kOS.Lua
         private static int instructionsPerUpdate = SafeHouse.Config.InstructionsPerUpdate;
         private static int instructionsThisUpdate = 0;
         public const string luaVersion = "5.4";
+        public static readonly string[] FilenameExtensions = new string[] { "lua" };
 
         protected SharedObjects Shared { get; private set; }
 
@@ -49,9 +51,10 @@ namespace kOS.Lua
                     Debug.LogException(e);
                 }
             }
-            // TODO: boot files
 
-            Shared.Cpu.Boot(); // TODO: do lua only booting when we figure out what lua needs to run
+            if (Shared.GameEventDispatchManager != null) Shared.GameEventDispatchManager.Clear();
+            if (Shared.FunctionManager != null) Shared.FunctionManager.Load();
+            if (Shared.BindingMgr != null) Shared.BindingMgr.Load();
 
             if (Shared.Terminal != null) Shared.Terminal.Reset();
             // Booting message
@@ -60,6 +63,38 @@ namespace kOS.Lua
                 Shared.Screen.ClearScreen();
                 string bootMessage = string.Format("kOS Operating System\nLua v{0}\n(manual at {1})\n \nProceed.\n", luaVersion, SafeHouse.DocumentationURL);
                 Shared.Screen.Print(bootMessage);
+            }
+
+            if (!Shared.Processor.CheckCanBoot()) return;
+
+            VolumePath path = Shared.Processor.BootFilePath;
+            // Check to make sure the boot file name is valid, and then that the boot file exists.
+            if (path == null)
+            {
+                SafeHouse.Logger.Log("Boot file name is empty, skipping boot script");
+            }
+            else
+            {
+                // Boot is only called once right after turning the processor on,
+                // the volume cannot yet have been changed from that set based on
+                // Config.StartOnArchive, and Processor.CheckCanBoot() has already
+                // handled the range check for the archive.
+                Volume sourceVolume = Shared.VolumeMgr.CurrentVolume;
+                var file = Shared.VolumeMgr.CurrentVolume.Open(path) as VolumeFile;
+                if (file == null)
+                {
+                    SafeHouse.Logger.Log(string.Format("Boot file \"{0}\" is missing, skipping boot script", path));
+                }
+                else
+                {
+                    var content = file.ReadAll();
+                    if (content == null)
+                    {
+                        DisplayError(string.Format("File '{0}' not found", path));
+                        return;
+                    }
+                    ProcessCommand(content.String); // TODO: run through dofile when its ready
+                }
             }
             Shared.UpdateHandler.AddFixedObserver(this);
         }

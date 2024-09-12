@@ -1,5 +1,6 @@
 using kOS.Safe.Binding;
 using kOS.Safe.Utilities;
+using kOS.Screen;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -81,7 +82,10 @@ namespace kOS.Binding
                     Name = name,
                 };
                 variables.Add(name, variable);
-                shared.Cpu.AddVariable(variable, name, false);
+                if (shared.Interpreter is KSInterpreter)
+                {
+                    shared.Cpu.AddVariable(variable, name, false);
+                }
             }
 
             if (getDelegate != null)

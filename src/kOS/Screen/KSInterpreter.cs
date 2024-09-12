@@ -1,5 +1,6 @@
 using kOS.Safe.Compilation;
 using kOS.Safe.Execution;
+using kOS.Safe.Persistence;
 using kOS.Safe.Screen;
 using kOS.Safe.Utilities;
 using System;
@@ -13,6 +14,7 @@ namespace kOS.Screen
     public class KSInterpreter : IInterpreter
     {
         public const string InterpreterName = "interpreter";
+        public static readonly string[] FilenameExtensions = new string[] { Volume.KERBOSCRIPT_EXTENSION, Volume.KOS_MACHINELANGUAGE_EXTENSION };
 
         protected SharedObjects Shared { get; private set; }
 
