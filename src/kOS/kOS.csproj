@@ -80,6 +80,7 @@
     <Compile Include="Function\Persistence.cs" />
     <Compile Include="Function\Suffixed.cs" />
     <Compile Include="KSPLogger.cs" />
+    <Compile Include="Lua\Binding.cs" />
     <Compile Include="Module\Bootstrapper.cs" />
     <Compile Include="Module\AutopilotMsgManager.cs" />
     <Compile Include="Module\kOSCustomParameters.cs" />

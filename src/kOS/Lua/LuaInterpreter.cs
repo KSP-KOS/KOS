@@ -42,6 +42,7 @@ namespace kOS.Lua
             state = new NLua.Lua();
             commandCoroutine = state.State.NewThread();
             commandCoroutine.SetHook(YieldHook, LuaHookMask.Count, 1);
+            Shared.UpdateHandler.AddFixedObserver(this);
             state["Shared"] = Shared;
             state["FlightGlobals"] = UnityEngine.MonoBehaviour.FindObjectOfType<FlightGlobals>();
             using (var streamReader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("kOS.Lua.init.lua"))) {
@@ -55,6 +56,8 @@ namespace kOS.Lua
             if (Shared.GameEventDispatchManager != null) Shared.GameEventDispatchManager.Clear();
             if (Shared.FunctionManager != null) Shared.FunctionManager.Load();
             if (Shared.BindingMgr != null) Shared.BindingMgr.Load();
+
+            Binding.BindToState(commandCoroutine, Shared);
 
             if (Shared.Terminal != null) Shared.Terminal.Reset();
             // Booting message
@@ -96,7 +99,6 @@ namespace kOS.Lua
                     ProcessCommand(content.String); // TODO: run through dofile when its ready
                 }
             }
-            Shared.UpdateHandler.AddFixedObserver(this);
         }
 
         public void Shutdown()
@@ -105,11 +107,9 @@ namespace kOS.Lua
             state?.Dispose();
         }
 
-        // This function will be running in lua land so be careful about stuff being garbage collected
-        // Setting instructionsThisUpdate and instructionsPerUpdate to static somehow prevents them from being collected
-        private void YieldHook(System.IntPtr L, System.IntPtr ar)
+        private static void YieldHook(IntPtr L, IntPtr ar)
         {
-            if (instructionsThisUpdate++ >= instructionsPerUpdate)
+            if (++instructionsThisUpdate >= instructionsPerUpdate)
             {
                 KeraLua.Lua.FromIntPtr(L).Yield(0);
             }
@@ -167,6 +167,7 @@ namespace kOS.Lua
                 LuaStatus status = commandCoroutine.Resume(state.State, 0);
                 if (status != LuaStatus.OK & status != LuaStatus.Yield)
                 {
+                    commandCoroutine.ResetThread();
                     DisplayError(commandCoroutine.ToString(-1));
                 }
             }
@@ -178,7 +179,7 @@ namespace kOS.Lua
             Shared.UpdateHandler.RemoveFixedObserver(this);
         }
 
-        private void DisplayError(string errorMessage)
+        public void DisplayError(string errorMessage)
         {
             Shared.Logger.Log("lua error: "+errorMessage);
             Shared.SoundMaker.BeginFileSound("error");

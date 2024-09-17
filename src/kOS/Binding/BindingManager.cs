@@ -26,6 +26,7 @@ namespace kOS.Binding
         private static readonly HashSet<KeyValuePair<BindingAttribute, Type>> rawAttributes = new HashSet<KeyValuePair<BindingAttribute, Type>>();
 
         private FlightControlManager flightControl;
+        public Dictionary<string, BoundVariable> RawVariables => variables;
 
         public BindingManager(SharedObjects shared)
         {

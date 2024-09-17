@@ -8,7 +8,7 @@ namespace kOS.Binding
     {
         public override void AddTo(SharedObjects shared)
         {
-            shared.BindingMgr.AddGetter("OPCODESLEFT", delegate { return kOSCustomParameters.Instance.InstructionsPerUpdate - shared.Cpu.InstructionsThisUpdate; });
+            shared.BindingMgr.AddGetter("OPCODESLEFT", delegate { return kOSCustomParameters.Instance.InstructionsPerUpdate - shared.Interpreter.InstructionsThisUpdate(); });
             shared.BindingMgr.MarkVolatile("OPCODESLEFT");
         }
     }
