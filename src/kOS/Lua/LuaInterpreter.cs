@@ -27,6 +27,7 @@ namespace kOS.Lua
         private bool commandPending = false;
         private static int instructionsPerUpdate = SafeHouse.Config.InstructionsPerUpdate;
         private static int instructionsThisUpdate = 0;
+        private const string interpreterName = "lua";
         public const string luaVersion = "5.4";
         public static readonly string[] FilenameExtensions = new string[] { "lua" };
 
@@ -36,6 +37,8 @@ namespace kOS.Lua
         {
             Shared = shared;
         }
+
+        public string GetName() => interpreterName;
 
         public void Boot()
         {

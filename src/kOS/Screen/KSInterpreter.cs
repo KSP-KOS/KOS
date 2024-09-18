@@ -13,7 +13,8 @@ namespace kOS.Screen
 {
     public class KSInterpreter : IInterpreter
     {
-        public const string InterpreterName = "interpreter";
+        private const string interpreterName = "kerboscript";
+        public const string traceName = "interpreter";
         public static readonly string[] FilenameExtensions = new string[] { Volume.KERBOSCRIPT_EXTENSION, Volume.KOS_MACHINELANGUAGE_EXTENSION };
 
         protected SharedObjects Shared { get; private set; }
@@ -23,10 +24,12 @@ namespace kOS.Screen
             Shared = shared;            
         }
 
+        public string GetName() => interpreterName;
+
         public void Boot()
         {
             Shared.UpdateHandler.AddFixedObserver(Shared.Cpu);
-            Shared.ScriptHandler.ClearContext(InterpreterName);
+            Shared.ScriptHandler.ClearContext(traceName);
             // TODO: ^ this line was previously in Shared.Terminal.Reset() and was being called from
             // v Shared.Cpu.Boot() putting this line here changes the order of operations. Make sure nothing got broken
             Shared.Cpu.Boot();
@@ -53,7 +56,7 @@ namespace kOS.Screen
                 };
 
                 List<CodePart> commandParts = Shared.ScriptHandler.Compile(new InterpreterPath(Shared.Terminal as Terminal),
-                    Shared.Terminal.GetCommandHistoryIndex(), commandText, InterpreterName, options);
+                    Shared.Terminal.GetCommandHistoryIndex(), commandText, traceName, options);
                 if (commandParts == null) return;
 
                 var interpreterContext = ((CPU)Shared.Cpu).GetInterpreterContext();
@@ -108,7 +111,7 @@ namespace kOS.Screen
 
             public override string ToString()
             {
-                return InterpreterName;
+                return traceName;
             }
         }
     }

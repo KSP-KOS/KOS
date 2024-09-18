@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Compilation;
+using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using System;
@@ -8,6 +8,9 @@ namespace kOS.Safe.Function
 {
     public abstract class SafeFunctionBase
     {
+        public IStackOperator stackOperator;
+        public string functionName;
+
         /// <summary>
         /// ALL FUNCTIONS in kOS will always have exactly one return value.  We have no
         /// "void" functions, to keep the execution logic consistent and simple.  Therefore
@@ -101,14 +104,7 @@ namespace kOS.Safe.Function
         /// If the assert fails, an exception is thrown.
         /// </summary>
         /// <param name="shared"></param>
-        protected void AssertArgBottomAndConsume(SafeSharedObjects shared)
-        {
-            object shouldBeBottom = shared.Cpu.PopArgumentStack();
-            if (shouldBeBottom != null && shouldBeBottom.GetType() == OpcodeCall.ArgMarkerType)
-                return; // Assert passed.
-
-            throw new KOSArgumentMismatchException("Too many arguments were passed to " + GetFuncName());
-        }
+        protected void AssertArgBottomAndConsume(SafeSharedObjects shared) => stackOperator.AssertArgBottomAndConsume(shared, functionName);
 
         /// <summary>
         /// A utility function that a function's Execute() may use if it wishes to, to get a count of
@@ -116,24 +112,7 @@ namespace kOS.Safe.Function
         /// </summary>
         /// <param name="shared"></param>
         /// <returns>Number of args as yet unpopped.  returns zero if there are no args, or -1 if there's a bug and the argstart marker is missing.</returns>
-        protected int CountRemainingArgs(SafeSharedObjects shared)
-        {
-            int depth = 0;
-            bool found = false;
-            bool stillInStack = true;
-            while (stillInStack && !found)
-            {
-                object peekItem = shared.Cpu.PeekRawArgument(depth, out stillInStack);
-                if (stillInStack && peekItem != null && peekItem.GetType() == OpcodeCall.ArgMarkerType)
-                    found = true;
-                else
-                    ++depth;
-            }
-            if (found)
-                return depth;
-            else
-                return -1;
-        }
+        protected int CountRemainingArgs(SafeSharedObjects shared) => stackOperator.CountRemainingArgs(shared);
 
         /// <summary>
         /// A utility function that a function's Execute() should use in place of cpu.PopValue(),
@@ -141,13 +120,7 @@ namespace kOS.Safe.Function
         /// is, it will throw the appropriate error.
         /// </summary>
         /// <returns></returns>
-        protected object PopValueAssert(SafeSharedObjects shared, bool barewordOkay = false)
-        {
-            object returnValue = shared.Cpu.PopValueArgument(barewordOkay);
-            if (returnValue != null && returnValue.GetType() == OpcodeCall.ArgMarkerType)
-                throw new KOSArgumentMismatchException("Too few arguments were passed to " + GetFuncName());
-            return returnValue;
-        }
+        protected object PopValueAssert(SafeSharedObjects shared, bool barewordOkay = false) => stackOperator.PopValueAssert(shared, functionName, barewordOkay);
 
         /// <summary>
         /// A utility function that a function's Execute() should use in place of cpu.PopArgumentStack(),
@@ -155,13 +128,7 @@ namespace kOS.Safe.Function
         /// is, it will throw the appropriate error.
         /// </summary>
         /// <returns></returns>
-        protected object PopStackAssert(SafeSharedObjects shared)
-        {
-            object returnValue = shared.Cpu.PopArgumentStack();
-            if (returnValue != null && returnValue.GetType() == OpcodeCall.ArgMarkerType)
-                throw new KOSArgumentMismatchException("Too few arguments were passed to " + GetFuncName());
-            return returnValue;
-        }
+        protected object PopStackAssert(SafeSharedObjects shared) => stackOperator.PopStackAssert(shared, functionName);
 
         /// <summary>
         /// Identical to PopValueAssert, but with the additional step of coercing the result
@@ -174,22 +141,6 @@ namespace kOS.Safe.Function
             return Structure.FromPrimitiveWithAssert(returnValue);
         }
 
-        protected string GetFuncName()
-        {
-            // The following is all just to extract the function name from the attribute.
-            // That really should be easier
-            string funcName = "<unknown function name>"; // hopefully this cannot ever get seen by the user because of the next lines.
-            FunctionAttribute attr = (FunctionAttribute)GetType().GetCustomAttributes(typeof(FunctionAttribute), true).FirstOrDefault();
-            if (attr != null)
-            {
-                // Of all the possible alias names, lets pick the longest one, as the most verbose description:
-                string longestOne = "";
-                foreach (string name in attr.Names)
-                    if (name.Length > longestOne.Length)
-                        longestOne = name;
-                funcName = longestOne;
-            }
-            return funcName;
-        }
+        protected string GetFuncName() => functionName;
     }
 }

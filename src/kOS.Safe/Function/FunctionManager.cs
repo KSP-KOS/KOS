@@ -13,6 +13,8 @@ namespace kOS.Safe.Function
         private Dictionary<string, SafeFunctionBase> functions;
         private static readonly Dictionary<FunctionAttribute, Type> rawAttributes = new Dictionary<FunctionAttribute, Type>();
 
+        public Dictionary<string, SafeFunctionBase> RawFunctions => functions;
+
         public FunctionManager(SafeSharedObjects shared)
         {
             this.shared = shared;
@@ -27,11 +29,18 @@ namespace kOS.Safe.Function
                 var type = rawAttributes[attr];
                 if (attr == null || type == null) continue;
                 object functionObject = Activator.CreateInstance(type);
+                string longestName = attr.Names.Aggregate(string.Empty, (max, cur) => cur.Length > max.Length? cur : max);
                 foreach (string functionName in attr.Names)
                 {
                     if (functionName != string.Empty)
                     {
-                        functions.Add(functionName, (SafeFunctionBase)functionObject);
+                        var function = (SafeFunctionBase)functionObject;
+                        function.functionName = longestName;
+                        if (shared.Interpreter.GetName() == "lua")
+                            function.stackOperator = new LuaStackOperator();
+                        else
+                            function.stackOperator = new KSStackOperator();
+                        functions.Add(functionName, function);
                     }
                 }
             }

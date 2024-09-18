@@ -1,10 +1,12 @@
 using KeraLua;
 using kOS.Binding;
+using kOS.Safe;
 using kOS.Safe.Binding;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Execution;
+using kOS.Safe.Function;
 using kOS.Safe.Utilities;
 using System;
 using System.Collections.Generic;
@@ -15,6 +17,7 @@ namespace kOS.Lua
     internal class Binding
     {
         private static readonly Dictionary<IntPtr, BindingData> bindings = new Dictionary<IntPtr, BindingData>();
+        private static readonly Dictionary<IntPtr, FunctionManager> functions = new Dictionary<IntPtr, FunctionManager>();
 
         private class BindingData
         {
@@ -29,10 +32,22 @@ namespace kOS.Lua
             }
         }
 
+        private class FunctionManager
+        {
+            public readonly Dictionary<string, SafeFunctionBase> functions;
+            public readonly SafeSharedObjects Shared;
+            public FunctionManager(SafeSharedObjects shared, Dictionary<string, SafeFunctionBase> functions)
+            {
+                Shared = shared;
+                this.functions = functions;
+            }
+        }
+
         public static void BindToState(KeraLua.Lua state, SharedObjects shared)
         {
             state = state.MainThread;
             bindings[state.Handle] = new BindingData((shared.BindingMgr as BindingManager).RawVariables);
+            functions[state.Handle] = new FunctionManager(shared, (shared.FunctionManager as Safe.Function.FunctionManager).RawFunctions);
             state.PushCFunction(EnvIndex);
             state.SetGlobal("envIndex");
             state.PushCFunction(EnvNewIndex);
@@ -95,13 +110,17 @@ namespace kOS.Lua
             var state = KeraLua.Lua.FromIntPtr(L);
             var index = state.ToString(2);
             var binding = bindings[state.MainThread.Handle];
-            if (!binding.variables.TryGetValue(index, out var boundVar))
+            if (binding.variables.TryGetValue(index, out var boundVar))
             {
-                state.PushNil();
-                return 1;
+                try { return PushLuaType(state, Structure.ToPrimitive(boundVar.Value), binding); }
+                catch (Exception e) { return state.Error(e.Message); }
             }
-            try { return PushLuaType(state, Structure.ToPrimitive(boundVar.Value), binding); }
-            catch (Exception e) { return state.Error(e.Message); }
+            var functionManager = functions[state.MainThread.Handle];
+            if (functionManager.functions.TryGetValue(index, out var function))
+            {
+                return PushLuaType(state, function, binding);
+            }
+            return 0;
         }
 
         private static int EnvNewIndex(IntPtr L)
@@ -125,7 +144,11 @@ namespace kOS.Lua
         {
             var state = KeraLua.Lua.FromIntPtr(L);
             var binding = bindings[state.MainThread.Handle];
-            var structure = (Structure)binding.objects[state.ToUserData(1)];
+            object obj = binding.objects[state.ToUserData(1)];
+            var structure = obj as Structure;
+            if (structure == null)
+                return state.Error(string.Format("attempt to index a {0} value", obj.GetType().Name));
+
             object pushValue = null;
             if (structure is IIndexable && state.TypeName(2) == "number")
             {
@@ -162,7 +185,10 @@ namespace kOS.Lua
         {
             var state = KeraLua.Lua.FromIntPtr(L);
             var binding = bindings[state.MainThread.Handle];
-            var structure = (Structure)binding.objects[state.ToUserData(1)];
+            object obj = binding.objects[state.ToUserData(1)];
+            var structure = obj as Structure;
+            if (structure == null)
+                return state.Error(string.Format("attempt to index a {0} value", obj.GetType().Name));
             object value = ToCSharpObject(state, 3, binding);
             if (value != null)
             {
@@ -185,9 +211,22 @@ namespace kOS.Lua
             var state = KeraLua.Lua.FromIntPtr(L);
             var binding = bindings[state.MainThread.Handle];
             var structure = binding.objects[state.ToUserData(1)];
-            if (!(structure is DelegateSuffixResult delegateResult)) {
-                return state.Error(string.Format("attempt to call a structure {0} value", structure.GetType().Name));
+            if (structure is SafeFunctionBase function)
+            {
+                var stackOperator = function.stackOperator as LuaStackOperator;
+                stackOperator.stack.Clear();
+                for (int i = 2; i <= state.GetTop(); i++)
+                    stackOperator.stack.Push(ToCSharpObject(state, i, binding));
+
+                try { function.Execute(functions[state.MainThread.Handle].Shared); }
+                catch (Exception e) { return state.Error(e.Message); }
+
+                return PushLuaType(state, Structure.ToPrimitive(function.ReturnValue), binding);
             }
+            var delegateResult = structure as DelegateSuffixResult;
+            if (delegateResult == null)
+                return state.Error(string.Format("attempt to call a structure {0} value", structure.GetType().Name));
+
             // the next entire bit is copied from DelegateSuffixResult.Invoke method with a few changes
             // that make it access arguments from the lua stack instead of kerboscript stack
             try

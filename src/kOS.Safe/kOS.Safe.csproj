@@ -192,6 +192,9 @@
     <Compile Include="Execution\YieldFinishedGetChar.cs" />
     <Compile Include="Execution\YieldFinishedNextTick.cs" />
     <Compile Include="Function\FunctionAttribute.cs" />
+    <Compile Include="Function\IStackOperator.cs" />
+    <Compile Include="Function\KSStackOperator.cs" />
+    <Compile Include="Function\LuaStackOperator.cs" />
     <Compile Include="Function\SafeFunctionBase.cs" />
     <Compile Include="Function\FunctionManager.cs" />
     <Compile Include="Function\IFunctionManager.cs" />

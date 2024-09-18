@@ -130,7 +130,7 @@ namespace kOS
                     else
                         msg += "Called from ";
                     
-                    msg += (thisOpcode is OpcodeEOF) ? KSInterpreter.InterpreterName
+                    msg += (thisOpcode is OpcodeEOF) ? KSInterpreter.traceName
                         : BuildLocationString(thisOpcode.SourcePath, thisOpcode.SourceLine);
                     msg += "\n" + textLine + "\n";
 

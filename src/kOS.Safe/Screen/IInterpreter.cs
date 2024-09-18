@@ -8,6 +8,7 @@ namespace kOS.Safe.Screen
 {
     public interface IInterpreter
     {
+        string GetName();
         void Boot();
         void Shutdown();
         void ProcessCommand(string commandText);
