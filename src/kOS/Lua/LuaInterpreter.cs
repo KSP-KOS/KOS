@@ -158,6 +158,9 @@ namespace kOS.Lua
             if (stateInfo[commandCoroutine.MainThread.Handle].StopExecution)
             {   // true after StopExecution was called, reset thread to prevent execution of the same program
                 stateInfo[commandCoroutine.MainThread.Handle].StopExecution = false;
+                // sometimes Terminal sends an empty string to ProcessCommand() after you ctrl+c during execution.
+                // This ignores commands that are sent in the same tick that StopExecution() was called
+                commandPending = false;
                 commandCoroutine.ResetThread();
             }
             instructionsPerUpdate = SafeHouse.Config.InstructionsPerUpdate;
