@@ -67,7 +67,6 @@ namespace kOS.Module
         private bool objectsInitialized = false;
         private int  numUpdatesAfterStartHappened = 0;
         private bool finishedRP1ProceduralAvionicsUpdate = false;
-        private bool interpreterChanged = false;
 
         public float AdditionalMass { get; set; }
 
@@ -87,6 +86,8 @@ namespace kOS.Module
         private const int ARCHIVE_EFFECTIVE_BYTES = 50000;
 
         private const string BootDirectoryName = "boot";
+
+        public string InterpreterLanguage => interpreterLanguage;
 
         [KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Interpreter", groupName = PAWGroup, groupDisplayName = PAWGroup), UI_ChooseOption(scene = UI_Scene.All)]
         public string interpreterLanguage = "kerboscript";
@@ -467,20 +468,11 @@ namespace kOS.Module
 
         private void OnInterpreterChanged(BaseField field, object buggyPrevValue)
         {
-            // change the interpreter on the next fixed update instead of now because when you 'core:setfield("interpreter", "Lua").'
-            // it would OnInterpreterChanged() > SetMode(*off*) > ProcessorModeChanged() > Shared.Interpreter.Shutdown() > Shared.Cpu.BreakExecution(true)
-            // and kerboscript errors when you BreakExecution in the middle of executing
-            // the error is really harmless but its unplesant when it pops up
-            interpreterLanguage = interpreterLanguage.ToLower();
-            interpreterChanged = true;
-            var prevValue = shared.Interpreter is LuaInterpreter? "Lua" : "KerboScript";
-            shared.Logger.Log("interpreter changed. "+prevValue+" to "+interpreterLanguage);
-        }
-
-        private void ChangeInterpreter()
-        {
-            if (interpreterLanguage.ToLower() == "lua") shared.Interpreter = new LuaInterpreter(shared);
-            else shared.Interpreter = new KSInterpreter(shared);
+            interpreterLanguage = interpreterLanguage.ToLower()[0]=='l'? "lua" : "kerboscript";
+            if (shared.Interpreter.Name == interpreterLanguage) return;
+            shared.Logger.Log("Interpreter changed. "+shared.Interpreter.Name+" to "+interpreterLanguage+". Rebooting");
+            SetMode(ProcessorModes.OFF);
+            SetMode(ProcessorModes.READY);
         }
 
         private void InitUI()
@@ -619,6 +611,11 @@ namespace kOS.Module
 
         private static Regex VolumeNameRemoveChars = new Regex("[/\\\\<>:\"|?*]*", RegexOptions.Compiled);
 
+        private ICpu luaCpu;
+        private ICpu ksCpu;
+        private IInterpreter luaInterpreter;
+        private IInterpreter ksInterpreter;
+
         public void InitObjects()
         {
             if (objectsInitialized)
@@ -631,8 +628,6 @@ namespace kOS.Module
             CalcConstsFromKSP();
 
             shared = new SharedObjects();
-
-            ChangeInterpreter();
 
             shared.Vessel = vessel;
             shared.Processor = this;
@@ -647,7 +642,8 @@ namespace kOS.Module
             shared.ProcessorMgr = new ProcessorManager();
             shared.FunctionManager = new FunctionManager(shared);
             shared.TransferManager = new TransferManager(shared);
-            shared.Cpu = new CPU(shared);
+            shared.Cpu = interpreterLanguage == "lua" ? new LuaCPU(shared) : new CPU(shared);
+            shared.Interpreter = interpreterLanguage == "lua" ? (IInterpreter)new LuaInterpreter(shared) : new KSInterpreter(shared);
             shared.AddonManager = new AddOns.AddonManager(shared);
             shared.GameEventDispatchManager = new GameEventDispatchManager(shared);
 
@@ -825,6 +821,7 @@ namespace kOS.Module
             {
                 shared.Cpu.BreakExecution(false);
                 shared.Cpu.Dispose();
+                shared.Interpreter.Dispose();
                 shared.DestroyObjects();
                 shared = null;
             }
@@ -926,15 +923,32 @@ namespace kOS.Module
                 if (!HasBooted)
                 {
                     SafeHouse.Logger.LogWarning("First Update()");
+                    // interpreter swap
+                    // stop the fixed observers
+                    shared.UpdateHandler.RemoveFixedObserver(shared.Cpu);
+                    if (shared.Interpreter is IFixedUpdateObserver interpreterObserver)
+                        shared.UpdateHandler.RemoveFixedObserver(interpreterObserver);
+                    // save cpu and interpreter references
+                    if (shared.Cpu is LuaCPU) luaCpu = shared.Cpu;
+                    else ksCpu = shared.Cpu;
+                    if (shared.Interpreter is LuaInterpreter) luaInterpreter = shared.Interpreter; 
+                    else ksInterpreter = shared.Interpreter;
+                    // update shared cpu and interpreter from references or create new ones if they are null
+                    if (interpreterLanguage == "lua")
+                    {
+                        shared.Cpu = luaCpu ?? new LuaCPU(shared);
+                        shared.Interpreter = luaInterpreter ?? new LuaInterpreter(shared);
+                    }
+                    else
+                    {
+                        shared.Cpu = ksCpu ?? new CPU(shared);
+                        shared.Interpreter = ksInterpreter ?? new KSInterpreter(shared);
+                    }
+                    // run boot methods
+                    shared.Cpu.Boot();
                     shared.Interpreter.Boot();
+                    
                     HasBooted = true;
-                }
-                if (interpreterChanged)
-                {
-                    interpreterChanged = false;
-                    SetMode(ProcessorModes.OFF);
-                    ChangeInterpreter();
-                    SetMode(ProcessorModes.READY);
                 }
                 UpdateVessel();
                 UpdateFixedObservers();
@@ -1221,7 +1235,7 @@ namespace kOS.Module
 
                 case ProcessorModes.OFF:
                 case ProcessorModes.STARVED:
-                    if (shared.Interpreter != null) shared.Interpreter.Shutdown();
+                    if (shared.Interpreter != null) shared.Interpreter.StopExecution();
                     if (shared.Terminal != null) shared.Terminal.SetInputLock(true);
                     if (shared.Window != null) shared.Window.IsPowered = false;
                     if (shared.SoundMaker != null) shared.SoundMaker.StopAllVoices();

@@ -13,6 +13,7 @@ namespace kOS.Screen
 {
     public class Terminal : TextEditor, ITerminal
     {
+        public const string InterpreterName = "interpreter";
         private readonly List<string> commandHistory = new List<string>();
         private int commandHistoryIndex;
         private bool locked;
@@ -66,7 +67,8 @@ namespace kOS.Screen
         {
             if (key == (char)UnicodeCommand.BREAK)
             {
-                Shared.Interpreter.BreakExecution(true);
+                Shared.Interpreter.StopExecution();
+                Shared.Cpu.BreakExecution(true);
                 LineBuilder.Remove(0, LineBuilder.Length); // why isn't there a StringBuilder.Clear()?
 
                 NewLine(); // process the now emptied line, to make it do all the updates it normally
@@ -146,6 +148,7 @@ namespace kOS.Screen
 
         public override void Reset()
         {
+            Shared.ScriptHandler.ClearContext(InterpreterName);
             commandHistory.Clear();
             commandHistoryIndex = 0;
             base.Reset();

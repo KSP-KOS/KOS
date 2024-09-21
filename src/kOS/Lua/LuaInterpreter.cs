@@ -25,26 +25,35 @@ namespace kOS.Lua
         private NLua.Lua state;
         private KeraLua.Lua commandCoroutine;
         private bool commandPending = false;
+        private static readonly Dictionary<IntPtr, ExecInfo> stateInfo = new Dictionary<IntPtr, ExecInfo>();
         private static int instructionsPerUpdate = SafeHouse.Config.InstructionsPerUpdate;
-        private static int instructionsThisUpdate = 0;
-        private const string interpreterName = "lua";
-        public const string luaVersion = "5.4";
+        public const string LuaVersion = "5.4";
         public static readonly string[] FilenameExtensions = new string[] { "lua" };
+        public string Name => "lua";
+        private SharedObjects Shared { get; }
 
-        protected SharedObjects Shared { get; private set; }
+        private class ExecInfo
+        {
+            public int InstructionsThisUpdate = 0;
+            public bool StopExecution = false;
+        }
 
         public LuaInterpreter(SharedObjects shared)
         {
             Shared = shared;
         }
 
-        public string GetName() => interpreterName;
-
         public void Boot()
         {
+            if (state != null)
+            {
+                stateInfo.Remove(state.State.MainThread.Handle);
+                state.Dispose();
+            }
             state = new NLua.Lua();
             commandCoroutine = state.State.NewThread();
             commandCoroutine.SetHook(YieldHook, LuaHookMask.Count, 1);
+            stateInfo.Add(commandCoroutine.MainThread.Handle, new ExecInfo());
             Shared.UpdateHandler.AddFixedObserver(this);
             state["Shared"] = Shared;
             state["FlightGlobals"] = UnityEngine.MonoBehaviour.FindObjectOfType<FlightGlobals>();
@@ -56,20 +65,7 @@ namespace kOS.Lua
                 }
             }
 
-            if (Shared.GameEventDispatchManager != null) Shared.GameEventDispatchManager.Clear();
-            if (Shared.FunctionManager != null) Shared.FunctionManager.Load();
-            if (Shared.BindingMgr != null) Shared.BindingMgr.Load();
-
             Binding.BindToState(commandCoroutine, Shared);
-
-            if (Shared.Terminal != null) Shared.Terminal.Reset();
-            // Booting message
-            if (Shared.Screen != null)
-            {
-                Shared.Screen.ClearScreen();
-                string bootMessage = string.Format("kOS Operating System\nLua v{0}\n(manual at {1})\n \nProceed.\n", luaVersion, SafeHouse.DocumentationURL);
-                Shared.Screen.Print(bootMessage);
-            }
 
             if (!Shared.Processor.CheckCanBoot()) return;
 
@@ -99,22 +95,18 @@ namespace kOS.Lua
                         DisplayError(string.Format("File '{0}' not found", path));
                         return;
                     }
-                    ProcessCommand(content.String); // TODO: run through dofile when its ready
+                    ProcessCommand(content.String);
                 }
             }
         }
 
-        public void Shutdown()
-        {
-            Shared.UpdateHandler.RemoveFixedObserver(this);
-            state?.Dispose();
-        }
-
         private static void YieldHook(IntPtr L, IntPtr ar)
         {
-            if (++instructionsThisUpdate >= instructionsPerUpdate)
+            var state = KeraLua.Lua.FromIntPtr(L);
+            var execInfo = stateInfo[state.MainThread.Handle];
+            if (++execInfo.InstructionsThisUpdate >= instructionsPerUpdate || execInfo.StopExecution)
             {
-                KeraLua.Lua.FromIntPtr(L).Yield(0);
+                state.Yield(0);
             }
         }
 
@@ -149,21 +141,31 @@ namespace kOS.Lua
             return commandCoroutine.Status != LuaStatus.Yield;
         }
 
-        public void BreakExecution(bool manual)
+        public void StopExecution()
         {
-            commandCoroutine.ResetThread();
+            stateInfo[commandCoroutine.MainThread.Handle].StopExecution = true;
         }
 
         public int InstructionsThisUpdate()
-        {
-            return instructionsThisUpdate;
+        {   // ProcessElectricity() calls this after changing interpreter when stuff is not initialized yet
+            if (commandCoroutine != null && stateInfo.TryGetValue(commandCoroutine.MainThread.Handle, out var info))
+                return info.InstructionsThisUpdate;
+            return 0;
         }
 
         public void KOSFixedUpdate(double dt)
         {
+            if (stateInfo[commandCoroutine.MainThread.Handle].StopExecution)
+            {   // true after StopExecution was called, reset thread to prevent execution of the same program
+                stateInfo[commandCoroutine.MainThread.Handle].StopExecution = false;
+                commandCoroutine.ResetThread();
+            }
             instructionsPerUpdate = SafeHouse.Config.InstructionsPerUpdate;
-            instructionsThisUpdate = 0;
-            // resumes the coroutine created by ProcessCommand after it was created and after it yielded due to running out of instructions
+            stateInfo[commandCoroutine.MainThread.Handle].InstructionsThisUpdate = 0;
+
+            Shared.BindingMgr?.PreUpdate();
+
+            // resumes the coroutine after it yielded due to running out of instructions or after ProcessCommand loaded a new command
             if (commandCoroutine.Status == LuaStatus.Yield || commandPending)
             {
                 commandPending = false;
@@ -178,6 +180,7 @@ namespace kOS.Lua
 
         public void Dispose()
         {
+            StopExecution();
             state.Dispose();
             Shared.UpdateHandler.RemoveFixedObserver(this);
         }

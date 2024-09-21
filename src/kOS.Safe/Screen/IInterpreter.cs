@@ -6,15 +6,14 @@ using System.Threading.Tasks;
 
 namespace kOS.Safe.Screen
 {
-    public interface IInterpreter
+    public interface IInterpreter : IDisposable
     {
-        string GetName();
+        string Name { get; }
         void Boot();
-        void Shutdown();
         void ProcessCommand(string commandText);
         bool IsCommandComplete(string commandText);
         bool IsWaitingForCommand();
-        void BreakExecution(bool manual);
+        void StopExecution();
         int InstructionsThisUpdate();
     }
 }

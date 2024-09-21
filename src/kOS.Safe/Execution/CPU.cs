@@ -49,8 +49,8 @@ namespace kOS.Safe.Execution
             }
         }
 
-        private readonly IStack stack;
-        private readonly VariableScope globalVariables;
+        protected readonly IStack stack;
+        protected readonly VariableScope globalVariables;
 
 
         private class YieldFinishedWithPriority
@@ -60,10 +60,10 @@ namespace kOS.Safe.Execution
         }
         private List<YieldFinishedWithPriority> yields;
 
-        private double currentTime;
-        private readonly SafeSharedObjects shared;
-        private readonly List<ProgramContext> contexts;
-        private ProgramContext currentContext;
+        protected double currentTime;
+        protected readonly SafeSharedObjects shared;
+        protected readonly List<ProgramContext> contexts;
+        protected ProgramContext currentContext;
         private VariableScope savedPointers;
         private int instructionsPerUpdate;
 
@@ -121,12 +121,12 @@ namespace kOS.Safe.Execution
             globalVariables = new VariableScope(0, null);
             contexts = new List<ProgramContext>();
             yields = new List<YieldFinishedWithPriority>();
-            if (this.shared.UpdateHandler != null) this.shared.UpdateHandler.AddFixedObserver(this);
             popContextNotifyees = new HashSet<PopContextNotifyeeContainer>();
         }
 
-        public void Boot()
+        public virtual void Boot()
         {
+            if (shared.UpdateHandler != null) shared.UpdateHandler.AddFixedObserver(this);
             // break all running programs
             currentContext = null;
             contexts.Clear();            
@@ -214,7 +214,7 @@ namespace kOS.Safe.Execution
             }
         }
 
-        private void PushInterpreterContext()
+        protected void PushInterpreterContext()
         {
             var interpreterContext = new ProgramContext(true);
             // initialize the context with an empty program
@@ -450,7 +450,7 @@ namespace kOS.Safe.Execution
             return currentContext;
         }
 
-        public Opcode GetCurrentOpcode()
+        public virtual Opcode GetCurrentOpcode()
         {
             return currentContext.Program[currentContext.InstructionPointer];
         }
@@ -1771,7 +1771,7 @@ namespace kOS.Safe.Execution
             compileWatch.Stop();
         }
 
-        private class BootGlobalPath : InternalPath
+        protected class BootGlobalPath : InternalPath
         {
             private string command;
 
