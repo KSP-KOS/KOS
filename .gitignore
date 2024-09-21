@@ -22,6 +22,9 @@ packages/
 # VisualStudio Code
 .vscode/
 
+# Rider
+.idea/
+
 # Vim
 *.swp
 
@@ -39,6 +42,7 @@ packages/
 
 # Symlink to KSP directory
 KSPdirlink
+KSP
 
 # Part thumbnails added through the KSP symlink
 Resources/GameData/kOS/Parts/@thumbs/
