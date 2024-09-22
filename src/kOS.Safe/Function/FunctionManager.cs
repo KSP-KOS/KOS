@@ -36,10 +36,6 @@ namespace kOS.Safe.Function
                     {
                         var function = (SafeFunctionBase)functionObject;
                         function.functionName = longestName;
-                        if (shared.Processor.InterpreterLanguage == "lua")
-                            function.stackOperator = new LuaStackOperator();
-                        else
-                            function.stackOperator = new KSStackOperator();
                         functions.Add(functionName, function);
                     }
                 }

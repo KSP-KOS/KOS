@@ -18,6 +18,8 @@ namespace kOS.Lua
 {
     public class LuaCPU : CPU
     {
+        public IStack Stack => stack;
+        
         public new bool IsYielding() => base.IsYielding();
         
         public LuaCPU(SafeSharedObjects shared) : base(shared) { }
