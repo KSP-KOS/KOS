@@ -582,7 +582,7 @@ namespace kOS.Safe.Execution
         /// this purpose.  Waiting in mainline code will still allow triggers to run.
         /// </summary>
         /// <param name="yieldTracker"></param>
-        public void YieldProgram(YieldFinishedDetector yieldTracker)
+        public virtual void YieldProgram(YieldFinishedDetector yieldTracker)
         {
             yields.Add(new YieldFinishedWithPriority() { detector = yieldTracker, priority = CurrentPriority });
             yieldTracker.creationTimeStamp = currentTime;

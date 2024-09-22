@@ -10,74 +10,104 @@ using kOS.Safe.Function;
 using kOS.Safe.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using Smooth.Collections;
 using Debug = UnityEngine.Debug;
 
 namespace kOS.Lua
 {
-    internal class Binding
+    internal static class Binding
     {
         private static readonly Dictionary<IntPtr, BindingData> bindings = new Dictionary<IntPtr, BindingData>();
-        private static readonly Dictionary<IntPtr, FunctionManager> functions = new Dictionary<IntPtr, FunctionManager>();
 
+        // the CSharp object to userdata binding model was adapted from NLua model
+        // with some simplifications and changes to make it work on Structures
         private class BindingData
         {
             public readonly Dictionary<string, BoundVariable> variables;
             public readonly Dictionary<IntPtr, object> objects;
             public readonly Dictionary<object, IntPtr> userdataPtrs;
-            public BindingData(Dictionary<string, BoundVariable> boundVariables)
+            public readonly Dictionary<string, SafeFunctionBase> functions;
+            public readonly SafeSharedObjects Shared;
+            
+            public BindingData(SafeSharedObjects shared, Dictionary<string, BoundVariable> boundVariables, Dictionary<string, SafeFunctionBase> functions)
             {
+                Shared = shared;
                 variables = boundVariables;
                 objects = new Dictionary<IntPtr, object>();
                 userdataPtrs = new Dictionary<object, IntPtr>();
-            }
-        }
-
-        private class FunctionManager
-        {
-            public readonly Dictionary<string, SafeFunctionBase> functions;
-            public readonly SafeSharedObjects Shared;
-            public FunctionManager(SafeSharedObjects shared, Dictionary<string, SafeFunctionBase> functions)
-            {
-                Shared = shared;
                 this.functions = functions;
             }
         }
 
+        public static void DisposeStateBinding(KeraLua.Lua state) => bindings.Remove(state.MainThread.Handle);
+
         public static void BindToState(KeraLua.Lua state, SharedObjects shared)
         {
             state = state.MainThread;
-            bindings[state.Handle] = new BindingData((shared.BindingMgr as BindingManager).RawVariables);
-            functions[state.Handle] = new FunctionManager(shared, (shared.FunctionManager as Safe.Function.FunctionManager).RawFunctions);
+            bindings[state.Handle] = new BindingData(
+                shared,
+                (shared.BindingMgr as BindingManager).RawVariables,
+                (shared.FunctionManager as FunctionManager).RawFunctions
+            );
             state.PushCFunction(EnvIndex);
             state.SetGlobal("envIndex");
             state.PushCFunction(EnvNewIndex);
             state.SetGlobal("envNewIndex");
+            state.GetGlobal("type");
+            state.SetGlobal("_type");
+            state.PushCFunction(UserdataType);
+            state.SetGlobal("type");
+            state.GetGlobal("print");
+            state.SetGlobal("_print");
+            state.PushCFunction(KosPrint);
+            state.SetGlobal("print");
             int oldTop = state.GetTop();
             state.DoString(@"local mt = { __index = envIndex, __newindex = envNewIndex }; setmetatable(_ENV, mt)");
             CreateUserdataMapTable(state);
             if (state.NewMetaTable("Structure"))
             {
+                state.PushString("__type");
+                state.PushString("Structure");
+                state.RawSet(-3);
                 state.PushString("__index");
                 state.PushCFunction(StructureIndex);
                 state.RawSet(-3);
                 state.PushString("__newindex");
                 state.PushCFunction(StructureNewIndex);
                 state.RawSet(-3);
-                state.PushString("__call");
-                state.PushCFunction(StructureCall);
+                state.PushString("__pairs");
+                state.PushCFunction(StructurePairs);
                 state.RawSet(-3);
                 state.PushString("__gc");
                 state.PushCFunction(CollectObject);
                 state.RawSet(-3);
                 state.PushString("__tostring");
-                state.PushCFunction(ObjectToString);
+                state.PushCFunction(StructureToString);
+                state.RawSet(-3);
+            }
+            if (state.NewMetaTable("KerboscriptFunction"))
+            {
+                state.PushString("__type");
+                state.PushString("KerboscriptFunction");
+                state.RawSet(-3);
+                state.PushString("__call");
+                state.PushCFunction(KSFunctionCall);
+                state.RawSet(-3);
+                state.PushString("__gc");
+                state.PushCFunction(CollectObject);
+                state.RawSet(-3);
+                state.PushString("__tostring");
+                state.PushCFunction(KSFunctionToString);
                 state.RawSet(-3);
             }
             state.SetTop(oldTop);
         }
         private static void CreateUserdataMapTable(KeraLua.Lua state)
         {
-            state.PushString("userdataAdressToUserdata");
+            state.PushString("userdataAddressToUserdata");
             state.NewTable();
             state.NewTable();
             state.PushString("__mode");
@@ -87,21 +117,60 @@ namespace kOS.Lua
             state.SetTable((int)LuaRegistry.Index);
         }
 
-        private static int CollectObject(IntPtr L)
+        private static int KosPrint(IntPtr L)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
-            var binding = bindings[state.MainThread.Handle];
-            var userdataAdress = state.ToUserData(1);
-            var obj = binding.objects[userdataAdress];
-            binding.userdataPtrs.Remove(obj);
-            binding.objects.Remove(userdataAdress);
+            var argCount = state.GetTop();
+            var prints = new string[argCount];
+            for (int i = 0; i < argCount; i++)
+                prints[i] = state.ToString(i + 1);
+            bindings[state.MainThread.Handle].Shared.Screen.Print(string.Join("    ", prints));
             return 0;
         }
 
-        private static int ObjectToString(IntPtr L)
+        private static int UserdataType(IntPtr L)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
-            state.PushString(bindings[state.MainThread.Handle].objects[state.ToUserData(1)].ToString());
+            if (state.GetMetaField(1, "__type") == LuaType.String)
+                return 1;
+            state.PushString(state.TypeName(1));
+            return 1;
+        }
+
+        private static int CollectObject(IntPtr L)
+        {
+            var state = KeraLua.Lua.FromIntPtr(L);
+            bindings.TryGetValue(state.MainThread.Handle, out var binding);
+            if (binding == null) return 0; // happens after DisposeStateBinding() was called
+            var userdataAddress = state.ToUserData(1);
+            binding.objects.TryGetValue(userdataAddress, out var obj);
+            if (obj == null) return 0; // read the note in PushObject() to know when this happens
+            binding.userdataPtrs.Remove(obj);
+            binding.objects.Remove(userdataAddress);
+            return 0;
+        }
+
+        private static int StructureToString(IntPtr L)
+        {
+            var state = KeraLua.Lua.FromIntPtr(L);
+            var structure = bindings[state.MainThread.Handle].objects[state.ToUserData(1)];
+            if (structure is IEnumerable<Structure>)
+            {   // make enum structures ToString() method show 1 base indexed values in lua
+                // replaces "\n  [*number*]" with "\n  [*number+1*]"
+                state.PushString(Regex.Replace(structure.ToString(), @"\n\s*\[([0-9]+)\]", (match) =>
+                    Regex.Replace(match.Groups[0].Value, match.Groups[1].Value, (int.Parse(match.Groups[1].Value) + 1).ToString())
+                ));
+            }
+            else
+                state.PushString(structure.ToString());
+            return 1;
+        }
+        
+        private static int KSFunctionToString(IntPtr L)
+        {
+            var state = KeraLua.Lua.FromIntPtr(L);
+            var function = bindings[state.MainThread.Handle].objects[state.ToUserData(1)];
+            state.PushString(function.GetType().Name);
             return 1;
         }
 
@@ -113,10 +182,9 @@ namespace kOS.Lua
             if (binding.variables.TryGetValue(index, out var boundVar))
             {
                 try { return PushLuaType(state, Structure.ToPrimitive(boundVar.Value), binding); }
-                catch (Exception e) { return state.Error(e.Message); }
+                catch (Exception e) { Debug.Log(e); return state.Error(e.Message); }
             }
-            var functionManager = functions[state.MainThread.Handle];
-            if (functionManager.functions.TryGetValue(index, out var function))
+            if (binding.functions.TryGetValue(index, out var function))
             {
                 return PushLuaType(state, function, binding);
             }
@@ -131,7 +199,7 @@ namespace kOS.Lua
             if (binding.variables.TryGetValue(index, out var boundVar) && boundVar.Set != null)
             {
                 try { boundVar.Value = ToCSharpObject(state, 3, binding); }
-                catch (Exception e) { return state.Error(e.Message); }
+                catch (Exception e) { Debug.Log(e); return state.Error(e.Message); }
             }
             else
             {
@@ -149,34 +217,38 @@ namespace kOS.Lua
             if (structure == null)
                 return state.Error(string.Format("attempt to index a {0} value", obj.GetType().Name));
 
+            try { return PushSuffixResult(state, binding, structure, 2); }
+            catch (Exception e) { Debug.Log(e); return state.Error(e.Message); }
+        }
+
+        private static int PushSuffixResult(KeraLua.Lua state, BindingData binding, Structure structure, int index)
+        {
             object pushValue = null;
-            if (structure is IIndexable && state.TypeName(2) == "number")
+            if (state.TypeName(index) == "number" && structure is IIndexable indexable)
             {
-                int intIndex = (int)state.ToInteger(2);
-                try { pushValue = Structure.ToPrimitive((structure as IIndexable).GetIndex(intIndex)); }
-                catch (Exception e) { return state.Error(e.Message); }
+                pushValue = Structure.ToPrimitive(indexable.GetIndex((int)state.ToInteger(index)-(structure is Lexicon? 0 : 1), true));
                 return PushLuaType(state, pushValue, binding);
             }
-            var index = state.ToString(2);
-            if (structure.HasSuffix(index))
+            
+            var result = structure.GetSuffix(state.ToString(index), true);
+            if (result == null)
+                return PushLuaType(state, null, binding);
+            
+            if (result.HasValue)
             {
-                var result = structure.GetSuffix(index);
-                if (result.HasValue)
-                {
-                    pushValue = Structure.ToPrimitive(result.Value);
-                } else
-                {
-                    var delegateResult = result as DelegateSuffixResult;
-                    if (delegateResult.RawDelInfo.Parameters.Length == 0)
-                    {
-                        try { delegateResult.RawSetValue(Structure.FromPrimitiveWithAssert(delegateResult.RawCall(null))); }
-                        catch (Exception e) { return state.Error(e.Message); }
-                        pushValue = Structure.ToPrimitive(delegateResult.Value); // TODO: maybe skip the conversions?
-                    } else
-                    {
-                        pushValue = delegateResult;
-                    }
-                }
+                pushValue = Structure.ToPrimitive(result.Value);
+            }
+            else if (result is DelegateSuffixResult delegateResult && delegateResult.RawDelInfo.Parameters.Length == 0)
+            {
+                var callResult = delegateResult.RawCall(null);
+                if (delegateResult.RawDelInfo.ReturnType == typeof(void))
+                    delegateResult.RawSetValue(ScalarValue.Create(0)); // this is what kerboscript does
+                else
+                    delegateResult.RawSetValue(Structure.FromPrimitiveWithAssert(callResult));
+                pushValue = Structure.ToPrimitive(delegateResult.Value);
+            } else
+            {
+                pushValue = result as DelegateSuffixResult; // if its somehow not DelegateSuffixResult push null
             }
             return PushLuaType(state, pushValue, binding);
         }
@@ -196,36 +268,90 @@ namespace kOS.Lua
                 {
                     int intIndex = (int)state.ToInteger(2);
                     try { (structure as IIndexable).SetIndex(intIndex, Structure.FromPrimitive(value) as Structure); }
-                    catch (Exception e) { return state.Error(e.Message); }
+                    catch (Exception e) { Debug.Log(e); return state.Error(e.Message); }
                     return 0;
                 }
                 var index = state.ToString(2);
                 try { structure.SetSuffix(index, Structure.FromPrimitive(value)); }
-                catch (Exception e) { return state.Error(e.Message); }
+                catch (Exception e) { Debug.Log(e); return state.Error(e.Message); }
             }
             return 0;
         }
-
-        private static int StructureCall(IntPtr L)
+        
+        private static int StructurePairs(IntPtr L)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
             var binding = bindings[state.MainThread.Handle];
-            var structure = binding.objects[state.ToUserData(1)];
-            if (structure is SafeFunctionBase function)
+            var structure = binding.objects[state.ToUserData(1)] as Structure;
+            if (structure == null)
+                return state.Error("pairs metamethod can only be called with a Structure type");
+
+            state.PushInteger(1);
+            var enumCount = (structure is IIndexable && structure is IEnumerable<Structure> enumerable)
+                ? enumerable.Count()
+                : 0;
+            state.NewTable();
+            var index = 1;
+            for (; index <= enumCount; index++)
+            {
+                state.PushInteger(index);
+                state.PushInteger(index);
+                state.SetTable(-3);
+            }
+            foreach (var name in structure.GetSuffixNames())
+            {
+                state.PushInteger(index++);
+                state.PushString(name);
+                state.SetTable(-3);
+            }
+
+            state.PushCClosure(StructureNext, 2); // pass the starting index and table with index-suffix pairs
+            state.PushCopy(1);
+            return 2;
+        }
+
+        private static int StructureNext(IntPtr L)
+        {
+            var state = KeraLua.Lua.FromIntPtr(L);
+            var binding = bindings[state.MainThread.Handle];
+            var structure = binding.objects[state.ToUserData(1)] as Structure;
+            if (structure == null)
+                return state.Error("iterator can only be called with a Structure type");
+            // ignore the second argument
+            var currentIndex = state.ToInteger(KeraLua.Lua.UpValueIndex(1));
+            state.PushCopy(KeraLua.Lua.UpValueIndex(2));
+            state.PushInteger(currentIndex);
+            state.GetTable(-2);
+            
+            try { PushSuffixResult(state, binding, structure, -1); }
+            catch (Exception e) { Debug.Log(e); return state.Error(e.Message); }
+            
+            state.PushInteger(currentIndex+1);
+            state.Copy(-1, KeraLua.Lua.UpValueIndex(1));
+            state.Remove(-1);
+            return 2;
+        }
+
+        private static int KSFunctionCall(IntPtr L)
+        {
+            var state = KeraLua.Lua.FromIntPtr(L);
+            var binding = bindings[state.MainThread.Handle];
+            var ksFunction = binding.objects[state.ToUserData(1)];
+            if (ksFunction is SafeFunctionBase function)
             {
                 var stackOperator = function.stackOperator as LuaStackOperator;
                 stackOperator.stack.Clear();
                 for (int i = 2; i <= state.GetTop(); i++)
                     stackOperator.stack.Push(ToCSharpObject(state, i, binding));
 
-                try { function.Execute(functions[state.MainThread.Handle].Shared); }
-                catch (Exception e) { return state.Error(e.Message); }
+                try { function.Execute(binding.Shared); }
+                catch (Exception e) { Debug.Log(e); return state.Error(e.Message); }
 
                 return PushLuaType(state, Structure.ToPrimitive(function.ReturnValue), binding);
             }
-            var delegateResult = structure as DelegateSuffixResult;
+            var delegateResult = ksFunction as DelegateSuffixResult;
             if (delegateResult == null)
-                return state.Error(string.Format("attempt to call a structure {0} value", structure.GetType().Name));
+                return state.Error(string.Format("attempt to call a non function {0} value", ksFunction.GetType().Name));
 
             // the next entire bit is copied from DelegateSuffixResult.Invoke method with a few changes
             // that make it access arguments from the lua stack instead of kerboscript stack
@@ -340,6 +466,7 @@ namespace kOS.Lua
                 return PushLuaType(state, Structure.ToPrimitive(delegateResult.Value), binding);
             } catch (Exception e)
             {
+                Debug.Log(e);
                 return state.Error(e.Message);
             }
         }
@@ -347,33 +474,21 @@ namespace kOS.Lua
         private static int PushLuaType(KeraLua.Lua state, object obj, BindingData binding)
         {
             if (obj == null)
-            {
                 state.PushNil();
-            }
             else if (obj is double db)
-            {
                 state.PushNumber(db);
-            }
             else if (obj is int i)
-            {
                 state.PushInteger(i);
-            }
             else if (obj is string str)
-            {
                 state.PushString(str);
-            }
             else if (obj is bool b)
-            {
                 state.PushBoolean(b);
-            }
             else
-            {
-                PushObject(state, obj, binding);
-            }
+                return PushObject(state, obj, binding, obj is Structure? "Structure" : "KerboscriptFunction");
             return 1;
         }
 
-        private static object ToCSharpObject(KeraLua.Lua state, int index, BindingData binding)
+        private static object ToCSharpObject(KeraLua.Lua state, int index, BindingData binding = null)
         {
             switch (state.TypeName(index))
             {
@@ -384,41 +499,53 @@ namespace kOS.Lua
                 case "boolean":
                     return state.ToBoolean(index);
                 case "userdata":
-                    return binding.objects.GetValueOrDefault(state.ToUserData(index), null);
+                    return binding?.objects.GetValueOrDefault(state.ToUserData(index), null);
                 default:
                     return null;
             }
         }
 
-        private static int PushObject(KeraLua.Lua state, object obj, BindingData binding)
+        private static int PushObject(KeraLua.Lua state, object obj, BindingData binding, string metatable)
         {
-            state.GetMetaTable("userdataAdressToUserdata");
-            if (binding.userdataPtrs.TryGetValue(obj, out IntPtr userdataAdress)) // Object already in the list of object userdata? Push the userdata
+            state.GetMetaTable("userdataAddressToUserdata");
+            if (binding.userdataPtrs.TryGetValue(obj, out IntPtr userdataAddress)) // Object already in the list of object userdata? Push the userdata
             {
-                // Note: starting with lua5.1 the garbage collector may remove weak reference items (such as our userdataAdressToUserdata values) when the initial GC sweep 
+                // Note: starting with lua5.1 the garbage collector may remove weak reference items (such as our userdataAddressToUserdata values) when the initial GC sweep 
                 // occurs, but the actual call of the __gc finalizer for that object may not happen until a little while later.  During that window we might call
-                // this routine and find the element missing from userdataAdressToUserdata, but CollectObject() has not yet been called.  In that case, we go ahead and
+                // this routine and find the element missing from userdataAddressToUserdata, but CollectObject() has not yet been called.  In that case, we go ahead and
                 // do the same thing CollectObject() does and remove from out object maps
-                state.PushLightUserData(userdataAdress);
-                if (state.RawGet(-2) != LuaType.Nil) return 1; // if found the objects userdata return it
-
+                state.PushLightUserData(userdataAddress);
+                if (state.RawGet(-2) != LuaType.Nil)
+                {   // if found the objects userdata return it
+                    state.Remove(-2);
+                    return 1;
+                }
                 state.Remove(-1);	// remove the nil value
-
-                binding.objects.Remove(userdataAdress); // Remove from both our maps and fall out to create a new userdata
+                binding.objects.Remove(userdataAddress); // Remove from both our maps and fall out to create a new userdata
                 binding.userdataPtrs.Remove(obj);
             }
 
-            userdataAdress = state.NewUserData(0);
-            state.GetMetaTable("Structure");
+            userdataAddress = state.NewUserData(0);
+            state.GetMetaTable(metatable);
             state.SetMetaTable(-2);
-            state.PushLightUserData(userdataAdress);
+            state.PushLightUserData(userdataAddress);
             state.PushCopy(-2);
-            state.RawSet(-4); // add userdata on top of the stack to the userdataAdressToUserdata metatable at userdataAdress key
+            state.RawSet(-4); // add userdata on top of the stack to the userdataAddressToUserdata metatable at userdataAddress key
+            state.Remove(-2);
 
-            binding.objects[userdataAdress] = obj;
-            binding.userdataPtrs[obj] = userdataAdress;
+            binding.objects[userdataAddress] = obj;
+            binding.userdataPtrs[obj] = userdataAddress;
 
             return 1;
+        }
+        
+        private static void DumpStack(KeraLua.Lua state, string debugName = "", BindingData binding = null)
+        {
+            binding = binding ?? bindings[state.MainThread.Handle];
+            Debug.Log(debugName+"_________");
+            for (int i = 0; i <= state.GetTop(); i++)
+                Debug.Log(i+" "+state.TypeName(i)+" "+ToCSharpObject(state, i, binding));
+            Debug.Log("____________________");
         }
     }
 }

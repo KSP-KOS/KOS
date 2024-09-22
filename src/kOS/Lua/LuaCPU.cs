@@ -57,5 +57,10 @@ namespace kOS.Lua
         {
             return new OpcodeBogus();
         }
+        
+        public override void YieldProgram(YieldFinishedDetector yieldTracker) // lua TODO: implement kerboscript yielding
+        {
+            return;
+        }
     }
 }

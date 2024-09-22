@@ -45,24 +45,21 @@ namespace kOS.Lua
 
         public void Boot()
         {
+            Shared.UpdateHandler.AddFixedObserver(this);
             if (state != null)
             {
                 stateInfo.Remove(state.State.MainThread.Handle);
+                Binding.DisposeStateBinding(state.State);
                 state.Dispose();
             }
             state = new NLua.Lua();
             commandCoroutine = state.State.NewThread();
             commandCoroutine.SetHook(YieldHook, LuaHookMask.Count, 1);
             stateInfo.Add(commandCoroutine.MainThread.Handle, new ExecInfo());
-            Shared.UpdateHandler.AddFixedObserver(this);
-            state["Shared"] = Shared;
-            state["FlightGlobals"] = UnityEngine.MonoBehaviour.FindObjectOfType<FlightGlobals>();
+            
             using (var streamReader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("kOS.Lua.init.lua"))) {
-                try {
-                    state.DoString(streamReader.ReadToEnd());
-                } catch (Exception e) {
-                    Debug.LogException(e);
-                }
+                try { state.DoString(streamReader.ReadToEnd()); }
+                catch (Exception e) { Debug.Log(e); DisplayError(e.Message); }
             }
 
             Binding.BindToState(commandCoroutine, Shared);
