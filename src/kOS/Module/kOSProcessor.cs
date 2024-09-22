@@ -471,6 +471,7 @@ namespace kOS.Module
             interpreterLanguage = interpreterLanguage.ToLower()[0]=='l'? "lua" : "kerboscript";
             if (shared.Interpreter.Name == interpreterLanguage) return;
             shared.Logger.Log("Interpreter changed. "+shared.Interpreter.Name+" to "+interpreterLanguage+". Rebooting");
+            if (ProcessorMode != ProcessorModes.READY) return;
             SetMode(ProcessorModes.OFF);
             SetMode(ProcessorModes.READY);
         }
