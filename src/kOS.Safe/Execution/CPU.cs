@@ -589,7 +589,7 @@ namespace kOS.Safe.Execution
             yieldTracker.Begin(shared);
         }
 
-        private bool IsYielding()
+        protected bool IsYielding()
         {
             int numStillBlocking = 0;
 

@@ -18,6 +18,8 @@ namespace kOS.Lua
 {
     public class LuaCPU : CPU
     {
+        public new bool IsYielding() => base.IsYielding();
+        
         public LuaCPU(SafeSharedObjects shared) : base(shared) { }
         
         // difference from base Boot method:
@@ -52,15 +54,16 @@ namespace kOS.Lua
                 shared.Screen.Print(bootMessage);
             }
         }
-       
+
+        // this is called from LuaInterpreter KOSFixedUpdate to keep one FixedUpdate function per interpreter and to keep order consistency
+        public void FixedUpdate()
+        {
+            currentTime = shared.UpdateHandler.CurrentFixedTime;
+        }
+
         public override Opcode GetCurrentOpcode()
         {
             return new OpcodeBogus();
-        }
-        
-        public override void YieldProgram(YieldFinishedDetector yieldTracker) // lua TODO: implement kerboscript yielding
-        {
-            return;
         }
     }
 }

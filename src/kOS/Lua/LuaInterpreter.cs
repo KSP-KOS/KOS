@@ -36,6 +36,11 @@ namespace kOS.Lua
         {
             public int InstructionsThisUpdate = 0;
             public bool StopExecution = false;
+            public SharedObjects Shared;
+            public ExecInfo(SharedObjects shared)
+            {
+                Shared = shared;
+            }
         }
 
         public LuaInterpreter(SharedObjects shared)
@@ -54,8 +59,8 @@ namespace kOS.Lua
             }
             state = new NLua.Lua();
             commandCoroutine = state.State.NewThread();
-            commandCoroutine.SetHook(YieldHook, LuaHookMask.Count, 1);
-            stateInfo.Add(commandCoroutine.MainThread.Handle, new ExecInfo());
+            commandCoroutine.SetHook(AfterEveryInstructionHook, LuaHookMask.Count, 1);
+            stateInfo.Add(commandCoroutine.MainThread.Handle, new ExecInfo(Shared));
             
             using (var streamReader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("kOS.Lua.init.lua"))) {
                 try { state.DoString(streamReader.ReadToEnd()); }
@@ -97,11 +102,11 @@ namespace kOS.Lua
             }
         }
 
-        private static void YieldHook(IntPtr L, IntPtr ar)
+        private static void AfterEveryInstructionHook(IntPtr L, IntPtr ar)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
             var execInfo = stateInfo[state.MainThread.Handle];
-            if (++execInfo.InstructionsThisUpdate >= instructionsPerUpdate || execInfo.StopExecution)
+            if (++execInfo.InstructionsThisUpdate >= instructionsPerUpdate || execInfo.StopExecution || (execInfo.Shared.Cpu as LuaCPU).IsYielding())
             {
                 state.Yield(0);
             }
@@ -135,7 +140,7 @@ namespace kOS.Lua
 
         public bool IsWaitingForCommand()
         {
-            return commandCoroutine.Status != LuaStatus.Yield;
+            return !(Shared.Cpu as LuaCPU).IsYielding() && commandCoroutine.Status != LuaStatus.Yield;
         }
 
         public void StopExecution()
@@ -152,21 +157,24 @@ namespace kOS.Lua
 
         public void KOSFixedUpdate(double dt)
         {
-            if (stateInfo[commandCoroutine.MainThread.Handle].StopExecution)
+            (Shared.Cpu as LuaCPU).FixedUpdate();
+            
+            var execInfo = stateInfo[commandCoroutine.MainThread.Handle];
+            if (execInfo.StopExecution)
             {   // true after StopExecution was called, reset thread to prevent execution of the same program
-                stateInfo[commandCoroutine.MainThread.Handle].StopExecution = false;
+                execInfo.StopExecution = false;
                 // sometimes Terminal sends an empty string to ProcessCommand() after you ctrl+c during execution.
                 // This ignores commands that are sent in the same tick that StopExecution() was called
                 commandPending = false;
                 commandCoroutine.ResetThread();
             }
             instructionsPerUpdate = SafeHouse.Config.InstructionsPerUpdate;
-            stateInfo[commandCoroutine.MainThread.Handle].InstructionsThisUpdate = 0;
+            execInfo.InstructionsThisUpdate = 0;
 
             Shared.BindingMgr?.PreUpdate();
 
             // resumes the coroutine after it yielded due to running out of instructions or after ProcessCommand loaded a new command
-            if (commandCoroutine.Status == LuaStatus.Yield || commandPending)
+            if (!(Shared.Cpu as LuaCPU).IsYielding() && (commandCoroutine.Status == LuaStatus.Yield || commandPending))
             {
                 commandPending = false;
                 LuaStatus status = commandCoroutine.Resume(state.State, 0);
