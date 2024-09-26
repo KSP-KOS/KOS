@@ -67,7 +67,7 @@ namespace kOS.Screen
         {
             if (key == (char)UnicodeCommand.BREAK)
             {
-                Shared.Interpreter.StopExecution();
+                Shared.Interpreter.BreakExecution();
                 Shared.Cpu.BreakExecution(true);
                 LineBuilder.Remove(0, LineBuilder.Length); // why isn't there a StringBuilder.Clear()?
 

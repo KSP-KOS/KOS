@@ -68,7 +68,7 @@ namespace kOS.Screen
             return context.Program[context.InstructionPointer] is OpcodeEOF;
         }
 
-        public void StopExecution()
+        public void BreakExecution()
         {
             Shared.Cpu.GetCurrentOpcode().AbortProgram = true;
         }

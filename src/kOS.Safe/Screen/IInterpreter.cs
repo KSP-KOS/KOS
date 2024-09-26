@@ -13,7 +13,7 @@ namespace kOS.Safe.Screen
         void ProcessCommand(string commandText);
         bool IsCommandComplete(string commandText);
         bool IsWaitingForCommand();
-        void StopExecution();
+        void BreakExecution();
         int InstructionsThisUpdate();
     }
 }
