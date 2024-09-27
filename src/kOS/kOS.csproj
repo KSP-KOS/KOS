@@ -82,6 +82,10 @@
     <Compile Include="KSPLogger.cs" />
     <Compile Include="Lua\Binding.cs" />
     <Compile Include="Lua\LuaCPU.cs" />
+    <Compile Include="Lua\LuaFunctions.cs" />
+    <Compile Include="Lua\Types\KSFunction.cs" />
+    <Compile Include="Lua\Types\KSStructure.cs" />
+    <Compile Include="Lua\Types\LuaTypeBase.cs" />
     <Compile Include="Module\Bootstrapper.cs" />
     <Compile Include="Module\AutopilotMsgManager.cs" />
     <Compile Include="Module\kOSCustomParameters.cs" />
