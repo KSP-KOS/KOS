@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using KeraLua;
 using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Exceptions;
 using kOS.Safe.Execution;
 using kOS.Safe.Function;
 using Debug = UnityEngine.Debug;
@@ -55,6 +57,9 @@ namespace kOS.Lua.Types
             state.PushString("__pow");
             state.PushCFunction(StructurePower);
             state.RawSet(-3);
+            state.PushString("__unm");
+            state.PushCFunction(StructureUnary);
+            state.RawSet(-3);
             // there is no "not equal", "greater than", "greater or equal than" because lua switches the order for these operators
             // and uses the operators below. In theory there shouldn't be any differences with how kerboscript does it, but watch out
             state.PushString("__eq");
@@ -84,6 +89,22 @@ namespace kOS.Lua.Types
             var pair = new OperandPair(Binding.ToCSharpObject(state, 1, binding), Binding.ToCSharpObject(state, 2, binding));
             try { return Binding.PushLuaType(state, operatorMethod(pair), binding); }
             catch (Exception e) { Debug.Log(e); return state.Error(e.Message); }
+        }
+        
+        private static int StructureUnary(IntPtr L)
+        {
+            var state = KeraLua.Lua.FromIntPtr(L);
+            var binding = Binding.bindings[state.MainThread.Handle];
+            var obj = Binding.ToCSharpObject(state, 1, binding);
+            
+            MethodInfo unaryMethod = obj.GetType().GetMethod("op_UnaryNegation", BindingFlags.FlattenHierarchy |BindingFlags.Static | BindingFlags.Public);
+            if (unaryMethod != null)
+            {
+                try { return Binding.PushLuaType(state, unaryMethod.Invoke(null, new[]{obj}), binding); }
+                catch (Exception e) { Debug.Log(e); return state.Error(e.Message); }
+            }
+            var ex = new KOSUnaryOperandTypeException("negate", obj);
+            Debug.Log(ex); return state.Error(ex.Message);
         }
 
         private static int StructureToString(IntPtr L)
