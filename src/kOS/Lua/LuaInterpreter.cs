@@ -56,13 +56,8 @@ namespace kOS.Lua
 
         public void Boot()
         {
+            Dispose();
             Shared.UpdateHandler.AddFixedObserver(this);
-            if (state != null)
-            {
-                stateInfo.Remove(state.State.MainThread.Handle);
-                Binding.DisposeStateBinding(state.State);
-                state.Dispose();
-            }
             state = new NLua.Lua();
             commandCoroutine = state.State.NewThread();
             callbacksCoroutine = state.State.NewThread();
@@ -159,7 +154,7 @@ namespace kOS.Lua
 
         public void BreakExecution()
         {
-            stateInfo[commandCoroutine.MainThread.Handle].BreakExecution = true;
+            stateInfo[state.State.MainThread.Handle].BreakExecution = true;
         }
 
         public int InstructionsThisUpdate()
@@ -234,9 +229,12 @@ namespace kOS.Lua
 
         public void Dispose()
         {
-            BreakExecution();
-            state.Dispose();
+            if (state == null) return;
             Shared.UpdateHandler.RemoveFixedObserver(this);
+            stateInfo.Remove(state.State.MainThread.Handle);
+            Binding.bindings.Remove(state.State.MainThread.Handle);
+            state.Dispose();
+            state = null;
         }
 
         public void DisplayError(string errorMessage)

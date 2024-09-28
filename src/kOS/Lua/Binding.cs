@@ -47,8 +47,6 @@ namespace kOS.Lua
             }
         }
 
-        public static void DisposeStateBinding(KeraLua.Lua state) => bindings.Remove(state.MainThread.Handle);
-
         public static void BindToState(KeraLua.Lua state, SharedObjects shared)
         {
             state = state.MainThread;

@@ -823,6 +823,10 @@ namespace kOS.Module
                 shared.Cpu.BreakExecution(false);
                 shared.Cpu.Dispose();
                 shared.Interpreter.Dispose();
+                luaCpu?.Dispose();
+                ksCpu?.Dispose();
+                luaInterpreter?.Dispose();
+                ksInterpreter?.Dispose();
                 shared.DestroyObjects();
                 shared = null;
             }
