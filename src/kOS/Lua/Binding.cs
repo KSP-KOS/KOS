@@ -14,14 +14,23 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using kOS.Lua.Types;
+using kOS.Suffixed;
 using Smooth.Collections;
 using Debug = UnityEngine.Debug;
+using TimeSpan = kOS.Suffixed.TimeSpan;
 
 namespace kOS.Lua
 {
     public static class Binding
     {
         public static readonly Dictionary<IntPtr, BindingData> bindings = new Dictionary<IntPtr, BindingData>();
+        private static readonly HashSet<Type> uniqueTypes = new HashSet<Type>()
+        {   // Types of objects that you want to create new lua instances of when pushing onto the stack,
+            // but that have overridden Equals and GetHashCode methods so BindingData.Objects dictionary
+            // picks "equal" already created object. For example "v1 = v(0,0,0); v2 = v(0,0,0); v1.x = 1; print(v2.x);"
+            // would print 1 because both v1 and v2 would be the same lua object, which is what we are avoiding here.
+            typeof(Vector), typeof(Direction), typeof(TimeSpan), typeof(TimeStamp)
+        };
 
         // the CSharp object to userdata binding model was adapted from NLua model
         // with some simplifications and changes to make it work on Structures
@@ -205,8 +214,9 @@ namespace kOS.Lua
 
         private static int PushObject(KeraLua.Lua state, object obj, BindingData binding, string metatable)
         {
+            var isUnique = uniqueTypes.Contains(obj.GetType());
             state.GetMetaTable("userdataAddressToUserdata");
-            if (binding.UserdataPtrs.TryGetValue(obj, out IntPtr userdataAddress)) // Object already in the list of object userdata? Push the userdata
+            if (!isUnique && binding.UserdataPtrs.TryGetValue(obj, out IntPtr userdataAddress)) // Object already in the list of object userdata? Push the userdata
             {
                 // Note: starting with lua5.1 the garbage collector may remove weak reference items (such as our userdataAddressToUserdata values) when the initial GC sweep 
                 // occurs, but the actual call of the __gc finalizer for that object may not happen until a little while later.  During that window we might call
@@ -232,7 +242,8 @@ namespace kOS.Lua
             state.Remove(-2);
 
             binding.Objects[userdataAddress] = obj;
-            binding.UserdataPtrs[obj] = userdataAddress;
+            if (!isUnique)
+                binding.UserdataPtrs[obj] = userdataAddress;
 
             return 1;
         }
