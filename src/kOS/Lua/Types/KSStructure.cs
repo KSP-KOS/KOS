@@ -148,13 +148,11 @@ namespace kOS.Lua.Types
             {
                 pushValue = Structure.ToPrimitive(result.Value);
             }
-            else if (result is DelegateSuffixResult delegateResult && delegateResult.RawDelInfo.Parameters.Length == 0)
+            else if (result is DelegateSuffixResult delegateResult && delegateResult.RawDelInfo.ReturnType != typeof(void)
+                                                                   && delegateResult.RawDelInfo.Parameters.Length == 0)
             {
                 var callResult = delegateResult.RawCall(null);
-                if (delegateResult.RawDelInfo.ReturnType == typeof(void))
-                    delegateResult.RawSetValue(ScalarValue.Create(0)); // this is what kerboscript does
-                else
-                    delegateResult.RawSetValue(Structure.FromPrimitiveWithAssert(callResult));
+                delegateResult.RawSetValue(Structure.FromPrimitiveWithAssert(callResult));
                 pushValue = Structure.ToPrimitive(delegateResult.Value);
             } else
             {

@@ -10,7 +10,8 @@ namespace kOS.Lua.Types
     public class KSFunction : LuaTypeBase
     {
         private static readonly Type[] bindingTypes = { typeof(SafeFunctionBase), typeof(DelegateSuffixResult) };
-        public override string MetatableName => "KerboscriptFunction";
+        private static readonly string metatableName = "KerboscriptFunction";
+        public override string MetatableName => metatableName;
         public override Type[] BindingTypes => bindingTypes;
 
         public KSFunction(KeraLua.Lua state)
@@ -34,6 +35,7 @@ namespace kOS.Lua.Types
         {
             var state = KeraLua.Lua.FromIntPtr(L);
             var binding = Binding.bindings[state.MainThread.Handle];
+            state.CheckUserData(1, metatableName);
             var ksFunction = binding.Objects[state.ToUserData(1)];
             
             var stack = (binding.Shared.Cpu as LuaCPU).Stack;
@@ -48,14 +50,12 @@ namespace kOS.Lua.Types
             
             if (ksFunction is SafeFunctionBase function)
             {
-                try { function.Execute(binding.Shared); }
-                catch (Exception e) { Debug.Log(e); return state.Error(e.Message); }
+                Binding.LuaExceptionCatch(() => function.Execute(binding.Shared), state);
                 return Binding.PushLuaType(state, Structure.ToPrimitive(function.ReturnValue), binding);
             }
             if (ksFunction is DelegateSuffixResult delegateResult)
             {
-                try { delegateResult.Invoke(binding.Shared.Cpu); }
-                catch (Exception e) { Debug.Log(e); return state.Error(e.Message); }
+                Binding.LuaExceptionCatch(() => delegateResult.Invoke(binding.Shared.Cpu), state);
                 return Binding.PushLuaType(state, Structure.ToPrimitive(delegateResult.Value), binding);
             }
             return state.Error(string.Format("attempt to call a non function {0} value", ksFunction.GetType().Name));
