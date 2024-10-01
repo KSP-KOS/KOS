@@ -31,6 +31,7 @@ namespace kOS.Lua
             // would print 1 because both v1 and v2 would be the same lua object, which is what we are avoiding here.
             typeof(Vector), typeof(Direction), typeof(TimeSpan), typeof(TimeStamp)
         };
+        private static readonly string[] controlVariables = { "STEERING", "THROTTLE", "WHEELSTEERING", "WHEELTHROTTLE" };
 
         // the CSharp object to userdata binding model was adapted from NLua model
         // with some simplifications and changes to make it work on Structures
@@ -137,8 +138,8 @@ namespace kOS.Lua
             var binding = bindings[state.MainThread.Handle];
             if (binding.Variables.TryGetValue(index, out var boundVar))
             {
-                try { return PushLuaType(state, Structure.ToPrimitive(boundVar.Value), binding); }
-                catch (Exception e) { Debug.Log(e); return state.Error(e.Message); }
+                return (int)LuaExceptionCatch(() =>
+                    PushLuaType(state, Structure.ToPrimitive(boundVar.Value), binding), state);
             }
             if (binding.Functions.TryGetValue(index, out var function))
             {
@@ -152,10 +153,12 @@ namespace kOS.Lua
             var state = KeraLua.Lua.FromIntPtr(L);
             var binding = bindings[state.MainThread.Handle];
             var index = state.ToString(2);
-            if (binding.Variables.TryGetValue(index, out var boundVar) && boundVar.Set != null)
+            var isControlVariable = controlVariables.Contains(index.ToUpper()) && !controlVariables.Contains(index);
+            if (!isControlVariable && binding.Variables.TryGetValue(index, out var boundVar) && boundVar.Set != null)
             {
-                try { boundVar.Value = ToCSharpObject(state, 3, binding); }
-                catch (Exception e) { Debug.Log(e); return state.Error(e.Message); }
+                var newValue = ToCSharpObject(state, 3, binding);
+                if (newValue == null) return 0;
+                LuaExceptionCatch(() => boundVar.Value = newValue, state);
             }
             else
             {
@@ -246,6 +249,19 @@ namespace kOS.Lua
                 binding.UserdataPtrs[obj] = userdataAddress;
 
             return 1;
+        }
+
+        public static void LuaExceptionCatch(Action tryBody, KeraLua.Lua state) =>
+            LuaExceptionCatch(() => { tryBody(); return null; }, state);   
+
+        public static object LuaExceptionCatch(Func<object> tryBody, KeraLua.Lua state)
+        {
+            try { return tryBody(); }
+            catch (Exception e)
+            {
+                Debug.Log(e);
+                return state.Error(e.Message);
+            }
         }
         
         public static void DumpStack(KeraLua.Lua state, string debugName = "", BindingData binding = null)

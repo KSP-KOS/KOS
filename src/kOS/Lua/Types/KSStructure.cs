@@ -87,8 +87,7 @@ namespace kOS.Lua.Types
             var state = KeraLua.Lua.FromIntPtr(L);
             var binding = Binding.bindings[state.MainThread.Handle];
             var pair = new OperandPair(Binding.ToCSharpObject(state, 1, binding), Binding.ToCSharpObject(state, 2, binding));
-            try { return Binding.PushLuaType(state, operatorMethod(pair), binding); }
-            catch (Exception e) { Debug.Log(e); return state.Error(e.Message); }
+            return (int)Binding.LuaExceptionCatch(() => Binding.PushLuaType(state, operatorMethod(pair), binding), state);
         }
         
         private static int StructureUnary(IntPtr L)
@@ -96,15 +95,12 @@ namespace kOS.Lua.Types
             var state = KeraLua.Lua.FromIntPtr(L);
             var binding = Binding.bindings[state.MainThread.Handle];
             var obj = Binding.ToCSharpObject(state, 1, binding);
-            
+            if (obj == null) return 0;
             MethodInfo unaryMethod = obj.GetType().GetMethod("op_UnaryNegation", BindingFlags.FlattenHierarchy |BindingFlags.Static | BindingFlags.Public);
             if (unaryMethod != null)
-            {
-                try { return Binding.PushLuaType(state, unaryMethod.Invoke(null, new[]{obj}), binding); }
-                catch (Exception e) { Debug.Log(e); return state.Error(e.Message); }
-            }
-            var ex = new KOSUnaryOperandTypeException("negate", obj);
-            Debug.Log(ex); return state.Error(ex.Message);
+                return (int)Binding.LuaExceptionCatch(() => Binding.PushLuaType(state, unaryMethod.Invoke(null, new[]{obj}), binding), state);
+            Binding.LuaExceptionCatch(() => throw new KOSUnaryOperandTypeException("negate", obj), state);
+            return 0;
         }
 
         private static int StructureToString(IntPtr L)
@@ -132,8 +128,7 @@ namespace kOS.Lua.Types
             if (structure == null)
                 return state.Error(string.Format("attempt to index a {0} value", obj.GetType().Name));
 
-            try { return PushSuffixResult(state, binding, structure, 2); }
-            catch (Exception e) { Debug.Log(e); return state.Error(e.Message); }
+            return (int)Binding.LuaExceptionCatch(() => PushSuffixResult(state, binding, structure, 2), state);
         }
 
         private static int PushSuffixResult(KeraLua.Lua state, Binding.BindingData binding, Structure structure, int index)
@@ -172,23 +167,22 @@ namespace kOS.Lua.Types
         {
             var state = KeraLua.Lua.FromIntPtr(L);
             var binding = Binding.bindings[state.MainThread.Handle];
-            object obj = binding.Objects[state.ToUserData(1)];
+            var obj = binding.Objects[state.ToUserData(1)];
             var structure = obj as Structure;
             if (structure == null)
                 return state.Error(string.Format("attempt to index a {0} value", obj.GetType().Name));
-            object value = Binding.ToCSharpObject(state, 3, binding);
-            if (value != null)
+            var newValue = Binding.ToCSharpObject(state, 3, binding);
+            if (newValue == null) return 0;
+            if (structure is IIndexable && state.Type(2) == LuaType.Number)
             {
-                if (structure is IIndexable && state.Type(2) == LuaType.Number)
-                {
-                    int intIndex = (int)state.ToInteger(2);
-                    try { (structure as IIndexable).SetIndex(intIndex, Structure.FromPrimitive(value) as Structure); }
-                    catch (Exception e) { Debug.Log(e); return state.Error(e.Message); }
-                    return 0;
-                }
+                var index = (int)state.ToInteger(2) - (structure is Lexicon? 0 : 1);
+                Binding.LuaExceptionCatch(() =>
+                    (structure as IIndexable).SetIndex(index, Structure.FromPrimitive(newValue) as Structure), state);
+            }
+            else
+            {
                 var index = state.ToString(2);
-                try { structure.SetSuffix(index, Structure.FromPrimitive(value)); }
-                catch (Exception e) { Debug.Log(e); return state.Error(e.Message); }
+                Binding.LuaExceptionCatch(() => structure.SetSuffix(index, Structure.FromPrimitive(newValue)), state);
             }
             return 0;
         }
@@ -237,9 +231,8 @@ namespace kOS.Lua.Types
             state.PushCopy(KeraLua.Lua.UpValueIndex(2));
             state.PushInteger(currentIndex);
             state.GetTable(-2);
-            
-            try { PushSuffixResult(state, binding, structure, -1); }
-            catch (Exception e) { Debug.Log(e); return state.Error(e.Message); }
+
+            Binding.LuaExceptionCatch(() => PushSuffixResult(state, binding, structure, -1), state);
             
             state.PushInteger(currentIndex+1);
             state.Copy(-1, KeraLua.Lua.UpValueIndex(1));

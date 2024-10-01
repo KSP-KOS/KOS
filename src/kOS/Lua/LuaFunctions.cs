@@ -14,9 +14,12 @@ namespace kOS.Lua
             state.SetGlobal("_print");
             state.PushCFunction(KosPrint);
             state.SetGlobal("print");
-            state.SetWarningFunction(Warning, state.MainThread.Handle);
+            state.GetGlobal("warn");
+            state.SetGlobal("_warn");
+            state.PushCFunction(Warning);
+            state.SetGlobal("warn");
         }
-        
+
         private static int KosPrint(IntPtr L)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
@@ -27,19 +30,15 @@ namespace kOS.Lua
             Binding.bindings[state.MainThread.Handle].Shared.Screen.Print(string.Join("    ", prints));
             return 0;
         }
-
-        private static void Warning(IntPtr ud, IntPtr msg, int tocont)
+        
+        private static int Warning(IntPtr L)
         {
-            var shared = Binding.bindings[ud].Shared;
-            (shared.Interpreter as LuaInterpreter).DisplayError(Marshal.PtrToStringAnsi(msg));
+            var state = KeraLua.Lua.FromIntPtr(L);
+            state.CheckString(1);
+            var shared = Binding.bindings[state.MainThread.Handle].Shared;
+            shared.SoundMaker.BeginFileSound("error");
+            shared.Screen.Print(state.ToString(1));
+            return 0;
         }
-
-        // private static int SetSteering(IntPtr L)
-        // {
-        //     var state = KeraLua.Lua.FromIntPtr(L);
-        //     var binding = Binding.bindings[state.MainThread.Handle];
-        //     var steeringManager = kOSVesselModule.GetInstance(binding.Shared.Vessel).GetFlightControlParameter("steering");
-        //     return 0;
-        // }
     }
 }

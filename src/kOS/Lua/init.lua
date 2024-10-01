@@ -1,5 +1,60 @@
 function onFixedUpdate(dt)
+    runProcessControl()
     runCallbacks()
+end
+
+function runProcessControl()
+    if controlCoroutine then coroutine.resume(controlCoroutine) end
+    controlCoroutine = coroutine.create(processControl)
+    coroutine.resume(controlCoroutine)
+end
+
+function processControl()
+    if rawget(_ENV, "steering") then
+        steeringControlled = true
+        local success, error = pcall(function() STEERING = type(steering) == "function" and steering() or steering end)
+        if not success then
+            warn(error)
+            steering = nil
+        end
+    elseif steeringControlled then
+        steeringControlled = false
+        toggleflybywire("steering", false)
+    end
+    if rawget(_ENV, "throttle") then
+        throttleControlled = true
+        local success, error = pcall(function() THROTTLE = type(throttle) == "function" and throttle() or throttle end)
+        if not success then
+            warn(error)
+            throttle = nil
+        end
+    elseif throttleControlled then
+        throttleControlled = false
+        toggleflybywire("throttle", false)
+    end
+    if rawget(_ENV, "wheelSteering") then
+        wheelSteeringControlled = true
+        local success, error = pcall(function() WHEELSTEERING = type(wheelSteering) == "function" and wheelSteering() or wheelSteering end)
+        if not success then
+            warn(error)
+            wheelSteering = nil
+        end
+    elseif wheelSteeringControlled then
+        wheelSteeringControlled = false
+        toggleflybywire("wheelSteering", false)
+    end
+    if rawget(_ENV, "wheelThrottle") then
+        wheelThrottleControlled = true
+        local success, error = pcall(function() WHEELTHROTTLE = type(wheelThrottle) == "function" and wheelThrottle() or wheelThrottle end)
+        if not success then
+            warn(error)
+            wheelThrottle = nil
+        end
+    elseif wheelThrottleControlled then
+        wheelThrottleControlled = false
+        toggleflybywire("wheelThrottle", false)
+    end
+    controlCoroutine = nil
 end
 
 function onBreakExecution()

@@ -40,7 +40,11 @@ namespace kOS.Lua.Types
             stack.Clear();
             stack.PushArgument(new KOSArgMarkerType());
             for (int i = 2; i <= state.GetTop(); i++)
-                stack.PushArgument(Binding.ToCSharpObject(state, i, binding));
+            {
+                var arg = Binding.ToCSharpObject(state, i, binding);
+                if (arg == null) break;
+                stack.PushArgument(arg);
+            }
             
             if (ksFunction is SafeFunctionBase function)
             {
