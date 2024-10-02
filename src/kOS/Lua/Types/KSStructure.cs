@@ -27,49 +27,26 @@ namespace kOS.Lua.Types
             state.PushString("__type");
             state.PushString(MetatableName);
             state.RawSet(-3);
-            state.PushString("__index");
-            state.PushCFunction(StructureIndex);
-            state.RawSet(-3);
-            state.PushString("__newindex");
-            state.PushCFunction(StructureNewIndex);
-            state.RawSet(-3);
-            state.PushString("__pairs");
-            state.PushCFunction(StructurePairs);
-            state.RawSet(-3);
-            state.PushString("__gc");
-            state.PushCFunction(Binding.CollectObject);
-            state.RawSet(-3);
-            state.PushString("__tostring");
-            state.PushCFunction(StructureToString);
-            state.RawSet(-3);
-            state.PushString("__add");
-            state.PushCFunction(StructureAdd);
-            state.RawSet(-3);
-            state.PushString("__sub");
-            state.PushCFunction(StructureSubtract);
-            state.RawSet(-3);
-            state.PushString("__mul");
-            state.PushCFunction(StructureMultiply);
-            state.RawSet(-3);
-            state.PushString("__div");
-            state.PushCFunction(StructureDivide);
-            state.RawSet(-3);
-            state.PushString("__pow");
-            state.PushCFunction(StructurePower);
-            state.RawSet(-3);
-            state.PushString("__unm");
-            state.PushCFunction(StructureUnary);
-            state.RawSet(-3);
-            // there is no "not equal", "greater than", "greater or equal than" because lua switches the order for these operators
-            // and uses the operators below. In theory there shouldn't be any differences with how kerboscript does it, but watch out
-            state.PushString("__eq");
-            state.PushCFunction(StructureEqual);
-            state.RawSet(-3);
-            state.PushString("__lt");
-            state.PushCFunction(StructureLessThan);
-            state.RawSet(-3);
-            state.PushString("__le");
-            state.PushCFunction(StructureLessEqualThan);
+            AddMetaMethod(state, "__index", StructureIndex);
+            AddMetaMethod(state, "__newindex", StructureNewIndex);
+            AddMetaMethod(state, "__pairs", StructurePairs);
+            AddMetaMethod(state, "__gc", Binding.CollectObject);
+            AddMetaMethod(state, "__tostring", StructureToString);
+            AddMetaMethod(state, "__add", StructureAdd);
+            AddMetaMethod(state, "__sub", StructureSubtract);
+            AddMetaMethod(state, "__mul", StructureMultiply);
+            AddMetaMethod(state, "__div", StructureDivide);
+            AddMetaMethod(state, "__pow", StructurePower);
+            AddMetaMethod(state, "__unm", StructureUnary);
+            AddMetaMethod(state, "__eq", StructureEqual);
+            AddMetaMethod(state, "__lt", StructureLessThan);
+            AddMetaMethod(state, "__le", StructureLessEqualThan);
+        }
+
+        private static void AddMetaMethod(KeraLua.Lua state, string name, LuaFunction metaMethod)
+        {
+            state.PushString(name);
+            state.PushCFunction(metaMethod);
             state.RawSet(-3);
         }
 
@@ -139,6 +116,9 @@ namespace kOS.Lua.Types
                 pushValue = Structure.ToPrimitive(indexable.GetIndex((int)state.ToInteger(index)-(structure is Lexicon? 0 : 1), true));
                 return Binding.PushLuaType(state, pushValue, binding);
             }
+            
+            if (structure is TerminalInput && state.ToString(index)?.ToLower() == "getchar")
+                return Binding.PushLuaType(state, LuaFunctions.GetChar, binding);
             
             var result = structure.GetSuffix(state.ToString(index), true);
             if (result == null)

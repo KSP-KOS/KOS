@@ -2,6 +2,8 @@ using KeraLua;
 using kOS.Module;
 using System;
 using System.Runtime.InteropServices;
+using kOS.Safe.Execution;
+using kOS.Safe.Persistence;
 using Debug = UnityEngine.Debug;
 
 namespace kOS.Lua
@@ -10,14 +12,25 @@ namespace kOS.Lua
     {
         public static void Add(KeraLua.Lua state)
         {
-            state.GetGlobal("print");
-            state.SetGlobal("_print");
-            state.PushCFunction(KosPrint);
-            state.SetGlobal("print");
-            state.GetGlobal("warn");
-            state.SetGlobal("_warn");
-            state.PushCFunction(Warning);
-            state.SetGlobal("warn");
+            AddFunction(state, "print", KosPrint);
+            AddFunction(state, "warn", Warn);
+            AddFunction(state, "wait", Wait);
+            AddFunction(state, "loadfile", LoadFile);
+            AddFunction(state, "dofile", DoFile);
+            AddFunction(state, "getchar", GetChar);
+        }
+
+        private static void AddFunction(KeraLua.Lua state, string name, LuaFunction function, bool saveOverwrittenValue = true)
+        {
+            if (saveOverwrittenValue)
+            {
+                if (state.GetGlobal(name) != LuaType.Nil)
+                    state.SetGlobal("_" + name);
+                else
+                    state.Pop(1);
+            }
+            state.PushCFunction(function);
+            state.SetGlobal(name);
         }
 
         private static int KosPrint(IntPtr L)
@@ -31,7 +44,7 @@ namespace kOS.Lua
             return 0;
         }
         
-        private static int Warning(IntPtr L)
+        private static int Warn(IntPtr L)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
             state.CheckString(1);
@@ -39,6 +52,78 @@ namespace kOS.Lua
             shared.SoundMaker.BeginFileSound("error");
             shared.Screen.Print(state.ToString(1));
             return 0;
+        }
+
+        private static int Wait(IntPtr L)
+        {
+            var state = KeraLua.Lua.FromIntPtr(L);
+            state.CheckNumber(1);
+            var shared = Binding.bindings[state.MainThread.Handle].Shared;
+            shared.Cpu.YieldProgram(new YieldFinishedGameTimer(state.ToNumber(1)));
+            return 0;
+        }
+
+        private static int LoadFile(IntPtr L)
+        {
+            var state = KeraLua.Lua.FromIntPtr(L);
+            state.CheckString(1);
+            var filePath = state.ToString(1);
+            var mode = state.OptString(2, "bt");
+            var shared = Binding.bindings[state.MainThread.Handle].Shared;
+            var file = shared.VolumeMgr.CurrentVolume.Open(filePath) as VolumeFile;
+            if (file == null)
+            {
+                state.PushNil();
+                state.PushString($"File '{filePath}' not found");
+                return 2;
+            }
+            if (state.LoadBuffer(state.Encoding.GetBytes(file.ReadAll().String), file.Path.ToString(), mode) != LuaStatus.OK)
+            {
+                state.PushNil();
+                state.PushCopy(-2);
+                return 2;
+            }
+            if (state.GetTop() >= 4)
+            {   // if there was a third argument set it as the _ENV value for the loaded function
+                state.PushCopy(3);
+                if (state.SetUpValue(-2, 1) == null)
+                    state.Pop(1);
+            }
+            return 1;
+        }
+
+        private static int DoFile(IntPtr L)
+        {
+            var state = KeraLua.Lua.FromIntPtr(L);
+            var argCount = state.GetTop();
+            LoadFile(L);
+            if (state.IsString(-1))
+                return state.Error(state.ToString(-1));
+            state.CallK(0, -1, argCount, DoFileContinuation);
+            return DoFileContinuation(L, (int)LuaStatus.OK, (IntPtr)argCount);
+        }
+
+        private static int DoFileContinuation(IntPtr L, int status, IntPtr ctx)
+        {
+            var state = KeraLua.Lua.FromIntPtr(L);
+            var argCount = (int)ctx;
+            return state.GetTop()-argCount;
+        }
+        
+        public static int GetChar(IntPtr L)
+        {
+            return GetCharContinuation(L, 0, IntPtr.Zero);
+        }
+
+        private static int GetCharContinuation(IntPtr L, int status, IntPtr ctx)
+        {
+            var state = KeraLua.Lua.FromIntPtr(L);
+            var shared = Binding.bindings[state.MainThread.Handle].Shared;
+            var q = shared.Screen.CharInputQueue;
+            if (q.Count == 0)
+                state.YieldK(0, 0, GetCharContinuation);
+            state.PushString(q.Dequeue().ToString());
+            return 1;
         }
     }
 }

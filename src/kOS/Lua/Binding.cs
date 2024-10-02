@@ -57,9 +57,28 @@ namespace kOS.Lua
             }
         }
 
+        private static class BindingChanges
+        {
+            private static readonly List<KeyValuePair<string, string>> variableRenames = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>("stage", "stageInfo")
+            };
+
+            public static void Apply(BindingManager bindingManager, FunctionManager functionManager)
+            {
+                foreach (var rename in variableRenames)
+                {
+                    if (!bindingManager.RawVariables.TryGetValue(rename.Key, out var variable)) continue;
+                    bindingManager.RawVariables.Add(rename.Value, variable);
+                    bindingManager.RawVariables.Remove(rename.Key);
+                }
+            }
+        }
+
         public static void BindToState(KeraLua.Lua state, SharedObjects shared)
         {
             state = state.MainThread;
+            BindingChanges.Apply(shared.BindingMgr as BindingManager, shared.FunctionManager as FunctionManager);
             bindings[state.Handle] = new BindingData(
                 state,
                 shared,
@@ -212,6 +231,11 @@ namespace kOS.Lua
                     break;
                 }
             }
+            return 1;
+        }
+        public static int PushLuaType(KeraLua.Lua state, LuaFunction function, BindingData binding)
+        {
+            state.PushCFunction(function);
             return 1;
         }
 
