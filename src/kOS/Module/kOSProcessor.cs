@@ -87,8 +87,6 @@ namespace kOS.Module
 
         private const string BootDirectoryName = "boot";
 
-        public string InterpreterLanguage => interpreterLanguage;
-
         [KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Interpreter", groupName = PAWGroup, groupDisplayName = PAWGroup), UI_ChooseOption(scene = UI_Scene.All)]
         public string interpreterLanguage = "kerboscript";
 

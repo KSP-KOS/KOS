@@ -73,14 +73,6 @@ namespace kOS.Safe.Test.Execution
             }
         }
 
-        public string InterpreterLanguage
-        {
-            get
-            {
-                return String.Empty;
-            }
-        }
-
         public string Tag
         {
             get
