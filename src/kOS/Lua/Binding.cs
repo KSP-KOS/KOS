@@ -61,7 +61,8 @@ namespace kOS.Lua
         {
             private static readonly List<KeyValuePair<string, string>> variableRenames = new List<KeyValuePair<string, string>>()
             {
-                new KeyValuePair<string, string>("stage", "stageInfo")
+                new KeyValuePair<string, string>("STAGE", "STAGEINFO"),
+                new KeyValuePair<string, string>("HEADING", "SHIPHEADING")
             };
 
             public static void Apply(BindingManager bindingManager, FunctionManager functionManager)
