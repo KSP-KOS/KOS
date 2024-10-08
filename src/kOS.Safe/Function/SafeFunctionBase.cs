@@ -8,7 +8,7 @@ namespace kOS.Safe.Function
 {
     public abstract class SafeFunctionBase
     {
-        public string functionName;
+        public string FunctionName;
 
         /// <summary>
         /// ALL FUNCTIONS in kOS will always have exactly one return value.  We have no
@@ -109,7 +109,7 @@ namespace kOS.Safe.Function
             if (shouldBeBottom != null && shouldBeBottom.GetType() == OpcodeCall.ArgMarkerType)
                 return; // Assert passed.
 
-            throw new KOSArgumentMismatchException("Too many arguments were passed to " + functionName);
+            throw new KOSArgumentMismatchException("Too many arguments were passed to " + FunctionName);
         }
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace kOS.Safe.Function
         {
             object returnValue = shared.Cpu.PopValueArgument(barewordOkay);
             if (returnValue != null && returnValue.GetType() == OpcodeCall.ArgMarkerType)
-                throw new KOSArgumentMismatchException("Too few arguments were passed to " + functionName);
+                throw new KOSArgumentMismatchException("Too few arguments were passed to " + FunctionName);
             return returnValue;
         }
 
@@ -161,7 +161,7 @@ namespace kOS.Safe.Function
         {
             object returnValue = shared.Cpu.PopArgumentStack();
             if (returnValue != null && returnValue.GetType() == OpcodeCall.ArgMarkerType)
-                throw new KOSArgumentMismatchException("Too few arguments were passed to " + functionName);
+                throw new KOSArgumentMismatchException("Too few arguments were passed to " + FunctionName);
             return returnValue;
         }
 
@@ -176,6 +176,6 @@ namespace kOS.Safe.Function
             return Structure.FromPrimitiveWithAssert(returnValue);
         }
 
-        protected string GetFuncName() => functionName;
+        protected string GetFuncName() => FunctionName;
     }
 }

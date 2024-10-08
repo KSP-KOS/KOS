@@ -116,9 +116,12 @@ namespace kOS.Lua.Types
                 pushValue = Structure.ToPrimitive(indexable.GetIndex((int)state.ToInteger(index)-(structure is Lexicon? 0 : 1), true));
                 return Binding.PushLuaType(state, pushValue, binding);
             }
-            
+
             if (structure is TerminalInput && state.ToString(index)?.ToLower() == "getchar")
-                return Binding.PushLuaType(state, LuaFunctions.GetChar, binding);
+            {
+                state.PushCFunction(LuaFunctions.GetChar);
+                return 1;
+            }
             
             var result = structure.GetSuffix(state.ToString(index), true);
             if (result == null)

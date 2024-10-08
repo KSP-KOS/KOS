@@ -234,11 +234,6 @@ namespace kOS.Lua
             }
             return 1;
         }
-        public static int PushLuaType(KeraLua.Lua state, LuaFunction function, BindingData binding)
-        {
-            state.PushCFunction(function);
-            return 1;
-        }
 
         private static int PushObject(KeraLua.Lua state, object obj, BindingData binding, string metatable)
         {

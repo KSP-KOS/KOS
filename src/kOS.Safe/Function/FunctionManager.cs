@@ -35,7 +35,7 @@ namespace kOS.Safe.Function
                     if (functionName != string.Empty)
                     {
                         var function = (SafeFunctionBase)functionObject;
-                        function.functionName = longestName;
+                        function.FunctionName = longestName;
                         functions.Add(functionName, function);
                     }
                 }

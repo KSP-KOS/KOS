@@ -168,4 +168,90 @@ namespace kOS.Function
             ReturnValue = PartModuleFieldsFactory.Construct(processor, shared);
         }
     }
+    
+    [Function("runfileon")]
+    public class RunFileOn : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            var processorTagOrVolume = PopValueAssert(shared);
+            var pathObject = PopValueAssert(shared);
+            
+            AssertArgBottomAndConsume(shared);
+            
+            GlobalPath path = shared.VolumeMgr.GlobalPathFromObject(pathObject);
+            Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
+            VolumeFile volumeFile = volume.Open(path) as VolumeFile;
+            FileContent content = volumeFile != null ? volumeFile.ReadAll() : null;
+            
+            if (content == null) throw new Exception(string.Format("File '{0}' not found", path));
+    
+            kOSProcessor processor;
+    
+            if (processorTagOrVolume is Volume)
+            {
+                processor = shared.ProcessorMgr.GetProcessor(processorTagOrVolume as Volume);
+            }
+            else if (processorTagOrVolume is string || processorTagOrVolume is StringValue)
+            {
+                processor = shared.ProcessorMgr.GetProcessor(processorTagOrVolume.ToString());
+            }
+            else
+            {
+                throw new KOSInvalidArgumentException(FunctionName, "processorId", "String or Volume expected");
+            }
+    
+            if (processor == null)
+            {
+                throw new KOSInvalidArgumentException(FunctionName, "processorId", "Processor with that volume or name was not found");
+            }
+    
+            processor.RunBootFile(volumeFile);
+        }
+    }
+
+    [Function("runcommandon")]
+    public class RunCommandOn : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            var processorTagOrVolume = PopValueAssert(shared);
+            var command = Structure.ToPrimitive(PopValueAssert(shared)) as string;
+            
+            AssertArgBottomAndConsume(shared);
+
+            if (command == null)
+            {
+                throw new KOSInvalidArgumentException(FunctionName, "command", "String expected");
+            }
+
+            kOSProcessor processor;
+
+            if (processorTagOrVolume is Volume)
+            {
+                processor = shared.ProcessorMgr.GetProcessor(processorTagOrVolume as Volume);
+            }
+            else if (processorTagOrVolume is string || processorTagOrVolume is StringValue)
+            {
+                processor = shared.ProcessorMgr.GetProcessor(processorTagOrVolume.ToString());
+            }
+            else
+            {
+                throw new KOSInvalidArgumentException(FunctionName, "processorId", "String or Volume expected");
+            }
+
+            if (processor == null)
+            {
+                throw new KOSInvalidArgumentException(FunctionName, "processorId",
+                    "Processor with that volume or name was not found");
+            }
+            if (processor.KOSCoreId == shared.Processor.KOSCoreId)
+            {
+                throw new KOSInvalidArgumentException(FunctionName, "processorId",
+                    "Processor cannot be the current processor");
+            }
+
+            processor.RunCommand(command);
+        }
+    }
 }

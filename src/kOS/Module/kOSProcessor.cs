@@ -950,6 +950,18 @@ namespace kOS.Module
                     // run boot methods
                     shared.Cpu.Boot();
                     shared.Interpreter.Boot();
+
+                    // if booted by calling RunBootFile reset bootFile to its previous value
+                    if (beforeRunLuaBootFile != null)
+                    {
+                        luaBootFile = beforeRunLuaBootFile;
+                        beforeRunLuaBootFile = null;
+                    }
+                    if (beforeRunBootFile != null)
+                    {
+                        bootFile = beforeRunBootFile;
+                        beforeRunBootFile = null;
+                    }
                     
                     HasBooted = true;
                 }
@@ -1251,7 +1263,39 @@ namespace kOS.Module
 
         }
 
-        // TODO: this never gets called? We can use it to run programs on other kosprocessors. Perhaps even ones that are using different interpreters
+        private string beforeRunLuaBootFile;
+        private string beforeRunBootFile;
+        
+        public void RunBootFile(VolumeFile file)
+        {
+            if (KSInterpreter.FilenameExtensions.Contains(file.Extension))
+            {
+                interpreterLanguage = "kerboscript";
+            }
+            else if (LuaInterpreter.FilenameExtensions.Contains(file.Extension))
+            {
+                interpreterLanguage = "lua";
+            }
+
+            if (interpreterLanguage == "kerboscript")
+            {
+                beforeRunBootFile = bootFile;
+                bootFile = file.Path.ToString();
+            }
+            else if (interpreterLanguage == "lua")
+            {
+                beforeRunLuaBootFile = luaBootFile;
+                luaBootFile = file.Path.ToString();
+            }
+            SetMode(ProcessorModes.OFF);
+            SetMode(ProcessorModes.READY);
+        }
+
+        public void RunCommand(string command)
+        {
+            shared.Interpreter.ProcessCommand(command);
+        }
+
         public void ExecuteInterProcCommand(InterProcCommand command)
         {
             if (command != null)
