@@ -205,7 +205,9 @@ namespace kOS.Lua
                     var status = callbacksCoroutine.Resume(state.State, 0);
                     if (status != LuaStatus.OK && status != LuaStatus.Yield)
                     {
-                        DisplayError(callbacksCoroutine.ToString(-1));
+                        DisplayError(callbacksCoroutine.ToString(-1)
+                                     +"\nonFixedUpdate function errored and was set to nil."
+                                     +"\nTo reset onFixedUpdate do 'onFixedUpdate = _onFixedUpdate'.");
                         callbacksCoroutine.PushNil();
                         callbacksCoroutine.SetGlobal("onFixedUpdate");
                     }

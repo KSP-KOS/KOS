@@ -1,6 +1,18 @@
-function onFixedUpdate(dt)
+function _onFixedUpdate()
     runProcessControl()
     runCallbacks()
+end
+onFixedUpdate = _onFixedUpdate
+
+function _onBreakExecution()
+    breakControl()
+    breakCallbacks()
+end
+onBreakExecution = _onBreakExecution
+
+function breakControl()
+    steering, throttle, wheelSteering, wheelThrottle = nil, nil, nil, nil
+    steeringControlled, throttleControlled, wheelSteeringControlled, wheelThrottleControlled = nil, nil, nil, nil
 end
 
 function runProcessControl()
@@ -57,15 +69,8 @@ function processControl()
     controlCoroutine = nil
 end
 
-function onBreakExecution()
-    breakCallbacks()
-end
-
 function breakCallbacks()
-    callbacksList = {}
-    callbacksAddQueueLock = nil
-    callbacksAddQueueRoot = nil
-    callbacksAddQueueTail = nil
+    callbacks = {}
     callbacksContinuation = nil
     callbacksUnsorted = nil
 end
@@ -75,100 +80,52 @@ function runCallbacks()
     if callbacksContinuation then
         coroutine.resume(callbacksContinuation)
     end
-    if callbacksAddQueueRoot and not callbacksAddQueueLock then
+    if callbacksUnsorted then
         callbacksContinuation = coroutine.create(function()
-            callbacksList.next, callbacksAddQueueTail.next =
-            callbacksAddQueueRoot, callbacksList.next
-            callbacksAddQueueRoot = nil
-            sortCallbacks()
+            table.sort(callbacks, function(a, b) return a.priority < b.priority end)
+            callbacksUnsorted = false
+            callbacksContinuation = nil
         end)
         coroutine.resume(callbacksContinuation)
     end
-    if callbacksUnsorted then
-        callbacksContinuation = coroutine.create(sortCallbacks)
-        coroutine.resume(callbacksContinuation)
-    end
-    local callback = callbacksList.next
-    local previousCallback = callbacksList
-    while callback do
+    for i=#callbacks,1,-1 do
+        local callback = callbacks[i]
         if callback.coroutine then
             coroutine.resume(callback.coroutine, callback)
-            previousCallback = callback
         else
             if callback.body then
                 callback.coroutine = coroutine.create(callback.body)
                 coroutine.resume(callback.coroutine, callback)
-                previousCallback = callback
             else
-                previousCallback.next = callback.next
+                table.remove(callbacks, i)
             end
         end
-        callback = callback.next
     end
-end
-
-function callbacksSplit(head)
-    local fast, slow = head, head
-    while fast and fast.next do
-        fast = fast.next.next
-        if fast then slow = slow.next end
-    end
-    local second = slow.next
-    slow.next = nil
-    return second
-end
-function callbacksMerge(first, second)
-    if not first then return second end
-    if not second then return first end
-    if first.priority > second.priority then
-        first.next = callbacksMerge(first.next, second)
-        return first
-    else
-        second.next = callbacksMerge(first, second.next)
-        return second
-    end
-end
-function callbacksMergeSort(head)
-    if not head or not head.next then return head end
-    local second = callbacksSplit(head)
-    head = callbacksMergeSort(head)
-    second = callbacksMergeSort(second)
-    return callbacksMerge(head, second)
-end
-function sortCallbacks()
-    callbacksList.next = callbacksMergeSort(callbacksList.next)
-    callbacksUnsorted = false
-    callbacksContinuation = nil
 end
 
 function addCallback(body, priority)
-    local function callbackBody(callback)
-        local success, newPriority = pcall(body, callback)
-        if not(newPriority == true or newPriority == callback.priority) then
-            if success then
-                callback.priority = tonumber(newPriority)
-                if callback.priority then
-                    callbacksUnsorted = true
+    local callback = {
+        body = function(callback)
+            local success, newPriority = pcall(body, callback)
+            if not(newPriority == true or newPriority == callback.priority) then
+                if success then
+                    callback.priority = tonumber(newPriority)
+                    if callback.priority then
+                        callbacksUnsorted = true
+                    else
+                        callback.body = nil
+                    end
                 else
+                    warn(newPriority)
                     callback.body = nil
                 end
-            else
-                warn(newPriority)
-                callback.body = nil
             end
-        end
-        callback.coroutine = nil
-    end
-    callbacksAddQueueLock = true
-    callbacksAddQueueRoot = {
-        next = callbacksAddQueueRoot,
-        body = callbackBody,
+            callback.coroutine = nil
+        end,
         priority = priority or 0
     }
-    if not callbacksAddQueueRoot.next then
-        callbacksAddQueueTail = callbacksAddQueueRoot
-    end
-    callbacksAddQueueLock = false
+    table.insert(callbacks, callback)
+    callbacksUnsorted = true
 end
 
 function when(condition, body, priority)
