@@ -49,6 +49,7 @@ namespace kOS.Lua
             public int InstructionsThisUpdate = 0;
             public int InstructionsDebt = 0;
             public bool BreakExecution = false;
+            public int BreakExecutionCount = 0;
             public readonly KeraLua.Lua CommandCoroutine;
             public readonly KeraLua.Lua CallbacksCoroutine;
             public readonly SharedObjects Shared;
@@ -169,7 +170,9 @@ namespace kOS.Lua
 
         public void BreakExecution()
         {
-            stateInfo[state.State.MainThread.Handle].BreakExecution = true;
+            var execInfo = stateInfo[state.State.MainThread.Handle];
+            execInfo.BreakExecution = true;
+            execInfo.BreakExecutionCount++;
         }
 
         public int InstructionsThisUpdate()
@@ -213,7 +216,16 @@ namespace kOS.Lua
             callbacksCoroutine.ResetThread();
             if (callbacksCoroutine.GetGlobal("onFixedUpdate") == LuaType.Function)
             {
-                if (callbacksCoroutine.LoadString("onFixedUpdate()", "callback") == LuaStatus.OK)
+                if (execInfo.BreakExecutionCount >= 3)
+                {
+                    Shared.SoundMaker.BeginFileSound("beep");
+                    Shared.Screen.Print("Ctrl+C was pressed 3 times while onFixedUpdate was executing and "+
+                                        "onFixedUpdate was set to nil. To reset onFixedUpdate do 'onFixedUpdate = _onFixedUpdate'.");
+                    callbacksCoroutine.PushNil();
+                    callbacksCoroutine.SetGlobal("onFixedUpdate");
+                    execInfo.BreakExecutionCount = 0;
+                }
+                else if (callbacksCoroutine.LoadString("onFixedUpdate()", "callback") == LuaStatus.OK)
                 {
                     var status = callbacksCoroutine.Resume(state.State, 0);
                     if (status != LuaStatus.OK && status != LuaStatus.Yield)
@@ -227,7 +239,9 @@ namespace kOS.Lua
                 }
             }
             
-            if (execInfo.InstructionsThisUpdate >= instructionsPerUpdate) return;
+            if (execInfo.InstructionsThisUpdate < instructionsPerUpdate)
+                execInfo.BreakExecutionCount = 0;
+            
             if (execInfo.InstructionsThisUpdate >= instructionsPerUpdate || (Shared.Cpu as LuaCPU).IsYielding()) return;
 
 
