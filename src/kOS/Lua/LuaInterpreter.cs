@@ -25,13 +25,24 @@ namespace kOS.Lua
         private NLua.Lua state;
         private KeraLua.Lua commandCoroutine;
         private KeraLua.Lua callbacksCoroutine;
-        private bool commandPending = false;
+        private readonly Queue<CommandInfo> commandsQueue = new Queue<CommandInfo>();
         private static readonly Dictionary<IntPtr, ExecInfo> stateInfo = new Dictionary<IntPtr, ExecInfo>();
         private static int instructionsPerUpdate = SafeHouse.Config.InstructionsPerUpdate;
         public const string LuaVersion = "5.4";
         public static readonly string[] FilenameExtensions = new string[] { "lua" };
         public string Name => "lua";
         private SharedObjects Shared { get; }
+        
+        private class CommandInfo
+        {
+            public string Command;
+            public string ChunkName;
+            public CommandInfo(string command, string chunkName)
+            {
+                Command = command;
+                ChunkName = chunkName;
+            }
+        }
 
         private class ExecInfo
         {
@@ -123,15 +134,19 @@ namespace kOS.Lua
 
         private void ProcessCommand(string commandText, string commandName)
         {
-            if ((LuaStatus)commandCoroutine.ResetThread() != LuaStatus.OK || commandCoroutine.LoadString(commandText, commandName) != LuaStatus.OK)
+            commandsQueue.Enqueue(new CommandInfo(commandText, commandName));
+        }
+
+        private bool LoadCommand(CommandInfo commandInfo)
+        {
+            if ((LuaStatus)commandCoroutine.ResetThread() != LuaStatus.OK || commandCoroutine.LoadString(commandInfo.Command, commandInfo.ChunkName) != LuaStatus.OK)
             {
                 var err = commandCoroutine.ToString(-1);
                 commandCoroutine.Pop(1);
                 DisplayError(err);
-            } else
-            {
-                commandPending = true;
+                return false;
             }
+            return true;
         }
 
         public bool IsCommandComplete(string commandText)
@@ -177,9 +192,7 @@ namespace kOS.Lua
             if (execInfo.BreakExecution)
             {   // true after BreakExecution was called, reset thread to prevent execution of the same program
                 execInfo.BreakExecution = false;
-                // sometimes Terminal sends an empty string to ProcessCommand() after you ctrl+c during execution.
-                // This ignores commands that are sent in the same tick that StopExecution() was called
-                commandPending = false;
+                commandsQueue.Clear();
                 commandCoroutine.ResetThread();
                 callbacksCoroutine.ResetThread();
                 if (callbacksCoroutine.GetGlobal("onBreakExecution") == LuaType.Function)
@@ -215,16 +228,25 @@ namespace kOS.Lua
             }
             
             if (execInfo.InstructionsThisUpdate >= instructionsPerUpdate) return;
+            if (execInfo.InstructionsThisUpdate >= instructionsPerUpdate || (Shared.Cpu as LuaCPU).IsYielding()) return;
 
-            // resumes the coroutine after it yielded due to running out of instructions or after ProcessCommand loaded a new command
-            if (!(Shared.Cpu as LuaCPU).IsYielding() && (commandCoroutine.Status == LuaStatus.Yield || commandPending))
+
+            // resumes the coroutine after it yielded due to running out of instructions
+            // and/or executes queued commands until they run out or the coroutine yields
+            while (commandCoroutine.Status == LuaStatus.Yield || commandsQueue.Count > 0)
             {
-                commandPending = false;
-                LuaStatus status = commandCoroutine.Resume(state.State, 0);
-                if (status != LuaStatus.OK && status != LuaStatus.Yield)
+                if (commandCoroutine.Status == LuaStatus.Yield || LoadCommand(commandsQueue.Dequeue()))
                 {
-                    commandCoroutine.ResetThread();
-                    DisplayError(commandCoroutine.ToString(-1));
+                    var status = commandCoroutine.Resume(state.State, 0);
+                    if (status == LuaStatus.Yield)
+                    {
+                        return;
+                    }
+                    if (status != LuaStatus.OK)
+                    {
+                        DisplayError(commandCoroutine.ToString(-1));
+                        commandCoroutine.ResetThread();
+                    }
                 }
             }
         }
@@ -234,6 +256,7 @@ namespace kOS.Lua
             if (state == null) return;
             Shared.UpdateHandler.RemoveFixedObserver(this);
             stateInfo.Remove(state.State.MainThread.Handle);
+            commandsQueue.Clear();
             Binding.bindings.Remove(state.State.MainThread.Handle);
             state.Dispose();
             state = null;

@@ -245,11 +245,6 @@ namespace kOS.Function
                 throw new KOSInvalidArgumentException(FunctionName, "processorId",
                     "Processor with that volume or name was not found");
             }
-            if (processor.KOSCoreId == shared.Processor.KOSCoreId)
-            {
-                throw new KOSInvalidArgumentException(FunctionName, "processorId",
-                    "Processor cannot be the current processor");
-            }
 
             processor.RunCommand(command);
         }
