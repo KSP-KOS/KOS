@@ -98,7 +98,6 @@ namespace kOS.Lua
                 // the volume cannot yet have been changed from that set based on
                 // Config.StartOnArchive, and Processor.CheckCanBoot() has already
                 // handled the range check for the archive.
-                Volume sourceVolume = Shared.VolumeMgr.CurrentVolume;
                 var file = Shared.VolumeMgr.CurrentVolume.Open(path) as VolumeFile;
                 if (file == null)
                 {
@@ -106,13 +105,7 @@ namespace kOS.Lua
                 }
                 else
                 {
-                    var content = file.ReadAll();
-                    if (content == null)
-                    {
-                        DisplayError(string.Format("File '{0}' not found", path));
-                        return;
-                    }
-                    ProcessCommand(content.String, "boot");
+                    ProcessCommand($"dofile(\"{file.Path}\")", "boot");
                 }
             }
         }
@@ -204,7 +197,7 @@ namespace kOS.Lua
                     {
                         var status = callbacksCoroutine.Resume(state.State, 0);
                         if (status != LuaStatus.OK && status != LuaStatus.Yield)
-                            DisplayError(callbacksCoroutine.ToString(-1));
+                            DisplayError(callbacksCoroutine.ToString(-1), callbacksCoroutine);
                     }
                 }
             }
@@ -232,7 +225,7 @@ namespace kOS.Lua
                     {
                         DisplayError(callbacksCoroutine.ToString(-1)
                                      +"\nonFixedUpdate function errored and was set to nil."
-                                     +"\nTo reset onFixedUpdate do 'onFixedUpdate = _onFixedUpdate'.");
+                                     +"\nTo reset onFixedUpdate do 'onFixedUpdate = _onFixedUpdate'.", callbacksCoroutine);
                         callbacksCoroutine.PushNil();
                         callbacksCoroutine.SetGlobal("onFixedUpdate");
                     }
@@ -258,7 +251,7 @@ namespace kOS.Lua
                     }
                     if (status != LuaStatus.OK)
                     {
-                        DisplayError(commandCoroutine.ToString(-1));
+                        DisplayError(commandCoroutine.ToString(-1), commandCoroutine);
                         commandCoroutine.ResetThread();
                     }
                 }
@@ -276,8 +269,13 @@ namespace kOS.Lua
             state = null;
         }
 
-        public void DisplayError(string errorMessage)
+        private void DisplayError(string errorMessage, KeraLua.Lua state = null)
         {
+            if (state != null)
+            {
+                state.Traceback(state);
+                errorMessage += "\n" + state.ToString(-1);
+            }
             Shared.Logger.Log("lua error: "+errorMessage);
             Shared.SoundMaker.BeginFileSound("error");
             Shared.Screen.Print(errorMessage);
