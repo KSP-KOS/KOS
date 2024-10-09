@@ -46,6 +46,7 @@ namespace kOS.Lua
 
         private class ExecInfo
         {
+            public int? IdleInstructions;
             public int InstructionsThisUpdate = 0;
             public int InstructionsDebt = 0;
             public bool BreakExecution = false;
@@ -78,8 +79,8 @@ namespace kOS.Lua
             stateInfo.Add(state.State.MainThread.Handle, new ExecInfo(Shared, commandCoroutine, callbacksCoroutine));
             
             using (var streamReader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("kOS.Lua.init.lua"))) {
-                try { state.DoString(streamReader.ReadToEnd()); }
-                catch (Exception e) { Debug.Log(e); DisplayError(e.Message); }
+                try { state.DoString(streamReader.ReadToEnd(), "init"); }
+                catch (Exception e) { DisplayError(e.Message); }
             }
 
             Binding.BindToState(commandCoroutine, Shared);
@@ -181,9 +182,7 @@ namespace kOS.Lua
             
             var execInfo = stateInfo[commandCoroutine.MainThread.Handle];
             instructionsPerUpdate = SafeHouse.Config.InstructionsPerUpdate;
-            execInfo.InstructionsThisUpdate = Math.Min(instructionsPerUpdate, execInfo.InstructionsDebt);
-            execInfo.InstructionsDebt -= execInfo.InstructionsThisUpdate;
-            if (execInfo.InstructionsThisUpdate >= instructionsPerUpdate) return;
+            execInfo.InstructionsThisUpdate = -execInfo.IdleInstructions ?? 0;
             
             if (execInfo.BreakExecution)
             {   // true after BreakExecution was called, reset thread to prevent execution of the same program
@@ -231,12 +230,26 @@ namespace kOS.Lua
                     }
                 }
             }
+
+            // record how many instructions were used on the first fixed update by the default onFixedUpdate callback
+            // before any user code was executed. On next updates InstructionsThisUpdate will be set to -IdleInstructions
+            // to make the processor use 0 opcodes at idle. If onFixedUpdate is set to nil by the user
+            // (which means no default trigger system, no default vessel control) they would have higher IPU count.
+            // With *current* ./init.lua file IdleInstructions is 60
+            if (execInfo.IdleInstructions == null)
+            {
+                execInfo.IdleInstructions = execInfo.InstructionsThisUpdate;
+                execInfo.InstructionsThisUpdate = 0;
+            }
+            
+            var instructionsDebtPayment = Math.Min(instructionsPerUpdate - execInfo.InstructionsThisUpdate, execInfo.InstructionsDebt);
+            execInfo.InstructionsDebt -= instructionsDebtPayment;
+            execInfo.InstructionsThisUpdate += instructionsDebtPayment;
             
             if (execInfo.InstructionsThisUpdate < instructionsPerUpdate)
                 execInfo.BreakExecutionCount = 0;
             
             if (execInfo.InstructionsThisUpdate >= instructionsPerUpdate || (Shared.Cpu as LuaCPU).IsYielding()) return;
-
 
             // resumes the coroutine after it yielded due to running out of instructions
             // and/or executes queued commands until they run out or the coroutine yields
