@@ -2,6 +2,7 @@ using KeraLua;
 using kOS.Module;
 using System;
 using System.Runtime.InteropServices;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Execution;
 using kOS.Safe.Persistence;
 using Debug = UnityEngine.Debug;
@@ -12,6 +13,7 @@ namespace kOS.Lua
     {
         public static void Add(KeraLua.Lua state)
         {
+            AddFunction(state, "type", Type);
             AddFunction(state, "print", KosPrint);
             AddFunction(state, "warn", Warn);
             AddFunction(state, "wait", Wait);
@@ -31,6 +33,24 @@ namespace kOS.Lua
             }
             state.PushCFunction(function);
             state.SetGlobal(name);
+        }
+        
+        private static int Type(IntPtr L)
+        {
+            var state = KeraLua.Lua.FromIntPtr(L);
+            if (state.Type(1) == LuaType.UserData)
+            {
+                var obj = Binding.bindings[state.MainThread.Handle].Objects[state.ToUserData(1)];
+                if (obj is Structure structure)
+                {
+                    state.PushString(structure.KOSName);
+                    return 1;
+                }
+            }
+            if (state.GetMetaField(1, "__type") == LuaType.String)
+                return 1;
+            state.PushString(state.TypeName(1));
+            return 1;
         }
 
         private static int KosPrint(IntPtr L)

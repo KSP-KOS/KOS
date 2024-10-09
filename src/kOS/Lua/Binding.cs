@@ -89,17 +89,19 @@ namespace kOS.Lua
             
             LuaFunctions.Add(state);
             
+            // set index and newindex metamethods on the environment table
+            state.PushGlobalTable();
+            state.NewTable();
+            state.PushString("__index");
             state.PushCFunction(EnvIndex);
-            state.SetGlobal("envIndex");
+            state.SetTable(-3);
+            state.PushString("__newindex");
             state.PushCFunction(EnvNewIndex);
-            state.SetGlobal("envNewIndex");
-            state.GetGlobal("type");
-            state.SetGlobal("_type");
-            state.PushCFunction(TypeFunction);
-            state.SetGlobal("type");
-            int oldTop = state.GetTop();
-            state.DoString(@"local mt = { __index = envIndex, __newindex = envNewIndex }; setmetatable(_ENV, mt)");
+            state.SetTable(-3);
+            state.SetMetaTable(-2);
+            state.Pop(1);
             
+            // add userdataAddressToUserdata table to the registry
             state.PushString("userdataAddressToUserdata");
             state.NewTable();
             state.NewTable();
@@ -108,8 +110,6 @@ namespace kOS.Lua
             state.SetTable(-3);
             state.SetMetaTable(-2);
             state.SetTable((int)LuaRegistry.Index);
-            
-            state.SetTop(oldTop);
         }
 
         public static int CollectObject(IntPtr L)
@@ -130,24 +130,6 @@ namespace kOS.Lua
             var state = KeraLua.Lua.FromIntPtr(L);
             var obj = Binding.bindings[state.MainThread.Handle].Objects[state.ToUserData(1)];
             state.PushString(obj.ToString());
-            return 1;
-        }
-        
-        private static int TypeFunction(IntPtr L)
-        {
-            var state = KeraLua.Lua.FromIntPtr(L);
-            if (state.Type(1) == LuaType.UserData)
-            {
-                var obj = bindings[state.MainThread.Handle].Objects[state.ToUserData(1)];
-                if (obj is Structure structure)
-                {
-                    state.PushString(structure.KOSName);
-                    return 1;
-                }
-            }
-            if (state.GetMetaField(1, "__type") == LuaType.String)
-                return 1;
-            state.PushString(state.TypeName(1));
             return 1;
         }
 
