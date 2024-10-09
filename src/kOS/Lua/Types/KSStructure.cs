@@ -31,6 +31,7 @@ namespace kOS.Lua.Types
             AddMetaMethod(state, "__newindex", StructureNewIndex);
             AddMetaMethod(state, "__pairs", StructurePairs);
             AddMetaMethod(state, "__gc", Binding.CollectObject);
+            AddMetaMethod(state, "__len", StructureLength);
             AddMetaMethod(state, "__tostring", StructureToString);
             AddMetaMethod(state, "__add", StructureAdd);
             AddMetaMethod(state, "__sub", StructureSubtract);
@@ -78,6 +79,17 @@ namespace kOS.Lua.Types
                 return (int)Binding.LuaExceptionCatch(() => Binding.PushLuaType(state, unaryMethod.Invoke(null, new[]{obj}), binding), state);
             Binding.LuaExceptionCatch(() => throw new KOSUnaryOperandTypeException("negate", obj), state);
             return 0;
+        }
+
+        private static int StructureLength(IntPtr L)
+        {
+            var state = KeraLua.Lua.FromIntPtr(L);
+            var binding = Binding.bindings[state.MainThread.Handle];
+            var structure = binding.Objects[state.ToUserData(1)] as Structure;
+            if (!structure.HasSuffix("LENGTH"))
+                return state.Error("attempt to get length of a Structure with no length suffix");
+            state.PushString("LENGTH");
+            return (int)Binding.LuaExceptionCatch(() => PushSuffixResult(state, binding, structure, -1), state);
         }
 
         private static int StructureToString(IntPtr L)
