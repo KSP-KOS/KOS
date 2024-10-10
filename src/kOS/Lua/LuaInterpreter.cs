@@ -72,6 +72,7 @@ namespace kOS.Lua
             Dispose();
             Shared.UpdateHandler.AddFixedObserver(this);
             state = new NLua.Lua();
+            state.State.Encoding = Encoding.UTF8;
             commandCoroutine = state.State.NewThread();
             callbacksCoroutine = state.State.NewThread();
             commandCoroutine.SetHook(AfterEveryInstructionHook, LuaHookMask.Count, 1);
