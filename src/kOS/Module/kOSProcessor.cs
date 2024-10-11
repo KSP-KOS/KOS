@@ -610,11 +610,6 @@ namespace kOS.Module
 
         private static Regex VolumeNameRemoveChars = new Regex("[/\\\\<>:\"|?*]*", RegexOptions.Compiled);
 
-        private ICpu luaCpu;
-        private ICpu ksCpu;
-        private IInterpreter luaInterpreter;
-        private IInterpreter ksInterpreter;
-
         public void InitObjects()
         {
             if (objectsInitialized)
@@ -821,10 +816,6 @@ namespace kOS.Module
                 shared.Cpu.BreakExecution(false);
                 shared.Cpu.Dispose();
                 shared.Interpreter.Dispose();
-                luaCpu?.Dispose();
-                ksCpu?.Dispose();
-                luaInterpreter?.Dispose();
-                ksInterpreter?.Dispose();
                 shared.DestroyObjects();
                 shared = null;
             }
@@ -927,24 +918,19 @@ namespace kOS.Module
                 {
                     SafeHouse.Logger.LogWarning("First Update()");
                     // interpreter swap
-                    // stop the fixed observers
-                    shared.UpdateHandler.RemoveFixedObserver(shared.Cpu);
-                    // save cpu and interpreter references
+                    // dispose current cpu and interpreter
+                    shared.Cpu.Dispose();
                     shared.Interpreter.Dispose();
-                    if (shared.Cpu is LuaCPU) luaCpu = shared.Cpu;
-                    else ksCpu = shared.Cpu;
-                    if (shared.Interpreter is LuaInterpreter) luaInterpreter = shared.Interpreter; 
-                    else ksInterpreter = shared.Interpreter;
-                    // update shared cpu and interpreter from references or create new ones if they are null
+                    // update shared cpu and interpreter
                     if (interpreterLanguage == "lua")
                     {
-                        shared.Cpu = luaCpu ?? new LuaCPU(shared);
-                        shared.Interpreter = luaInterpreter ?? new LuaInterpreter(shared);
+                        shared.Cpu = new LuaCPU(shared);
+                        shared.Interpreter = new LuaInterpreter(shared);
                     }
                     else
                     {
-                        shared.Cpu = ksCpu ?? new CPU(shared);
-                        shared.Interpreter = ksInterpreter ?? new KSInterpreter(shared);
+                        shared.Cpu = new CPU(shared);
+                        shared.Interpreter = new KSInterpreter(shared);
                     }
                     // run boot methods
                     shared.Cpu.Boot();
