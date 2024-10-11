@@ -929,9 +929,8 @@ namespace kOS.Module
                     // interpreter swap
                     // stop the fixed observers
                     shared.UpdateHandler.RemoveFixedObserver(shared.Cpu);
-                    if (shared.Interpreter is IFixedUpdateObserver interpreterObserver)
-                        shared.UpdateHandler.RemoveFixedObserver(interpreterObserver);
                     // save cpu and interpreter references
+                    shared.Interpreter.Dispose();
                     if (shared.Cpu is LuaCPU) luaCpu = shared.Cpu;
                     else ksCpu = shared.Cpu;
                     if (shared.Interpreter is LuaInterpreter) luaInterpreter = shared.Interpreter; 

@@ -1,12 +1,23 @@
 function _onFixedUpdate()
     runProcessControl()
-    runCallbacks()
+    runCallbacks(fixedUpdateCallbacks)
 end
-onFixedUpdate = _onFixedUpdate
+
+function _onUpdate()
+    runCallbacks(updateCallbacks)
+end
+
+function setUpdateCallbacks()
+    onFixedUpdate = _onFixedUpdate
+    onUpdate = _onUpdate
+end
+setUpdateCallbacks()
 
 function _onBreakExecution()
     breakControl()
-    breakCallbacks()
+    fixedUpdateCallbacks = {}
+    callbacks = fixedUpdateCallbacks
+    updateCallbacks = {}
 end
 onBreakExecution = _onBreakExecution
 
@@ -69,24 +80,20 @@ function processControl()
     controlCoroutine = nil
 end
 
-function breakCallbacks()
-    callbacks = {}
-    callbacksContinuation = nil
-    callbacksUnsorted = nil
-end
-breakCallbacks()
+fixedUpdateCallbacks = {}
+updateCallbacks = {}
 
-function runCallbacks()
-    if callbacksContinuation then
-        coroutine.resume(callbacksContinuation)
+function runCallbacks(callbacks)
+    if callbacks.continuation then
+        coroutine.resume(callbacks.continuation)
     end
-    if callbacksUnsorted then
-        callbacksContinuation = coroutine.create(function()
+    if callbacks.unsorted then
+        callbacks.continuation = coroutine.create(function()
             table.sort(callbacks, function(a, b) return a.priority < b.priority end)
-            callbacksUnsorted = false
-            callbacksContinuation = nil
+            callbacks.unsorted = false
+            callbacks.continuation = nil
         end)
-        coroutine.resume(callbacksContinuation)
+        coroutine.resume(callbacks.continuation)
     end
     for i=#callbacks,1,-1 do
         local callback = callbacks[i]
@@ -103,7 +110,8 @@ function runCallbacks()
     end
 end
 
-function addCallback(body, priority)
+function addCallback(body, priority, callbacks)
+    callbacks = callbacks or fixedUpdateCallbacks
     local callback = {
         body = function(callback)
             local success, newPriority = pcall(body, callback)
@@ -111,7 +119,7 @@ function addCallback(body, priority)
                 if success then
                     callback.priority = tonumber(newPriority)
                     if callback.priority then
-                        callbacksUnsorted = true
+                        callbacks.unsorted = true
                     else
                         callback.body = nil
                     end
@@ -125,22 +133,23 @@ function addCallback(body, priority)
         priority = priority or 0
     }
     table.insert(callbacks, callback)
-    callbacksUnsorted = true
+    callbacks.unsorted = true
+    return callback
 end
 
-function when(condition, body, priority)
-    addCallback(function (callback)
+function when(condition, body, priority, callbacks)
+    return addCallback(function (callback)
         if condition() then
             return body()
         else
             return callback.priority
         end
-    end, priority)
+    end, priority, callbacks)
 end
 
-function on(state, body, priority)
+function on(state, body, priority, callbacks)
     local previousState = state()
-    addCallback(function (callback)
+    return addCallback(function (callback)
         local currentState = state()
         if currentState ~= previousState then
             local newPriority = body()
@@ -149,5 +158,5 @@ function on(state, body, priority)
         else
             return callback.priority
         end
-    end, priority)
+    end, priority, callbacks)
 end
