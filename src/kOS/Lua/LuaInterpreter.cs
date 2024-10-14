@@ -330,9 +330,10 @@ namespace kOS.Lua
             if (state == null) return;
             Shared.UpdateHandler.RemoveFixedObserver(this);
             Shared.UpdateHandler.RemoveObserver(this);
-            stateInfo.Remove(state.State.MainThread.Handle);
-            Binding.bindings.Remove(state.State.MainThread.Handle);
+            var stateHandle = state.State.MainThread.Handle;
             state.Dispose();
+            stateInfo.Remove(stateHandle);
+            Binding.bindings.Remove(stateHandle);
             state = null;
         }
 
