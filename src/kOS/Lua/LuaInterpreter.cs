@@ -47,8 +47,6 @@ namespace kOS.Lua
         {
             public readonly Queue<CommandInfo> CommandsQueue = new Queue<CommandInfo>();
             public int InstructionsPerUpdate = SafeHouse.Config.InstructionsPerUpdate;
-            public int? FixedUpdateIdleInstructions;
-            public int? UpdateIdleInstructions;
             public int InstructionsThisUpdate = 0;
             public int InstructionsDebt = 0;
             public bool BreakExecution = false;
@@ -194,7 +192,7 @@ namespace kOS.Lua
             // if KOSUpdate got called run onUpdate callback
 
             var execInfo = stateInfo[commandCoroutine.MainThread.Handle];
-            var idleInstructionsRecorded = execInfo.FixedUpdateIdleInstructions != null && execInfo.UpdateIdleInstructions != null;
+            execInfo.InstructionsPerUpdate = SafeHouse.Config.LuaInstructionsPerUpdate;
             
             if (fixedUpdateCoroutine.Status != LuaStatus.Yield && updateCoroutine.Status != LuaStatus.Yield)
                 execInfo.BreakExecutionCount = 0;
@@ -217,7 +215,7 @@ namespace kOS.Lua
             
             // running commands here but resetting InstructionsThisUpdate after, so commands have the lowest priority
             // here InstructionsThisUpdate is more like InstructionsThatUpdate
-            if (execInfo.InstructionsThisUpdate < execInfo.InstructionsPerUpdate && !(Shared.Cpu as LuaCPU).IsYielding() && idleInstructionsRecorded)
+            if (execInfo.InstructionsThisUpdate < execInfo.InstructionsPerUpdate && !(Shared.Cpu as LuaCPU).IsYielding())
             {
                 // resumes the coroutine after it yielded due to running out of instructions
                 // and/or executes queued commands until they run out or the coroutine yields
@@ -236,7 +234,6 @@ namespace kOS.Lua
                 }
             }
 
-            execInfo.InstructionsPerUpdate = idleInstructionsRecorded? SafeHouse.Config.InstructionsPerUpdate : int.MaxValue;
             execInfo.InstructionsThisUpdate = 0;
             
             if (execInfo.BreakExecution)
@@ -257,9 +254,6 @@ namespace kOS.Lua
                 }
             }
 
-            if (execInfo.FixedUpdateIdleInstructions != null)
-                execInfo.InstructionsThisUpdate -= (int)execInfo.FixedUpdateIdleInstructions;
-
             // if onFixedUpdate failed to execute due to running out of instructions we reset and start over.
             // it's up to lua side to figure out how to handle the reset in case it didn't finish the callback
             fixedUpdateCoroutine.ResetThread();
@@ -278,17 +272,6 @@ namespace kOS.Lua
                     }
                 }
             }
-
-            // record how many instructions were used on the first fixed update by the default onFixedUpdate callback
-            // before any user code was executed. This number of instructions will be subtracted from InstructionThisUpdate
-            // right before onFixedUpdate gets called to make the processor use 0 opcodes at idle.
-            // If onFixedUpdate is set to nil by the user (which means no default trigger system, no default vessel control)
-            // they would have higher IPU count. The same goes for the onUpdate callback
-            if (execInfo.FixedUpdateIdleInstructions == null)
-            {
-                execInfo.FixedUpdateIdleInstructions = execInfo.InstructionsThisUpdate;
-                execInfo.InstructionsThisUpdate = 0;
-            }
         }
 
         public void KOSUpdate(double dt)
@@ -296,9 +279,6 @@ namespace kOS.Lua
             if (dt == 0) return; // don't run when the game is paused
             var execInfo = stateInfo[commandCoroutine.MainThread.Handle];
             
-            if (execInfo.UpdateIdleInstructions != null)
-                execInfo.InstructionsThisUpdate -= (int)execInfo.UpdateIdleInstructions;
-
             if (execInfo.InstructionsThisUpdate >= execInfo.InstructionsPerUpdate) return;
             
             updateCoroutine.ResetThread();
@@ -316,12 +296,6 @@ namespace kOS.Lua
                         updateCoroutine.SetGlobal("onUpdate");
                     }
                 }
-            }
-            
-            if (execInfo.UpdateIdleInstructions == null)
-            {
-                execInfo.UpdateIdleInstructions = execInfo.InstructionsThisUpdate;
-                execInfo.InstructionsThisUpdate = 0;
             }
         }
 
