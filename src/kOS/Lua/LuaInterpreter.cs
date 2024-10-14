@@ -293,6 +293,7 @@ namespace kOS.Lua
 
         public void KOSUpdate(double dt)
         {
+            if (dt == 0) return; // don't run when the game is paused
             var execInfo = stateInfo[commandCoroutine.MainThread.Handle];
             
             if (execInfo.UpdateIdleInstructions != null)
