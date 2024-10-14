@@ -262,7 +262,7 @@ namespace kOS.Lua
             catch (Exception e)
             {
                 Debug.Log(e);
-                return state.Error(e.Message);
+                return state.Error(e.Message == ""? e.GetType().FullName : e.Message);
             }
         }
         

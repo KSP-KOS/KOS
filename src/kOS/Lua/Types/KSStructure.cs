@@ -96,15 +96,16 @@ namespace kOS.Lua.Types
         {
             var state = KeraLua.Lua.FromIntPtr(L);
             var structure = Binding.bindings[state.MainThread.Handle].Objects[state.ToUserData(1)];
+            var structureString = (string)Binding.LuaExceptionCatch(() => structure.ToString(), state);
             if (structure is IEnumerable<Structure>)
             {   // make enum structures ToString() method show 1 base indexed values in lua
                 // replaces "\n  [*number*]" with "\n  [*number+1*]"
-                state.PushString(Regex.Replace(structure.ToString(), @"\n\s*\[([0-9]+)\]", (match) =>
+                state.PushString(Regex.Replace(structureString, @"\n\s*\[([0-9]+)\]", (match) =>
                     Regex.Replace(match.Groups[0].Value, match.Groups[1].Value, (int.Parse(match.Groups[1].Value) + 1).ToString())
                 ));
             }
             else
-                state.PushString(structure.ToString());
+                state.PushString(structureString);
             return 1;
         }
         
