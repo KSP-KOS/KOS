@@ -66,6 +66,18 @@ namespace kOS.Module
                 instructionsPerUpdate = Math.Max(ipuMin, Math.Min(ipuMax, value));
             }
         }
+        
+        private const int luaIpuMin = 150;
+        private const int luaIpuMax = 2000;
+        private int luaInstructionsPerUpdate = 200;
+
+        [GameParameters.CustomIntParameterUI("Lua instructions per update", minValue = luaIpuMin, maxValue = luaIpuMax,
+                                            toolTip = "Maximum number of instructions used per physics tick by CPUs using lua")]
+        public int LuaInstructionsPerUpdate
+        {
+            get => luaInstructionsPerUpdate;
+            set => luaInstructionsPerUpdate = Math.Max(luaIpuMin, Math.Min(luaIpuMax, value));
+        }
 
         [GameParameters.CustomParameterUI("Enable compressed storage",
                                          toolTip = "When storing local volumes' data in the saved game,\n"+

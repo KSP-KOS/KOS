@@ -17,6 +17,7 @@ namespace kOS.Suffixed
         private readonly Dictionary<PropId, ConfigKey> properties;
 
         public int InstructionsPerUpdate { get { return kOSCustomParameters.Instance.InstructionsPerUpdate; } set { kOSCustomParameters.Instance.InstructionsPerUpdate = value; } }
+        public int LuaInstructionsPerUpdate { get { return kOSCustomParameters.Instance.LuaInstructionsPerUpdate; } set { kOSCustomParameters.Instance.LuaInstructionsPerUpdate = value; } }
         public bool UseCompressedPersistence { get { return kOSCustomParameters.Instance.useCompressedPersistence; } set { kOSCustomParameters.Instance.useCompressedPersistence = value; } }
         public bool ShowStatistics { get { return kOSCustomParameters.Instance.showStatistics; } set { kOSCustomParameters.Instance.showStatistics = value; } }
         public bool StartOnArchive { get { return kOSCustomParameters.Instance.startOnArchive; } set { kOSCustomParameters.Instance.startOnArchive = value; } }
@@ -54,6 +55,7 @@ namespace kOS.Suffixed
         private void InitializeSuffixes()
         {
             AddSuffix("IPU", new SetSuffix<ScalarValue>(() => InstructionsPerUpdate, value => InstructionsPerUpdate = value));
+            AddSuffix("LUAIPU", new SetSuffix<ScalarValue>(() => LuaInstructionsPerUpdate, value => LuaInstructionsPerUpdate = value));
             AddSuffix("UCP", new SetSuffix<BooleanValue>(() => UseCompressedPersistence, value => UseCompressedPersistence = value));
             AddSuffix("STAT", new SetSuffix<BooleanValue>(() => ShowStatistics, value => ShowStatistics = value));
             AddSuffix("ARCH", new SetSuffix<BooleanValue>(() => StartOnArchive, value => StartOnArchive = value));
@@ -238,25 +240,26 @@ namespace kOS.Suffixed
         private enum PropId
         {
             InstructionsPerUpdate = 1,
-            UseCompressedPersistence = 2,
-            ShowStatistics = 3,
-            EnableRTIntegration = 4,
-            StartOnArchive = 5,
-            ObeyHideUI = 6,
-            EnableSafeMode = 7,
-            AudibleExceptions = 8,
-            VerboseExceptions = 9,
-            EnableTelnet = 10,
-            TelnetPort = 11,
-            TelnetIPAddrString = 12,
-            UseBlizzyToolbarOnly = 13,
-            DebugEachOpcode = 14,
-            TerminalFontDefaultSize = 15,
-            TerminalFontName = 16,
-            TerminalBrightness = 17,
-            TerminalDefaultWidth = 18,
-            TerminalDefaultHeight = 19,
-            SuppressAutopilot = 20
+            LuaInstructionsPerUpdate = 2,
+            UseCompressedPersistence = 3,
+            ShowStatistics = 4,
+            EnableRTIntegration = 5,
+            StartOnArchive = 6,
+            ObeyHideUI = 7,
+            EnableSafeMode = 8,
+            AudibleExceptions = 9,
+            VerboseExceptions = 10,
+            EnableTelnet = 11,
+            TelnetPort = 12,
+            TelnetIPAddrString = 13,
+            UseBlizzyToolbarOnly = 14,
+            DebugEachOpcode = 15,
+            TerminalFontDefaultSize = 16,
+            TerminalFontName = 17,
+            TerminalBrightness = 18,
+            TerminalDefaultWidth = 19,
+            TerminalDefaultHeight = 20,
+            SuppressAutopilot = 21
         }
     }
 }
