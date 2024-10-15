@@ -67,10 +67,16 @@ namespace kOS.Lua
         private static int Warn(IntPtr L)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
-            state.CheckString(1);
+            var errorMessage = state.CheckString(1);
+            var tracebackLevel = state.OptInteger(2, 0);
+            if (tracebackLevel > 0)
+            {
+                state.Traceback(state, (int)tracebackLevel);
+                errorMessage += "\n" + state.ToString(-1);
+            }
             var shared = Binding.bindings[state.MainThread.Handle].Shared;
             shared.SoundMaker.BeginFileSound("error");
-            shared.Screen.Print(state.ToString(1));
+            shared.Screen.Print(errorMessage);
             return 0;
         }
 
