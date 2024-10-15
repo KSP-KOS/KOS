@@ -169,6 +169,7 @@ namespace kOS.Lua
 
         public void BreakExecution()
         {
+            if (state == null) return;
             var execInfo = stateInfo[state.State.MainThread.Handle];
             execInfo.BreakExecution = true;
             execInfo.BreakExecutionCount++;

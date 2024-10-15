@@ -70,6 +70,7 @@ namespace kOS.Screen
 
         public void BreakExecution()
         {
+            if (Shared.Cpu.GetCurrentContext() == null) return;
             Shared.Cpu.GetCurrentOpcode().AbortProgram = true;
         }
 
