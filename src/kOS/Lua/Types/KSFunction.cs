@@ -45,7 +45,7 @@ namespace kOS.Lua.Types
             {
                 var arg = Binding.ToCSharpObject(state, i, binding);
                 if (arg == null) break;
-                stack.PushArgument(arg);
+                Binding.LuaExceptionCatch(() => stack.PushArgument(arg), state);
             }
             
             if (ksFunction is SafeFunctionBase function)
