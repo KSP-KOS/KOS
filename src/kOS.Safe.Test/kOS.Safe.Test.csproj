@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\KSPBuildTools.0.0.2-alpha.7\build\KSPBuildTools.props" Condition="Exists('..\..\packages\KSPBuildTools.0.0.2-alpha.7\build\KSPBuildTools.props')" />
+  <Import Project="..\..\packages\JsonPoke.1.2.0\build\JsonPoke.props" Condition="Exists('..\..\packages\JsonPoke.1.2.0\build\JsonPoke.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -11,6 +13,8 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,6 +44,10 @@
       <HintPath>$(SolutionDir)packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <!-- while we want to use KSPBuildTools to reference the same System dlls that KSP uses, we don't want any of the KSP or Unity libraries-->
+    <Reference Remove="$(ManagedPath)\Assembly-CSharp.dll"/>
+    <Reference Remove="$(ManagedPath)\Assembly-CSharp-firstpass.dll"/>
+    <Reference Remove="$(ManagedPath)\UnityEngine*.dll"/>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Calculator\CalculatorScalarTest.cs" />
@@ -99,9 +107,18 @@
     <None Include="Properties\AssemblyInfo.cs.versiontemplate" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)KSPBuildTools\KSPCommon.props" />
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\JsonPoke.1.2.0\build\JsonPoke.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\JsonPoke.1.2.0\build\JsonPoke.props'))" />
+    <Error Condition="!Exists('..\..\packages\JsonPoke.1.2.0\build\JsonPoke.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\JsonPoke.1.2.0\build\JsonPoke.targets'))" />
+    <Error Condition="!Exists('..\..\packages\KSPBuildTools.0.0.2-alpha.7\build\KSPBuildTools.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\KSPBuildTools.0.0.2-alpha.7\build\KSPBuildTools.props'))" />
+    <Error Condition="!Exists('..\..\packages\KSPBuildTools.0.0.2-alpha.7\build\KSPBuildTools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\KSPBuildTools.0.0.2-alpha.7\build\KSPBuildTools.targets'))" />
+  </Target>
+  <Import Project="..\..\packages\JsonPoke.1.2.0\build\JsonPoke.targets" Condition="Exists('..\..\packages\JsonPoke.1.2.0\build\JsonPoke.targets')" />
 </Project>
