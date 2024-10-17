@@ -68,8 +68,8 @@ namespace kOS.Module
         }
         
         private const int luaIpuMin = 150;
-        private const int luaIpuMax = 2000;
-        private int luaInstructionsPerUpdate = 200;
+        private const int luaIpuMax = 3000;
+        private int luaInstructionsPerUpdate = 300;
 
         [GameParameters.CustomIntParameterUI("Lua instructions per update", minValue = luaIpuMin, maxValue = luaIpuMax,
                                             toolTip = "Maximum number of instructions used per physics tick by CPUs using lua")]
