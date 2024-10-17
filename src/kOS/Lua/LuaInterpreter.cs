@@ -1,20 +1,11 @@
-using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-using Unity;
-using System.Net;
 using System.IO;
 using System.Reflection;
-using System.CodeDom;
-using NLua;
 using KeraLua;
 using kOS.Safe;
 using kOS.Safe.Utilities;
-using Debug = UnityEngine.Debug;
 using kOS.Safe.Screen;
 using kOS.Safe.Persistence;
 
@@ -22,7 +13,7 @@ namespace kOS.Lua
 {
     public class LuaInterpreter : IInterpreter, IFixedUpdateObserver, IUpdateObserver
     {
-        private NLua.Lua state;
+        private KeraLua.Lua state;
         private KeraLua.Lua commandCoroutine;
         private KeraLua.Lua fixedUpdateCoroutine;
         private KeraLua.Lua updateCoroutine;
@@ -69,19 +60,18 @@ namespace kOS.Lua
             Dispose();
             Shared.UpdateHandler.AddFixedObserver(this);
             Shared.UpdateHandler.AddObserver(this);
-            state = new NLua.Lua();
-            state.State.Encoding = Encoding.UTF8;
-            commandCoroutine = state.State.NewThread();
-            fixedUpdateCoroutine = state.State.NewThread();
-            updateCoroutine = state.State.NewThread();
+            state = new KeraLua.Lua();
+            state.Encoding = Encoding.UTF8;
+            commandCoroutine = state.NewThread();
+            fixedUpdateCoroutine = state.NewThread();
+            updateCoroutine = state.NewThread();
             commandCoroutine.SetHook(AfterEveryInstructionHook, LuaHookMask.Count, 1);
             fixedUpdateCoroutine.SetHook(AfterEveryInstructionHook, LuaHookMask.Count, 1);
             updateCoroutine.SetHook(AfterEveryInstructionHook, LuaHookMask.Count, 1);
-            stateInfo.Add(state.State.MainThread.Handle, new ExecInfo(Shared, commandCoroutine));
+            stateInfo.Add(state.MainThread.Handle, new ExecInfo(Shared, commandCoroutine));
             
             using (var streamReader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("kOS.Lua.init.lua"))) {
-                try { state.DoString(streamReader.ReadToEnd(), "init"); }
-                catch (Exception e) { DisplayError(e.Message); }
+                ProcessCommand(streamReader.ReadToEnd(), "init");
             }
 
             Binding.BindToState(commandCoroutine, Shared);
@@ -130,7 +120,8 @@ namespace kOS.Lua
 
         private void ProcessCommand(string commandText, string commandName)
         {
-            var execInfo = stateInfo[state.State.MainThread.Handle];
+            if (state == null) return;
+            var execInfo = stateInfo[state.MainThread.Handle];
             execInfo.CommandsQueue.Enqueue(new CommandInfo(commandText, commandName));
         }
 
@@ -169,7 +160,7 @@ namespace kOS.Lua
         public void BreakExecution()
         {
             if (state == null) return;
-            var execInfo = stateInfo[state.State.MainThread.Handle];
+            var execInfo = stateInfo[state.MainThread.Handle];
             execInfo.BreakExecution = true;
             execInfo.BreakExecutionCount++;
         }
@@ -202,10 +193,10 @@ namespace kOS.Lua
                 Shared.SoundMaker.BeginFileSound("beep");
                 Shared.Screen.Print("Ctrl+C was pressed 3 times while the processor was using all of the available instructions so "+
                                     "update callbacks were set to nil. To reset callbacks do:\n\"setUpdateCallbacks()\".");
-                state.State.PushNil();
-                state.State.SetGlobal("onFixedUpdate");
-                state.State.PushNil();
-                state.State.SetGlobal("onUpdate");
+                state.PushNil();
+                state.SetGlobal("onFixedUpdate");
+                state.PushNil();
+                state.SetGlobal("onUpdate");
                 execInfo.BreakExecutionCount = 0;
             }
             
@@ -219,7 +210,7 @@ namespace kOS.Lua
                 {
                     if (commandCoroutine.Status == LuaStatus.Yield || LoadCommand(execInfo.CommandsQueue.Dequeue()))
                     {
-                        var status = commandCoroutine.Resume(state.State, 0);
+                        var status = commandCoroutine.Resume(state, 0);
                         if (status == LuaStatus.Yield) break;
                         if (status != LuaStatus.OK)
                         {
@@ -243,7 +234,7 @@ namespace kOS.Lua
                 {
                     if (fixedUpdateCoroutine.LoadString("onBreakExecution()", "breakExecution") == LuaStatus.OK)
                     {
-                        var status = fixedUpdateCoroutine.Resume(state.State, 0);
+                        var status = fixedUpdateCoroutine.Resume(state, 0);
                         if (status != LuaStatus.OK && status != LuaStatus.Yield)
                             DisplayError(fixedUpdateCoroutine.ToString(-1), fixedUpdateCoroutine);
                     }
@@ -257,7 +248,7 @@ namespace kOS.Lua
             {
                 if (fixedUpdateCoroutine.LoadString($"onFixedUpdate({dt})", "fixedUpdate") == LuaStatus.OK)
                 {
-                    var status = fixedUpdateCoroutine.Resume(state.State, 0);
+                    var status = fixedUpdateCoroutine.Resume(state, 0);
                     if (status != LuaStatus.OK && status != LuaStatus.Yield)
                     {
                         DisplayError(fixedUpdateCoroutine.ToString(-1)
@@ -282,7 +273,7 @@ namespace kOS.Lua
             {
                 if (updateCoroutine.LoadString($"onUpdate({dt})", "update") == LuaStatus.OK)
                 {
-                    var status = updateCoroutine.Resume(state.State, 0);
+                    var status = updateCoroutine.Resume(state, 0);
                     if (status != LuaStatus.OK && status != LuaStatus.Yield)
                     {
                         DisplayError(updateCoroutine.ToString(-1)
@@ -300,7 +291,7 @@ namespace kOS.Lua
             if (state == null) return;
             Shared.UpdateHandler.RemoveFixedObserver(this);
             Shared.UpdateHandler.RemoveObserver(this);
-            var stateHandle = state.State.MainThread.Handle;
+            var stateHandle = state.MainThread.Handle;
             state.Dispose();
             stateInfo.Remove(stateHandle);
             Binding.bindings.Remove(stateHandle);

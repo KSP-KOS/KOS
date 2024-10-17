@@ -273,9 +273,6 @@
     <Reference Include="KeraLua, Version=1.4.1.0, Culture=neutral, PublicKeyToken=6a194c04b9c89217, processorArchitecture=MSIL">
       <HintPath>..\..\packages\KeraLua.1.4.1\lib\net46\KeraLua.dll</HintPath>
     </Reference>
-    <Reference Include="NLua, Version=1.7.3.0, Culture=neutral, PublicKeyToken=6a194c04b9c89217, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NLua.1.7.3\lib\net46\NLua.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Lua\init.lua" />
