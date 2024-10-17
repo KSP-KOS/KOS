@@ -48,7 +48,6 @@ namespace kOS.Lua
             public readonly Queue<CommandInfo> CommandsQueue = new Queue<CommandInfo>();
             public int InstructionsPerUpdate = SafeHouse.Config.InstructionsPerUpdate;
             public int InstructionsThisUpdate = 0;
-            public int InstructionsDebt = 0;
             public bool BreakExecution = false;
             public int BreakExecutionCount = 0;
             public readonly KeraLua.Lua CommandCoroutine;
@@ -121,9 +120,9 @@ namespace kOS.Lua
                 || (execInfo.CommandCoroutine.Handle == L && (execInfo.Shared.Cpu as LuaCPU).IsYielding()))
             {
                 // it's possible for a C/CSharp function to call lua making a coroutine unable to yield because
-                // of the "C-call boundary". If that is the case we increase InstructionsDebt and its paid up on next fixed updates
-                if (state.IsYieldable) state.Yield(0);
-                else execInfo.InstructionsDebt++;
+                // of the "C-call boundary".
+                if (state.IsYieldable)
+                    state.Yield(0);
             }
         }
 
@@ -209,10 +208,6 @@ namespace kOS.Lua
                 state.State.SetGlobal("onUpdate");
                 execInfo.BreakExecutionCount = 0;
             }
-            
-            var instructionsDebtPayment = Math.Min(execInfo.InstructionsPerUpdate - execInfo.InstructionsThisUpdate, execInfo.InstructionsDebt);
-            execInfo.InstructionsDebt -= instructionsDebtPayment;
-            execInfo.InstructionsThisUpdate += instructionsDebtPayment;
             
             // running commands here but resetting InstructionsThisUpdate after, so commands have the lowest priority
             // here InstructionsThisUpdate is more like InstructionsThatUpdate
