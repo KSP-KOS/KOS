@@ -60,8 +60,16 @@ namespace kOS.Lua
             Dispose();
             Shared.UpdateHandler.AddFixedObserver(this);
             Shared.UpdateHandler.AddObserver(this);
-            state = new KeraLua.Lua();
+            state = new KeraLua.Lua(false);
             state.Encoding = Encoding.UTF8;
+            
+            state.RequireF("_G", LibraryOpenMethods.luaopen_base, true);
+            state.RequireF("coroutine", LibraryOpenMethods.luaopen_coroutine, true);
+            state.RequireF("string", LibraryOpenMethods.luaopen_string, true);
+            state.RequireF("utf8", LibraryOpenMethods.luaopen_utf8, true);
+            state.RequireF("table", LibraryOpenMethods.luaopen_table, true);
+            state.RequireF("math", LibraryOpenMethods.luaopen_math, true);
+            
             commandCoroutine = state.NewThread();
             fixedUpdateCoroutine = state.NewThread();
             updateCoroutine = state.NewThread();

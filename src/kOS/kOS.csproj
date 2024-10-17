@@ -81,6 +81,7 @@
     <Compile Include="Function\Suffixed.cs" />
     <Compile Include="KSPLogger.cs" />
     <Compile Include="Lua\Binding.cs" />
+    <Compile Include="Lua\LibraryOpenMethods.cs" />
     <Compile Include="Lua\LuaCPU.cs" />
     <Compile Include="Lua\LuaFunctions.cs" />
     <Compile Include="Lua\Types\KSFunction.cs" />

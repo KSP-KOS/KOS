@@ -14,11 +14,12 @@ namespace kOS.Lua
         public static void Add(KeraLua.Lua state)
         {
             AddFunction(state, "type", Type);
-            AddFunction(state, "print", KosPrint);
-            AddFunction(state, "warn", Warn);
+            AddFunction(state, "print", KosPrint, false);
+            AddFunction(state, "warn", Warn, false);
             AddFunction(state, "wait", Wait);
-            AddFunction(state, "loadfile", LoadFile);
-            AddFunction(state, "dofile", DoFile);
+            AddFunction(state, "load", Load, false);
+            AddFunction(state, "loadfile", LoadFile, false);
+            AddFunction(state, "dofile", DoFile, false);
             AddFunction(state, "getchar", GetChar);
         }
 
@@ -89,12 +90,31 @@ namespace kOS.Lua
             return 0;
         }
 
+        private static int Load(IntPtr L)
+        {
+            var state = KeraLua.Lua.FromIntPtr(L);
+            var chunk = state.CheckString(1);
+            var chunkName = state.OptString(2, "chunk");
+            if (state.LoadString(chunk, chunkName) != LuaStatus.OK)
+            {
+                state.PushNil();
+                state.PushCopy(-2);
+                return 2;
+            }
+            if (!state.IsNoneOrNil(4))
+            {
+                state.PushCopy(4);
+                if (state.SetUpValue(-2, 1) == null)
+                    state.Pop(1);
+            }
+            return 1;
+        }
+
         private static int LoadFile(IntPtr L)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
             state.CheckString(1);
             var filePath = state.ToString(1);
-            var mode = state.OptString(2, "bt");
             var shared = Binding.bindings[state.MainThread.Handle].Shared;
             var file = shared.VolumeMgr.CurrentVolume.Open(filePath) as VolumeFile;
             if (file == null)
@@ -103,7 +123,7 @@ namespace kOS.Lua
                 state.PushString($"File '{filePath}' not found");
                 return 2;
             }
-            if (state.LoadBuffer(state.Encoding.GetBytes(file.ReadAll().String), file.Path.ToString(), mode) != LuaStatus.OK)
+            if (state.LoadString(file.ReadAll().String, file.Path.ToString()) != LuaStatus.OK)
             {
                 state.PushNil();
                 state.PushCopy(-2);
