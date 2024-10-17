@@ -63,6 +63,7 @@ namespace kOS.Module
         private int vesselPartCount;
         private SharedObjects shared;
         private static readonly List<kOSProcessor> allMyInstances = new List<kOSProcessor>();
+        private bool hasShutdown = true;
         public bool HasBooted { get; set; }
         private bool objectsInitialized = false;
         private int  numUpdatesAfterStartHappened = 0;
@@ -814,8 +815,8 @@ namespace kOS.Module
             if (shared != null)
             {
                 shared.Cpu.BreakExecution(false);
-                shared.Cpu.Dispose();
                 shared.Interpreter.Dispose();
+                shared.Cpu.Dispose();
                 shared.DestroyObjects();
                 shared = null;
             }
@@ -914,13 +915,18 @@ namespace kOS.Module
 
             if (!vessel.HoldPhysics)
             {
+                if (!hasShutdown)
+                {
+                    shared.Interpreter.Dispose();
+                    hasShutdown = true;
+                }
                 if (!HasBooted)
                 {
                     SafeHouse.Logger.LogWarning("First Update()");
                     // interpreter swap
                     // dispose current cpu and interpreter
-                    shared.Cpu.Dispose();
                     shared.Interpreter.Dispose();
+                    shared.Cpu.Dispose();
                     // update shared cpu and interpreter
                     if (interpreterLanguage == "lua")
                     {
@@ -1235,6 +1241,7 @@ namespace kOS.Module
 
                 case ProcessorModes.OFF:
                 case ProcessorModes.STARVED:
+                    hasShutdown = false;
                     if (shared.Interpreter != null) shared.Interpreter.BreakExecution();
                     if (shared.Cpu != null) shared.Cpu.BreakExecution(true);
                     if (shared.Terminal != null) shared.Terminal.SetInputLock(true);
