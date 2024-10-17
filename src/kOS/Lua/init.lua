@@ -37,7 +37,7 @@ function processControl()
         steeringControlled = true
         local success, error = pcall(function() STEERING = type(steering) == "function" and steering() or steering end)
         if not success then
-            warn(error)
+            warn(error, 1)
             steering = nil
         end
     elseif steeringControlled then
@@ -48,7 +48,7 @@ function processControl()
         throttleControlled = true
         local success, error = pcall(function() THROTTLE = type(throttle) == "function" and throttle() or throttle end)
         if not success then
-            warn(error)
+            warn(error, 1)
             throttle = nil
         end
     elseif throttleControlled then
@@ -59,7 +59,7 @@ function processControl()
         wheelSteeringControlled = true
         local success, error = pcall(function() WHEELSTEERING = type(wheelSteering) == "function" and wheelSteering() or wheelSteering end)
         if not success then
-            warn(error)
+            warn(error, 1)
             wheelSteering = nil
         end
     elseif wheelSteeringControlled then
@@ -70,7 +70,7 @@ function processControl()
         wheelThrottleControlled = true
         local success, error = pcall(function() WHEELTHROTTLE = type(wheelThrottle) == "function" and wheelThrottle() or wheelThrottle end)
         if not success then
-            warn(error)
+            warn(error, 1)
             wheelThrottle = nil
         end
     elseif wheelThrottleControlled then
@@ -124,7 +124,7 @@ function addCallback(body, priority, callbacks)
                         callback.body = nil
                     end
                 else
-                    warn(newPriority)
+                    warn("error in callback:\n" .. newPriority)
                     callback.body = nil
                 end
             end
