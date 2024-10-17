@@ -1,3 +1,10 @@
+stateFinalizer = setmetatable({}, { __gc = function() -- Called when the state is disposed(on shutdown, reboot)
+    toggleflybywire("steering", false)
+    toggleflybywire("throttle", false)
+    toggleflybywire("wheelSteering", false)
+    toggleflybywire("wheelThrottle", false)
+end})
+
 function _onFixedUpdate()
     runProcessControl()
     runCallbacks(fixedUpdateCallbacks)
