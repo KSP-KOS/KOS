@@ -167,3 +167,85 @@ function on(state, body, priority, callbacks)
         end
     end, priority, callbacks)
 end
+
+vecDraws = setmetatable({}, { __mode = "v" })
+updatingVecDraws = setmetatable({}, { __mode = "v" })
+
+function clearVecDraws()
+    CLEARVECDRAWS()
+    for _,vd in pairs(vecDraws) do
+        vd.parameters.show = false
+    end
+    updatingVecDraws.keepCallback = false
+    updatingVecDraws = setmetatable({}, { __mode = "v" })
+end
+
+local vecDrawMetatable = {
+    __index = function(vd, index)
+        return vd.parameters[index] == nil and vd.structure[index] or vd.parameters[index]
+    end,
+    __newindex = function(vd, index, value)
+        local parameters = vd.parameters
+        if type(value) ~= "function" then vd.structure[index] = value end
+        if parameters[index] == nil then return end
+        parameters[index] = value
+
+        if index == "start" then vd.isStartFunction = type(value) == "function"
+        elseif index == "vector" then vd.isVectorFunction = type(value) == "function"
+        elseif index == "color" then vd.isColorFunction = type(value) == "function" end
+
+        local vdShouldBeUpdating = parameters.show and (vd.isStartFunction or vd.isVectorFunction or vd.isColorFunction)
+        local vdUpdating = false
+
+        for i,v in ipairs(updatingVecDraws) do
+            if v == vd then
+                vdUpdating = true
+                if not vdShouldBeUpdating then
+                    table.remove(updatingVecDraws, i)
+                    if #updatingVecDraws == 0 then
+                        updatingVecDraws.keepCallback = false
+                    end
+                end
+                break
+            end
+        end
+
+        if vdShouldBeUpdating and not vdUpdating then
+            if #updatingVecDraws == 0 then
+                updatingVecDraws.keepCallback = true
+                addCallback(function()
+                    for _, vd in ipairs(updatingVecDraws) do
+                        if vd.isStartFunction then vd.structure.start = vd.parameters.start() end
+                        if vd.isVectorFunction then vd.structure.vector = vd.parameters.vector() end
+                        if vd.isColorFunction then vd.structure.color = vd.parameters.color() end
+                    end
+                    return updatingVecDraws.keepCallback
+                end, 0, updateCallbacks)
+            end
+            table.insert(updatingVecDraws, vd)
+        end
+    end,
+    __gc = function(vd) vd.show = false end,
+}
+
+function vecDraw(start, vector, color, label, scale, show, width, pointy, wiping)
+    local vd = {
+        structure = VECDRAW(v(0,0,0), v(0,0,0), white, label or "", scale or 1, show ~= nil and show, width or 0.2, pointy == nil or pointy, wiping == nil or wiping),
+        isStartFunction = false,
+        isVectorFunction = false,
+        isColorFunction = false,
+        parameters = {
+            start = v(0,0,0),
+            vector = v(0,0,0),
+            color = white,
+            show = false,
+        }
+    }
+    setmetatable(vd, vecDrawMetatable)
+    table.insert(vecDraws, vd)
+    if start then vd.start = start end
+    if vector then vd.vector = vector end
+    if color then vd.color = color end
+    if show then vd.show = show end
+    return vd
+end

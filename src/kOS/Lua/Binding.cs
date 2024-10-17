@@ -32,6 +32,7 @@ namespace kOS.Lua
             typeof(Vector), typeof(Direction), typeof(TimeSpan), typeof(TimeStamp)
         };
         private static readonly string[] controlVariables = { "STEERING", "THROTTLE", "WHEELSTEERING", "WHEELTHROTTLE" };
+        private static readonly string[] capitalNameOnlyVariables = { "VECDRAW", "CLEARVECDRAWS" };
 
         // the CSharp object to userdata binding model was adapted from NLua model
         // with some simplifications and changes to make it work on Structures
@@ -138,6 +139,9 @@ namespace kOS.Lua
             var state = KeraLua.Lua.FromIntPtr(L);
             var index = state.ToString(2);
             var binding = bindings[state.MainThread.Handle];
+            var isCapitalOnlyNameVariableNotCapital = capitalNameOnlyVariables.Contains(index.ToUpper()) && !capitalNameOnlyVariables.Contains(index);
+            if (isCapitalOnlyNameVariableNotCapital)
+                return 0;
             if (binding.Variables.TryGetValue(index, out var boundVar))
             {
                 return (int)LuaExceptionCatch(() =>
@@ -155,8 +159,10 @@ namespace kOS.Lua
             var state = KeraLua.Lua.FromIntPtr(L);
             var binding = bindings[state.MainThread.Handle];
             var index = state.ToString(2);
+            var isCapitalOnlyNameVariableNotCapital = capitalNameOnlyVariables.Contains(index.ToUpper()) && !capitalNameOnlyVariables.Contains(index);
             var isControlVariable = controlVariables.Contains(index.ToUpper()) && !controlVariables.Contains(index);
-            if (!isControlVariable && binding.Variables.TryGetValue(index, out var boundVar) && boundVar.Set != null)
+            if (!isControlVariable && binding.Variables.TryGetValue(index, out var boundVar) && boundVar.Set != null
+                && !isCapitalOnlyNameVariableNotCapital)
             {
                 var newValue = ToCSharpObject(state, 3, binding);
                 if (newValue == null) return 0;
