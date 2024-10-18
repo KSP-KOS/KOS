@@ -161,7 +161,6 @@ namespace kOS.Lua
         public bool IsWaitingForCommand()
         {
             return !(Shared.Cpu as LuaCPU).IsYielding() && fixedUpdateCoroutine.Status != LuaStatus.Yield
-                                                        && updateCoroutine.Status != LuaStatus.Yield
                                                         && commandCoroutine.Status != LuaStatus.Yield;
         }
 
@@ -175,7 +174,7 @@ namespace kOS.Lua
 
         public int InstructionsThisUpdate()
         {   // ProcessElectricity() calls this after changing interpreter when stuff is not initialized yet
-            if (commandCoroutine != null && stateInfo.TryGetValue(commandCoroutine.MainThread.Handle, out var info))
+            if (state != null && stateInfo.TryGetValue(state.MainThread.Handle, out var info))
                 return info.InstructionsThisUpdate;
             return 0;
         }
@@ -185,50 +184,8 @@ namespace kOS.Lua
             (Shared.Cpu as LuaCPU).FixedUpdate();
             Shared.BindingMgr?.PreUpdate();
             
-            // run commands with remaining instructions from previous onFixedUpdate, onUpdate callbacks
-            // reset InstructionsThisUpdate
-            // run onFixedUpdate callback
-            // if KOSUpdate got called run onUpdate callback
-
             var execInfo = stateInfo[commandCoroutine.MainThread.Handle];
             execInfo.InstructionsPerUpdate = SafeHouse.Config.LuaInstructionsPerUpdate;
-            
-            if (fixedUpdateCoroutine.Status != LuaStatus.Yield && updateCoroutine.Status != LuaStatus.Yield)
-                execInfo.BreakExecutionCount = 0;
-            
-            if (execInfo.BreakExecutionCount >= 3)
-            {
-                Shared.SoundMaker.BeginFileSound("beep");
-                Shared.Screen.Print("Ctrl+C was pressed 3 times while the processor was using all of the available instructions so "+
-                                    "update callbacks were set to nil. To reset callbacks do:\n\"setUpdateCallbacks()\".");
-                state.PushNil();
-                state.SetGlobal("onFixedUpdate");
-                state.PushNil();
-                state.SetGlobal("onUpdate");
-                execInfo.BreakExecutionCount = 0;
-            }
-            
-            // running commands here but resetting InstructionsThisUpdate after, so commands have the lowest priority
-            // here InstructionsThisUpdate is more like InstructionsThatUpdate
-            if (execInfo.InstructionsThisUpdate < execInfo.InstructionsPerUpdate && !(Shared.Cpu as LuaCPU).IsYielding())
-            {
-                // resumes the coroutine after it yielded due to running out of instructions
-                // and/or executes queued commands until they run out or the coroutine yields
-                while (commandCoroutine.Status == LuaStatus.Yield || execInfo.CommandsQueue.Count > 0)
-                {
-                    if (commandCoroutine.Status == LuaStatus.Yield || LoadCommand(execInfo.CommandsQueue.Dequeue()))
-                    {
-                        var status = commandCoroutine.Resume(state, 0);
-                        if (status == LuaStatus.Yield) break;
-                        if (status != LuaStatus.OK)
-                        {
-                            DisplayError(commandCoroutine.ToString(-1), commandCoroutine);
-                            commandCoroutine.ResetThread();
-                        }
-                    }
-                }
-            }
-
             execInfo.InstructionsThisUpdate = 0;
             
             if (execInfo.BreakExecution)
@@ -264,6 +221,40 @@ namespace kOS.Lua
                                      +"\nTo reset onFixedUpdate do 'onFixedUpdate = _onFixedUpdate'.", fixedUpdateCoroutine);
                         fixedUpdateCoroutine.PushNil();
                         fixedUpdateCoroutine.SetGlobal("onFixedUpdate");
+                    }
+                }
+            }
+
+            if (execInfo.InstructionsThisUpdate < execInfo.InstructionsPerUpdate)
+                execInfo.BreakExecutionCount = 0;
+            
+            if (execInfo.BreakExecutionCount >= 3)
+            {
+                Shared.SoundMaker.BeginFileSound("beep");
+                Shared.Screen.Print("Ctrl+C was pressed 3 times while the processor was using all of the available instructions so "+
+                                    "update callbacks were set to nil. To reset callbacks do:\n\"setUpdateCallbacks()\".");
+                state.PushNil();
+                state.SetGlobal("onFixedUpdate");
+                state.PushNil();
+                state.SetGlobal("onUpdate");
+                execInfo.BreakExecutionCount = 0;
+            }
+            
+            if (execInfo.InstructionsThisUpdate < execInfo.InstructionsPerUpdate && !(Shared.Cpu as LuaCPU).IsYielding())
+            {
+                // resumes the coroutine after it yielded due to running out of instructions
+                // and/or executes queued commands until they run out or the coroutine yields
+                while (commandCoroutine.Status == LuaStatus.Yield || execInfo.CommandsQueue.Count > 0)
+                {
+                    if (commandCoroutine.Status == LuaStatus.Yield || LoadCommand(execInfo.CommandsQueue.Dequeue()))
+                    {
+                        var status = commandCoroutine.Resume(state, 0);
+                        if (status == LuaStatus.Yield) break;
+                        if (status != LuaStatus.OK)
+                        {
+                            DisplayError(commandCoroutine.ToString(-1), commandCoroutine);
+                            commandCoroutine.ResetThread();
+                        }
                     }
                 }
             }
