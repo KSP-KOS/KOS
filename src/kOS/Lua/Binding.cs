@@ -139,8 +139,8 @@ namespace kOS.Lua
             var state = KeraLua.Lua.FromIntPtr(L);
             var index = state.ToString(2);
             var binding = bindings[state.MainThread.Handle];
-            var isCapitalOnlyNameVariableNotCapital = capitalNameOnlyVariables.Contains(index.ToUpper()) && !capitalNameOnlyVariables.Contains(index);
-            if (isCapitalOnlyNameVariableNotCapital)
+            var isCapitalNameOnlyVariableNotCapital = capitalNameOnlyVariables.Contains(index.ToUpper()) && !capitalNameOnlyVariables.Contains(index);
+            if (isCapitalNameOnlyVariableNotCapital)
                 return 0;
             if (binding.Variables.TryGetValue(index, out var boundVar))
             {
@@ -159,11 +159,23 @@ namespace kOS.Lua
             var state = KeraLua.Lua.FromIntPtr(L);
             var binding = bindings[state.MainThread.Handle];
             var index = state.ToString(2);
-            var isCapitalOnlyNameVariableNotCapital = capitalNameOnlyVariables.Contains(index.ToUpper()) && !capitalNameOnlyVariables.Contains(index);
+            var isCapitalNameOnlyVariableNotCapital = capitalNameOnlyVariables.Contains(index.ToUpper()) && !capitalNameOnlyVariables.Contains(index);
             var isControlVariable = controlVariables.Contains(index.ToUpper()) && !controlVariables.Contains(index);
-            if (!isControlVariable && binding.Variables.TryGetValue(index, out var boundVar) && boundVar.Set != null
-                && !isCapitalOnlyNameVariableNotCapital)
+            if (!isControlVariable && !isCapitalNameOnlyVariableNotCapital
+                                   && binding.Variables.TryGetValue(index, out var boundVar))
             {
+                if (boundVar.Set == null)
+                {
+                    if (SafeHouse.Config.AllowClobberBuiltIns)
+                    {
+                        state.RawSet(1);
+                        return 0;
+                    }
+                    return state.Error($"Attempt to assign to a built-in variable({index}) that doesn't have a setter.\n"+
+                                       "If you really want to be able to \"hide\" a built-in variable behind a user "+
+                                       "variable you can \"rawset(_ENV, *variableName*, *value*)\" or allow it globally "
+                                       +"with \"config.clobberBuiltIns = true\"");
+                }
                 var newValue = ToCSharpObject(state, 3, binding);
                 if (newValue == null) return 0;
                 LuaExceptionCatch(() => boundVar.Value = newValue, state);
