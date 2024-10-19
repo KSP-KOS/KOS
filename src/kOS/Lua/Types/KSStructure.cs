@@ -176,7 +176,11 @@ namespace kOS.Lua.Types
             else
             {
                 var index = state.ToString(2);
-                Binding.LuaExceptionCatch(() => structure.SetSuffix(index, Structure.FromPrimitive(newValue)), state);
+                Binding.LuaExceptionCatch(() =>
+                {
+                    if (!structure.SetSuffix(index, Structure.FromPrimitive(newValue)))
+                        throw new Exception($"Suffix \"{index}\" not found on Structure {structure.KOSName}");
+                }, state);
             }
             return 0;
         }
