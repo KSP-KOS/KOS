@@ -81,12 +81,16 @@
     <Compile Include="Function\Suffixed.cs" />
     <Compile Include="KSPLogger.cs" />
     <Compile Include="Lua\Binding.cs" />
-    <Compile Include="Lua\LibraryOpenMethods.cs" />
+    <Compile Include="Lua\Libs\Base.cs" />
+    <Compile Include="Lua\Libs\Dev.cs" />
+    <Compile Include="Lua\Libs\Callbacks.cs" />
+    <Compile Include="Lua\Libs\Misc.cs" />
+    <Compile Include="Lua\NativeMethods.cs" />
     <Compile Include="Lua\LuaCPU.cs" />
-    <Compile Include="Lua\LuaFunctions.cs" />
     <Compile Include="Lua\Types\KSFunction.cs" />
     <Compile Include="Lua\Types\KSStructure.cs" />
     <Compile Include="Lua\Types\LuaTypeBase.cs" />
+    <Compile Include="Lua\Libraries.cs" />
     <Compile Include="Module\Bootstrapper.cs" />
     <Compile Include="Module\AutopilotMsgManager.cs" />
     <Compile Include="Module\kOSCustomParameters.cs" />
@@ -276,9 +280,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Lua\init.lua" />
     <None Include="packages.config" />
     <None Include="Properties\AssemblyInfo.cs.versiontemplate" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Lua\Libs\callbacks.lua" />
+    <EmbeddedResource Include="Lua\Libs\misc.lua" />
+    <EmbeddedResource Include="Lua\whitelist.lua" />
   </ItemGroup>
   <Import Project="..\..\packages\KeraLua.1.4.1\build\net46\KeraLua.targets" Condition="Exists('..\..\packages\KeraLua.1.4.1\build\net46\KeraLua.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

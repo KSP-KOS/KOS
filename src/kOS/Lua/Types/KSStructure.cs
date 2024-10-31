@@ -24,31 +24,24 @@ namespace kOS.Lua.Types
         public KSStructure(KeraLua.Lua state)
         {
             state.NewMetaTable(MetatableName);
-            state.PushString("__type");
             state.PushString(MetatableName);
-            state.RawSet(-3);
-            AddMetaMethod(state, "__index", StructureIndex);
-            AddMetaMethod(state, "__newindex", StructureNewIndex);
-            AddMetaMethod(state, "__pairs", StructurePairs);
-            AddMetaMethod(state, "__gc", Binding.CollectObject);
-            AddMetaMethod(state, "__len", StructureLength);
-            AddMetaMethod(state, "__tostring", StructureToString);
-            AddMetaMethod(state, "__add", StructureAdd);
-            AddMetaMethod(state, "__sub", StructureSubtract);
-            AddMetaMethod(state, "__mul", StructureMultiply);
-            AddMetaMethod(state, "__div", StructureDivide);
-            AddMetaMethod(state, "__pow", StructurePower);
-            AddMetaMethod(state, "__unm", StructureUnary);
-            AddMetaMethod(state, "__eq", StructureEqual);
-            AddMetaMethod(state, "__lt", StructureLessThan);
-            AddMetaMethod(state, "__le", StructureLessEqualThan);
-        }
-
-        private static void AddMetaMethod(KeraLua.Lua state, string name, LuaFunction metaMethod)
-        {
-            state.PushString(name);
-            state.PushCFunction(metaMethod);
-            state.RawSet(-3);
+            state.SetField(-2, "__type");
+            AddMethod(state, "__index", StructureIndex);
+            AddMethod(state, "__newindex", StructureNewIndex);
+            AddMethod(state, "__pairs", StructurePairs);
+            AddMethod(state, "__gc", Binding.CollectObject);
+            AddMethod(state, "__len", StructureLength);
+            AddMethod(state, "__tostring", StructureToString);
+            AddMethod(state, "__add", StructureAdd);
+            AddMethod(state, "__sub", StructureSubtract);
+            AddMethod(state, "__mul", StructureMultiply);
+            AddMethod(state, "__div", StructureDivide);
+            AddMethod(state, "__pow", StructurePower);
+            AddMethod(state, "__unm", StructureUnary);
+            AddMethod(state, "__eq", StructureEqual);
+            AddMethod(state, "__lt", StructureLessThan);
+            AddMethod(state, "__le", StructureLessEqualThan);
+            state.Pop(1);
         }
 
         private static int StructureAdd(IntPtr L) => StructureOperator(L, structureCalculator.Add);
@@ -132,7 +125,7 @@ namespace kOS.Lua.Types
 
             if (structure is TerminalInput && state.ToString(index)?.ToLower() == "getchar")
             {
-                state.PushCFunction(LuaFunctions.GetChar);
+                state.PushCFunction(GetChar);
                 return 1;
             }
             
@@ -236,6 +229,22 @@ namespace kOS.Lua.Types
             state.Copy(-1, KeraLua.Lua.UpValueIndex(1));
             state.Remove(-1);
             return 2;
+        }
+        
+        private static int GetChar(IntPtr L)
+        {
+            return GetCharContinuation(L, 0, IntPtr.Zero);
+        }
+
+        private static int GetCharContinuation(IntPtr L, int status, IntPtr ctx)
+        {
+            var state = KeraLua.Lua.FromIntPtr(L);
+            var shared = Binding.bindings[state.MainThread.Handle].Shared;
+            var q = shared.Screen.CharInputQueue;
+            if (q.Count == 0)
+                state.YieldK(0, 0, GetCharContinuation);
+            state.PushString(q.Dequeue().ToString());
+            return 1;
         }
     }
 }

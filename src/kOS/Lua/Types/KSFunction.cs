@@ -17,18 +17,12 @@ namespace kOS.Lua.Types
         public KSFunction(KeraLua.Lua state)
         {
             state.NewMetaTable(MetatableName);
-            state.PushString("__type");
             state.PushString(MetatableName);
-            state.RawSet(-3);
-            state.PushString("__call");
-            state.PushCFunction(KSFunctionCall);
-            state.RawSet(-3);
-            state.PushString("__gc");
-            state.PushCFunction(Binding.CollectObject);
-            state.RawSet(-3);
-            state.PushString("__tostring");
-            state.PushCFunction(Binding.ObjectToString);
-            state.RawSet(-3);
+            state.SetField(-2, "__type");
+            AddMethod(state, "__call", KSFunctionCall);
+            AddMethod(state, "__gc", Binding.CollectObject);
+            AddMethod(state, "__tostring", Binding.ObjectToString);
+            state.Pop(1);
         }
 
         private static int KSFunctionCall(IntPtr L)

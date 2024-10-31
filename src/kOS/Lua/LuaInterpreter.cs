@@ -63,13 +63,6 @@ namespace kOS.Lua
             state = new KeraLua.Lua(false);
             state.Encoding = Encoding.UTF8;
             
-            state.RequireF("_G", LibraryOpenMethods.luaopen_base, true);
-            state.RequireF("coroutine", LibraryOpenMethods.luaopen_coroutine, true);
-            state.RequireF("string", LibraryOpenMethods.luaopen_string, true);
-            state.RequireF("utf8", LibraryOpenMethods.luaopen_utf8, true);
-            state.RequireF("table", LibraryOpenMethods.luaopen_table, true);
-            state.RequireF("math", LibraryOpenMethods.luaopen_math, true);
-            
             commandCoroutine = state.NewThread();
             fixedUpdateCoroutine = state.NewThread();
             updateCoroutine = state.NewThread();
@@ -78,12 +71,10 @@ namespace kOS.Lua
             updateCoroutine.SetHook(AfterEveryInstructionHook, LuaHookMask.Count, 1);
             stateInfo.Add(state.MainThread.Handle, new ExecInfo(Shared, commandCoroutine));
             
-            using (var streamReader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("kOS.Lua.init.lua"))) {
-                ProcessCommand(streamReader.ReadToEnd(), "init");
-            }
-
-            Binding.BindToState(commandCoroutine, Shared);
-
+            Libraries.Open(state);
+            
+            Binding.BindToState(state, Shared);
+            
             if (!Shared.Processor.CheckCanBoot()) return;
 
             VolumePath path = Shared.Processor.BootFilePath;
@@ -195,9 +186,9 @@ namespace kOS.Lua
                 commandCoroutine.ResetThread();
                 fixedUpdateCoroutine.ResetThread();
                 updateCoroutine.ResetThread();
-                if (fixedUpdateCoroutine.GetGlobal("onBreakExecution") == LuaType.Function)
+                if (fixedUpdateCoroutine.GetGlobal("breakexecution") == LuaType.Function)
                 {
-                    if (fixedUpdateCoroutine.LoadString("onBreakExecution()", "breakExecution") == LuaStatus.OK)
+                    if (fixedUpdateCoroutine.LoadString("breakexecution()", "breakexecution") == LuaStatus.OK)
                     {
                         var status = fixedUpdateCoroutine.Resume(state, 0);
                         if (status != LuaStatus.OK && status != LuaStatus.Yield)
@@ -206,21 +197,19 @@ namespace kOS.Lua
                 }
             }
 
-            // if onFixedUpdate failed to execute due to running out of instructions we reset and start over.
-            // it's up to lua side to figure out how to handle the reset in case it didn't finish the callback
             fixedUpdateCoroutine.ResetThread();
-            if (fixedUpdateCoroutine.GetGlobal("onFixedUpdate") == LuaType.Function)
+            if (fixedUpdateCoroutine.GetGlobal("fixedupdate") == LuaType.Function)
             {
-                if (fixedUpdateCoroutine.LoadString($"onFixedUpdate({dt})", "fixedUpdate") == LuaStatus.OK)
+                if (fixedUpdateCoroutine.LoadString($"fixedupdate({dt})", "fixedupdate") == LuaStatus.OK)
                 {
                     var status = fixedUpdateCoroutine.Resume(state, 0);
                     if (status != LuaStatus.OK && status != LuaStatus.Yield)
                     {
                         DisplayError(fixedUpdateCoroutine.ToString(-1)
-                                     +"\nonFixedUpdate function errored and was set to nil."
-                                     +"\nTo reset onFixedUpdate do 'onFixedUpdate = _onFixedUpdate'.", fixedUpdateCoroutine);
+                                     +"\nfixedupdate function errored and was set to nil."
+                                     +"\nTo reset fixedupdate do 'fixedupdate = callbacks.fixedupdate'.", fixedUpdateCoroutine);
                         fixedUpdateCoroutine.PushNil();
-                        fixedUpdateCoroutine.SetGlobal("onFixedUpdate");
+                        fixedUpdateCoroutine.SetGlobal("fixedupdate");
                     }
                 }
             }
@@ -232,11 +221,11 @@ namespace kOS.Lua
             {
                 Shared.SoundMaker.BeginFileSound("beep");
                 Shared.Screen.Print("Ctrl+C was pressed 3 times while the processor was using all of the available instructions so "+
-                                    "update callbacks were set to nil. To reset callbacks do:\n\"setUpdateCallbacks()\".");
+                                    "update callbacks were set to nil. To reset callbacks do:\n\"callbacks.init()\".");
                 state.PushNil();
-                state.SetGlobal("onFixedUpdate");
+                state.SetGlobal("fixedupdate");
                 state.PushNil();
-                state.SetGlobal("onUpdate");
+                state.SetGlobal("update");
                 execInfo.BreakExecutionCount = 0;
             }
             
@@ -268,18 +257,18 @@ namespace kOS.Lua
             if (execInfo.InstructionsThisUpdate >= execInfo.InstructionsPerUpdate) return;
             
             updateCoroutine.ResetThread();
-            if (updateCoroutine.GetGlobal("onUpdate") == LuaType.Function)
+            if (updateCoroutine.GetGlobal("update") == LuaType.Function)
             {
-                if (updateCoroutine.LoadString($"onUpdate({dt})", "update") == LuaStatus.OK)
+                if (updateCoroutine.LoadString($"update({dt})", "update") == LuaStatus.OK)
                 {
                     var status = updateCoroutine.Resume(state, 0);
                     if (status != LuaStatus.OK && status != LuaStatus.Yield)
                     {
                         DisplayError(updateCoroutine.ToString(-1)
-                                     +"\nonUpdate function errored and was set to nil."
-                                     +"\nTo reset onUpdate do 'onUpdate = _onUpdate'.", updateCoroutine);
+                                     +"\nupdate function errored and was set to nil."
+                                     +"\nTo reset update do 'update = callbacks.update'.", updateCoroutine);
                         updateCoroutine.PushNil();
-                        updateCoroutine.SetGlobal("onUpdate");
+                        updateCoroutine.SetGlobal("update");
                     }
                 }
             }

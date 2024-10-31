@@ -88,29 +88,23 @@ namespace kOS.Lua
                 (shared.FunctionManager as FunctionManager).RawFunctions
             );
             
-            LuaFunctions.Add(state);
-            
             // set index and newindex metamethods on the environment table
             state.PushGlobalTable();
             state.NewTable();
-            state.PushString("__index");
             state.PushCFunction(EnvIndex);
-            state.SetTable(-3);
-            state.PushString("__newindex");
+            state.SetField(-2, "__index");
             state.PushCFunction(EnvNewIndex);
-            state.SetTable(-3);
+            state.SetField(-2, "__newindex");
             state.SetMetaTable(-2);
             state.Pop(1);
             
             // add userdataAddressToUserdata table to the registry
-            state.PushString("userdataAddressToUserdata");
             state.NewTable();
             state.NewTable();
-            state.PushString("__mode");
             state.PushString("v");
-            state.SetTable(-3);
+            state.SetField(-2, "__mode");
             state.SetMetaTable(-2);
-            state.SetTable((int)LuaRegistry.Index);
+            state.SetField((int)LuaRegistry.Index, "userdataAddressToUserdata");
         }
 
         public static int CollectObject(IntPtr L)

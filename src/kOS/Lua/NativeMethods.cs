@@ -3,7 +3,7 @@ using lua_State = System.IntPtr;
 
 namespace kOS.Lua
 {
-    internal static class LibraryOpenMethods
+    internal static class NativeMethods
     {
         #if __IOS__ || __TVOS__ || __WATCHOS__ || __MACCATALYST__
                 private const string LuaLibraryName = "@rpath/liblua54.framework/liblua54";
