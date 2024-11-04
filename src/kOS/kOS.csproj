@@ -288,6 +288,12 @@
     <EmbeddedResource Include="Lua\Libs\misc.lua" />
     <EmbeddedResource Include="Lua\whitelist.lua" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Lua\include\*">
+      <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="..\..\packages\KeraLua.1.4.1\build\net46\KeraLua.targets" Condition="Exists('..\..\packages\KeraLua.1.4.1\build\net46\KeraLua.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
