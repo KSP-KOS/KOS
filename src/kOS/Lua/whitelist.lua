@@ -1,7 +1,6 @@
-local setupvalue = ...
+local registry, setUpvalue = ...
 
 local env = {
---     _G = _G, holds the old environment
     _VERSION = _VERSION,
     assert = assert,
     collectgarbage = collectgarbage,
@@ -32,7 +31,6 @@ local env = {
     package = {
         config = package.config,
         path = package.path,
-        preload = package.preload,
         searchers = {
             package.searchers[1],
             package.searchers[2],
@@ -118,20 +116,28 @@ local env = {
 }
 env._G = env
 
-local loaded = {
-    _G = env._G,
-    package = env.package,
-    coroutine = env.coroutine,
-    math = env.math,
-    string = env.string,
-    table = env.table,
-    utf8 = env.utf8,
+local whitelistedRegistry = {
+    registry[1], -- main thread
+    env,
+    _LOADED = {
+        _G = env._G,
+        package = env.package,
+        coroutine = env.coroutine,
+        math = env.math,
+        string = env.string,
+        table = env.table,
+        utf8 = env.utf8,
+    },
+    _PRELOAD = {},
+    _CLIBS = setmetatable({}, getmetatable(registry._CLIBS)),
 }
-env.package.loaded = loaded
 
-setupvalue(env.require, 1, env.package)
-for _,searcher in env.ipairs(env.package.searchers) do
-    setupvalue(searcher, 1, env.package)
+env.package.loaded = whitelistedRegistry._LOADED
+env.package.preload = whitelistedRegistry._PRELOAD
+
+setUpvalue(env.require, 1, env.package)
+for _,searcher in ipairs(env.package.searchers) do
+    setUpvalue(searcher, 1, env.package)
 end
 
 local visitedTables = {}
@@ -145,4 +151,8 @@ local function deepCleanTable(tab)
     end
 end
 
-return env, loaded, deepCleanTable
+deepCleanTable(registry)
+
+for k,v in env.pairs(whitelistedRegistry) do
+    registry[k] = v
+end

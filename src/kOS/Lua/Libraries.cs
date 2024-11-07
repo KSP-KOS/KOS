@@ -38,21 +38,12 @@ namespace kOS.Lua
             the goal here is to remove the ability of lua scripts to be malicious and make it simpler to keep it that way
             it is achieved by:
             1. Opening only whitelisted libraries
-            2. Overwriting the registry global environment table and loaded libraries table with tables that
-                include only whitelisted fields
-            3. Recursively removing every field in the previous global environment table and the loaded libraries table
-                for an extra layer of protection in case the table or its inner tables are saved anywhere else
+            2. Recursively removing every field in the registry table
+            3. Adding whitelisted fields to the registry table
                 
             this means that even if some potentially dangerous lua library/function gets added it would need
             to be explicitly added in the whitelist to be accessible by lua scripts
             */
-            
-            // require dummy library to check if "_LOADED" registry key is used for loaded libraries(LUA_LOADED_TABLE definition)
-            state.RequireF("_dummy", DummyOpen, false);
-            state.Pop(1);
-            if (state.GetField((int)LuaRegistry.Index, "_LOADED") != LuaType.Table)
-                throw new Exception("Loaded libraries table was not found at *registry*._LOADED");
-            state.Pop(1);
             
             // open whitelisted libraries
             foreach (var library in whitelistedLibraries)
@@ -63,29 +54,15 @@ namespace kOS.Lua
                 state.SetGlobal(library.name);
             }
 
-            // push 3 values onto the stack: new env table, new loaded table, deepCleanTable function
+            // whitelist the registry table
             using (var streamReader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("kOS.Lua.whitelist.lua")))
             {
                 state.LoadString(streamReader.ReadToEnd());
             }
+            state.PushCopy((int)LuaRegistry.Index);
             state.PushCFunction(SetUpvalue);
-            state.Call(1, 3);
+            state.Call(2, 0);
             
-            // call the deepCleanTable function on the global table
-            state.PushCopy(-1);
-            if (state.RawGetInteger((int)LuaRegistry.Index, (int)LuaRegistryIndex.Globals) != LuaType.Table)
-                throw new Exception("Global table was not found at *registry*[LuaRegistryIndex.Globals]");
-            state.Call(1, 0);
-            
-            // call the deepCleanTable function on the loaded table
-            state.GetField((int)LuaRegistry.Index, "_LOADED");
-            state.Call(1, 0);
-            
-            // assign the loaded table to *registry*._LOADED
-            state.SetField((int)LuaRegistry.Index, "_LOADED");
-            
-            // assign the env table to *registry*[LuaRegistryIndex.Globals]
-            state.RawSetInteger((int)LuaRegistry.Index, (int)LuaRegistryIndex.Globals);
             state.GarbageCollector(LuaGC.Collect, 0);
             
             // open lua libraries
@@ -114,13 +91,6 @@ namespace kOS.Lua
             state.CheckAny(3);
             state.SetUpValue(1, n);
             return 0;
-        }
-        
-        private static int DummyOpen(IntPtr L)
-        {
-            var state = KeraLua.Lua.FromIntPtr(L);
-            state.NewTable();
-            return 1;
         }
     }
     
