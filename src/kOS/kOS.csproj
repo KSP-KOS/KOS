@@ -85,6 +85,7 @@
     <Compile Include="Lua\Libs\Dev.cs" />
     <Compile Include="Lua\Libs\Callbacks.cs" />
     <Compile Include="Lua\Libs\Misc.cs" />
+    <Compile Include="Lua\Libs\Package.cs" />
     <Compile Include="Lua\NativeMethods.cs" />
     <Compile Include="Lua\LuaCPU.cs" />
     <Compile Include="Lua\Types\KSFunction.cs" />

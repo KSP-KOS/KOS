@@ -12,6 +12,7 @@ namespace kOS.Lua
         private static readonly RegList whitelistedLibraries = new RegList
         {
             {"_G", Libs.Base.Open},
+            {"package", Libs.Package.Open},
             {"coroutine", NativeMethods.luaopen_coroutine},
             {"string", NativeMethods.luaopen_string},
             {"utf8", NativeMethods.luaopen_utf8},
@@ -67,7 +68,8 @@ namespace kOS.Lua
             {
                 state.LoadString(streamReader.ReadToEnd());
             }
-            state.Call(0, 3);
+            state.PushCFunction(SetUpvalue);
+            state.Call(1, 3);
             
             // call the deepCleanTable function on the global table
             state.PushCopy(-1);
@@ -102,6 +104,16 @@ namespace kOS.Lua
                 state.Pop(1);
             }
             #endif
+        }
+
+        private static int SetUpvalue(IntPtr L)
+        {
+            var state = KeraLua.Lua.FromIntPtr(L);
+            state.CheckType(1, LuaType.Function);
+            var n = (int)state.CheckInteger(2);
+            state.CheckAny(3);
+            state.SetUpValue(1, n);
+            return 0;
         }
         
         private static int DummyOpen(IntPtr L)

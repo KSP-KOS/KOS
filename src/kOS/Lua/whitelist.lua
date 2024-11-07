@@ -1,3 +1,5 @@
+local setupvalue = ...
+
 local env = {
 --     _G = _G, holds the old environment
     _VERSION = _VERSION,
@@ -26,6 +28,18 @@ local env = {
     xpcall = xpcall,
     _type = _type,
     wait = wait,
+    require = require,
+    package = {
+        config = package.config,
+        path = package.path,
+        preload = package.preload,
+        searchers = {
+            package.searchers[1],
+            package.searchers[2],
+            package.searchers[3],
+            package.searchers[4],
+        },
+    },
     coroutine = {
         close = coroutine.close,
         create = coroutine.create,
@@ -106,12 +120,19 @@ env._G = env
 
 local loaded = {
     _G = env._G,
+    package = env.package,
     coroutine = env.coroutine,
     math = env.math,
     string = env.string,
     table = env.table,
     utf8 = env.utf8,
 }
+env.package.loaded = loaded
+
+setupvalue(env.require, 1, env.package)
+for _,searcher in env.ipairs(env.package.searchers) do
+    setupvalue(searcher, 1, env.package)
+end
 
 local visitedTables = {}
 local function deepCleanTable(tab)
@@ -123,7 +144,5 @@ local function deepCleanTable(tab)
         tab[k] = nil
     end
 end
-
--- what.what()
 
 return env, loaded, deepCleanTable
