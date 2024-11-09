@@ -1,5 +1,6 @@
 using KeraLua;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -24,9 +25,22 @@ namespace kOS.Lua.Libs
             RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "dll" :
             RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "dylib" :
             "so";
-
+        private static readonly PackageConfig config = new PackageConfig
+        {
+            DIRSEP = VolumePath.PathSeparator,
+            PATHSEP = ';',
+            PATHMARK = '?',
+            EXECDIR = '!',
+            IGMARK = '-',
+        };
+        // "0:/?.lua;0:/?/init.lua;/?.lua;/?/init.lua;?.lua;?/init.lua"
+        private static readonly string luaSearchPath = 
+            $"0:{config.DIRSEP}{config.PATHMARK}.lua{config.PATHSEP}"+
+            $"0:{config.DIRSEP}{config.PATHMARK}{config.DIRSEP}init.lua{config.PATHSEP}"+
+            $"{config.DIRSEP}{config.PATHMARK}.lua{config.PATHSEP}"+
+            $"{config.DIRSEP}{config.PATHMARK}{config.DIRSEP}init.lua{config.PATHSEP}"+
+            $"{config.PATHMARK}.lua{config.PATHSEP}{config.PATHMARK}{config.DIRSEP}init.lua";
         private static LuaFunction _loadlib;
-        private static PackageConfig _packageConfig;
 
         public static int Open(IntPtr L)
         {
@@ -41,7 +55,7 @@ namespace kOS.Lua.Libs
             loadlib, searchpath function
             */
             
-            // call luaopen_package with a new fake global table
+            // swap the global table and call luaopen_package
             state.PushGlobalTable();
             state.NewTable();
             state.PushCopy(-1);
@@ -77,7 +91,7 @@ namespace kOS.Lua.Libs
             state.Insert(-3);
             state.Insert(-2);
             // package table, fake global table, global table
-            state.RawSetInteger((int)LuaRegistry.Index, (int)LuaRegistryIndex.Globals);
+            state.RawSetInteger((int)LuaRegistry.Index, (int)LuaRegistryIndex.Globals); // restore the real global table
             
             state.GetField(-1, "require");
             var require = state.ToCFunction(-1);
@@ -85,21 +99,7 @@ namespace kOS.Lua.Libs
             
             state.GetField(-1, "loadlib");
             _loadlib = state.ToCFunction(-1);
-            state.Pop(1); // pop loadlib
-            
-            // get package config
-            state.GetField(-1, "config");
-            var config = state.ToString(-1);
-            string[] configValues = config.Split('\n');
-            _packageConfig = new PackageConfig
-            {
-                DIRSEP = configValues[0], // /
-                PATHSEP = configValues[1], // ;
-                PATHMARK = configValues[2], // ?
-                EXECDIR = configValues[3], // !
-                IGMARK = configValues[4], // -
-            };
-            state.Pop(2); // pop config string and package table
+            state.Pop(2); // pop loadlib and package table
             
             // new package table
             state.NewTable();
@@ -121,23 +121,14 @@ namespace kOS.Lua.Libs
             state.SetField(-2, "searchers");
             
             // add config
-            state.PushString(config);
+            state.PushString(config.DIRSEP+"\n"+config.PATHSEP+"\n"+config.PATHMARK+"\n"+config.EXECDIR+"\n"+config.IGMARK);
             state.SetField(-2, "config");
             
             // add path string
-            var dirSep = VolumePath.PathSeparator;
-            // "0:/?.lua;0:/?/init.lua;/?.lua;/?/init.lua;?.lua;?/init.lua"
-            state.PushString(
-                $"0:{dirSep}{_packageConfig.PATHMARK}.lua{_packageConfig.PATHSEP}"+
-                $"0:{dirSep}{_packageConfig.PATHMARK}{dirSep}init.lua{_packageConfig.PATHSEP}"+
-                $"{dirSep}{_packageConfig.PATHMARK}.lua{_packageConfig.PATHSEP}"+
-                $"{dirSep}{_packageConfig.PATHMARK}{dirSep}init.lua{_packageConfig.PATHSEP}"+
-                $"{_packageConfig.PATHMARK}.lua{_packageConfig.PATHSEP}{_packageConfig.PATHMARK}{dirSep}init.lua");
+            state.PushString(luaSearchPath);
             state.SetField(-2, "path");
             
-            // add registry preload table
-            state.GetField(LuaRegistry.Index, "_PRELOAD");
-            state.SetField(-2, "preload");
+            // loaded and preload tables are getting added in whitelist.lua
             
             return 1;
         }
@@ -165,9 +156,9 @@ namespace kOS.Lua.Libs
             var paths = state.ToString(-1);
             var volumeManager = Binding.bindings[state.MainThread.Handle].Shared.VolumeMgr;
             var errorMessage = "";
-            foreach(var pathTemplate in paths.Split(_packageConfig.PATHSEP.ToCharArray()))
+            foreach(var pathTemplate in paths.Split(config.PATHSEP))
             {
-                var path = pathTemplate.Replace(_packageConfig.PATHMARK, name);
+                var path = pathTemplate.Replace(config.PATHMARK.ToString(), name);
                 var globalPath = Binding.LuaExceptionCatch(() => volumeManager.GlobalPathFromObject(path), state) as GlobalPath;
                 var file = Binding.LuaExceptionCatch(() => volumeManager.GetVolumeFromPath(globalPath).Open(globalPath), state) as VolumeFile;
                 if (file == null)
@@ -186,18 +177,23 @@ namespace kOS.Lua.Libs
 
         private static string FindPackage(KeraLua.Lua state, string[] names)
         {
-            var errorMessage = "";
-            foreach (var name in names)
+            var packages = new Dictionary<string, string>();
+            if (Directory.Exists(packagesDirectory))
             {
                 foreach (var packagePath in Directory.GetFiles(packagesDirectory))
                 {
-                    var packageName = Path.GetFileName(packagePath);
-                    if (name == packageName)
-                    {
-                        return packagePath;
-                    }
+                    packages.Add(Path.GetFileName(packagePath), packagePath);
                 }
-                errorMessage += $"no file '{packagesDirectory + name}'\n";
+            }
+            var errorMessage = "";
+            foreach (var name in names)
+            {
+                var fileName = name + "." + libraryExtension;
+                if (packages.TryGetValue(fileName, out var packagePath))
+                {
+                    return packagePath;
+                }
+                errorMessage += $"no file '{packagesDirectory + fileName}'\n";
             }
             state.PushString(errorMessage);
             return null;
@@ -206,11 +202,11 @@ namespace kOS.Lua.Libs
         private static int LoadFunc(KeraLua.Lua state, string filename, string name)
         {
             var modname = name.Replace('.', '_');
-            if (modname.Contains(_packageConfig.IGMARK))
+            if (modname.Contains(config.IGMARK.ToString()))
             {
-                var stat = LookForFunc(state, filename, "luaopen_" + modname.Split(_packageConfig.IGMARK.ToCharArray())[0]);
+                var stat = LookForFunc(state, filename, "luaopen_" + modname.Split(config.IGMARK)[0]);
                 if (stat != 2) return stat;
-                return LookForFunc(state, filename, "luaopen_" + modname.Split(_packageConfig.IGMARK.ToCharArray())[1]);
+                return LookForFunc(state, filename, "luaopen_" + modname.Split(config.IGMARK)[1]);
             }
             return LookForFunc(state, filename, "luaopen_" + modname);
         }
@@ -236,12 +232,7 @@ namespace kOS.Lua.Libs
         {
             var state = KeraLua.Lua.FromIntPtr(L);
             var name = state.CheckString(1);
-            string[] names =
-            {
-                name + "." + libraryExtension,
-                "loadall." + libraryExtension,
-            };
-            var filename = FindPackage(state, names);
+            var filename = FindPackage(state, new [] { name, "loadall" });
             if (filename == null) return 1;
             var success = 0 == LoadFunc(state, filename, name);
             if (!success)
@@ -255,12 +246,7 @@ namespace kOS.Lua.Libs
             var state = KeraLua.Lua.FromIntPtr(L);
             var name = state.CheckString(1);
             if (!name.Contains(".")) return 0;
-            string[] names =
-            {
-                name.Split('.')[0] + "." + libraryExtension,
-                "loadall." + libraryExtension,
-            };
-            var filename = FindPackage(state, names);
+            var filename = FindPackage(state, new [] { name.Split('.')[0], "loadall" });
             if (filename == null) return 1;
             var status = LoadFunc(state, filename, name);
             if (status == 1)
@@ -276,11 +262,11 @@ namespace kOS.Lua.Libs
         
         private struct PackageConfig
         {
-            public string DIRSEP;
-            public string PATHSEP;
-            public string PATHMARK;
-            public string EXECDIR;
-            public string IGMARK;
+            public char DIRSEP;
+            public char PATHSEP;
+            public char PATHMARK;
+            public char EXECDIR;
+            public char IGMARK;
         }
     }
 }
