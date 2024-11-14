@@ -3,4 +3,4 @@
 	url = https://github.com/KSPModdingLibs/KSPBuildTools.git
 [submodule "src/kOS/Lua/lua"]
 	path = src/kOS/Lua/lua
-	url = git@github.com:NLua/lua.git
+	url = git@github.com:sug44/lua.git

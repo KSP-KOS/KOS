@@ -19,12 +19,17 @@ namespace kOS.Lua.Libs
             CRootSearcher
         };
 
-        private static readonly string packagesDirectory = Assembly.GetExecutingAssembly().Location.Replace("kOS.dll",
-            "LuaPackages" + Path.DirectorySeparatorChar);
-        private static readonly string libraryExtension =
-            RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "dll" :
-            RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "dylib" :
-            "so";
+        private static readonly string osName = 
+            RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "Windows" :
+            RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "macOS" :
+            "Linux";
+        private static readonly string modulesDirectory =
+            Path.Combine(new DirectoryInfo(Assembly.GetExecutingAssembly().Location).Parent.Parent.FullName, 
+                "PluginData", "LuaModules", osName);
+        private static readonly string[] libraryExtensions =
+            RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? new [] { "dll" } :
+            RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? new [] { "so", "dylib", "framework" } :
+            new [] { "so" };
         private static readonly PackageConfig config = new PackageConfig
         {
             DIRSEP = VolumePath.PathSeparator,
@@ -51,7 +56,7 @@ namespace kOS.Lua.Libs
             Only 'require' and 'loadlib' functions are taken from the native package library.
             The unsafe loadlib function is only used internally to look for C functions in a library.
             functionality removed:
-            changing cpath, C searchers will only look in packagesDirectory
+            changing cpath, C searchers will only look in modulesDirectory
             loadlib, searchpath function
             */
             
@@ -178,9 +183,9 @@ namespace kOS.Lua.Libs
         private static string FindPackage(KeraLua.Lua state, string[] names)
         {
             var packages = new Dictionary<string, string>();
-            if (Directory.Exists(packagesDirectory))
+            if (Directory.Exists(modulesDirectory))
             {
-                foreach (var packagePath in Directory.GetFiles(packagesDirectory))
+                foreach (var packagePath in Directory.GetFiles(modulesDirectory))
                 {
                     packages.Add(Path.GetFileName(packagePath), packagePath);
                 }
@@ -188,12 +193,15 @@ namespace kOS.Lua.Libs
             var errorMessage = "";
             foreach (var name in names)
             {
-                var fileName = name + "." + libraryExtension;
-                if (packages.TryGetValue(fileName, out var packagePath))
+                foreach (var extension in libraryExtensions)
                 {
-                    return packagePath;
+                    var fileName = name + "." + extension;
+                    if (packages.TryGetValue(fileName, out var packagePath))
+                    {
+                        return packagePath;
+                    }
+                    errorMessage += $"no file '{Path.Combine(modulesDirectory, fileName)}'\n";
                 }
-                errorMessage += $"no file '{packagesDirectory + fileName}'\n";
             }
             state.PushString(errorMessage);
             return null;

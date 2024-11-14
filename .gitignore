@@ -38,14 +38,13 @@ packages/
 [Rr]esources/GameData/kOS/Plugins/
 [Rr]esources/*.dll
 [Rr]esources/GameData/*.dll
+[Rr]esources/GameData/kOS/Parts/@thumbs/
+[Rr]esources/GameData/kOS/PluginData/LuaModules/
 !Resources/GameData/kOS/ICSharpCode.SharpZipLib.dll
 
 # Symlink to KSP directory
 KSPdirlink
 KSP
-
-# Part thumbnails added through the KSP symlink
-Resources/GameData/kOS/Parts/@thumbs/
 
 # OS Specific
 .DS_STORE*

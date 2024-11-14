@@ -16,11 +16,15 @@ on:
 permissions:
   contents: write
 
+defaults:
+  run:
+    shell: bash
+
 env:
   LUA_SOURCE_DIR: ${{ github.workspace }}/src/kOS/Lua/lua
   LUA_BUILD_DIR: ${{ github.workspace }}/src/kOS/Lua/lua/_build
   LUA_OUTPUT_DIR: ${{ github.workspace }}/src/kOS/Lua/include
-  
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -32,42 +36,73 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: 'true'
-          
+
       - name: Set vars
         id: vars
-        shell: bash
         run: |
           if [ "$RUNNER_OS" == "Linux" ]; then
-            echo "LUA_LIB_NAME=liblua54.so" >> "$GITHUB_OUTPUT"
-            echo "LUA_LIB_PATH=$LUA_BUILD_DIR/lib64/liblua54.so" >> "$GITHUB_OUTPUT"
+            echo 'LUA_LIB_NAME=liblua54.so" >> "$GITHUB_OUTPUT'
+            echo 'LUA_LIB_PATH=$LUA_BUILD_DIR/lib64/liblua54.so' >> "$GITHUB_OUTPUT"
+            echo 'LUA_LUAROCKS_LIB_PATH=/usr/local/lib/lua/5.4' >> "$GITHUB_OUTPUT"
           elif [ "$RUNNER_OS" == "Windows" ]; then
-            echo "LUA_LIB_NAME=lua54.dll" >> "$GITHUB_OUTPUT"
-            echo "LUA_LIB_PATH=$LUA_BUILD_DIR/bin64/lua54.dll" >> "$GITHUB_OUTPUT"
+            echo 'LUA_LIB_NAME=lua54.dll" >> "$GITHUB_OUTPUT'
+            echo 'LUA_LIB_PATH=$LUA_BUILD_DIR/bin/lua54.dll' >> "$GITHUB_OUTPUT"
+            echo 'LUA_LUAROCKS_LIB_PATH=~/.luarocks/lib/lua/5.4' >> "$GITHUB_OUTPUT"
           elif [ "$RUNNER_OS" == "macOS" ]; then
-            echo "LUA_LIB_NAME=liblua54.dylib" >> "$GITHUB_OUTPUT"
-            echo "LUA_LIB_PATH=$LUA_BUILD_DIR/lib64/liblua54.dylib" >> "$GITHUB_OUTPUT"
+            echo 'LUA_LIB_NAME=liblua54.dylib" >> "$GITHUB_OUTPUT'
+            echo 'LUA_LIB_PATH=$LUA_BUILD_DIR/lib64/liblua54.dylib' >> "$GITHUB_OUTPUT"
+            echo 'LUA_LUAROCKS_LIB_PATH=/usr/local/lib/lua/5.4' >> "$GITHUB_OUTPUT"
           fi
-          
+
       - name: Configure CMake
-        shell: bash
         run: cmake -S $LUA_SOURCE_DIR -B $LUA_BUILD_DIR
 
       - name: Build
-        shell: bash
         run: cmake --build $LUA_BUILD_DIR --config Release
 
       - name: Test
-        shell: bash
-        if: matrix.os != 'windows-latest' # TODO: fix test
         working-directory: ${{ env.LUA_BUILD_DIR }}
         run: ctest --build-config Release
+        
+      - name: Install LuaRocks
+        run: |
+          mv $LUA_BUILD_DIR/bin64 $LUA_BUILD_DIR/bin # luarocks gets lost if lua binary is not in "bin" directory
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            curl http://luarocks.github.io/luarocks/releases/luarocks-3.11.1-windows-64.zip --output luarocks.zip
+            unzip luarocks.zip -d ~/luarocks
+            mv ~/luarocks/luarocks-3.11.1-windows-64/* ~/luarocks
+            rm -rf ~/luarocks/luarocks-3.11.1-windows-64
+          else
+            wget https://luarocks.org/releases/luarocks-3.11.1.tar.gz
+            tar zxpf luarocks-3.11.1.tar.gz
+            cd luarocks-3.11.1
+            ./configure --with-lua-bin="$LUA_BUILD_DIR/bin"
+            make && sudo make install
+          fi
 
+      - name: Install modules
+        run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            PATH=~/luarocks:$LUA_BUILD_DIR/bin:$PATH
+            luarocks install lua-cjson 2.1.0.10-1
+          else
+            sudo luarocks install lua-cjson 2.1.0.10-1
+          fi
+          
+      - name: Create artifact
+        run: |
+          rm -rf artifact
+          mkdir artifact
+          cp ${{ steps.vars.outputs.LUA_LIB_PATH }} artifact/${{ steps.vars.outputs.LUA_LIB_NAME }}
+          mkdir artifact/LuaModules artifact/LuaModules/${{ runner.os }}
+          cp -r ${{ steps.vars.outputs.LUA_LUAROCKS_LIB_PATH }}/. artifact/LuaModules/${{ runner.os }}
+          
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.vars.outputs.LUA_LIB_NAME }}
+          name: ${{ runner.os }}
           if-no-files-found: error
           retention-days: 7
-          path: ${{ steps.vars.outputs.LUA_LIB_PATH }}
+          path: ${{ github.workspace }}/artifact
   
   push:
     runs-on: ubuntu-latest
@@ -77,15 +112,15 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: 'true'
-          
+
       - name: Clear output directory
         run: rm -rf $LUA_OUTPUT_DIR
-        
+
       - uses: actions/download-artifact@v4
         with:
           merge-multiple: 'true'
           path: ${{ env.LUA_OUTPUT_DIR }}
-          
+
       - name: Push
         env:
           GIT_COMMITTER_NAME: lua-build automation
