@@ -83,8 +83,6 @@
     <Compile Include="Lua\Binding.cs" />
     <Compile Include="Lua\Libs\Base.cs" />
     <Compile Include="Lua\Libs\Dev.cs" />
-    <Compile Include="Lua\Libs\Callbacks.cs" />
-    <Compile Include="Lua\Libs\Misc.cs" />
     <Compile Include="Lua\Libs\Package.cs" />
     <Compile Include="Lua\NativeMethods.cs" />
     <Compile Include="Lua\LuaCPU.cs" />
@@ -285,17 +283,17 @@
     <None Include="Properties\AssemblyInfo.cs.versiontemplate" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Lua\Libs\callbacks.lua" />
-    <EmbeddedResource Include="Lua\Libs\misc.lua" />
     <EmbeddedResource Include="Lua\whitelist.lua" />
   </ItemGroup>
-  <Target Name="CopyLuaIncludeToRepo" AfterTargets="Build">
+  <Target Name="CopyToRepo" AfterTargets="Build">
     <ItemGroup>
       <LuaIncludeFiles Include="Lua\include\*.*" />
-      <LuaModulesFiles Include="Lua\include\LuaModules\**" />
+      <LuaCModuleFiles Include="Lua\include\LuaModules\**" />
+      <LuaModuleFiles Include="Lua\Libs\*.lua" />
     </ItemGroup>
     <Copy SourceFiles="@(LuaIncludeFiles)" DestinationFolder="$(RepoRootPath)\$(BinariesOutputRelativePath)" />
-    <Copy SourceFiles="@(LuaModulesFiles)" DestinationFolder="$(RepoRootPath)\$(BinariesOutputRelativePath)\..\PluginData\LuaModules\%(RecursiveDir)" />
+    <Copy SourceFiles="@(LuaCModuleFiles);@(LuaModuleFiles)"
+          DestinationFolder="$(RepoRootPath)\$(BinariesOutputRelativePath)\..\PluginData\LuaModules\%(RecursiveDir)" />
   </Target>
   <Import Project="..\..\packages\KeraLua.1.4.1\build\net46\KeraLua.targets" Condition="Exists('..\..\packages\KeraLua.1.4.1\build\net46\KeraLua.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

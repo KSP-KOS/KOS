@@ -20,12 +20,6 @@ namespace kOS.Lua
             {"math", NativeMethods.luaopen_math},
         };
 
-        private static readonly RegList luaLibraries = new RegList
-        {
-            {"callbacks", Libs.Callbacks.Open},
-            {"misc", Libs.Misc.Open},
-        };
-
         private static readonly RegList devLibraries = new RegList
         {
             {"debug", NativeMethods.luaopen_debug},
@@ -68,10 +62,52 @@ namespace kOS.Lua
             Binding.BindToState(state, shared);
             
             // open lua libraries
-            foreach (var library in luaLibraries)
+            var modulesDir =
+                Path.Combine(new DirectoryInfo(Assembly.GetExecutingAssembly().Location).Parent.Parent.FullName, 
+                "PluginData", "LuaModules");
+            var luaModules = Directory.GetFiles(modulesDir, "*.lua", SearchOption.AllDirectories);
+            foreach (var luaModule in luaModules)
             {
-                state.RequireF(library.name, library.function,true);
-                state.Pop(1);
+                using (var streamReader = new StreamReader(luaModule))
+                {
+                    var moduleName = Path.GetFileNameWithoutExtension(luaModule);
+                    
+                    // call the module file
+                    if (state.LoadString(streamReader.ReadToEnd()) != LuaStatus.OK ||
+                        state.PCall(0, 1, 0) != LuaStatus.OK)
+                    {
+                        shared.SoundMaker.BeginFileSound("error");
+                        shared.Screen.Print($"error loading module '{moduleName}':\n" + state.ToString(-1));
+                        state.Pop(1);
+                        continue;
+                    }
+                    
+                    // call "init" field on the module if it exists
+                    if (state.Type(-1) == LuaType.Table)
+                    {
+                        if (state.GetField(-1, "init") == LuaType.Function)
+                        {
+                            if (state.PCall(0, 0, 0) != LuaStatus.OK)
+                            {
+                                shared.SoundMaker.BeginFileSound("error");
+                                shared.Screen.Print($"error in 'init' function of module '{moduleName}':\n" + state.ToString(-1));
+                                state.Pop(1);
+                            }
+                        }
+                        else
+                        {
+                            state.Pop(1);
+                        }
+                    }
+
+                    // add the module to the global table and the loaded table
+                    state.PushCopy(-1);
+                    state.SetGlobal(moduleName);
+                    state.GetField(LuaRegistry.Index, "_LOADED");
+                    state.Rotate(-2, 1);
+                    state.SetField(-2, moduleName);
+                    state.Pop(1);
+                }
             }
             
             // open dev libraries past the whitelist if built in debug configuration
