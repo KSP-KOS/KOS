@@ -3,6 +3,7 @@ local M = {}
 function M.init()
     vecdraw = M.vecdraw
     clearvecdraws = M.clearvecdraws
+    json = select(2, pcall(require, "cjson"))
 end
 
 M.vecdraws = setmetatable({}, { __mode = "v" })

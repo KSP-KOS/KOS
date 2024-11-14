@@ -56,7 +56,7 @@ namespace kOS.Lua.Types
         private static int StructureOperator(IntPtr L, Func<OperandPair, object> operatorMethod)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
-            var binding = Binding.bindings[state.MainThread.Handle];
+            var binding = Binding.Bindings[state.MainThread.Handle];
             var pair = new OperandPair(Binding.ToCSharpObject(state, 1, binding), Binding.ToCSharpObject(state, 2, binding));
             return (int)Binding.LuaExceptionCatch(() => Binding.PushLuaType(state, operatorMethod(pair), binding), state);
         }
@@ -64,7 +64,7 @@ namespace kOS.Lua.Types
         private static int StructureUnary(IntPtr L)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
-            var binding = Binding.bindings[state.MainThread.Handle];
+            var binding = Binding.Bindings[state.MainThread.Handle];
             var obj = Binding.ToCSharpObject(state, 1, binding);
             if (obj == null) return 0;
             MethodInfo unaryMethod = obj.GetType().GetMethod("op_UnaryNegation", BindingFlags.FlattenHierarchy |BindingFlags.Static | BindingFlags.Public);
@@ -77,7 +77,7 @@ namespace kOS.Lua.Types
         private static int StructureLength(IntPtr L)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
-            var binding = Binding.bindings[state.MainThread.Handle];
+            var binding = Binding.Bindings[state.MainThread.Handle];
             var structure = binding.Objects[state.ToUserData(1)] as Structure;
             if (!structure.HasSuffix("LENGTH"))
                 return state.Error("attempt to get length of a Structure with no length suffix");
@@ -88,7 +88,7 @@ namespace kOS.Lua.Types
         private static int StructureToString(IntPtr L)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
-            var structure = Binding.bindings[state.MainThread.Handle].Objects[state.ToUserData(1)];
+            var structure = Binding.Bindings[state.MainThread.Handle].Objects[state.ToUserData(1)];
             var structureString = (string)Binding.LuaExceptionCatch(() => structure.ToString(), state);
             if (structure is IEnumerable<Structure>)
             {   // make enum structures ToString() method show 1 base indexed values in lua
@@ -105,7 +105,7 @@ namespace kOS.Lua.Types
         private static int StructureIndex(IntPtr L)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
-            var binding = Binding.bindings[state.MainThread.Handle];
+            var binding = Binding.Bindings[state.MainThread.Handle];
             object obj = binding.Objects[state.ToUserData(1)];
             var structure = obj as Structure;
             if (structure == null)
@@ -153,7 +153,7 @@ namespace kOS.Lua.Types
         private static int StructureNewIndex(IntPtr L)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
-            var binding = Binding.bindings[state.MainThread.Handle];
+            var binding = Binding.Bindings[state.MainThread.Handle];
             var obj = binding.Objects[state.ToUserData(1)];
             var structure = obj as Structure;
             if (structure == null)
@@ -181,7 +181,7 @@ namespace kOS.Lua.Types
         private static int StructurePairs(IntPtr L)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
-            var binding = Binding.bindings[state.MainThread.Handle];
+            var binding = Binding.Bindings[state.MainThread.Handle];
             var structure = binding.Objects[state.ToUserData(1)] as Structure;
             if (structure == null)
                 return state.Error("pairs metamethod can only be called with a Structure type");
@@ -213,7 +213,7 @@ namespace kOS.Lua.Types
         private static int StructureNext(IntPtr L)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
-            var binding = Binding.bindings[state.MainThread.Handle];
+            var binding = Binding.Bindings[state.MainThread.Handle];
             var structure = binding.Objects[state.ToUserData(1)] as Structure;
             if (structure == null)
                 return state.Error("iterator can only be called with a Structure type");
@@ -239,7 +239,7 @@ namespace kOS.Lua.Types
         private static int GetCharContinuation(IntPtr L, int status, IntPtr ctx)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
-            var shared = Binding.bindings[state.MainThread.Handle].Shared;
+            var shared = Binding.Bindings[state.MainThread.Handle].Shared;
             var q = shared.Screen.CharInputQueue;
             if (q.Count == 0)
                 state.YieldK(0, 0, GetCharContinuation);

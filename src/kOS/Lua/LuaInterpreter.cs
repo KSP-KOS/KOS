@@ -71,9 +71,7 @@ namespace kOS.Lua
             updateCoroutine.SetHook(AfterEveryInstructionHook, LuaHookMask.Count, 1);
             stateInfo.Add(state.MainThread.Handle, new ExecInfo(Shared, commandCoroutine));
             
-            Libraries.Open(state);
-            
-            Binding.BindToState(state, Shared);
+            Libraries.Open(state, Shared);
             
             if (!Shared.Processor.CheckCanBoot()) return;
 
@@ -282,7 +280,7 @@ namespace kOS.Lua
             var stateHandle = state.MainThread.Handle;
             state.Dispose();
             stateInfo.Remove(stateHandle);
-            Binding.bindings.Remove(stateHandle);
+            Binding.Bindings.Remove(stateHandle);
             state = null;
         }
 

@@ -32,7 +32,7 @@ namespace kOS.Lua
             {"dev", Libs.Dev.Open},
         };
         
-        public static void Open(KeraLua.Lua state)
+        public static void Open(KeraLua.Lua state, SharedObjects shared)
         {
             /*
             the goal here is to remove the ability of lua scripts to be malicious and make it simpler to keep it that way
@@ -64,6 +64,8 @@ namespace kOS.Lua
             state.Call(2, 0);
             
             state.GarbageCollector(LuaGC.Collect, 0);
+            
+            Binding.BindToState(state, shared);
             
             // open lua libraries
             foreach (var library in luaLibraries)

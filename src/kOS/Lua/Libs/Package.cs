@@ -159,7 +159,7 @@ namespace kOS.Lua.Libs
             if (state.GetField((int)LuaRegistry.Index-1, "path") != LuaType.String)
                 return state.Error("'package.path' must be a string");
             var paths = state.ToString(-1);
-            var volumeManager = Binding.bindings[state.MainThread.Handle].Shared.VolumeMgr;
+            var volumeManager = Binding.Bindings[state.MainThread.Handle].Shared.VolumeMgr;
             var errorMessage = "";
             foreach(var pathTemplate in paths.Split(config.PATHSEP))
             {

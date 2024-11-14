@@ -28,7 +28,7 @@ namespace kOS.Lua.Types
         private static int KSFunctionCall(IntPtr L)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
-            var binding = Binding.bindings[state.MainThread.Handle];
+            var binding = Binding.Bindings[state.MainThread.Handle];
             state.CheckUserData(1, metatableName);
             var ksFunction = binding.Objects[state.ToUserData(1)];
             

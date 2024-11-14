@@ -123,7 +123,7 @@ namespace kOS.Lua.Libs
             var state = KeraLua.Lua.FromIntPtr(L);
             if (state.Type(1) == LuaType.UserData)
             {
-                var obj = Binding.bindings[state.MainThread.Handle].Objects[state.ToUserData(1)];
+                var obj = Binding.Bindings[state.MainThread.Handle].Objects[state.ToUserData(1)];
                 if (obj is Structure structure)
                 {
                     state.PushString(structure.KOSName);
@@ -143,7 +143,7 @@ namespace kOS.Lua.Libs
             var prints = new string[argCount];
             for (int i = 0; i < argCount; i++)
                 prints[i] = state.ToString(i + 1);
-            Binding.bindings[state.MainThread.Handle].Shared.Screen.Print(string.Join("    ", prints));
+            Binding.Bindings[state.MainThread.Handle].Shared.Screen.Print(string.Join("    ", prints));
             return 0;
         }
         
@@ -157,7 +157,7 @@ namespace kOS.Lua.Libs
                 state.Traceback(state, (int)tracebackLevel);
                 errorMessage += "\n" + state.ToString(-1);
             }
-            var shared = Binding.bindings[state.MainThread.Handle].Shared;
+            var shared = Binding.Bindings[state.MainThread.Handle].Shared;
             shared.SoundMaker.BeginFileSound("error");
             shared.Screen.Print(errorMessage);
             return 0;
@@ -188,7 +188,7 @@ namespace kOS.Lua.Libs
             var state = KeraLua.Lua.FromIntPtr(L);
             state.CheckString(1);
             var filePath = state.ToString(1);
-            var shared = Binding.bindings[state.MainThread.Handle].Shared;
+            var shared = Binding.Bindings[state.MainThread.Handle].Shared;
             var file = shared.VolumeMgr.CurrentVolume.Open(filePath) as VolumeFile;
             if (file == null)
             {
@@ -233,7 +233,7 @@ namespace kOS.Lua.Libs
         {
             var state = KeraLua.Lua.FromIntPtr(L);
             state.CheckNumber(1);
-            var shared = Binding.bindings[state.MainThread.Handle].Shared;
+            var shared = Binding.Bindings[state.MainThread.Handle].Shared;
             shared.Cpu.YieldProgram(new YieldFinishedGameTimer(state.ToNumber(1)));
             return 0;
         }

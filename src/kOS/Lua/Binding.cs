@@ -23,7 +23,7 @@ namespace kOS.Lua
 {
     public static class Binding
     {
-        public static readonly Dictionary<IntPtr, BindingData> bindings = new Dictionary<IntPtr, BindingData>();
+        public static readonly Dictionary<IntPtr, BindingData> Bindings = new Dictionary<IntPtr, BindingData>();
         private static readonly HashSet<Type> uniqueTypes = new HashSet<Type>()
         {   // Types of objects that you want to create new lua instances of when pushing onto the stack,
             // but that have overridden Equals and GetHashCode methods so BindingData.Objects dictionary
@@ -38,18 +38,14 @@ namespace kOS.Lua
         // with some simplifications and changes to make it work on Structures
         public class BindingData
         {
-            public readonly Dictionary<string, BoundVariable> Variables;
-            public readonly Dictionary<string, SafeFunctionBase> Functions;
             public readonly Dictionary<IntPtr, object> Objects = new Dictionary<IntPtr, object>();
             public readonly Dictionary<object, IntPtr> UserdataPtrs = new Dictionary<object, IntPtr>();
             public readonly LuaTypeBase[] Types;
             public readonly SharedObjects Shared;
             
-            public BindingData(KeraLua.Lua state, SharedObjects shared, Dictionary<string, BoundVariable> boundVariables, Dictionary<string, SafeFunctionBase> functions)
+            public BindingData(KeraLua.Lua state, SharedObjects shared)
             {
                 Shared = shared;
-                Variables = boundVariables;
-                Functions = functions;
                 Types = new LuaTypeBase[]
                 {
                     new KSStructure(state),
@@ -81,12 +77,7 @@ namespace kOS.Lua
         {
             state = state.MainThread;
             BindingChanges.Apply(shared.BindingMgr as BindingManager, shared.FunctionManager as FunctionManager);
-            bindings[state.Handle] = new BindingData(
-                state,
-                shared,
-                (shared.BindingMgr as BindingManager).RawVariables,
-                (shared.FunctionManager as FunctionManager).RawFunctions
-            );
+            Bindings[state.Handle] = new BindingData(state, shared);
             
             // set index and newindex metamethods on the environment table
             state.PushGlobalTable();
@@ -110,7 +101,7 @@ namespace kOS.Lua
         public static int CollectObject(IntPtr L)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
-            bindings.TryGetValue(state.MainThread.Handle, out var binding);
+            Bindings.TryGetValue(state.MainThread.Handle, out var binding);
             if (binding == null) return 0; // happens after DisposeStateBinding() was called
             var userdataAddress = state.ToUserData(1);
             binding.Objects.TryGetValue(userdataAddress, out var obj);
@@ -123,7 +114,7 @@ namespace kOS.Lua
         public static int ObjectToString(IntPtr L)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
-            var obj = Binding.bindings[state.MainThread.Handle].Objects[state.ToUserData(1)];
+            var obj = Binding.Bindings[state.MainThread.Handle].Objects[state.ToUserData(1)];
             state.PushString(obj.ToString());
             return 1;
         }
@@ -132,16 +123,18 @@ namespace kOS.Lua
         {
             var state = KeraLua.Lua.FromIntPtr(L);
             var index = state.ToString(2);
-            var binding = bindings[state.MainThread.Handle];
+            var binding = Bindings[state.MainThread.Handle];
             var isCapitalNameOnlyVariableNotCapital = capitalNameOnlyVariables.Contains(index.ToUpper()) && !capitalNameOnlyVariables.Contains(index);
             if (isCapitalNameOnlyVariableNotCapital)
                 return 0;
-            if (binding.Variables.TryGetValue(index, out var boundVar))
+            var variables = (binding.Shared.BindingMgr as BindingManager).RawVariables;
+            var functions = (binding.Shared.FunctionManager as FunctionManager).RawFunctions;
+            if (variables.TryGetValue(index, out var boundVar))
             {
                 return (int)LuaExceptionCatch(() =>
                     PushLuaType(state, Structure.ToPrimitive(boundVar.Value), binding), state);
             }
-            if (binding.Functions.TryGetValue(index, out var function))
+            if (functions.TryGetValue(index, out var function))
             {
                 return PushLuaType(state, function, binding);
             }
@@ -151,12 +144,13 @@ namespace kOS.Lua
         private static int EnvNewIndex(IntPtr L)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
-            var binding = bindings[state.MainThread.Handle];
+            var binding = Bindings[state.MainThread.Handle];
+            var variables = (binding.Shared.BindingMgr as BindingManager).RawVariables;
             var index = state.ToString(2);
             var isCapitalNameOnlyVariableNotCapital = capitalNameOnlyVariables.Contains(index.ToUpper()) && !capitalNameOnlyVariables.Contains(index);
             var isControlVariable = controlVariables.Contains(index.ToUpper()) && !controlVariables.Contains(index);
             if (!isControlVariable && !isCapitalNameOnlyVariableNotCapital
-                                   && binding.Variables.TryGetValue(index, out var boundVar))
+                                   && variables.TryGetValue(index, out var boundVar))
             {
                 if (boundVar.Set == null)
                 {
@@ -280,7 +274,7 @@ namespace kOS.Lua
         
         public static void DumpStack(KeraLua.Lua state, string debugName = "", BindingData binding = null)
         {
-            binding = binding ?? bindings[state.MainThread.Handle];
+            binding = binding ?? Bindings[state.MainThread.Handle];
             Debug.Log(debugName+"_________");
             for (int i = 0; i <= state.GetTop(); i++)
                 Debug.Log(i+" "+state.TypeName(i)+" "+ToCSharpObject(state, i, binding));
