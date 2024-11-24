@@ -1,47 +1,35 @@
-{
-    "spec_version"   : 1,
-    "identifier"     : "kOS",
-    "$kref"          : "#/ckan/github/KSP-KOS/KOS",
-    "$vref"          : "#/ckan/ksp-avc",
-    "x_netkan_epoch" : 1,
-    "name"           : "kOS: Scriptable Autopilot System",
-    "abstract"       : "kOS is a scriptable autopilot mod that allows you write small programs to automate specific tasks.",
-    "author"         : "many KSP-KOS contributers, currently dunbaratu and hvacengi",
-    "license"        : "GPL-3.0",
-    "release_status" : "stable",
-    "x_netkan_version_edit": "^[vV]?(?<version>.+)$",
-    "resources"      : {
-        "homepage"   : "https://ksp-kos.github.io/KOS_DOC/",
-        "manual"     : "https://ksp-kos.github.io/KOS_DOC/",
-        "repository" : "https://github.com/KSP-KOS/KOS"
-    },
-    "conflicts"      :   [ { "name" : "kOS-Classic" } ],
-    "recommends"     : [
-        {
-            "name": "ModuleManager",
-            "min_version": "2.5.6",
-            "comment": "Earlier versions of MM have forward compatibility problems, according to the MM release notes."
-        }
-    ],
-    "suggests": [
-        {
-            "name": "RemoteTech",
-            "min_version": "1.5.1",
-            "comment": "RT gives incentive to having local control of craft, even unmanned ones"
-        }
-    ],
-    "install" : [
-        {
-            "file"   : "GameData/kOS",
-            "install_to" : "GameData"
-        }
-    ],
-    "x_netkan_override": [
-        {
-            "version": "1:1.1.3.1",
-            "override": {
-                "ksp_version_min" : "1.2.0"
-            }
-        }
-    ]
-}
+spec_version: 1
+identifier: kOS
+$kref: '#/ckan/github/KSP-KOS/KOS'
+$vref: '#/ckan/ksp-avc'
+x_netkan_epoch: 1
+name: 'kOS: Scriptable Autopilot System'
+abstract: >-
+  kOS is a scriptable autopilot mod that allows you write small programs to
+  automate specific tasks.
+author: many KSP-KOS contributers, currently dunbaratu and hvacengi
+license: GPL-3.0
+x_netkan_version_edit: ^[vV]?(?<version>.+)$
+resources:
+  homepage: https://ksp-kos.github.io/KOS_DOC/
+  manual: https://ksp-kos.github.io/KOS_DOC/
+  repository: https://github.com/KSP-KOS/KOS
+conflicts:
+  - name: kOS-Classic
+recommends:
+  - name: ModuleManager
+    min_version: 2.5.6
+    comment: >-
+      Earlier versions of MM have forward compatibility problems, according to
+      the MM release notes.
+suggests:
+  - name: RemoteTech
+    min_version: 1.5.1
+    comment: RT gives incentive to having local control of craft, even unmanned ones
+install:
+  - file: GameData/kOS
+    install_to: GameData
+x_netkan_override:
+  - version: 1:1.1.3.1
+    override:
+      ksp_version_min: 1.2.0
