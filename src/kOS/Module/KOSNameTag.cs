@@ -2,6 +2,7 @@ using kOS.Screen;
 using kOS.Suffixed;
 using kOS.Safe.Utilities;
 using UnityEngine;
+using System;
 
 namespace kOS.Module
 {
@@ -61,6 +62,10 @@ namespace kOS.Module
                     part.RemoveModule(pm);
                 }
             }
+
+            // make this module cheaper in update loops
+            isEnabled = false;
+            enabled = false;
         }
 
         public void TypingDone(string newValue)
@@ -74,6 +79,41 @@ namespace kOS.Module
             typingWindow.Close();
             Destroy(typingWindow);
             typingWindow = null;
+        }
+    }
+
+    // setting isEnabled to false prevents the nametag from showing up in the PAW...work around that.
+    [KSPAddon(KSPAddon.Startup.FlightAndEditor, false)]
+    class KOSNameTagActivationManager : MonoBehaviour
+    {
+        void Awake()
+        {
+            GameEvents.onPartActionUICreate.Add(OnPartActionUICreate);
+            GameEvents.onPartActionUIShown.Add(OnPartActionUIShown);
+        }
+
+        void OnDestroy()
+        {
+            GameEvents.onPartActionUICreate.Remove(OnPartActionUICreate);
+            GameEvents.onPartActionUIShown.Remove(OnPartActionUIShown);
+        }
+        
+        private void OnPartActionUICreate(Part part)
+        {
+            var nameTagModule = part.FindModuleImplementing<KOSNameTag>();
+            if (nameTagModule != null)
+            {
+                nameTagModule.isEnabled = true;
+            }
+        }
+
+        private void OnPartActionUIShown(UIPartActionWindow paw, Part part)
+        {
+            var nameTagModule = part.FindModuleImplementing<KOSNameTag>();
+            if (nameTagModule != null)
+            {
+                nameTagModule.isEnabled = false;
+            }
         }
     }
 }
