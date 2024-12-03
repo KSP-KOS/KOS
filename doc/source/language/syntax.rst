@@ -70,6 +70,8 @@ operator symbols:
 
     * ``//`` -> Comment indicator - starts a comment that runs until
       the end of the line.
+    * ``/* */`` -> Block comment delimiters - Everything between the
+      delimiters is a comment.
     * ``( )`` -> Used either to group expressions to change the order of
       operations (in the usual fashion), or to mark the parameters of
       a function being called, like ``min(a, b)``.
@@ -96,6 +98,15 @@ operator symbols:
 *Comments* consist of everything from a "//" symbol to the end of the line::
 
     set x to 1. // this is a comment.
+
+*Block comments* consist of everything between "/\*" and "\*/". They can be multiple lines long::
+
+    /* this is a single line block comment. */
+
+    /*
+    this is a
+    multiline block comment.
+    */
 
 .. highlight:: none
 
