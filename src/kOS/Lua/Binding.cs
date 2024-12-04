@@ -54,25 +54,6 @@ namespace kOS.Lua
             }
         }
 
-        private static class BindingChanges
-        {
-            private static readonly List<KeyValuePair<string, string>> variableRenames = new List<KeyValuePair<string, string>>()
-            {
-                new KeyValuePair<string, string>("STAGE", "STAGEINFO"),
-                new KeyValuePair<string, string>("HEADING", "SHIPHEADING")
-            };
-
-            public static void Apply(BindingManager bindingManager, FunctionManager functionManager)
-            {
-                foreach (var rename in variableRenames)
-                {
-                    if (!bindingManager.RawVariables.TryGetValue(rename.Key, out var variable)) continue;
-                    bindingManager.RawVariables.Add(rename.Value, variable);
-                    bindingManager.RawVariables.Remove(rename.Key);
-                }
-            }
-        }
-
         public static void BindToState(KeraLua.Lua state, SharedObjects shared)
         {
             state = state.MainThread;
@@ -279,6 +260,40 @@ namespace kOS.Lua
             for (int i = 0; i <= state.GetTop(); i++)
                 Debug.Log(i+" "+state.TypeName(i)+" "+ToCSharpObject(state, i, binding));
             Debug.Log("____________________");
+        }
+        
+        private static class BindingChanges
+        {
+            private static readonly Renames variableRenames = new Renames()
+            {
+                {"STAGE", "STAGEINFO"},
+                {"HEADING", "SHIPHEADING"}
+            };
+            private static readonly Renames functionRenames = new Renames()
+            {
+                {"BODY", "GETBODY"}
+            };
+
+            public static void Apply(BindingManager bindingManager, FunctionManager functionManager)
+            {
+                foreach (var rename in variableRenames)
+                {
+                    if (!bindingManager.RawVariables.TryGetValue(rename.Key, out var variable)) continue;
+                    bindingManager.RawVariables.Add(rename.Value, variable);
+                    bindingManager.RawVariables.Remove(rename.Key);
+                }
+                foreach (var rename in functionRenames)
+                {
+                    if (!functionManager.RawFunctions.TryGetValue(rename.Key, out var variable)) continue;
+                    functionManager.RawFunctions.Add(rename.Value, variable);
+                    functionManager.RawFunctions.Remove(rename.Key);
+                }
+            }
+            
+            private class Renames : List<KeyValuePair<string, string>>
+            {
+                public void Add(string originalName, string newName) => Add(new KeyValuePair<string, string>(originalName, newName));
+            }
         }
     }
 }
