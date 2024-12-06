@@ -123,13 +123,15 @@ namespace kOS.Lua.Types
                 return Binding.PushLuaType(state, pushValue, binding);
             }
 
-            if (structure is TerminalInput && state.ToString(index)?.ToLower() == "getchar")
+            var suffixName = state.ToString(index).ToLower();
+            
+            if (structure is TerminalInput && suffixName == "getchar")
             {
                 state.PushCFunction(GetChar);
                 return 1;
             }
             
-            var result = structure.GetSuffix(state.ToString(index), true);
+            var result = structure.GetSuffix(suffixName, true);
             if (result == null)
                 return Binding.PushLuaType(state, null, binding);
             
@@ -138,7 +140,8 @@ namespace kOS.Lua.Types
                 pushValue = Structure.ToPrimitive(result.Value);
             }
             else if (result is DelegateSuffixResult delegateResult && delegateResult.RawDelInfo.ReturnType != typeof(void)
-                                                                   && delegateResult.RawDelInfo.Parameters.Length == 0)
+                                                                   && delegateResult.RawDelInfo.Parameters.Length == 0
+                                                                   && suffixName != "pop" && suffixName != "peek")
             {
                 var callResult = delegateResult.RawCall(null);
                 delegateResult.RawSetValue(Structure.FromPrimitiveWithAssert(callResult));
