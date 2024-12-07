@@ -59,3 +59,5 @@ netkan.exe
 
 # .swp files from vim (temporary files that vim creates when editing a file)
 *.swp
+
+!Resources/GameData/kOS/PluginData/LuaLSAddon/library/

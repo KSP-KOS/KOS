@@ -1,0 +1,5906 @@
+---@class MessageQueue : Structure
+---True if there are no messages in this queue.
+---@field empty boolean
+---Number of messages in this queue.
+---@field length number
+---Returns the first (oldest) message in the queue and removes it. Messages in the queue are always ordered by their arrival date.
+---@field pop fun(): Message
+---:return: `Message`
+---
+---Returns the oldest message in the queue without removing it from the queue.
+---@field peek fun(): Message
+---Removes all messages from the queue.
+---@field clear fun()
+---:parameter message: `Message` message to be added
+---
+---You can use this message to explicitly add a message to this queue. This will insert this exact message to the queue, all attributes that are normally
+---added automatically by kOS (:attr:`Message:SENTAT`, :attr:`Message:RECEIVEDAT` and :attr:`Message:SENDER`) will not be changed.
+---@field push fun(message: any)
+
+---@class Message : Structure
+---Date this message was sent at.
+---@field sentat TimeStamp
+---Date this message was received at.
+---@field receivedat TimeStamp
+---:type: `Vessel` or `boolean`
+---
+---Vessel which has sent this message, or a boolean false value if
+---the sender vessel no longer exists.
+---
+---If the sender of the message doesn't exist anymore (see the explanation
+---for :attr:`HASSENDER`), this suffix will return a different type
+---altogether.  It will be a `boolean` (which is false).
+---
+---You can check for this condition either by using the :attr:`HASSENDER`
+---suffix, or by checking the ``:ISTYPE`` suffix of the sender to
+---detect if it's really a vessel or not.
+---@field sender any
+---Because there can be a delay between when the message was sent and
+---when it was processed by the receiving script, it's possibile that
+---the vessel that sent the message might not exist anymore.  It could
+---have either exploded, or been recovered, or been merged into another
+---vessel via docking.  You can check the value of the ``:HASSENDER``
+---suffix to find out if the sender of the message is still a valid vessel.
+---If :attr:`HASSENDER` is false, then :attr:`SENDER` won't give you an
+---object of type `Vessel` and instead will give you just a
+---`boolean` false.
+---@field hassender boolean
+---Content of this message.
+---@field content any
+
+---@class Note : Structure
+---@field frequency number
+---@field endfrequency number
+---@field volume number
+---@field keydownlength number
+---@field duration number
+
+---@class Voice : Structure
+---Settable.
+---:type: `number` (seconds)
+---
+---The *Attack* setting of the SKID voice's
+---:ref:`ADSR Envelope <skid_envelope>`.  This value is
+---in seconds (usually a fractional portion of a second).
+---@field attack number
+---Settable.
+---:type: `number` (seconds)
+---
+---The *Decay* setting of the SKID voice's
+---:ref:`ADSR Envelope <skid_envelope>`.  This value is
+---in seconds (usually a fractional portion of a second).
+---@field decay number
+---Settable.
+---:type: `number` in the range [0..1]
+---
+---The *Sustain* setting of the SKID voice's
+---:ref:`ADSR Envelope <skid_envelope>`.  Unlike the other
+---values in the ASDR Envelope, this setting is NOT a measure
+---of time.  This is a coefficient to multiply the volume by
+---during the sustain portion of the notes that are being played
+---on this voice.  (i.e. 0.5 would mean "sustain at half volume").
+---@field sustain number
+---Settable.
+---:type: `number` (seconds)
+---
+---The *Release* setting of the SKID voice's
+---:ref:`ADSR Envelope <skid_envelope>`.  This value is
+---in seconds (usually a fractional portion of a second).
+---Note, that in order for this setting to have any real
+---effect, the notes that are being played have to
+---have their :attr:`KeyDownLength<Note:KEYDOWNLENGTH>` set to be shorter than
+---their :attr:`Duration<Note:DURATION`, otherwise the notes will still cut
+---off before the Release has a chance to happen.
+---@field release number
+---Settable.
+---The "peak" volume of the notes played on this voice, when they
+---hit the top of their initial spike in the
+---:ref:`ADSR Envelope <skid_envelope>`.  While conceptually the
+---max value is 1.0, in practice it can often go higher because
+---the KSP game setting for User Interface volume is usually only
+---at 50%, and in that scenario putting a 1.0 here would put the
+---max at 50%, *really*.  Setting this value to 0 will silence the voice.
+---@field volume number
+---Settable.
+---To select which of the SKID chip's
+---:ref:`waveform generators <skid_waveform>` you want this voice
+---to use, set this to the string name of that waveform.  If you
+---use a string that isn't one of the ones listed there (i.e.
+---"triangle", "noise", "square", etc) then the attempt to set this
+---value will be ignored and it will remain at its previous value.
+---@field wave string
+---:parameter note_or_list: Either one `Note` or a `List` of `Note`'s
+---:returns: None
+---
+---To cause the SKID chip to actually emit a sound, you need to
+---use this suffix method.  There are two ways it can be called:
+---
+---**Play just one note** : To play a single note, you can call
+---PLAY(), passing it one note object.  Usually you construct
+---the note object on the fly as you call Play, like so::
+---
+---    SET V0 to GetVoice(0).
+---    V0:PLAY(NOTE(440,0.5)).
+---
+---**Play a list of notes** : To play a full list of notes (which
+---could even encode an entire song), you can call PLAY, passing it
+---a `List` of `Note`'s.  It will recognize that it
+---is receiving a list of notes, and begin playing through them
+---one at a time, only playing the next note when the previous
+---note's :attr:`DURATION<Note:DURATION>` is finished::
+---
+---    SET V0 to GetVoice(0).
+---    V0:PLAY(
+---        LIST(
+---            NOTE(440, 0.5),
+---            NOTE(400, 0.2),
+---            SLIDENOTE(410, 350, 0.3)
+---            )
+---        ).
+---
+---**Notes play in the background**:  In *either case*, whether
+---playing a single note or a list of notes, the ``PLAY()``
+---method will return immediately, *before even the first note
+---has begun playing*.  It queues the note(s) to play, rather
+---than waiting for them to finish.  This lets your main program
+---continue doing its work without waiting for the sound to finish.
+---
+---**Calling PLAY() again on the same voice aborts the previous
+---PLAY()**:  Because the notes play in the background, it's possible
+---to execute another PLAY() call while a previous one hasn't
+---finished its work yet.  If you do this, then the previous thing
+---that was playing will quit, to be replaced by the new thing.
+---
+---**But PLAY() can be called simultaneously on different voices**:
+---(In fact that's the whole point of having different voices.).
+---Calling PLAY() again on a *different* voice number will not
+---abort the previous call to PLAY().  It only aborts the previous
+---PLAY() when it's being done on the *same* voice.
+---@field play fun(note_or_list: any)
+---:returns: None
+---
+---Calling this method will tell the voice to stop playing notes.  If there are
+---any notes queued to be played, they will not be played.  If a note is
+---currently being played, that note will be stopped.
+---@field stop fun()
+---Settable.
+---If this is set to true, then the PLAY() method of this voice will
+---keep on playing the same list of notes continually (starting over
+---with the first note after the last note has finished).  Note that
+---for the purpose of this, a play command that was only given a single
+---note to play still counts as a 'song' that is one note long (i.e.
+---it will keep repeating the same note continually).
+---@field loop boolean
+---Settable.
+---**Get**: If this voice is currently playing a note or list of notes
+---that was previously passed in to the ``PLAY()`` method, then this
+---returns true.  Note that if :attr:`LOOP<Voice:LOOP>` is true, then this
+---will never become false unless you set it to become false.
+---
+---**Set**: If you set this value to FALSE, that will force the voice
+---to stop playing whatever it was playing, and shut it up.  (Setting
+---it to true doesn't really mean anything.  It becomes true because
+---the PLAY() method was called.  You can't restart a song just by
+---setting this to true because when it becomes false, the voice
+---"throws away" its memory of the song it was playing.)
+---@field isplaying boolean
+---Settable.
+---When the voice is playing a `Note` or (more usefully) a
+---`List` of `Note`'s, it will stretch or shrink the
+---durations of those notes by multiplying them by this scaling
+---factor.  At 1.0 (the default), that means that when a note
+---*says* it lasts for 1 second, then it really does.  But if
+---this tempo was set to, say 1.5, then that would mean that each
+---time a note claims it wants to play for 1 second, it would really
+---end up playing for 1.5 seconds on this voice.  (or if you set
+---the tempo to 0.5, then all songs will play their notes at double
+---speed (each note only lasting half as long as it "should").)
+---
+---In other words, setting this to a value less than 1.0 will
+---speed up the song, and setting it to a value greater than 1.0
+---will slow it down (which might be the opposite of what you'd
+---expect with it being called "tempo", but what else should
+---we have called it?  "slowpo"?)
+---
+---Changes to this value take effect as soon as the next note in
+---the song starts. (You do not need to re-run the PLAY() method.
+---It will change the speed in mid-song.)
+---
+---Be aware that this *only* scales the timings of the `Note`'s
+---:attr:`KEYDOWNLENGTH<Note:KEYDOWNLENGTH>` and :attr:`DURATION<Note:DURATION>`
+---timings.  It does not
+---affect the timings in the :ref:`ADSR Envelope <skid_envelope>`, as
+---those represent what are meant to be physical properties of the
+---"instrument" the voice is playing on.  This means if you set the
+---tempo too fast, it will start cutting off the full duration of the
+---"envelope" of the notes, if you are playing the notes with settings
+---that have a slow attack or decay.
+---@field tempo number
+
+---@class Core : KOSProcessor
+---The kOS version currently running.
+---@field version Version
+---The vessel containing the current processor.
+---@field vessel Vessel
+---The element object containing the current processor.
+---@field element Element
+---The currently selected volume for the current processor.  This may be useful to prevent deleting files on the Archive, or for interacting with multiple local hard disks.
+---@field currentvolume Volume
+---Returns this processsor's message queue.
+---@field messages MessageQueue
+
+---@class Bounds : Structure
+---Settable.
+---The position of the origin point of the bounding box, expressed
+---in absolute coordinates (what kOS calls the ship-raw reference
+---frame, that the rest of the position vectors in kOS use.)
+---
+---If this bounding box came from a Part, this will be the same as
+---that part's ``Part:POSITION``, and will keep being "magically"
+---updated to stay with that part's position if it moves or rotates
+---(but see note below).
+---
+---If this bounding box came from a vessel, this will be the same as
+---that vessel's ``Vessel:PARTS[0]:POSITION`` (the position of its
+---root part) and be "magically" updated to stay with that part's
+---position if it moves or rotates (but see note below).  It is
+---NOT ``Vessel:position``, which is important.  ``Vessel:position``
+---is the *center of mass* of a vessel.  While kOS prefers to use
+---CoM as the official position of a vessel most of the time, the fact
+---that using fuel shifts the position of the CoM within the vessel made
+---it impractical to use CoM for the vessel's bounding box origin.
+---
+---**WARNING about using SET with this suffix:** *If this bounds box
+---was obtained using :attr:`Part:BOUNDS` or :attr:`Vessel:BOUNDS`,
+---then this suffix keeps changing its value to remain correct as the
+---vessel rotates or moves.  But ONLY if you restrict your use of this
+---suffix to GET-only.  If you ever SET this suffix, kOS stops that
+---auto-updating so it won't override the value you gave.  Generally,
+---using SET on this suffix was only ever intended for Bounds you
+---created manually with the BOUNDS() function.*
+---@field absorigin Vector
+---Settable.
+---This defines the orientation of this bounding box's local
+---reference frame, by providing a rotation that will get you
+---from the bounding-box relative orientation (in which the
+---X, Y, and Z axes are parallel to the bounding box's edges)
+---to the absolute orientation (the ship-raw orientation the
+---rest of kOS uses).
+---
+---If this bounding box came from a Part, this will be the same as
+---that part's ``Part:FACING``, and will keep being "magically"
+---updated to stay aligned with that part's facing if it moves or
+---rotates (but see note below).
+---
+---If this bounding box came from a Vessel, this will be the same as
+---that Vessel's ``Vessel:FACING``, and will keep being "magically"
+---updated to stay aligned with that part's facing if it moves or
+---rotates (but see note below).
+---
+---**WARNING about using SET with this suffix:** *If this bounds box
+---was obtained using :attr:`Part:BOUNDS` or :attr:`Vessel:BOUNDS`,
+---then this suffix keeps changing its value to remain correct as the
+---vessel rotates or moves.  But ONLY if you restrict your use of this
+---suffix to GET-only.  If you ever SET this suffix, kOS stops that
+---auto-updating so it won't override the value you gave.  Generally,
+---using SET on this suffix was only ever intended for Bounds you
+---created manually with the BOUNDS() function.*
+---@field facing Direction
+---Settable.
+---:type: `Vector` **in bounding-box relative reference frame**
+---
+---A vector expressed in the bounding-box-relative reference frame
+---(where the XYZ axes are parallel to the bounding box's edges).
+---
+---This defines one corner of the bounding box.  It is the
+---"negative-most" corner of the box.  If you drew a vector from
+---the box's origin point to its "negative-most" corner, that would
+---be this vector.  By "negative-most" that simply means the corner
+---where the X, Y, and Z coordinates have their smallest values.
+---(again, in the bounding box's own reference frame, not the absolute
+---world (ship-raw) frame.)
+---
+---This corner will always be the diagonally opposite corner from
+---:attr:`Bounds:RELMAX`.
+---
+---If you SET this value, you are changing the size of the
+---bounding box, making it larger (or smaller), as well as
+---stretching or shrinking it, depending on the new value
+---you pick.  Doing so doesn't *actually* change the size of
+---a part or vessel, and is really only useful if you are
+---working with your own ``Bounds`` you created manually with
+---the ``Bounds()`` built-in function.
+---
+---Be careful when trying to "add" the RELMIN vector to other
+---vectors in the game.  It's not oriented in ship-raw coords.
+---To rotate it into ship-raw coords you can multiply it by
+---the bounds facing like so: ``MyBounds:FACING * MyBounds:RELMIN``.
+---@field relmin Vector
+---Settable.
+---:type: `Vector` **in bounding-box relative reference frame**
+---
+---A vector expressed in the bounding-box-relative reference frame
+---(where the XYZ axes are parallel to the bounding box's edges).
+---
+---This defines one corner of the bounding box.  It is the
+---"positive-most" corner of the box.  If you drew a vector from
+---the box's origin point to its "positive-most" corner, that would
+---be this vector.  By "positive-most" that simply means the corner
+---where the X, Y, and Z coordinates have their greatest values.
+---(again, in the bounding box's own reference frame, not the absolute
+---world (ship-raw) frame.)
+---
+---This corner will always be the diagonally opposite corner from
+---:attr:`Bounds:RELMIN`.
+---
+---If you SET this value, you are changing the size of the
+---bounding box, making it larger (or smaller), as well as
+---stretching or shrinking it, depending on the new value
+---you pick.  Doing so doesn't *actually* change the size of
+---a part or vessel, and is really only useful if you are
+---working with your own ``Bounds`` you created manually with
+---the ``Bounds()`` built-in function.
+---
+---Be careful when trying to "add" the RELMAX vector to other
+---vectors in the game.  It's not oriented in ship-raw coords.
+---To rotate it into ship-raw coords you can multiply it by
+---the bounds facing like so: ``MyBounds:FACING * MyBounds:RELMAX``.
+---@field relmax Vector
+---This is the same point as :attr:`Bounds:RELMIN`, except it has
+---been rotated and translated into absolute coordinates (what 
+---kOS calls the ship-raw reference frame, that the rest of the
+---position vectors in kOS use.)
+---
+---You cannot SET this value, because it is generated
+---from the ABSORIGIN, the FACING, and the RELMIN.
+---
+---Calculating the ABSMIN could be done in kerboscript from the
+---other Bounds suffixes (see example below), but this is provided
+---for convenience::
+---
+---    // The following two print lines should print
+---    // the same vector, within reason.  (There may be a
+---    // small floating point precision variance between them):
+---    set B to ship:bounds.
+---    print B:ABSMIN.
+---    print B:ABSORIGIN + (B:FACING * B:RELMIN).
+---@field absmin Vector
+---This is the same point as :attr:`Bounds:RELMAX`, except it has
+---been rotated and translated into absolute coordinates (what 
+---kOS calls the ship-raw reference frame, that the rest of the
+---position vectors in kOS use.)
+---
+---You cannot SET this value, because it is generated
+---from the ABSORIGIN, the FACING, and the RELMAX.
+---
+---Calculating the ABSMAX could be done in kerboscript from the
+---other Bounds suffixes (see example below), but this is provided
+---for convenience::
+---
+---    // The following two print lines should print
+---    // the same vector, within reason.  (There may be a
+---    // small floating point precision variance between them):
+---    set B to ship:bounds.
+---    print B:ABSMAX.
+---    print B:ABSORIGIN + (B:FACING * B:RELMAX).
+---@field absmax Vector
+---:type: `Vector` **in bounding-box relative reference frame**
+---
+---The center of the bounding box, in its own relative reference frame.
+---(Not the absolute ship-raw reference frame the rest of kOS uses.)
+---
+---This is the offset between the bounding box's origin and its center.
+---
+---The origin of a bounding box is often not at its center because a
+---bounding box can extend further in one direction than the other.
+---For example a vessel's root part is often up at the top of the rocket,
+---such a vessel's bounding box will extend much further in the "aft"
+---direction than it does in the "fore" direction.  The wing parts in the
+---game are often defined with their origin point at the base where they
+---glue to the fuselage, not out in the middle of the wing.
+---
+---Instead of being provided directly, this value could be calculated
+---from the RELMIN and RELMAX.  It's simply the point exactly halfway
+---between those two opposite corners.
+---@field relcenter Vector
+---This is just the same thing as :attr:`Bounds:RELCENTER`, but
+---in the absolute (ship-raw) reference frame which scripts might find
+---more useful.
+---
+---It's exactly equivalent to doing this::
+---
+---    MyBounds:ABSORIGIN + (MyBounds:FACING * MyBounds:RELCENTER).
+---
+---Instead of being provided directly, this value could be calculated
+---from the ABSMIN and ABSMAX.  It's simply the point exactly halfway
+---between those two opposite corners.
+---@field abscenter Vector
+---Settable.
+---:type: `Vector` **in bounding-box relative reference frame**
+---
+---A vector (in bounding-box relative reference frame, NOT the
+---absolute (ship-raw) reference frame the rest of kOS uses)
+---that describes where :attr:`Bounds:RELMAX` is, relative to
+---to the box's center (rather than to its origin).
+---
+---Note that the vector in the inverse direction of this one (that you'd
+---get by multiplying it by -1), points from the center to
+---the oppposite corner, the :attr:`Bounds:RELMIN`.
+---@field extents Vector
+---Settable.
+---:type: `Vector` **in bounding-box relative reference frame**
+---
+---A vector (in bounding-box relative reference frame, NOT the
+---absolute (ship-raw) reference frame the rest of kOS uses)
+---that describes the ray from RELMIN to RELMAX that goes diagonally
+---across the whole box.  It's always just the same thing you'd
+---get if you took the :attr:`Bounds:EXTENTS` vector and multiplied
+---it by the scalar 2.
+---@field size Vector
+---:parameter ray: The "that-a-way" `Vector` in absolute (ship-raw) reference frame.
+---:return: `Vector` in absolute (ship-raw) referece frame.
+---
+---Returns the position (in absolute (ship-raw) reference frame) of
+---whichever of the 8 corners of this bounding box is "furthest" in
+---the direction the ray vector is pointing.  Useful when you want
+---to know the furthest a bounding box extends in some gameworld
+---direction.
+---
+---Examples::
+---
+---    // Assume other_vessel has been set to some vessel nearby
+---    // other than the current SHIP:
+---    //
+---    local ves_box is other_vessel:bounds.
+---    local top is ves_box:furthestcorner(up:vector).
+---    local bottom is ves_box:furthestcorner(-up:vector).
+---
+---    local from_other_to_me is ship:position - other_vessel:position.
+---    local nearest is ves_box:furthestcorner(from_other_to_me).
+---    print "The closest point on the other vessel's bounds box is this far away:".
+---    print nearest:mag.
+---
+---    // A more complex example showing how you might use bounds boxes
+---    // when trying to figure out how big a target vessel is so you
+---    // know how to go around it:
+---    //
+---    local my_left is -ship:facing:starvector.
+---    local leftmost is ves_box:furthestcorner(my_left).
+---    print "In order to go around the other vessel, to the left, ".
+---    pritn "I would need to shift myself this far to my left:".
+---    print vdot(-ship:facing:starvector, leftmost).
+---@field furthestcorner fun(ray: Vector): Vector
+---The above-sea-level altitude reading from the bottom-most corner of
+---this bounding box, toward whichever Body the current CPU vessel is
+---orbiting.
+---
+---Note that it's always using the CPU vessel's *current*
+---body to decide which body is the one that defines the bounding
+---box's "downward" direction for picking its bottom-most corner,
+---and it uses that same body to decide what counts as "altitude",
+---regardless of wether the bounds box is a bounds box of the current
+---CPU vessel or something else.
+---
+---To put it another way: You can't "read" what the altitude of a
+---bounding box above the Mun is if your ship is currently
+---in Kerbin's sphere of influence.  If you are currently orbiting
+---Kerbin, it will assume that the "bottom" of any Bounds box you
+---refer to means "corner closest to Kerbin" and "altitude" means
+---"distance from Kerbin's Sea level".  Once your CPU vessel moves
+---into the Mun's sphere of influence this will change it it will
+---now assume that the "bottom" of a Bounds is the corner closest
+---to the Mun and the altitude you care about is the altitude above
+---the Mun.
+---
+---This may seem like a limitation, but it really isn't, since you
+---wouldn't be able to query a vessel or a part for its bounding
+---box if that vessel was far enough away to be outside the loading
+---distance and thus its full set of parts isn't "there".
+---It would only be a limitation for cases where you are inventing
+---your own bounds boxes from scratch.
+---@field bottomalt number
+---The radar-altitude reading from the bottom-most corner of
+---this bounding box, toward whichever Body the current CPU vessel is
+---orbiting.  Same as :attr:`Bounds:BOTTOMALT` except for the
+---difference between above-sea-level altitude versus radar altitude.
+---@field bottomaltradar number
+
+---@class ScienceExperimentModule : PartModule
+---Call this method to deploy and run this science experiment. This method will fail if the experiment already contains scientific
+---data or is inoperable.
+---@field deploy fun()
+---Call this method to reset this experiment. This method will fail if the experiment is inoperable.
+---@field reset fun()
+---Call this method to transmit the results of the experiment back to Kerbin. This will render the experiment
+---inoperable if it is not rerunnable. This method will fail if there is no data to send.
+---@field transmit fun()
+---Call this method to discard the data obtained as a result of running this experiment.
+---@field dump fun()
+---True if this experiment is no longer operable.
+---@field inoperable boolean
+---True if this experiment is deployed.
+---@field deployed boolean
+---True if this experiment can be run multiple times.
+---@field rerunnable boolean
+---True if this experiment has scientific data stored.
+---@field hasdata boolean
+---:type: `List` of `ScienceData`
+---
+---List of scientific data obtained by this experiment
+---@field data List
+
+---@class PartModule : Structure
+---:test: string
+---
+---Get the name of the module. Note that it's the same as the name given in the MODULE section of the Part.cfg file for the part.
+---@field name string
+---:test: `Part`
+---
+---Get the `Part` that this PartModule is attached to.
+---@field part Part
+---:test: `List` of strings
+---
+---Get a list of all the names of KSPFields on this PartModule that the kos script is CURRENTLY allowed to get or set with :GETFIELD or :SETFIELD. Note the Security access comments below. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.
+---@field allfields List
+---:test: `List` of strings
+--- 
+--- Similar to :ALLFIELDS except that it returns the string without the formatting to make it easier to use in a script. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.
+---@field allfieldnames List
+---:parameter name: (`string`) Name of the field
+---:return: `boolean`
+---
+---Return true if the given field name is currently available for use with :GETFIELD or :SETFIELD on this PartModule, false otherwise.
+---@field hasfield fun(name: string): boolean
+---:test: `List` of strings
+---
+---Get a list of all the names of KSPEvents on this PartModule that the kos script is CURRENTLY allowed to trigger with :DOEVENT. Note the Security access comments below. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.
+---@field allevents List
+---:test: `List` of strings
+--- 
+--- Similar to :ALLEVENTS except that it returns the string without the formatting to make it easier to use in a script. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.
+---@field alleventnames List
+---:parameter name: (`string`) Name of the event
+---:return: `boolean`
+---
+---Return true if the given event name is currently available for use with :DOEVENT on this PartModule, false otherwise.
+---@field hasevent fun(name: string): boolean
+---:test: `List` of strings
+---
+---Get a list of all the names of KSPActions on this PartModule that the kos script is CURRENTLY allowed to trigger with :DOACTION. Note the Security access comments below.
+---@field allactions List
+---:test: `List` of strings
+--- 
+--- Similar to :ALLACTIONS except that it returns the string without the formatting to make it easier to use in a script. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.
+---@field allactionnames List
+---:parameter name: (`string`) Name of the action
+---:return: `boolean`
+---
+---Return true if the given action name is currently available for use with :DOACTION on this PartModule, false otherwise.
+---@field hasaction fun(name: string): boolean
+---:parameter name: (`string`) Name of the field
+---:return: varies
+---
+---Get the value of one of the fields that this PartModule has placed onto the rightclick menu for the part. Note the Security comments below.
+---@field getfield fun(name: string): any
+---:parameter name: (`string`) Name of the field
+---
+---Set the value of one of the fields that this PartModule has placed onto the rightclick menu for the part. Note the Security comments below.
+---
+---WARNING: This suffix is only settable for parts attached to the :ref:`CPU Vessel <cpu vessel>`
+---
+---SYMMETRY NOTE: There is one important difference between using
+---SETFIELD to set a field versus what happens when you use the mouse
+---to do it in the game's GUI.  In the GUI, often if the part is
+---in a 2x, 3x, 4x, 6x, or 8x symmetry group, setting a field on
+---one part will cause the other parts' fields to also change along
+---with it.  Generally that does NOT happen when you use kOS to set
+---the field.  If you want to set the same value to all the parts in
+---a symmetry group, you need to iterate over all the parts yourself
+---using the part's :attr:`Part::SYMMETRYCOUNT` suffix to see how
+---many symmetrical parts there are, and iterate over them with
+---:attr:`Part:SYMMETRYPARTNER(index)`, calling ``SETFIELD`` on
+---them one at a time.
+---@field setfield fun(name: string, value: any)
+---:parameter name: (`string`) Name of the event
+---
+---Trigger an "event button" that is on the rightclick part menu at the moment. Note the Security comments below.
+---
+---WARNING: This suffix is only callable for parts attached to the :ref:`CPU Vessel <cpu vessel>`
+---@field doevent fun(name: string)
+---:parameter name: (`string`) Name of the action
+---:parameter bool: (`boolean`) Value to set: True or False
+---
+---Activate one of this PartModule's action-group-able actions, bypassing the action group system entirely by just activating it for this one part directly. The `boolean` value decides whether you are toggling the action ON or toggling it OFF. Note the Security comments below.
+---
+---WARNING: This suffix is only callable for parts attached to the :ref:`CPU Vessel <cpu vessel>`
+---@field doaction fun(name: string, bool: boolean)
+
+---@class KOSProcessor : PartModule
+---Indicates the current state of this processor. `OFF` - deactivated, `READY` - active, or `STARVED` - no power.
+---@field mode string
+---:returns: None
+---
+---Activate this processor
+---@field activate fun()
+---:returns: None
+---
+---Deactivate this processor
+---@field deactivate fun()
+---This processor's hard disk.
+---@field volume Volume
+---Settable.
+---This processor's name tag
+---@field tag string
+---Settable.
+---The filename for the boot file on this processor. This may be set to an empty :ref:`string <string>` “” or to “None” to disable the use of a boot file.
+---@field bootfilename string
+---:return: `Connection`
+---
+---Returns your connection to this processor.
+---@field connection Connection
+
+---@class ScienceContainerModule : PartModule
+---:type: :ref:`Boolean <boolean>`
+---
+---True if this container has scientific data stored.
+---@field hasdata boolean
+---:type: `List` of `ScienceData`
+---
+---List of scientific data contained by this part
+---@field data List
+---Call this method to dump the particular experiment provided
+---@field dumpdata fun(DATA: number)
+---Call this method to run the unit's "collect all" action
+---@field collectall fun()
+
+---@class Gimbal : PartModule
+---Settable.
+---Is this gimbal locked to neutral position and not responding to steering controls right now? When you set it to true it will snap the engine back to 0s for pitch, yaw and roll
+---@field lock boolean
+---Settable.
+---Is the gimbal responding to pitch controls? Relevant only if the gimbal is not locked.
+---@field pitch boolean
+---Settable.
+---Is the gimbal responding to yaw controls? Relevant only if the gimbal is not locked.
+---@field yaw boolean
+---Settable.
+---Is the gimbal responding to roll controls? Relevant only if the gimbal is not locked.
+---@field roll boolean
+---Settable.
+---:type: `number` (%)
+---
+---Percentage of maximum range this gimbal is allowed to travel
+---@field limit number
+---:type: `number` (deg)
+---
+---The maximum extent of travel possible for the gimbal along all 3 axis (Pitch, Yaw, Roll)
+---@field range number
+---A Measure of the rate of travel for the gimbal
+---@field responsespeed number
+---The gimbals current pitch, has a range of -1 to 1. Will always be 0 when LOCK is true
+---@field pitchangle number
+---The gimbals current yaw, has a range of -1 to 1. Will always be 0 when LOCK is true
+---@field yawangle number
+---The gimbals current roll, has a range of -1 to 1. Will always be 0 when LOCK is true
+---@field rollangle number
+
+---@class Addons : Structure
+---@field id RTAddon
+---@field available fun(param1: string): boolean
+---@field hasaddon fun(param1: string): boolean
+
+---@class Skin : Structure
+---Settable.
+---@field name Style
+---Settable.
+---@field name Style
+---Settable.
+---@field font string
+---Settable.
+---@field selectioncolor RGBA
+---@field add fun(param1: string, param2: Style): Style
+---@field get fun(param1: string): Style
+---@field has fun(param1: string): boolean
+
+---@class TipDisplay : Label
+
+---@class Button : Label
+---Settable.
+---@field pressed boolean
+---@field takepress boolean
+---Settable.
+---@field toggle boolean
+---Settable.
+---@field exclusive boolean
+---Settable.
+---@field ontoggle UserDelegate
+---Settable.
+---@field onclick UserDelegate
+
+---@class Slider : Widget
+---Settable.
+---@field value number
+---Settable.
+---@field min number
+---Settable.
+---@field max number
+---Settable.
+---@field onchange UserDelegate
+
+---@class Label : Widget
+---Settable.
+---@field text string
+---Settable.
+---@field image string
+---Settable.
+---@field textupdater UserDelegate
+---Settable.
+---@field tooltip string
+
+---@class PopupMenu : Button
+---Settable.
+---@field options List
+---@field addoption fun(param1: any)
+---Settable.
+---@field value any
+---Settable.
+---@field index number
+---@field clear fun()
+---Settable.
+---@field changed boolean
+---Settable.
+---@field maxvisible number
+---Settable.
+---@field onchange UserDelegate
+---Settable.
+---@field optionsuffix string
+
+---@class StyleState : Structure
+---Settable.
+---@field bg string
+---Settable.
+---@field textcolor RGBA
+
+---@class GUI : Box
+---Settable.
+---@field x number
+---Settable.
+---@field y number
+---Settable.
+---@field draggable boolean
+---Settable.
+---@field extradelay number
+---Settable.
+---@field skin Skin
+---@field tooltip string
+
+---@class StyleRectOffset : Structure
+---Settable.
+---@field h number
+---Settable.
+---@field v number
+---Settable.
+---@field left number
+---Settable.
+---@field right number
+---Settable.
+---@field top number
+---Settable.
+---@field bottom number
+
+---@class ScrollBox : Box
+---Settable.
+---@field halways boolean
+---Settable.
+---@field valways boolean
+---Settable.
+---@field position Vector
+
+---@class Style : Structure
+---@field margin StyleRectOffset
+---@field padding StyleRectOffset
+---@field border StyleRectOffset
+---@field overflow StyleRectOffset
+---Settable.
+---@field width number
+---Settable.
+---@field height number
+---Settable.
+---@field hstretch boolean
+---Settable.
+---@field vstretch boolean
+---Settable.
+---@field bg string
+---Settable.
+---@field textcolor RGBA
+---@field normal StyleState
+---@field focused StyleState
+---@field active StyleState
+---@field hover StyleState
+---@field on StyleState
+---@field normal StyleState
+---@field on StyleState
+---@field focused StyleState
+---@field on StyleState
+---@field active StyleState
+---@field on StyleState
+---@field hover StyleState
+---@field on StyleState
+---Settable.
+---@field font string
+---Settable.
+---@field fontsize number
+---Settable.
+---@field richtext boolean
+---Settable.
+---@field align string
+---Settable.
+---@field wordwrap boolean
+
+---@class Spacing : Widget
+---Settable.
+---@field amount number
+
+---@class Box : Widget
+---@field addlabel fun(...): Label
+---@field addtextfield fun(...): TextField
+---@field addbutton fun(...): Button
+---@field addradiobutton fun(...): Button
+---@field addcheckbox fun(...): Button
+---@field addpopupmenu PopupMenu
+---@field addhslider fun(...): Slider
+---@field addvslider fun(...): Slider
+---@field addhbox Box
+---@field addvbox Box
+---@field addhlayout Box
+---@field addvlayout Box
+---@field addscrollbox ScrollBox
+---@field addstack Box
+---@field addspacing fun(...): Spacing
+---@field addtipdisplay fun(...): Label
+---@field widgets List
+---@field radiovalue string
+---Settable.
+---@field onradiochange UserDelegate
+---@field showonly fun(param1: Widget)
+---@field clear fun()
+
+---@class TextField : Label
+---Settable.
+---@field changed boolean
+---Settable.
+---@field confirmed boolean
+---Settable.
+---@field onchange UserDelegate
+---Settable.
+---@field onconfirm UserDelegate
+
+---@class Widget : Structure
+---Settable.
+---@field enabled boolean
+---Settable.
+---@field visible boolean
+---@field show fun()
+---@field hide fun()
+---@field dispose fun()
+---Settable.
+---@field style Style
+---@field gui GUI
+---@field parent Widget
+---@field hasparent boolean
+
+---@class Vessel : Orbitable
+---:parameter name: (`string`) Name of the parts
+---:return: `List` of `Part` objects
+---
+---Returns a list of all the parts that have this as their
+---``Part:NAME``. The matching is done case-insensitively. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
+---@field partsnamed fun(name: string): List
+---:parameter namePattern: (`string`) Pattern of the name of the parts
+---:return: `List` of `Part` objects
+---
+---Returns a list of all the parts that have this Regex pattern in their
+---``Part:NAME``. The matching is done identically as in :meth:`String:MATCHESPATTERN`\ . For more information, see :ref:`ship parts and modules <parts and partmodules>`.
+---@field partsnamedpattern fun(namePattern: string): List
+---:parameter title: (`string`) Title of the parts
+---:return: `List` of `Part` objects
+---
+---Returns a list of all the parts that have this as their
+---``Part:TITLE``. The matching is done case-insensitively. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
+---@field partstitled fun(title: string): List
+---:parameter titlePattern: (`string`) Patern of the title of the parts
+---:return: `List` of `Part` objects
+---
+---Returns a list of all the parts that have this Regex pattern in their
+---``Part:TITLE``. The matching is done identically as in :meth:`String:MATCHESPATTERN`\ . For more information, see :ref:`ship parts and modules <parts and partmodules>`.
+---@field partstitledpattern fun(titlePattern: string): List
+---:parameter name: (`string`) name, title or tag of the parts
+---:return: `List` of `Part` objects
+---
+---Return a list of all the parts that match this
+---name regardless of whether that name is the Part:Name, the Part:Tag, or the Part:Title. It is effectively the distinct union of :PARTSNAMED(val), :PARTSTITLED(val), :PARTSTAGGED(val). The matching is done case-insensitively. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
+---@field partsdubbed fun(name: string): List
+---:parameter namePattern: (`string`) Pattern of the name, title or tag of the parts
+---:return: `List` of `Part` objects
+---
+---Return a list of parts that match this Regex pattern
+---regardless of whether that name is the Part:Name, the Part:Tag, or the Part:Title. It is effectively the distinct union of :PARTSNAMEDPATTERN(val), :PARTSTITLEDPATTERN(val), :PARTSTAGGEDPATTERN(val). The matching is done identically as in :meth:`String:MATCHESPATTERN`\ . For more information, see :ref:`ship parts and modules <parts and partmodules>`.
+---@field partsdubbedpattern fun(namePattern: string): List
+---:parameter name: (`string`) Name of the part modules
+---:return: `List` of `PartModule` objects
+---
+---Return a list of all the `PartModule` objects that
+---match the given name. The matching is done case-insensitively. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
+---@field modulesnamed fun(name: string): List
+---:parameter group: (integer) the action group number
+---:return: `List` of `Part` objects
+---
+---one action triggered by the given action group. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
+---@field partsingroup fun(group: string): List
+---:parameter group: (integer) the action group number
+---:return: `List` of `PartModule` objects
+---
+---have at least one action triggered by the given action group. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
+---@field modulesingroup fun(group: string): List
+---:parameter tag: (`string`) Tag of the parts
+---:return: `List` of `Part` objects
+---
+---Returns a list of all the parts that have this name as their
+---``Part:TAG`` value. The matching is done case-insensitively. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
+---@field partstagged fun(tag: string): List
+---:parameter tagPattern: (`string`) Pattern of the tag of the parts
+---:return: `List` of `Part` objects
+---
+---Returns a list of all the parts that match this Regex pattern in their
+---``part:TAG`` value. The matching is done identically as in :meth:`String:MATCHESPATTERN`\ . For more information, see :ref:`ship parts and modules <parts and partmodules>`.
+---@field partstaggedpattern fun(tagPattern: string): List
+---:return: `List` of `Part` objects
+---
+---Return all parts who's nametag isn't blank.
+---For more information, see :ref:`ship parts and modules <parts and partmodules>`.
+---@field alltaggedparts List
+---:type: `List` of `Part` objects
+---
+---A List of all the :ref:`parts <part>` on the vessel. ``SET FOO TO SHIP:PARTS.`` has exactly the same effect as ``LIST PARTS IN FOO.``. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
+---@field parts List
+---:type: `List` of `DockingPort` objects
+---
+---A List of all the :ref:`docking ports <DockingPort>` on the Vessel.
+---@field dockingports List
+---@field decouplers List
+---@field separators List
+---:type: `List` of `Element` objects
+---
+---A List of all the :ref:`elements <Element>` on the Vessel.
+---@field elements List
+---:type: `List` of `Engine` objects
+---
+---A List of all the :ref:`engines <Engine>` on the Vessel.
+---@field engines List
+---:type: `List` of `RCS` objects
+---
+---A List of all the :ref:`RCS thrusters <RCS>` on the Vessel.
+---@field rcs List
+---The structure representing the raw flight controls for the vessel.
+---
+---WARNING: This suffix is only gettable for :ref:`CPU Vessel <cpu vessel>`
+---@field control Control
+---*relative* compass heading (degrees) to this vessel from the :ref:`CPU Vessel <cpu vessel>`, taking into account the CPU Vessel's own heading.
+---@field bearing number
+---*absolute* compass heading (degrees) to this vessel from the :ref:`CPU Vessel <cpu vessel>`
+---@field heading number
+---Sum of all the :ref:`engines' THRUSTs <engine_THRUST>` of all the currently active engines In Kilonewtons.
+---@field thrust number
+---Sum of all the :ref:`engines' AVAILABLETHRUSTs <engine_AVAILABLETHRUST>` of all the currently active engines taking into account their throttlelimits. Result is in Kilonewtons.
+---@field availablethrust number
+---:parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
+---:type: `number` (kN)
+---
+---Sum of all the :ref:`engines' AVAILABLETHRUSTATs <engine_AVAILABLETHRUSTAT>` of all the currently active engines taking into account their throttlelimits at the given atmospheric pressure. Result is in Kilonewtons.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
+---(Pressure must be greater than or equal to zero.  If you pass in a
+---negative value, it will be treated as if you had given a zero instead.)
+---@field availablethrustat fun(pressure: number): number
+---Sum of all the :ref:`engines' MAXTHRUSTs <engine_MAXTHRUST>` of all the currently active engines In Kilonewtons.
+---@field maxthrust number
+---:parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
+---:type: `number` (kN)
+---
+---Sum of all the :ref:`engines' MAXTHRUSTATs <engine_MAXTHRUSTAT>` of all the currently active engines In Kilonewtons at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
+---(Pressure must be greater than or equal to zero.  If you pass in a
+---negative value, it will be treated as if you had given a zero instead.)
+---@field maxthrustat fun(pressure: number): number
+---The way the vessel is pointed, which is also the rotation
+---that would transform a vector from a coordinate space where the
+---axes were oriented to match the vessel's orientation, to one
+---where they're oriented to match the world's ship-raw coordinates.
+---
+---i.e. ``SHIP:FACING * V(0,0,1)`` gives the direction the
+---ship is pointed (it's Z-axis) in absolute ship-raw coordinates
+---@field facing Direction
+---Constructs a "bounding box" structure that can be used to
+---give your script some idea of the extents of the vessel's shape - how
+---wide, long, and tall it is.
+---
+---It is rather expensive in terms of CPU time to call this suffix.
+---(Calling :attr:`Part:BOUNDS` on ONE part on the ship is itself a
+---*little* expensive, and this has to perform that same work on
+---every part on the ship, finding the bounding box that would
+---surround all the parts.) Because of that expense, kOS **forces**
+---your script to give up its remaining instructions this update when
+---you call this (It forces the equivalent of doing a ``WAIT 0.``
+---right after you call it).  This is to discourage you from
+---calling this suffix again and again in a fast loop.  The proper
+---way to use this suffix is to call it once, storing the result in
+---a variable, and then use that variable repeatedly, rather than
+---using the suffix itself repeatedly.  Only call the suffix again
+---when you have reason to expect the bounding box to change or
+---become invalid, such as docking, staging, changing facing to a
+---new control-from part, and so on.
+---
+---More detailed information about how to read the bounds box, and 
+---what circumstances call for getting a re-generated copy of the
+---bounds box, is found on the documentation page for `Bounds`.
+---@field bounds Bounds
+---Given in :ref:`SHIP_RAW <ship-raw>` reference frame. The vector
+---represents the axis of the rotation (in left-handed convention,
+---not right handed as most physics textbooks show it), and its
+---magnitude is the angular momentum of the rotation, which varies
+---not only with the speed of the rotation, but also with the angular
+---inertia of the vessel.
+---
+---Units are expressed in: (Megagrams * meters^2) / (seconds * radians)
+---
+---(Normal SI units would use kilograms, but in KSP all masses use a
+---1000x scaling factor.)
+---
+---**Justification for radians here:**
+---Unlike the trigonometry functions in kOS, this value uses radians
+---rather than degrees.  The convention of always expressing angular
+---momentum using a formula that assumes you're using radians is a very
+---strongly adhered to universal convention, for... reasons.
+---It's so common that it's often not even explicitly
+---mentioned in information you may find when doing a web search on
+---helpful formulae about angular momentum.  This is why kOS doesn't
+---use degrees here.  (That an backward compatibility for old scripts.
+---It's been like this for quite a while.).
+---@field angularmomentum Vector
+---Angular velocity of the body's rotation about its axis (its
+---day) expressed as a vector.
+---
+---The direction the angular velocity points is in Ship-Raw orientation,
+---and represents the axis of rotation.  Remember that everything in
+---Kerbal Space Program uses a *left-handed coordinate system*, which
+---affects which way the angular velocity vector will point.  If you
+---curl the fingers of your **left** hand in the direction of the rotation,
+---and stick out your thumb, the thumb's direction is the way the
+---angular velocity vector will point.
+---
+---The magnitude of the vector is the speed of the rotation.
+---
+---Note, unlike many of the other parts of kOS, the rotation speed is
+---expressed in radians rather than degrees.  This is to make it
+---congruent with how VESSEL:ANGULARMOMENTUM is expressed, and for
+---backward compatibility with older kOS scripts.
+---@field angularvel Vector
+---:type: `number` (metric tons)
+---
+---The mass of the ship
+---@field mass number
+---:type: `number` (m/s)
+---
+---How fast the ship is moving. in the "up" direction relative to the SOI Body's sea level surface.
+---@field verticalspeed number
+---:type: `number` (m/s)
+---
+---How fast the ship is moving in the two dimensional plane horizontal
+---to the SOI body's sea level surface.  The vertical component of the
+---ship's velocity is ignored when calculating this.
+---
+---.. note::
+---
+---   .. versionadded:: 0.18
+---       The old name for this value was SURFACESPEED.  The name was changed
+---       because it was confusing before.  "surface speed" implied it's the
+---       `number` magnitude of "surface velocity", but it wasn't, because of how
+---       it ignores the vertical component.
+---@field groundspeed number
+---@field surfacespeed number
+---:type: `number` (m/s)
+---
+---How fast the ship is moving relative to the air. KSP models atmosphere as simply a solid block of air "glued" to the planet surface (the weather on Kerbin is boring and there's no wind). Therefore airspeed is generally the same thing as as the magnitude of the surface velocity.
+---@field airspeed number
+---Settable.
+---The name of the vessel as it appears in the tracking station. When you set this, it cannot be empty.
+---@field shipname string
+---Settable.
+---The name of the vessel as it appears in the tracking station. When you set this, it cannot be empty.
+---@field name string
+---Settable.
+---The ship's type as described `on the KSP wiki <http://wiki.kerbalspaceprogram.com/wiki/Craft#Vessel_types>`_.
+---@field type string
+---Structure holding summary information of sensor data for the vessel
+---@field sensors VesselSensors
+---:type: `number` (m/s)
+---
+---(Deprecated with KSP 1.0 atmospheric model)
+---
+---Terminal velocity of the vessel in freefall through atmosphere, based on the vessel's current altitude above sea level, and its drag properties. Warning, can cause values of Infinity if used in a vacuum, and kOS sometimes does not let you store Infinity in a variable.
+---
+---.. note::
+---
+---    .. deprecated:: 0.17.2
+---
+---       Removed to account for significant changes to planetary atmosphere mechanics introduced in KSP 1.0
+---@field termvelocity number
+---:type: `number` (ATM's)
+---
+---Returns what the air pressure is in the atmosphere surrounding the vessel.
+---The value is returned in units of sea-level Kerbin atmospheres.  Many
+---formulae expect you to plug in a value expressed in kiloPascals, or
+---kPA.  You can convert this value into kPa by multiplying it by
+---`constant:ATMtokPa`.
+---@field dynamicpressure number
+---:type: `number` (ATM's)
+---
+---Returns what the air pressure is in the atmosphere surrounding the vessel.
+---The value is returned in units of sea-level Kerbin atmospheres.  Many
+---formulae expect you to plug in a value expressed in kiloPascals, or
+---kPA.  You can convert this value into kPa by multiplying it by
+---`constant:ATMtokPa`.
+---@field q number
+---:type: :ref:`Boolean <boolean>`
+---
+---True if the vessel is fully loaded into the complete KSP physics engine (false if it's "on rails").
+---See `LoadDistance` for details.
+---@field loaded boolean
+---:type: :ref:`Boolean <boolean>`
+---
+---True if the vessel is fully unpacked.  That is to say that all of the individual parts are loaded
+---and can be interacted with.  This allows docking ports to be targeted, and controls if some
+---actions/events on parts will actually trigger.  See `LoadDistance` for details.
+---@field unpacked boolean
+---The ROOTPART is usually the first `Part` that was used to begin the ship design - the command core. Vessels in KSP are built in a tree-structure, and the first part that was placed is the root of that tree. It is possible to change the root part in VAB/SPH by using Root tool, so ROOTPART does not always point to command core or command pod. Vessel:ROOTPART may change in flight as a result of docking/undocking or decoupling of some part of a Vessel.
+---@field rootpart Part
+---Returns the `Part` serving as the control reference, relative to
+---which the directions (as displayed on the navball and returned in
+---:attr:`FACING`) are determined. A part may be set as the control reference
+---part by "Control From Here" action or :meth:`PART:CONTROLFROM` command
+---(available for parts of specific types).  **NOTE:** It is possible for this
+---to return unexpected values if the root part of the vessel cannot serve as a
+---control reference, and the control has not been directly selected.
+---@field controlpart Part
+---:type: `number` (metric tons)
+---
+---The mass of the ship if all resources were empty
+---@field drymass number
+---:type: `number` (metric tons)
+---
+---The mass of the ship if all resources were full
+---@field wetmass number
+---:type: `List` of `AggregateResource` objects
+---
+---A List of all the :ref:`AggregateResources <AggregateResource>` on the vessel. ``SET FOO TO SHIP:RESOURCES.`` has exactly the same effect as ``LIST RESOURCES IN FOO.``.
+---@field resources List
+---Returns the load distance object for this vessel.  The suffixes of this object may be adjusted to change the loading behavior of this vessel. Note: these settings are not persistent across flight instances, and will reset the next time you launch a craft from an editor or the tracking station.
+---@field loaddistance LoadDistances
+---:type: :ref:`Boolean <boolean>`
+---
+---It is possible to have a variable that refers to a vessel that
+---doesn't exist in the Kerbal Space Program universe anymore, but
+---did back when you first got it.  For example: you could do:
+---SET VES TO VESSEL("OTHER"). WAIT 10. And in that intervening
+---waiting time, the vessel might have crashed into the ground.
+---Checking :ISDEAD lets you see if the vessel that was previously
+---valid isn't valid anymore.
+---@field isdead boolean
+---The current status of the vessel possible results are: `LANDED`, `SPLASHED`, `PRELAUNCH`, `FLYING`, `SUB_ORBITAL`, `ORBITING`, `ESCAPING` and `DOCKED`.
+---@field status string
+---:return: `number`
+---
+---The total delta-v of this vessel in its current situation, using the stock
+---calulations the KSP game shows in the staging list.  Note that this is only
+---as accurate as the stock KSP game's numbers are.
+---@field deltav DeltaV
+---:parameter num: `number` the stage number to query for
+---:return: `DeltaV`
+---
+---One stage's Delta-V info.  Pass in the stage number for which stage.  The
+---curent stage can be found with ``:STAGENUM``, and they count down from
+---there to stage 0 at the "top" of the staging list.
+---
+---If you pass in a number that is less than zero, it will return the info about
+---stage 0.  If you pass in a number that is greater than the current stage, it
+---will return the info about the current stage.  In other words, if there are
+---currently stages 5, 4, 3, 2, 1, and 0, then passing in -99 gives you stage 0,
+---and passing in stage 9999 gets you stage 5.
+---@field stagedeltav fun(num: number): DeltaV
+---Tells you which stage number is current.  Stage numbers always count down, which
+---is backward from how you might usually refer to stages in most space lingo, but
+---in KSP, it's how it's done. (Stage 5 on bottom, Stage 0 on top, for example).
+---
+---e.g. if STAGENUM is 4, that tells you the vessel has 5 total stages remaining,
+---numbered 4, 3, 2, 1, and 0.
+---@field stagenum number
+---@field latitude number
+---@field longitude number
+---@field altitude number
+---:return: `List` of `CrewMember` objects
+---
+---list of all :struct:`kerbonauts <CrewMember>` aboard this vessel
+---@field crew List
+---crew capacity of this vessel
+---@field crewcapacity number
+---:return: `Connection`
+---
+---Returns your connection to this vessel.
+---@field connection Connection
+---:return: `MessageQueue`
+---
+---Returns this vessel's message queue. You can only access this attribute for your current vessel (using for example `SHIP:MESSAGES`).
+---@field messages MessageQueue
+---:return: None
+---
+---Call this method to start tracking the object.  This is functionally the
+---same as clicking on the "Start Tracking" button in the Tracking Station
+---interface.  The primary purpose is to change asteroids from being displayed
+---in the tracking station or on the map as ``"Unknown"`` to being displayed as
+---``"SpaceObject"``.  By doing so, the asteroid will not be de-spawned by
+---KSP's asteroid management system.
+---
+---.. note::
+---    This does not change the value returned by :attr:`Vessel:TYPE`.  KSP
+---    internally manages the "discovery information" for vessels, including
+---    assteroids, in a different system. As a result, the value kOS reads for
+---    ``TYPE`` may be different from that displayed on the map.
+---@field starttracking fun()
+---:return: None
+---
+---Call this method to stop tracking an asteroid or asteroid-like object.
+---This is functionally the same as using the Tracking Station interface
+---to tell KSP to forget the asteroid.  Doing so also tells the Tracking
+---Station that it's okay to de-spawn the object if it feels the need
+---to clean it up to avoid clutter.
+---@field stoptracking fun()
+---Returns the size class for an asteroid or asteroid-like object (which
+---is modeled in the game as a vessel).  (i.e. class A, B, C, D, or E
+---for varying size ranges of asteroid.) For objects that the tracking
+---station is tracking but you have not yet rendezvous'ed with, sometimes
+---all the game lets you know is the general class and not the specific
+---dimensions or mass.
+---
+---If you are not tracking the object yet, the returned string can come
+---back as "UNKNOWN" rather than one of the known class sizes.
+---@field sizeclass string
+---@field soichangewatchers UniqueSet
+---@field positionerror Vector
+
+---@class Addon : Structure
+---@field available boolean
+
+---@class TimeStamp : TimeBase
+---@operator add(TimeStamp):TimeStamp
+---@operator add(TimeSpan):TimeStamp
+---@operator add(number):TimeStamp
+---@operator sub(TimeStamp):TimeSpan
+---@operator sub(TimeSpan):TimeStamp
+---@operator sub(number):TimeStamp
+---@operator mul(TimeStamp):TimeStamp
+---@operator mul(TimeSpan):TimeStamp
+---@operator mul(number):TimeStamp
+---@operator div(TimeStamp):TimeStamp
+---@operator div(TimeSpan):TimeStamp
+---@operator div(number):TimeStamp
+---Settable.
+---Year-hand number.  Note that the first year of the game, at "epoch"
+---time is actullay year 1, not year 0.
+---@field year number
+---Settable.
+---:type: `number` (range varies by universe)
+---
+---Day-hand number. Kerbin has 426 days in its year if using Kerbin's
+---6 hour day (one fourth of that if :attr:`Kuniverse:HOURSPERDAY` is
+---24 meaning the game is configured to show Earthlike days not Kerbin
+---days.)
+---
+---Also note that with mods installed you might not be looking at
+---the stock universe, which could change the range this field could
+---be if it changes how long a year is in your solar system.
+---
+---Note that the first day of the year is actually day 1, not day 0.
+---@field day number
+---Settable.
+---:type: `number` (0-5) or (0-23)
+---
+---Hour-hand number.  Note the setting :attr:`Kuniverse:HOURSPERDAY` affects
+---whether this will be a number from 0 to 5 (6 hour day) or a number
+---from 0 to 23 (24 hour day).
+---@field hour number
+---Settable.
+---:type: `number` (0-59)
+---
+---Minute-hand number
+---@field minute number
+---Settable.
+---:type: `number` (0-59)
+---
+---Second-hand number.
+---@field second number
+---:type: `number` (float)
+---
+---Total Seconds since Epoch.  Epoch is defined as the moment your
+---current saved game's universe began (the point where you started
+---your campaign).  Can be very precise to the current "physics tick"
+---and store values less than one second.  (i.e. a typical value
+---might be something like 50402.103019 seconds).  Please note
+---that if you print this in a loop again and again it will appear
+---to be "frozen" for a bit before moving in discrete jumps.  This
+---reflects the fact that Kerbal Space Program is a computer simulated
+---world where time advances in discrete chunks, not smoothly.
+---@field seconds number
+---The full string for the timestamp. (Down to the second anyway.  Fractions of
+---seconds not shown), including year, day, hour, minute, and second.
+---The format is:
+---
+---``Year XX Day XX HH:MM:SS``
+---@field full string
+---Time in (HH:MM:SS) format.  Does not show which year or day.
+---@field clock string
+---Date in ``Year XX Day XX`` format.
+---@field calendar string
+
+---@class ScienceData : Structure
+---Amount of data
+---@field dataamount number
+---Amount of science that would be gained by returning this data to KSC
+---@field sciencevalue number
+---Amount of science that would be gained by transmitting this data to KSC
+---@field transmitvalue number
+---Experiment title
+---@field title string
+
+---@class Vecdraw : Structure
+---Settable.
+---Mandatory - The vector to draw, SHIP-RAW Coords.
+---@field vec Vector
+---Settable.
+---Mandatory - The vector to draw, SHIP-RAW Coords.
+---@field vector Vector
+---Settable.
+---:type: `KosDelegate` with no parameters, returning a `Vector`
+---
+---This allows you to tell the VecDraw that you'd like it to update the ``VEC`` suffix
+---of the vector regularly every update, according to your own scripted code.
+---
+---You create a `KosDelegate` that takes no parameters, and returns a vector,
+---which the system will automatically assign to the :attr:`VEC` suffix every update.
+---Be aware that this system does eat into the instructions available per update, so if
+---you make this delegate do too much work, it will slow down your script's performance.
+---
+---To make the system stop calling your delegate, set this suffix to the magic
+---keyword :global:`DONOTHING`.
+---
+---Example::
+---
+---    // This example will spin the arrow around in a circle by leaving the start
+---    // where it is but moving the tip by trig functions:
+---    set vd to vecdraw(v(0,0,0), v(5,0,0), green, "spinning arrow", 1.0, true, 0.2).
+---    print "Moving the arrow in a circle for a few seconds.".
+---    set vd:vecupdater to {
+---       return ship:up:vector*5*sin(time:seconds*180) + ship:north:vector*5*cos(time:seconds*180). }.
+---    wait 5.
+---    print "Stopping the arrow movement.".
+---    set vd:vecupdater to DONOTHING.
+---    wait 3.
+---    print "Removing the arrow.".
+---    set vd to 0.
+---
+---
+---.. versionadded:: 1.1.0
+---
+---    scripted Delegate callbacks such as this did not exist prior to kOS version 1.1.0
+---@field vecupdater UserDelegate
+---Settable.
+---:type: `KosDelegate` with no parameters, returning a `Vector`
+---
+---This allows you to tell the VecDraw that you'd like it to update the ``VEC`` suffix
+---of the vector regularly every update, according to your own scripted code.
+---
+---You create a `KosDelegate` that takes no parameters, and returns a vector,
+---which the system will automatically assign to the :attr:`VEC` suffix every update.
+---Be aware that this system does eat into the instructions available per update, so if
+---you make this delegate do too much work, it will slow down your script's performance.
+---
+---To make the system stop calling your delegate, set this suffix to the magic
+---keyword :global:`DONOTHING`.
+---
+---Example::
+---
+---    // This example will spin the arrow around in a circle by leaving the start
+---    // where it is but moving the tip by trig functions:
+---    set vd to vecdraw(v(0,0,0), v(5,0,0), green, "spinning arrow", 1.0, true, 0.2).
+---    print "Moving the arrow in a circle for a few seconds.".
+---    set vd:vecupdater to {
+---       return ship:up:vector*5*sin(time:seconds*180) + ship:north:vector*5*cos(time:seconds*180). }.
+---    wait 5.
+---    print "Stopping the arrow movement.".
+---    set vd:vecupdater to DONOTHING.
+---    wait 3.
+---    print "Removing the arrow.".
+---    set vd to 0.
+---
+---
+---.. versionadded:: 1.1.0
+---
+---    scripted Delegate callbacks such as this did not exist prior to kOS version 1.1.0
+---@field vectorupdater UserDelegate
+---Settable.
+---:type: :ref:`Color <color>`
+---
+---Optional, defaults to white. This is the color to draw the vector.
+---If you leave the :attr:`VecDraw:WIPING` suffix at its default value
+---of True, then there will be a wipe effect such that the line will
+---fade-in as it goes, only becoming this color at the endpoint tip.
+---
+---(You can pass in an RGBA with an alpha value less than 1.0 if you
+---would like the line to never be fully opaque even at the tip.)
+---@field color RGBA
+---Settable.
+---:type: :ref:`Color <color>`
+---
+---Optional, defaults to white. This is the color to draw the vector.
+---If you leave the :attr:`VecDraw:WIPING` suffix at its default value
+---of True, then there will be a wipe effect such that the line will
+---fade-in as it goes, only becoming this color at the endpoint tip.
+---
+---(You can pass in an RGBA with an alpha value less than 1.0 if you
+---would like the line to never be fully opaque even at the tip.)
+---@field colour RGBA
+---Settable.
+---:type: `KosDelegate` with no parameters, returning a `Color`
+---
+---This allows you to tell the VecDraw that you'd like it to update the ``COLOR``/``COLOUR``
+---suffix of the vector regularly every update, according to your own scripted code.
+---
+---You create a `KosDelegate` that takes no parameters, and returns a Color,
+---which the system will automatically assign to the :attr:`COLOR` suffix every update.
+---Be aware that this system does eat into the instructions available per update, so if
+---you make this delegate do too much work, it will slow down your script's performance.
+---
+---To make the system stop calling your delegate, set this suffix to the magic
+---keyword :global:`DONOTHING`.
+---
+---Example::
+---
+---    // This example will change how opaque the arrow is over time by changing
+---    // the 'alpha' of its color:
+---    set vd to vecdraw(v(0,0,0), ship:north:vector*5, green, "fading arrow", 1.0, true, 0.2).
+---    print "Fading the arrow in and out for a few seconds.".
+---    set vd:colorupdater to { return RGBA(0,1,0,sin(time:seconds*180)). }.
+---    wait 5.
+---    print "Stopping the color change.".
+---    set vd:colorupdater to DONOTHING.
+---    wait 3.
+---    print "Removing the arrow.".
+---    set vd to 0.
+---
+---
+---.. versionadded:: 1.1.0
+---
+---    scripted Delegate callbacks such as this did not exist prior to kOS version 1.1.0
+---@field colorupdater UserDelegate
+---Settable.
+---:type: `KosDelegate` with no parameters, returning a `Color`
+---
+---This allows you to tell the VecDraw that you'd like it to update the ``COLOR``/``COLOUR``
+---suffix of the vector regularly every update, according to your own scripted code.
+---
+---You create a `KosDelegate` that takes no parameters, and returns a Color,
+---which the system will automatically assign to the :attr:`COLOR` suffix every update.
+---Be aware that this system does eat into the instructions available per update, so if
+---you make this delegate do too much work, it will slow down your script's performance.
+---
+---To make the system stop calling your delegate, set this suffix to the magic
+---keyword :global:`DONOTHING`.
+---
+---Example::
+---
+---    // This example will change how opaque the arrow is over time by changing
+---    // the 'alpha' of its color:
+---    set vd to vecdraw(v(0,0,0), ship:north:vector*5, green, "fading arrow", 1.0, true, 0.2).
+---    print "Fading the arrow in and out for a few seconds.".
+---    set vd:colorupdater to { return RGBA(0,1,0,sin(time:seconds*180)). }.
+---    wait 5.
+---    print "Stopping the color change.".
+---    set vd:colorupdater to DONOTHING.
+---    wait 3.
+---    print "Removing the arrow.".
+---    set vd to 0.
+---
+---
+---.. versionadded:: 1.1.0
+---
+---    scripted Delegate callbacks such as this did not exist prior to kOS version 1.1.0
+---@field colourupdater UserDelegate
+---Settable.
+---Set to true to make the arrow appear, false to hide it. Defaults to false until you're ready to set it to true.
+---@field show boolean
+---Settable.
+---Optional, defaults to V(0,0,0) - position of the tail of the vector to draw in SHIP-RAW coords. V(0,0,0) means the ship Center of Mass.
+---@field start Vector
+---Settable.
+---:type: `KosDelegate` with no parameters, returning a `Vector`
+---
+---This allows you to tell the VecDraw that you'd like it to update the START position
+---of the vector regularly every update, according to your own scripted code.
+---
+---You create a `KosDelegate` that takes no parameters, and returns a vector,
+---which the system will automatically assign to the :attr:`START` suffix every update.
+---Be aware that this system does eat into the instructions available per update, so if
+---you make this delegate do too much work, it will slow down your script's performance.
+---
+---To make the system stop calling your delegate, set this suffix to the magic
+---keyword :global:`DONOTHING`.
+---
+---Example::
+---
+---    // This example will bounce the arrow up and down over time for a few seconds,
+---    // moving the location of the vector's start according to a sine wave over time:
+---    set vd to vecdraw(v(0,0,0), ship:north:vector*5, green, "bouncing arrow", 1.0, true, 0.2).
+---    print "Moving the arrow up and down for a few seconds.".
+---    set vd:startupdater to { return ship:up:vector*3*sin(time:seconds*180). }.
+---    wait 5.
+---    print "Stopping the arrow movement.".
+---    set vd:startupdater to DONOTHING.
+---    wait 3.
+---    print "Removing the arrow.".
+---    set vd to 0.
+---
+---.. versionadded:: 1.1.0
+---
+---    scripted Delegate callbacks such as this did not exist prior to kOS version 1.1.0
+---@field startupdater UserDelegate
+---Settable.
+---Optional, defaults to 1.0. Scalar to multiply the VEC by, and the WIDTH,
+---but not the START.
+---@field scale number
+---Settable.
+---Optional, defaults to "". Text to show on-screen at the midpoint of the vector.
+---Note the font size the label is displayed in gets stretched when you
+---change the :attr:`SCALE` or the :attr:`WIDTH` values.
+---@field label string
+---Settable.
+---Define the width of the drawn line, in meters.  The deafult is 0.2 if
+---left off.  Note, this also causes the font of the label to be enlarged
+---to match if set to a value larger than 0.2.
+---@field width number
+---Settable.
+---(Defaults to True if left off.) Will this line be drawn with
+---a pointy arrowhead "hat" on the tip to show which end is the
+---start point and which is the end point? If this is false,
+---then Vecdraw draws just a thick line, instead of an arrow.
+---@field pointy boolean
+---Settable.
+---(Defaults to True if left off.) If true, this line will be drawn
+---with a "wipe" effect that varies how transparent it is.  At the
+---start point it will be a more transparent version of the color
+---you specified in :attr:`VecDraw:COLOR`.  It will only become the
+---full opacity you requested when it reaches the endpoint of the line.
+---This effect is to help show the direction the arrow is going as it
+---"fades in" to full opacity as it goes along.
+---
+---If false, then the opacity of the line will not vary.  It will draw
+---the whole line at the exact color you specified in the in the
+---:attr:`VecDraw:COLOR` SUFFIX. (Which can still be transparent if
+---you use an RGBA() and provide the alpha value.)
+---@field wiping boolean
+
+---@class ConsumedResource : Structure
+---The name of the resource, i.e. "LIQUIDFUEL", "ELECTRICCHARGE", "MONOPROP".
+---@field name string
+---The density value of this resource, expressed in Megagrams f mass
+---per Unit of resource.  (i.e. a value of 0.005 would mean that each
+---unit of this resource is 5 kilograms.  Megagrams [metric tonnes] is
+---the usual unit that most mass in the game is represented in.)
+---@field density number
+---How much volume of this fuel is this engine consuming at this very moment.
+---@field fuelflow number
+---How much volume of this fuel would this engine consume at standard pressure and velocity if the throttle was max at 1.0, and the thrust limiter was max at 100%.
+---@field maxfuelflow number
+---How much volume of this fuel does this require at this very moment for the current throttle setting.
+---This will usually equal FUELFLOW but may be higher for INTAKEAIR for instance.
+---@field requiredflow number
+---How much mass of this fuel is this engine consuming at this very moment.
+---@field massflow number
+---How much mass of this fuel would this engine consume at standard pressure and velocity if the throttle was max at 1.0, and the thrust limiter was max at 100%.
+---@field maxmassflow number
+---What is the volumetric ratio of this fuel as a proportion of the overall fuel mixture, e.g. if this is 0.5 then this fuel is half the required fuel for the engine.
+---@field ratio number
+---The value of how much resource is left and accessible to this engine. Only valid while the engine is running.
+---@field amount number
+---What AMOUNT would be if the resource was filled to the top. Only valid while the engine is running.
+---@field capacity number
+
+---@class OrbitableVelocity : Structure
+---@field obt Vector
+---@field orbit Vector
+---Returns the surface-frame velocity. Note that this is the surface velocity relative to the surface of the SOI body, not the orbiting object itself. (i.e. Mun:VELOCITY:SURFACE returns the Mun's velocity relative to the surface of its SOI body, Kerbin).
+---
+---.. note::
+---    **Special case instance, the Sun:** Because the Sun has no parent
+---    SoI body that it orbits around (Kerbal Space Program does not
+---    simulate the existence of anything outside the one solar system),
+---    that means that the Sun's surface velocity is just hardcoded to
+---    be the same thing as its orbital velocity.  This may or may not be
+---    entirely correct, but the "correct" answer to the question, "What is
+---    sun:velocity:surface?" would technically be "I refuse to answer.
+---    That's an invalid question." Rather than crash or throw an exception,
+---    kOS just returns the same as the orbital velocity in this case.
+---@field surface Vector
+
+---@class DeltaV : Structure
+---:type: `number` in m/s
+---
+---Returns stock KSP's notion of how much deltaV there is.  The stock deltaV
+---calculation assumes all engine burns take place at the current atmospheric
+---pressure the ship is in.  This should match the value seen in the staging
+---list during flight, (Including the sometimes incorrect values that stock
+---KSP gives in its DeltaV calculations, unfortunately.)
+---
+---Heed the warning above: Stock delta-V values might not be getting
+---calculated if this vessel is not the currently active vessel.
+---@field current number
+---:type: `number` in m/s
+---
+---Returns stock KSP's notion of how much deltaV there *would be* if all the
+---burns took place at 1 ATM (sea level atmosphere).  This should match
+---the value seen in the staging list during construction if you had the
+---delta-V readouts in sea level mode., (Including the sometimes
+---incorrect values that stock KSP gives in its DeltaV calculations,
+---unfortunately.)
+---
+---Heed the warning above: Stock delta-V values might not be getting
+---calculated if this vessel is not the currently active vessel.
+---@field asl number
+---:type: `number` in m/s
+---
+---Returns stock KSP's notion of how much deltaV there *would be* if all the
+---burns took place in a vacuum.  This should match
+---the value seen in the staging list during construction if you had the
+---delta-V readouts in vacuum mode., (Including the sometimes
+---incorrect values that stock KSP gives in its DeltaV calculations,
+---unfortunately.)
+---
+---Heed the warning above: Stock delta-V values might not be getting
+---calculated if this vessel is not the currently active vessel.
+---@field vacuum number
+---:type: `number` in seconds
+---
+---Returns stock KSP's notion of how long it will take to cause this deltaV.
+---(How much time it takes for the engine(s) to burn up the fuel if they
+---are at MAXTHRUST).  This should match the value seen in the staging list.
+---(Including the sometimes incorrect values that stock KSP gives in its
+---DeltaV calculations, unfortunately.)
+---
+---Heed the warning above: Stock delta-V values might not be getting
+---calculated if this vessel is not the currently active vessel.
+---@field duration number
+---:type: none (void)
+---
+---The stock delta-V calculations are made by constantly running a small
+---simulation in its head during flight that takes a few update ticks
+---to arrive at the answer.  Calling this method will force the stock game
+---to mark its current delta-V values "dirty" and make it want to re-run
+---the calculation.  **DO NOT CALL THIS REPEATEDLY IN A LOOP OR A
+---TRIGGER**.  Calling this causes the game to lag if you keep doing it
+---all the time (it generates "garbage" for the game to "collect".)
+---
+---After calling FORCECALC(), the deltaV values you see will be quite
+---wrong for a few update ticks, while the game calculates the new values.
+---Unfortunately, there isn't a good way for a kerobscript to find out
+---when the answer is final and the recalculation is over.  (Sorry, we
+---tried, but couldn't find the API call in KSP that would tell us this.)
+---
+---The only real way to decide the recalculation is over is to examine
+---the output of the :ASL or :VACUUM suffixes and see when they seem
+---to have settled on a number and stayed there a while.  (don't use
+---:CURRENT for this, as it will naturally change if you are ascending
+---or descending in atmosphere.)  Be aware that a *small* fluctuation
+---in the value is in fact expected, as the simulation KSP runs in its
+---head is subject to floating point errors (i.e. while you see a value
+---like "2345 m/s" in the User display, under the hood that value could
+---actually be varying between 2345.11112 to 2345.11135 to 2345.11102,
+---etc.)
+---@field forcecalc fun()
+
+---@class Career : Structure
+---:type: :ref:`Boolean <boolean>`
+---
+---If your tracking center allows the tracking of unnamed objects (asteroids, mainly) then this will return true.
+---@field cantrackobjects boolean
+---:type: :ref:`scalar <scalar>`
+---
+---If your tracking center allows some patched conics predictions, then this number will be greater than zero.
+---The number represents how many patches beyond the current one that you are allowed to see.  It influences
+---attempts to call SHIP:PATCHES and SHIP:OBT:NEXTPATCH.
+---@field patchlimit number
+---:type: :ref:`Boolean <boolean>`
+---
+---If your tracking center and mission control buildings are both upgraded enough, then the game allows
+---you to make manuever nodes (which the game calls "flight planning").  This will return true if you
+---can make maneuver nodes.
+---@field canmakenodes boolean
+---:type: :ref:`Boolean <boolean>`
+---
+---If your VAB or SPH are upgraded enough to allow custom action groups, then you will also be allowed
+---to execute the :DOACTION method of PartModules.  Otherwise you can't.  This will return a boolean
+---letting you know if the condition has been met.
+---@field candoactions boolean
+
+---@class HSVA : RGBA
+---Settable.
+---@field h number
+---Settable.
+---@field hue number
+---Settable.
+---@field s number
+---Settable.
+---@field saturation number
+---Settable.
+---@field v number
+---Settable.
+---@field value number
+
+---@class Body : Orbitable
+---The name of the body. Example: "Mun".
+---@field name string
+---Longer description of the body, often just a duplicate of the name.
+---@field description string
+---The mass of the body in kilograms.
+---@field mass number
+---True if this body has an ocean.  Example: In the stock solar system,
+---this is True for Kerbin and False for Mun.
+---@field hasocean boolean
+---True if this body has a solid surface.  Example: In the stock solar system,
+---this is True for Kerbin and False for Jool.
+---@field hassolidsurface boolean
+---A list of the bodies orbiting this body.  Example: In the stock solar system,
+---Kerbin:orbitingchildren is a list two things: Mun and Minmus.
+---@field orbitingchildren List
+---The altitude of this body above the sea level surface of its parent body. I.e. the altitude of Mun above Kerbin.
+---@field altitude number
+---The radius from the body's center to its sea level.
+---@field radius number
+---The `Gravitational Parameter`_ of the body.
+---@field mu number
+---The number of seconds it takes the body to rotate around its own axis.
+---This is the sidereal rotation period which can differ from the length
+---of a day due to the fact that the body moves a bit further around the
+---Sun while it's rotating around its own axis.
+---@field rotationperiod number
+---A variable that describes the atmosphere of this body.
+---@field atm Atmosphere
+---Angular velocity of the body's rotation about its axis (its
+---sidereal day) expressed as a vector.
+---
+---The direction the angular velocity points is in Ship-Raw orientation,
+---and represents the axis of rotation.  Remember that everything in
+---Kerbal Space Program uses a *left-handed coordinate system*, which
+---affects which way the angular velocity vector will point.  If you
+---curl the fingers of your **left** hand in the direction of the rotation,
+---and stick out your thumb, the thumb's direction is the way the
+---angular velocity vector will point.
+---
+---The magnitude of the vector is the speed of the rotation, *in radians*.
+---
+---Note, unlike many of the other parts of kOS, the rotation speed is
+---expressed in radians rather than degrees.  This is to make it
+---congruent with how VESSEL:ANGULARMOMENTUM is expressed, and for
+---backward compatibility with older kOS scripts.
+---@field angularvel Vector
+---The radius of the body's sphere of influence. Measured from the body's center.
+---@field soiradius number
+---The rotation angle is the number of degrees between the
+---:ref:`Solar Prime Vector <solarprimevector>` and the
+---current position of the body's prime meridian (body longitude
+---of zero).
+---
+---The value is in constant motion, and once per body's rotation
+---period ("sidereal day"), its ``:rotationangle`` will wrap
+---around through a full 360 degrees.
+---@field rotationangle number
+---:parameter vectorPos: `Vector` input position in XYZ space.
+---The geoposition underneath the given vector position.  SHIP:BODY:GEOPOSITIONOF(SHIP:POSITION) should, in principle, give the same thing as SHIP:GEOPOSITION, while SHIP:BODY:GEOPOSITIONOF(SHIP:POSITION + 1000*SHIP:NORTH) would give you the lat/lng of the position 1 kilometer north of you.  Be careful not to confuse this with :GEOPOSITION (no "OF" in the name), which is also a suffix of Body by virtue of the fact that Body is an Orbitable, but it doesn't mean the same thing.
+---
+---(Not to be confused with the :attr:`Orbitable:GEOPOSITION` suffix, which ``Body`` inherits
+---from `Orbitable`, and which gives the position that this body is directly above
+---on the surface *of its parent body*.)
+---@field geopositionof fun(vectorPos: Vector): GeoCoordinates
+---The altitude of the given vector position, above this body's 'sea level'.  SHIP:BODY:ALTITUDEOF(SHIP:POSITION) should, in principle, give the same thing as SHIP:ALTITUDE.  Example: Eve:ALTITUDEOF(GILLY:POSITION) gives the altitude of gilly's current position above Eve, even if you're not actually anywhere near the SOI of Eve at the time.  Be careful not to confuse this with :ALTITUDE (no "OF" in the name), which is also a suffix of Body by virtue of the fact that Body is an Orbitable, but it doesn't mean the same thing.
+---@field altitudeof fun(param1: Vector): number
+---:parameter latitude: `number` input latitude
+---:parameter longitude: `number` input longitude
+---Given a latitude and longitude, this returns a `GeoCoordinates` structure
+---for that position on this body.
+---
+---(Not to be confused with the :attr:`Orbitable:GEOPOSITION` suffix, which ``Body`` inherits
+---from `Orbitable`, and which gives the position that this body is directly above
+---on the surface *of its parent body*.)
+---@field geopositionlatlng fun(latitude: number, longitude: number): GeoCoordinates
+
+---@class GeoCoordinates : Structure
+---The latitude of this position on the surface.
+---@field lat number
+---The longitude of this position on the surface.
+---@field lng number
+---The :ref:`Celestial Body <body>` this position is attached to.
+---@field body Body
+---Distance of the terrain above "sea level" at this geographical position. Negative numbers are below "sea level."
+---@field terrainheight number
+---Distance from the :ref:`CPU_Vessel <cpu vessel>` to this point on the surface.
+---@field distance number
+---The *absolute* compass direction from the :ref:`CPU_Vessel <cpu vessel>` to this point on the surface.
+---@field heading number
+---The *relative* compass direction from the :ref:`CPU_Vessel <cpu vessel>` to this point on the surface. For example, if the vessel is heading at compass heading 45, and the geo-coordinates location is at heading 30, then :attr:`GeoCoordinates:BEARING` will return -15.
+---@field bearing number
+---The ship-raw 3D position on the surface of the body, relative to the current ship's Center of mass.
+---@field position Vector
+---The (linear) velocity of this spot on the surface of the planet/moon, due to the rotation of the
+---body causing that spot to move though space.
+---(For example, on Kerbin at a sea level location, it would be 174.95 m/s eastward, and slightly
+---more at higher terrain spots above sea level.)
+---Note that this is returned as an `OrbitableVelocity`, meaning it isn't a vector but a
+---pair of vectors, one called ``:orbit`` and one called ``:surface``.  Note that the
+---surface-relative velocity you get from the ``:surface`` suffix isn't always zero like you might
+---intuit because ``:surface`` gives you the velocity relative to the surface reference frame
+---where ``SHIP`` is, which might not be the same latitude/longitude/altitude as where this
+---Geocoordinates is.
+---@field velocity OrbitableVelocity
+---The ship-raw 3D position above or below the surface of the body, relative to the current ship's Center of mass.  You pass in an altitude number for the altitude above "sea" level of the desired location.
+---@field altitudeposition fun(altitude: number): Vector
+---This is the same as :attr:`GeoCoordinates:VELOCITY`, except that it lets you specify some
+---altitude other than the surface terrain height.  You specify a (sea-level) altitude,
+---and it will calculate based on a point at that altitude which may be above or below
+---the actual surface at this latitude and longitude.  It will calculate as if you had some
+---point fixed to the ground, like an imaginary tower bolted to the surface, but not at the
+---ground's altitude.  (The body's rotation will impart a larger magnitude linear velocity
+---on a locaton affixed to the body the farther that location is from the body's center).
+---@field altitudevelocity fun(altitude: number): OrbitableVelocity
+
+---@class ConsumedResourceRCS : Structure
+---The name of the resource, i.e. "LIQUIDFUEL", "ELECTRICCHARGE", "MONOPROP".
+---@field name string
+---The density value of this resource, expressed in Megagrams f mass
+---per Unit of resource.  (i.e. a value of 0.005 would mean that each
+---unit of this resource is 5 kilograms.  Megagrams [metric tonnes] is
+---the usual unit that most mass in the game is represented in.)
+---@field density number
+---What is the volumetric ratio of this fuel as a proportion of the overall fuel mixture, e.g. if this is 0.5 then this fuel is half the required fuel for the thruster.
+---@field ratio number
+---The value of how much resource is left and accessible to this thruster. Only valid while the thruster is running.
+---@field amount number
+---What AMOUNT would be if the resource was filled to the top. Only valid while the thruster is running.
+---@field capacity number
+
+---@class AggregateResource : Structure
+---The name of the resource, i.e. "LIQUIDFUEL", "ELECTRICCHARGE", "MONOPROP".
+---@field name string
+---The density value of this resource, expressed in Megagrams f mass
+---per Unit of resource.  (i.e. a value of 0.005 would mean that each
+---unit of this resource is 5 kilograms.  Megagrams [metric tonnes] is
+---the usual unit that most mass in the game is represented in.)
+---@field density number
+---The value of how much resource is left.
+---@field amount number
+---What AMOUNT would be if the resource was filled to the top.
+---@field capacity number
+---Because this is a summation of the resources from many parts. kOS gives you the list of all parts that do or could contain the resource.
+---@field parts List
+
+---@class TimeBase : Structure
+---@field year number
+---@field day number
+---@field hour number
+---@field minute number
+---@field second number
+---@field seconds number
+---@field clock string
+---@field calendar string
+
+---@class Node : Structure
+---@field deltav Vector
+---@field burnvector Vector
+---Settable.
+---@field eta number
+---Settable.
+---@field time number
+---Settable.
+---@field prograde number
+---Settable.
+---@field radialout number
+---Settable.
+---@field normal number
+---@field obt Orbit
+---@field orbit Orbit
+
+---@class Transfer : Structure
+---@field goal number
+---@field transferred number
+---@field status string
+---@field message string
+---@field resource string
+---Settable.
+---@field active boolean
+
+---@class Orbit : Structure
+---a name for this orbit.
+---@field name string
+---:type: `number` (m)
+---
+---The max altitude expected to be reached.
+---@field apoapsis number
+---:type: `number` (m)
+---
+---The min altitude expected to be reached.
+---@field periapsis number
+---The celestial body this orbit is orbiting.
+---@field body Body
+---:type: `number` (seconds)
+---
+---`orbital period`_
+---@field period number
+---:type: `number` (degree)
+---
+---`orbital inclination`_
+---@field inclination number
+---`orbital eccentricity`_
+---@field eccentricity number
+---:type: `number` (m)
+---
+---`semi-major axis`_
+---@field semimajoraxis number
+---:type: `number` (m)
+---
+---`semi-minor axis`_
+---@field semiminoraxis number
+---Same as :attr:`Orbit:LONGITUDEOFASCENDINGNODE`.
+---@field lan number
+---Same as :attr:`Orbit:LONGITUDEOFASCENDINGNODE`.
+---@field longitudeofascendingnode number
+---`argument of periapsis`_
+---@field argumentofperiapsis number
+---`true anomaly`_ in degrees.  Even though orbital parameters are
+---traditionally done in radians, in keeping with the kOS standard
+---of making everything into degrees, they are given as degrees by
+---kOS.
+---
+---**Closed versus Open orbits clamp this differently:** The range of
+---possible values this can have differs depending on if the orbit
+---is "closed" (elliptical, eccentricity < 1.0) versus "open" (parabolic
+---or hyperbolic, eccentricity >= 1.0).  If the orbit is closed, then
+---this value will be in the range [0..360), where values larger than
+---180 represent positions in the orbit where it is "coming down"
+---from apoapsis to periapsis.  But if the orbit is open, then this
+---value will be in the range (-180..180), where negative values are
+---used to represent the positions in the orbit where it is "coming down"
+---to the periapsis.  The difference is because it does not make sense
+---to speak of the orbit looping all the way around 360 degrees in
+---the case of an open orbit where it does not come back down.
+---
+---Note that the above switch between 0..360 versus -180..180 happens
+---when the orbit is *mathematically* shown to be an escaping orbit,
+---NOT when it's still an ellipse but the apoapsis happens to be higher
+---than the body's sphere of influence so the game will let it escape
+---anyway.  Both conditions look similar on the game map so it may
+---be hard to tell them apart without actually querying the eccentricity
+---to find out which it is.
+---@field trueanomaly number
+---:type: `number` degrees
+---
+---`mean anomaly`_  in degrees. Even though orbital parameters are
+---traditionally done in radians, in keeping with the kOS standard
+---of making everything into degrees, they are given as degrees by
+---kOS.
+---
+---Internally, KSP tracks orbit position using :attr:`MEANANOMALYATEPOCH`
+---and :attr:`EPOCH`.  "Epoch" is an arbitrary timestamp expressed in
+---universal time (gameworld seconds from game start, same as ``TIME:SECONDS``
+---uses) at which the mean anomaly of the orbit would be :attr:`MEANANOMALYATEPOCH`.
+---
+---Given the mean anomaly at epoch, and the epoch time, and the current time,
+---and the orbital period, it's possible to find out the current mean anomaly.
+---Kerbal Space Program uses this internally to track orbit positions while under
+---time warp without using the full physics system.
+---
+---**Closed versus Open orbits clamp this differently:** The range of
+---possible values this can have differs depending on if the orbit
+---is "closed" (elliptical, eccentricity < 1.0) versus "open" (parabolic
+---or hyperbolic, eccentricity >= 1.0).  If the orbit is closed, then
+---this value will be in the range [0..360), where values larger than
+---180 represent positions in the orbit where it is "coming back down"
+---from apoapsis to periapsis.  But if the orbit is open, then this value
+---doesn't have any limits, and furthermore negative values are
+---used to represent the portion of the orbit that is "coming down"
+---to the periapsis, rather than using values > 180 for this.
+---
+---Note that the above switch between MEANANOMALY behaving in the "closed"
+---versus "open" way depends on the orbit being *mathematically* shown
+---to be an escaping orbit, NOT merely "escaping" because it has an
+---apoapsis higher than the body's sphere of influence.  If the orbit's
+---mathematical parameters show it to be an ellipse, but its apoapsis is
+---higher than the body's sphere of influence, then the game will let it
+---escape anyway despite it still being an elliptical orbit.  (It's just
+---an elliptical orbit with the top "cut off".)  The MEANANOMALY
+---measurement will treat such elliptical-but-escaping-anyway scenarios
+---as "closed" even though they don't look like it on the map.
+---@field meananomalyatepoch number
+---:type: `number` universal timestamp (seconds)
+---
+---Internally, KSP tracks orbit position using :attr:`MEANANOMALYATEPOCH`
+---and :attr:`EPOCH`.  "Epoch" is an arbitrary timestamp expressed in
+---universal time (gameworld seconds from game start, same as ``TIME:SECONDS``
+---uses) at which the mean anomaly of the orbit would be :attr:`MEANANOMALYATEPOCH`.
+---
+---Beware, if you are an experienced programmer, you may be aware of the
+---word "Epoch" being used to mean a fixed point in time that never
+---ever changes throughout an entire system.  For example, the Unix
+---timestamp system refers to Jan 1, 1970 as the "epoch".  This is *NOT*
+---how the word is used in KSP's orbit system.  In Kerbal Space Program,
+---the "epoch" is not a true "epoch", in that it often moves and you have to
+---re-check what it is.  It's not a hardcoded constant.
+---
+---(The epoch timestamp seems to change when you go on or off from time warp.)
+---@field epoch number
+---Describes the way in which this orbit will end and become a different orbit, with a value taken :ref:`from this list <transitions>`.
+---@field transition string
+---The current position of whatever the object is that is in this orbit.
+---@field position Vector
+---The current velocity of whatever the object is that is in this orbit.  Be aware
+---that this is not just a velocity vector, but a structure containing both the
+---orbital and surface velocity vectors as a pair.  (See `OrbitableVelocity`).
+---@field velocity OrbitableVelocity
+---*In career this requires a building upgrade* - In career mode where
+---buildings are not upgraded at the start, this suffix won't be allowed
+---until your tracking station is upgraded a level.
+---
+---When this orbit has a transition to another orbit coming up, this suffix returns the next Orbit patch after this one. For example, when escaping from a Mun orbit into a Kerbin orbit from which you will escape and hit a Solar orbit, then the current orbit's :attr:`:NEXTPATCH <Orbit:NEXTPATCH>` will show the Kerbin orbit, and ``:NEXTPATCH:NEXTPATCH`` will show the solar orbit. The number of patches into the future that you can peek depends on your conic patches setting in your **Kerbal Space Program** Settings.cfg file.
+---@field nextpatch Orbit
+---*In career this requires a building upgrade* - In career mode where
+---buildings are not upgraded at the start, this suffix won't be allowed
+---until your tracking station is upgraded a level.
+---
+---If :attr:`:NEXTPATCH <Orbit:NEXTPATCH>` will return a valid patch, this is true. If :attr:`:NEXTPATCH <Orbit:NEXTPATCH>` will not return a valid patch because there are no transitions occurring in the future, then :attr:`HASNEXTPATCH <Orbit:HASNEXTPATCH` will be false.
+---@field hasnextpatch boolean
+---*In career this requires a building upgrade* - In career mode where
+---buildings are not upgraded at the start, this suffix won't be allowed
+---until your tracking station is upgraded a level.
+---
+---When this orbit has a transition to another orbit coming up, this suffix
+---returns the eta to that transition.  This is different from the value
+---provided by the :attr:`ETA:TRANSITION` suffix as it is not limited
+---to the patch following the current orbit, but rather may be chained to
+---multiple patch transitions.  The number of patches depends on your conic
+---patches setting in your **Kerbal Space Program** Settings.cfg file.
+---@field nextpatcheta number
+---Returns the `OrbitEta` object that lets you access the number of
+---seconds to important events in this orbit (periapsis, apoapsis, and transition
+---to next orbit).
+---@field eta OrbitEta
+---@field vstatevector Vector
+---@field rstatevector Vector
+
+---@class OrbitEta : Structure
+---@field apoapsis number
+---@field periapsis number
+---@field transition number
+---@field nextnode number
+
+---@class Waypoint : Structure
+---@field dump string
+---Name of waypoint as it appears on the map and contract
+---@field name string
+---Celestial body the waypoint is attached to
+---@field body Body
+---The LATLNG of this waypoint
+---@field geoposition GeoCoordinates
+---The Vector position of this waypoint in 3D space, in ship-raw coords.
+---@field position Vector
+---Altitude of waypoint **above "sea" level**.  Warning, this a point somewhere in the midst of the contract altitude range, not the edge of the altitude range.  It corresponds towhere the marker tip hovers on the map, which is not actually at the very edge of the contract condition's range.  It represents a typical midling location inside the contract's altitude range.
+---@field altitude number
+---Altitude of waypoint **above ground**.  Warning, this a point somewhere in the midst of the contract altitude range, not the edge of the altitude range.  It corresponds to where the marker tip hovers on the map, which is not actually at the very edge of the contract condition's range.  It represents a typical midling location inside the contract's altitude range.
+---@field agl number
+---True if waypoint is a point near or on the body rather than high in orbit.
+---@field nearsurface boolean
+---True if waypoint is actually glued to the ground.
+---@field grounded boolean
+---The integer index of this waypoint amongst its cluster of sibling waypoints.  In other words, when you have a cluster of waypoints called "Somewhere Alpha", "Somewhere Beta", and "Somewhere Gamma", then the alpha site has index 0, the beta site has index 1 and the gamma site has index 2. When Waypoint:CLUSTERED is false, this value is zero but meaningless.
+---@field index number
+---True if this waypoint is part of a set of clustered waypoints with greek letter names appended (Alpha, Beta, Gamma, etc).  If true, there should be a one-to-one correspondence with the greek letter name and the :INDEX suffix. (0 = Alpha, 1 = Beta, 2 = Gamma, etc).
+---@field clustered boolean
+---True if navigation has been activated on this waypoint.
+---@field isselected boolean
+
+---@class Vector : Structure
+---@operator add(Vector):Vector
+---@operator add(Direction):Vector
+---@operator sub(Vector):Vector
+---@operator mul(Vector):number
+---@operator mul(number):Vector
+---@operator mul(Direction):Vector
+---@operator div(number):Vector
+---@operator unm:Vector
+---Settable.
+---The :math:`x` component of the vector.
+---@field x number
+---Settable.
+---The :math:`y` component of the vector.
+---@field y number
+---Settable.
+---The :math:`z` component of the vector.
+---@field z number
+---Settable.
+---The magnitude of the vector, as a scalar number, by the Pythagorean Theorem.
+---@field mag number
+---This is a suffix that creates a *COPY* of this vector. Useful if you want to copy a vector and then change the copy. Normally if you ``SET v2 TO v1``, then ``v1`` and ``v2`` are two names for the same vector and changing one would change the other.
+---@field vec Vector
+---This creates a unit vector pointing in the same direction as this vector. This is the same effect as multiplying the vector by the scalar ``1 / vec:MAG``.
+---@field normalized Vector
+---The magnitude of the vector, squared. Use instead of ``vec:MAG^2`` if you need to square of the magnitude as this skips the step in the Pythagorean formula where you take the square root in the first place. Taking the square root and then squaring that would introduce floating point error needlessly.
+---@field sqrmagnitude number
+---Settable.
+---GET:
+---    The vector rendered into a :ref:`Direction <direction>` (see
+---    :ref:`note in the Directions documentation <vectors_vs_directions>`
+---    about information loss when doing this).
+---
+---SET:
+---    Tells the vector to keep its magnitude as it is but point in a new direction, adjusting its :math:`(x,y,z)` numbers accordingly.
+---@field direction Direction
+
+---@class Timewarp : Structure
+---Settable.
+---The current multiplier timescale rate (i.e.  1000 if current rate
+---is 1000x as much as normal, etc).
+---
+---If you have just changed the time warp, it takes a few moments for
+---the game to "catch up" and achieve the desired warp rate.  You can
+---query this value to find out what the current rate is the game is
+---operating under during this physics tick.  It often takes almost
+---a whole second of game time to finally arrive at the destination rate.
+---
+---When you ``set`` the ``:RATE`` equal to a new value, then
+---instead of directly setting the rate to that value, kOS will
+---set the :attr:`WARP<TimeWarp:WARP>` to whatever value it would need to have
+---to end up with that rate.  The rate itself won't change right
+---away.  For example, the following two commands are equivalent::
+---
+---    // This will eventually give you a rate of 100, after several
+---    // update ticks have passed, but not right away:
+---    set kuniverse:timewarp:warp to 4.
+---
+---    // This will *also* do the same thing, and not set the rate
+---    // to 100 right away, but instead tells kOS indirectly
+---    // to set the WARP to 4, so as to target a destination
+---    // rate of 100.
+---    set kuniverse:timewarp:rate to 100.
+---
+---If you set the rate to a value that isn't on the allowed list
+---that the KSP game interface normally lets you pick, then kOS
+---will pick whichever :attr:`WARP<TimeWarp:WARP>` value will get you closest
+---to the requested rate.  For example::
+---
+---    // If you do any of these, then the effect is the same:
+---    set kuniverse:timewarp:rate to 89.
+---    set kuniverse:timewarp:rate to 145.
+---    set kuniverse:timewarp:rate to 100.
+---    // Because the game only allows permanent rates of 1,5,10,50,100,1000, etc.
+---    // A rate of 100 was the closest match it could allow.
+---
+---Note, the game is actually capable of warping at arbitrary rates
+---in between these values, and it does so temporarily when transitioning
+---to a new warp rate, but it doesn't allow you to hold the rate at those
+---in-between values indefintiely.
+---@field rate number
+---If :attr:`MODE<TimeWarp:MODE>` is "PHYSICS", this will return :attr:`PHYSICSRATELIST<TimeWarp:PHYSICSRATELIST>`.
+---If :attr:`MODE<TimeWarp:MODE>` is "RAILS", this will return :attr:`RAILSRATELIST<TimeWarp:RAILSRATELIST>`.
+---
+---It's always the list that goes with the current warping mode.
+---@field ratelist List
+---:type: `List` of `number` values
+---
+---The list of the legal values that the game lets you set the warp rate
+---to when in "on rails" warping mode ("normal" time warp).
+---
+---(As of this writing of the documents, the values come out like the table
+---below, but the base KSP game could change these at any time.  The
+---following table is not a guarantee.)
+---
+---.. table:: RAILS WARP RATE LIST
+---
+---    ==== ====
+---    WARP RATE
+---    ==== ====
+---    0    1x
+---    1    5x
+---    2    10x
+---    3    50x
+---    4    100x
+---    5    1000x
+---    6    10000x
+---    7    100000x
+---    ==== ====
+---@field railsratelist List
+---:type: `List` of `number` values
+---
+---The list of the legal values that the game lets you set the warp rate
+---to when in "physics warp" warping mode.
+---
+---(As of this writing of the documents, the values come out like the table
+---below, but the base KSP game could change these at any time.  The
+---following table is not a guarantee.)
+---
+---.. table:: PHYSICS WARP RATE LIST
+---
+---    ==== ====
+---    WARP RATE
+---    ==== ====
+---    0    1x
+---    1    2x
+---    2    3x
+---    3    4x
+---    ==== ====
+---@field physicsratelist List
+---Settable.
+---The string value indicating whether we are in "PHYSICS" or "RAILS"
+---warping mode right now.  You can set this value to change which
+---warp mode the game will perform.
+---
+---(Any experienced player of KSP should be aware of what the difference
+---between physics warp and "time warp" (rails) is.  In "physics" warp,
+---all the normal things work, and the game simulates the entire physics
+---engine with longer coarser delta-T time steps to achieve a faster
+---simulation rate.  In "rails" warp, many of the calculations are not
+---working, the vessel is not controllable, and the game calculates
+---positions of objects based on the Keplerian elliptical parameters only.)
+---@field mode string
+---Settable.
+---Time warp as an integer index.  In the tables listed above for
+---:attr:`RAILSRATELIST<TimeWarp:RAILSRATELIST>` and :attr:`PHYSICSRATELIST<TimeWarp:PHYSICSRATELIST>`, this is the number
+---on the lefthand side of those tables.  (i.e. if
+---:attr:`MODE<TimeWarp:MODE>` is "RAILS" and :attr:`RATE<TimeWarp:RATE>` is 50, then that means
+---:attr:`WARP<TimeWarp:WARP>` is 3.)
+---
+---If you set either :attr:`WARP<TimeWarp:WARP>` or :attr:`RATE<TimeWarp:RATE>`, the other will change
+---along with it to agree with it.  (See the full explanation in
+---:attr:`RATE<TimeWarp:RATE>` below).
+---@field warp number
+---:parameter timestamp: `number`
+---:return: None
+---
+---Call this method to warp time forward to a universal time stamp.
+---The argument you pass in should be a universal timestamp in seconds.
+---Example: To warp 120 seconds into the future:
+---``kuniverse:timewarp:warpto(time:seconds + 120)``.
+---
+---Obviously this alters the values of :attr:`WARP<TimeWarp:WARP>` and :attr:`RATE<TimeWarp:RATE>` while
+---the warping is happening.
+---@field warpto fun(timestamp: number)
+---:return: None
+---
+---Call this method to cancel any active warp.  This will both interupt any
+---current automated warp (such as one using :meth:`WARPTO<TimeWarp:WARPTO>`
+---or the "Warp Here" user interface) and a manual warp setting (as if you had
+---used the ``SET WARP TO 0.`` command).
+---@field cancelwarp fun()
+---Physics Delta-T.  How much time *should* pass between ticks.  Note this is
+---not the *actual* time that has passed.  For that you should query
+---:attr:`time:seconds <timespan:seconds>` regularly and store the timestamps it
+---returns, and compare those timestamps.  This value is just the "expected"
+---physics delta-T that you *should* get if everything is running smoothly
+---and your computer can keep up with everything the game is doing.
+---
+---This value changes depending on your physics warp.  Note, if you query it
+---during on-rails warping, it can return some very strange values you
+---shouldn't trust.
+---@field physicsdeltat number
+---When you have just changed the warp speed, the game takes time to
+---"catch up" and achieve the new desired speed.  (i.e. if you change your
+---rate from 100x up to 1000x, and you look at the screen, you will see
+---the numbers in the display saying things like "Warp 123x" then "Warp 344x"
+---then "Warp 432x", etc.  There are several "ticks" during which the warp
+---hasn't yet achieved the desired 1000x level.)  This can take a "long"
+---time in computer terms to happen.
+---
+---You can query this value to find out whether or not the actual warp
+---rate has finally settled on the desired amount yet.
+---
+---For example::
+---
+---    set kuniverse:timewarp:mode to "RAILS".
+---    set kuniverse:timewarp:rate to 1000.
+---    print "starting to change warp".
+---    until kuniverse:timewarp:issettled {
+---        print "rate = " + round(rate,1).
+---        wait 0.
+---    }
+---    print "warp is now 1000x".
+---
+---    // The above would output something like this to the screen:
+---    starting to change warp.
+---    rate = 113.5
+---    rate = 143.2
+---    rate = 213.1
+---    rate = 233.2
+---    rate = 250.0
+---    rate = 264.1
+---    rate = 301.5
+---    rate = 320.5
+---    rate = 361.5
+---    rate = 391.3
+---    rate = 421.5
+---    rate = 430.0
+---    rate = 450.5
+---    rate = 471.5
+---    rate = 490.1
+---    rate = 501.5
+---    rate = 613.5
+---    rate = 643.2
+---    rate = 713.1
+---    rate = 733.2
+---    rate = 750.0
+---    rate = 764.1
+---    rate = 801.5
+---    rate = 820.5
+---    rate = 861.5
+---    rate = 891.3
+---    rate = 921.5
+---    rate = 930.0
+---    rate = 950.5
+---    rate = 971.5
+---    rate = 990.1
+---    rate = 1000
+---    warp is now 1000x.
+---@field issettled boolean
+
+---@class VesselSensors : Structure
+---Accelleration the vessel is undergoing. A combination of both the gravitational pull and the engine thrust.
+---@field acc Vector
+---The current pressure of this ship.
+---@field pres number
+---The current temperature.
+---@field temp number
+---Magnitude and direction of gravity acceleration where the vessel currently is. Magnitude is expressed in "G"'s (multiples of 9.802 m/s^2).
+---@field grav Vector
+---The total amount of sun exposure that exists here - only readable if there are solar panels on the vessel.
+---@field light number
+
+---@class CrewMember : Structure
+---crew member's name
+---@field name string
+---true if this crew member is a tourist
+---@field tourist boolean
+---"Male" or "Female"
+---@field gender string
+---crew member's trait (specialization), for example "Pilot"
+---@field trait string
+---experience level (number of stars)
+---@field experience number
+---`Part` this crew member is located in
+---@field part Part
+---@field status string
+---@field experiencevalue number
+---@field kerbaltype string
+
+---@class Resource : Structure
+---The name of the resource, i.e. "LIQUIDFUEL", "ELECTRICCHARGE", "MONOPROP".
+---@field name string
+---The value of how much resource is left.
+---@field amount number
+---The density value of this resource, expressed in Megagrams f mass
+---per Unit of resource.  (i.e. a value of 0.005 would mean that each
+---unit of this resource is 5 kilograms.  Megagrams [metric tonnes] is
+---the usual unit that most mass in the game is represented in.)
+---@field density number
+---What AMOUNT would be if the resource was filled to the top.
+---@field capacity number
+---Many, but not all, resources can be turned on and off, this removes them from the fuel flow.
+---@field toggleable boolean
+---Settable.
+---If the resource is TOGGLEABLE, setting this to false will prevent the resource from being taken out normally.
+---@field enabled boolean
+
+---@class Control : Structure
+---@field pilotyaw number
+---Settable.
+---@field pilotyawtrim number
+---@field pilotroll number
+---Settable.
+---@field pilotrolltrim number
+---@field pilotpitch number
+---Settable.
+---@field pilotpitchtrim number
+---@field pilotfore number
+---@field pilotstarboard number
+---@field pilottop number
+---Settable.
+---@field pilotwheelthrottle number
+---Settable.
+---@field pilotwheelthrottletrim number
+---@field pilotwheelsteer number
+---Settable.
+---@field pilotwheelsteertrim number
+---@field pilotneutral boolean
+---@field pilotrotation Vector
+---@field pilottranslation Vector
+---Settable.
+---@field pilotmainthrottle number
+---Settable.
+---@field yaw number
+---Settable.
+---@field yawtrim number
+---Settable.
+---@field roll number
+---Settable.
+---@field rolltrim number
+---Settable.
+---@field pitch number
+---Settable.
+---@field pitchtrim number
+---Settable.
+---@field rotation Vector
+---Settable.
+---@field fore number
+---Settable.
+---@field starboard number
+---Settable.
+---@field top number
+---Settable.
+---@field translation Vector
+---Settable.
+---@field wheelsteer number
+---Settable.
+---@field wheelsteertrim number
+---Settable.
+---@field mainthrottle number
+---Settable.
+---@field wheelthrottle number
+---Settable.
+---@field wheelthrottletrim number
+---Settable.
+---@field bound boolean
+---Settable.
+---@field neutral boolean
+---Settable.
+---@field neutralize boolean
+
+---@class LoadDistances : Structure
+---@field escaping LoadDistance
+---@field flying LoadDistance
+---@field landed LoadDistance
+---@field orbit LoadDistance
+---@field prelaunch LoadDistance
+---@field splashed LoadDistance
+---@field suborbital LoadDistance
+
+---@class LoadDistance : Structure
+---Settable.
+---@field load number
+---Settable.
+---@field unload number
+---Settable.
+---@field pack number
+---Settable.
+---@field unpack number
+
+---@class Direction : Structure
+---@operator add(Direction):Direction
+---@operator sub(Direction):Direction
+---@operator mul(Direction):Direction
+---@operator unm:Direction
+---:type: `number` (deg)
+---
+---
+---Rotation around the :math:`x` axis.
+---@field pitch number
+---:type: `number` (deg)
+---
+---Rotation around the :math:`y` axis.
+---@field yaw number
+---:type: `number` (deg)
+---
+---
+---Rotation around the :math:`z` axis.
+---@field roll number
+---`Vector` of length 1 that is in the same direction as the "look-at" of this Direction.  Note that it is the same meaning as "what the Z axis of the universe would be rotated to if this rotation was applied to the basis axes of the universe".  When you LOCK STEERING to a direction, that direction's FOREVECTOR is the vector the nose of the ship will orient to.  SHIP:FACING:FOREVECTOR is the way the ship's nose is aimed right now.
+---@field forevector Vector
+---`Vector` of length 1 that is in the same direction as the "look-at" of this Direction.  Note that it is the same meaning as "what the Z axis of the universe would be rotated to if this rotation was applied to the basis axes of the universe".  When you LOCK STEERING to a direction, that direction's FOREVECTOR is the vector the nose of the ship will orient to.  SHIP:FACING:FOREVECTOR is the way the ship's nose is aimed right now.
+---@field vector Vector
+---`Vector` of length 1 that is in the same direction as the "look-up" of this Direction.  Note that it is the same meaning as "what the Y axis of the universe would be rotated to if this rotation was applied to the basis axes of the universe". When you LOCK STEERING to a direction, that direction's TOPVECTOR is the vector the roof of the ship will orient to.  SHIP:FACING:TOPVECTOR is the way the ship's roof is aimed right now.
+---@field topvector Vector
+---`Vector` of length 1 that is in the same direction as the "look-up" of this Direction.  Note that it is the same meaning as "what the Y axis of the universe would be rotated to if this rotation was applied to the basis axes of the universe". When you LOCK STEERING to a direction, that direction's TOPVECTOR is the vector the roof of the ship will orient to.  SHIP:FACING:TOPVECTOR is the way the ship's roof is aimed right now.
+---@field upvector Vector
+---`Vector` of length 1 that is in the same direction as the "starboard side" of this Direction.  Note that it is the same meaning as "what the X axis of the universe would be rotated to if this rotation was applied to the basis axes of the universe". When you LOCK STEERING to a direction, that direction's STARVECTOR is the vector the right wing of the ship will orient to.  SHIP:FACING:STARVECTOR is the way the ship's right wing is aimed right now.
+---@field starvector Vector
+---`Vector` of length 1 that is in the same direction as the "starboard side" of this Direction.  Note that it is the same meaning as "what the X axis of the universe would be rotated to if this rotation was applied to the basis axes of the universe". When you LOCK STEERING to a direction, that direction's STARVECTOR is the vector the right wing of the ship will orient to.  SHIP:FACING:STARVECTOR is the way the ship's right wing is aimed right now.
+---@field rightvector Vector
+---:struct: Gives a `Direction` with the opposite rotation around its axes.
+---@field inverse Direction
+
+---@class TimeSpan : TimeBase
+---@operator add(TimeSpan):TimeSpan
+---@operator add(number):TimeSpan
+---@operator sub(TimeSpan):TimeSpan
+---@operator sub(number):TimeSpan
+---@operator mul(TimeSpan):TimeSpan
+---@operator mul(number):TimeSpan
+---@operator div(TimeSpan):TimeSpan
+---@operator div(number):TimeSpan
+---Settable.
+---Whole number of Years in the span.  Note that TimeSpan starts
+---counting years at 0 not at 1.  This is a difference from how it
+---works for `TimeStamp`
+---@field year number
+---Settable.
+---*TOTAL* time in the span, expressed in units of years.  This is not
+---the same as :attr:`TimeSpan:YEAR` because it includes a fractional
+---part and is the *entire* span, not just the whole number of years.
+---Example: If there are 426 days in a Year, and the Timespan is
+---1 year and 213 days long, then this will return ``1.5`` rather than ``1``,
+---as the *entire* span is one and a half years.  You can think of this
+---as being :attr:`TimeSpan:SECONDS` divided by seconds per year.
+---@field years number
+---Settable.
+---:type: `number` (range varies by universe)
+---
+---Whole number of days remaining after the lst full year within the span.
+---Kerbin has 426 days in a year if using Kerbin's
+---6 hour day (one fourth as much if if :attr:`Kuniverse:HOURSPERDAY`
+---is 24 meaning the game is configured to show Earthlike days not
+---Kerbin days.
+---
+---The range of possible values could be different if you have mods
+---installed that replace the stock solar system with a different
+---solar system and thus alter how long your homeworld's year is.
+---
+---Note that for spans the first day of the year is the zero-th
+---day, not the 1-th day.  This is a difference from how it
+---works for `TimeStamp`
+---@field day number
+---Settable.
+---*TOTAL* time in the span, expressed in units of days.  This is not
+---the same as :attr:`TimeSpan:DAY` because it includes a fractional
+---part and is the *entire* span, not just the whole number of days leftover
+---in the last partial year.
+---Example: If there are 426 days in a Year, and the Timespan is
+---1 year and 213 days and 12 hours long, then this will return ``639.5``
+---rather than ``213``, as the *entire* span is 639 and a half days.
+---@field days number
+---Settable.
+---:type: `number` (0-5) or (0-23)
+---
+---Whole number of hours remaining after the last full day in the span.
+---Note the setting :attr:`Kuniverse:HOURSPERDAY` affects
+---whether this will be a number from 0 to 5 (6 hour day) or a number
+---from 0 to 23 (24 hour day).
+---@field hour number
+---Settable.
+---*TOTAL* time in the span, expressed in units of hours.  This is not
+---the same as :attr:`TimeSpan:HOUR` because it includes a fractional
+---part and is the *entire* span, not just the whole number of hours
+---leftover in the last partial day.
+---Example: If the Timespan is 0 years, 2 days, 3 hours, and 20 minutes,
+---and days are 6 hours long, then this will return 15.3333333 since
+---the *entire* span is 2 days of 6 hours each, plus 3 more hours, plus 
+---20 minutes which is one third of an hour.
+---@field hours number
+---Settable.
+---:type: `number` (0-59)
+---
+---Whole number of minutes remaining after the last full hour in the span.
+---@field minute number
+---Settable.
+---*TOTAL* time in the span, expressed in units of minutes.  This is not
+---the same as :attr:`TimeSpan:MINUTE` because it includes a fractional
+---part and is the *entire* span, not just the whole number of minutes
+---leftover in the last partial hour.
+---Example: If the Timespan is 0 years, 0 days, 3 hours, 20 minutes, and
+---30 seconds, then this will return ``200.5`` as that is the *entire*
+---span: 3 60-minute hours is 180, plus 20 more minutes is 200, plus 30
+---seconds which is half a minute gives 200.5.
+---@field minutes number
+---Settable.
+---:type: `number` (0-59)
+---
+---Whole number of seconds remaining after the last full minute in the span.
+---Please note the difference between this and :attr:`TimeSpan:SECONDS`.
+---@field second number
+---Settable.
+---:type: `number` (float)
+---
+---*TOTAL* Seconds in the TimeSpan, including fractonal part.  Note
+---this is NOT the same as :attr:`TimeSpan:SECOND` (singular),
+---because this is the total span of time expressed in seconds,
+---and not just the leftover seconds in the last minute of the span.
+---@field seconds number
+---The full string for the TimeSpan. (Down to the second anyway.  Fractions of
+---seconds not shown), including year, day, hour, minute, and second.
+---The format is:
+---
+---``_y_d_h_m_s`` (where the underscores are numbers).
+---@field full string
+
+---@class Stage : Structure
+---Every craft has a current stage, and that stage is represented by a number, this is it!
+---@field number number
+---Kerbal Space Program enforces a small delay between staging commands, this is to allow the last staging command to complete. This bool value will let you know if kOS can activate the next stage.
+---@field ready boolean
+---This is a collection of the available `AggregateResource` for the current stage.
+---@field resources List
+---This is a dictionary style collection of the available `Resource`
+---for the current stage.  The `string` key in the lexicon will match
+---the name suffix on the `AggregateResource`.  This suffix walks the parts
+---list entirely on every call, so it is recommended that you cache the value
+---if it will be reference repeatedly.
+---@field resourceslex Lexicon
+---One of the nearest `Decoupler` parts that is going to be activated by staging
+---(not necessarily in next stage, if that stage does not contain any decoupler, separator,
+---launch clamp or docking port with staging enabled). `None` if there is no decoupler.
+---
+---This is particularly helpful for advanced staging logic, e.g.:
+---::
+---
+---    STAGE.
+---    IF stage:nextDecoupler:isType("LaunchClamp")
+---        STAGE.
+---    IF stage:nextDecoupler <> "None" {
+---        WHEN availableThrust = 0 or (
+---            stage:resourcesLex["LiquidFuel"]:amount = 0 and
+---            stage:resourcesLex["SolidFuel"]:amount = 0)
+---        THEN {
+---            STAGE.
+---            return stage:nextDecoupler <> "None".
+---        }
+---    }
+---@field nextdecoupler any
+---One of the nearest `Decoupler` parts that is going to be activated by staging
+---(not necessarily in next stage, if that stage does not contain any decoupler, separator,
+---launch clamp or docking port with staging enabled). `None` if there is no decoupler.
+---
+---This is particularly helpful for advanced staging logic, e.g.:
+---::
+---
+---    STAGE.
+---    IF stage:nextDecoupler:isType("LaunchClamp")
+---        STAGE.
+---    IF stage:nextDecoupler <> "None" {
+---        WHEN availableThrust = 0 or (
+---            stage:resourcesLex["LiquidFuel"]:amount = 0 and
+---            stage:resourcesLex["SolidFuel"]:amount = 0)
+---        THEN {
+---            STAGE.
+---            return stage:nextDecoupler <> "None".
+---        }
+---    }
+---@field nextseparator any
+---Returns delta-V information (see `DeltaV`) about the current stage.::
+---
+---    // These two lines would do the same thing:
+---    SET DV TO STAGE:DELTAV.
+---    SET DV TO SHIP:STAGEDELTAV(SHIP:STAGRENUM).
+---@field deltav DeltaV
+
+---@class Kuniverse : Structure
+---Returns true if either revert to launch or revert to editor is available.  Note: either option may still be unavailable, use the specific methods below to check the exact option you are looking for.
+---@field canrevert boolean
+---Returns true if either revert to launch is available.
+---@field canreverttolaunch boolean
+---Returns true if either revert to the editor is available.  This tends
+---to be false after reloading from a saved game where the vessel was
+---already in existence in the saved file when you loaded the game.
+---@field canreverttoeditor boolean
+---Initiate the KSP game's revert to launch function.  All progress so far will be lost, and the vessel will be returned to the launch pad or runway at the time it was initially launched.
+---@field reverttolaunch fun()
+---Initiate the KSP game's revert to editor function.  The game will revert to the editor, as selected based on the vessel type.
+---@field reverttoeditor fun()
+---:parameter editor: The editor identifier
+---:return: None
+---
+---Revert to the provided editor.  Valid inputs are `"VAB"` and `"SPH"`.
+---@field revertto fun(editor: string)
+---Returns true if KSP's quicksave feature is enabled and available.
+---@field canquicksave boolean
+---Pauses Kerbal Space Program, bringing up the same pause menu that would
+---normally appear when you hit the "Escape" key.
+---
+---**Warning:** *NO lines of Kerboscript code can run while the game is
+---paused!!!  If you call this, you will be stopping your script there
+---until a human being clicks "resume" on the pause menu.*
+---
+---kOS is designed to thematically act like a computer that lives *inside*
+---the game universe. That means it stops when the game clock stops, for
+---the same reason a bouncing ball stops when the game clock stops.
+---
+---Until a human being resumes the game by clicking the Resume button
+---in the menu, your script will be stuck.  This makes it impossible
+---to have the program run code that decides when to un-pause the game.
+---Once the Resume button is clicked, then the program will
+---continue where it left off, just after the point where it called
+---``KUniverse:PAUSE().``.
+---
+---Note, if you use Control-C in the terminal to kill the program,
+---that *will* work while the game is paused like this.  If you make
+---the mistake of having your script keep re-pausing the game every
+---time the game resumes (i.e. you call ``Kuniverse:PAUSE()``
+---again and again in a loop), then using Control-C in the terminal
+---can be a way to break out of this problem.
+---@field pause fun()
+---Initiate the KSP game's quicksave function.  The game will save the current
+---state to the default quicksave file.
+---@field quicksave fun()
+---Initiate the KSP game's quickload function.  The game will load the game
+---state from the default quickload file.
+---@field quickload fun()
+---:parameter name: The name of the save file
+---:return: None
+---
+---Initiate the KSP game's quicksave function.  The game will save the current
+---state to a quicksave file matching the name parameter.
+---@field quicksaveto fun(name: string)
+---:parameter name: The name of the save file
+---:return: None
+---
+---Initiate the KSP game's quickload function.  The game will load the game
+---state from the quicksave file matching the name parameter.
+---@field quickloadfrom fun(name: string)
+---:type: `List` of `string`
+---
+---Returns a list of names of all quicksave file in this KSP game.
+---@field quicksavelist List
+---Returns the name of the originating editor based on the vessel type.
+---The value is one of:
+---
+---- "SPH" for things built in the space plane hangar,
+---- "VAB" for things built in the vehicle assembly building.
+---- "" (empty `string`) for cases where the vehicle cannot remember its editor (when KUniverse:CANREVERTTOEDITOR is false.)
+---@field origineditor string
+---Get or set the default loading distances for vessels loaded in the future.
+---Note: this setting will not affect any vessel currently in the universe for
+---the current flight session.  It will take effect the next time you enter a
+---flight scene from the editor or tracking station, even on vessels that have
+---already existed beforehand.  The act of loading a new scene causes all the
+---vessels in that scene to inherit these new default values, forgetting the
+---values they may have had before.
+---
+---(To affect the value on a vessel already existing in the current scene
+---you have to use the :LOADDISTANCE suffix of the Vessel structure.)
+---@field defaultloaddistance LoadDistances
+---Settable.
+---Returns the active vessel object and allows you to set the active vessel.  Note: KSP will not allow you to change vessels by default when the current active vessel is in the atmosphere or under acceleration.  Use :meth:`FORCEACTIVE` under those circumstances.
+---@field activevessel Vessel
+---:parameter vessel: `Vessel` to switch to.
+---:return: None
+---
+---Force KSP to change the active vessel to the one specified.  Note: Switching the active vessel under conditions that KSP normally disallows may cause unexpected results on the initial vessel.  It is possible that the vessel will be treated as if it is re-entering the atmosphere and deleted.
+---@field forcesetactivevessel fun(vessel: Vessel)
+---:parameter vessel: `Vessel` to switch to.
+---:return: None
+---
+---Force KSP to change the active vessel to the one specified.  Note: Switching the active vessel under conditions that KSP normally disallows may cause unexpected results on the initial vessel.  It is possible that the vessel will be treated as if it is re-entering the atmosphere and deleted.
+---@field forceactive fun(vessel: Vessel)
+---:type: `number` (integer)
+---
+---Has the value of either 6 or 24, depending on what setting you used
+---on Kerbal Space Program's main settings screen for whether you wanted
+---to think in terms of Kerbal days (6 hours) or Kerbin days (24 hours).
+---This only affects what the clock format looks like and doesn't
+---change the actual time in game, which is stored purely as a number of
+---seconds since epoch anyway and is unaffected by how the time is presented
+---to the human being watching the game.  (i.e. if you allow
+---25 hours to pass in the game, the game merely tracks that 39000 seconds
+---have passed (25 x 60 x 60).  It doesn't care how that translates into
+---minutes, hours, days, and years until showing it on screen to the player.)
+---
+---This setting also affects how values from `TimeSpan` and
+---`TimeStamp` calculate the ``:hours``, ``:days``, and ``:years``
+---suffixes.
+---
+---Note that this setting is not settable.  This decision was made because
+---the main stock KSP game only ever changes the setting on the main
+---settings menu, which isn't accessible during play.  It's entirely
+---possible for kOS to support changing the value mid-game, but we've
+---decided to deliberately avoid doing so because there may be other mods
+---with code that only reads the setting once up front and then assumes
+---it never changes after that.  Because in the stock game, that
+---assumption would be true.
+---@field hoursperday number
+---:parameter message: `string` message to append to the log.
+---:return: None
+---
+---All Unity games (Kerbal Space Program included) have a standard
+---"log" file where they can store a lot of verbose messages that
+---help developers trying to debug their games.  Sometimes it may
+---be useful to make your script log a message to *THAT* debug file,
+---instead of using kOS's normal ``Log`` function to append a
+---message to some file of your own making.
+---
+---This is useful for cases where you are trying to work with a kOS
+---developer to trace the cause of a problem and you want your script
+---to mark the moments when it hit different parts of the program, and
+---have those messages get embedded in the log interleaved with the
+---game's own diagnostic messages.
+---
+---Here is an example.  Say you suspected the game was throwing an error
+---every time you tried to lock steering to up.  So you experiment with
+---this bit of code::
+---
+---    kuniverse:debuglog("=== Now starting test ===").
+---    kuniverse:debuglog("--- Locking steering to up----").
+---    lock steering to up.
+---    kuniverse:debuglog("--- Now forcing a physics tick ----").
+---    wait 0.001.
+---    kuniverse:debuglog("--- Now unlocking steering again ----").
+---    unlock steering.
+---    wait 0.001.
+---    kuniverse:debuglog("=== Now done with test ===").
+---
+---This would cause the messages you wrote to appear in the debug log,
+---interleaved with any error messages kOS, and any other parts of the
+---entire Kerbal Space Program game, dump into the same log.
+---
+---The location of this log varies depending on your platform.  For
+---some reason, Unity chooses a different filename convention for
+---each OS.  Consult the list below to see where it is on your platform.
+---
+---- Windows 32-bit: [install_dir]\KSP_Data\output_log.txt
+---- Windows 64-bit: [install_dir]\KSP_x64_Data\output_log.txt (not officially supported)
+---- Mac OS X: ~/Library/Logs/Unity/Player.log
+---- Linux: ~/.config/unity3d/Squad/"Kerbal Space Program"/Player.log
+---
+---For an example of what it looks like in the log, this::
+---
+---    kuniverse:debuglog("this is my message").
+---
+---ends up resulting in this in the KSP output log::
+---
+---    kOS: (KUNIVERSE:DEBUGLOG) this is my message
+---@field debuglog fun(message: string)
+---:parameter name: `string` craft name.
+---:parameter facility: `string` editor name.
+---:return: `CraftTemplate`
+---
+---Returns the `CraftTemplate` matching the given craft name saved from
+---the given editor.  Valid values for editor include ``"VAB"`` and ``"SPH"``.
+---@field getcraft fun(name: string, editor: string): CraftTemplate
+---:parameter template: `CraftTemplate` craft template object.
+---
+---Launch a new instance of the given `CraftTemplate` from the
+---template's default launch site.
+---
+---**NOTE:** The craft will be launched with the KSP default crew assignment,
+---as if you had clicked launch from the editor without manually adjusting the
+---crew.
+---
+---**NOTE:** Due to how KSP handles launching a new craft, this will end the
+---current program even if the currently active vessel is located within
+---physics range of the launch site.
+---@field launchcraft fun(template: CraftTemplate)
+---:parameter template: `CraftTemplate` craft template object.
+---:parameter site: `string` launch site name.
+---
+---Launch a new instance of the given `CraftTemplate` from the given
+---launch site. Valid values for site include ``"RUNWAY"`` and ``"LAUNCHPAD"``.
+---
+---**NOTE:** The craft will be launched with the KSP default crew assignment,
+---as if you had clicked launch from the editor without manually adjusting the
+---crew.  To pick which crew are on the craft use
+---:meth:`Kuniverse:LAUNCHCRAFTWITHCREWFROM()` instead.
+---
+---**NOTE:** Due to how KSP handles launching a new craft, this will end the
+---current program even if the currently active vessel is located within
+---physics range of the launch site.
+---@field launchcraftfrom fun(template: CraftTemplate, site: string)
+---:parameter template: `CraftTemplate` craft template object.
+---:parameter crewlist: `List` of `string` kerbal names.
+---:parameter site: `string` launch site name.
+---
+---Launch a new instance of the given `CraftTemplate` with the given crew
+---manifest from the given launch site.
+---Valid values for site include ``"RUNWAY"`` and ``"LAUNCHPAD"``.
+---
+---If any of the kerbal names you use in the ``crewlist`` parameter don't
+---exist in the game, there will be no error.  Instead that name just 
+---gets ignored in the list.
+---
+---**NOTE:** Due to how KSP handles launching a new craft, this will end the
+---current program even if the currently active vessel is located within
+---physics range of the launch site.
+---@field launchcraftwithcrewfrom fun(template: CraftTemplate, crewlist: List, site: string)
+---:return: `List` of `CraftTemplate`
+---
+---Returns a list of all `CraftTemplate` templates stored in the VAB
+---and SPH folders of the stock Ships folder and the save specific Ships folder.
+---@field craftlist List
+---@field switchvesselwatchers UniqueSet
+---Returns the `TimeWarp` structure that you can use to manipulate
+---Kerbal Space Program's time warping features.   See the documentation
+---on `TimeWarp` for more details.
+---
+---example: ``set kuniverse:timewarp:rate to 50.``
+---@field timewarp Timewarp
+---An alias for :struct:`KUniverse:REALTIME`.
+---@field realworldtime number
+---An alias for :struct:`KUniverse:REALTIME`.
+---@field realtime number
+
+---@class Config : Structure
+---Settable.
+---:type: `number` integer. range = [50,2000]
+---
+---Configures the ``InstructionsPerUpdate`` setting.
+---
+---This is the number of kRISC psuedo-machine-language instructions that each kOS CPU will attempt to execute from the main program per :ref:`physics update tick <cpu hardware>`.
+---
+---This value is constrained to stay within the range [50..2000]. If you set it to a value outside that range, it will reset itself to remain in that range.
+---@field ipu number
+---Settable.
+---@field luaipu number
+---Settable.
+---Configures the ``useCompressedPersistence`` setting.
+---
+---If true, then the contents of the kOS local volume 'files' stored inside the campaign save's persistence file will be stored using a compression algorithm that has the advantage of making them take less space, but at the cost of making the data impossible to decipher with the naked human eye when looking at the persistence file.
+---@field ucp boolean
+---Settable.
+---Configures the ``showStatistics`` setting.
+---
+---If true, then executing a program will log numbers to the screen showing execution speed statistics.
+---
+---When this is set to true, it also makes the use of the
+---:ref:`ProfileResult() <profileresult>` function available, for
+---deep analysis of your program run, if you are so inclined.
+---@field stat boolean
+---Settable.
+---Configures the ``startOnArchive`` setting.
+---
+---If true, then when a vessel is first loaded onto the launchpad or runway, the initial default volume will be set to volume 0, the archive, instead of volume 1, the local drive.
+---@field arch boolean
+---Settable.
+---Configures the ``obeyHideUI`` setting.
+---
+---If true, then the kOS terminals will all hide when you toggle the user
+---interface widgets with Kerbal Space Program's Hide UI key (it is
+---set to F2 by default key bindings).
+---@field obeyhideui boolean
+---Settable.
+---Configures the ``enableSafeMode`` setting.
+---If true, then it enables the following error messages::
+---
+---    Tried to push NaN into the stack.
+---    Tried to push Infinity into the stack.
+---
+---They will be triggered any time any mathematical operation would result in something that is not a real number, such as dividing by zero, or trying to take the square root of a negative number, or the arccos of a number larger than 1. Performing such an operation will immediately terminate the program with one of the error messages shown above.
+---
+---If false, then these operations are permitted, but the result may lead to code that does not function correctly if you are not careful about how you use it. Using a value that is not a real number may result in freezing Kerbal Space Program itself if that value is used in a variable that is passed into Kerbal Space Program's API routines. KSP's own API interface does not seem to have any protective checks in place and will faithfully try to use whatever values its given.
+---@field safe boolean
+---Settable.
+---Configures the ``audibleExceptions`` setting.
+---
+---If true, then it enables a mode in which errors coming from kOS will
+---generte a sound effect of a short little warning bleep to remind you that
+---an exception occurred.  This can be useful when you are flying
+---hands-off and need to realize your autopilot script just died so
+---@field audioerr boolean
+---Settable.
+---Configures the ``verboseExceptions`` setting.
+---
+---If true, then it enables a mode in which errors coming from kOS are very long and verbose, trying to explain every detail of the problem.
+---@field verbose boolean
+---Settable.
+---Setting this config option to TRUE will allow scripts to clobber
+---built-in idenifier names, re-enabling older behavior for backward
+---compatibility and disabling the compiler enforcement that was
+---introduced in kOS v 1.4.0.0 to stop this practice.
+---
+---In kOS v1.4.0.0, the compiler started enforcing the rule that kerboscript
+---programs must never create a user variable, lock, or function with a
+---name that clashes with one of kOS's own built-in variable, lock, or
+---function names.  This rule was introduced to prevent common bugs where
+---a program masked over some vital kOS variable, rendering it inaccessible,
+---like for example ``SHIP``, or ``VELOCITY``.
+---
+---Older scripts written before kOS 1.4.0.0 might need this config option
+---enabled to make the compiler accept them and not throw errors.
+---
+---Before enabling this to make the error messages go away, first consider
+---going through the offeding script and editing it to rename the variable,
+---lock, or function that is causing the message.  That would be the better
+---solution.  This config option is only being presented as a dirty way
+---to make old scripts that are no longer being edited keep working on
+---newer versions of kOS.  In the long run, it's better to edit the scripts.
+---
+---**Note: This can be over-ridden by @CLOBBERBUILTINS directive:**
+---
+---Note that this config option can be over-ridden on a per-file basis by
+---using the compiler directive called :ref:`@CLOBBERBUILTINS <clobberbuiltins>`.
+---The Config value here is merely the default you get for files that lack a
+---:ref:`@CLOBBERBUILTINS <clobberbuiltins>` compiler directive.
+---@field clobberbuiltins boolean
+---Settable.
+---Configures the ``debugEachOpcode`` setting.
+---
+---NOTE: This makes the game VERY slow, use with caution.
+---
+---If true, each opcode that is executed by the CPU will be accompanied by
+---an entry in the KSP log. This is a debugging tool for those who are very
+---familiar with the inner workings of kOS and should rarely be used outside
+---the kOS dev team.
+---
+---This change takes effect immediately.
+---@field debugeachopcode boolean
+---Settable.
+---@field blizzy boolean
+---Settable.
+---:type: `number`. range = [0,1]
+---
+---Configures the ``Brightness`` setting.
+---
+---This is the default starting brightness setting a new
+---kOS in-game terminal will have when it is invoked.  This
+---is just the default for new terminals.  Individual terminals
+---can have different settings, either by setting the value
+---:attr:`Terminal:BRIGHTNESS` in a script, or by manually moving the
+---brightness slider widget on that terminal.
+---
+---The value here must be between 0 (invisible) and 1 (Max brightness).
+---@field brightness number
+---Settable.
+---:type: `number` integer-only. range = [6,20]
+---
+---Configures the ``TerminalFontDefaultSize`` setting.
+---
+---This is the default starting font height (in pixels. not "points")
+---for all newly created kOS in-game terminals.  This
+---is just the default for new terminals.  Individual terminals
+---can have different settings, either by setting the value
+---:attr:`Terminal:CHARHEIGHT` in a script, or by manually clicking
+---the font adjustment buttons on that terminal.
+---
+---The value here must be at least 6 (nearly impossible to read)
+---and no greater than 30 (very big).  It will be rounded to the
+---nearest integer when setting the value.
+---@field defaultfontsize number
+---Settable.
+---:type: `number` integer-only. range = [15,255]
+---
+---Configures the ``TerminalDefaultWidth`` setting.
+---
+---This is the default starting width (in number of character cells,
+---not number of pixels) for all newly created kOS in-game terminals.
+---This is just the default for new terminals.  Individual terminals
+---can have different settings, either by setting the value
+---:attr:`Terminal:WIDTH` in a script, or by manually dragging the
+---resize corner of the terminal with the mouse.
+---@field defaultwidth number
+---Settable.
+---:type: `number` integer-only. range = [3,160]
+---
+---Configures the ``TerminalDefaultHeight`` setting.
+---
+---This is the default starting height (in number of character cells,
+---not number of pixels) for all newly created kOS in-game terminals.
+---This is just the default for new terminals.  Individual terminals
+---can have different settings, either by setting the value
+---:attr:`Terminal:HEIGHT` in a script, or by manually dragging the
+---resize corner of the terminal with the mouse.
+---@field defaultheight number
+---Settable.
+---*This is settable by use of the "Toggle Autopilot" Action Group too.*
+---
+---When this is set to True, it suppresses all of kOS's attempts to
+---override the steering, throttle, or translation controls, leaving
+---them entirely under manual control.  It is intended to be a way
+---to let you take manual control in an emergency quickly (through
+---the toolbar window where this setting appears) without having to
+---quit the running program or figure out which terminal window has
+---the program causing the control lock.
+---
+---You can also bind this setting to an action group for a kOS core part
+---in the VAB or SPH.  The action is called "Toggle Suppress".
+---(Or "Suppress On" and "Suppress Off" for one-way action groups
+---that don't toggle.)
+---
+---While it does suppress steering, throttle, and translation, it cannot
+---suppress action groups or staging.
+---@field suppressautopilot boolean
+
+---@class CraftTemplate : Structure
+---Returns the name of the craft.  It may differ from the file name.
+---@field name string
+---Returns the description field of the craft, which may be edited from the
+---drop down window below the craft name in the editor.
+---@field description string
+---Name of the editor from which the craft file was saved.  Valid values are
+---``"VAB"`` and ``"SPH"``.
+---@field editor string
+---Returns the name of the default launch site of the craft.  Valid values are
+---``"LAUNCHPAD"`` and ``"RUNWAY"``.
+---@field launchsite string
+---Returns the total default mass of the craft.  This includes the dry mass and the
+---mass of any resources loaded onto the craft by default.
+---@field mass number
+---Returns the total default cost of the craft.  This includes the cost of the
+---vessel itself as well as any resources loaded onto the craft by default.
+---@field cost number
+---Returns the total number of parts on the craft.
+---@field partcount number
+
+---@class Sensor : Part
+---Settable.
+---True of the sensor is enabled. Can SET to cause the sensor to activate or de-activate.
+---@field active boolean
+---:access: Get only
+---@field type string
+---The value of the sensor's readout, usualy including the units.
+---@field display string
+---The rate at which this sensor drains ElectricCharge.
+---@field powerconsumption number
+---Call this method to cause the sensor to switch between active and deactivated or visa versa.
+---@field toggle fun()
+
+---@class Decoupler : Part
+
+---@class RCS : Part
+---Settable.
+---Is this rcs thruster enabled.
+---@field enabled boolean
+---Settable.
+---Is yaw control enabled for this rcs thruster.
+---@field yawenabled boolean
+---Settable.
+---Is pitch control enabled for this rcs thruster.
+---@field pitchenabled boolean
+---Settable.
+---Is roll control enabled for this rcs thruster.
+---@field rollenabled boolean
+---Settable.
+---Is port/starboard control enabled for this rcs thruster.
+---@field starboardenabled boolean
+---Settable.
+---Is dorsal/ventral control enabled for this rcs thruster.
+---@field topenabled boolean
+---Settable.
+---Is fore/aft control enabled for this rcs thruster.
+---@field foreenabled boolean
+---Settable.
+---Does this thruster apply fore thrust when the ship throttled up.
+---@field forebythrottle boolean
+---Settable.
+---Does this thruster always apply full thrust.
+---@field fullthrust boolean
+---Settable.
+---:type: `number` (%)
+---
+---If this is a thruster with a thrust limiter (tweakable) enabled, what
+---percentage is it limited to?  Note that this is expressed as a
+---percentage, not a simple 0..1 coefficient.  e.g. To set thrustlimit
+---to half, you use a value of 50.0, not 0.5.
+---
+---This value is not allowed to go outside the range [0..100].  If you
+---attempt to do so, it will be clamped down into the allowed range.
+---
+---Note that although a kerboscript is allowed to set the value to a
+---very precise number (for example 10.5123), the stock in-game display
+---widget that pops up when you right-click the rcs will automatically
+---round it to the nearest 0.5 whenever you open the panel.  So if you
+---do something like ``set ship:part[20]:thrustlimit to 10.5123.`` in
+---your script, then look at the rightclick menu for the rcs, the very
+---act of just looking at the menu will cause it to become 10.5 instead
+---of 10.5123.  There isn't much that kOS can do to change this.  It's a
+---user interface decision baked into the stock game.
+---@field thrustlimit number
+---Settable.
+---Default: 0.05.
+---
+---**Please note the warning below before you try to SET this.**
+---
+---The stock game imposes a large dead zone on RCS thrusters.  By
+---default they will not respond to any inputs less than this value.
+---For example, at the default value of 0.05, the RCS thruster
+---will ignore this statement::
+---
+---    set ship:control:yaw to 0.049.
+---
+---but it will respond to this statement::
+---
+---    set ship:control:yaw to 0.051.
+---
+---The reason this limit exists is apparently (this is speculation,
+---warning) that it's how the stock game prevents SAS from spending
+---a lot of monopropellant when it wiggles the controls small amounts.
+---When control inputs are smaller than this value, then the RCS
+---thrusters ignore them and only the reaction wheels and engine
+---gimbals respond.  Despite the fact that this is really only a
+---problem with SAS, the game appears to have solved the problem by
+---imposing this null zone physically on the RCS parts themselves so
+---the limit affects everything that uses them, including kOS
+---autopiloting and user manual control.
+---
+---The best way to deal with this, if you have a script that wants
+---the RCS thrusters to operate at a value less than this, is
+---to pulse the input intermittently on and off at 0.05 to achieve
+---amounts smaller than 0.05, rather than trying to solve it by
+---setting this value.  (Remember that in the real world, thrusters
+---have a minimum thrust they can't go below so it's not entirely
+---unrealistic for this deadband to exist in the game.)
+---@field deadband number
+---:type: `number` (kN)
+---
+---Taking into account the thrust limiter tweakable setting, how much thrust would this rcs thruster give at its current thrust limit setting and atmospheric pressure conditions, if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxxed .
+---@field availablethrust number
+---:parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
+---:type: `number` (kN)
+---
+---Taking into account the thrust limiter tweakable setting, how much thrust at the given atmospheric pressure would this rcs thruster give at its current thrust limit setting if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxxed.   The pressure is measured in ATMs, meaning 0.0 is a vacuum, 1.0 is sea level at Kerbin.
+---(Pressure must be greater than or equal to zero.  If you pass in a
+---negative value, it will be treated as if you had given a zero instead.)
+---@field availablethrustat fun(pressure: number): number
+---:type: `number` (kN)
+---
+---How much thrust would this rcs thruster give at its current atmospheric pressure if one of the control axes that activates it (yaw, pitch, roll, fore, aft, or top) was maxxed, and the thrust limiter was max at 100%.  Note this might not be the thruster's actual max thrust it could have under other air pressure conditions.  Some thrusters have a very different value for MAXTHRUST in vacuum as opposed to at sea level pressure.
+---@field maxthrust number
+---:type: `number` (units/s)
+---
+---How much fuel volume would this rcs thruster consume at standard pressure and velocity if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxxed, and the thrust limiter was max at 100%.  Note this might not be the engine's actual max fuel flow it could have under other air pressure conditions.
+---@field maxfuelflow number
+---:type: `number` (Mg/s)
+---
+---How much fuel mass would this rcs thruster consume at standard pressure and velocity if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxxed, and the thrust limiter was max at 100%.  Note this might not be the engine's actual max fuel flow it could have under other air pressure conditions.
+---@field maxmassflow number
+---`Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_
+---@field isp number
+---Synonym for :VACUUMISP
+---@field visp number
+---Synonym for :VACUUMISP
+---@field vacuumisp number
+---Synonym for :SEALEVELISP
+---@field slisp number
+---Synonym for :SEALEVELISP
+---@field sealevelisp number
+---Is this rcs thruster failed because it is starved of a resource (monopropellant)?
+---@field flameout boolean
+---:parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
+---`Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
+---(Pressure must be greater than or equal to zero.  If you pass in a
+---negative value, it will be treated as if you had given a zero instead.)
+---@field ispat fun(pressure: number): number
+---:parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
+---:type: `number` (kN)
+---
+---How much thrust would this rcs thruster give if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxxed and thrust limiter was max at the given atmospheric pressure.  Use a pressure of 0.0 for vacuum, and 1.0 for sea level (on Kerbin) (or more than 1 for thicker atmospheres like on Eve).
+---(Pressure must be greater than or equal to zero.  If you pass in a
+---negative value, it will be treated as if you had given a zero instead.)
+---@field maxthrustat fun(pressure: number): number
+---:type: `List` of :struct:`Vectors <Vector>`
+---
+---This gives a list of all the vectors that this RCS module can thrust along. Vectors returned are of unit length.  The vectors are returned in Ship-Raw coordinates, rather than relative to the ship.  (i.e. if it thrusts along the ship's fore axis, and the ship's current ``ship:facing:forevector`` is ``V(0.7071, 0.7071, 0)``, then the value this returns would be ``V(0.7071, 0.7071, 0)``, not ``V(0,0,1)``).
+---@field thrustvectors List
+---:type: `Lexicon` of `CONSUMEDRESOURCERCS`
+---
+---This gives a lexicon of all the resources this rcs thruster consumes, keyed by resource name.
+---@field consumedresources Lexicon
+
+---@class Separator : Decoupler
+---Force of the push that happens when this decoupler is fired.
+---@field ejectionforce number
+---True if this part has already had its decoupling event triggered.
+---@field isdecoupled boolean
+---True if this part's decoupling event is in the vessel's staging list.
+---@field staged boolean
+
+---@class DockingPort : Decoupler
+---@field aquirerange number
+---@field aquireforce number
+---@field aquiretorque number
+---gets the range at which the port will "notice" another port and pull on it.
+---@field acquirerange number
+---gets the force with which the port pulls on another port.
+---@field acquireforce number
+---gets the rotational force with which the port pulls on another port.
+---@field acquiretorque number
+---@field reengagedistance number
+---name of vessel on the other side of the docking port.
+---@field dockedshipname string
+---One of the following string values:
+---
+---``Ready``
+---    Docking port is not yet attached and will attach if it touches another.
+---``Docked (docker)``
+---    One port in the joined pair is called the docker, and has this state
+---``Docked (dockee)``
+---    One port in the joined pair is called the dockee, and has this state
+---``Docked (same vessel)``
+---    Sometimes KSP says this instead. It's unclear what it means.
+---``Disabled``
+---    Docking port will refuse to dock if it bumps another docking port.
+---``PreAttached``
+---    Temporary state during the "wobbling" while two ports are magnetically touching but not yet docked solidly. During this state the two vessels are still tracked as separate vessels and haven't become one yet.
+---@field state string
+---True if this part can be picked with ``SET TARGET TO``.
+---@field targetable boolean
+---Call this to cause the docking port to detach.
+---@field undock fun()
+---@field target fun()
+---Gets the facing of this docking port which may differ from the facing of the part itself if the docking port is aimed out the side of the part, as in the case of the inline shielded docking port.
+---@field portfacing Direction
+---The coordinates of the point on the docking port part where the
+---port attachment spot is located.  This is different from the 
+---part's position itself because that's the position of the center
+---of the whole part.  This is the position of the face of the
+---docking port.  Coordinates are in SHIP-RAW xyz coords.
+---@field nodeposition Vector
+---Each docking port has a node type string that specifies its
+---compatibility with other docking ports.  In order for two docking
+---ports to be able to attach to each other, the values for their
+---NODETYPEs must be the same.
+---
+---The base KSP stock docking port parts all use one of the following
+---three values:
+---
+---    - "size0" for all Junior-sized docking ports.
+---    - "size1" for all Normal-sized docking ports.
+---    - "size2" for all Senior-sized docking ports.
+---
+---Mods that provide their own new kinds of docking port might use
+---any other value they feel like here, but only if they are trying
+---to declare that the new part isn't supposed to be able to connect
+---to stock docking ports.  Any docking port that is meant to connect
+---to stock ports will have to adhere to the above scheme.
+---@field nodetype string
+---@field dockwatchers UniqueSet
+---@field undockwatchers UniqueSet
+---:type: `DockingPort`, or the `string` "None" if no such port.
+---
+---The docking port this docking port is attached to.
+---If this docking port is not actually attached to another port, attempting
+---to call this will return a String instead of a DockingPort, and that String
+---will have the value "None".  (Alternatively, you can test if this
+---docking port has a partner port attached by calling
+---:meth:`DockingPort:HASPARTER`.)
+---@field partner any
+---Whether or not this docking port is attached to another docking port.
+---@field haspartner boolean
+
+---@class Engine : Part
+---Call to make the engine turn on.
+---@field activate fun()
+---Call to make the engine turn off.
+---@field shutdown fun()
+---Settable.
+---:type: `number` (%)
+---
+---If this an engine with a thrust limiter (tweakable) enabled, what
+---percentage is it limited to?  Note that this is expressed as a 
+---percentage, not a simple 0..1 coefficient.  e.g. To set thrustlimit
+---to half, you use a value of 50.0, not 0.5.
+---
+---This value is not allowed to go outside the range [0..100].  If you
+---attempt to do so, it will be clamped down into the allowed range.
+---
+---Note that although a kerboscript is allowed to set the value to a
+---very precise number (for example 10.5123), the stock in-game display
+---widget that pops up when you right-click the engine will automatically
+---round it to the nearest 0.5 whenever you open the panel.  So if you
+---do something like ``set ship:part[20]:thrustlimit to 10.5123.`` in
+---your script, then look at the rightclick menu for the engine, the very
+---act of just looking at the menu will cause it to become 10.5 instead 
+---of 10.5123.  There isn't much that kOS can do to change this.  It's a
+---user interface decision baked into the stock game.
+---@field thrustlimit number
+---:type: `number` (kN)
+---
+---How much thrust would this engine give at its current atmospheric pressure and velocity if the throttle was max at 1.0, and the thrust limiter was max at 100%.  Note this might not be the engine's actual max thrust it could have under other air pressure conditions.  Some engines have a very different value for MAXTHRUST in vacuum as opposed to at sea level pressure.  Also, some jet engines have a very different value for MAXTHRUST depending on how fast they are currently being rammed through the air. Also note that this will read zero if the engine is currently disabled.
+---@field maxthrust number
+---:type: `number` (kN)
+---
+---How much thrust is this engine giving at this very moment.
+---@field thrust number
+---:type: `number` (units/s)
+---
+---How much fuel volume is this engine consuming at this very moment.
+---@field fuelflow number
+---:type: `number` (units/s)
+---
+---How much fuel volume would this engine consume at standard pressure and velocity if the throttle was max at 1.0, and the thrust limiter was max at 100%.  Note this might not be the engine's actual max fuel flow it could have under other air pressure conditions.  Some jet engines have a very different fuel consumption depending on how fast they are currently being rammed through the air.
+---@field maxfuelflow number
+---:type: `number` (Mg/s)
+---
+---How much fuel mass is this engine consuming at this very moment.
+---@field massflow number
+---:type: `number` (Mg/s)
+---
+---How much fuel mass would this engine consume at standard pressure and velocity if the throttle was max at 1.0, and the thrust limiter was max at 100%.  Note this might not be the engine's actual max fuel flow it could have under other air pressure conditions.  Some jet engines have a very different fuel consumption depending on how fast they are currently being rammed through the air.
+---@field maxmassflow number
+---`Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_
+---@field isp number
+---Synonym for :VACUUMISP
+---@field visp number
+---Synonym for :VACUUMISP
+---@field vacuumisp number
+---Synonym for :SEALEVELISP
+---@field slisp number
+---Synonym for :SEALEVELISP
+---@field sealevelisp number
+---Is this engine failed because it is starved of a resource (liquidfuel, oxidizer, oxygen)?
+---@field flameout boolean
+---Has this engine been ignited? If both :attr:`Engine:IGNITION` and :attr:`Engine:FLAMEOUT` are true, that means the engine could start up again immediately if more resources were made available to it.
+---@field ignition boolean
+---Is this an engine that can be started again? Usually True, but false for solid boosters.
+---@field allowrestart boolean
+---Is this an engine that can be shut off once started? Usually True, but false for solid boosters.
+---@field allowshutdown boolean
+---Is this an engine that is stuck at a fixed throttle? (i.e. solid boosters)
+---@field throttlelock boolean
+---:parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
+---`Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
+---(Pressure must be greater than or equal to zero.  If you pass in a
+---negative value, it will be treated as if you had given a zero instead.)
+---@field ispat fun(pressure: number): number
+---:parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
+---:type: `number` (kN)
+---
+---How much thrust would this engine give if both the throttle and thrust limtier was max at the current velocity, and at the given atmospheric pressure.  Use a pressure of 0.0 for vacuum, and 1.0 for sea level (on Kerbin) (or more than 1 for thicker atmospheres like on Eve). Note that this will read zero if the engine is currently disabled.
+---(Pressure must be greater than or equal to zero.  If you pass in a
+---negative value, it will be treated as if you had given a zero instead.)
+---@field maxthrustat fun(pressure: number): number
+---:type: `number` (kN)
+---
+---Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and atmospheric pressure and velocity conditions. Note that this will read zero if the engine is currently disabled.
+---@field availablethrust number
+---:parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
+---:type: `number` (kN)
+---
+---Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and velocity, but at a different atmospheric pressure you pass into it.  The pressure is measured in ATM's, meaning 0.0 is a vacuum, 1.0 is sea level at Kerbin.  Note that this will read zero if the engine is currently disabled.
+---(Pressure must be greater than or equal to zero.  If you pass in a
+---negative value, it will be treated as if you had given a zero instead.)
+---@field availablethrustat fun(pressure: number): number
+---:type: `number` (kN)
+---
+---Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and atmospheric pressure and velocity conditions. This will give the correct value even if the engine is currently disabled.
+---@field possiblethrust number
+---:parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
+---:type: `number` (kN)
+---
+---Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and velocity, but at a different atmospheric pressure you pass into it.  The pressure is measured in ATM's, meaning 0.0 is a vacuum, 1.0 is sea level at Kerbin.  This will give the correct value even if the engine is currently disabled.
+---(Pressure must be greater than or equal to zero.  If you pass in a
+---negative value, it will be treated as if you had given a zero instead.)
+---@field possiblethrustat fun(pressure: number): number
+---@field maxpossiblethrust number
+---@field maxpossiblethrustat fun(param1: number): number
+---:type: `Lexicon` of `ConsumedResource`
+---
+---The fuel resources this engine consumes, and in what ratios.
+---@field consumedresources Lexicon
+---Does this engine have multiple modes (i.e. RAPIER)? Check this before calling multi-mode specific suffixes.
+---@field multimode boolean
+---:type: `List` of strings
+---
+---Lists names of modes of this engine if multimode, returns a list of 1 string "Single mode" otherwise.
+---@field modes List
+---Name of the current mode. Only assessible for multi-mode engines.
+---@field mode string
+---Call to switch to another mode. Only assessible for multi-mode engines.
+---@field togglemode fun()
+---Settable.
+---True for primary mode, false for secondary. Setting to other value equals toggling the mode. Only assessible for multi-mode engines.
+---@field primarymode boolean
+---Settable.
+---Is automatic switching enabled? Can set to switch between manual and automatic switching. Only assessible for multi-mode engines.
+---@field autoswitch boolean
+---Does this engine have a gimbal enabled?
+---@field hasgimbal boolean
+---Returns the `Gimbal` attached to this engine. Only accessible if the gimbal is present (Use :attr:`Engine:HASGIMBAL` to check if available).
+---@field gimbal Gimbal
+---If RealFuels is installed, returns true if this engine is a type of engine that requires ullage, otherwise returns false.
+---Note: this is a static property of the engine, for current fuel status, check `FUELSTABILITY`.
+---@field ullage boolean
+---If RealFuels is installed, returns the fuel stability of this engine as a value between 0 and 1 (where 1 is fullly stable), otherwise returns 1.
+---Engines that don't require ullage will always return 1, unless they are pressure fed and the feed pressure is too low.
+---@field fuelstability number
+---If RealFuels is installed, returns true if this engine is pressure fed, otherwise returns false.
+---@field pressurefed boolean
+---If RealFuels is installed, returns the number of ignitions remaining, or -1 if it is unlimited, otherwise returns -1.
+---@field ignitions number
+---If RealFuels is installed, returns the minimum throttle setting as a value between 0 and 1, otherwise returns 0.
+---@field minthrottle number
+---If RealFuels is installed, returns the configuration name of this engine if applicable, otherwise returns the part title.
+---@field config string
+
+---@class LaunchClamp : Decoupler
+
+---@class Part : Structure
+---Call this function to cause the game to do the same thing as when you right-click a part on a vessel and select "control from here" on the menu. It rotates the control orientation so that fore/aft/left/right/up/down now match the orientation of this part. NOTE that this will not work for every type of part. It only works for those parts that KSP itself allows this for (control cores and docking ports).  It accepts no arguments, and returns no value.
+---All vessels must have at least one "control from"
+---part on them somewhere, which is why there's no mechanism for un-setting
+---the "control from" setting other than to pick another part and set it
+---to that part instead.
+---
+---.. warning::
+---    This suffix is only callable for parts attached to the :ref:`CPU Vessel <cpu vessel>`
+---@field controlfrom fun()
+---Name of part as it is used behind the scenes in the game's API code.
+---
+---A part's *name* is the name it is given behind the scenes in KSP. It never appears in the normal GUI for the user to see, but it is used in places like Part.cfg files, the saved game persistence file, the ModuleManager mod, and so on.
+---@field name string
+---@field fuelcrossfeed boolean
+---The title of the part as it appears on-screen in the gui.
+---
+---A part's *title* is the name it has inside the GUI interface on the screen that you see as the user.
+---@field title string
+---the stage this part is part of.
+---@field stage number
+---Part Craft ID. This is similar to :attr:`Part:UID`, except that this
+---ID is only unique per craft design.  In other words if you launch two
+---copies of the same design without editing the design at all, then the
+---same part in both copies of the design will have the same ``Part:CID``
+---as each other.  (This value is kept in the *craft file* and repeated
+---in each instance of the vessel that you launch).
+---@field cid string
+---Part Universal ID. All parts have a unique ID number. Part's uid never changes because it is the same value as stored in persistent.sfs. Although you can compare parts by comparing their uid it is recommended to compare parts directly if possible.
+---@field uid string
+---The rotation of this part's X-axis, which points out of its side and is probably not what you want. You probably want the :attr:`Part:FACING` suffix instead.
+---@field rotation Direction
+---The location of this part in the universe. It is expressed in the same frame of reference as all the other positions in kOS, and thus can be used to help do things like navigate toward the position of a docking port.
+---@field position Vector
+---@field com Vector
+---Settable.
+---The name tag value that may exist on this part if you have given the part a name via the :ref:`name-tag system <nametag>`.
+---
+---A part's *tag* is whatever custom name you have given it using the :ref:`name-tag system described here <nametag>`. This is probably the best naming convention to use because it lets you make up whatever name you like for the part and use it to pick the parts you want to deal with in your script.
+---
+---WARNING: This suffix is only settable for parts attached to the :ref:`CPU Vessel <cpu vessel>`
+---@field tag string
+---The direction that this part is facing, which is also the rotation
+---that would transform a vector from a coordinate space where the
+---axes were oriented to match the part, to one where they're
+---oriented to match the world's ship-raw coordinates.
+---@field facing Direction
+---Constructs a "bounding box" structure that can be used to
+---give your script some idea of the extents of the part's shape - how
+---wide, long, and tall it is.
+---
+---It can be slightly expensive in terms of CPU time to keep calling
+---this suffix over and over, as kOS has to perform some work to build
+---this structure.  If you need to keep looking at a part's bounds again
+---and again in a loop, and you know that part's shape isn't going to be
+---changing (i.e. you're not going to extend a solar panel or something
+---like that), then it's better for you to call this ``:BOUNDS`` suffix
+---just once at the top, storing the result in a variable that you use in
+---the loop.
+---
+---More detailed information is found on the documentation page for
+---`Bounds`.
+---@field bounds Bounds
+---list of the `Resource` in this part.
+---@field resources List
+---True if this part can be selected by KSP as a target.
+---
+---This example assumes you have a target vessel picked, and that the target vessel is loaded into full-physics range and not "on rails". vessels that are "on rails" do not have their full list of parts entirely populated at the moment::
+---
+---    LIST PARTS FROM TARGET IN tParts.
+---
+---    PRINT "The target vessel has a".
+---    PRINT "partcount of " + tParts:LENGTH.
+---
+---    SET totTargetable to 0.
+---    FOR part in tParts {
+---        IF part:TARGETABLE {
+---            SET totTargetable TO totTargetable + 1.
+---        }
+---    }
+---
+---    PRINT "...and " + totTargetable.
+---    PRINT " of them are targetable parts.".
+---@field targetable boolean
+---the vessel that contains this part.
+---@field ship Vessel
+---:parameter name: (`string`) The name of the module to check for
+---:returns: `boolean`
+---
+---Checks to see if this part contains the `PartModule` with the name
+---given.  If it does, this returns true, else it returns false.  (If 
+---``HASMODULE(name)`` returns false, then this means an attempt to use
+---``GETMODULE(name)`` would fail with an error.)
+---@field hasmodule fun(name: string): boolean
+---:parameter name: (`string`) Name of the part module
+---:returns: `PartModule`
+---
+---Get one of the :struct:`PartModules <PartModule>` attached to this part, given the name of the module. (See :attr:`Part:MODULES` for a list of all the names available).
+---@field getmodule fun(name: string): PartModule
+---:parameter index: (`number`) Index number of the part module
+---:returns: `PartModule`
+---
+---Get one of the :struct:`PartModules <PartModule>` attached to this part,
+---given the index number of the module. You can use :attr:`Part:MODULES` for a
+---list of names of all modules on the part. The indexes are not guaranteed to
+---always be in the same order. It is recommended to iterate over the indexes
+---with a loop and verify the module name::
+---
+---    local moduleNames is part:modules.
+---    for idx in range(0, moduleNames:length) {
+---        if moduleNames[idx] = "test module" {
+---            local pm is part:getmodulebyindex(idx).
+---            DoSomething(pm).
+---        }
+---    }
+---@field getmodulebyindex fun(index: number): PartModule
+---:type: `List` of strings
+---
+---list of the names of :struct:`PartModules <PartModule>` enabled for this part.
+---@field modules List
+---:type: `List` of strings
+---
+---list of the names of :struct:`PartModules <PartModule>` enabled for this part.
+---@field allmodules List
+---When walking the :ref:`tree of parts <parts and partmodules>`, this is the part that this part is attached to on the way "up" toward the root part.
+---@field parent any
+---:type: `Decoupler` or `string`
+---
+---The decoupler/separator that will decouple this part when activated. `None` if no such exists.
+---@field decoupler any
+---:type: `Decoupler` or `string`
+---
+---The decoupler/separator that will decouple this part when activated. `None` if no such exists.
+---@field separator any
+---The stage number where this part will get decoupled. -1 if cannot be decoupled.
+---@field decoupledin number
+---The stage number where this part will get decoupled. -1 if cannot be decoupled.
+---@field separatedin number
+---When walking the :ref:`tree of parts <parts and partmodules>`, this is true as long as there is a parent part to this part, and is false if this part has no parent (which can only happen on the root part).
+---@field hasparent boolean
+---:type: `List` of :struct:`Parts <Part>`
+---
+---When walking the :ref:`tree of parts <parts and partmodules>`, this is all the parts that are attached as children of this part. It returns a list of zero length when this part is a "leaf" of the parts tree.
+---@field children List
+---The mass of the part if all of its resources were empty. If the part has no physics this will always be 0.
+---@field drymass number
+---The current mass or the part and its resources. If the part has no physics this will always be 0.
+---@field mass number
+---The mass of the part if all of its resources were full. If the part has no physics this will always be 0.
+---@field wetmass number
+---This comes from a part's configuration and is an artifact of the KSP simulation.
+---
+---For a list of stock parts that have this attribute and a fuller explanation see `the KSP wiki page about massless parts <http://wiki.kerbalspaceprogram.com/wiki/Massless_part>`_.
+---@field hasphysics boolean
+---Returns how many parts are in the same symmetry set as this part.
+---
+---Note that all parts should at least return a minimum value of 1, since
+---even a part placed without symmetry is technically in a group of 1 part,
+---itself.
+---@field symmetrycount number
+---Tells you the type of symmetry this part has by returning a number
+---as follows:
+---
+---0 = This part has radial symmetry
+---
+---1 = This part has mirror symmetry
+---
+---It's unclear if this means anything when the part's symmetry is 1x.
+---@field symmetrytype number
+---:returns: nothing
+---
+---Call this method to remove this part from its symmetry group, reverting
+---it back to a symmetry group of 1x (just itself).  This has the same
+---effect as pressing the "Remove From Symmetry" button in the part's
+---action window.
+---
+---Note that just like when you press the "Remove from Symmetry" button,
+---once a part has been removed from symmetry you don't have a way to
+---put it back into the symmetry group again.
+---@field removesymmetry fun()
+---:parameter name: (`number`) Index of which part in the symmetry group
+---:returns: `Part`
+---
+---When a set of parts has been placed with symmetry in the Vehicle
+---Assembly Building or Space Plane Hangar, this method can be used
+---to find all the parts that are in the same symmetrical group.
+---
+---The index is numbered from zero to :attr:``SYMMETRYCOUNT`` minus one.
+---
+---The zero-th symmetry partner is this part itself.  Even parts placed
+---without symmetry still are technically in a symmetry group of 1 part.
+---
+---The index also wraps around in a cycle, such that if there are 4 parts in
+---symmetry, then ``SYMMETRYPARTNER(0)`` and ``SYMMETRYPARTNER(4)`` and
+---``SYMMETRYPARTNER(8)`` would all actually be the same part.
+---
+---Example::
+---
+---    // Print the symmetry group a part is inside:
+---    function print_sym {
+---      parameter a_part.
+---
+---      print a_part + " is in a " + a_part:SYMMETRYCOUNT + "x symmetry set.".
+---
+---      if a_part:SYMMETRAYCOUNT = 1 {
+---        return. // no point in printing the list when its not in a group.
+---      }
+---
+---      if a_part:SYMMETRYTYPE = 0 {
+---        print "  The symmetry is radial.".
+---      } else if a_part:SYMMETRYTYPE = 1 {
+---        print "  The symmetry is mirror.".
+---      } else {
+---        print "  The symmetry is some other weird kind that".
+---        print "  didn't exist back when this example was written.".
+---      }
+---
+---      print "    The Symmetry Group is: ".
+---      for i in range (0, a_part:SYMMETRYCOUNT) {
+---        print "      [" + i + "] " + a_part:SYMMETRYPARTNER(i).
+---      }
+---    }
+---@field symmetrypartner fun(index: number): Part
+---:parameter name: (`string`) Name of the parts
+---:return: `List` of `Part` objects
+---
+---Same as :meth:`Vessel:PARTSNAMED(name)` except that this version
+---doesn't search the entire vessel tree and instead it only searches the
+---branch of the vessel's part tree from the current part down through
+---its children and its children's children and so on.
+---@field partsnamed fun(name: string): List
+---:parameter namePattern: (`string`) Pattern of the name of the parts
+---:return: `List` of `Part` objects
+---
+---Same as :meth:`Vessel:PARTSNAMEDPATTERN(namePattern)` except that this version
+---doesn't search the entire vessel tree and instead it only searches the
+---branch of the vessel's part tree from the current part down through
+---its children and its children's children and so on.
+---@field partsnamedpattern fun(namePattern: string): List
+---:parameter title: (`string`) Title of the parts
+---:return: `List` of `Part` objects
+---
+---Same as :meth:`Vessel:PARTSTITLED(title)` except that this version
+---doesn't search the entire vessel tree and instead it only searches the
+---branch of the vessel's part tree from the current part down through
+---its children and its children's children and so on.
+---@field partstitled fun(title: string): List
+---:parameter titlePattern: (`string`) Patern of the title of the parts
+---:return: `List` of `Part` objects
+---
+---Same as :meth:`Vessel:PARTSTITLEDPATTERN(titlePattern)` except that this version
+---doesn't search the entire vessel tree and instead it only searches the
+---branch of the vessel's part tree from the current part down through
+---its children and its children's children and so on.
+---@field partstitledpattern fun(titlePattern: string): List
+---:parameter name: (`string`) name, title or tag of the parts
+---:return: `List` of `Part` objects
+---
+---Same as :meth:`Vessel:PARTSDUBBED(name)` except that this version
+---doesn't search the entire vessel tree and instead it only searches the
+---branch of the vessel's part tree from the current part down through
+---its children and its children's children and so on.
+---@field partsdubbed fun(name: string): List
+---:parameter namePattern: (`string`) Pattern of the name, title or tag of the parts
+---:return: `List` of `Part` objects
+---
+---Same as :meth:`Vessel:PARTSDUBBEDPATERN(namePattern)` except that this version
+---doesn't search the entire vessel tree and instead it only searches the
+---branch of the vessel's part tree from the current part down through
+---its children and its children's children and so on.
+---@field partsdubbedpattern fun(namePattern: string): List
+---:parameter name: (`string`) Name of the part modules
+---:return: `List` of `PartModule` objects
+---
+---Same as :meth:`Vessel:MODULESNAMED(name)` except that this version
+---doesn't search the entire vessel tree and instead it only searches the
+---branch of the vessel's part tree from the current part down through
+---its children and its children's children and so on.
+---@field modulesnamed fun(name: string): List
+---:parameter tag: (`string`) Tag of the parts
+---:return: `List` of `Part` objects
+---
+---Same as :meth:`Vessel:PARTSTAGGED(tag)` except that this version
+---doesn't search the entire vessel tree and instead it only searches the
+---branch of the vessel's part tree from the current part down through
+---its children and its children's children and so on.
+---@field partstagged fun(tag: string): List
+---:parameter tagPattern: (`string`) Pattern of the tag of the parts
+---:return: `List` of `Part` objects
+---
+---Same as :meth:`Vessel:PARTSTAGGEDPATTERN(tagPattern)` except that this version
+---doesn't search the entire vessel tree and instead it only searches the
+---branch of the vessel's part tree from the current part down through
+---its children and its children's children and so on.
+---@field partstaggedpattern fun(tagPattern: string): List
+---:return: `List` of `Part` objects
+---
+---Same as :meth:`Vessel:ALLTAGGEDPARTS()` except that this version
+---doesn't search the entire vessel tree and instead it only searches the
+---branch of the vessel's part tree from the current part down through
+---its children and its children's children and so on.
+---@field alltaggedparts List
+
+---@class ActiveResource : AggregateResource
+
+---@class Element : Structure
+---Settable.
+---The name of the Element element, is an artifact from the vessel the element belonged to before docking. Cannot be set to an empty `string`.
+---@field name string
+---A unique id
+---@field uid string
+---The parent vessel containing the element.
+---@field vessel Vessel
+---:type: `List` of `Part` objects
+---
+---A List of all the :struct:`parts <Part>` on the Element. ``SET FOO TO SHIP:PARTS.`` has exactly the same effect as ``LIST PARTS IN FOO.``. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
+---@field parts List
+---:type: `List` of `DockingPort` objects
+---
+---A List of all the :struct:`docking ports <DockingPort>` on the Element.
+---@field dockingports List
+---@field decouplers List
+---@field separators List
+---:type: `List` of `AggregateResource` objects
+---
+---A List of all the :struct:`AggregateResources <AggregateResource>` on the element.
+---@field resources List
+
+---@class Atmosphere : Structure
+---The Body that this atmosphere is around - as a STRING NAME, not a Body object.
+---@field body string
+---True if this atmosphere is "real" and not just a dummy placeholder.
+---@field exists boolean
+---True if the air has oxygen and could therefore be used by a jet engine's intake.
+---@field oxygen boolean
+---:type: `number` (atm)
+---
+---Pressure at the body's sea level.
+---
+---Result is returned in Atmospheres.  1.0 Atmosphere = same as Kerbin or Earth.
+---If you prefer to see the answer in KiloPascals, multiply the answer by
+---:global:`Constant:AtmToKPa`.
+---
+---.. warning::
+---    .. versionchanged:: 1.1.0
+---        Previous versions returned this value in KiloPascals by mistake,
+---        which has now been changed to Atmospheres.
+---@field sealevelpressure number
+---:type: `number` (m)
+---
+---The altitude at which the atmosphere is "officially" advertised as ending. (actual ending value differs, see below).
+---@field height number
+---:parameter altitude: The altitude above sea level (in meters) you want to know the pressure for.
+---:type: `number` (atm)
+---
+---Number of Atm's of atmospheric pressure at the given altitude.
+---If you pass in zero, you should get the sea level pressure.
+---If you pass in 10000, you get the pressure at altitude=10,000m.
+---This will return zero if the body has no atmosphere, or if the altitude you
+---pass in is above the max atmosphere altitude for the body.
+---
+---Result is returned in Atmospheres.  1.0 Atmosphere = same as Kerbin or Earth.
+---If you prefer to see the answer in KiloPascals, multiply the answer by
+---:global:`Constant:AtmToKPa`.
+---@field altitudepressure fun(altitude: number): number
+---:acces: Get only
+---
+---The Molecular Mass of the gas the atmosphere is composed of.
+---Units are in kg/mol.
+---`Wikipedia Molar Mass Explanation <https://en.wikipedia.org/wiki/Molar_mass>`_.
+---@field molarmass number
+---The Adiabatic index of the gas the atmosphere is composed of.
+---`Wikipedia Adiabatic Index Explanation <https://en.wikipedia.org/wiki/Heat_capacity_ratio>`_.
+---@field adiabaticindex number
+---The Adiabatic index of the gas the atmosphere is composed of.
+---`Wikipedia Adiabatic Index Explanation <https://en.wikipedia.org/wiki/Heat_capacity_ratio>`_.
+---@field adbidx number
+---:parameter: altitude (`number`) the altitude to query temperature at.
+---
+---Returns an approximate atmosphere temperature on this world at the given altitude.
+---Note that this is only approximate because the temperature will vary depending
+---on the sun position in the sky (i.e. your latitude and what time of day it is).
+---@field altitudetemperature fun(altitude: number): number
+---:parameter: altitude (`number`) the altitude to query temperature at.
+---
+---Returns an approximate atmosphere temperature on this world at the given altitude.
+---Note that this is only approximate because the temperature will vary depending
+---on the sun position in the sky (i.e. your latitude and what time of day it is).
+---@field alttemp fun(altitude: number): number
+
+---@class RGBA : Structure
+---Settable.
+---@field r number
+---Settable.
+---@field red number
+---Settable.
+---@field g number
+---Settable.
+---@field green number
+---Settable.
+---@field b number
+---Settable.
+---@field blue number
+---Settable.
+---@field a number
+---Settable.
+---@field alpha number
+---@field html string
+---@field hex string
+
+---@class Orbitable : Structure
+---Name of this vessel or body.
+---@field name string
+---:type: `number` (deg)
+---
+---.. deprecated:: 0.15
+---
+---   This is only kept here for backward compatibility.
+---   in new scripts you write, use :attr:`OBT:APOAPSIS <Orbit:APOAPSIS>`.
+---   (i.e. use ``SHIP:OBT:APOAPSIS`` instead of ``SHIP:APOAPSIS``,
+---   or use ``MUN:OBT:APOAPSIS`` instead of ``MUN:APOAPSIS``, etc).
+---@field apoapsis number
+---:type: `number` (deg)
+---
+---.. deprecated:: 0.15
+---
+---   This is only kept here for backward compatibility.
+---   in new scripts you write, use :attr:`OBT:PERIAPSIS <Orbit:PERIAPSIS>`.
+---   (i.e. use ``SHIP:OBT:PERIAPSIS`` instead of ``SHIP:PERIAPSIS``).
+---   or use ``MUN:OBT:PERIAPSIS`` instead of ``MUN:PERIAPSIS``, etc).
+---@field periapsis number
+---The `Body` that this object is orbiting. I.e. ``Mun:BODY`` returns ``Kerbin``.
+---@field body Body
+---True if this object has a body it orbits (false only when this object is the Sun, pretty much).
+---@field hasbody boolean
+---True if this object has a body it orbits (false only when this object is the Sun, pretty much).
+---@field hasobt boolean
+---True if this object has a body it orbits (false only when this object is the Sun, pretty much).
+---@field hasorbit boolean
+---pointing straight up away from the SOI body.
+---@field up Direction
+---pointing straight north on the SOI body, parallel to the surface of the SOI body.
+---@field north Direction
+---pointing in the direction of this object's **orbitable-frame** velocity
+---@field prograde Direction
+---pointing in the opposite of the direction of this object's **orbitable-frame** velocity
+---@field retrograde Direction
+---pointing in the direction of this object's **surface-frame** velocity. Note that if this Orbitable is itself a body, remember that this is relative to the surface of the SOI body, not this body.
+---@field srfprograde Direction
+---pointing in the opposite of the direction of this object's **surface-frame** velocity. Note that this is relative to the surface of the SOI body.
+---@field srfretrograde Direction
+---The current single orbit "patch" that this object is on (not the future orbits it might be expected to achieve after maneuver nodes or encounter transitions, but what the current orbit would be if nothing changed and no encounters perturbed the orbit.
+---@field obt Orbit
+---The current single orbit "patch" that this object is on (not the future orbits it might be expected to achieve after maneuver nodes or encounter transitions, but what the current orbit would be if nothing changed and no encounters perturbed the orbit.
+---@field orbit Orbit
+---The position of this object in the :ref:`SHIP-RAW reference frame <ship-raw>`
+---@field position Vector
+---The :struct:`orbitable velocity <OrbitableVelocity>` of this object in the :ref:`SHIP-RAW reference frame <ship-raw>`
+---@field velocity OrbitableVelocity
+---:type: `number` (m)
+---
+---The `number` distance between this object and the center of `SHIP`.
+---@field distance number
+---pointing in the direction of this object from `SHIP`.
+---@field direction Direction
+---:type: `number` (deg)
+---
+---The latitude in degrees of the spot on the surface of the SOI body directly under this object.
+---@field latitude number
+---:type: `number` (deg)
+---
+---The longitude in degrees of the spot on the surface of the SOI body directly under this object. Longitude returned will always be normalized to be in the range [-180,180].
+---@field longitude number
+---:type: `number` (m)
+---
+---The altitude in meters above the *sea level* surface of the SOI body (not the center of the SOI body. To get the true radius of the orbit for proper math calculations remember to add altitude to the SOI body's radius.)
+---@field altitude number
+---A combined structure of the latitude and longitude numbers.
+---@field geoposition GeoCoordinates
+---:type: `List` of `Orbit` "patches"
+---
+---The list of all the orbit patches that this object will transition to, not taking into account maneuver nodes. The zero-th patch of the list is the current orbit.
+---@field patches List
+
+---@class VesselAltitude : Structure
+---@field apoapsis number
+---@field periapsis number
+---@field radar number
+
+---@class AGXAddon : RTAddon
+
+---@class TRAddon : RTAddon
+---**Only gives the correct answer for Trajectries version >= 2.2.0**
+---
+---*For earlier versions, it gives a hardcoded fixed answer, as follows:*
+---
+---- For any Trajectories version earlier than 2.0.0,
+---  this returns the empty string "".
+---- For any Trajectories version at least 2.0.0 but
+---  below 2.2.0, this returns the 'rounded off' answer "2.0.0"
+---  regardless of the precise version number within that range.
+---- If your Trajectories version is at least 2.2.0 or above,
+---  this returns the specific version string correctly.
+---
+---For cases where you need to check for a known minimum Trajectories
+---version, it is probably better to use the specific boolean suffix
+---for that version (for example, :attr:`TRAddon:ISVERTWO`, or
+---:attr:`TRAddon:ISVERTWOTWO` etc.)
+---@field getversion string
+---**Only gives the correct answer for Trajectries version >= 2.0.0**
+---
+---*For earlier versions, it gives a hardcoded fixed answer, as follows:*
+---
+---- For any Trajectories version earlier than 2.0.0,
+---  this returns "0".
+---- If your Trajectories version is at least 2.0.0 or above,
+---  this returns the specific version major value correctly.
+---
+---For cases where you need to check for a known minimum Trajectories
+---version, it is probably better to use the specific boolean suffix
+---for that version (for example, :attr:`TRAddon:ISVERTWO`, or
+---:attr:`TRAddon:ISVERTWOTWO` etc.)
+---@field getversionmajor number
+---**Only gives the correct answer for Trajectries version >= 2.2.0**
+---
+---*For earlier versions, it gives a hardcoded fixed answer, as follows:*
+---
+---- For any Trajectories version below 2.2.0, this returns
+---  "0" regardless of the precise version number within that range.
+---- If your Trajectories version is at least 2.2.0 or above,
+---  this returns the specific version minor value correctly.
+---
+---For cases where you need to check for a known minimum Trajectories
+---version, it is probably better to use the specific boolean suffix
+---for that version (for example, :attr:`TRAddon:ISVERTWO`, or
+---:attr:`TRAddon:ISVERTWOTWO` etc.)
+---@field getversionminor number
+---**Only gives the correct answer for Trajectries version >= 2.2.0**
+---
+---*For earlier versions, it gives a hardcoded fixed answer, as follows:*
+---
+---- For any Trajectories version below 2.2.0, this returns
+---  "0" regardless of the precise version number within that range.
+---- If your Trajectories version is at least 2.2.0 or above,
+---  this returns the specific version patch value correctly.
+---
+---For cases where you need to check for a known minimum Trajectories
+---version, it is probably better to use the specific boolean suffix
+---for that version (for example, :attr:`TRAddon:ISVERTWO`, or
+---:attr:`TRAddon:ISVERTWOTWO` etc.)
+---@field getversionpatch number
+---True if the Trajectories mod is at least version 2.0.0 or above.
+---@field isvertwo boolean
+---True if the Trajectories mod is at least version 2.2.0 or above.
+---@field isvertwotwo boolean
+---True if the Trajectories mod is at least version 2.4.0 or above.
+---@field isvertwofour boolean
+---Estimated impact position.
+---@field impactpos GeoCoordinates
+---True if Trajectories has calculated an impact position for the current `Vessel`. You should always check this before using :attr:`impactPos<TRAddon:IMPACTPOS>`, :attr:`plannedVect<TRAddon:plannedVec>`, :meth:`setTarget<TRAddon:setTarget>`, or :attr:`correctedVect<TRAddon:correctedVec>` to avoid exceptions.
+---@field hasimpact boolean
+---A vector that applies an offset to :attr:`PLANNEDVEC<TRAddon:PLANNEDVEC>`
+---intended to correct the predicted trajectory to impact at the selected
+---target position.  This vector does not use any aerodynamic prediction and
+---is a very simplistic representation.  It is also just a unit vector.  It
+---contains no magnitude information about how far off the selected target is
+---from the predicted impact - just the way the offset points. Accuracy is
+---not guaranteed, but it should at least help determine if you need to
+---pitch the nose up or down.
+---@field correctedvec Vector
+---A vector that applies an offset to :attr:`PLANNEDVEC<TRAddon:PLANNEDVEC>`
+---intended to correct the predicted trajectory to impact at the selected
+---target position.  This vector does not use any aerodynamic prediction and
+---is a very simplistic representation.  It is also just a unit vector.  It
+---contains no magnitude information about how far off the selected target is
+---from the predicted impact - just the way the offset points. Accuracy is
+---not guaranteed, but it should at least help determine if you need to
+---pitch the nose up or down.
+---@field correctedvector Vector
+---Vector pointing the direction your vessel should face to follow the
+---predicted trajectory, based on the angle of attack selected in the
+---Trajectories descent profile.
+---@field plannedvec Vector
+---Vector pointing the direction your vessel should face to follow the
+---predicted trajectory, based on the angle of attack selected in the
+---Trajectories descent profile.
+---@field plannedvector Vector
+---:parameter position: `GeoCoordinates`
+---:return: None
+---
+---Sets the Trajectories target landing position to the given position.
+---@field settarget fun(position: GeoCoordinates)
+---**Did Not Exist in Trajectories before 2.0.0!**
+---
+---*If :attr:`TRAddons:ISVERTWO` is false, using this suffix will cause
+---a runtime error.*
+---
+---The Trajectories Addon can be given a target position.
+---This is true if such a position is set, or false if it is not.
+---@field hastarget boolean
+---**Did Not Exist in Trajectories before 2.2.0!**
+---
+---*If :attr:`TRAddons:ISVERTWOTWO` is false, using this suffix will cause
+---a runtime error.*
+---
+---Gives you Trajectories prediction of how many seconds until impact
+---on ground or water.
+---@field timetillimpact number
+---Settable.
+---**Did Not Exist in Trajectories before 2.2.0!**
+---
+---*If :attr:`TRAddons:ISVERTWOTWO` is false, using this suffix will cause
+---a runtime error.*
+---
+---For Trajectories 2.2.0 True if all the descent profile AoA values are 180.
+---For Trajectories 2.4.0 True if all the descent profile nodes are 'retrograde'
+---
+---You can set this to have the same effect as clicking on retrograde mode
+---in the trajectories GUI. Setting this value to true causes
+---:attr:`TRAddon:PROGRADE` to become false. (They cannot both be
+---true at the same time.)
+---
+---Setting this causes all Trajectories descent profile nodes
+---to be set to 'retrograde' mode if True or 'prograde' mode if False.
+---Also resets all AoA values to 0.
+---@field retrograde boolean
+---Settable.
+---**Did Not Exist in Trajectories before 2.2.0!**
+---
+---*If :attr:`TRAddons:ISVERTWOTWO` is false, using this suffix will cause
+---a runtime error.*
+---
+---For Trajectories 2.2.0 True if all the descent profile AoA values are 0.
+---For Trajectories 2.4.0 True if all the descent profile nodes are 'prograde'
+---
+---You can set this to have the same effect as clicking on prograde mode
+---in the trajectories GUI. Setting this value to true causes
+---:attr:`TRAddon:RETROGRADE` to become false. (They cannot both be
+---true at the same time.)
+---
+---Setting this causes all Trajectories descent profile nodes
+---to be set to 'prograde' mode if True or 'retrograde' mode if False.
+---Also resets all AoA values to 0.
+---@field prograde boolean
+---**Did Not Exist in Trajectories before 2.4.0!**
+---
+---*If :attr:`TRAddons:ISVERTWOFOUR` is false, using this suffix will cause
+---a runtime error.*
+---
+---Returns the Trajectories target position if one is set.
+---@field gettarget GeoCoordinates
+---:parameter None
+---:return: None
+---
+---**Did Not Exist in Trajectories before 2.4.0!**
+---
+---*If :attr:`TRAddons:ISVERTWOFOUR` is false, using this suffix will cause
+---a runtime error.*
+---
+---Clears the Trajectories target position.
+---@field cleartarget fun()
+---:parameter AoA: `number`
+---:return: None
+---
+---**Did Not Exist in Trajectories before 2.4.0!**
+---
+---*If :attr:`TRAddons:ISVERTWOFOUR` is false, using this suffix will cause
+---a runtime error.*
+---
+---Resets all the Trajectories descent profile nodes to the passed AoA value (in Degrees),
+---also sets Retrograde if AoA value is greater than 90 degrees (PI/2 radians)
+---otherwise sets to Prograde.
+---@field resetdescentprofile fun(AoA: number)
+---Settable.
+---:type: :struct:`List<Scalar>`
+---
+---**Did Not Exist in Trajectories before 2.4.0!**
+---
+---*If :attr:`TRAddons:ISVERTWOFOUR` is false, using this suffix will cause
+---a runtime error.*
+---
+---Returns or sets all the Trajectories descent profile AoA values (in Degrees),
+---also sets a node to Retrograde if it's passed AoA is greater than 90 degrees
+---(PI/2 radians)
+---Note. also use with :attr:`TRAddons:DESCENTGRADES` to set a nodes grade
+---if needed and passing AoA values as displayed in the gui with max 90 degrees
+---(PI/2 radians).
+---
+---List<Scalar>(atmospheric entry, high altitude, low altitude, final approach).
+---@field descentangles List
+---Settable.
+---:type: :struct:`List<Boolean>`
+---
+---**Did Not Exist in Trajectories before 2.4.0!**
+---
+---*If :attr:`TRAddons:ISVERTWOFOUR` is false, using this suffix will cause
+---a runtime error.*
+---
+---Returns or sets all the Trajectories descent profile modes,
+---True = AoA, False = Horizon.
+---
+---List<Boolean>(atmospheric entry, high altitude, low altitude, final approach).
+---@field descentmodes List
+---Settable.
+---:type: :struct:`List<Boolean>`
+---
+---**Did Not Exist in Trajectories before 2.4.0!**
+---
+---*If :attr:`TRAddons:ISVERTWOFOUR` is false, using this suffix will cause
+---a runtime error.*
+---
+---Returns or sets all the Trajectories descent profile grades,
+---True = Retrograde, False = Prograde.
+---
+---List<Boolean>(atmospheric entry, high altitude, low altitude, final approach).
+---@field descentgrades List
+
+---@class IRAddon : RTAddon
+---:type: `List` of `IRControlGroup` objects
+---
+---Lists all Servo Groups for the Vessel on which the script is being executed.
+---Example of use::
+---
+---    for g in ADDONS:IR:GROUPS
+---    {
+---        Print g:NAME + " contains " + g:SERVOS:LENGTH + " servos".
+---    }
+---@field groups List
+---:type: `List` of `IRServo` objects
+---
+---Lists all Servos for the Vessel on which the script is being executed.
+---Example of use::
+---
+---    for s in ADDONS:IR:ALLSERVOS
+---    {
+---        print "Name: " + s:NAME + ", position: " + s:POSITION.
+---    }
+---@field allservos List
+---:parameter part: `Part` for which to return servos
+---:type: `List` of `IRServo` objects
+---
+---Lists all Servos found on the given `Part`.
+---@field partservos fun(part: Part): List
+
+---@class IRControlGroup : Structure
+---Settable.
+---:type: :ref:`string <string>`
+---
+---Name of the Control Group (cannot be empty).
+---@field name string
+---Settable.
+---:type: :ref:`scalar <scalar>`
+---
+---Speed multiplier as set in the IR user interface. Avoid setting it to 0.
+---@field speed number
+---Settable.
+---:type: :ref:`Boolean <boolean>`
+---
+---True if Group is expanded in IR UI
+---@field expanded boolean
+---Settable.
+---:type: :ref:`string <string>`
+---
+---Key assigned to forward movement. Can be empty.
+---@field forwardkey string
+---Settable.
+---:type: :ref:`string <string>`
+---
+---Key assigned to reverse movement. Can be empty.
+---@field reversekey string
+---:type: List of `IRServo` objects
+---
+---Lists Servos in the Group. Example of use::
+---
+---    for g in ADDONS:IR:GROUPS
+---    {
+---        Print g:NAME + " contains " + g:SERVOS:LENGTH + " servos:".
+---        for s in g:servos
+---        {
+---            print "    " + s:NAME + ", position: " + s:POSITION.
+---        }
+---    }
+---@field servos List
+---:return: void
+---
+---Commands servos in the group to move in positive direction.
+---@field moveright fun()
+---:return: void
+---
+---Commands servos in the group to move in negative direction.
+---@field moveleft fun()
+---:return: void
+---
+---Commands servos in the group to move to default position.
+---@field movecenter fun()
+---:return: void
+---
+---Commands servos in the group to move to next preset
+---@field movenextpreset fun()
+---:return: void
+---
+---Commands servos in the group to move to previous preset
+---@field moveprevpreset fun()
+---:return: void
+---
+---Commands servos in the group to stop
+---@field stop fun()
+---Returns a Vessel that owns this ServoGroup
+---@field vessel Vessel
+
+---@class IRServo : Structure
+---Settable.
+---:type: :ref:`string <string>`
+---
+---Name of the Control Group (cannot be empty).
+---@field name string
+---:type: :ref:`scalar <scalar>`
+---
+---Unique ID of the servo part (part.flightID).
+---@field uid number
+---Settable.
+---:type: :ref:`Boolean <boolean>`
+---
+---Set Hightlight status of the part.
+---@field highlight boolean
+---:type: :ref:`scalar <scalar>`
+---
+---Current position of the servo.
+---@field position number
+---:type: :ref:`scalar <scalar>`
+---
+---Minimum position for servo as defined by part creator in part.cfg
+---@field mincfgposition number
+---:type: :ref:`scalar <scalar>`
+---
+---Maximum position for servo as defined by part creator in part.cfg
+---@field maxcfgposition number
+---Settable.
+---:type: :ref:`scalar <scalar>`
+---
+---Minimum position for servo, from tweakable.
+---@field minposition number
+---Settable.
+---:type: :ref:`scalar <scalar>`
+---
+---Maximum position for servo, from tweakable.
+---@field maxposition number
+---:type: :ref:`scalar <scalar>`
+---
+---Servo movement speed as defined by part creator in part.cfg
+---@field configspeed number
+---Settable.
+---:type: :ref:`scalar <scalar>`
+---
+---Current Servo speed.
+---@field currentspeed number
+---Settable.
+---:type: :ref:`scalar <scalar>`
+---
+---Servo speed multiplier, from tweakable.
+---@field speed number
+---Settable.
+---:type: :ref:`scalar <scalar>`
+---
+---Servo acceleration multiplier, from tweakable.
+---@field acceleration number
+---:type: :ref:`Boolean <boolean>`
+---
+---True if Servo is moving
+---@field ismoving boolean
+---:type: :ref:`Boolean <boolean>`
+---
+---True if Servo is uncontrollable (ex. docking washer)
+---@field isfreemoving boolean
+---Settable.
+---:type: :ref:`Boolean <boolean>`
+---
+---Servo's locked status, set true to lock servo.
+---@field locked boolean
+---Settable.
+---:type: :ref:`Boolean <boolean>`
+---
+---Servo's inverted status, set true to invert servo's axis.
+---@field inverted boolean
+---:return: void
+---
+---Commands servo to move in positive direction
+---@field moveright fun()
+---:return: void
+---
+---Commands servo to move in negative direction
+---@field moveleft fun()
+---:return: void
+---
+---Commands servo to move to default position
+---@field movecenter fun()
+---:return: void
+---
+---Commands servo to move to next preset
+---@field movenextpreset fun()
+---:return: void
+---
+---Commands servo to move to previous preset
+---@field moveprevpreset fun()
+---:return: void
+---
+---Commands servo to stop
+---@field stop fun()
+---:parameter position: (float) Position to move to
+---:parameter speedMult: (float) Speed multiplier
+---:return: void
+---
+---Commands servo to move to `position` with `speedMult` multiplier.
+---@field moveto fun(position: number, speedMult: number)
+---Returns reference to the `Part` containing servo module. Please note that Part:UID does not equal IRServo:UID.
+---@field part Part
+
+---@class KACAddon : RTAddon
+---:return: List of `KACAlarm` objects
+---
+---List **all** the alarms set up in Kerbal Alarm Clock. Example of use::
+---
+---    for i in ADDONS:KAC:ALARMS
+---    {
+---    	print i:NAME + " - " + i:REMAINING + " - " + i:TYPE+ " - " + i:ACTION.
+---    }
+---@field alarms List
+
+---@class KACAlarm : Structure
+---:type: :ref:`string <string>`
+---
+---Unique identifier of the alarm.
+---@field id string
+---Settable.
+---:type: :ref:`string <string>`
+---
+---Name of the alarm. Displayed in main KAC window.
+---@field name string
+---Settable.
+---:type: :ref:`string <string>`
+---
+---Long description of the alarm. Can be seen when alarm pops or by double-clicking alarm in UI.
+---
+---**Warning**: This field may be reserved in the future version of KAC-KOS integration for automated script execution upon triggering of the alarm.
+---@field notes string
+---Settable.
+---:type: :ref:`string <string>`
+---
+---Should be one of the following
+---
+---  * `MessageOnly` - Message Only-No Affect on warp
+---  * `KillWarpOnly` - Kill Warp Only-No Message
+---  * `KillWarp` - Kill Warp and Message
+---  * `PauseGame` - Pause Game and Message
+---
+---If set incorrectly will log a warning in Debug log and revert to previous or default value.
+---@field action string
+---:type: :ref:`string <string>`
+---
+---Can only be set at Alarm creation.
+---Could be one of the following as per API
+---
+---	* Raw (default)
+---    * Maneuver
+---    * ManeuverAuto
+---    * Apoapsis
+---    * Periapsis
+---    * AscendingNode
+---    * DescendingNode
+---    * LaunchRendevous
+---    * Closest
+---    * SOIChange
+---    * SOIChangeAuto
+---    * Transfer
+---    * TransferModelled
+---    * Distance
+---    * Crew
+---    * EarthTime
+---
+---**Warning**: Unless you are 100% certain you know what you're doing, create only "Raw" AlarmTypes to avoid unnecessary complications.
+---@field type string
+---:type: :ref:`scalar <scalar>`
+---
+---Time remaining until alarm is triggered.
+---@field remaining number
+---Settable.
+---@field time number
+---Settable.
+---@field margin number
+---Settable.
+---:type: :ref:`boolean <boolean>`
+---
+---Should the alarm be repeated once it fires.
+---@field repeat boolean
+---Settable.
+---:type: :ref:`scalar <scalar>`
+---
+---How long after the alarm fires should the next alarm be set up.
+---@field repeatperiod number
+---Settable.
+---:type: :ref:`string <string>`
+---
+---Name of the body the vessel is departing from.
+---@field originbody string
+---Settable.
+---:type: :ref:`string <string>`
+---
+---Name of the body the vessel is arriving to.
+---@field targetbody string
+
+---@class RTAddon : RTAddon
+---:parameter vessel: `Vessel`
+---:return: (`number`) seconds
+---
+---Returns shortest possible delay for `vessel` (Will be less than KSC delay if you have a local command post).
+---@field delay fun(vessel: Vessel): number
+---:parameter vessel: `Vessel`
+---:return: (`number`) seconds
+---
+---Returns delay in seconds from KSC to `vessel`.
+---@field kscdelay fun(vessel: Vessel): number
+---:parameter vessel: `Vessel`
+---:return: `boolean`
+---
+---Returns True if `vessel` has any connection (including to local command posts).
+---@field hasconnection fun(vessel: Vessel): boolean
+---:parameter vessel: `Vessel`
+---:return: `boolean`
+---
+---Returns True if `vessel` has connection to KSC.
+---@field haskscconnection fun(vessel: Vessel): boolean
+---:parameter part: `Part`
+---:return: `boolean`
+---
+---Returns True if `part` has any connection (including to local command posts).
+---@field antennahasconnection fun(part: Part): boolean
+---:parameter vessel: `Vessel`
+---:return: `boolean`
+---
+---Returns True if `vessel` has local control (and thus not requiring a RemoteTech connection).
+---@field haslocalcontrol fun(vessel: Vessel): boolean
+---:return: `List` of `string`
+---
+---Returns names of all RT ground stations
+---@field groundstations List
+
+---@class RTAddonAntennaModule : PartModule
+---@field allfields List
+---@field allfieldnames List
+---@field hasfield fun(param1: string): boolean
+---@field getfield fun(param1: string): any
+---@field setfield fun(param1: string, param2: any)
+
+---@class HIGHLIGHT : Structure
+---Settable.
+---@field color RGBA
+---Settable.
+---@field enabled boolean
+
+---@class SteeringManager : Structure
+---Returns the PIDLoop object responsible for calculating the :ref:`target angular velocity <cooked_omega_pid>` in the pitch direction.  This allows direct manipulation of the gain parameters, and other components of the `PIDLoop` structure.  Changing the loop's `MAXOUTPUT` or `MINOUTPUT` values will have no effect as they are overwritten every physics frame.  They are set to limit the maximum turning rate to that which can be stopped in a :attr:`MAXSTOPPINGTIME` seconds (calculated based on available torque, and the ship's moment of inertia).
+---@field pitchpid PIDLoop
+---Returns the PIDLoop object responsible for calculating the :ref:`target angular velocity <cooked_omega_pid>` in the yaw direction.  This allows direct manipulation of the gain parameters, and other components of the `PIDLoop` structure.  Changing the loop's `MAXOUTPUT` or `MINOUTPUT` values will have no effect as they are overwritten every physics frame.  They are set to limit the maximum turning rate to that which can be stopped in a :attr:`MAXSTOPPINGTIME` seconds (calculated based on available torque, and the ship's moment of inertia).
+---@field yawpid PIDLoop
+---Returns the PIDLoop object responsible for calculating the :ref:`target angular velocity <cooked_omega_pid>` in the roll direction.  This allows direct manipulation of the gain parameters, and other components of the `PIDLoop` structure.  Changing the loop's `MAXOUTPUT` or `MINOUTPUT` values will have no effect as they are overwritten every physics frame.  They are set to limit the maximum turning rate to that which can be stopped in a :attr:`MAXSTOPPINGTIME` seconds (calculated based on available torque, and the ship's moment of inertia).
+---
+---.. note::
+---
+---    The SteeringManager will ignore the roll component of steering
+---    until after both the pitch and yaw components are close to being
+---    correct.  In other words it will try to point the nose of the
+---    craft in the right direction first, before it makes any attempt
+---    to roll the craft into the right orientation.  As long as the
+---    pitch or yaw is still far off from the target aim, this PIDloop
+---    won't be getting used at all.
+---@field rollpid PIDLoop
+---Returns true if the SteeringManager is currently controlling the vessel steering.
+---@field enabled boolean
+---Returns direction that the is currently being targeted.  If steering is locked to a vector, this will return the calculated direction in which kOS chose an arbitrary roll to go with the vector.  If steering is locked to "kill", this will return the vessel's last facing direction.
+---@field target Direction
+---:return: none
+---
+---Resets the integral sum to zero for all six steering PID Loops.
+---@field resetpids fun()
+---:return: none
+---
+---Resets the various tuning parameters of the `SteeringManager` to
+---their default values as if the ship had just been loaded.  This internally
+---will also call :meth:`SteeringManager:RESETPIDS`.
+---@field resettodefault fun()
+---Settable.
+---Setting this suffix to true will cause the steering manager to display graphical vectors (see `VecDraw`) representing the forward, top, and starboard of the facing direction, as well as the world x, y, and z axis orientation (centered on the vessel).  Setting to false will hide the vectors, as will disabling locked steering.
+---@field showfacingvectors boolean
+---Settable.
+---Setting this suffix to true will cause the steering manager to display graphical vectors (see `VecDraw`) representing the current and target angular velocities in the pitch, yaw, and roll directions.  Setting to false will hide the vectors, as will disabling locked steering.
+---@field showangularvectors boolean
+---Settable.
+---Setting this suffix to true will cause the steering manager to clear the terminal screen and print steering data each update.
+---@field showsteeringstats boolean
+---Settable.
+---Setting this suffix to true will cause the steering manager log the data from all 6 PIDLoops calculating target angular velocity and target torque.  The files are stored in the `[KSP Root]\GameData\kOS\Plugins\PluginData\kOS` folder, with one file per loop and a new file created for each new manager instance (i.e. every launch, every revert, and every vessel load).  These files can grow quite large, and add up quickly, so it is recommended to only set this value to true for testing or debugging and not normal operation.
+---@field writecsvfiles boolean
+---Settable.
+---Represents the settling time for the :ref:`PID calculating pitch torque based on target angular velocity <cooked_torque_pid>`.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the pitch direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).
+---@field pitchts number
+---Settable.
+---Represents the settling time for the :ref:`PID calculating yaw torque based on target angular velocity <cooked_torque_pid>`.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the yaw direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).
+---@field yawts number
+---Settable.
+---Represents the settling time for the :ref:`PID calculating roll torque based on target angular velocity <cooked_torque_pid>`.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the roll direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).
+---@field rollts number
+---Settable.
+---DEFAULT VALUE: 0.0002
+---
+---Tweaking this value can help make the controls stop wiggling so fast.
+---
+---You cannot set this value higher than
+---:attr:`SteeringManager:TORQUEEPSILONMAX`.
+---If you attempt to do so, then
+---:attr:`SteeringManager:TORQUEEPSILONMAX` will be increased to match
+---the value just set :attr:`SteeringManager:TORQUEEPSILONMIN` to.
+---
+---To see how to use this value, look at the description of
+---:attr:`SteeringManager:TORQUEEPSILONMAX` below, which
+---has the full documentation about how these two values, Min and Max,
+---work together.
+---@field torqueepsilonmin number
+---Settable.
+---DEFAULT VALUE: 0.001
+---
+---Tweaking this value can help make the controls stop wiggling so fast.
+---If you have problems wasting too much RCS propellant because kOS
+---"cares too much" about getting the rotation rate exactly right and is
+---wiggling the controls unnecessarily when rotating toward a new direction,
+---setting thie value a bit higher can help.
+---
+---You cannot set this value lower than
+---:attr:`SteeringManager:TORQUEEPSILONMIN`.
+---If you attempt to do so, then
+---:attr:`SteeringManager:TORQUEEPSILONMIN` will be decreased to match
+---the value just set :attr:`SteeringManager:TORQUEEPSILONMAX` to.
+---
+---**HOW IT WORKS:**
+---
+---If the error in the desired rotation rate is smaller than the current epsilon,
+---then the PID that calculates desired torque will ignore that error and not
+---bother correcting it until it gets bigger.  The actual epsilon value used
+---in the steering manager's internal PID controller is always something between 
+---:attr:`SteeringManager:TORQUEEPSILONMIN`.
+---and
+---:attr:`SteeringManager:TORQUEEPSILONMAX`.
+---It varies between these two values depending on whether the
+---vessel is currently rotating at near the maximum rotation rate
+---the SteeringManager allows (as determined by
+---:attr:`SteeringManager:MAXSTOPPINGTIME`) or whether it's quite far
+---from its maximum rotation rate.
+---:attr:`SteeringManager:TORQUEEPSILONMAX` is used when the vessel is
+---at it's maximum rotation rate (i.e. it's coasting around to a new
+---orientation and shouldn't pointlessly spend RCS fuel trying to hold
+---that angular velocity precisely).
+---:attr:`SteeringManager:TORQUEEPSILONMIN` is used when the vessel is
+---not trying to rotate at all and is supposed to be using the steering
+---just to hold the aim at a standstill.  In between these two states,
+---it uses a value partway between the two, linearly interpolated between
+---them.
+---
+---If you desire a constant epsilon, set both the min and max values to the
+---same value.
+---@field torqueepsilonmax number
+---Settable.
+---:type: `number` (s)
+---
+---This value is used to limit the turning rate when :ref:`calculating target angular velocity <cooked_omega_pid>`.  The ship will not turn faster than what it can stop in this amount of time.  The maximum angular velocity about each axis is calculated as: (max angular velocity) = MAXSTOPPINGTIME * (available torque) / (moment of inertia).
+---
+---.. note::
+---
+---    This setting affects all three of the :ref:`rotational velocity PID's <cooked_omega_pid>` at once (pitch, yaw, and roll), rather than affecting the three axes individually one at a time.
+---@field maxstoppingtime number
+---:type: `number` (deg)
+---
+---The angle between the ship's facing direction forward vector and the target direction's forward.  This is the combined pitch and yaw error.
+---@field angleerror number
+---:type: `number` (deg)
+---
+---The pitch angle between the ship's facing direction and the target direction.
+---@field pitcherror number
+---:type: `number` (deg)
+---
+---The yaw angle between the ship's facing direction and the target direction.
+---@field yawerror number
+---:type: `number` (deg)
+---
+---The roll angle between the ship's facing direction and the target direction.
+---@field rollerror number
+---Settable.
+---:type: `number` (kNm)
+---
+---You can set this value to provide an additive bias to the calculated available pitch torque used in the pitch :ref:`torque PID <cooked_torque_pid>`. (available torque) = ((calculated torque) + PITCHTORQUEADJUST) * PITCHTORQUEFACTOR.
+---@field pitchtorqueadjust number
+---Settable.
+---:type: `number` (kNm)
+---
+---You can set this value to provide an additive bias to the calculated available yaw torque used in the yaw :ref:`torque PID <cooked_torque_pid>`. (available torque) = ((calculated torque) + YAWTORQUEADJUST) * YAWTORQUEFACTOR.
+---@field yawtorqueadjust number
+---Settable.
+---:type: `number` (kNm)
+---
+---You can set this value to provide an additive bias to the calculated available roll torque used in the roll :ref:`torque PID <cooked_torque_pid>`. (available torque) = ((calculated torque) + ROLLTORQUEADJUST) * ROLLTORQUEFACTOR.
+---@field rolltorqueadjust number
+---Settable.
+---:type: `number` (kNm)
+---
+---You can set this value to provide an multiplicative factor bias to the calculated available pitch torque used in the :ref:`torque PID <cooked_torque_pid>`. (available torque) = ((calculated torque) + PITCHTORQUEADJUST) * PITCHTORQUEFACTOR.
+---@field pitchtorquefactor number
+---Settable.
+---:type: `number` (kNm)
+---
+---You can set this value to provide an multiplicative factor bias to the calculated available yaw torque used in the :ref:`torque PID <cooked_torque_pid>`. (available torque) = ((calculated torque) + YAWTORQUEADJUST) * YAWTORQUEFACTOR.
+---@field yawtorquefactor number
+---Settable.
+---:type: `number` (kNm)
+---
+---You can set this value to provide an multiplicative factor bias to the calculated available roll torque used in the :ref:`torque PID <cooked_torque_pid>`. (available torque) = ((calculated torque) + ROLLTORQUEADJUST) * ROLLTORQUEFACTOR.
+---@field rolltorquefactor number
+---@field averageduration number
+---Settable.
+---:type: `number` (deg)
+---
+---The maximum value of :attr:`ANGLEERROR<SteeringManager:ANGLEERROR>` for
+---which kOS will attempt to respond to error along the roll axis.  If this
+---is set to 5 (the default value), the facing direction will need to be within
+---5 degrees of the target direction before it actually attempts to roll the
+---ship.  Setting the value to 180 will effectivelly allow roll control at any
+---error amount.  When :attr:`ANGLEERROR<SteeringManager:ANGLEERROR>` is
+---greater than this value, kOS will only attempt to kill all roll angular
+---velocity.  The value is clamped between 180 and 1e-16.
+---@field rollcontrolanglerange number
+
+---@class Archive : Volume
+
+---@class FileContent : Structure
+---Length of the file.
+---@field length number
+---True if the file is empty
+---@field empty boolean
+---Type of the content as a string. Can be one of the following:\
+---
+---TOOSHORT
+---    Content too short to establish a type
+---
+---ASCII
+---    A file containing ASCII text, like the result of a LOG command.
+---
+---KSM
+---    A type of file containing KerboMachineLanguage compiled code, that was created from the :ref:`COMPILE command <compiling>`.
+---
+---BINARY
+---    Any other type of file.
+---@field type string
+---Contents of the file decoded using UTF-8 encoding
+---@field string string
+---Contents of the file as a list of bytes. Each item in the list is a number between 0 and 255 representing a single byte from the file.
+---@field binary List
+---Iterates over the lines of a file
+---@field iterator Iterator
+
+---@class LocalVolume : Volume
+
+---@class VolumeDirectory : VolumeItem
+---@field iterator Iterator
+---An alias for :meth:`LEXICON`. It's slightly wrong that a method called "List"
+---returns a Lexicon instead of a List, but it has been that way long enough that
+---now for backward compatibility, the name "List" had to remain as an alias
+---for this method.
+---@field list Lexicon
+---An alias for :meth:`LEXICON`. It's slightly wrong that a method called "List"
+---returns a Lexicon instead of a List, but it has been that way long enough that
+---now for backward compatibility, the name "List" had to remain as an alias
+---for this method.
+---@field lexicon Lexicon
+---An alias for :meth:`LEXICON`. It's slightly wrong that a method called "List"
+---returns a Lexicon instead of a List, but it has been that way long enough that
+---now for backward compatibility, the name "List" had to remain as an alias
+---for this method.
+---@field lex Lexicon
+
+---@class Volume : Structure
+---Free space left on the volume
+---@field freespace number
+---Total space on the volume
+---@field capacity number
+---Settable.
+---Gets or sets volume name. This name can be used instead of the volumeId with some :ref:`file and volume-related commands<files>`
+---@field name string
+---True if the name of this volume can be changed. Currently only the name of the archive can't be changed.
+---@field renameable boolean
+---Amount of power consumed when this volume is set as the current volume
+---@field powerrequirement number
+---Returns volume's root directory
+---@field root VolumeDirectory
+---:return: `boolean`
+---
+---Returns true if the given file or directory exists. This will also return true when the given file does not exist, but there is a file with the same name and `.ks` or `.ksm` extension added.
+---Use ``Volume:FILES:HASKEY(name)`` to perform a strict check.
+---
+---Paths passed as the argument to this command should not contain a volume id or name and should not be relative.
+---@field exists fun(path: string): boolean
+---:type: `Lexicon` of `VolumeItem`
+---
+---List of files and directories on this volume. Keys are the names of all items on this volume and values are the associated `VolumeItem` structures.
+---@field files Lexicon
+---:return: `VolumeFile`
+---
+---Creates a file under the given path and returns `VolumeFile`. It will fail if the file already exists.
+---
+---Paths passed as the argument to this command should not contain a volume id or name and should not be relative.
+---@field create fun(path: string): VolumeFile
+---:return: `VolumeDirectory`
+---
+---Creates a directory under the given path and returns `VolumeDirectory`. It will fail if the directory already exists.
+---
+---Paths passed as the argument to this command should not contain a volume id or name and should not be relative.
+---@field createdir fun(path: string): VolumeDirectory
+---:return: `VolumeItem` or `boolean` false
+---
+---Opens the file or directory pointed to by the given path and returns `VolumeItem`. It will return a boolean false if the given file or directory does not exist.
+---
+---Paths passed as the argument to this command should not contain a volume id or name and should not be relative.
+---@field open fun(path: string): any
+---:return: boolean
+---
+---Deletes the given file or directory (recursively). It will return true if the given item was successfully deleted and false otherwise.
+---
+---Paths passed as the argument to this command should not contain a volume id or name and should not be relative.
+---@field delete fun(path: string): boolean
+
+---@class VolumeItem : Structure
+---Name of the item, including the extension.
+---@field name string
+---Size of the item, in bytes.
+---@field size number
+---Item extension (part of the name after the last dot).
+---@field extension string
+---True if this item is a file
+---@field isfile boolean
+
+---@class Path : Structure
+---Volume this path belongs to.
+---@field volume Volume
+---:type: `List` of `string`
+---
+---List of segments this path contains. Segments are parts of the path separated by `/`. For example path `0:/directory/subdirectory/script.ks` contains the following segments:
+---`directory`, `subdirectory` and `script.ks`.
+---@field segments List
+---Number of this path's segments.
+---@field length number
+---Name of file or directory this path points to (same as the last segment).
+---@field name string
+---True if the last segment of this path has an extension.
+---@field hasextension boolean
+---Extension of the last segment of this path.
+---@field extension string
+---Returns a new path that points to the root directory of this path's volume.
+---@field root Path
+---Returns a new path that points to this path's parent. This method will throw an exception if this path does not have a parent (its length is 0).
+---@field parent Path
+---:parameter path: `Path` path to check
+---:return: `boolean`
+---
+---Returns true if `path` is the parent of this path.
+---@field isparent fun(path: Path): boolean
+---:parameter name: `string` new path name
+---:return: `Path`
+---
+---Will return a new path with the value of the last segment of this path replaced (or added if there's none).
+---@field changename fun(name: string): Path
+---:parameter extension: `string` new path extension
+---:return: `Path`
+---
+---Will return a new path with the extension of the last segment of this path replaced (or added if there's none).
+---@field changeextension fun(extension: string): Path
+---:parameter name: `string` segments to add
+---:return: `Path`
+---
+---Returns a new path that represents the file or directory
+---that would be reached by starting from this path and then
+---appending the path elements given in the list.
+---
+---e.g::
+---
+---    set p to path("0:/home").
+---    set p2 to p:combine("d1", "d2", "file.ks").
+---    print p2
+---    0:/home/d1/d2/file.ks
+---@field combine fun(...: any): Path
+
+---@class VolumeFile : VolumeItem
+---:return: `FileContent`
+---
+---Reads the content of the file.
+---@field readall FileContent
+---:return: `boolean`
+---
+---Writes the given string or a `FileContent` to the file. Returns true if successful (lack of space on the `Volume` can cause a failure).
+---@field write fun(String: any): boolean
+---:return: `boolean`
+---
+---Writes the given string followed by a newline to the file. Returns true if successful.
+---@field writeln fun(string: string): boolean
+---:return: None
+---
+---Clears this file
+---@field clear fun()
+
+---@class Connection : Structure
+---True if the connection is opened and messages can be sent.
+---
+---- For CPU connections:
+---    - This will be true if the destination CPU belongs to the same vessel
+---      as the current CPU, and will be false otherwise.
+---- For Vessel connections:
+---    - If you are using Stock KSP and chose the PermitAll connectivity
+---      manager, then this will aways return true.
+---    - If you are using Stock KSP and chose the CommNet connectivity
+---      manager, then this will obey the rules of the stock CommNet system
+---      for whether a connection path exists between the source and
+---      destination vessel.
+---    - If you are using the RemoteTech and chose the RemoteTech
+---      connectivity manager, then this will obey the rules of the
+---      RemoteTech mod for whether a connection path exists between the
+---      source and destination vessel.
+---
+---The connection has to be opened only in the moment of sending the message in order for it to arrive. If connection is lost after the message was sent,
+---but before it arrives at its destination, this will have no effect on whether the message will reach its destination or not.
+---
+---.. note::
+---    **Debris Vessels**: If you are using the KSP Stock CommNet system,
+---    be aware that it never includes "debris" type vessels in the
+---    communications network.  ``ISCONNECTED`` will always be false
+---    for any vessel of type "debris", no matter what antennas it
+---    may have on it.
+---
+--- .. note::
+---    **ISCONNECTION fails just after scene load**: If you have just loaded
+---    the scene, such as after a vessel switch, then both the Stock CommNet
+---    system and the RemoteTech mod often have a slight delay before they
+---    "find" all the communication paths that exist.  This means that
+---    ISCONNECTION will often return ``False`` for the first second or two
+---    after a scene load, even when the correct answer should be ``True``.
+---    It will be unable to report the correct answer until a second or so
+---    later after the communications paths have all been discovered by the
+---    game.  Because of this, if you have a boot script that depends on an
+---    accurate answer for ISCONNECTED, it's a good idea for that boot
+---    script to start with a short wait of a second or two at the top of
+---    the script.
+---@field isconnected boolean
+---The number of seconds that it will take for messages sent using this connection to arrive at their destination. This value will be equal to -1 if connection is not opened.
+---
+---- For CPU connections:
+---	- This will be always equal to 0 if the destination CPU belongs
+---	  to the same vessel as the current CPU.  Otherwise it will be
+---	  equal to -1 as no such connection is allowed.
+---- For vessel connections:
+---	- If you are using the PermitAll Connectivity Manager, then this
+---	  will always be zero, as messages arrive instantly.
+---	- If you are using the stock CommNet Connectivirty Manager, then this
+---	  will always be zero, as stock CommNet does not impose any delay
+---	  from radio signals.
+---	- If you are using the RemoteTech Connectivity Manager, then this
+---	  will report RemoteTech's signal delay along the path being used
+---	  to form the connection.  RemoteTech calculates the number of 
+---	  seconds of delay due radio signals traveling at the speed of light,
+---	  which can be quite significant when dealing with interplanetary
+---	  distances.
+---@field delay number
+---:parameter message: `any`
+---:return: (`boolean`) true if the message was successfully sent.
+---
+---Send a message using this connection. Any serializable structure or a primitive (`string`, `number` or `boolean`) can be given as an argument.
+---It is always worth checking the return value of this function. A returned false value would indicate that the message was not sent for some reason.
+---This method will fail to send the message and return false if :attr:`Connection:ISCONNECTED` is false.
+---@field sendmessage fun(message: any): boolean
+---:type: `Vessel` or `kOSProcessor`
+---
+---Destination of this connection. Will be either a vessel or a processor.
+---@field destination any
+
+---@class BuiltinDelegate : Delegate
+
+---@class List : Collection
+---Returns a new list that contains the same thing as the old list.
+---@field copy List
+---:parameter item: (any type) item to be added
+---
+---Appends the new value given to the end of the list.
+---@field add fun(item: any)
+---:parameter index: (integer) position in list (starting from zero)
+---:parameter item: (any type) item to be added
+---
+---Inserts a new value at the position given, pushing all the other values in the list (if any) one spot to the right.
+---@field insert fun(index: number, item: any)
+---:parameter index: (integer) position in list (starting from zero)
+---
+---Remove the item from the list at the numeric index given, with counting starting at the first item being item zero
+---@field remove fun(index: number)
+---:parameter index: (integer) starting index (from zero)
+---:parameter length: (integer) resulting length of returned `List`
+---:return: `List`
+---
+---Returns a new list that contains a subset of this list starting at the given index number, and running for the given length of items.
+---@field sublist fun(index: number, length: number): List
+---:parameter separator: (string) separator that will be inserted between the list items
+---:return: `string`
+---
+---Returns a string created by converting each element of the array to a string, separated by the given separator.
+---@field join fun(separator: string): string
+---This is just an alias for :meth:`FIND(item)`.
+---@field indexof fun(item: any): number
+---This is just an alias for :meth:`FIND(item)`.
+---@field find fun(item: any): number
+---This is just an alias for :meth:`FINDLAST(item)`.
+---@field lastindexof fun(item: any): number
+---This is just an alias for :meth:`FINDLAST(item)`.
+---@field findlast fun(item: any): number
+
+---@class Boolean : Structure
+
+---@class NoDelegate : UserDelegate
+
+---@class Structure
+---When issuing the command ``PRINT aaa.``, the variable ``aaa`` gets
+---converted to a string and then the string is shown on the screen.
+---This suffix universally lets you get that string version of any item,
+---rather than showing it on the screen.
+---@field tostring string
+---:parameter name: `string` name of the suffix being tested for
+---Given the name of a suffix, returns true if the object has a suffix
+---by that name.  For example, if you have a variable that might be a
+---:struct:`vessel <vessel>`, or might be a :struct:`Body <body>`,
+---then this example::
+---
+---    print thingy:hassuffix("maxthrust").
+---
+---would print ``True`` if ``thingy`` was a vessel of some sort, but
+---``False`` if ``thingy`` was a body, because there exists a maxthrust
+---suffix for vessels but not for bodies.
+---
+---When searching for suffix names, the search is performed in a
+---case-insensitive way.  Kerboscript cannot distinguish ":AAA"
+---and ":aaa" as being two different suffixes.  In kerboscript,
+---they'd be the same suffix.
+---
+---(Note that because a `Lexicon` can use a special
+---:ref:`Lexicon suffix syntax <lexicon_suffix>`, it will also
+---return true for suffix-usable keys when you call its
+---HASSUFFIX method.)
+---@field hassuffix fun(name: string): boolean
+---:type: :struct:`List <list>` of :struct:`strings <string>`
+---
+---Returns a list of all the string names of the suffixes that can
+---be used by the thing you call it on.  As of this release, no
+---information is shown about the parameters the suffix expects, or
+---about the return value it gives.  All you see is the suffix names.
+---
+---If this object's type is inherited from other types (for example, a
+---:struct:`Body <body>` is also a kind of :struct:`Orbitable <orbitable>`.)
+---then what you see here contains the list of all the suffixes from the base
+---type as well.  (Therefore the suffixes described here on this very page
+---always appear in the list for any type.)
+---
+---Note, for some objects, like Vessels, this can be a rather long list.
+---
+---The list is returned sorted in alphabetical order.
+---
+---Example::
+---
+---    set v1 to V(12,41,0.1). // v1 is a vector
+---    print v1:suffixnames.
+---    List of 14 items:
+---    [0] = DIRECTION
+---    [1] = HASSUFFIX
+---    [2] = ISSERIALIZABLE
+---    [3] = ISTYPE
+---    [4] = MAG
+---    [5] = NORMALIZED
+---    [6] = SQRMAGNITUDE
+---    [7] = SUFFIXNAMES
+---    [8] = TOSTRING
+---    [9] = TYPENAME
+---    [10] = VEC
+---    [11] = X
+---    [12] = Y
+---    [13] = Z
+---
+---(Note that because a `Lexicon` can use a special
+---:ref:`Lexicon suffix syntax <lexicon_suffix>`, it will also
+---include all of its suffix-usable keys when you call its
+---SUFFIXNAMES method.)
+---@field suffixnames List
+---Not all types can be saved using the built-in serialization function
+---:ref:`WRITEJSON <writejson>`.  For those that can, values of that
+---type will return ``True`` for this suffix, otherwise it returns ``False``.
+---@field isserializable boolean
+---Gives the name of the type of the object, in kOS terminology.
+---
+---Type names correspond to the types mentioned throughout these
+---documentation pages, at the tops of the tables that list
+---suffixes.
+---
+---Examples::
+---
+---    set x to 1.
+---    print x:typename
+---    Scalar
+---
+---    set x to 1.1.
+---    print x:typename
+---    Scalar
+---
+---    set x to ship:parts[2].
+---    print x:typename
+---    Part
+---
+---    set x to Mun.
+---    print x:typename
+---    Body
+---
+---The kOS types described in these documentaion pages correspond
+---one-to-one with underlying types in the C# code the implements
+---them.  However they don't have the same name as the underlying 
+---C# names.  This returns an abstraction of the C# name.  There
+---are a few places in the C# code where an error message will 
+---mention the C# type name instead of the kOS type name.  This is
+---an issue that might be resolved in a later release.
+---@field typename string
+---:Parameter name: string name of the type being checked for
+---This is ``True`` if the value is of the type mentioned in the name, or
+---if it is a type that is derived from the type mentioned in the name.
+---Otherwise it is ``False``.
+---
+---Example::
+---
+---    set x to SHIP.
+---    print x:istype("Vessel").
+---    True
+---    print x:istype("Orbitable").
+---    True
+---    print x:istype("Structure").
+---    True.
+---    print x:istype("Body").
+---    False
+---    print x:istype("Vector").
+---    False
+---    print x:istype("Some bogus type name that doesn't exist").
+---    False
+---
+---The type name is searched in a case-insensitive way.
+---@field istype fun(name: string): boolean
+---Gives a string describing the typename of this value, and the
+---typename of the type this value is inherited from, and the typename
+---of the type that type is inherited from, etc all the way to 
+---this root type of ``Structure`` that all values share.
+---
+---Example::
+---
+---    set x to SHIP.
+---    print x:inheritance.
+---    Vessel derived from Orbitable derived from Structure
+---
+---(The kOS types described in that string are an abstraction of the
+---underlying C# names in the mod's implementation, and a few of the
+---C# types the mod uses to abstract a few things are skipped along
+---the way, as they are types the script code can't see directly.)
+---@field inheritance string
+
+---@class Iterator : Structure
+---:returns: `boolean`
+---
+---Call this to move the iterator to the next item in the list. Returns true if there is such an item, or false if no such item exists because it's already at the end of the list.
+---@field next boolean
+---Returns true if the iterator is at the end of the list and therefore cannot be "NEXTed", false otherwise.
+---@field atend boolean
+---:type: `number` (integer)
+---
+---Returns the numerical index of how far you are into the list, starting the counting at 0 for the first item in the list. The last item in the list is numbered N-1, where N is the number of items in the list.
+---
+---.. note::
+---
+---    If you have just created the ITERATOR, then the value of :attr:`Iterator:INDEX` is -1. It only becomes 0 after the first call to :meth:`Iterator:NEXT`.
+---@field index number
+---Returns the thing stored at the current position in the list.
+---@field value any
+
+---@class Version : Structure
+---@field major number
+---@field minor number
+---@field patch number
+---@field build number
+
+---@class ConfigKey : Structure
+
+---@class Lexicon : Structure
+---Removes all of the pairs from the lexicon. Making it empty.
+---@field clear fun()
+---Returns a List of the keys stored in this lexicon.
+---@field keys List
+---:parameter key: (any type) 
+---:return: `boolean`
+---
+---Returns true if the lexicon contains the provided key
+---@field haskey fun(key: any): boolean
+---:parameter key: (any type) 
+---:return: `boolean`
+---
+---Returns true if the lexicon contains the provided value
+---@field hasvalue fun(key: any): boolean
+---Returns a List of the values stored in this lexicon.
+---@field values List
+---Returns a new lexicon that contains the same set of pairs as this lexicon.
+---Note that this is a "shallow" copy, meaning that if there is a value in
+---the list that refers to, for example, another Lexicon, or a Vessel, or
+---a Part, the new copy will still be referring to the same object as the
+---original copy in that value.
+---@field copy Lexicon
+---Returns the number of pairs in the lexicon.
+---@field length number
+---:parameter key: the keyvalue of the pair to be removed
+---
+---Remove the pair with the given key from the lexicon.
+---@field remove fun(key: any): boolean
+---:parameter key: (any type) a unique key
+---:parameter value: (any type) a value that is to be associated to the key
+---
+---Adds an additional pair to the lexicon.
+---@field add fun(key: any, value: any)
+---Returns a string containing a verbose dump of the lexicon's contents.
+---
+---The difference between a DUMP and just the normal printing of a 
+---Lexicon is in whether or not it recursively shows you the contents
+---of every complex object inside the Lexicon.
+---
+---i.e::
+---
+---    // Just gives a shallow list:
+---    print mylexicon.
+---    
+---    // Walks the entire tree of contents, descending down into
+---    // any Lists or Lexicons that are stored inside this Lexicon:
+---    print mylexicon:dump.
+---@field dump string
+---Settable.
+---The case sensitivity behaviour of the lexicon when the keys are strings.
+---By default, all kerboscript lexicons use case-insensitive keys, at
+---least for those keys that are string types, meaning that
+---mylexicon["AAA"] means the same exact thing as mylexicon["aaa"].  If
+---you do not want this behaviour, and instead want the key "AAA" to be
+---different from the key "aaa", you can set this value to true.
+---
+---Be aware, however, that if you change this, it has the side effect
+---of *clearing out* the entire contents of the lexicon.  This is done so
+---as to avoid any potential clashes when the rules about what constitutes
+---a duplicate key changed after the lexicon was already populated.
+---Therefore you should probably only set this on a brand new lexicon,
+---right after you've created it, and never change it after that.
+---@field casesensitive boolean
+---Settable.
+---The case sensitivity behaviour of the lexicon when the keys are strings.
+---By default, all kerboscript lexicons use case-insensitive keys, at
+---least for those keys that are string types, meaning that
+---mylexicon["AAA"] means the same exact thing as mylexicon["aaa"].  If
+---you do not want this behaviour, and instead want the key "AAA" to be
+---different from the key "aaa", you can set this value to true.
+---
+---Be aware, however, that if you change this, it has the side effect
+---of *clearing out* the entire contents of the lexicon.  This is done so
+---as to avoid any potential clashes when the rules about what constitutes
+---a duplicate key changed after the lexicon was already populated.
+---Therefore you should probably only set this on a brand new lexicon,
+---right after you've created it, and never change it after that.
+---@field case boolean
+
+---@class Terminal : Structure
+---Settable.
+---If you read the height it will return a number of character cells tall the terminal
+---is.  If you set this value, it will cause the terminal to resize.
+---If there's multiple terminals connected to the same CPU part via telnet clients,
+---then kOS will attempt to keep them all the same size, and one terminal being resized
+---will resize them all.  (caveat: Some terminal types cannot be resized from the
+---server side, and therefore this doesn't always work in both directions).
+---
+---This setting is different per kOS CPU part.  Different terminal
+---windows can have different settings for this value.
+---@field height number
+---Settable.
+---If you read the width it will return a number of character cells wide the terminal
+---is.  If you set this value, it will cause the terminal to resize.
+---If there's multiple terminals connected to the same CPU part via telnet clients,
+---then kOS will attempt to keep them all the same size, and one terminal being resized
+---will resize them all.  (caveat: Some terminal types cannot be resized from the
+---server side, and therefore this doesn't always work in both directions).
+---
+---This setting is different per kOS CPU part.  Different terminal
+---windows can have different settings for this value.
+---@field width number
+---Settable.
+---If true, then the terminal window is currently set to show
+---the whole screen in reversed color - swapping the background
+---and foreground colors.   Both the telnet terminals and the in-game
+---GUI terminal respond to this setting equally.
+---
+---Note, this setting can also be toggled with a radio-button on the
+---in-game GUI terminal window.
+---
+---This setting is different per kOS CPU part.  Different terminal
+---windows can have different settings for this value.
+---@field reverse boolean
+---Settable.
+---If true, then the terminal window is currently set to show any
+---BEEP characters by silently flashing the screen for a moment
+---(inverting the background/foreground for a fraction of a second),
+---instead of making a sound.
+---
+---Note, this setting can also be toggled with a radio-button on the
+---in-game GUI terminal window.
+---
+---This will only typically affect the in-game GUI terminal window,
+---and **not a telnet client's** terminal window.
+---
+---To affect the window you are using in a telnet session, you will
+---have to use whatever your terminal or terminal emulator's local
+---settings panel has for it.  Most do have some sort of visual
+---beep setting, but it is usually not settable via a control character
+---sequence sent across the connection.  The terminals are designed to
+---assume it's a local user preference that isn't overridable
+---by the software you are running.
+---
+---This setting is different per kOS CPU part.  Different terminal
+---windows can have different settings for this value.
+---@field visualbeep boolean
+---Settable.
+---The same thing as the brightness slider on the terminal GUI.
+---The values range from 0.0 (minimum) to 1.0 (maximum).  At
+---zero, the effect is to entirely hide the letters altogether.
+---@field brightness number
+---Settable.
+---Width of a character cell in the display terminal, in pixels.
+---
+---Please note that this value is not settable anymore.  It
+---can only be changed as a side-effect of changing the 
+---:attr:`CHARHEIGHT`.  This is because the font is in
+---charge of choosing the ratio between a letter's height and
+---its width.  You can't force the font to render a letter
+---at a different aspect ratio than it wants to.
+---@field charwidth number
+---Settable.
+---Height of a character cell in the display terminal, in pixels.
+---The value is forced to remain in the range [4..24] and be
+---divisible by 2.  If you try to set it to any other value, it
+---will snap to the allowed range and increment.
+---@field charheight number
+---@field resizewatchers UniqueSet
+---This gives you a `TerminalInput` structure, which can be
+---used to read user's input into the kOS terminal.
+---@field input TerminalInput
+
+---@class Delegate : Structure
+---@field call fun(...: any): any
+---@field bind fun(...: any): Delegate
+---@field isdead boolean
+
+---@class Constant : Structure
+---Newton's Gravitational Constant that the game's planetary
+---bodies are implying in their configuration data.
+---(6.67384E-11 as of the last update to these documents).
+---
+---Note, the stock KSP game never technically records a value
+---for G in its data.  kOS derives this value by calculating it
+---based on the Sun's Mass and its Gravitational Parameter.  It
+---is possible for a mod (or perhaps a future release of KSP, if
+---mistakes were made) to define a universe in which Newton's
+---Gravitational Constant, G, isn't actually constant at all
+---within that game universe, and instead varies from one sphere
+---of influence to the next.  Such a universe would be breaking
+---some laws of physics by a lot, but it is technically possible
+---in the game's data model.  Due to this strange feature in
+---the game's data model, it is probably safer to always have
+---your scripts use the body's Mu in your formulas instead of
+---explicitly doing mass*G to derive it.
+---
+---Do NOT confuse this with ``Constant:g0`` below.
+---
+---Example::
+---
+---    PRINT "Gravitational parameter of Kerbin, calculated:".
+---    PRINT constant:G * Kerbin:Mass.
+---    PRINT "Gravitational parameter of Kerbin, hardcoded:".
+---    PRINT Kerbin:Mu.
+---    PRINT "The above two numbers had *better* agree.".
+---    PRINT "If they do not, then your solar system is badly configured.".
+---@field g number
+---Standard value the game uses for acceleration due to
+---gravity at sea level on Earth.  (9.80655 m/s^2 as
+---of the last update to these documents).
+---
+---Do NOT confuse this with ``Constant:G`` above.
+---
+---The place where this matters the most is in ISP
+---calculations.  The rocket equation using ISP 
+---contains an inherent conversion from mass to weight
+---that basically means, "what would this mass of fuel
+---have weighed at g0?".  Some kind of official standard
+---value of g0 is needed to use ISP properly to predict
+---how much fuel will be burned in a scenario.
+---
+---In pretty much any other calculation you do in your kOS
+---scripts, other than when using ISP in the Rocketry Equation,
+---you should probably not use g0 and instead calculate your
+---local gravity more precisely based on your actual radius to
+---the body center.  Not only because this is more accurate, but
+---because the g0 you see here is NOT the g0 you would actually
+---have on Kerbin's sea level.  It's the g0 on Earth, which is
+---what the game's ISP numbers are using.  Kerbin's sea level
+---g0 is ever so slightly different from Earth's g0 (but not
+---by much.)
+---
+---::
+---
+---    PRINT "Gravitational parameter of Kerbin is:".
+---    PRINT constant:G * Kerbin:Mass.
+---@field g0 number
+---Natural Log base "e"::
+---
+---    PRINT "e^2 is:".
+---    PRINT constant:e ^ 2.
+---@field e number
+---Ratio of circumference of a circle to its diameter, 3.14159265...
+---
+---::
+---
+---    SET diameter to 10.
+---    PRINT "circumference is:".
+---    PRINT constant:pi * diameter.
+---@field pi number
+---Speed of light in a vacuum, in meters per second.
+---
+---::
+---
+---    SET speed to SHIP:VELOCITY:ORBIT:MAG.
+---    SET percentOfLight to (speed / constant:c) * 100.
+---    PRINT "We're going " + percentOfLight + "% of lightspeed!".
+---
+---.. note::
+---    In Kerbal Space Program, all physics motion is purely Newtonian.
+---    You can go faster than the speed of light provided you have enough
+---    delta-V, and no time dilation effects will occur.  The universe
+---    will behave entirely linearly even at speeds near *c*.
+---
+---This constant is provided mainly for the benefit of people who are
+---playing with the mod "RemoteTech" installed, who may want to perform
+---calculations about signal delays to hypothetical probes.  (Note that
+---if the probe already has a connection, you can
+---:ref:`ask Remotetech directly <remotetech>` what the signal delay is.
+---@field c number
+---A conversion constant.
+---
+---If you have a pressure measurement expressed in atmospheres of pressure,
+---you can multiply it by this to get the equivalent in kiloPascals
+---(kiloNewtons per square meter).
+---
+---::
+---
+---    PRINT "1 atm is:".
+---    PRINT 1 * constant:AtmToKPa + " kPa.".
+---@field atmtokpa number
+---A conversion constant.
+---
+---If you have a pressure measurement expressed in kiloPascals (kiloNewtons
+---per square meter), you can multiply it by this to get the equivalent
+---in atmospheres.
+---
+---::
+---
+---    PRINT "100 kPa is:".
+---    PRINT 100 * constant:KPaToATM + " atmospheres".
+---@field kpatoatm number
+---A conversion constant.
+---
+---If you have an angle measured in degrees, you can multiply it by
+---this to get the equivalent measure in radians.  It is exactly
+---the same thing as saying ``constant:pi / 180``, except the result is
+---pre-recorded as a constant number and thus no division is performed
+---at runtime.
+---
+---::
+---
+---    PRINT "A right angle is:".
+---    PRINT 90 * constant:DegToRad + " radians".
+---@field degtorad number
+---A conversion constant.
+---
+---If you have an angle measured in radians, you can multiply it by
+---this to get the equivalent measure in degrees.  It is exactly
+---the same thing as saying ``180 / constant:pi``, except the result is
+---pre-recorded as a constant number and thus no division is performed
+---at runtime.
+---
+---::
+---
+---    PRINT "A radian is:".
+---    PRINT 1 * constant:RadToDeg + " degrees".
+---@field radtodeg number
+---Avogadro's Constant.
+---
+---This value can be used in calculating atmospheric properties for drag purposes,
+---which can be a rather advanced topic.
+---`(Avogadro's constant Wikipedia Page) <https://en.wikipedia.org/wiki/Avogadro_constant>`_.
+---@field avogadro number
+---Boltzmann Constant.
+---
+---This value can be used in calculating atmospheric properties for drag purposes,
+---which can be a rather advanced topic.
+---`(Boltzmann constant Wikipedia Page) <https://en.wikipedia.org/wiki/Boltzmann_constant>`_.
+---@field boltzmann number
+---Ideal Gas Constant.
+---
+---This value can be used in calculating atmospheric properties for drag purposes,
+---which can be a rather advanced topic.
+---`(Ideal Gas Constant Wikipedia Page) <https://en.wikipedia.org/wiki/Gas_constant>`_.
+---@field idealgas number
+
+---@class TerminalInput : Structure
+---:return: `string`
+---
+---Read the next character of terminal input.  If the user hasn't typed
+---anything in that is still waiting to be read, then this will "block"
+---(meaning it will pause the execution of the program) until there
+---is a character that has been typed that can be processed.
+---
+---The character will be expressed in a string containing 1 char.
+---
+---If you need to check against "unprintable" characters such as
+---backspace (control-H) and so on, you can do so with the
+---:func:`unchar` function, or by using the aliases described elsewhere
+---in this structure.
+---@field getchar string
+---True if there is at least 1 character of input waiting.  If this is
+---false then that would mean that an attempt to call :meth:`GETCHAR<TerminalInput:GETCHAR>`
+---would block and wait for user input.  If this is true then an attempt
+---to call :meth:`GETCHAR<TerminalInput:GETCHAR>` would return immediately with an answer.
+---
+---You can simulate non-blocking I/O like so::
+---
+---    // Read a char if it exists, else just keep going:
+---    if terminal:input:haschar {
+---      process_one_char(terminal:input:getchar()).
+---    }
+---@field haschar boolean
+---:return: None
+---
+---Call this method to throw away all waiting input characters, flushing
+---the input queue.
+---@field clear fun()
+---@field code string
+---@field tostring string
+---A string for testing if the character read is a backspace.
+---@field backspace string
+---A string for testing if the character read is the return key.
+---@field return string
+---A string for testing if the character read is the return key.
+---@field enter string
+
+---@class Queue : Enumerable
+---Returns a new queue that contains the same thing as the old one.
+---@field copy Queue
+---:parameter item: (any type) item to be added
+---
+---Adds the item to the end of the queue.
+---@field push fun(item: any)
+---Returns the item in the front of the queue and removes it.
+---@field pop fun(): any
+---Returns the item in the front of the queue without removing it.
+---@field peek fun(): any
+---Removes all elements from the queue.
+---@field clear fun()
+
+---@class Enumerable : Structure
+---An alternate means of iterating over an enumerable. See: `Iterator`.
+---@field iterator Iterator
+---An alternate means of iterating over an enumerable. Order of items is reversed. See: `Iterator`.
+---@field reverseiterator Iterator
+---Returns the number of elements in the enumerable.
+---@field length number
+---:parameter item: element whose presence in the enumerable should be checked
+---:return: `boolean`
+---
+---Returns true if the enumerable contains an item equal to the one passed as an argument
+---@field contains fun(item: any): boolean
+---Returns true if the enumerable has zero items in it.
+---@field empty boolean
+---Returns a string containing a verbose dump of the enumerable's contents.
+---@field dump string
+
+---@class UniqueSet : Collection
+---Returns a new set that contains the same thing as the old set.
+---@field copy UniqueSet
+---:parameter item: (any type) item to be added
+---
+---Appends the new value given.
+---@field add fun(item: any)
+---:parameter item: (any type) item to be removed
+---
+---Remove the item from the set.
+---@field remove fun(item: any): boolean
+
+---@class UserDelegate : Delegate
+
+---@class Scalar : Structure
+
+---@class Range : Enumerable
+---Returns the initial element of the range.  Must be a round number.
+---@field start number
+---Returns the range limit.  Must be a round number.
+---@field stop number
+---Returns the step size.  Must be a round number.
+---@field step number
+
+---@class PIDLoop : Structure
+---The value representing the time of the last sample.  This value is equal to the time parameter of the :meth:`UPDATE` method.
+---@field lastsampletime number
+---Settable.
+---The proportional gain factor.
+---@field kp number
+---Settable.
+---The integral gain factor.
+---@field ki number
+---Settable.
+---The derivative gain factor.
+---@field kd number
+---The value representing the input of the last sample.  This value is equal to the input parameter of the :meth:`UPDATE` method.
+---@field input number
+---Settable.
+---The current setpoint.  This is the value to which input is compared when :meth:`UPDATE` is called.  It may not be synced with the last sample.
+---
+---It is desirable to use :attr:`SETPOINT` for the
+---:ref:`reasons described above <please_use_setpoint>`.
+---@field setpoint number
+---The calculated error from the last sample (setpoint - input).
+---@field error number
+---The calculated output from the last sample.
+---@field output number
+---Settable.
+---The current maximum output value.  This value also helps with regulating integral wind up mitigation.
+---@field maxoutput number
+---Settable.
+---The current minimum output value.  This value also helps with regulating integral wind up mitigation.
+---@field minoutput number
+---Settable.
+---This is just an alias that is the same thing as :attr:`EPSILON`.
+---@field ignoreerror number
+---Settable.
+---This is just an alias that is the same thing as :attr:`EPSILON`.
+---@field epsilon number
+---The value representing the time weighted sum of all errrors.  It will be equal to :attr:`ITERM` / :attr:`KI`.  This value is adjusted by the integral windup mitigation logic.
+---@field errorsum number
+---The value representing the proportional component of :attr:`OUTPUT`.
+---@field pterm number
+---The value representing the integral component of :attr:`OUTPUT`.  This value is adjusted by the integral windup mitigation logic.
+---@field iterm number
+---The value representing the derivative component of :attr:`OUTPUT`.
+---@field dterm number
+---The rate of change of the :attr:`INPUT` during the last sample.  It will be equal to (input - last input) / (change in time).
+---@field changerate number
+---:return: none
+---
+---Call this method to clear the :attr:`ERRORSUM`, :attr:`ITERM`, and :attr:`LASTSAMPLETIME` components of the PID calculation.
+---@field reset fun()
+---:parameter time: (`number`) the decimal time in seconds
+---:parameter input: (`number`) the input variable to compare to the setpoint
+---:return: `number` representing the calculated output
+---
+---Upon calling this method, the PIDLoop will calculate the output based on this this basic framework (see below for detailed derivation): output = error * kp + errorsum * ki + (change in input) / (change in time) * kd.  This method is usually called with the current time in seconds (`TIME:SECONDS`), however it may be called using whatever rate measurement you prefer.  Windup mitigation is included, based on :attr:`MAXOUTPUT` and :attr:`MINOUTPUT`.  Both integral components and derivative components are guarded against a change in time greater than 1s, and will not be calculated on the first iteration.
+---@field update fun(time: number, input: number): number
+
+---@class Stack : Enumerable
+---Returns a new stack that contains the same thing as the old one.
+---@field copy Stack
+---:parameter item: (any type) item to be added
+---
+---Adds the item to the top of the stack.
+---@field push fun(item: any)
+---Returns the item on top of the stack and removes it.
+---@field pop fun(): any
+---Returns the item on top of the stack without removing it.
+---@field peek fun(): any
+---Removes all elements from the stack.
+---@field clear fun()
+
+---@class String : Structure
+---:type: `number` (integer)
+---
+---Number of characters in the string
+---@field length number
+---:parameter start: `number` (integer) starting index (from zero)
+---:parameter count: `number` (integer) resulting length of returned `string`
+---:return: `string`
+---
+---Returns a new string with the given count of characters from this string starting from the given start position.
+---@field substring fun(start: number, count: number): string
+---:parameter string: `string` to look for
+---True if the given string is contained within this string.
+---@field contains fun(string: string): boolean
+---:parameter string: `string` to look for
+---True if this string ends with the given string.
+---@field endswith fun(string: string): boolean
+---:parameter string: `string` to look for
+---:parameter startAt: `number` (integer) index to start searching at
+---Returns the index of the first occurrence of the given string in this string (starting from startAt).
+---
+---If the ``string`` passed in is not found, this returns -1.
+---
+---If the ``string`` passed in is the empty string ``""``, this always claims to have
+---successfully "found" that empty string at the start of the search.
+---@field findat fun(string: string, startAt: number): number
+---:parameter index: `number` (integer) index to add the string at
+---:parameter string: `string` to insert
+---Returns a new string with the given string inserted at the given index into this string
+---@field insert fun(index: number, string: string): string
+---:parameter string: `string` to look for
+---:parameter startAt: `number` (integer) index to start searching at
+---Returns the index of the last occurrence of the given string in this string (starting from startAt)
+---
+---If the ``string`` passed in is not found, this returns -1.
+---
+---If the ``string`` passed in is the empty string ``""``, this always claims to have
+---successfully "found" that empty string at the beginning of the search.
+---@field findlastat fun(string: string, startAt: number): number
+---:parameter width: `number` (integer) number of characters the resulting string will contain
+---Returns a new right-aligned version of this string padded to the given width by spaces.
+---@field padleft fun(width: number): string
+---:parameter width: `number` (integer) number of characters the resulting string will contain
+---Returns a new left-aligned version of this string padded to the given width by spaces.
+---@field padright fun(width: number): string
+---:parameter index: `number` (integer) position of the string from which characters will be removed from the resulting string
+---:parameter count: `number` (integer) number of characters that will be removing from the resulting string
+---Returns a new string out of this string with the given count of characters removed starting at the given index.
+---@field remove fun(index: number, count: number): string
+---:parameter oldString: `string` to search for
+---:parameter newString: `string` that all occurances of oldString will be replaced with
+---Returns a new string out of this string with any occurrences of oldString replaced with newString.
+---@field replace fun(oldString: string, newString: string): string
+---:parameter separator: `string` delimiter on which this string will be split
+---:return: `List`
+---
+---Breaks this string up into a list of smaller strings on each occurrence of the given separator. This will return a
+---list of strings, none of which will contain the separator character(s).
+---@field split fun(separator: string): List
+---:parameter string: `string` to look for
+---True if this string starts with the given string .
+---@field startswith fun(string: string): boolean
+---Returns a new string with all characters in this string replaced with their lower case versions
+---@field tolower string
+---Returns a new string with all characters in this string replaced with their upper case versions
+---@field toupper string
+---returns a new string with no leading or trailing whitespace
+---@field trim string
+---returns a new string with no trailing whitespace
+---@field trimend string
+---returns a new string with no leading whitespace
+---@field trimstart string
+---:parameter pattern: `string` pattern to be matched against the string
+---True if the string matches the given pattern (regular expression). The match is not anchored to neither the start nor the end of the string.
+---That means that pattern ``"foo"`` will match ``"foobar"``, ``"barfoo"`` and ``"barfoobar"`` too. If you want to match from the start,
+---you have to explicitly specify the start of the string in the pattern, i.e. for example to match strings starting with ``"foo"`` you need to
+---use the pattern ``"^foo"`` (or equivalently ``"^foo.*"`` or even ``"^foo.*$"``).
+---
+---Regular expressions are beyond the scope of this documentation. For reference see `Regular Expression Language - Quick Reference <https://msdn.microsoft.com/en-us/library/az24scfc.aspx>`__\ .
+---@field matchespattern fun(pattern: string): boolean
+---:parameter defaultIfError: (optional argument) `number` to return as a default value if the string format is in error.
+---:return: `number`
+---
+---Returns the numeric version of the string, as a number that can be used
+---for mathematics or anywhere a `number` is expected.  If the
+---string is not in a format that kOS is able to convert into a number, then
+---the value ``defaultIfError`` is returned instead.  You can use this to
+---either select a sane default, or to deliberately select a value you
+---never expect to get in normal circumstances so you can use it as a
+---test to see if the string was formatted well.
+---
+---The argument ``defaultIfError`` is optional.  If it is left off, then
+---when there is a problem in the format of the string, you will get
+---an error that stops the script instead of returning a value.
+---
+---The valid understood format allows an optional leading sign,
+---a decimal point with fractional part, and scientific notation
+---using "e" as in "1.23e3" for "1230" or "1.23e-3" for "0.00123".
+---
+---You may also include optional underscores in the string to
+---help space groups of digits, and they will be ignored.
+---(For example you may write "one thousand" as "1_000" instead
+---of as "1000" if you like".)
+---
+---Example - using with math::
+---
+---    set str to "16.8".
+---    print "half of " + str + " is " + str:tonumber() / 2.
+---    half of 16.8 is 8.4
+---
+---Example - checking for bad values by using defaultIfError::
+---
+---    set str to "Garbage 123 that is not a proper number".
+---    set val to str:tonumber(-9999).
+---    if val = -9999 {
+---      print "that string isn't a number".
+---    } else {
+---      print "the string is a number: " + val.
+---    }
+---
+---Example - not setting a default value can throw an error::
+---
+---   set str to "Garbage".
+---   set val to str:tonumber().  // the script dies with error here.
+---   print "value is " + val. // the script never gets this far.
+---@field tonumber fun(...: any): number
+---:parameter defaultIfError: (optional argument) `number` to return as a default value if the string format is in error.
+---:return: `number`
+---
+---Returns the numeric version of the string, as a number that can be used
+---for mathematics or anywhere a `number` is expected.  If the
+---string is not in a format that kOS is able to convert into a number, then
+---the value ``defaultIfError`` is returned instead.  You can use this to
+---either select a sane default, or to deliberately select a value you
+---never expect to get in normal circumstances so you can use it as a
+---test to see if the string was formatted well.
+---
+---The argument ``defaultIfError`` is optional.  If it is left off, then
+---when there is a problem in the format of the string, you will get
+---an error that stops the script instead of returning a value.
+---
+---The valid understood format allows an optional leading sign,
+---a decimal point with fractional part, and scientific notation
+---using "e" as in "1.23e3" for "1230" or "1.23e-3" for "0.00123".
+---
+---You may also include optional underscores in the string to
+---help space groups of digits, and they will be ignored.
+---(For example you may write "one thousand" as "1_000" instead
+---of as "1000" if you like".)
+---
+---Example - using with math::
+---
+---    set str to "16.8".
+---    print "half of " + str + " is " + str:tonumber() / 2.
+---    half of 16.8 is 8.4
+---
+---Example - checking for bad values by using defaultIfError::
+---
+---    set str to "Garbage 123 that is not a proper number".
+---    set val to str:tonumber(-9999).
+---    if val = -9999 {
+---      print "that string isn't a number".
+---    } else {
+---      print "the string is a number: " + val.
+---    }
+---
+---Example - not setting a default value can throw an error::
+---
+---   set str to "Garbage".
+---   set val to str:tonumber().  // the script dies with error here.
+---   print "value is " + val. // the script never gets this far.
+---@field toscalar fun(...: any): number
+---@field format fun(...: any): string
+---Alias for FIND(string)
+---@field indexof fun(string: string): number
+---Alias for FIND(string)
+---@field find fun(string: string): number
+---Alias for FINDLAST(string)
+---@field lastindexof fun(string: string): number
+---Alias for FINDLAST(string)
+---@field findlast fun(string: string): number
+---An alternate means of iterating over a string's characters
+---(See: `Iterator`).
+---
+---For most programs you won't have to use this directly.  It's just
+---what enables you to use a string with a FOR loop to get access
+---to its characters one at a time.
+---@field iterator Iterator
+
+---@class Collection : Enumerable
+---@field clear fun()
+
