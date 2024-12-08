@@ -258,47 +258,47 @@ ag9 = nil
 ag10 = nil
 
 ---Get only.
----@type RBGA
+---@type RGBA
 white = nil
 
 ---Get only.
----@type RBGA
+---@type RGBA
 black = nil
 
 ---Get only.
----@type RBGA
+---@type RGBA
 red = nil
 
 ---Get only.
----@type RBGA
+---@type RGBA
 green = nil
 
 ---Get only.
----@type RBGA
+---@type RGBA
 blue = nil
 
 ---Get only.
----@type RBGA
+---@type RGBA
 yellow = nil
 
 ---Get only.
----@type RBGA
+---@type RGBA
 cyan = nil
 
 ---Get only.
----@type RBGA
+---@type RGBA
 magenta = nil
 
 ---Get only.
----@type RBGA
+---@type RGBA
 purple = nil
 
 ---Get only.
----@type RBGA
+---@type RGBA
 grey = nil
 
 ---Get only.
----@type RBGA
+---@type RGBA
 gray = nil
 
 ---Get only.
@@ -419,7 +419,7 @@ archive = nil
 THROTTLE = nil
 
 ---Get/Set.
----@type Vector | Direction | string
+---@type Vector | Direction | string | "kill"
 STEERING = nil
 
 ---Get/Set.
