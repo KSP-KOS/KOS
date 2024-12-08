@@ -5,8 +5,7 @@ It includes:
 
 ### Setup for VSCode
 1. Install the lua language server extension made by sumneko.
-2. Copy the `.luarc.json` file to your workspace folder where you want the addon enabled.
-It's usually the archive at `*KSP_Folder*/Ships/Script/.luarc.json`.
+2. Copy the `.luarc.json` file to the archive at `*KSP_Folder*/Ships/Script/.luarc.json`.
 3. Open the folder with VSCode and you will be asked by the patcher plugin to patch lua language server.
 4. Read the message and press "Ok".
 5. Restart VSCode.
