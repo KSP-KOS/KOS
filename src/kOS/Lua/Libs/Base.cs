@@ -189,7 +189,9 @@ namespace kOS.Lua.Libs
             state.CheckString(1);
             var filePath = state.ToString(1);
             var shared = Binding.Bindings[state.MainThread.Handle].Shared;
-            var file = shared.VolumeMgr.CurrentVolume.Open(filePath) as VolumeFile;
+            GlobalPath path = shared.VolumeMgr.GlobalPathFromObject(filePath);
+            Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
+            VolumeFile file = volume.Open(path) as VolumeFile;
             if (file == null)
             {
                 state.PushNil();
