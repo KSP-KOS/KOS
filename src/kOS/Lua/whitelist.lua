@@ -1,6 +1,6 @@
 local registry, setUpvalue = ...
 
-local env = {
+local _ENV = {
     _VERSION = _VERSION,
     assert = assert,
     collectgarbage = collectgarbage,
@@ -114,45 +114,46 @@ local env = {
         offset = utf8.offset,
     },
 }
-env._G = env
 
 local whitelistedRegistry = {
     registry[1], -- main thread
-    env,
+    _ENV,
     _LOADED = {
-        _G = env._G,
-        package = env.package,
-        coroutine = env.coroutine,
-        math = env.math,
-        string = env.string,
-        table = env.table,
-        utf8 = env.utf8,
+        _G = _ENV,
+        package = package,
+        coroutine = coroutine,
+        math = math,
+        string = string,
+        table = table,
+        utf8 = utf8,
     },
     _PRELOAD = {},
     _CLIBS = setmetatable({}, getmetatable(registry._CLIBS)),
 }
 
-env.package.loaded = whitelistedRegistry._LOADED
-env.package.preload = whitelistedRegistry._PRELOAD
-
-setUpvalue(env.require, 1, env.package)
-for _,searcher in ipairs(env.package.searchers) do
-    setUpvalue(searcher, 1, env.package)
-end
-
 local visitedTables = {}
 local function deepCleanTable(tab)
     visitedTables[tab] = true
-    for k,v in env.pairs(tab) do
-        if env._type(v) == "table" and not visitedTables[v] then
+    for k,v in pairs(tab) do
+        if _type(v) == "table" and not visitedTables[v] then
             deepCleanTable(v)
         end
         tab[k] = nil
     end
 end
-
 deepCleanTable(registry)
 
-for k,v in env.pairs(whitelistedRegistry) do
+for k,v in pairs(whitelistedRegistry) do
     registry[k] = v
 end
+
+_G = _ENV
+package.loaded = whitelistedRegistry._LOADED
+package.preload = whitelistedRegistry._PRELOAD
+
+setUpvalue(require, 1, package)
+for _,searcher in ipairs(package.searchers) do
+    setUpvalue(searcher, 1, package)
+end
+
+getmetatable("").__index = string
