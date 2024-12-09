@@ -37,7 +37,7 @@ namespace kOS.Lua.Types
             stack.PushArgument(new KOSArgMarkerType());
             for (int i = 2; i <= state.GetTop(); i++)
             {
-                var arg = Binding.ToCSharpObject(state, i, binding);
+                var arg = Structure.FromPrimitiveWithAssert(Binding.ToCSharpObject(state, i, binding));
                 if (arg == null) break;
                 Binding.LuaExceptionCatch(() => stack.PushArgument(arg), state);
             }
