@@ -104,7 +104,7 @@ namespace kOS.Lua
             var state = KeraLua.Lua.FromIntPtr(L);
             var execInfo = stateInfo[state.MainThread.Handle];
             if (++execInfo.InstructionsThisUpdate >= execInfo.InstructionsPerUpdate || execInfo.BreakExecution 
-                || (execInfo.CommandCoroutine.Handle == L && (execInfo.Shared.Cpu as LuaCPU).IsYielding()))
+                || (execInfo.Shared.Cpu as LuaCPU).IsYielding())
             {
                 // it's possible for a C/CSharp function to call lua making a coroutine unable to yield because
                 // of the "C-call boundary".
@@ -196,7 +196,7 @@ namespace kOS.Lua
             }
 
             fixedUpdateCoroutine.ResetThread();
-            if (fixedUpdateCoroutine.GetGlobal("fixedupdate") == LuaType.Function)
+            if (fixedUpdateCoroutine.GetGlobal("fixedupdate") == LuaType.Function && !(Shared.Cpu as LuaCPU).IsYielding())
             {
                 if (fixedUpdateCoroutine.LoadString($"fixedupdate({dt})", "fixedupdate") == LuaStatus.OK)
                 {
@@ -255,7 +255,7 @@ namespace kOS.Lua
             if (execInfo.InstructionsThisUpdate >= execInfo.InstructionsPerUpdate) return;
             
             updateCoroutine.ResetThread();
-            if (updateCoroutine.GetGlobal("update") == LuaType.Function)
+            if (updateCoroutine.GetGlobal("update") == LuaType.Function && !(Shared.Cpu as LuaCPU).IsYielding())
             {
                 if (updateCoroutine.LoadString($"update({dt})", "update") == LuaStatus.OK)
                 {

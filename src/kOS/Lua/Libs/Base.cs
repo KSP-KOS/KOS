@@ -16,7 +16,6 @@ namespace kOS.Lua.Libs
             {"print", Print},
             {"type", Type},
             {"warn", Warn},
-            {"wait", Wait},
             {null, null}
         };
 
@@ -229,15 +228,6 @@ namespace kOS.Lua.Libs
             var state = KeraLua.Lua.FromIntPtr(L);
             var argCount = (int)ctx;
             return state.GetTop()-argCount;
-        }
-        
-        private static int Wait(IntPtr L)
-        {
-            var state = KeraLua.Lua.FromIntPtr(L);
-            state.CheckNumber(1);
-            var shared = Binding.Bindings[state.MainThread.Handle].Shared;
-            shared.Cpu.YieldProgram(new YieldFinishedGameTimer(state.ToNumber(1)));
-            return 0;
         }
     }
 }

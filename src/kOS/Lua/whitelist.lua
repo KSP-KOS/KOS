@@ -26,7 +26,6 @@ local _ENV = {
     warn = warn,
     xpcall = xpcall,
     _type = _type,
-    wait = wait,
     require = require,
     package = {
         config = package.config,

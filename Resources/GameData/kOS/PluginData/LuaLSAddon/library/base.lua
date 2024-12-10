@@ -1,8 +1,3 @@
--- Stops execution of command code for the specified amount of time.
--- Note that `fixedupdate` and `update` functions will continue to be called.
----@param seconds number
-function wait(seconds) end
-
 -- Function that gets called by kOS each physics tick.
 ---@type function | nil
 fixedupdate = nil

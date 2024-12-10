@@ -1,6 +1,8 @@
 local M = {}
 
 function M.init()
+    wait = M.wait
+    waituntil = M.waituntil
     vecdraw = M.vecdraw
     clearvecdraws = M.clearvecdraws
 
@@ -12,6 +14,24 @@ function M.init()
     -- Not all keys are annotated. Complete documentation is available at the link.
     ---@type CJson
     json = select(2, pcall(require, "cjson"))
+end
+
+-- Suspends the execution for the specified amount of time.
+-- Any call to this function will suspend execution for at least one physics tick.
+-- This function is a simple abstraction made to achieve the same effect as the kerboscript `wait *number*.` command.
+-- One difference is it only suspends the execution of the coroutine it was called from, making it totally fine to use inside callbacks.
+function M.wait(seconds)
+    local waitEnd = time.seconds + seconds
+    coroutine.yield()
+    while time.seconds < waitEnd do coroutine.yield() end
+end
+
+-- Suspends the execution until the `condition` function returns a true value.
+-- This function is a simple abstraction made to achieve the same effect as the kerboscript `wait until *condition*.` command.
+-- One difference is it only suspends the execution of the coroutine it was called from, making it totally fine to use inside callbacks.
+---@param condition function
+function M.waituntil(condition)
+    while not condition() do coroutine.yield() end
 end
 
 M.vecdraws = setmetatable({}, { __mode = "v" })
