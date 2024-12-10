@@ -35,7 +35,8 @@ function listalarms(alarmType) end
 function deletealarm(alarmID) end
 
 ---@param path string 
----Path of the file for editing.
+---argument 1
+---   Path of the file for editing.
 ---
 ---Edits or creates a program file described by filename :code:`PATH`.
 ---If the file referred to by :code:`PATH` already exists, then it will
@@ -233,6 +234,7 @@ function bodyexists(name) end
 
 ---@param name string 
 ---@return Atmosphere
+---Passing in a string (``name``) parameter, this function returns the
 ---:attr:`ATM <Body:ATM>` of the body that has that name.  It's identical
 ---to calling ``BODY(name):ATM``, but accomplishes the goal in fewer steps.
 ---
@@ -953,6 +955,7 @@ function clearscreen() end
 ---@param size number 
 ---@param colour RGBA 
 ---@param doEcho boolean 
+---You can make text messages appear on the heads-up display, in the
 ---same way that the in-game stock messages appear, by calling the
 ---HUDTEXT function, as follows::
 ---
@@ -1194,12 +1197,14 @@ function vectorangle(v1, v2) end
 
 ---@param volumeIdOrName? number | string 
 ---@return Volume
+---Will return a `Volume` structure representing the volume with a given
 ---id or name. You can omit the argument to create a `Volume`
 ---for the current volume.
 function volume(volumeIdOrName) end
 
 ---@param path string | VolumeItem | Volume 
 ---@return Path
+---Will create a `Path` structure representing the given path string. You
 ---can omit the argument to create a `Path` for the current directory.
 function path(path) end
 
@@ -1268,22 +1273,21 @@ function pidloop() end
 ---Creates a Stack structure with arguments as elements
 function stack(...) end
 
----@return Path
----can omit the argument to create a `Path` for the current directory.
-function scriptpath() end
-
 ---@param volume Volume | number | string 
+---Changes the current directory to the root directory of the specified volume.
 ---Volumes can be referenced by instances of `Volume`, their ID numbers
 ---or their names if they've been given one. Understanding how
 ---:ref:`volumes work <volumes>` is important to understanding this command.
 function switch(volume) end
 
 ---@param path string | VolumeItem | Volume 
+---Changes the current directory to the one pointed to by the :code:`PATH`
 ---argument. This command will fail if the path is invalid or does not point
 ---to an existing directory.
 function cd(path) end
 
 ---@param path string | VolumeItem | Volume 
+---Changes the current directory to the one pointed to by the :code:`PATH`
 ---argument. This command will fail if the path is invalid or does not point
 ---to an existing directory.
 function chdir(path) end
@@ -1291,6 +1295,7 @@ function chdir(path) end
 ---@param fromPath string | VolumeItem | Volume 
 ---@param toPath string | VolumeItem | Volume 
 ---@return boolean
+---Copies the file or directory pointed to by :code:`FROMPATH` to the location
 ---pointed to :code:`TOPATH`. Depending on what kind of items both paths point
 ---to the exact behaviour of this command will differ:
 ---
@@ -1339,43 +1344,53 @@ function copypath(fromPath, toPath) end
 ---@param fromPath string | VolumeItem | Volume 
 ---@param toPath string | VolumeItem | Volume 
 ---@return boolean
+---Moves the file or directory pointed to by :code:`FROMPATH` to the location
 ---pointed to :code:`TOPATH`. Depending on what kind of items both paths point
 ---to the exact behaviour of this command will differ, see :code:`COPYPATH` above.
 function movepath(fromPath, toPath) end
 
 ---@param path string | VolumeItem 
 ---@return boolean
+---Deleted the file or directory pointed to by :code:`FROMPATH`. Directories are
 ---removed along with all the items they contain.
 function deletepath(path) end
 
 ---@param object  
 ---@param path string | VolumeItem | Volume 
 ---@return VolumeFile
+---Serializes the given object to JSON format and saves it under the given path.
+---
 ---Go to :ref:`Serialization page <serialization>` to read more about serialization.
 function writejson(object, path) end
 
 ---@param path string | VolumeItem 
+---Reads the contents of a file previously created using ``WRITEJSON`` and deserializes them.
+---
 ---Go to :ref:`Serialization page <serialization>` to read more about serialization.
 function readjson(path) end
 
 ---@param path string | VolumeItem | Volume 
 ---@return boolean
+---Returns true if there exists a file or a directory under the given path,
 ---otherwise returns false. Also see :meth:`Volume:EXISTS`.
 function exists(path) end
 
 ---@param path string | VolumeItem | Volume 
+---Will return a `VolumeFile` or `VolumeDirectory` representing the item
 ---pointed to by :code:`PATH`. It will return a `boolean` false if there's
 ---nothing present under the given path. Also see :meth:`Volume:OPEN`.
 function open(path) end
 
 ---@param path string | VolumeItem 
 ---@return VolumeFile
+---Creates a file under the given path. Will create parent directories if needed.
 ---It will fail if a file or a directory already exists under the given path.
 ---Also see :meth:`Volume:CREATE`.
 function create(path) end
 
 ---@param path string | VolumeItem 
 ---@return VolumeDirectory
+---Creates a directory under the given path. Will create parent directories
 ---if needed. It will fail if a file or a directory already exists under the
 ---given path. Also see :meth:`Volume:CREATEDIR`.
 function createdir(path) end

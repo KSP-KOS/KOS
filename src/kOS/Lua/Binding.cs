@@ -273,6 +273,16 @@ namespace kOS.Lua
             {
                 {"BODY", "GETBODY"}
             };
+            private static readonly List<string> removeFunctions = new List<string>()
+            {
+                "run",
+                "load",
+                "debugdump",
+                "profileresult",
+                "makebuiltindelegate",
+                "droppriority",
+                "scriptpath"
+            };
 
             public static void Apply(BindingManager bindingManager, FunctionManager functionManager)
             {
@@ -287,6 +297,11 @@ namespace kOS.Lua
                     if (!functionManager.RawFunctions.TryGetValue(rename.Key, out var variable)) continue;
                     functionManager.RawFunctions.Add(rename.Value, variable);
                     functionManager.RawFunctions.Remove(rename.Key);
+                }
+
+                foreach (var functionName in removeFunctions)
+                {
+                    functionManager.RawFunctions.Remove(functionName);
                 }
             }
             
