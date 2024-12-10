@@ -7,7 +7,7 @@ function M.init()
     -- - `Direction` the ship should point towards.
     -- - `Vector` the ship should point towards. Like `Direction`, but without the roll component
     -- - `string` "kill". The ship will try to kill all its angular velocity
-    ---@type function | Direction | Vector | "kill"
+    ---@type function | Direction | Vector | Node | "kill"
     steering = nil
     -- Controls the throttle value of the ship. Can be a number or a function returning a number.
     -- The number is expected to be between 0 and 1.

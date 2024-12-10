@@ -419,7 +419,7 @@ archive = nil
 THROTTLE = nil
 
 ---Get/Set.
----@type Vector | Direction | string | "kill"
+---@type Vector | Direction | Node | string | "kill"
 STEERING = nil
 
 ---Get/Set.
