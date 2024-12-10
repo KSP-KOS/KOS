@@ -180,7 +180,7 @@ function M.addcallback(body, priority, callbacks)
                         callback.body = nil
                     end
                 else
-                    warn("error in callback:\n" .. newPriority)
+                    warn("error in callback:\n" .. (newPriority == nil and "" or tostring(newPriority)))
                     callback.body = nil
                 end
             end
