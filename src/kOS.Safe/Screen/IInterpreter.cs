@@ -15,5 +15,6 @@ namespace kOS.Safe.Screen
         bool IsWaitingForCommand();
         void BreakExecution();
         int InstructionsThisUpdate();
+        int ECInstructionsThisUpdate();
     }
 }

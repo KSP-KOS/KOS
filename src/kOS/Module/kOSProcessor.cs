@@ -1185,7 +1185,7 @@ namespace kOS.Module
             {
                 // Because the processor is not STARVED, evaluate the power requirement based on actual operation.
                 // For EC drain purposes, always pretend atleast 1 instruction happened, so idle drain isn't quite zero:
-                int instructions = System.Math.Max(shared.Interpreter.InstructionsThisUpdate(), 1);
+                int instructions = System.Math.Max(shared.Interpreter.ECInstructionsThisUpdate(), 1);
                 var request = volumePower * time + instructions * ECPerInstruction;
                 if (request > 0)
                 {

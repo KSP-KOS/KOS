@@ -79,6 +79,8 @@ namespace kOS.Screen
             return Shared.Cpu.InstructionsThisUpdate;
         }
 
+        public int ECInstructionsThisUpdate() => InstructionsThisUpdate();
+
         public void Dispose() { } // Everything is disposed in CPU
 
         private class InterpreterPath : InternalPath

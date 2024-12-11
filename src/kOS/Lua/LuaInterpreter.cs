@@ -41,6 +41,7 @@ namespace kOS.Lua
             public int InstructionsThisUpdate = 0;
             public bool BreakExecution = false;
             public int BreakExecutionCount = 0;
+            public int? IdleInstructions;
             public readonly KeraLua.Lua CommandCoroutine;
             public readonly SharedObjects Shared;
             public ExecInfo(SharedObjects shared, KeraLua.Lua commandCoroutine)
@@ -168,6 +169,12 @@ namespace kOS.Lua
             return 0;
         }
 
+        public int ECInstructionsThisUpdate()
+        {
+            var execInfo = stateInfo[commandCoroutine.MainThread.Handle];
+            return Math.Max(InstructionsThisUpdate() - execInfo.IdleInstructions ?? 0, 0);
+        }
+
         public void KOSFixedUpdate(double dt)
         {
             (Shared.Cpu as LuaCPU).FixedUpdate();
@@ -211,6 +218,9 @@ namespace kOS.Lua
                     }
                 }
             }
+            
+            if (execInfo.IdleInstructions == null)
+                execInfo.IdleInstructions = execInfo.InstructionsThisUpdate;
 
             if (execInfo.InstructionsThisUpdate < execInfo.InstructionsPerUpdate)
                 execInfo.BreakExecutionCount = 0;
