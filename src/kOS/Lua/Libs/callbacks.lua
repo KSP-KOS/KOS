@@ -134,7 +134,9 @@ function M.runcallbacks(callbacks)
     end
     if callbacks.unsorted then
         callbacks.continuation = coroutine.create(function()
-            table.sort(callbacks, function(a, b) return a.priority < b.priority end)
+            table.sort(callbacks, function(a, b)
+                return a.priority == b.priority and a.creationTime > b.creationTime or a.priority < b.priority
+            end)
             callbacks.unsorted = false
             callbacks.continuation = nil
         end)
@@ -186,7 +188,8 @@ function M.addcallback(body, priority, callbacks)
             end
             callback.coroutine = nil
         end,
-        priority = priority or 0
+        priority = priority or 0,
+        creationTime = time.seconds + kuniverse.timewarp.physicsdeltat * (config.luaipu - opcodesleft) / config.luaipu
     }
     table.insert(callbacks, callback)
     callbacks.unsorted = true
