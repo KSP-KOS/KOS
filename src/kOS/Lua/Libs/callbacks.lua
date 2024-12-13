@@ -1,27 +1,27 @@
 local M = {}
 
 function M.init()
-    -- Controls how kOS should steer the ship.
-    -- Options:
-    -- - `function` that returns one of the options listed below.
-    -- - `Direction` the ship should point towards.
-    -- - `Vector` the ship should point towards. Like `Direction`, but without the roll component
-    -- - `string` "kill". The ship will try to kill all its angular velocity
+    ---Controls how kOS should steer the ship.
+    ---Options:
+    ---- `function` that returns one of the options listed below.
+    ---- `Direction` the ship should point towards.
+    ---- `Vector` the ship should point towards. Like `Direction`, but without the roll component
+    ---- `string` "kill". The ship will try to kill all its angular velocity
     ---@type function | Direction | Vector | Node | "kill"
     steering = nil
-    -- Controls the throttle value of the ship. Can be a number or a function returning a number.
-    -- The number is expected to be between 0 and 1.
+    ---Controls the throttle value of the ship. Can be a number or a function returning a number.
+    ---The number is expected to be between 0 and 1.
     ---@type function | number
     throttle = nil
-    -- Options:
-    -- - `function` that returns one of the options listed below.
-    -- - `number`. Compass heading the ship should steer towards.
-    -- - `GeoCoordinates` the ship should steer towards.
-    -- - `Vessel` the ship should steer towards.
+    ---Options:
+    ---- `function` that returns one of the options listed below.
+    ---- `number`. Compass heading the ship should steer towards.
+    ---- `GeoCoordinates` the ship should steer towards.
+    ---- `Vessel` the ship should steer towards.
     ---@type function | number | GeoCoordinates | Vessel
     wheelsteering = nil
-    -- Controls the wheel throttle value of the ship. Can be a number or a function returning a number.
-    -- The number is expected to be between 0 and 1.
+    ---Controls the wheel throttle value of the ship. Can be a number or a function returning a number.
+    ---The number is expected to be between 0 and 1.
     ---@type function | number
     wheelthrottle = nil
 
@@ -60,8 +60,8 @@ function M.breakexecution()
     M.updatecallbacks = {}
 end
 
--- A table with a finalizer that gets called when the lua state is disposed(on shutdown, reboot).
--- Makes the core automatically "let go" of the controls.
+---A table with a finalizer that gets called when the lua state is disposed(on shutdown, reboot).
+---Makes the core automatically "let go" of the controls.
 M.finalizer = setmetatable({}, { __gc = function()
     toggleflybywire("steering", false)
     toggleflybywire("throttle", false)
@@ -158,16 +158,16 @@ function M.runcallbacks(callbacks)
 end
 
 ---@param body function :
--- Callback function body to get executed on the next physics tick(or the next frame, see the third parameter).
--- If returns a number or `true` the callback doesn't get cleared.
--- If returns a number this number will be used as the callback priority, see the second parameter.
+---Callback function body to get executed on the next physics tick(or the next frame, see the third parameter).
+---If returns a number or `true` the callback doesn't get cleared.
+---If returns a number this number will be used as the callback priority, see the second parameter.
 ---@param priority? number :
--- Callback priority. Callbacks with highest priorities get executed first. Default is 0.
+---Callback priority. Callbacks with highest priorities get executed first. Default is 0.
 ---@param callbacks? table :
--- Callbacks table where to add the callback to.
--- Options:
--- - `callbacks.fixedupdatecallbacks`: gets executed each physics tick. Default.
--- - `callbacks.updatecallbacks`: gets executed each frame.
+---Callbacks table where to add the callback to.
+---Options:
+---- `callbacks.fixedupdatecallbacks`: gets executed each physics tick. Default.
+---- `callbacks.updatecallbacks`: gets executed each frame.
 function M.addcallback(body, priority, callbacks)
     callbacks = callbacks or M.fixedupdatecallbacks
     local callback = {
@@ -196,7 +196,7 @@ function M.addcallback(body, priority, callbacks)
     return callback
 end
 
--- "When" trigger implemented as a wrapper around the `addcallback` function.
+---"When" trigger implemented as a wrapper around the `addcallback` function.
 ---@param condition function The callback executes only if this function returns a true value
 ---@param body function The same as in `addcallback` function
 ---@param priority? number The same as in `addcallback` function
@@ -211,7 +211,7 @@ function M.when(condition, body, priority, callbacks)
     end, priority, callbacks)
 end
 
--- "On" trigger implemented as a wrapper around the `addcallback` function.
+---"On" trigger implemented as a wrapper around the `addcallback` function.
 ---@param state function The callback executes only if this function returns a value that is not equal to the value it returned previously
 ---@param body function The same as in `addcallback` function
 ---@param priority? number The same as in `addcallback` function
