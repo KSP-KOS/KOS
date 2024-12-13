@@ -135,7 +135,7 @@ function M.runcallbacks(callbacks)
     if callbacks.unsorted then
         callbacks.continuation = coroutine.create(function()
             table.sort(callbacks, function(a, b)
-                return a.priority == b.priority and a.creationTime > b.creationTime or a.priority < b.priority
+                return a.priority == b.priority and a.creationTime < b.creationTime or a.priority < b.priority
             end)
             callbacks.unsorted = false
             callbacks.continuation = nil
