@@ -81,7 +81,7 @@ function M.runcontrol()
 end
 
 function M.processcontrol()
-    if rawget(_ENV, "steering") then
+    if steering then
         M.controlled.steering = true
         local success, error = pcall(function() STEERING = type(steering) == "function" and steering() or steering end)
         if not success then
@@ -92,7 +92,7 @@ function M.processcontrol()
         M.controlled.steering = false
         toggleflybywire("steering", false)
     end
-    if rawget(_ENV, "throttle") then
+    if throttle then
         M.controlled.throttle = true
         local success, error = pcall(function() THROTTLE = type(throttle) == "function" and throttle() or throttle end)
         if not success then
@@ -103,7 +103,7 @@ function M.processcontrol()
         M.controlled.throttle = false
         toggleflybywire("throttle", false)
     end
-    if rawget(_ENV, "wheelsteering") then
+    if wheelsteering then
         M.controlled.wheelsteering = true
         local success, error = pcall(function() WHEELSTEERING = type(wheelsteering) == "function" and wheelsteering() or wheelsteering end)
         if not success then
@@ -114,7 +114,7 @@ function M.processcontrol()
         M.controlled.wheelsteering = false
         toggleflybywire("wheelsteering", false)
     end
-    if rawget(_ENV, "wheelthrottle") then
+    if wheelthrottle then
         M.controlled.wheelthrottle = true
         local success, error = pcall(function() WHEELTHROTTLE = type(wheelthrottle) == "function" and wheelthrottle() or wheelthrottle end)
         if not success then

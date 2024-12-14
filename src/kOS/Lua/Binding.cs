@@ -31,8 +31,6 @@ namespace kOS.Lua
             // would print 1 because both v1 and v2 would be the same lua object, which is what we are avoiding here.
             typeof(Vector), typeof(Direction), typeof(TimeSpan), typeof(TimeStamp)
         };
-        private static readonly string[] controlVariables = { "STEERING", "THROTTLE", "WHEELSTEERING", "WHEELTHROTTLE" };
-        private static readonly string[] capitalNameOnlyVariables = { "VECDRAW", "CLEARVECDRAWS" };
 
         // the CSharp object to userdata binding model was adapted from NLua model
         // with some simplifications and changes to make it work on Structures
@@ -105,7 +103,8 @@ namespace kOS.Lua
             var state = KeraLua.Lua.FromIntPtr(L);
             var index = state.ToString(2);
             var binding = Bindings[state.MainThread.Handle];
-            var isCapitalNameOnlyVariableNotCapital = capitalNameOnlyVariables.Contains(index.ToUpper()) && !capitalNameOnlyVariables.Contains(index);
+            var isCapitalNameOnlyVariableNotCapital = BindingChanges.CapitalNameOnlyVariables.Contains(index.ToUpper())
+                                                      && index.Any(char.IsLower);
             if (isCapitalNameOnlyVariableNotCapital)
                 return 0;
             var variables = (binding.Shared.BindingMgr as BindingManager).RawVariables;
@@ -128,10 +127,9 @@ namespace kOS.Lua
             var binding = Bindings[state.MainThread.Handle];
             var variables = (binding.Shared.BindingMgr as BindingManager).RawVariables;
             var index = state.ToString(2);
-            var isCapitalNameOnlyVariableNotCapital = capitalNameOnlyVariables.Contains(index.ToUpper()) && !capitalNameOnlyVariables.Contains(index);
-            var isControlVariable = controlVariables.Contains(index.ToUpper()) && !controlVariables.Contains(index);
-            if (!isControlVariable && !isCapitalNameOnlyVariableNotCapital
-                                   && variables.TryGetValue(index, out var boundVar))
+            var isCapitalNameOnlyVariableNotCapital = BindingChanges.CapitalNameOnlyVariables.Contains(index.ToUpper())
+                                                      && index.Any(char.IsLower);
+            if (!isCapitalNameOnlyVariableNotCapital && variables.TryGetValue(index, out var boundVar))
             {
                 if (boundVar.Set == null)
                 {
@@ -264,6 +262,15 @@ namespace kOS.Lua
         
         private static class BindingChanges
         {
+            public static readonly HashSet<string> CapitalNameOnlyVariables = new HashSet<string>
+            {
+                "STEERING",
+                "THROTTLE",
+                "WHEELSTEERING",
+                "WHEELTHROTTLE",
+                "VECDRAW",
+                "CLEARVECDRAWS"
+            };
             private static readonly Renames variableRenames = new Renames()
             {
                 {"STAGE", "STAGEINFO"},
