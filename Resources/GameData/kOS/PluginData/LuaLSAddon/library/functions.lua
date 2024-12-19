@@ -1109,7 +1109,7 @@ function vectorcrossproduct(v1, v2) end
 
 ---@param v1 Vector (`Vector`)
 ---@param v2 Vector (`Vector`)
----@return Vector
+---@return number
 ---:return: The `vector dot-product <https://mathinsight.org/dot_product>`__
 ---This is the `dot product <https://mathinsight.org/dot_product>`__ of two vectors returning a scalar number. This is the same as :ref:`v1 * v2 <Vector *>`::
 ---
@@ -1126,7 +1126,7 @@ function vdot(v1, v2) end
 
 ---@param v1 Vector (`Vector`)
 ---@param v2 Vector (`Vector`)
----@return Vector
+---@return number
 ---:return: The `vector dot-product <https://mathinsight.org/dot_product>`__
 ---This is the `dot product <https://mathinsight.org/dot_product>`__ of two vectors returning a scalar number. This is the same as :ref:`v1 * v2 <Vector *>`::
 ---
