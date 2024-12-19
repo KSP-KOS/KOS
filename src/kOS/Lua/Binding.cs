@@ -120,16 +120,27 @@ namespace kOS.Lua
             }
             return 0;
         }
+        
+        private const string ClobberBuiltInsMessage = 
+           "If you really want to be able to \"hide\" a built-in variable/function behind a user variable you can "+
+           "\"rawset(_ENV, *variableName*, *value*)\" or allow it globally with \"config.clobberBuiltIns = true\"";
 
         private static int EnvNewIndex(IntPtr L)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
-            var binding = Bindings[state.MainThread.Handle];
-            var variables = (binding.Shared.BindingMgr as BindingManager).RawVariables;
             var index = state.ToString(2);
+            
             var isCapitalNameOnlyVariableNotCapital = BindingChanges.CapitalNameOnlyVariables.Contains(index.ToUpper())
                                                       && index.Any(char.IsLower);
-            if (!isCapitalNameOnlyVariableNotCapital && variables.TryGetValue(index, out var boundVar))
+            if (isCapitalNameOnlyVariableNotCapital)
+            {
+                state.RawSet(1);
+                return 0;
+            }
+            
+            var binding = Bindings[state.MainThread.Handle];
+            var variables = (binding.Shared.BindingMgr as BindingManager).RawVariables;
+            if (variables.TryGetValue(index, out var boundVar))
             {
                 if (boundVar.Set == null)
                 {
@@ -138,19 +149,21 @@ namespace kOS.Lua
                         state.RawSet(1);
                         return 0;
                     }
-                    return state.Error($"Attempt to assign to a built-in variable({index}) that doesn't have a setter.\n"+
-                                       "If you really want to be able to \"hide\" a built-in variable behind a user "+
-                                       "variable you can \"rawset(_ENV, *variableName*, *value*)\" or allow it globally "
-                                       +"with \"config.clobberBuiltIns = true\"");
+                    return state.Error($"Attempt to clobber a built-in kOS bound variable without a setter: {boundVar.Name}.\n"+ClobberBuiltInsMessage);
                 }
                 var newValue = ToCSharpObject(state, 3, binding);
                 if (newValue == null) return 0;
                 LuaExceptionCatch(() => boundVar.Value = newValue, state);
+                return 0;
             }
-            else
+            
+            var functions = (binding.Shared.FunctionManager as FunctionManager).RawFunctions;
+            if (functions.TryGetValue(index, out var function) && !SafeHouse.Config.AllowClobberBuiltIns)
             {
-                state.RawSet(1);
+                return state.Error($"Attempt to clobber a built-in kOS function: {function.FunctionName}.\n"+ClobberBuiltInsMessage);
             }
+            
+            state.RawSet(1);
             return 0;
         }
 
