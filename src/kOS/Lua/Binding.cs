@@ -1,21 +1,13 @@
 using KeraLua;
 using kOS.Binding;
-using kOS.Safe;
-using kOS.Safe.Binding;
 using kOS.Safe.Encapsulation;
-using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Safe.Exceptions;
-using kOS.Safe.Execution;
 using kOS.Safe.Function;
 using kOS.Safe.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using kOS.Lua.Types;
 using kOS.Suffixed;
-using Smooth.Collections;
 using Debug = UnityEngine.Debug;
 using TimeSpan = kOS.Suffixed.TimeSpan;
 
@@ -24,6 +16,7 @@ namespace kOS.Lua
     public static class Binding
     {
         public static readonly Dictionary<IntPtr, BindingData> Bindings = new Dictionary<IntPtr, BindingData>();
+        private static readonly LuaTypeBase[] luaTypes = { new KSStructure(), new KSFunction() };
         private static readonly HashSet<Type> uniqueTypes = new HashSet<Type>()
         {   // Types of objects that you want to create new lua instances of when pushing onto the stack,
             // but that have overridden Equals and GetHashCode methods so BindingData.Objects dictionary
@@ -38,17 +31,11 @@ namespace kOS.Lua
         {
             public readonly Dictionary<IntPtr, object> Objects = new Dictionary<IntPtr, object>();
             public readonly Dictionary<object, IntPtr> UserdataPtrs = new Dictionary<object, IntPtr>();
-            public readonly LuaTypeBase[] Types;
             public readonly SharedObjects Shared;
             
-            public BindingData(KeraLua.Lua state, SharedObjects shared)
+            public BindingData(SharedObjects shared)
             {
                 Shared = shared;
-                Types = new LuaTypeBase[]
-                {
-                    new KSStructure(state),
-                    new KSFunction(state),
-                };
             }
         }
 
@@ -56,7 +43,10 @@ namespace kOS.Lua
         {
             state = state.MainThread;
             BindingChanges.Apply(shared.BindingMgr as BindingManager, shared.FunctionManager as FunctionManager);
-            Bindings[state.Handle] = new BindingData(state, shared);
+            Bindings[state.Handle] = new BindingData(shared);
+
+            foreach (var type in luaTypes)
+                type.CreateMetatable(state);
             
             // set index and newindex metamethods on the environment table
             state.PushGlobalTable();
@@ -205,7 +195,7 @@ namespace kOS.Lua
                     break;
                 default:
                 {
-                    foreach (var type in binding.Types)
+                    foreach (var type in luaTypes)
                         if (type.BindingTypes.Any(t => t.IsInstanceOfType(obj)))
                             return PushObject(state, obj, binding, type.MetatableName);
                     state.PushNil();

@@ -17,14 +17,15 @@ namespace kOS.Lua.Types
     public class KSStructure : LuaTypeBase
     {
         private static readonly CalculatorStructure structureCalculator = new CalculatorStructure();
+        private static readonly string metatableName = "Structure";
         private static readonly Type[] bindingTypes = { typeof(Structure) };
-        public override string MetatableName => "Structure";
+        public override string MetatableName => metatableName;
         public override Type[] BindingTypes => bindingTypes;
 
-        public KSStructure(KeraLua.Lua state)
+        public override void CreateMetatable(KeraLua.Lua state)
         {
-            state.NewMetaTable(MetatableName);
-            state.PushString(MetatableName);
+            state.NewMetaTable(metatableName);
+            state.PushString(metatableName);
             state.SetField(-2, "__type");
             AddMethod(state, "__index", StructureIndex);
             AddMethod(state, "__newindex", StructureNewIndex);

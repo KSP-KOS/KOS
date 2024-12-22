@@ -14,10 +14,10 @@ namespace kOS.Lua.Types
         public override string MetatableName => metatableName;
         public override Type[] BindingTypes => bindingTypes;
 
-        public KSFunction(KeraLua.Lua state)
+        public override void CreateMetatable(KeraLua.Lua state)
         {
-            state.NewMetaTable(MetatableName);
-            state.PushString(MetatableName);
+            state.NewMetaTable(metatableName);
+            state.PushString(metatableName);
             state.SetField(-2, "__type");
             AddMethod(state, "__call", KSFunctionCall);
             AddMethod(state, "__gc", Binding.CollectObject);
