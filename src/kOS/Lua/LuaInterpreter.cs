@@ -163,16 +163,17 @@ namespace kOS.Lua
         }
 
         public int InstructionsThisUpdate()
-        {   // ProcessElectricity() calls this after changing interpreter when stuff is not initialized yet
-            if (state != null && stateInfo.TryGetValue(state.MainThread.Handle, out var info))
-                return info.InstructionsThisUpdate;
+        {
+            if (state != null && stateInfo.TryGetValue(state.MainThread.Handle, out var execInfo))
+                return execInfo.InstructionsThisUpdate;
             return 0;
         }
 
         public int ECInstructionsThisUpdate()
         {
-            var execInfo = stateInfo[commandCoroutine.MainThread.Handle];
-            return Math.Max(InstructionsThisUpdate() - execInfo.IdleInstructions ?? 0, 0);
+            if (state != null && stateInfo.TryGetValue(state.MainThread.Handle, out var execInfo))
+                return Math.Max(execInfo.InstructionsThisUpdate - execInfo.IdleInstructions ?? 0, 0);
+            return 0;
         }
 
         public void KOSFixedUpdate(double dt)
