@@ -7,6 +7,7 @@ namespace kOS.Lua.Libs
     {
         private static readonly RegList devLib = new RegList
         {
+            {"log", Log},
             {"getregistry", GetRegistry},
             {"getupvalues", GetUpvalues},
             {null, null}
@@ -18,6 +19,14 @@ namespace kOS.Lua.Libs
             state.PushGlobalTable();
             state.SetFuncs(devLib.ToArray(), 0);
             return 1;
+        }
+        
+        private static int Log(IntPtr L)
+        {
+            var state = KeraLua.Lua.FromIntPtr(L);
+            var logMessage = state.CheckString(1);
+            UnityEngine.Debug.Log(logMessage);
+            return 0;
         }
 
         private static int GetRegistry(IntPtr L)
