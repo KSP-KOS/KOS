@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.IO;
-using System.Reflection;
 using KeraLua;
 using kOS.Safe;
 using kOS.Safe.Utilities;
@@ -13,15 +11,19 @@ namespace kOS.Lua
 {
     public class LuaInterpreter : IInterpreter, IFixedUpdateObserver, IUpdateObserver
     {
+        public const string LuaVersion = "5.4";
+        public static readonly string[] FilenameExtensions = { "lua" };
+        public string Name => "lua";
+        private SharedObjects Shared { get; }
         private KeraLua.Lua state;
         private KeraLua.Lua commandCoroutine;
         private KeraLua.Lua fixedUpdateCoroutine;
         private KeraLua.Lua updateCoroutine;
-        private static readonly Dictionary<IntPtr, ExecInfo> stateInfo = new Dictionary<IntPtr, ExecInfo>();
-        public const string LuaVersion = "5.4";
-        public static readonly string[] FilenameExtensions = new string[] { "lua" };
-        public string Name => "lua";
-        private SharedObjects Shared { get; }
+        /// Relevant information for the instruction hook meant to be accessed with the lua state handle in a static context 
+        private static readonly Dictionary<IntPtr, InstructionHookInfo> stateHookInfo = new Dictionary<IntPtr, InstructionHookInfo>();
+        private readonly Queue<CommandInfo> commandsQueue = new Queue<CommandInfo>();
+        private int breakExecutionCount;
+        private int? idleInstructions;
         
         private class CommandInfo
         {
@@ -34,20 +36,15 @@ namespace kOS.Lua
             }
         }
 
-        private class ExecInfo
+        private class InstructionHookInfo
         {
-            public readonly Queue<CommandInfo> CommandsQueue = new Queue<CommandInfo>();
-            public int InstructionsPerUpdate = SafeHouse.Config.InstructionsPerUpdate;
-            public int InstructionsThisUpdate = 0;
-            public bool BreakExecution = false;
-            public int BreakExecutionCount = 0;
-            public int? IdleInstructions;
-            public readonly KeraLua.Lua CommandCoroutine;
+            public int InstructionsPerUpdate;
+            public int InstructionsThisUpdate;
+            public bool BreakExecution;
             public readonly SharedObjects Shared;
-            public ExecInfo(SharedObjects shared, KeraLua.Lua commandCoroutine)
+            public InstructionHookInfo(SharedObjects shared)
             {
                 Shared = shared;
-                CommandCoroutine = commandCoroutine;
             }
         }
 
@@ -70,7 +67,7 @@ namespace kOS.Lua
             commandCoroutine.SetHook(AfterEveryInstructionHook, LuaHookMask.Count, 1);
             fixedUpdateCoroutine.SetHook(AfterEveryInstructionHook, LuaHookMask.Count, 1);
             updateCoroutine.SetHook(AfterEveryInstructionHook, LuaHookMask.Count, 1);
-            stateInfo.Add(state.MainThread.Handle, new ExecInfo(Shared, commandCoroutine));
+            stateHookInfo.Add(state.MainThread.Handle, new InstructionHookInfo(Shared));
             
             Libraries.Open(state, Shared);
             
@@ -103,9 +100,9 @@ namespace kOS.Lua
         private static void AfterEveryInstructionHook(IntPtr L, IntPtr ar)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
-            var execInfo = stateInfo[state.MainThread.Handle];
-            if (++execInfo.InstructionsThisUpdate >= execInfo.InstructionsPerUpdate || execInfo.BreakExecution 
-                || (execInfo.Shared.Cpu as LuaCPU).IsYielding())
+            var hookInfo = stateHookInfo[state.MainThread.Handle];
+            if (++hookInfo.InstructionsThisUpdate >= hookInfo.InstructionsPerUpdate || hookInfo.BreakExecution 
+                || (hookInfo.Shared.Cpu as LuaCPU).IsYielding())
             {
                 // it's possible for a C/CSharp function to call lua making a coroutine unable to yield because
                 // of the "C-call boundary".
@@ -119,8 +116,7 @@ namespace kOS.Lua
         private void ProcessCommand(string commandText, string commandName)
         {
             if (state == null) return;
-            var execInfo = stateInfo[state.MainThread.Handle];
-            execInfo.CommandsQueue.Enqueue(new CommandInfo(commandText, commandName));
+            commandsQueue.Enqueue(new CommandInfo(commandText, commandName));
         }
 
         private bool LoadCommand(CommandInfo commandInfo)
@@ -157,22 +153,22 @@ namespace kOS.Lua
         public void BreakExecution()
         {
             if (state == null) return;
-            var execInfo = stateInfo[state.MainThread.Handle];
-            execInfo.BreakExecution = true;
-            execInfo.BreakExecutionCount++;
+            var hookInfo = stateHookInfo[state.MainThread.Handle];
+            hookInfo.BreakExecution = true;
+            breakExecutionCount++;
         }
 
         public int InstructionsThisUpdate()
         {
-            if (state != null && stateInfo.TryGetValue(state.MainThread.Handle, out var execInfo))
-                return execInfo.InstructionsThisUpdate;
+            if (state != null && stateHookInfo.TryGetValue(state.MainThread.Handle, out var hookInfo))
+                return hookInfo.InstructionsThisUpdate;
             return 0;
         }
 
         public int ECInstructionsThisUpdate()
         {
-            if (state != null && stateInfo.TryGetValue(state.MainThread.Handle, out var execInfo))
-                return Math.Max(execInfo.InstructionsThisUpdate - execInfo.IdleInstructions ?? 0, 0);
+            if (state != null && stateHookInfo.TryGetValue(state.MainThread.Handle, out var hookInfo))
+                return Math.Max(hookInfo.InstructionsThisUpdate - idleInstructions ?? 0, 0);
             return 0;
         }
 
@@ -181,14 +177,14 @@ namespace kOS.Lua
             (Shared.Cpu as LuaCPU).FixedUpdate();
             Shared.BindingMgr?.PreUpdate();
             
-            var execInfo = stateInfo[commandCoroutine.MainThread.Handle];
-            execInfo.InstructionsPerUpdate = SafeHouse.Config.LuaInstructionsPerUpdate;
-            execInfo.InstructionsThisUpdate = 0;
+            var hookInfo = stateHookInfo[commandCoroutine.MainThread.Handle];
+            hookInfo.InstructionsPerUpdate = SafeHouse.Config.LuaInstructionsPerUpdate;
+            hookInfo.InstructionsThisUpdate = 0;
             
-            if (execInfo.BreakExecution)
+            if (hookInfo.BreakExecution)
             {   // true after BreakExecution was called, reset thread to prevent execution of the same program
-                execInfo.BreakExecution = false;
-                execInfo.CommandsQueue.Clear();
+                hookInfo.BreakExecution = false;
+                commandsQueue.Clear();
                 commandCoroutine.ResetThread();
                 fixedUpdateCoroutine.ResetThread();
                 updateCoroutine.ResetThread();
@@ -220,13 +216,13 @@ namespace kOS.Lua
                 }
             }
             
-            if (execInfo.IdleInstructions == null)
-                execInfo.IdleInstructions = execInfo.InstructionsThisUpdate;
+            if (idleInstructions == null)
+                idleInstructions = hookInfo.InstructionsThisUpdate;
 
-            if (execInfo.InstructionsThisUpdate < execInfo.InstructionsPerUpdate)
-                execInfo.BreakExecutionCount = 0;
+            if (hookInfo.InstructionsThisUpdate < hookInfo.InstructionsPerUpdate)
+                breakExecutionCount = 0;
             
-            if (execInfo.BreakExecutionCount >= 3)
+            if (breakExecutionCount >= 3)
             {
                 Shared.SoundMaker.BeginFileSound("beep");
                 Shared.Screen.Print("Ctrl+C was pressed 3 times while the processor was using all of the available instructions so "+
@@ -235,16 +231,16 @@ namespace kOS.Lua
                 state.SetGlobal("fixedupdate");
                 state.PushNil();
                 state.SetGlobal("update");
-                execInfo.BreakExecutionCount = 0;
+                breakExecutionCount = 0;
             }
             
-            if (execInfo.InstructionsThisUpdate < execInfo.InstructionsPerUpdate && !(Shared.Cpu as LuaCPU).IsYielding())
+            if (hookInfo.InstructionsThisUpdate < hookInfo.InstructionsPerUpdate && !(Shared.Cpu as LuaCPU).IsYielding())
             {
                 // resumes the coroutine after it yielded due to running out of instructions
                 // and/or executes queued commands until they run out or the coroutine yields
-                while (commandCoroutine.Status == LuaStatus.Yield || execInfo.CommandsQueue.Count > 0)
+                while (commandCoroutine.Status == LuaStatus.Yield || commandsQueue.Count > 0)
                 {
-                    if (commandCoroutine.Status == LuaStatus.Yield || LoadCommand(execInfo.CommandsQueue.Dequeue()))
+                    if (commandCoroutine.Status == LuaStatus.Yield || LoadCommand(commandsQueue.Dequeue()))
                     {
                         var status = commandCoroutine.Resume(state, 0);
                         if (status == LuaStatus.Yield) break;
@@ -261,9 +257,9 @@ namespace kOS.Lua
         public void KOSUpdate(double dt)
         {
             if (dt == 0) return; // don't run when the game is paused
-            var execInfo = stateInfo[commandCoroutine.MainThread.Handle];
+            var hookInfo = stateHookInfo[commandCoroutine.MainThread.Handle];
             
-            if (execInfo.InstructionsThisUpdate >= execInfo.InstructionsPerUpdate) return;
+            if (hookInfo.InstructionsThisUpdate >= hookInfo.InstructionsPerUpdate) return;
             
             updateCoroutine.ResetThread();
             if (updateCoroutine.GetGlobal("update") == LuaType.Function && !(Shared.Cpu as LuaCPU).IsYielding())
@@ -290,9 +286,12 @@ namespace kOS.Lua
             Shared.UpdateHandler.RemoveObserver(this);
             var stateHandle = state.MainThread.Handle;
             state.Dispose();
-            stateInfo.Remove(stateHandle);
+            stateHookInfo.Remove(stateHandle);
             Binding.Bindings.Remove(stateHandle);
             state = null;
+            commandsQueue.Clear();
+            breakExecutionCount = 0;
+            idleInstructions = null;
         }
 
         private void DisplayError(string errorMessage, KeraLua.Lua state = null)
