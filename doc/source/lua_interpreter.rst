@@ -172,8 +172,8 @@ Misc module
 
 ``vecdraw(start?, vector?, color?, label?, scale?, show?, width?, pointy?, wiping?): VecdrawTable``
 ```````````````````````````````````````````````````````````````````````````````````````````````````
-    Wrapper around kOS :func:`VECDRAW` function that uses the `Callback system`_ to automatically update the "start", "vector" and "color" values.
-    Those 3 parameters can also accept functions, in which case their values will be changed each frame with the return value of the functions.
+    Wrapper around kOS :func:`VECDRAW` function that uses the `Callback system`_ to automatically update the "start" and "vector".
+    Those parameters can accept functions, in which case their values will be changed each frame with the return value of the functions.
     This function returns a table representing a Vecdraw structure, and when this table gets garbage collected the vecdraw is removed.
 
     ::
