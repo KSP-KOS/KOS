@@ -1376,6 +1376,7 @@ function readjson(path) end
 function exists(path) end
 
 ---@param path string | VolumeItem | Volume 
+---@return VolumeFile | VolumeDirectory
 ---Will return a `VolumeFile` or `VolumeDirectory` representing the item
 ---pointed to by :code:`PATH`. It will return a `boolean` false if there's
 ---nothing present under the given path. Also see :meth:`Volume:OPEN`.

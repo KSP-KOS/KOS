@@ -1272,7 +1272,6 @@
 ---back as "UNKNOWN" rather than one of the known class sizes.
 ---@field sizeclass string
 ---@field soichangewatchers UniqueSet
----@field positionerror Vector
 
 ---@class Addon : Structure
 ---@field available boolean
