@@ -26,7 +26,7 @@ Just write the lua scripts using its syntax as you would kerboscript, but there 
 
 - The difference between kerboscript ``RUN`` command and ``dofile`` and ``loadfile`` functions. The main difference being that the context is shared across the whole core.
 - Triggers are implemented using the `callback system`_. While you can use them exactly like you would use kerboscript triggers, that is not the most efficient way.
-- Some kerboscript commands are functions in lua. Examples being ``wait``, ``waituntil``, ``buildlist``, ``printlist``, ``add``, ``remove`` etc. The first two are a part of the default `Misc module`_. The other functions are available in kerboscript too, but most people use their command equivalents.
+- Some `name changes to bound variables and functions`_.
 
 Main lua changes
 ----------------
@@ -44,17 +44,41 @@ as well as support for the added syntactic sugar see the README file at ``*KSP_F
 
 Name changes to bound variables and functions
 ---------------------------------------------
-Some changes were neccessary to resolve name conflicts:
-
-- "stage" bound variable got renamed to "stageinfo".
-- "heading" bound variable got renamed to "shipheading".
-- "body" function got renamed to "getbody".
+Some name changes were neccessary to resolve name conflicts:
+    | ``STAGE`` bound variable → ``stageinfo``.
+    | ``HEADING`` bound variable → ``shipheading``.
+    | ``BODY`` function → ``getbody``.
 
 kOS variables and functions that are accessable only by capital names:
+    | ``STEERING``
+    | ``THROTTLE``
+    | ``WHEELSTEERING``
+    | ``WHEELTHROTTLE``
+    | ``VECDRAW``
+    | ``CLEARVECDRAWS``
 
-"STEERING", "THROTTLE", "WHEELSTEERING", "WHEELTHROTTLE", "VECDRAW", "CLEARVECDRAWS".
+    This was done so there is no confusion between kOS variables and lua variables used by default modules.
 
-This was done so there is no confusion between kOS variables and lua variables used by default modules.
+Kerboscript command alternatives:
+    | ``WHEN condition THEN *body*.`` → `when(condition, body) <#when-condition-body-priority-callbacks>`_
+    | ``ON state *body*.`` → `on(state, body) <#on-state-body-priority-callbacks>`_
+    | ``WAIT seconds.`` → `wait(seconds)`_
+    | ``WAIT UNTIL condition.`` → `waituntil(condition)`_
+    | ``PRINT item AT(column, row).`` → ``printat(item, column, row)``
+    | ``STAGE.`` → ``stage()``
+    | ``CLEARSCREEN.`` → ``clearscreen()``
+    | ``ADD node.`` → ``add(node)``
+    | ``REMOVE node.`` → ``remove(node)``
+    | ``LOG text TO path.`` → ``logfile(text, path)``
+    | ``SWITCH TO volumeId.`` → ``switch(volumeId)``
+    | ``EDIT path.`` → ``edit(path)``
+    | ``REBOOT.`` → ``reboot()``
+    | ``SHUTDOWN.`` → ``shutdown()``
+    | ``LIST listType IN variable.`` → ``variable = buildlist(listType)``
+    | ``LIST listType.`` → ``printlist(listType)``
+    | ``LIST.`` → ``printlist("files")``
+
+    All these functions, except the first 4, are available in kerboscript but are documented as commands.
 
 Default modules
 ---------------
