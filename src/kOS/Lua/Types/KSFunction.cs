@@ -37,9 +37,11 @@ namespace kOS.Lua.Types
             stack.PushArgument(new KOSArgMarkerType());
             for (int i = 2; i <= state.GetTop(); i++)
             {
-                var arg = Structure.FromPrimitiveWithAssert(Binding.ToCSharpObject(state, i, binding));
-                if (arg == null) break;
-                Binding.LuaExceptionCatch(() => stack.PushArgument(arg), state);
+                var arg = Binding.ToCSharpObject(state, i, binding);
+                var structure = Structure.FromPrimitive(arg) as Structure;
+                if (structure == null)
+                    state.Error($"Cannot cast argument #{i-1} of type {(arg == null? "null" : arg.GetType().ToString())} to Structure.");
+                Binding.LuaExceptionCatch(() => stack.PushArgument(structure), state);
             }
             
             if (ksFunction is SafeFunctionBase function)
