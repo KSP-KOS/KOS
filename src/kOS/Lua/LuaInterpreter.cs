@@ -24,6 +24,7 @@ namespace kOS.Lua
         private readonly Queue<CommandInfo> commandsQueue = new Queue<CommandInfo>();
         private int breakExecutionCount;
         private int? idleInstructions;
+        private int fixedupdateInstructions;
         
         private class CommandInfo
         {
@@ -146,8 +147,8 @@ namespace kOS.Lua
 
         public bool IsWaitingForCommand()
         {
-            return !(Shared.Cpu as LuaCPU).IsYielding() && fixedUpdateCoroutine.Status != LuaStatus.Yield
-                                                        && commandCoroutine.Status != LuaStatus.Yield;
+            return !(Shared.Cpu as LuaCPU).IsYielding() && commandCoroutine.Status != LuaStatus.Yield
+                   && fixedupdateInstructions < stateHookInfo[state.MainThread.Handle].InstructionsPerUpdate;
         }
 
         public void BreakExecution()
@@ -216,6 +217,8 @@ namespace kOS.Lua
                 }
             }
             else fixedUpdateCoroutine.Pop(1);
+            
+            fixedupdateInstructions = hookInfo.InstructionsThisUpdate;
             
             if (idleInstructions == null)
                 idleInstructions = hookInfo.InstructionsThisUpdate;
