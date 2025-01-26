@@ -18,6 +18,7 @@ Basic knowledge of lua is required.
 - `Misc module`_
 - `Design patterns`_
 - `Example scripts`_
+- `System variables`_
 
 Main differences from kerboscript
 ---------------------------------
@@ -227,3 +228,13 @@ Interactive scripts
 Example scripts
 ---------------
     You can take a look at some examples of using lua at `sug44/kOSLuaScripts <https://github.com/sug44/kOSLuaScripts>`_
+
+System variables
+----------------
+
+    There are 3 lua variables that are used by kOS:
+        - ``fixedupdate``. Function called at the start of each physics tick.
+        - ``update``. Function called at the start of each frame.
+        - ``breakexecution``. Function called when the terminal receives the Ctrl+C code. If Ctrl+C was pressed 3 times while the command code was deprived of instructions by the ``fixedupdate`` function it will be set to ``nil`` to prevent the core from geting stuck. To prevent it from happening this function must ensure the terminal is not deprived of instructions.
+
+    Those variables are used by the default `Callbacks module`_.
