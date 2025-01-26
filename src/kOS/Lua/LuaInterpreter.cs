@@ -190,31 +190,32 @@ namespace kOS.Lua
                 updateCoroutine.ResetThread();
                 if (fixedUpdateCoroutine.GetGlobal("breakexecution") == LuaType.Function)
                 {
-                    if (fixedUpdateCoroutine.LoadString("breakexecution()", "breakexecution") == LuaStatus.OK)
+                    var status = fixedUpdateCoroutine.Resume(state, 0);
+                    if (status != LuaStatus.OK && status != LuaStatus.Yield)
                     {
-                        var status = fixedUpdateCoroutine.Resume(state, 0);
-                        if (status != LuaStatus.OK && status != LuaStatus.Yield)
-                            DisplayError(fixedUpdateCoroutine.ToString(-1), fixedUpdateCoroutine);
+                        DisplayError(fixedUpdateCoroutine.ToString(-1), fixedUpdateCoroutine);
+                        fixedUpdateCoroutine.Pop(1);
                     }
                 }
+                else fixedUpdateCoroutine.Pop(1);
             }
 
             fixedUpdateCoroutine.ResetThread();
             if (fixedUpdateCoroutine.GetGlobal("fixedupdate") == LuaType.Function && !(Shared.Cpu as LuaCPU).IsYielding())
             {
-                if (fixedUpdateCoroutine.LoadString($"fixedupdate({dt})", "fixedupdate") == LuaStatus.OK)
+                fixedUpdateCoroutine.PushNumber(dt);
+                var status = fixedUpdateCoroutine.Resume(state, 1);
+                if (status != LuaStatus.OK && status != LuaStatus.Yield)
                 {
-                    var status = fixedUpdateCoroutine.Resume(state, 0);
-                    if (status != LuaStatus.OK && status != LuaStatus.Yield)
-                    {
-                        DisplayError(fixedUpdateCoroutine.ToString(-1)
-                                     +"\nfixedupdate function errored and was set to nil."
-                                     +"\nTo reset fixedupdate do 'fixedupdate = callbacks.fixedupdate'.", fixedUpdateCoroutine);
-                        fixedUpdateCoroutine.PushNil();
-                        fixedUpdateCoroutine.SetGlobal("fixedupdate");
-                    }
+                    DisplayError(fixedUpdateCoroutine.ToString(-1)
+                                 +"\nfixedupdate function errored and was set to nil."
+                                 +"\nTo reset fixedupdate do 'fixedupdate = callbacks.fixedupdate'.", fixedUpdateCoroutine);
+                    fixedUpdateCoroutine.Pop(1);
+                    fixedUpdateCoroutine.PushNil();
+                    fixedUpdateCoroutine.SetGlobal("fixedupdate");
                 }
             }
+            else fixedUpdateCoroutine.Pop(1);
             
             if (idleInstructions == null)
                 idleInstructions = hookInfo.InstructionsThisUpdate;
@@ -226,11 +227,9 @@ namespace kOS.Lua
             {
                 Shared.SoundMaker.BeginFileSound("beep");
                 Shared.Screen.Print("Ctrl+C was pressed 3 times while the processor was using all of the available instructions so "+
-                                    "update callbacks were set to nil. To reset callbacks do:\n\"callbacks.init()\".");
+                                    "fixedupdate function was set to nil. To reset the default function do:\n\"callbacks.init()\".");
                 state.PushNil();
                 state.SetGlobal("fixedupdate");
-                state.PushNil();
-                state.SetGlobal("update");
                 breakExecutionCount = 0;
             }
             
@@ -264,19 +263,19 @@ namespace kOS.Lua
             updateCoroutine.ResetThread();
             if (updateCoroutine.GetGlobal("update") == LuaType.Function && !(Shared.Cpu as LuaCPU).IsYielding())
             {
-                if (updateCoroutine.LoadString($"update({dt})", "update") == LuaStatus.OK)
+                updateCoroutine.PushNumber(dt);
+                var status = updateCoroutine.Resume(state, 1);
+                if (status != LuaStatus.OK && status != LuaStatus.Yield)
                 {
-                    var status = updateCoroutine.Resume(state, 0);
-                    if (status != LuaStatus.OK && status != LuaStatus.Yield)
-                    {
-                        DisplayError(updateCoroutine.ToString(-1)
-                                     +"\nupdate function errored and was set to nil."
-                                     +"\nTo reset update do 'update = callbacks.update'.", updateCoroutine);
-                        updateCoroutine.PushNil();
-                        updateCoroutine.SetGlobal("update");
-                    }
+                    DisplayError(updateCoroutine.ToString(-1)
+                                 +"\nupdate function errored and was set to nil."
+                                 +"\nTo reset update do 'update = callbacks.update'.", updateCoroutine);
+                    updateCoroutine.Pop(1);
+                    updateCoroutine.PushNil();
+                    updateCoroutine.SetGlobal("update");
                 }
             }
+            else updateCoroutine.Pop(1);
         }
 
         public void Dispose()
