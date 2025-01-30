@@ -732,7 +732,7 @@ namespace kOS.Function
             AssertArgBottomAndConsume(shared); // no args
             
             // ReSharper disable SuggestUseVarKeywordEvident
-            ListValue<WaypointValue> returnList = new ListValue<WaypointValue>();
+            ListValue returnList = new ListValue();
             // ReSharper enable SuggestUseVarKeywordEvident
 
             WaypointManager wpm = WaypointManager.Instance();

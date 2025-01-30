@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using kOS.Module;
 using kOS.Control;
 using kOS.Safe.Binding;
@@ -56,15 +57,15 @@ namespace kOS.Binding
                     return false; // Since there is no solver, there can be no node.
                 return vessel.patchedConicSolver.maneuverNodes.Count > 0;
             });
-            shared.BindingMgr.AddGetter("ALLNODES", () => GetAllNodes(shared));
+            shared.BindingMgr.AddGetter("ALLNODES", () => new ListValue(GetAllNodes(shared)));
         }
 
-        public ListValue<Node> GetAllNodes(SharedObjects shared)
+        public List<Node> GetAllNodes(SharedObjects shared)
         {
             var vessel = shared.Vessel;
             if (vessel.patchedConicSolver == null || vessel.patchedConicSolver.maneuverNodes.Count == 0)
-                return new ListValue<Node>();
-            var ret = new ListValue<Node>(vessel.patchedConicSolver.maneuverNodes.Select(e => Node.FromExisting(vessel, e, shared)));
+                return new List<Node>();
+            var ret = new List<Node>(vessel.patchedConicSolver.maneuverNodes.Select(e => Node.FromExisting(vessel, e, shared)));
             return ret;
         }
     }

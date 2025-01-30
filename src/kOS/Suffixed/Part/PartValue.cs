@@ -22,7 +22,7 @@ namespace kOS.Suffixed.Part
         public global::Part Part { get; private set; }
         public PartValue Parent { get; private set; }
         public DecouplerValue Decoupler { get; private set; }
-        public ListValue<PartValue> Children { get; private set; }
+        public List<PartValue> Children { get; private set; }
         public Structure ParentValue { get { return (Structure)Parent ?? StringValue.None; } }
         public Structure DecouplerValue { get { return (Structure)Decoupler ?? StringValue.None; } }
         public int DecoupledIn { get { return (Decoupler != null) ? Decoupler.Part.inverseStage : -1; } }
@@ -37,7 +37,7 @@ namespace kOS.Suffixed.Part
             Parent = parent;
             Decoupler = decoupler;
             RegisterInitializer(PartInitializeSuffixes);
-            Children  = new ListValue<PartValue>();
+            Children  = new List<PartValue>();
         }
 
         private void PartInitializeSuffixes()
@@ -66,7 +66,7 @@ namespace kOS.Suffixed.Part
             AddSuffix(new[] { "DECOUPLER", "SEPARATOR" }, new Suffix<Structure>(() => DecouplerValue, "The part that will decouple/separate this part when activated"));
             AddSuffix(new[] { "DECOUPLEDIN", "SEPARATEDIN" }, new Suffix<ScalarValue>(() => DecoupledIn));
             AddSuffix("HASPARENT", new Suffix<BooleanValue>(() => Part.parent != null, "Tells you if this part has a parent, is used to avoid null exception from PARENT"));
-            AddSuffix("CHILDREN", new Suffix<ListValue<PartValue>>(() => PartValueFactory.ConstructGeneric(Part.children, Shared), "A LIST() of the children parts of this part"));
+            AddSuffix("CHILDREN", new Suffix<ListValue>(() => new ListValue(PartValueFactory.ConstructGeneric(Part.children, Shared)), "A LIST() of the children parts of this part"));
             AddSuffix("DRYMASS", new Suffix<ScalarValue>(() => Part.GetDryMass(), "The Part's mass when empty"));
             AddSuffix("MASS", new Suffix<ScalarValue>(() => Part.CalculateCurrentMass(), "The Part's current mass"));
             AddSuffix("WETMASS", new Suffix<ScalarValue>(() => Part.GetWetMass(), "The Part's mass when full"));

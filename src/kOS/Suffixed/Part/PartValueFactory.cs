@@ -12,8 +12,8 @@ namespace kOS.Suffixed.Part
             return ListValue.CreateList(parts.Select(part => Construct(part, shared)).Where(p => p != null));
         }
 
-        public static ListValue<PartValue> ConstructGeneric(IEnumerable<global::Part> parts, SharedObjects shared) {
-            return ListValue<PartValue>.CreateList(parts.Select(part => Construct(part, shared)).Where(p => p != null));
+        public static List<PartValue> ConstructGeneric(IEnumerable<global::Part> parts, SharedObjects shared) {
+            return parts.Select(part => Construct(part, shared)).Where(p => p != null).ToList();
         }
 
         public static PartValue Construct(global::Part part, SharedObjects shared) {

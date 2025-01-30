@@ -115,10 +115,10 @@ namespace kOS.Safe.Encapsulation
         private void InitalizeSuffixes()
         {
             AddSuffix("CLEAR", new NoArgsVoidSuffix(Clear, "Removes all items from Lexicon"));
-            AddSuffix("KEYS", new Suffix<ListValue<Structure>>(GetKeys, "Returns the lexicon keys"));
+            AddSuffix("KEYS", new Suffix<ListValue>(GetKeys, "Returns the lexicon keys"));
             AddSuffix("HASKEY", new OneArgsSuffix<BooleanValue, Structure>(HasKey, "Returns true if a key is in the Lexicon"));
             AddSuffix("HASVALUE", new OneArgsSuffix<BooleanValue, Structure>(HasValue, "Returns true if value is in the Lexicon"));
-            AddSuffix("VALUES", new Suffix<ListValue<Structure>>(GetValues, "Returns the lexicon values"));
+            AddSuffix("VALUES", new Suffix<ListValue>(GetValues, "Returns the lexicon values"));
             AddSuffix("COPY", new NoArgsSuffix<Lexicon>(() => new Lexicon(this), "Returns a copy of Lexicon"));
             AddSuffix("LENGTH", new NoArgsSuffix<ScalarValue>(() => internalDictionary.Count, "Returns the number of elements in the collection"));
             AddSuffix("REMOVE", new OneArgsSuffix<BooleanValue, Structure>(one => Remove(one), "Removes the value at the given key"));
@@ -158,12 +158,12 @@ namespace kOS.Safe.Encapsulation
             return internalDictionary.ContainsKey(key);
         }
 
-        public ListValue<Structure> GetValues()
+        public ListValue GetValues()
         {
             return ListValue.CreateList(Values);
         }
 
-        public ListValue<Structure> GetKeys()
+        public ListValue GetKeys()
         {
             return ListValue.CreateList(Keys);
         }
@@ -380,9 +380,9 @@ namespace kOS.Safe.Encapsulation
         /// to the list.
         /// </summary>
         /// <returns></returns>
-        public override ListValue<StringValue> GetSuffixNames()
+        public override List<StringValue> GetSuffixNames()
         {
-            ListValue<StringValue> theList = base.GetSuffixNames();
+            List<StringValue> theList = base.GetSuffixNames();
 
             foreach (Structure key in internalDictionary.Keys)
             {
@@ -392,7 +392,7 @@ namespace kOS.Safe.Encapsulation
                     theList.Add(keyStr);
                 }
             }
-            return new ListValue<StringValue>(theList.OrderBy(item => item.ToString()));
+            return new List<StringValue>(theList.OrderBy(item => item.ToString()));
         }
         public override Dump Dump()
         {

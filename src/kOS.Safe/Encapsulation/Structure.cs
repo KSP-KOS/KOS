@@ -63,7 +63,7 @@ namespace kOS.Safe.Encapsulation
 
               AddSuffix("TOSTRING",       new NoArgsSuffix<StringValue>(() => ToString()));
               AddSuffix("HASSUFFIX",      new OneArgsSuffix<BooleanValue, StringValue>(HasSuffix));
-              AddSuffix("SUFFIXNAMES",    new NoArgsSuffix<ListValue<StringValue>>(GetSuffixNames));
+              AddSuffix("SUFFIXNAMES",    new NoArgsSuffix<ListValue>(() => new ListValue(GetSuffixNames())));
               AddSuffix("ISSERIALIZABLE", new NoArgsSuffix<BooleanValue>(() => this is SerializableStructure));
               AddSuffix("TYPENAME",       new NoArgsSuffix<StringValue>(() => new StringValue(KOSName)));
               AddSuffix("ISTYPE",         new OneArgsSuffix<BooleanValue,StringValue>(GetKOSIsType));
@@ -208,7 +208,7 @@ namespace kOS.Safe.Encapsulation
             return false;
         }
         
-        public virtual ListValue<StringValue> GetSuffixNames()
+        public virtual List<StringValue> GetSuffixNames()
         {
             callInitializeSuffixes();
             List<StringValue> names = new List<StringValue>();            
@@ -218,7 +218,7 @@ namespace kOS.Safe.Encapsulation
             
             // Return the list alphabetized by suffix name.  The key lookups above, since they're coming
             // from a hashed dictionary, won't be in any predictable ordering:
-            return new ListValue<StringValue>(names.OrderBy(item => item.ToString()));
+            return names.OrderBy(item => item.ToString()).ToList();
         }
         
         public virtual BooleanValue GetKOSIsType(StringValue queryTypeName)

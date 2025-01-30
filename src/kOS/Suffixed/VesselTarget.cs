@@ -255,9 +255,9 @@ namespace kOS.Suffixed
             AddSuffix("PARTSTAGGED", new OneArgsSuffix<ListValue, StringValue>(GetPartsTagged));
             AddSuffix("PARTSTAGGEDPATTERN", new OneArgsSuffix<ListValue, StringValue>(GetPartsTaggedPattern));
             AddSuffix("ALLTAGGEDPARTS", new NoArgsSuffix<ListValue>(GetAllTaggedParts));
-            AddSuffix("PARTS", new NoArgsSuffix<ListValue<PartValue>>(() => Parts));
-            AddSuffix("DOCKINGPORTS", new NoArgsSuffix<ListValue<DockingPortValue>>(() => DockingPorts));
-            AddSuffix(new string[] { "DECOUPLERS", "SEPARATORS" }, new NoArgsSuffix<ListValue<DecouplerValue>>(() => Decouplers));
+            AddSuffix("PARTS", new NoArgsSuffix<ListValue>(() => new ListValue(Parts)));
+            AddSuffix("DOCKINGPORTS", new NoArgsSuffix<ListValue>(() => new ListValue(DockingPorts)));
+            AddSuffix(new string[] { "DECOUPLERS", "SEPARATORS" }, new NoArgsSuffix<ListValue>(() => new ListValue(Decouplers)));
             AddSuffix("ELEMENTS", new NoArgsSuffix<ListValue>(() => Vessel.PartList("elements", Shared)));
             
             AddSuffix("ENGINES", new NoArgsSuffix<ListValue>(() => Vessel.PartList("engines", Shared)));
@@ -291,7 +291,7 @@ namespace kOS.Suffixed
             AddSuffix("CONTROLPART", new Suffix<PartValue>(() => PartValueFactory.Construct(GetControlPart(), Shared)));
             AddSuffix("DRYMASS", new Suffix<ScalarValue>(() => Vessel.GetDryMass(), "The Ship's mass when empty"));
             AddSuffix("WETMASS", new Suffix<ScalarValue>(() => Vessel.GetWetMass(), "The Ship's mass when full"));
-            AddSuffix("RESOURCES", new Suffix<ListValue<AggregateResourceValue>>(() => AggregateResourceValue.FromVessel(Vessel, Shared), "The Aggregate resources from every part on the craft"));
+            AddSuffix("RESOURCES", new Suffix<ListValue>(() => new ListValue(AggregateResourceValue.FromVessel(Vessel, Shared)), "The Aggregate resources from every part on the craft"));
             AddSuffix("LOADDISTANCE", new Suffix<LoadDistanceValue>(() => new LoadDistanceValue(Vessel)));
             AddSuffix("ISDEAD", new NoArgsSuffix<BooleanValue>(() => (Vessel == null || Vessel.state == Vessel.State.DEAD)));
             AddSuffix("STATUS", new Suffix<StringValue>(() => Vessel.situation.ToString()));
