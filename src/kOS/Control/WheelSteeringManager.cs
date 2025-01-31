@@ -90,11 +90,7 @@ namespace kOS.Control
 
         object IFlightControlParameter.GetValue()
         {
-            if (Enabled)
-            {
-                return Value;
-            }
-            return internalVessel.ctrlState.mainThrottle;
+            return Value;
         }
 
         void IFlightControlParameter.UpdateAutopilot(FlightCtrlState c, ControlTypes ctrlLock)
