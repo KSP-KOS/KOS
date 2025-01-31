@@ -16,6 +16,7 @@ namespace kOS.Control
 
         public bool Enabled { get; private set; }
         public float Value { get; set; }
+        public PIDLoop SteeringPID = new PIDLoop(0.1, 0, 0);
 
         public bool FightsWithSas { get { return false; } }
 
@@ -101,14 +102,15 @@ namespace kOS.Control
             
             float vesselHeading = VesselUtils.GetHeading(controlShared.Vessel);
             float bearing = VesselUtils.AngleDelta(vesselHeading, Value);
+            float PIDOutput = SteeringPID.Update(controlShared.UpdateHandler.CurrentFixedTime, bearing);
 
             if (Mathf.Abs(VesselUtils.AngleDelta(vesselHeading, VesselUtils.GetVelocityHeading(controlShared.Vessel))) <= 90)
             {
-                c.wheelSteer = Mathf.Clamp(bearing / -10, -1, 1);
+                c.wheelSteer = Mathf.Clamp(PIDOutput, -1, 1);
             }
             else
             {
-                c.wheelSteer = -Mathf.Clamp(bearing / -10, -1, 1);
+                c.wheelSteer = -Mathf.Clamp(PIDOutput, -1, 1);
             }
         }
 
