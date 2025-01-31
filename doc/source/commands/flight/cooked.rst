@@ -203,6 +203,13 @@ Like all ``LOCK`` expressions, the steering and throttle continually update on t
     It's a very bad idea to ``WAIT`` during the execution of the expression in a
     LOCK WHEELSTEERING.  See the note in the next section below.
 
+.. global:: WHEELSTEERINGPID
+
+   :access: Get/Set
+   :type: :struct:`PIDLoop`
+
+   The PIDLoop used to control wheelsteering. Can be used to optimize
+   steering performance and eliminate steering oscillations on some vessels.
 
 Don't 'WAIT' or run slow script code during cooked control calculation
 ----------------------------------------------------------------------

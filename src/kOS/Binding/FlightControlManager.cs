@@ -12,6 +12,7 @@ using Math = System.Math;
 using kOS.Control;
 using kOS.Module;
 using kOS.Communication;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Binding
 {
@@ -49,6 +50,18 @@ namespace kOS.Binding
 
             shared.BindingMgr.AddBoundVariable("SASMODE", GetAutopilotModeName, SelectAutopilotMode);
             shared.BindingMgr.AddBoundVariable("NAVMODE", GetNavModeName, SetNavMode);
+
+            shared.BindingMgr.AddBoundVariable("WHEELSTEERINGPID", () =>
+            {
+                return ((WheelSteeringManager)kOSVesselModule.GetInstance(shared.Vessel).GetFlightControlParameter("wheelsteering")).SteeringPID;
+            }, value =>
+            {
+                if (value is PIDLoop pidLoop)
+                {
+                    ((WheelSteeringManager)kOSVesselModule.GetInstance(shared.Vessel).GetFlightControlParameter("wheelsteering")).SteeringPID = pidLoop;
+                }
+                else throw new KOSCastException(value.GetType(), typeof(PIDLoop));
+            });
         }
 
         private object GetThrottleValue()
