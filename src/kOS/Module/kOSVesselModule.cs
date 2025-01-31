@@ -58,6 +58,11 @@ namespace kOS.Module
             }
         }
 
+        public override Activation GetActivation()
+        {
+            return Activation.FlightScene | Activation.LoadedVessels;
+        }
+
         /// <summary>
         /// Start is called after OnEnable activates the module.  This is the second method called by
         /// KSP after Awake.  All parts should be added to the vessel now, so it is safe to walk the
