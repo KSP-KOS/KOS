@@ -98,14 +98,17 @@ namespace kOS.Control
             if (!Enabled) return;
 
             if (!(controlShared.Vessel.horizontalSrfSpeed > 0.1f)) return;
+            
+            float vesselHeading = VesselUtils.GetHeading(controlShared.Vessel);
+            float bearing = VesselUtils.AngleDelta(vesselHeading, Value);
 
-            if (Mathf.Abs(VesselUtils.AngleDelta(VesselUtils.GetHeading(controlShared.Vessel), VesselUtils.GetVelocityHeading(controlShared.Vessel))) <= 90)
+            if (Mathf.Abs(VesselUtils.AngleDelta(vesselHeading, VesselUtils.GetVelocityHeading(controlShared.Vessel))) <= 90)
             {
-                c.wheelSteer = Mathf.Clamp(Value / -10, -1, 1);
+                c.wheelSteer = Mathf.Clamp(bearing / -10, -1, 1);
             }
             else
             {
-                c.wheelSteer = -Mathf.Clamp(Value / -10, -1, 1);
+                c.wheelSteer = -Mathf.Clamp(bearing / -10, -1, 1);
             }
         }
 
@@ -119,29 +122,21 @@ namespace kOS.Control
             if (!Enabled)
                 ((IFlightControlParameter)this).EnableControl(shared);
 
-            float bearing = 0;
-
-            if (value is VesselTarget)
+            if (value is VesselTarget vessel)
             {
-                bearing = VesselUtils.GetTargetBearing(controlShared.Vessel, ((VesselTarget)value).Vessel);
+                Value = VesselUtils.GetTargetHeading(controlShared.Vessel, vessel.Vessel);
             }
-            else if (value is GeoCoordinates)
+            else if (value is GeoCoordinates gc)
             {
-                bearing = ((GeoCoordinates)value).GetBearing();
+                Value = gc.GetHeading();
             }
             else
             {
                 try
                 {
-                    double doubleValue = Convert.ToDouble(value);
-                    if (Utils.IsValidNumber(doubleValue))
-                    {
-                        bearing = (float)(Math.Round(doubleValue) - Mathf.Round(FlightGlobals.ship_heading));
-                        if (bearing < -180)
-                            bearing += 360; // i.e. 359 degrees to the left is really 1 degree to the right.
-                        else if (bearing > 180)
-                            bearing -= 360; // i.e. 359 degrees to the right is really 1 degree to the left
-                    }
+                    float heading = Convert.ToSingle(value);
+                    if (!float.IsInfinity(heading) && !float.IsNaN(heading))
+                        Value = heading;
                 }
                 catch
                 {
@@ -153,11 +148,10 @@ namespace kOS.Control
                             KOSNomenclature.GetKOSName(typeof(VesselTarget)),
                             KOSNomenclature.GetKOSName(typeof(GeoCoordinates)),
                             KOSNomenclature.GetKOSName(typeof(ScalarValue))
-                            )
-                        );
+                        )
+                    );
                 }
             }
-            Value = bearing;
         }
     }
 }

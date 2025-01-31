@@ -127,7 +127,7 @@ namespace kOS.Suffixed
         /// <returns> bearing </returns>
         public ScalarValue GetBearing()
         {
-            return VesselUtils.AngleDelta(VesselUtils.GetHeading(Shared.Vessel), (float) GetHeadingFrom());
+            return VesselUtils.AngleDelta(VesselUtils.GetHeading(Shared.Vessel), (float) GetHeading());
         }
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace kOS.Suffixed
         ///   LAT/LANG position on the SOI body's surface.
         /// </summary>
         /// <returns>compass heading in degrees</returns>
-        private ScalarValue GetHeadingFrom()
+        public ScalarValue GetHeading()
         {
             var up = Shared.Vessel.upAxis;
             var north = VesselUtils.GetNorthVector(Shared.Vessel);
@@ -321,7 +321,7 @@ namespace kOS.Suffixed
             AddSuffix("BODY", new Suffix<BodyTarget>(()=> BodyTarget.CreateOrGetExisting(Body, Shared)));
             AddSuffix("TERRAINHEIGHT", new Suffix<ScalarValue>(GetTerrainAltitude));
             AddSuffix("DISTANCE", new Suffix<ScalarValue>(GetDistanceFrom));
-            AddSuffix("HEADING", new Suffix<ScalarValue>(GetHeadingFrom));
+            AddSuffix("HEADING", new Suffix<ScalarValue>(GetHeading));
             AddSuffix("BEARING", new Suffix<ScalarValue>(GetBearing));
             AddSuffix("POSITION", new Suffix<Vector>(GetPosition,
                                                      "Get the 3-D space position relative to the ship center, of this lat/long, " +
