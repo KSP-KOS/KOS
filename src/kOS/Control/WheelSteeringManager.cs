@@ -16,7 +16,7 @@ namespace kOS.Control
 
         public bool Enabled { get; private set; }
         public float Value { get; set; }
-        public PIDLoop SteeringPID = new PIDLoop(0.1, 0, 0);
+        public PIDLoop SteeringPID = new PIDLoop(0.03, 0, 0);
 
         public bool FightsWithSas { get { return false; } }
 
