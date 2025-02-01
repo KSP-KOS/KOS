@@ -380,9 +380,9 @@ namespace kOS.Safe.Encapsulation
         /// to the list.
         /// </summary>
         /// <returns></returns>
-        public override List<StringValue> GetSuffixNames()
+        public override ListValue GetSuffixNames()
         {
-            List<StringValue> theList = base.GetSuffixNames();
+            ListValue theList = base.GetSuffixNames();
 
             foreach (Structure key in internalDictionary.Keys)
             {
@@ -392,7 +392,7 @@ namespace kOS.Safe.Encapsulation
                     theList.Add(keyStr);
                 }
             }
-            return new List<StringValue>(theList.OrderBy(item => item.ToString()));
+            return new ListValue(theList.OrderBy(item => item.ToString()));
         }
         public override Dump Dump()
         {

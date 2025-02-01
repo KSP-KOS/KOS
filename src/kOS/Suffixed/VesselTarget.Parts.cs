@@ -19,9 +19,9 @@ namespace kOS.Suffixed
         //..... [root, child1, child2, ..., part1-1, part1-2, ..., part2-1, ... heap ;)
         private PartValue rootPart;
         private DecouplerValue nextDecoupler;
-        private List<PartValue> allParts;
-        private List<DockingPortValue> dockingPorts;
-        private List<DecouplerValue> decouplers;
+        private ListValue allParts;
+        private ListValue dockingPorts;
+        private ListValue decouplers;
         private Dictionary<global::Part, PartValue> partCache;
 
         private void InvalidateParts()
@@ -53,7 +53,7 @@ namespace kOS.Suffixed
                 return nextDecoupler;
             }
         }
-        public List<PartValue> Parts
+        public ListValue Parts
         {
             get
             {
@@ -62,7 +62,7 @@ namespace kOS.Suffixed
                 return allParts;
             }
         }
-        public List<DockingPortValue> DockingPorts
+        public ListValue DockingPorts
         {
             get
             {
@@ -71,7 +71,7 @@ namespace kOS.Suffixed
                 return dockingPorts;
             }
         }
-        public List<DecouplerValue> Decouplers
+        public ListValue Decouplers
         {
             get
             {
@@ -98,12 +98,16 @@ namespace kOS.Suffixed
         {
             rootPart = null;
             nextDecoupler = null;
-            allParts = new List<PartValue>();
-            dockingPorts = new List<DockingPortValue>();
-            decouplers = new List<DecouplerValue>();
+            allParts = new ListValue();
+            dockingPorts = new ListValue();
+            decouplers = new ListValue();
             partCache = new Dictionary<global::Part, PartValue>();
 
             ConstructPart(Vessel.rootPart, null, null);
+
+            allParts.IsReadOnly = true;
+            dockingPorts.IsReadOnly = true;
+            decouplers.IsReadOnly = true;
         }
         private void ConstructPart(global::Part part, PartValue parent, DecouplerValue decoupler)
         {
@@ -189,6 +193,7 @@ namespace kOS.Suffixed
             allParts.Add(self);
             foreach (var child in part.children)
                 ConstructPart(child, self, decoupler);
+            self.Children.IsReadOnly = true;
         }
 
         private ListValue GetPartsDubbed(StringValue searchTerm)

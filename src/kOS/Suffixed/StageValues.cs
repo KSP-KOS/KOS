@@ -18,7 +18,7 @@ namespace kOS.Suffixed
         private readonly SharedObjects shared;
         private HashSet<global::Part> partHash = new HashSet<global::Part>();
         private PartSet partSet;
-        private List<ActiveResourceValue> resList;
+        private ListValue resList;
         private Lexicon resLex;
 
         // Set by VesselTarget (from InvalidateParts)
@@ -53,10 +53,10 @@ namespace kOS.Suffixed
             AddSuffix("DELTAV", new Suffix<DeltaVCalc>(() => new DeltaVCalc(shared, shared.Vessel.VesselDeltaV.GetStage(shared.Vessel.currentStage))));
         }
 
-        private List<ActiveResourceValue> GetResourceManifest()
+        private ListValue GetResourceManifest()
         {
             if (resList != null) return resList;
-            resList = new List<ActiveResourceValue>();
+            resList = new ListValue();
             CreatePartSet();
             var defs = PartResourceLibrary.Instance.resourceDefinitions;
             foreach (var def in defs)
