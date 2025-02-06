@@ -59,7 +59,7 @@ namespace kOS.Lua.Types
             var state = KeraLua.Lua.FromIntPtr(L);
             var binding = Binding.Bindings[state.MainThread.Handle];
             var pair = new OperandPair(Binding.ToCSharpObject(state, 1, binding), Binding.ToCSharpObject(state, 2, binding));
-            return (int)Binding.LuaExceptionCatch(() => Binding.PushLuaType(state, operatorMethod(pair), binding), state);
+            return (int)Util.LuaExceptionCatch(() => Binding.PushLuaType(state, operatorMethod(pair), binding), state);
         }
         
         private static int StructureUnary(IntPtr L)
@@ -70,8 +70,8 @@ namespace kOS.Lua.Types
             if (obj == null) return 0;
             MethodInfo unaryMethod = obj.GetType().GetMethod("op_UnaryNegation", BindingFlags.FlattenHierarchy |BindingFlags.Static | BindingFlags.Public);
             if (unaryMethod != null)
-                return (int)Binding.LuaExceptionCatch(() => Binding.PushLuaType(state, unaryMethod.Invoke(null, new[]{obj}), binding), state);
-            Binding.LuaExceptionCatch(() => throw new KOSUnaryOperandTypeException("negate", obj), state);
+                return (int)Util.LuaExceptionCatch(() => Binding.PushLuaType(state, unaryMethod.Invoke(null, new[]{obj}), binding), state);
+            Util.LuaExceptionCatch(() => throw new KOSUnaryOperandTypeException("negate", obj), state);
             return 0;
         }
 
@@ -83,14 +83,14 @@ namespace kOS.Lua.Types
             if (!structure.HasSuffix("LENGTH"))
                 return state.Error("attempt to get length of a Structure with no length suffix");
             state.PushString("LENGTH");
-            return (int)Binding.LuaExceptionCatch(() => PushSuffixResult(state, binding, structure, -1), state);
+            return (int)Util.LuaExceptionCatch(() => PushSuffixResult(state, binding, structure, -1), state);
         }
 
         private static int StructureToString(IntPtr L)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
             var structure = Binding.Bindings[state.MainThread.Handle].Objects[state.ToUserData(1)];
-            var structureString = (string)Binding.LuaExceptionCatch(() => structure.ToString(), state);
+            var structureString = (string)Util.LuaExceptionCatch(() => structure.ToString(), state);
             if (structure is IEnumerable<Structure>)
             {   // make enum structures ToString() method show 1 base indexed values in lua
                 // replaces "\n  [*number*]" with "\n  [*number+1*]"
@@ -112,7 +112,7 @@ namespace kOS.Lua.Types
             if (structure == null)
                 return state.Error(string.Format("attempt to index a {0} value", obj.GetType().Name));
 
-            return (int)Binding.LuaExceptionCatch(() => PushSuffixResult(state, binding, structure, 2), state);
+            return (int)Util.LuaExceptionCatch(() => PushSuffixResult(state, binding, structure, 2), state);
         }
 
         private static int PushSuffixResult(KeraLua.Lua state, Binding.BindingData binding, Structure structure, int index)
@@ -167,13 +167,13 @@ namespace kOS.Lua.Types
             if (structure is IIndexable && state.Type(2) == LuaType.Number)
             {
                 var index = (int)state.ToInteger(2) - (structure is Lexicon? 0 : 1);
-                Binding.LuaExceptionCatch(() =>
+                Util.LuaExceptionCatch(() =>
                     (structure as IIndexable).SetIndex(index, Structure.FromPrimitive(newValue) as Structure), state);
             }
             else
             {
                 var index = state.ToString(2);
-                Binding.LuaExceptionCatch(() =>
+                Util.LuaExceptionCatch(() =>
                 {
                     if (!structure.SetSuffix(index, Structure.FromPrimitive(newValue)))
                         throw new Exception($"Suffix \"{index}\" not found on Structure {structure.KOSName}");
@@ -227,7 +227,7 @@ namespace kOS.Lua.Types
             state.PushInteger(currentIndex);
             state.GetTable(-2);
 
-            Binding.LuaExceptionCatch(() => PushSuffixResult(state, binding, structure, -1), state);
+            Util.LuaExceptionCatch(() => PushSuffixResult(state, binding, structure, -1), state);
             
             state.PushInteger(currentIndex+1);
             state.Copy(-1, KeraLua.Lua.UpValueIndex(1));

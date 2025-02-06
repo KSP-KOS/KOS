@@ -164,8 +164,8 @@ namespace kOS.Lua.Libs
             foreach(var pathTemplate in paths.Split(config.PATHSEP))
             {
                 var path = pathTemplate.Replace(config.PATHMARK.ToString(), name);
-                var globalPath = Binding.LuaExceptionCatch(() => volumeManager.GlobalPathFromObject(path), state) as GlobalPath;
-                var file = Binding.LuaExceptionCatch(() => volumeManager.GetVolumeFromPath(globalPath).Open(globalPath), state) as VolumeFile;
+                var globalPath = Util.LuaExceptionCatch(() => volumeManager.GlobalPathFromObject(path), state) as GlobalPath;
+                var file = Util.LuaExceptionCatch(() => volumeManager.GetVolumeFromPath(globalPath).Open(globalPath), state) as VolumeFile;
                 if (file == null)
                 {
                     errorMessage += $"no file '{path}'\n";

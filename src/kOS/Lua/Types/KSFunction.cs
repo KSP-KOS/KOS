@@ -41,17 +41,17 @@ namespace kOS.Lua.Types
                 var structure = Structure.FromPrimitive(arg) as Structure;
                 if (structure == null)
                     state.Error($"Cannot cast argument #{i-1} of type {(arg == null? "null" : arg.GetType().ToString())} to Structure.");
-                Binding.LuaExceptionCatch(() => stack.PushArgument(structure), state);
+                Util.LuaExceptionCatch(() => stack.PushArgument(structure), state);
             }
             
             if (ksFunction is SafeFunctionBase function)
             {
-                Binding.LuaExceptionCatch(() => function.Execute(binding.Shared), state);
+                Util.LuaExceptionCatch(() => function.Execute(binding.Shared), state);
                 return Binding.PushLuaType(state, Structure.ToPrimitive(function.ReturnValue), binding);
             }
             if (ksFunction is DelegateSuffixResult delegateResult)
             {
-                Binding.LuaExceptionCatch(() => delegateResult.Invoke(binding.Shared.Cpu), state);
+                Util.LuaExceptionCatch(() => delegateResult.Invoke(binding.Shared.Cpu), state);
                 return Binding.PushLuaType(state, Structure.ToPrimitive(delegateResult.Value), binding);
             }
             return state.Error(string.Format("attempt to call a non function {0} value", ksFunction.GetType().Name));

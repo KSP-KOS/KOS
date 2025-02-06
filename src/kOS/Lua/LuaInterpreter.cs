@@ -189,7 +189,7 @@ namespace kOS.Lua
                 commandCoroutine.ResetThread();
                 fixedUpdateCoroutine.ResetThread();
                 updateCoroutine.ResetThread();
-                if (fixedUpdateCoroutine.GetGlobal("breakexecution") == LuaType.Function)
+                if (Util.RawGetGlobal(fixedUpdateCoroutine, "breakexecution") == LuaType.Function)
                 {
                     var status = fixedUpdateCoroutine.Resume(state, 0);
                     if (status != LuaStatus.OK && status != LuaStatus.Yield)
@@ -202,7 +202,7 @@ namespace kOS.Lua
             }
 
             fixedUpdateCoroutine.ResetThread();
-            if (fixedUpdateCoroutine.GetGlobal("fixedupdate") == LuaType.Function && !(Shared.Cpu as LuaCPU).IsYielding())
+            if (Util.RawGetGlobal(fixedUpdateCoroutine, "fixedupdate") == LuaType.Function && !(Shared.Cpu as LuaCPU).IsYielding())
             {
                 fixedUpdateCoroutine.PushNumber(dt);
                 var status = fixedUpdateCoroutine.Resume(state, 1);
@@ -264,7 +264,7 @@ namespace kOS.Lua
             if (hookInfo.InstructionsThisUpdate >= hookInfo.InstructionsPerUpdate) return;
             
             updateCoroutine.ResetThread();
-            if (updateCoroutine.GetGlobal("update") == LuaType.Function && !(Shared.Cpu as LuaCPU).IsYielding())
+            if (Util.RawGetGlobal(updateCoroutine, "update") == LuaType.Function && !(Shared.Cpu as LuaCPU).IsYielding())
             {
                 updateCoroutine.PushNumber(dt);
                 var status = updateCoroutine.Resume(state, 1);

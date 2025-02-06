@@ -101,7 +101,7 @@ namespace kOS.Lua
             var functions = (binding.Shared.FunctionManager as FunctionManager).RawFunctions;
             if (variables.TryGetValue(index, out var boundVar))
             {
-                return (int)LuaExceptionCatch(() =>
+                return (int)Util.LuaExceptionCatch(() =>
                     PushLuaType(state, Structure.ToPrimitive(boundVar.Value), binding), state);
             }
             if (functions.TryGetValue(index, out var function))
@@ -143,7 +143,7 @@ namespace kOS.Lua
                 }
                 var newValue = ToCSharpObject(state, 3, binding);
                 if (newValue == null) return 0;
-                LuaExceptionCatch(() => boundVar.Value = newValue, state);
+                Util.LuaExceptionCatch(() => boundVar.Value = newValue, state);
                 return 0;
             }
             
@@ -239,28 +239,6 @@ namespace kOS.Lua
                 binding.UserdataPtrs[obj] = userdataAddress;
 
             return 1;
-        }
-
-        public static void LuaExceptionCatch(Action tryBody, KeraLua.Lua state) =>
-            LuaExceptionCatch(() => { tryBody(); return null; }, state);   
-
-        public static object LuaExceptionCatch(Func<object> tryBody, KeraLua.Lua state)
-        {
-            try { return tryBody(); }
-            catch (Exception e)
-            {
-                Debug.Log(e);
-                return state.Error(e.Message == ""? e.GetType().FullName : e.Message);
-            }
-        }
-        
-        public static void DumpStack(KeraLua.Lua state, string debugName = "", BindingData binding = null)
-        {
-            binding = binding ?? Bindings[state.MainThread.Handle];
-            Debug.Log(debugName+"_________");
-            for (int i = 0; i <= state.GetTop(); i++)
-                Debug.Log(i+" "+state.TypeName(i)+" "+ToCSharpObject(state, i, binding));
-            Debug.Log("____________________");
         }
         
         private static class BindingChanges

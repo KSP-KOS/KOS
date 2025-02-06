@@ -92,6 +92,7 @@
     <Compile Include="Lua\Types\KSStructure.cs" />
     <Compile Include="Lua\Types\LuaTypeBase.cs" />
     <Compile Include="Lua\Libraries.cs" />
+    <Compile Include="Lua\Util.cs" />
     <Compile Include="Module\Bootstrapper.cs" />
     <Compile Include="Module\AutopilotMsgManager.cs" />
     <Compile Include="Module\kOSCustomParameters.cs" />
