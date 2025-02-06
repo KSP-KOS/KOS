@@ -91,6 +91,11 @@ namespace kOS.Lua
         private static int EnvIndex(IntPtr L)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
+            
+            state.CheckType(1, LuaType.Table);
+            if (state.Type(2) != LuaType.String)
+                return 0;
+            
             var index = state.ToString(2);
             var binding = Bindings[state.MainThread.Handle];
             var isCapitalNameOnlyVariableNotCapital = BindingChanges.CapitalNameOnlyVariables.Contains(index.ToUpper())
@@ -118,6 +123,15 @@ namespace kOS.Lua
         private static int EnvNewIndex(IntPtr L)
         {
             var state = KeraLua.Lua.FromIntPtr(L);
+            
+            state.CheckType(1, LuaType.Table);
+            state.CheckAny(3);
+            if (state.Type(2) != LuaType.String)
+            {
+                state.RawSet(1);
+                return 0;
+            }
+            
             var index = state.ToString(2);
             
             var isCapitalNameOnlyVariableNotCapital = BindingChanges.CapitalNameOnlyVariables.Contains(index.ToUpper())
