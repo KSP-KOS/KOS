@@ -202,7 +202,7 @@ namespace kOS.Lua.Types
                 state.PushInteger(index);
                 state.SetTable(-3);
             }
-            foreach (var name in structure.GetSuffixNames())
+            foreach (StringValue name in structure.GetSuffixNames())
             {
                 state.PushInteger(index++);
                 state.PushString(name);
