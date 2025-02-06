@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using kOS.Module;
 using kOS.Control;
 using kOS.Safe.Binding;
@@ -59,12 +60,12 @@ namespace kOS.Binding
             shared.BindingMgr.AddGetter("ALLNODES", () => GetAllNodes(shared));
         }
 
-        public ListValue<Node> GetAllNodes(SharedObjects shared)
+        public ListValue GetAllNodes(SharedObjects shared)
         {
             var vessel = shared.Vessel;
             if (vessel.patchedConicSolver == null || vessel.patchedConicSolver.maneuverNodes.Count == 0)
-                return new ListValue<Node>();
-            var ret = new ListValue<Node>(vessel.patchedConicSolver.maneuverNodes.Select(e => Node.FromExisting(vessel, e, shared)));
+                return new ListValue();
+            var ret = new ListValue(vessel.patchedConicSolver.maneuverNodes.Select(e => Node.FromExisting(vessel, e, shared)));
             return ret;
         }
     }

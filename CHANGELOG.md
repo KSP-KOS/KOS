@@ -8,6 +8,12 @@
 - Added `COM` suffix to parts to get the accurate center of mass (thanks SofieBrink) [commit](https://github.com/KSP-KOS/KOS/commit/496bf3fe7e29b4b8917ec214a6d9d8ab3780cd46)
 - 3rd party addons can now add custom suffixes to PartModules [commit](https://github.com/KSP-KOS/KOS/commit/9b83c9ee01e0fb0ce2699f42ff71028d4db71b36)
 - Integrated KSPBuildTools for easier local setup and automated build process [commit](https://github.com/KSP-KOS/KOS/commit/7bde357c9d23c60f95f1d64b0490724a4b1544a4)
+- Wheelsteering fixes and improvements (thanks @sug44) [commit](https://github.com/KSP-KOS/KOS/commit/cb3eb98a1cddfcf5255b61200338590c7c92dfaa)
+
+### PERFORMANCE IMPROVEMENTS
+
+- KOSNameTag modules no longer update during flight [commit](https://github.com/KSP-KOS/KOS/commit/6e9388fdedefc9f4b1287817036b6d4bbe5243df)
+- Prevent KOSVesselModule from updating for unloaded vessels [commit](https://github.com/KSP-KOS/KOS/commit/fb88b460117fc4f048c9fb3b451cb8c2862e2316)
 
 ### BUG FIXES
 
@@ -22,6 +28,8 @@
   - [managedwindow](https://github.com/KSP-KOS/KOS/commit/41a0a0665af6f2e6f55cc19a899f15b3cccfab09)
   - [static part caches](https://github.com/KSP-KOS/KOS/commit/ba4098a08ca015bd72d66e2f3539ed3486c0596d)
 - Invoke UI field change callbacks when settings fields (thanks ricmatsui) [commit](https://github.com/KSP-KOS/KOS/commit/09864894469119004eb8c9a2eca7ca91ae058a32)
+- `stage:number` suffix now works correctly on non-active vessels (thanks @sug44) [commit](https://github.com/KSP-KOS/KOS/commit/c1af606dd7950bc9e37dfe8c591f379598cb6870)
+- Several functions that return a strongly typed ListValue<T> now return the kos-friendly ListValue (thanks @sug44) [commit](https://github.com/KSP-KOS/KOS/commit/b9aad87ab00036a0cd8dcdc632690709fc85157e)
 
 ## v1.4.0.0 - Catch-up for over a year of little things
 

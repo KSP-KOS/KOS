@@ -116,11 +116,7 @@ namespace kOS.Suffixed
             {
                 return TransferPartType.Part;
             }
-            if (toTest is ListValue)
-            {
-                return TransferPartType.Parts;
-            }
-            if (toTest is ListValue<PartValue>)
+            if (toTest is ListValue || toTest is ListValue<PartValue> || toTest is List<PartValue>)
             {
                 return TransferPartType.Parts;
             }
@@ -348,6 +344,12 @@ namespace kOS.Suffixed
                     if (partListValue != null)
                     {
                         parts.AddRange(partListValue.Select(pv => pv.Part));
+                        break;
+                    }
+                    var partList= obj as List<PartValue>;
+                    if (partList!= null)
+                    {
+                        parts.AddRange(partList.Select(pv => pv.Part));
                         break;
                     }
                     break;

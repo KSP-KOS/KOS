@@ -61,13 +61,8 @@ namespace kOS.Safe.Persistence
             AddSuffix("EMPTY", new Suffix<BooleanValue>(() => Size == 0));
             AddSuffix("TYPE", new Suffix<StringValue>(() => Category.ToString()));
             AddSuffix("STRING", new Suffix<StringValue>(() => String));
-            AddSuffix("BINARY", new Suffix<ListValue<ScalarIntValue>>(() => ContentAsIntList()));
+            AddSuffix("BINARY", new Suffix<ListValue>(() => new ListValue(Bytes.Select(x => new ScalarIntValue(x)))));
             AddSuffix("ITERATOR", new Suffix<Enumerator>(() => new Enumerator(GetEnumerator())));
-        }
-
-        private ListValue<ScalarIntValue> ContentAsIntList()
-        {
-            return new ListValue<ScalarIntValue>(Bytes.Select(x => new ScalarIntValue(x)));
         }
 
         public override Dump Dump()
