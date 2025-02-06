@@ -23,4 +23,4 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyFileVersion("@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_PATCH@.@VERSION_BUILD@")]
 [assembly: AssemblyVersion("@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_PATCH@.@VERSION_BUILD@")]
-[assembly: KSPAssembly("kOS.Safe", @VERSION_MAJOR@, @VERSION_MINOR@)]
+
