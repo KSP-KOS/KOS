@@ -208,7 +208,7 @@ namespace kOS.Suffixed
 
         private void SaveGame(string name)
         {
-            if (HighLogic.CurrentGame.Parameters.Flight.CanQuickSave && FlightGlobals.ClearToSave() == ClearToSaveStatus.CLEAR)
+            if (HighLogic.CurrentGame.Parameters.Flight.CanQuickSave)
             {
                 var game = HighLogic.CurrentGame.Updated();
                 game.startScene = GameScenes.FLIGHT;

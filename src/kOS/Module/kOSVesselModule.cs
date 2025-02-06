@@ -34,12 +34,9 @@ namespace kOS.Module
             }
         }
 
-
-        private static Dictionary<Guid, kOSVesselModule> allInstances = new Dictionary<Guid, kOSVesselModule>();
-        private static Dictionary<uint, kOSVesselModule> partLookup = new Dictionary<uint, kOSVesselModule>();
         private Dictionary<string, IFlightControlParameter> flightControlParameters = new Dictionary<string, IFlightControlParameter>();
-        private List<uint> childParts = new List<uint>();
         private int partCount = 0;
+        private bool hasKOSProcessor = false;
 
         #region KSP Vessel Module Events
         /// <summary>
@@ -54,17 +51,16 @@ namespace kOS.Module
             flightParametersAdded = false;
             autopilotRehookCounter = autopilotRehookPeriod - 2; // make sure it starts out ready to trigger soon
             flightControlParameters = new Dictionary<string, IFlightControlParameter>();
-            childParts = new List<uint>();
 
             if (SafeHouse.Logger != null)
             {
                 SafeHouse.Logger.SuperVerbose("kOSVesselModule OnAwake()!");
-                if (Vessel != null)
-                {
-                    allInstances[ID] = this;
-                }
-                SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule Awake() finished on {0} ({1})", Vessel.vesselName, ID));
             }
+        }
+
+        public override Activation GetActivation()
+        {
+            return Activation.FlightScene | Activation.LoadedVessels;
         }
 
         /// <summary>
@@ -86,8 +82,6 @@ namespace kOS.Module
             // scene.  So we now wait to attach to events and attempt to harvest parts until after
             // the vessel itself has loaded.
 
-
-            allInstances[ID] = this;
             AddDefaultParameters();
             HarvestParts();
             HookEvents();
@@ -133,26 +127,18 @@ namespace kOS.Module
             if (SafeHouse.Logger != null)
             {
                 SafeHouse.Logger.SuperVerbose("kOSVesselModule OnDestroy()!");
-                if (initialized)
-                {
-                    UnHookEvents();
-                    ClearParts();
-                }
-                if (Vessel != null && allInstances.ContainsKey(ID) && ReferenceEquals(allInstances[ID], this))
-                {
-                    allInstances.Remove(ID);
-                }
-                foreach (var key in flightControlParameters.Keys.ToList())
-                {
-                    RemoveFlightControlParameter(key);
-                }
-                flightParametersAdded = false;
-                if (allInstances.Count == 0)
-                {
-                    partLookup.Clear();
-                }
-                initialized = false;
             }
+            UnHookEvents();
+            if (initialized)
+            {
+                ClearParts();
+            }
+            foreach (var key in flightControlParameters.Keys.ToList())
+            {
+                RemoveFlightControlParameter(key);
+            }
+            flightParametersAdded = false;
+            initialized = false;
         }
 
         /// <summary>
@@ -201,13 +187,7 @@ namespace kOS.Module
         /// </summary>
         private void HarvestParts()
         {
-            var proccessorModules = Vessel.FindPartModulesImplementing<kOSProcessor>();
-            foreach (var proc in proccessorModules)
-            {
-                uint id = proc.part.flightID;
-                childParts.Add(id);
-                partLookup[id] = this;
-            }
+            hasKOSProcessor = vessel.FindPartModuleImplementing<kOSProcessor>() != null;
             partCount = Vessel.Parts.Count;
         }
 
@@ -216,7 +196,7 @@ namespace kOS.Module
         /// </summary>
         private void ClearParts()
         {
-            childParts.Clear();
+            hasKOSProcessor = false;
             partCount = 0;
         }
 
@@ -304,7 +284,10 @@ namespace kOS.Module
         /// </summary>
         private void UnHookEvents()
         {
-            ConnectivityManager.RemoveAutopilotHook(Vessel, UpdateAutopilot);
+            if (ConnectivityManager.Instance != null)
+            {
+                ConnectivityManager.RemoveAutopilotHook(Vessel, UpdateAutopilot);
+            }
 
             if (workAroundEventsEnabled)
             {
@@ -312,8 +295,12 @@ namespace kOS.Module
                 TimingManager.FixedUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, resetControllable);
                 workAroundEventsEnabled = false;
             }
-            AutopilotMsgManager.Instance.TurnOffSuppressMessage(this);
-            AutopilotMsgManager.Instance.TurnOffSasMessage(this);
+
+            if (AutopilotMsgManager.Instance != null)
+            {
+                AutopilotMsgManager.Instance.TurnOffSuppressMessage(this);
+                AutopilotMsgManager.Instance.TurnOffSasMessage(this);
+            }
         }
 
         #region Hack to fix "Require Signal for Control"
@@ -406,7 +393,7 @@ namespace kOS.Module
 
             if (Vessel != null)
             {
-                if (childParts.Count > 0)
+                if (hasKOSProcessor)
                 {
                     foreach (var parameter in flightControlParameters.Values)
                     {
@@ -591,17 +578,9 @@ namespace kOS.Module
         /// <returns></returns>
         public static kOSVesselModule GetInstance(Vessel vessel)
         {
-            kOSVesselModule ret;
-            if (!allInstances.TryGetValue(vessel.id, out ret))
-            {
-                if (!vessel.isActiveAndEnabled)
-                    throw new Safe.Exceptions.KOSException("Vessel is no longer active or enabled " + vessel.name);
-                ret = vessel.GetComponent<kOSVesselModule>();
-                if (ret == null)
-                    throw new kOS.Safe.Exceptions.KOSException("Cannot find kOSVesselModule on vessel " + vessel.name);
-                allInstances.Add(vessel.id, ret);
-            }
-            return ret;
+            if (!vessel.isActiveAndEnabled)
+                throw new Safe.Exceptions.KOSException("Vessel is no longer active or enabled " + vessel.name);
+            return vessel.FindVesselModuleImplementing<kOSVesselModule>();
         }
     }
 }

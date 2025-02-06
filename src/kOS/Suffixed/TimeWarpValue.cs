@@ -33,9 +33,9 @@ namespace kOS.Suffixed
         private void InitializeSuffixes()
         {
             AddSuffix("RATE", new SetSuffix<ScalarValue>(GetRate, SetRate));
-            AddSuffix("RATELIST", new Suffix<ListValue<ScalarValue>>(GetRatesList));
-            AddSuffix("RAILSRATELIST", new Suffix<ListValue<ScalarValue>>(() => GetRatesList(TimeWarp.Modes.HIGH)));
-            AddSuffix("PHYSICSRATELIST", new Suffix<ListValue<ScalarValue>>(() => GetRatesList(TimeWarp.Modes.LOW)));
+            AddSuffix("RATELIST", new Suffix<ListValue>(() => ListValue.CreateList(GetRateArrayForMode(TimeWarp.WarpMode))));
+            AddSuffix("RAILSRATELIST", new Suffix<ListValue>(() => ListValue.CreateList(GetRateArrayForMode(TimeWarp.Modes.HIGH))));
+            AddSuffix("PHYSICSRATELIST", new Suffix<ListValue>(() => ListValue.CreateList(GetRateArrayForMode(TimeWarp.Modes.LOW))));
             AddSuffix("MODE", new SetSuffix<StringValue>(GetModeAsString, SetModeAsString));
             AddSuffix("WARP", new SetSuffix<ScalarIntValue>(GetWarp, SetWarp));
             AddSuffix("WARPTO", new OneArgsSuffix<ScalarValue>(WarpTo));
@@ -132,24 +132,6 @@ namespace kOS.Suffixed
         public ScalarValue GetDeltaT()
         {
             return TimeWarp.fixedDeltaTime;
-        }
-
-        public ListValue<ScalarValue> GetRatesList()
-        {
-            return GetRatesList(TimeWarp.WarpMode);
-        }
-
-        public ListValue<ScalarValue> GetRatesList(TimeWarp.Modes warpMode)
-        {
-            float[] ratesArray = GetRateArrayForMode(warpMode);
-
-            ListValue<ScalarValue> ratesKOSList = new ListValue<ScalarValue>();
-
-            // Have to convert the elements one at a time from (float) to (ScalarDoubleValue):
-            foreach (float val in ratesArray)
-                ratesKOSList.Add(val);
-
-            return ratesKOSList;
         }
 
         public BooleanValue IsWarpSettled()

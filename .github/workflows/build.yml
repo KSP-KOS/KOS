@@ -1,0 +1,20 @@
+name: build
+
+on:
+  push:
+    branches: [ "develop" ]
+    paths:
+      - '**/*.cs'
+      - '**/*.csproj'
+  pull_request:
+    paths:
+      - '**/*.cs'
+      - '**/*.csproj'
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  build:
+    uses: KSPModdingLibs/KSPBuildTools/.github/workflows/build.yml@main
+    with:
+      artifacts: Resources/GameData LICENSE* README* CHANGELOG*

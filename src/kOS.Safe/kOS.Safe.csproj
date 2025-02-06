@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\KSPBuildTools.0.0.2-alpha.7\build\KSPBuildTools.props" Condition="Exists('..\..\packages\KSPBuildTools.0.0.2-alpha.7\build\KSPBuildTools.props')" />
+  <Import Project="..\..\packages\JsonPoke.1.2.0\build\JsonPoke.props" Condition="Exists('..\..\packages\JsonPoke.1.2.0\build\JsonPoke.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,9 +11,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>kOS.Safe</RootNamespace>
     <AssemblyName>kOS.Safe</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,17 +48,6 @@
     <Optimize>false</Optimize>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\..\Resources\GameData\kOS\Plugins\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="Binding\SafeBindingBase.cs" />
     <Compile Include="Binding\BindingAttribute.cs" />
@@ -295,6 +288,7 @@
     <None Include="Compilation\CompiledObject-doc.md" />
     <None Include="Compilation\KS\kRISC.tpg" />
     <None Include="packages.config" />
+    <None Include="Properties\AssemblyInfo.cs.versiontemplate" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -303,23 +297,22 @@
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
-      cp "$(TargetPath)" "$(SolutionDir)/../Resources/GameData/kOS/Plugins"
-      (test -h "$(SolutionDir)/../KSPdirlink" &amp;&amp; cp "$(TargetPath)" "$(SolutionDir)/../KSPdirlink/GameData/kOS/Plugins") || true
-    </PostBuildEvent>
-    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
-      xcopy "$(TargetPath)" "$(SolutionDir)\..\Resources\GameData\kOS\Plugins" /y
-      IF EXIST "$(SolutionDir)\..\KSPdirlink\" xcopy "$(TargetPath)" "$(SolutionDir)\..\KSPdirlink\GameData\kOS\Plugins" /y || exit /B 0
-    </PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+  <ItemGroup>
+    <Reference Include="$(RepoRootPath)\$(BinariesOutputRelativePath)\ICSharpCode.SharpZipLib.dll" />
+    <!-- while we want to use KSPBuildTools to reference the same System dlls that KSP uses, we don't want any of the KSP or Unity libraries-->
+    <Reference Remove="$(ManagedPath)\Assembly-CSharp.dll"/>
+    <Reference Remove="$(ManagedPath)\Assembly-CSharp-firstpass.dll"/>
+    <Reference Remove="$(ManagedPath)\UnityEngine*.dll"/>
+  </ItemGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\JsonPoke.1.2.0\build\JsonPoke.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\JsonPoke.1.2.0\build\JsonPoke.props'))" />
+    <Error Condition="!Exists('..\..\packages\JsonPoke.1.2.0\build\JsonPoke.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\JsonPoke.1.2.0\build\JsonPoke.targets'))" />
+    <Error Condition="!Exists('..\..\packages\KSPBuildTools.0.0.2-alpha.7\build\KSPBuildTools.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\KSPBuildTools.0.0.2-alpha.7\build\KSPBuildTools.props'))" />
+    <Error Condition="!Exists('..\..\packages\KSPBuildTools.0.0.2-alpha.7\build\KSPBuildTools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\KSPBuildTools.0.0.2-alpha.7\build\KSPBuildTools.targets'))" />
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-  <ItemGroup />
-  <ItemGroup />
+  <Import Project="..\..\packages\JsonPoke.1.2.0\build\JsonPoke.targets" Condition="Exists('..\..\packages\JsonPoke.1.2.0\build\JsonPoke.targets')" />
+  <Import Project="..\..\packages\KSPBuildTools.0.0.2-alpha.7\build\KSPBuildTools.targets" Condition="Exists('..\..\packages\KSPBuildTools.0.0.2-alpha.7\build\KSPBuildTools.targets')" />
 </Project>

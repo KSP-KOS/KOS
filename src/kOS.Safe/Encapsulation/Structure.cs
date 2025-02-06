@@ -63,7 +63,7 @@ namespace kOS.Safe.Encapsulation
 
               AddSuffix("TOSTRING",       new NoArgsSuffix<StringValue>(() => ToString()));
               AddSuffix("HASSUFFIX",      new OneArgsSuffix<BooleanValue, StringValue>(HasSuffix));
-              AddSuffix("SUFFIXNAMES",    new NoArgsSuffix<ListValue<StringValue>>(GetSuffixNames));
+              AddSuffix("SUFFIXNAMES",    new NoArgsSuffix<ListValue>(GetSuffixNames));
               AddSuffix("ISSERIALIZABLE", new NoArgsSuffix<BooleanValue>(() => this is SerializableStructure));
               AddSuffix("TYPENAME",       new NoArgsSuffix<StringValue>(() => new StringValue(KOSName)));
               AddSuffix("ISTYPE",         new OneArgsSuffix<BooleanValue,StringValue>(GetKOSIsType));
@@ -208,17 +208,17 @@ namespace kOS.Safe.Encapsulation
             return false;
         }
         
-        public virtual ListValue<StringValue> GetSuffixNames()
+        public virtual ListValue GetSuffixNames()
         {
             callInitializeSuffixes();
-            List<StringValue> names = new List<StringValue>();            
-            
-            names.AddRange(instanceSuffixes.Keys.Select(item => (StringValue)item));
-            names.AddRange(GetStaticSuffixesForType(GetType()).Keys.Select(item => (StringValue)item));
+            List<StringValue> names = new List<StringValue>();
+
+            foreach (var suffix in instanceSuffixes.Keys) names.Add(suffix);
+            foreach (var staticSuffix in GetStaticSuffixesForType(GetType()).Keys) names.Add(staticSuffix);
             
             // Return the list alphabetized by suffix name.  The key lookups above, since they're coming
             // from a hashed dictionary, won't be in any predictable ordering:
-            return new ListValue<StringValue>(names.OrderBy(item => item.ToString()));
+            return new ListValue(names.OrderBy(item => item.ToString()));
         }
         
         public virtual BooleanValue GetKOSIsType(StringValue queryTypeName)

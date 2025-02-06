@@ -22,7 +22,7 @@ namespace kOS.Suffixed.Part
         public global::Part Part { get; private set; }
         public PartValue Parent { get; private set; }
         public DecouplerValue Decoupler { get; private set; }
-        public ListValue<PartValue> Children { get; private set; }
+        public ListValue Children { get; private set; }
         public Structure ParentValue { get { return (Structure)Parent ?? StringValue.None; } }
         public Structure DecouplerValue { get { return (Structure)Decoupler ?? StringValue.None; } }
         public int DecoupledIn { get { return (Decoupler != null) ? Decoupler.Part.inverseStage : -1; } }
@@ -37,7 +37,7 @@ namespace kOS.Suffixed.Part
             Parent = parent;
             Decoupler = decoupler;
             RegisterInitializer(PartInitializeSuffixes);
-            Children  = new ListValue<PartValue>();
+            Children  = new ListValue();
         }
 
         private void PartInitializeSuffixes()
@@ -51,6 +51,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("UID", new Suffix<StringValue>(() => Part.flightID.ToString()));
             AddSuffix("ROTATION", new Suffix<Direction>(() => new Direction(Part.transform.rotation)));
             AddSuffix("POSITION", new Suffix<Vector>(() => GetPosition()));
+            AddSuffix("COM", new Suffix<Vector>(() => GetCOM()));
             AddSuffix("TAG", new SetSuffix<StringValue>(GetTagName, SetTagName));
             AddSuffix("FACING", new Suffix<Direction>(() => GetFacing()));
             AddSuffix("BOUNDS", new Suffix<BoundsValue>(GetBoundsValue));
@@ -65,7 +66,7 @@ namespace kOS.Suffixed.Part
             AddSuffix(new[] { "DECOUPLER", "SEPARATOR" }, new Suffix<Structure>(() => DecouplerValue, "The part that will decouple/separate this part when activated"));
             AddSuffix(new[] { "DECOUPLEDIN", "SEPARATEDIN" }, new Suffix<ScalarValue>(() => DecoupledIn));
             AddSuffix("HASPARENT", new Suffix<BooleanValue>(() => Part.parent != null, "Tells you if this part has a parent, is used to avoid null exception from PARENT"));
-            AddSuffix("CHILDREN", new Suffix<ListValue<PartValue>>(() => PartValueFactory.ConstructGeneric(Part.children, Shared), "A LIST() of the children parts of this part"));
+            AddSuffix("CHILDREN", new Suffix<ListValue>(() => PartValueFactory.ConstructGeneric(Part.children, Shared), "A LIST() of the children parts of this part"));
             AddSuffix("DRYMASS", new Suffix<ScalarValue>(() => Part.GetDryMass(), "The Part's mass when empty"));
             AddSuffix("MASS", new Suffix<ScalarValue>(() => Part.CalculateCurrentMass(), "The Part's current mass"));
             AddSuffix("WETMASS", new Suffix<ScalarValue>(() => Part.GetWetMass(), "The Part's mass when full"));
@@ -278,6 +279,12 @@ namespace kOS.Suffixed.Part
         {
             Vector3d positionError = VesselTarget.CreateOrGetExisting(Part.vessel, Shared).GetPositionError();
             return new Vector(Part.transform.position - Shared.Vessel.CoMD + positionError);
+        }
+
+        public Vector GetCOM()
+        {
+            Vector3d positionError = VesselTarget.CreateOrGetExisting(Part.vessel, Shared).GetPositionError();
+            return new Vector(Part.transform.position - Shared.Vessel.CoMD + Part.transform.rotation * Part.CoMOffset + positionError);
         }
 
         private void ControlFrom()

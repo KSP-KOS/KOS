@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\KSPBuildTools.0.0.2-alpha.7\build\KSPBuildTools.props" Condition="Exists('..\..\packages\KSPBuildTools.0.0.2-alpha.7\build\KSPBuildTools.props')" />
+  <Import Project="..\..\packages\JsonPoke.1.2.0\build\JsonPoke.props" Condition="Exists('..\..\packages\JsonPoke.1.2.0\build\JsonPoke.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -8,9 +10,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>kOS</RootNamespace>
     <AssemblyName>kOS</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,69 +36,6 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\Resources\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\..\Resources\Assembly-CSharp-firstpass.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\..\Resources\GameData\kOS\Plugins\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine.AnimationModule">
-      <HintPath>..\..\Resources\UnityEngine.AnimationModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.AudioModule">
-      <HintPath>..\..\Resources\UnityEngine.AudioModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\Resources\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.ImageConversionModule">
-      <HintPath>..\..\Resources\UnityEngine.ImageConversionModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>..\..\Resources\UnityEngine.IMGUIModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.InputLegacyModule">
-      <HintPath>..\..\Resources\UnityEngine.InputLegacyModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>..\..\Resources\UnityEngine.PhysicsModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>..\..\Resources\UnityEngine.TextRenderingModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>..\..\Resources\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\Resources\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UIModule">
-      <HintPath>..\..\Resources\UnityEngine.UIModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UnityWebRequestAudioModule">
-      <HintPath>..\..\Resources\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UnityWebRequestModule">
-      <HintPath>..\..\Resources\UnityEngine.UnityWebRequestModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UnityWebRequestWWWModule">
-      <HintPath>..\..\Resources\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.VehiclesModule">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Resources\UnityEngine.VehiclesModule.dll</HintPath>
-    </Reference>
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="AddOns\ActionGroupsExtended\ActionGroupsExtendedAPI.cs" />
     <Compile Include="AddOns\ActionGroupsExtended\ActionGroupsExtendedBinding.cs" />
@@ -320,24 +261,22 @@
     <WCFMetadata Include="Service References" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
-      cp "$(TargetPath)" "$(SolutionDir)/../Resources/GameData/kOS/Plugins"
-      (test -h "$(SolutionDir)/../KSPdirlink" &amp;&amp; cp "$(TargetPath)" "$(SolutionDir)/../KSPdirlink/GameData/kOS/Plugins") || true
-    </PostBuildEvent>
-    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
-      xcopy "$(TargetPath)" "$(SolutionDir)\..\Resources\GameData\kOS\Plugins" /y
-      IF EXIST "$(SolutionDir)\..\KSPdirlink\" xcopy "$(TargetPath)" "$(SolutionDir)\..\KSPdirlink\GameData\kOS\Plugins" /y || exit /B 0
-    </PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <ItemGroup>
+    <Reference Include="$(RepoRootPath)\$(BinariesOutputRelativePath)\ICSharpCode.SharpZipLib.dll" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Properties\AssemblyInfo.cs.versiontemplate" />
   </ItemGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\JsonPoke.1.2.0\build\JsonPoke.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\JsonPoke.1.2.0\build\JsonPoke.props'))" />
+    <Error Condition="!Exists('..\..\packages\JsonPoke.1.2.0\build\JsonPoke.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\JsonPoke.1.2.0\build\JsonPoke.targets'))" />
+    <Error Condition="!Exists('..\..\packages\KSPBuildTools.0.0.2-alpha.7\build\KSPBuildTools.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\KSPBuildTools.0.0.2-alpha.7\build\KSPBuildTools.props'))" />
+    <Error Condition="!Exists('..\..\packages\KSPBuildTools.0.0.2-alpha.7\build\KSPBuildTools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\KSPBuildTools.0.0.2-alpha.7\build\KSPBuildTools.targets'))" />
+  </Target>
+  <Import Project="..\..\packages\JsonPoke.1.2.0\build\JsonPoke.targets" Condition="Exists('..\..\packages\JsonPoke.1.2.0\build\JsonPoke.targets')" />
+  <Import Project="..\..\packages\KSPBuildTools.0.0.2-alpha.7\build\KSPBuildTools.targets" Condition="Exists('..\..\packages\KSPBuildTools.0.0.2-alpha.7\build\KSPBuildTools.targets')" />
 </Project>

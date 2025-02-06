@@ -18,7 +18,7 @@ namespace kOS.Suffixed
         private readonly SharedObjects shared;
         private HashSet<global::Part> partHash = new HashSet<global::Part>();
         private PartSet partSet;
-        private ListValue<ActiveResourceValue> resList;
+        private ListValue resList;
         private Lexicon resLex;
 
         // Set by VesselTarget (from InvalidateParts)
@@ -40,23 +40,20 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            // TODO: TEST IF THIS IS BROKEN WHEN CPU VESSEL != ACTIVE VESSEL
-            // Some of these values come from StageManager, which is part of the UI and
-            // only refers to the "active vessel", while others come from shared.Vessel and
-            // thus refer to the CPU vessel.  Those aren't always the same thing:
+            // WARNING: StageManager refers to the active vessel and not the CPU vessel
 
-            AddSuffix("NUMBER", new Suffix<ScalarValue>(() => StageManager.CurrentStage));
+            AddSuffix("NUMBER", new Suffix<ScalarValue>(() => shared.Vessel.currentStage));
             AddSuffix("READY", new Suffix<BooleanValue>(() => shared.Vessel.isActiveVessel && StageManager.CanSeparate));
-            AddSuffix("RESOURCES", new Suffix<ListValue<ActiveResourceValue>>(GetResourceManifest));
-            AddSuffix("RESOURCESLEX", new Suffix<Lexicon>(GetResourceDictionary));
+            AddSuffix("RESOURCES", new Suffix<ListValue>(() => new ListValue(GetResourceManifest())));
+            AddSuffix("RESOURCESLEX", new Suffix<Lexicon>(() => new Lexicon(GetResourceDictionary())));
             AddSuffix(new string[] { "NEXTDECOUPLER", "NEXTSEPARATOR" }, new Suffix<Structure>(() => shared.VesselTarget.NextDecoupler ?? (Structure)StringValue.None));
             AddSuffix("DELTAV", new Suffix<DeltaVCalc>(() => new DeltaVCalc(shared, shared.Vessel.VesselDeltaV.GetStage(shared.Vessel.currentStage))));
         }
 
-        private ListValue<ActiveResourceValue> GetResourceManifest()
+        private ListValue GetResourceManifest()
         {
             if (resList != null) return resList;
-            resList = new ListValue<ActiveResourceValue>();
+            resList = new ListValue();
             CreatePartSet();
             var defs = PartResourceLibrary.Instance.resourceDefinitions;
             foreach (var def in defs)

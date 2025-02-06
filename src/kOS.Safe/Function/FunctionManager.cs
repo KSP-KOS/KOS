@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Utilities;
+using kOS.Safe.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,6 +57,7 @@ namespace kOS.Safe.Function
             function.Execute(shared);
             if (function.UsesAutoReturn)
                 shared.Cpu.PushArgumentStack(function.ReturnValue);
+            function.ReturnValue = null;
         }
 
         /// <summary>

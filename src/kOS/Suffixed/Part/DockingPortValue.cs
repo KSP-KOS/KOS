@@ -62,7 +62,7 @@ namespace kOS.Suffixed.Part
             }
 
             var otherVessel = VesselTarget.CreateOrGetExisting(otherNode.vessel, Shared);
-            foreach (var part in otherVessel.Parts)
+            foreach (PartValue part in otherVessel.Parts)
             {
                 if (part.Part == otherNode.part)
                 {

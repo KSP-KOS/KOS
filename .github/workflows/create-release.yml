@@ -1,0 +1,15 @@
+name: create-release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version-string:
+        type: string
+        required: true
+
+jobs:
+  create-release:
+    uses: KSPModdingLibs/KSPBuildTools/.github/workflows/create-release.yml@main
+    with:
+      version-string: ${{ inputs.version-string }}
+      artifacts: Resources/GameData LICENSE* README* CHANGELOG*

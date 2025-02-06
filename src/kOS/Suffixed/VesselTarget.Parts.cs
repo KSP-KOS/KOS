@@ -19,9 +19,9 @@ namespace kOS.Suffixed
         //..... [root, child1, child2, ..., part1-1, part1-2, ..., part2-1, ... heap ;)
         private PartValue rootPart;
         private DecouplerValue nextDecoupler;
-        private ListValue<PartValue> allParts;
-        private ListValue<DockingPortValue> dockingPorts;
-        private ListValue<DecouplerValue> decouplers;
+        private ListValue allParts;
+        private ListValue dockingPorts;
+        private ListValue decouplers;
         private Dictionary<global::Part, PartValue> partCache;
 
         private void InvalidateParts()
@@ -53,7 +53,7 @@ namespace kOS.Suffixed
                 return nextDecoupler;
             }
         }
-        public ListValue<PartValue> Parts
+        public ListValue Parts
         {
             get
             {
@@ -62,7 +62,7 @@ namespace kOS.Suffixed
                 return allParts;
             }
         }
-        public ListValue<DockingPortValue> DockingPorts
+        public ListValue DockingPorts
         {
             get
             {
@@ -71,7 +71,7 @@ namespace kOS.Suffixed
                 return dockingPorts;
             }
         }
-        public ListValue<DecouplerValue> Decouplers
+        public ListValue Decouplers
         {
             get
             {
@@ -98,9 +98,9 @@ namespace kOS.Suffixed
         {
             rootPart = null;
             nextDecoupler = null;
-            allParts = new ListValue<PartValue>();
-            dockingPorts = new ListValue<DockingPortValue>();
-            decouplers = new ListValue<DecouplerValue>();
+            allParts = new ListValue();
+            dockingPorts = new ListValue();
+            decouplers = new ListValue();
             partCache = new Dictionary<global::Part, PartValue>();
 
             ConstructPart(Vessel.rootPart, null, null);

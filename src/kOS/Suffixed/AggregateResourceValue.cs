@@ -99,10 +99,10 @@ namespace kOS.Suffixed
             return list;
         }
 
-        public static ListValue<AggregateResourceValue> FromVessel(Vessel vessel, SharedObjects shared)
+        public static ListValue FromVessel(Vessel vessel, SharedObjects shared)
         {
             var resources = ProspectResources(vessel.parts, shared);
-            return ListValue<AggregateResourceValue>.CreateList(resources.Values);
+            return new ListValue(resources.Values);
         }
     }
 }

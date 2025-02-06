@@ -239,10 +239,10 @@ namespace kOS.Safe.Encapsulation
         }
 
         // As the regular Split, except returning a ListValue rather than an array.
-        public ListValue<StringValue> SplitToList(string separator)
+        public ListValue SplitToList(string separator)
         {
             string[] split = Regex.Split(internalString, Regex.Escape(separator), RegexOptions.IgnoreCase);
-            ListValue<StringValue> returnList = new ListValue<StringValue>();
+            ListValue returnList = new ListValue();
             foreach (string s in split)
                 returnList.Add(new StringValue(s));
             return returnList;
@@ -273,7 +273,7 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("PADRIGHT",   new OneArgsSuffix<StringValue, ScalarValue>( one => PadRight(one)));
             AddSuffix("REMOVE",     new TwoArgsSuffix<StringValue, ScalarValue, ScalarValue>( (one, two) => Remove(one, two)));
             AddSuffix("REPLACE",    new TwoArgsSuffix<StringValue, StringValue, StringValue>( (one, two) => Replace(one, two)));
-            AddSuffix("SPLIT",      new OneArgsSuffix<ListValue<StringValue>, StringValue>( one => SplitToList(one)));
+            AddSuffix("SPLIT",      new OneArgsSuffix<ListValue, StringValue>( one => SplitToList(one)));
             AddSuffix("STARTSWITH", new OneArgsSuffix<BooleanValue, StringValue>( one => StartsWith(one)));
             AddSuffix("TOLOWER",    new NoArgsSuffix<StringValue>(() => ToLower()));
             AddSuffix("TOUPPER",    new NoArgsSuffix<StringValue>(() => ToUpper()));

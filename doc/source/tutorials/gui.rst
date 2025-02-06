@@ -38,8 +38,8 @@ share the implementation with multiple KSP installs, and with others online::
 Our TabWidget should be usable in any context, but in this example, we just create it at the top-level.
 The AddTabWidget function should however accept any VBOX as the parameter::
 
-    LOCAL gui IS GUI(500).
-    LOCAL tabwidget IS AddTabWidget(gui).
+    LOCAL my_gui IS GUI(500).
+    LOCAL tabwidget IS AddTabWidget(my_gui).
 
 3. Add tabs
 ^^^^^^^^^^^
@@ -74,13 +74,13 @@ tab for setting up Maneuver Nodes might be a better default::
 The rest here is just boilerplate - we add a Close button to the top level, then show and run the GUI until
 the user presses the Close button::
 
-    LOCAL close IS gui:ADDBUTTON("Close").
-    gui:SHOW().
+    LOCAL close IS my_gui:ADDBUTTON("Close").
+    my_gui:SHOW().
     UNTIL close:PRESSED {
         // Handle processing of all the widgets on all the tabs.
         WAIT(0).
     }
-    gui:HIDE().
+    my_gui:HIDE().
 
 The Implementation
 ------------------
@@ -259,7 +259,7 @@ which would mean the communication delay icon is constantly shown. We can test o
 artificially adding extra delay, and testing on the launch pad::
 
     ...
-    SET gui:EXTRADELAY TO 2.
+    SET my_gui:EXTRADELAY TO 2.
     ...
 
 The widget continues to work perfectly. Even if the user rapidly changes tab, the pages change as expected, though
