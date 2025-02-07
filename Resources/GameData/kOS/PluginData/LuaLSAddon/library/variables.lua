@@ -64,7 +64,7 @@ chutes = nil
 ---    WHEN (NOT CHUTESSAFE) THEN {
 ---        CHUTESSAFE ON.
 ---        RETURN (NOT CHUTES).
----}
+---    }
 ---@type boolean
 chutessafe = nil
 
@@ -378,14 +378,14 @@ warp = nil
 ---
 ---    IF MAPVIEW {
 ---        PRINT "You are looking at the map.".
----} ELSE {
----    PRINT "You are looking at the flight view.".
----}.
+---    } ELSE {
+---        PRINT "You are looking at the flight view.".
+---    }.
 ---
 ---You can switch between map and flight views by setting this variable::
 ---
----SET MAPVIEW TO TRUE.  // to map view
----SET MAPVIEW TO FALSE. // to flight view
+---    SET MAPVIEW TO TRUE.  // to map view
+---    SET MAPVIEW TO FALSE. // to flight view
 ---@type boolean
 mapview = nil
 
@@ -468,6 +468,12 @@ sasmode = nil
 ---It is the equivalent to changing the nav ball mode by clicking on speed display on the nav ball while manually piloting the craft, and will change the current mode of the nav ball, affecting behavior of most SAS modes.  Valid strings for ``value`` are ``"ORBIT"``, ``"SURFACE"`` and ``"TARGET"``.  A null or empty string will default to orbit mode, however any other invalid string will throw an exception.  This feature is accessible only for the active vessel, and will throw an exception if the current vessel is not active.  An exception is also thrown if ``"TARGET"`` is used, but no target is selected.
 ---@type string | "orbit" | "surface" | "target"
 navmode = nil
+
+---Get/Set.
+---The PIDLoop used to control wheelsteering. Can be used to optimize
+---   steering performance and eliminate steering oscillations on some vessels.
+---@type PIDLoop
+wheelsteeringpid = nil
 
 ---Get only.
 ---@type VesselAltitude
