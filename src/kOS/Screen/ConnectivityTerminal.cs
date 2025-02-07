@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace kOS.Screen
 {
-    public class ConnectivityInterpreter : Interpreter, IUpdateObserver
+    public class ConnectivityTerminal : Terminal, IUpdateObserver
     {
         private readonly List<string> commandQueue = new List<string>();
         private readonly List<string> batchQueue = new List<string>();
@@ -20,14 +20,14 @@ namespace kOS.Screen
         private string deploymentMessage;
         private bool signalLossWarning;
 
-        public ConnectivityInterpreter(SharedObjects shared) : base(shared)
+        public ConnectivityTerminal(SharedObjects shared) : base(shared)
         {
             Shared.UpdateHandler.AddObserver(this);
             CreateProgressBarSubBuffer(this);
             AddResizeNotifier(CreateProgressBarSubBuffer);
         }
 
-        ~ConnectivityInterpreter()
+        ~ConnectivityTerminal()
         {
             // Normally this design pattern would fail because the notifier hooks
             // would be references that prevent orphaning and thus we can't remove

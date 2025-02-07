@@ -49,8 +49,8 @@ namespace kOS.Safe.Execution
             }
         }
 
-        private readonly IStack stack;
-        private readonly VariableScope globalVariables;
+        protected readonly IStack stack;
+        protected readonly VariableScope globalVariables;
 
 
         private class YieldFinishedWithPriority
@@ -60,10 +60,10 @@ namespace kOS.Safe.Execution
         }
         private List<YieldFinishedWithPriority> yields;
 
-        private double currentTime;
-        private readonly SafeSharedObjects shared;
-        private readonly List<ProgramContext> contexts;
-        private ProgramContext currentContext;
+        protected double currentTime;
+        protected readonly SafeSharedObjects shared;
+        protected readonly List<ProgramContext> contexts;
+        protected ProgramContext currentContext;
         private VariableScope savedPointers;
         private int instructionsPerUpdate;
 
@@ -121,12 +121,12 @@ namespace kOS.Safe.Execution
             globalVariables = new VariableScope(0, null);
             contexts = new List<ProgramContext>();
             yields = new List<YieldFinishedWithPriority>();
-            if (this.shared.UpdateHandler != null) this.shared.UpdateHandler.AddFixedObserver(this);
             popContextNotifyees = new HashSet<PopContextNotifyeeContainer>();
         }
 
-        public void Boot()
+        public virtual void Boot()
         {
+            if (shared.UpdateHandler != null) shared.UpdateHandler.AddFixedObserver(this);
             // break all running programs
             currentContext = null;
             contexts.Clear();            
@@ -139,7 +139,7 @@ namespace kOS.Safe.Execution
             // clear global variables
             globalVariables.Clear();
             // clear interpreter
-            if (shared.Interpreter != null) shared.Interpreter.Reset();
+            if (shared.Terminal != null) shared.Terminal.Reset();
             // load functions
             if (shared.FunctionManager != null) shared.FunctionManager.Load();
             // load bindings
@@ -214,7 +214,7 @@ namespace kOS.Safe.Execution
             }
         }
 
-        private void PushInterpreterContext()
+        protected void PushInterpreterContext()
         {
             var interpreterContext = new ProgramContext(true);
             // initialize the context with an empty program
@@ -233,7 +233,7 @@ namespace kOS.Safe.Execution
 
             if (contexts.Count > 1)
             {
-                shared.Interpreter.SetInputLock(true);
+                shared.Terminal.SetInputLock(true);
             }
         }
 
@@ -268,7 +268,7 @@ namespace kOS.Safe.Execution
 
                 if (contexts.Count == 1)
                 {
-                    shared.Interpreter.SetInputLock(false);
+                    shared.Terminal.SetInputLock(false);
                 }
             }
             IsPoppingContext = false;
@@ -450,7 +450,7 @@ namespace kOS.Safe.Execution
             return currentContext;
         }
 
-        public Opcode GetCurrentOpcode()
+        public virtual Opcode GetCurrentOpcode()
         {
             return currentContext.Program[currentContext.InstructionPointer];
         }
@@ -582,14 +582,14 @@ namespace kOS.Safe.Execution
         /// this purpose.  Waiting in mainline code will still allow triggers to run.
         /// </summary>
         /// <param name="yieldTracker"></param>
-        public void YieldProgram(YieldFinishedDetector yieldTracker)
+        public virtual void YieldProgram(YieldFinishedDetector yieldTracker)
         {
             yields.Add(new YieldFinishedWithPriority() { detector = yieldTracker, priority = CurrentPriority });
             yieldTracker.creationTimeStamp = currentTime;
             yieldTracker.Begin(shared);
         }
 
-        private bool IsYielding()
+        protected bool IsYielding()
         {
             int numStillBlocking = 0;
 
@@ -1178,7 +1178,7 @@ namespace kOS.Safe.Execution
         /// more than one instance of a trigger to exist for this same triggerFunctionPointer.  Pass
         /// a zero to indicate you want to prevent multiple instances of triggers from this same
         /// entry point to be invokable.</param> 
-        /// <param name="immediate">Trigger should happen immediately on next opcode instead of waiting till next fixeupdate</parem>
+        /// <param name="immediate">Trigger should happen immediately on next opcode instead of waiting till next fixedupdate</param>
         /// <param name="closure">The closure the trigger should be called with.  If this is
         /// null, then the trigger will only be able to see global variables reliably.</param>
         /// <returns>A TriggerInfo structure describing this new trigger, which probably isn't very useful
@@ -1218,7 +1218,7 @@ namespace kOS.Safe.Execution
         /// more than one instance of a trigger to exist for this same triggerFunctionPointer.  Pass
         /// a zero to indicate you want to prevent multiple instances of triggers from this same
         /// entry point to be invokable.</param> 
-        /// <param name="immediate">Trigger should happen immediately on next opcode instead of waiting till next fixeupdate</parem>
+        /// <param name="immediate">Trigger should happen immediately on next opcode instead of waiting till next fixedupdate</param>
         /// <param name="args">The list of arguments to pass to the UserDelegate when it gets called.</param>
         /// <returns>A TriggerInfo structure describing this new trigger.  It can be used to monitor
         /// the progress of the function call: To see if it has had a chance to finish executing yet,
@@ -1263,7 +1263,7 @@ namespace kOS.Safe.Execution
         /// more than one instance of a trigger to exist for this same UserDelegate.  Pass
         /// a zero to indicate you want to prevent multiple instances of triggers from this same
         /// Delegate to be invokable.</param> 
-        /// <param name="immediate">Trigger should happen immediately on next opcode instead of waiting till next fixeupdate</parem>
+        /// <param name="immediate">Trigger should happen immediately on next opcode instead of waiting till next fixedupdate</param>
         /// <param name="args">A parms list of arguments to pass to the UserDelegate when it gets called.</param>
         /// <returns>A TriggerInfo structure describing this new trigger.  It can be used to monitor
         /// the progress of the function call: To see if it has had a chance to finish executing yet,
@@ -1293,7 +1293,7 @@ namespace kOS.Safe.Execution
         /// If the TriggerInfo you pass in was built for a different ProgramContext than the one that
         /// is currently running, then this will return null and refuse to do anything.
         /// </summary>
-        /// <param name="immediate">Trigger should happen immediately on next opcode instead of waiting till next fixeupdate</parem>
+        /// <param name="immediate">Trigger should happen immediately on next opcode instead of waiting till next fixedupdate</param>
         /// <returns>To be in agreement with how the other AddTrigger() methods work, this returns
         /// a TriggerInfo which is just the same one you passed in.  It will return a null, however,
         /// in cases where the TriggerInfo you passed in is for a different ProgramContext.</returns>
@@ -1771,7 +1771,7 @@ namespace kOS.Safe.Execution
             compileWatch.Stop();
         }
 
-        private class BootGlobalPath : InternalPath
+        protected class BootGlobalPath : InternalPath
         {
             private string command;
 

@@ -198,9 +198,10 @@ namespace kOS.Safe.Encapsulation
             throw new KOSNumberParseException(internalString);
         }
 
-        public Structure GetIndex(int index)
+        public Structure GetIndex(int index, bool failOkay = false)
         {
-            return new StringValue(internalString[index]);
+            try { return new StringValue(internalString[index]); }
+            catch { if (failOkay) return null; throw; }
         }
 
         public Structure GetIndex(Structure index)

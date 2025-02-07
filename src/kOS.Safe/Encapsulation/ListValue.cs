@@ -100,8 +100,11 @@ namespace kOS.Safe.Encapsulation
         public static ListValue<T> CreateList<TU>(IEnumerable<TU> list) =>
             new ListValue<T>(list.Cast<T>());
 
-        public Structure GetIndex(int index) =>
-            Collection[index];
+        public Structure GetIndex(int index, bool failOkay = false)
+        {
+            try { return Collection[index]; }
+            catch { if (failOkay) return null; throw; }
+        }
 
         public Structure GetIndex(Structure index)
         {

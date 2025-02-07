@@ -1,0 +1,9 @@
+{
+    "diagnostics.disable": ["lowercase-global"],
+    "workspace.library": [
+        "../../GameData/kOS/PluginData/LuaLSAddon/library",
+        "../../GameData/kOS/PluginData/LuaModules"
+    ],
+    "runtime.plugin": "../../GameData/kOS/PluginData/LuaLSAddon/plugin/patcher.lua",
+    "runtime.special": { "_G": "_G" }
+}

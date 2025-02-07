@@ -1,0 +1,3 @@
+[submodule "src/kOS/Lua/lua"]
+	path = src/kOS/Lua/lua
+	url = git@github.com:sug44/lua.git

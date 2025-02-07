@@ -132,13 +132,12 @@ namespace kOS.Safe.Encapsulation
 
         /// <summary>
         /// Set a suffix of this structure that has suffixName to the given value.
-        /// If failOkay is false then it will throw exception if it fails to find the suffix.
-        /// If failOkay is true then it will continue happily if it fails to find the suffix.
+        /// Throws an exception if the structure suffix doesn't have a setter, unless failOkay
         /// </summary>
         /// <param name="suffixName"></param>
         /// <param name="value"></param>
-        /// <param name="failOkay"></param>
-        /// <returns>false if failOkay was true and it failed to find the suffix</returns>
+        /// <param name="failOkay">If true and structure suffix doesn't have a setter return false instead of throwing an exception</param>
+        /// <returns>false if failed to find the suffix, true otherwise</returns>
         public virtual bool SetSuffix(string suffixName, object value, bool failOkay = false)
         {
             callInitializeSuffixes();
