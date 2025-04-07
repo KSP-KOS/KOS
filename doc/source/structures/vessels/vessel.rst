@@ -88,9 +88,6 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :attr:`CONNECTION`                       :struct:`Connection`            Returns your connection to this vessel
     :attr:`MESSAGES`                         :struct:`MessageQueue`          This vessel's message queue
     :attr:`DELTAV`                           :struct:`Scalar` (m/s)          The total delta-v of this vessel in its current situation
-    :attr:`DELTAVASL`                        :struct:`Scalar` (m/s)          The total delta-v of this vessel if it were at sea level
-    :attr:`DELTAVVACUUM`                     :struct:`Scalar` (m/s)          The total delta-v of this vessel if it were in a vacuum
-    :attr:`BURNTIME`                         :struct:`Scalar` (s)            The total burn time of this vessel (or 5 if the vessel has 0 delta/v).
     ======================================== =============================== =============
 
 .. note::
@@ -658,30 +655,6 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :return: :struct:`Scalar`
 
     The total delta-v of this vessel in its current situation, using the stock
-    calculations the KSP game shows in the staging list.  Note that this is only
-    as accurate as the stock KSP game's numbers are.
-
-.. attribute:: Vessel:DELTAVASL
-
-    :return: :struct:`Scalar`
-
-    The total delta-v of this vessel if it were at sea level, using the stock
-    calculations the KSP game shows in the staging list.  Note that this is only
-    as accurate as the stock KSP game's numbers are.
-
-.. attribute:: Vessel:DELTAVVACUUM
-
-    :return: :struct:`Scalar`
-
-    The total delta-v of this vessel if it were at sea vacuum, using the stock
-    calculations the KSP game shows in the staging list.  Note that this is only
-    as accurate as the stock KSP game's numbers are.
-
-.. attribute:: Vessel:BURNTIME
-
-    :return: :struct:`Scalar`
-
-    The total burn time, in seconds, of this vessel (or 5 if the vessel has 0 delta/v). Burn time is not affected by atmosphere.  This is using the stock
     calculations the KSP game shows in the staging list.  Note that this is only
     as accurate as the stock KSP game's numbers are.
 
