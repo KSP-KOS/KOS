@@ -542,7 +542,7 @@ These are the generic properties every PART has. You can obtain a list of values
 
 .. method:: Part:PARTSTITLEDPATTERN(titlePattern)
 
-    :parameter titlePattern: (:struct:`String`) Patern of the title of the parts
+    :parameter titlePattern: (:struct:`String`) Pattern of the title of the parts
     :return: :struct:`List` of :struct:`Part` objects
 
     Same as :meth:`Vessel:PARTSTITLEDPATTERN(titlePattern)` except that this version

@@ -128,7 +128,7 @@ Configuration of kOS
 
     Configures the ``InstructionsPerUpdate`` setting.
 
-    This is the number of kRISC psuedo-machine-language instructions that each kOS CPU will attempt to execute from the main program per :ref:`physics update tick <cpu hardware>`.
+    This is the number of kRISC pseudo-machine-language instructions that each kOS CPU will attempt to execute from the main program per :ref:`physics update tick <cpu hardware>`.
 
     This value is constrained to stay within the range [50..2000]. If you set it to a value outside that range, it will reset itself to remain in that range.
 
@@ -200,7 +200,7 @@ Configuration of kOS
     :type: :struct:`Boolean`
 
     Setting this config option to TRUE will allow scripts to clobber
-    built-in idenifier names, re-enabling older behavior for backward
+    built-in identifier names, re-enabling older behavior for backward
     compatibility and disabling the compiler enforcement that was
     introduced in kOS v 1.4.0.0 to stop this practice.
 
@@ -215,7 +215,7 @@ Configuration of kOS
     enabled to make the compiler accept them and not throw errors.
 
     Before enabling this to make the error messages go away, first consider
-    going through the offeding script and editing it to rename the variable,
+    going through the offending script and editing it to rename the variable,
     lock, or function that is causing the message.  That would be the better
     solution.  This config option is only being presented as a dirty way
     to make old scripts that are no longer being edited keep working on
@@ -236,7 +236,7 @@ Configuration of kOS
     Configures the ``audibleExceptions`` setting.
 
     If true, then it enables a mode in which errors coming from kOS will
-    generte a sound effect of a short little warning bleep to remind you that
+    generate a sound effect of a short little warning bleep to remind you that
     an exception occurred.  This can be useful when you are flying
     hands-off and need to realize your autopilot script just died so
     

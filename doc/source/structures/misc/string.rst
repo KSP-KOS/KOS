@@ -42,7 +42,7 @@ as in the example below::
   }
 
 The reason you can use Strings with the FOR loop like this is
-because you can obatain an :struct:`Iterator` of a string with the
+because you can obtain an :struct:`Iterator` of a string with the
 :attr:`ITERATOR` suffix mentioned below.  (Any type that
 implements the ITERATOR suffix can do this.)
 
@@ -89,8 +89,8 @@ Ordering
 Using the ``<``, ``>``, ``<=``, and ``>=`` operators, one
 string is considered to be less than the other if it is alphabetically
 sooner according to the ordering of its Unicode mapping, with the
-exception that capitalization is ingored (``a`` and ``A`` are
-considered the same letter).  Starting from the lefthand side of the
+exception that capitalization is ignored (``a`` and ``A`` are
+considered the same letter).  Starting from the left-hand side of the
 two strings, the characters are compered one at a time until the first
 difference is found, and that first difference decides the ordering.
 If one of the strings is shorter length than the other, and the characters
@@ -124,7 +124,7 @@ CASE SENSITIVIY
 
 NOTE: All string comparisons for equality and ordering, all substring
 matches, all pattern matches, and all string searches, are currently
-case **in** sensive, meaning that for example the letter "A" and the
+case **in** sensitive, meaning that for example the letter "A" and the
 letter "a" are indistinguishable.  There are future plans to add
 mechanisms that will let you choose case-sensitivity when you prefer.
 
@@ -361,7 +361,7 @@ Structure
 .. method:: String:REPLACE(oldString,newString)
 
     :parameter oldString: :struct:`String` to search for
-    :parameter newString: :struct:`String` that all occurances of oldString will be replaced with
+    :parameter newString: :struct:`String` that all occurrences of oldString will be replaced with
     :type: :struct:`String`
 
     Returns a new string out of this string with any occurrences of oldString replaced with newString.

@@ -28,7 +28,7 @@ either a :struct:`Vessel` or a :struct:`Body`.  This could be useful when
 you want to be able to get information about a hypothetical orbit that
 an object may someday end up in, even when its not in that orbit now.  One
 case where this may be useful is when trying to place a satellite into a
-desired final orbit (say to fufill a contract).  You may wish to see some
+desired final orbit (say to fulfill a contract).  You may wish to see some
 information about that destination orbit even though no particular objects
 are in that orbit at the moment.  To do this you can create an :struct`Orbit`
 object using the ``CREATEORBIT()`` function described below.  You pass in
@@ -219,7 +219,7 @@ Structure
     :type: :struct:`Scalar` (deg)
     :access: Get only
 
-    The Longitude of the ascening node is the "celestial longitude" where
+    The Longitude of the ascending node is the "celestial longitude" where
     the orbit crosses the body's equator from its southern hemisphere to
     its northern hemisphere
 
@@ -412,7 +412,7 @@ Structure
 .. _true anomaly: http://en.wikipedia.org/wiki/True_anomaly
 .. _mean anomaly: http://en.wikipedia.org/wiki/Mean_anomaly
 
-Both :attr:`NEXTPATCH <Orbit:NEXTPATCH>` and :attr:`HASNEXTPATCH <Orbit:HASNEXTPATCH>` both only operate on the **current** momentum of the object, and do **not** take into account any potential changes planned with maneuver nodes. To see the possible new path you would have if a maneuver node gets executed exactly as planned, you need to first get the orbit that follows the manuever node, by looking at the maneuver node's :attr:`:ORBIT <ManeuverNode:ORBIT>` suffix, and then look at **its** :attr:`:NEXTPATCH <Orbit:NEXTPATCH>` and :attr:`:HASNEXTPATCH <Orbit:HASNEXTPATCH>`.
+Both :attr:`NEXTPATCH <Orbit:NEXTPATCH>` and :attr:`HASNEXTPATCH <Orbit:HASNEXTPATCH>` both only operate on the **current** momentum of the object, and do **not** take into account any potential changes planned with maneuver nodes. To see the possible new path you would have if a maneuver node gets executed exactly as planned, you need to first get the orbit that follows the maneuver node, by looking at the maneuver node's :attr:`:ORBIT <ManeuverNode:ORBIT>` suffix, and then look at **its** :attr:`:NEXTPATCH <Orbit:NEXTPATCH>` and :attr:`:HASNEXTPATCH <Orbit:HASNEXTPATCH>`.
 
 Deprecated Suffix
 -----------------
@@ -446,4 +446,4 @@ ESCAPE
     Means that this orbit will enter a new SOI of another orbital body that is larger in scope and is "outside" the current one. (example: currently in Kerbin orbit, will enter Sun Orbit.)
 
 MANEUVER
-    Means that this orbit will end due to a manuever node that starts a new orbit?
+    Means that this orbit will end due to a maneuver node that starts a new orbit?

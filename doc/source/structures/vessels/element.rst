@@ -17,7 +17,7 @@ Each item of that list is one of the elements.  The rest of this page describes 
 elements and what they do.
 
 .. note::
-        Element boundries are not formed between two docking ports that were launched coupled. a craft with such an arrangement will appear as one element until you uncoupled the nodes and redocked
+        Element boundaries are not formed between two docking ports that were launched coupled. a craft with such an arrangement will appear as one element until you uncoupled the nodes and redocked
 
 .. structure:: Element
 
@@ -29,7 +29,7 @@ elements and what they do.
     :attr:`PARTS`                         :struct:`List`            all :struct:`Parts <Part>`
     :attr:`DOCKINGPORTS`                  :struct:`List`            all :struct:`DockingPorts <DockingPort>`
     :attr:`VESSEL`                        :struct:`Vessel`          the parent :struct:`Vessel`
-    :attr:`RESOURCES`                     :struct:`List`            all :struct:`AggrgateResources <AggregateResource>`
+    :attr:`RESOURCES`                     :struct:`List`            all :struct:`AggregateResources <AggregateResource>`
     ===================================== ========================= =============
 
 .. attribute:: Element:UID

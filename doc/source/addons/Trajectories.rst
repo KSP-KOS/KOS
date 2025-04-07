@@ -98,7 +98,7 @@ Access structure TRAddon via ``ADDONS:TR``.
     :type: :struct:`String`
     :access: Get
 
-    **Only gives the correct answer for Trajectries version >= 2.2.0**
+    **Only gives the correct answer for Trajectories version >= 2.2.0**
 
     *For earlier versions, it gives a hardcoded fixed answer, as follows:*
 
@@ -120,7 +120,7 @@ Access structure TRAddon via ``ADDONS:TR``.
     :type: :struct:`Scalar`
     :access: Get
 
-    **Only gives the correct answer for Trajectries version >= 2.0.0**
+    **Only gives the correct answer for Trajectories version >= 2.0.0**
 
     *For earlier versions, it gives a hardcoded fixed answer, as follows:*
 
@@ -139,7 +139,7 @@ Access structure TRAddon via ``ADDONS:TR``.
     :type: :struct:`Scalar`
     :access: Get
 
-    **Only gives the correct answer for Trajectries version >= 2.2.0**
+    **Only gives the correct answer for Trajectories version >= 2.2.0**
 
     *For earlier versions, it gives a hardcoded fixed answer, as follows:*
 
@@ -158,7 +158,7 @@ Access structure TRAddon via ``ADDONS:TR``.
     :type: :struct:`Scalar`
     :access: Get
 
-    **Only gives the correct answer for Trajectries version >= 2.2.0**
+    **Only gives the correct answer for Trajectories version >= 2.2.0**
 
     *For earlier versions, it gives a hardcoded fixed answer, as follows:*
 

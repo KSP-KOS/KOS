@@ -220,7 +220,7 @@ Access structure IRAddon via ``ADDONS:IR``.
     ===================================== ==================================== =============
      :attr:`NAME`                          :ref:`string <string>`               Name of the Servo
      :attr:`UID`                           :ref:`scalar <scalar>` (int)         Unique ID of the servo part (part.flightID).
-     :attr:`HIGHLIGHT`                     :ref:`Boolean <boolean>` (set-only)  Set Hightlight status of the part.
+     :attr:`HIGHLIGHT`                     :ref:`Boolean <boolean>` (set-only)  Set Highlight status of the part.
      :attr:`POSITION`                      :ref:`scalar <scalar>` (readonly)    Current position of the servo.
      :attr:`MINCFGPOSITION`                :ref:`scalar <scalar>` (readonly)    Minimum position for servo as defined by part creator in part.cfg
      :attr:`MAXCFGPOSITION`                :ref:`scalar <scalar>` (readonly)    Maximum position for servo as defined by part creator in part.cfg
@@ -264,7 +264,7 @@ Access structure IRAddon via ``ADDONS:IR``.
     :type: :ref:`Boolean <boolean>`
     :access: Set
 
-    Set Hightlight status of the part.
+    Set Highlight status of the part.
 
 .. attribute:: IRServo:POSITION
 
@@ -412,7 +412,7 @@ Access structure IRAddon via ``ADDONS:IR``.
 
 Example code::
 
-    print "IR Iavailable: " + ADDONS:IR:AVAILABLE.
+    print "IR available: " + ADDONS:IR:AVAILABLE.
 
     Print "Groups:".
 

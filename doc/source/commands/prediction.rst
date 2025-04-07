@@ -44,7 +44,7 @@ These return predicted information about the future position and velocity of an 
 
     Returns a prediction of where the :struct:`Orbitable` will be at some :ref:`universal Time <universal_time>`. If the :struct:`Orbitable` is a :struct:`Vessel`, and the :struct:`Vessel` has planned :ref:`maneuver nodes <maneuver node>`, the prediction assumes they will be executed exactly as planned.
 
-    *Refrence Frame:* The reference frame that the future position
+    *Reference Frame:* The reference frame that the future position
     gets returned in is the same reference frame as the current position
     vectors use.  In other words it's in ship:raw coords where the origin
     is the current ``SHIP``'s center of mass.
@@ -60,16 +60,16 @@ These return predicted information about the future position and velocity of an 
     :type orbitable:  :struct:`Orbitable`
     :param time:    Time of prediction
     :type time:     :struct:`TimeStamp` or :struct:`Scalar` universal seconds
-    :return: An :ref:`ObitalVelocity <orbitablevelocity>` structure.
+    :return: An :ref:`OrbitalVelocity <orbitablevelocity>` structure.
 
     Returns a prediction of what the :ref:`Orbitable's <orbitable>` velocity will be at some :ref:`universal Time <universal_time>`. If the :struct:`Orbitable` is a :struct:`Vessel`, and the :struct:`Vessel` has planned :struct:`maneuver nodes <Node>`, the prediction assumes they will be executed exactly as planned.
 
     *Prerequisite:*  If you are in a career mode game rather than a
     sandbox mode game, This function requires that you have your space
-    center's buildings advanced to the point where you can make manuever
+    center's buildings advanced to the point where you can make maneuver
     nodes on the map view, as described in :struct:`Career:CANMAKENODES`.
 
-    *Refrence Frame:* The reference frame that the future velocity gets
+    *Reference Frame:* The reference frame that the future velocity gets
     returned in is the same reference frame as the current velocity
     vectors use.  In other words it's relative to the ship's CURRENT
     body it's orbiting just like ``ship:velocity`` is.  For example,

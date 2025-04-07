@@ -38,13 +38,13 @@ Slider
         :type: :struct:`KOSDelegate`
         :access: Get/Set
 
-        This :struct:`KOSDelegate` takes one parmaeter, the value, and returns nothing.
+        This :struct:`KOSDelegate` takes one parameter, the value, and returns nothing.
 
         This allows you to set a callback delegate to be called
         whenever the user has moved the slider to a new
         value.  Note that as the user moves the slider
         to a new position, this will get called several
-        times along the way, giving sevearl intermediate
+        times along the way, giving several intermediate
         values on the way to the final value the user leaves
         the slider at.
 
@@ -89,7 +89,7 @@ Slider
         
         Note that despite the name, :attr:`MIN` doesn't have to be smaller
         than :attr:`MAX`.  If :attr:`MIN` is larger than :attr:`MAX`, then
-        that causes the slider to swapr their meaning, and reverse its direction.
+        that causes the slider to swap their meaning, and reverse its direction.
         (i.e. where numbers normally get larger when you slide to the right,
         inverting MIN and MAX causes the numbers to get larger when you
         slide to the left.)

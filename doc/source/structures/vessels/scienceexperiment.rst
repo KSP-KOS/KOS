@@ -12,7 +12,7 @@ example possible to deploy a science experiment::
     SET M TO P:GETMODULE("ModuleScienceExperiment").
     M:DOEVENT("observe mystery goo").
 
-Hovewer, this results in a dialog being shown to the user. Only from that dialog it is possible
+However, this results in a dialog being shown to the user. Only from that dialog it is possible
 to reset the experiment or transmit the experiment results back to Kerbin.
 :struct:`ScienceExperimentModule` structure introduces a few suffixes that allow the player
 to perform all science-related tasks without any manual intervention::

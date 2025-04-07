@@ -344,7 +344,7 @@ Mathematical Functions
         }
 
     The parameter ``key`` is a string, and it's used when you want
-    to track separate psuedo-random number sequences by name and 
+    to track separate pseudo-random number sequences by name and
     have them be deterministically repeatable. *Like other
     string keys in kOS, this key is case-insensitive.*
 
@@ -399,7 +399,7 @@ Mathematical Functions
     Initializes a new random number sequence from a seed, giving it a
     key name you can use to refer to it in future calls to :func:`RANDOM(key)`
 
-    Using this you can make psuedo-random number sequences that can be
+    Using this you can make pseudo-random number sequences that can be
     re-run using the same seed to get the same result a second time.
 
     Parameter ``key`` is a string - a name you can use to refer to this
@@ -414,7 +414,7 @@ Mathematical Functions
 
     Whenever you call ``RANDOMSEED(key, seed)``, it starts a new
     random number sequence using the integer seed you give it, and names
-    that sequence with a string key you can use later to retrive
+    that sequence with a string key you can use later to retrieve
     values from that random number sequence.
 
     Example::

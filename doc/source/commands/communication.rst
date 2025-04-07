@@ -157,8 +157,8 @@ Connectivity Managers
         support both CommNet and RemoteTech. Other mods may be supported or
         provide their own support in the future.
 
-kOS can implement communications over a variaty of connectivity configurations.
-We refer to these options as "Connectivity Managers." You can slect the active
+kOS can implement communications over a variety of connectivity configurations.
+We refer to these options as "Connectivity Managers." You can select the active
 manager from the :ref:`kOS section of KSP's Difficulty Settings<settingsWindow>`.
 If the currently selected manager no longer is available, or if a new manager
 becomes available, you will be prompted with a dialog box to select the manager

@@ -3,7 +3,7 @@
 OrbitableVelocity
 =================
 
-When any :struct:`Orbitable` object returns its :attr:`VELOCITY <Orbitable:VELOCITY>` suffix, it returns it as a structure containing a pair of both its orbit-frame velocity and its surface-frame velocity at the same instant of time. To obtain its velocity as a vector you must pick whether you want the oribtal or surface velocities by giving a further suffix:
+When any :struct:`Orbitable` object returns its :attr:`VELOCITY <Orbitable:VELOCITY>` suffix, it returns it as a structure containing a pair of both its orbit-frame velocity and its surface-frame velocity at the same instant of time. To obtain its velocity as a vector you must pick whether you want the orbital or surface velocities by giving a further suffix:
 
 .. structure:: OrbitableVelocity::
 

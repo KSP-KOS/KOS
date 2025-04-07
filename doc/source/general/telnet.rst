@@ -174,7 +174,7 @@ Using it
    of them type "st", then the other types "age", followed by the first person
    typing "." and the return key.)  All the keyboards and all the screens are
    slaved together to be equal.  You can view the in-game gui terminal while 
-   somebody is typing on a telnet temrinal.
+   somebody is typing on a telnet terminal.
 
 9. In order to make the terminals act as clones of each other, the game will attempt
    to keep them all the same size.  If you resize your telnet client window, it should
@@ -191,7 +191,7 @@ Using it
   effectively "argue" back and forth with each other, constantly changing each
   other's size.   If you experience this problem (your terminal window will be
   flipping back and forth between two different sizes, resizing itself over and over
-  again in a neverending loop), you can try to get out of it by issuing a hardcoded
+  again in a never-ending loop), you can try to get out of it by issuing a hardcoded
   command to set the terminal size, such as::
 
     SET TERMINAL:WIDTH TO 50.

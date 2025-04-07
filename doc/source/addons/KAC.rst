@@ -8,7 +8,7 @@ Kerbal Alarm Clock
 - Forum thread, including full instructions: http://forum.kerbalspaceprogram.com/threads/24786
 
 You can find out if Kerbal Alarm Clock addon is available in the
-current game installation by usng the boolean expression
+current game installation by using the boolean expression
 ``addons:available("KAC")``.
 
 Note that due to changes in Kerbal Alarm Clock, kOS can no longer support
@@ -206,7 +206,7 @@ Available Functions
 .. function:: LISTALARMS(alarmType)
 
     If `alarmType` equals "All", returns :struct:`List` of *all* :struct:`KACAlarm` objects attached to current vessel or have no vessel attached.
-    Otherwise returns :struct:`List` of all :struct:`KACAlarm` objects with `KACAlarm:TYPE` equeal to `alarmType` and attached to current vessel or have no vessel attached.::
+    Otherwise returns :struct:`List` of all :struct:`KACAlarm` objects with `KACAlarm:TYPE` equal to `alarmType` and attached to current vessel or have no vessel attached.::
 
         set al to listAlarms("All").
         for i in al

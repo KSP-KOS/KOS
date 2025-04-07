@@ -295,7 +295,7 @@ in the ``PARAMETER`` statement, like in the examples below::
     MYFUNC(1,2,3,"hi").  // prints "1, 2, 3, hi".
 
 Whenever arguments are missing, the system always makes up the difference by
-using defaults for the lastmost parameters until the correct number have been
+using defaults for the rightmost parameters until the correct number have been
 padded.  (So for example, if you call MYFUNC() above with 3 arguments, it's
 the last argument, P4, that gets defaulted, but P3 does not.  But if you call
 it with 2 arguments, both P4 and P3 get defaulted.)
@@ -333,7 +333,7 @@ live in and the memory the interpreter's pseudo-machine
 language instructions live in are two different things.
 
 The effect you may see if you attempt this is merely
-an "Unknown Identifer" error, or worse yet, it may end
+an "Unknown Identifier" error, or worse yet, it may end
 up jumping into random parts of your code that have nothing
 to do with the actual function call you're trying to
 make.

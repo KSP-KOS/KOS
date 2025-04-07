@@ -7,7 +7,7 @@ A :struct:`DeltaV` contains information about the delta-V
 numbers the stock KSP game calculates for you in the
 user interface (in the staging list display).  There are in
 fact two different kinds of DeltaV structures in kOS - one
-that refers to the whole veseel, or one that refers to just
+that refers to the whole vessel, or one that refers to just
 one stage of the vessel.
 
 You can obtain a DeltaV about the sum of the whole vessel
@@ -66,7 +66,7 @@ DeltaV Structure
         * - :attr:`CURRENT`
           - :struct:`Scalar`
           - Get only
-          - How much DeltaV (meters/second) at curent atmospheric conditions?
+          - How much DeltaV (meters/second) at current atmospheric conditions?
         * - :attr:`ASL`
           - :struct:`Scalar`
           - Get only
@@ -156,7 +156,7 @@ DeltaV Structure
 
     After calling FORCECALC(), the deltaV values you see will be quite
     wrong for a few update ticks, while the game calculates the new values.
-    Unfortunately, there isn't a good way for a kerobscript to find out
+    Unfortunately, there isn't a good way for a kerboscript to find out
     when the answer is final and the recalculation is over.  (Sorry, we
     tried, but couldn't find the API call in KSP that would tell us this.)
 

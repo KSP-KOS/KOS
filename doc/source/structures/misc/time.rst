@@ -20,7 +20,7 @@ of time, and can show you that time divided up into years, days,
 hours, minutes, and seconds.
 
 **Differences between ``TimeStamp`` and ``TimeSpan``**:
-The diference is that :struct:`TimeStamp` is for storing a single
+The difference is that :struct:`TimeStamp` is for storing a single
 point in time, while :struct:`TimeSpan` is for
 storing an offset, or duration of time.  Where they differ is in
 what it means to call something "year 1" or "day 1".  ``TimeStamp``
@@ -38,7 +38,7 @@ Mixing TimeStamp with TimeSpan
 ------------------------------
 
 There are rules for how you can mix and match :struct:`TimeStamp` and 
-:struct:`TimeSpan` in artithmetic and boolean comparisons.  (For example
+:struct:`TimeSpan` in arithmetic and boolean comparisons.  (For example
 if you add a :struct:`TimeSpan` to a :struct:`TimeStamp` you get a new
 :struct:`TimeStamp`.)  The full rules for these operations are listed
 in the :ref:`Time operators <time_operators>` section further down this page.
@@ -289,7 +289,7 @@ TimeStamp Structure
     :type: :struct:`Scalar`
 
     Year-hand number.  Note that the first year of the game, at "epoch"
-    time is actullay year 1, not year 0.
+    time is actually year 1, not year 0.
 
 .. attribute:: TimeStamp:DAY
 
@@ -466,7 +466,7 @@ TimeSpan Structure
           - :struct:`Scalar`
           - *TOTAL* time in the span expressed in years.
         * - :attr:`DAY`
-          - :struct:`Scalar` (range vaires by universe)
+          - :struct:`Scalar` (range varies by universe)
           - Whole number of days after the last whole year in the span.
         * - :attr:`DAYS`
           - :struct:`Scalar` 
@@ -561,7 +561,7 @@ TimeSpan Structure
     Whole number of days remaining after the lst full year within the span.
     Kerbin has 426 days in a year if using Kerbin's
     6 hour day (one fourth as much if if :attr:`Kuniverse:HOURSPERDAY`
-    is 24 meaning the game is configured to show Earthlike days not
+    is 24 meaning the game is configured to show Earth-like days not
     Kerbin days.
 
     The range of possible values could be different if you have mods
@@ -643,7 +643,7 @@ TimeSpan Structure
     :access: Get only
     :type: :struct:`Scalar` (float)
 
-    *TOTAL* Seconds in the TimeSpan, including fractonal part.  Note
+    *TOTAL* Seconds in the TimeSpan, including fractional part.  Note
     this is NOT the same as :attr:`TimeSpan:SECOND` (singular),
     because this is the total span of time expressed in seconds,
     and not just the leftover seconds in the last minute of the span.
@@ -759,7 +759,7 @@ Example::
   // This sets C to 22 minutes 30 seconds (half of 45 minutes):
   set C to A / 2.
 
-Time Opertators - comparisons
+Time Operators - comparisons
 -----------------------------
 
 You may check if two TimeStamps are equal, greater, or lesser.

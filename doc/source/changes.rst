@@ -103,7 +103,7 @@ Can Set the RCS Deadband
 
 Addition on :attr:`RCS:DEADBAND`
 
-SteeringManager Epislon
+SteeringManager Epsilon
 :::::::::::::::::::::::
 
 Addition of :attr:`SteeringManager:TORQUEEPSILONMIN` and
@@ -169,13 +169,13 @@ CreateOrbit from position and velocity
 
 A new variant of CreateOrbit - :func:`CREATEORBIT(pos, vel, body, ut)`,
 that lets you make an orbit out of state vectors instead of
-Kepplerian values.
+Keplerian values.
 
 Ranges take fractional numbers
 ::::::::::::::::::::::::::::::
 
 :ref:`Ranges <range>` now accept fractional values for start, stop
-and step.  (Previously everthing had to be an integer.)
+and step.  (Previously everything had to be an integer.)
 
 Numerous mistake fixes
 ::::::::::::::::::::::
@@ -226,7 +226,7 @@ New Function, :func:`BODYEXISTS(name)`
 Wordwrap on Labels
 ::::::::::::::::::
 
-You can set wordrap off for labels by the new suffx, :attr:`Style:WORDWRAP`.
+You can set wordwrap off for labels by the new suffix, :attr:`Style:WORDWRAP`.
 
 CreateOrbit
 :::::::::::
@@ -404,7 +404,7 @@ and were removed.
 Document Simulate in BG
 :::::::::::::::::::::::
 
-Documented the need to have Simulate in BG enabled when playing in windwed mode,
+Documented the need to have Simulate in BG enabled when playing in windowed mode,
 on the :ref:`Telnet <telnet>` page.
 
 Stage/decouple docs
@@ -432,7 +432,7 @@ New suffixes on Body page
 :ref:`Body <body>` page now has more fleshed-out examples and documentation
 to go with the new :HASOCEAN, :HASSURFACE, and :CHILDREN suffixes
 
-New Basic tutoial
+New Basic tutorial
 :::::::::::::::::
 
 New Basic Tutorial page.
@@ -556,7 +556,7 @@ error tones, or for playing simple music.  A basic example would be::
 
 For an example of a song, check out the :ref:`Example song section of voice documentation<voicesong>`
 
-Also check out the :ref:`SKID chip documentation<skid>` for an indepth explaination.
+Also check out the :ref:`SKID chip documentation<skid>` for an indepth explanation.
 
 CommNet Support
 :::::::::::::::
@@ -662,7 +662,7 @@ Subdirectories
 See :ref:`Understanding directories <directories>`.
 
 You are now able to store subdirectories ("folders") in your volumes,
-both in the archive and in local volumes.  To accomodate the new feature
+both in the archive and in local volumes.  To accommodate the new feature
 new versions of the file manipulation commands had to be made (please
 go over the documentation in the link given above).
 
@@ -769,7 +769,7 @@ KSP 1.1 release binaries (build 1230)
 Changes in 0.19.3
 -----------------
 
-Interuptable Triggers
+Interruptible Triggers
 :::::::::::::::::::::
 
 Triggers are no longer required to complete within a single update frame,
@@ -807,7 +807,7 @@ this: ::
     }
 
 ``ON`` will now evaluate the expression instead of treating it like a variable
-identifer.
+identifier.
 
 Changes in 0.19.2
 -----------------
@@ -904,7 +904,7 @@ Multimode Engine and Gimbal Support
 :::::::::::::::::::::::::::::::::::
 
 :ref:`Engines <engine>` can now support multiple-mode information, and can
-acces thei gimbal information in the ``:GIMBAL`` suffix.
+access their gimbal information in the ``:GIMBAL`` suffix.
 
 DMagic Orbital Science
 ::::::::::::::::::::::
@@ -938,7 +938,7 @@ JOIN
 ::::
 
 Join suffix on :ref:`lists <list>` now lets you make a string with a
-delimeter of the list's elements.
+delimiter of the list's elements.
 
 Hours per day
 :::::::::::::
@@ -965,7 +965,7 @@ you can use along with lists.
 Run Once
 ::::::::
 
-:ref:`New ONCE argment to the run command <run_once>`
+:ref:`New ONCE argument to the run command <run_once>`
 
 Volumes and Processors integration
 ::::::::::::::::::::::::::::::::::
@@ -999,7 +999,7 @@ A major change to Cooked Steering!
 Should help people using torque-less craft like with Realism Overhaul.
 Removed the old steering logic and replaced it with a nice auto-tuning system.
 
-:ref:`SteeringManager <steeringmanager>` structure now lests you acccess and alter parts of the cooked steering system.
+:ref:`SteeringManager <steeringmanager>` structure now lets you access and alter parts of the cooked steering system.
 
 :ref:`PIDLoop <pidloop>` structure now lets you borrow the PID mechanism used by the new cooked steering, for your own purposes.
 
@@ -1159,13 +1159,13 @@ Docking port, element, and vessel references
 
 You can now get a list of docking ports on any element or vessel using
 the DOCKINGPORTS suffix.  Vessels also expose a list of their elements
-(the ELEMENTS suffix) and an element will refernce it's parent vessel
+(the ELEMENTS suffix) and an element will reference it's parent vessel
 (the VESSEL suffix).
 
 New sounds and terminal features
 ::::::::::::::::::::::::::::::::
 
-For purely cosmetic purpopses, there are new sound features and
+For purely cosmetic purposes, there are new sound features and
  a few terminal tweaks.
 
 - A terminal keyclick option for the in-game GUI terminal.
@@ -1274,7 +1274,7 @@ that a manual user can do by using the right-click menus.
 Kerbal Alarm Clock support
 ::::::::::::::::::::::::::
 
-If you have the Kerbal Alarm Clock Mod isntalled, you can now
+If you have the Kerbal Alarm Clock Mod installed, you can now
 :ref:`query and manipulate its alarms <KAC>` from within your
 kOS scripts.
 

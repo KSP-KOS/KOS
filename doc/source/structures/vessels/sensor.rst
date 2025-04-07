@@ -69,7 +69,7 @@ The type of structures returned by :ref:`LIST SENSORS IN SOMEVARIABLE <list comm
     :access: Get only
     :type: :struct:`String`
 
-    The value of the sensor's readout, usualy including the units.
+    The value of the sensor's readout, usually including the units.
 
 .. attribute:: Sensor:POWERCONSUMPTION
 

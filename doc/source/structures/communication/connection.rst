@@ -58,7 +58,7 @@ Structure
           as the current CPU, and will be false otherwise.
     - For Vessel connections:
         - If you are using Stock KSP and chose the PermitAll connectivity
-          manager, then this will aways return true.
+          manager, then this will always return true.
         - If you are using Stock KSP and chose the CommNet connectivity
           manager, then this will obey the rules of the stock CommNet system
           for whether a connection path exists between the source and
@@ -103,7 +103,7 @@ Structure
     - For vessel connections:
 	- If you are using the PermitAll Connectivity Manager, then this
 	  will always be zero, as messages arrive instantly.
-	- If you are using the stock CommNet Connectivirty Manager, then this
+	- If you are using the stock CommNet Connectivity Manager, then this
 	  will always be zero, as stock CommNet does not impose any delay
 	  from radio signals.
 	- If you are using the RemoteTech Connectivity Manager, then this

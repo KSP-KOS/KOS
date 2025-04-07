@@ -125,7 +125,7 @@ that the whole expression will be true anyway.
 A similar short circuiting happens with AND.  Once the left side of the
 AND operator is false, then the entire AND expression is guaranteed
 to be false regardless of what's on the right side, so kerboscript
-doesn't bother calculating the righthand side once the lefthand side is false.
+doesn't bother calculating the right-hand side once the left-hand side is false.
 
 Read the link above for implications of why this matters in programming.
 
@@ -211,7 +211,7 @@ The full list of available suffixes for each type :ref:`can be found here <struc
 Triggers
 --------
 
-One useful feature of kerboscript (but a potentialy confusing one for 
+One useful feature of kerboscript (but a potentially confusing one for
 people new to the language, so we don't recommend you use it at
 first) is the "trigger". Triggers are small sections of your program
 that can interrupt your normal program flow when certain things

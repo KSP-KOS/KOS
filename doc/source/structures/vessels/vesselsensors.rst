@@ -40,7 +40,7 @@ If you store this in a variable and wait, the numbers are frozen in time and won
     :access: Get only
     :type: :struct:`Vector`
 
-    Accelleration the vessel is undergoing. A combination of both the gravitational pull and the engine thrust.
+    Acceleration the vessel is undergoing. A combination of both the gravitational pull and the engine thrust.
 
 .. attribute:: VesselSensors:PRES
 

@@ -10,7 +10,7 @@ that these suffixes refer to the player's actual input controls, rather
 than kOS's own controls that are layered on top of them, overriding them.
 
 Please note that the *Breaking Ground DLC* parts that can be configured
-to respond to the throttle, such as electric motors and propellor pitches
+to respond to the throttle, such as electric motors and propeller pitches
 will only respond to the settings described here on this page, and NOT
 the settings described in the :ref:`raw control <raw>` page, or the
 settings in ``lock throttle`` or ``lock steering``.  SQUAD designed
@@ -35,7 +35,7 @@ settings that "stay put" and don't reset to center when the pilot lets
 go of the stick.  For example, while ``PILOTPITCH`` matches whatever
 temporary position the pilot's stick is in, ``PILOTPITCHTRIM`` stays
 where it was last set.  Thus ``PILOTPITCHTRIM`` is settable here,
-while ``PILOTPITCH`` is not.  The docmentation below marks which
+while ``PILOTPITCH`` is not.  The documentation below marks which
 suffixes are indeed set-able.  Through the use of these trim-able
 settings, it is possible to control the ship in a way that still
 lets the pilot temporarily grab the controls for a second to override
@@ -139,7 +139,7 @@ what kOS is doing.
     lets go of the controls.
 
     RP-1 Special Case:  If using the RP-1 mod, and flying a "sounding rocket"
-    where the avionics controls are insuficcient to steer but are good
+    where the avionics controls are insufficient to steer but are good
     enough to ignite engines, then ``lock throttle`` does not work to
     activate those engines, but this suffix can do it.  RP-1 actively
     suppresses the normal ability for an autopilot to control the throttle
@@ -164,7 +164,7 @@ what kOS is doing.
 
     Get-only.
 
-    Returns the pilot's rotation input  about the logintudinal axis of the ship left-wing-down :math:`(-1)` or left-wing-up :math:`(+1)`.
+    Returns the pilot's rotation input  about the longitudinal axis of the ship left-wing-down :math:`(-1)` or left-wing-up :math:`(+1)`.
 
 .. _SHIP CONTROL PILOTROTATION:
 .. object:: SHIP:CONTROL:PILOTROTATION

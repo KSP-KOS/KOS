@@ -35,7 +35,7 @@ Intermediate
     Starts with a basic proportional feedback loop and develops, in stages, a complete PID-loop to control the throttle of a simple rocket design.
 
 :doc:`Execute Node script <tutorials/exenode>`
-    ZiwKerman describes a generic "execute manuever node" script to be a one-size-fits-all solution to many situations in KSP.  If you can make a manuever node for something, exenode will execute it.
+    ZiwKerman describes a generic "execute maneuver node" script to be a one-size-fits-all solution to many situations in KSP.  If you can make a maneuver node for something, exenode will execute it.
 
 :doc:`Display Bounds script <tutorials/display_bounds>`
     An example program showing how to read vessel and part bounding

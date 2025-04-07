@@ -374,7 +374,7 @@ Structure
     attribute that shows a list of all the suffixes on the structure,
     but for Lexicons the SUFFIXNAMES attribute has been altered so
     that it will additionally include any keys of the suffix that could
-    be callled using the :ref:`lexicon suffix syntax <lexicon_suffix>`.
+    be called using the :ref:`lexicon suffix syntax <lexicon_suffix>`.
 
 Access to Individual Elements
 -----------------------------
@@ -387,7 +387,7 @@ Access to Individual Elements
 Implicit ADD when using index brackets with new key values
 ----------------------------------------------------------
 
-**(a.k.a. The difference between GETTING and SETTING with nonexistant keys)**
+**(a.k.a. The difference between GETTING and SETTING with nonexistent keys)**
 
 If you attempt to use a key that does not exist in the lexicon, to
 GET a value, as follows::

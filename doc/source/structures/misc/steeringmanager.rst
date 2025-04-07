@@ -36,7 +36,7 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     :attr:`YAWTS`                        :struct:`Scalar` (s)      Settling time for the yaw torque calculation.
     :attr:`ROLLTS`                       :struct:`Scalar` (s)      Settling time for the roll torque calculation.
     :attr:`TORQUEEPSILONMIN`             :struct:`Scalar` (s)      Torque deadzone when not rotating at max rate
-    :attr:`TORQUEEPSILONMAX`             :struct:`Scalar` (s)      Torquw deadzone when rotating at max roatation rate
+    :attr:`TORQUEEPSILONMAX`             :struct:`Scalar` (s)      Torque deadzone when rotating at max rotation rate
     :attr:`MAXSTOPPINGTIME`              :struct:`Scalar` (s)      The maximum amount of stopping time to limit angular turn rate.
     :attr:`ROLLCONTROLANGLERANGE`        :struct:`Scalar` (deg)    The maximum value of :attr:`ANGLEERROR` for which to control roll.
     :attr:`ANGLEERROR`                   :struct:`Scalar` (deg)    The angle between vessel:facing and target directions
@@ -195,7 +195,7 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     If you have problems wasting too much RCS propellant because kOS
     "cares too much" about getting the rotation rate exactly right and is
     wiggling the controls unnecessarily when rotating toward a new direction,
-    setting thie value a bit higher can help.
+    setting this value a bit higher can help.
 
     You cannot set this value lower than
     :attr:`SteeringManager:TORQUEEPSILONMIN`.
@@ -268,7 +268,7 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     which kOS will attempt to respond to error along the roll axis.  If this
     is set to 5 (the default value), the facing direction will need to be within
     5 degrees of the target direction before it actually attempts to roll the
-    ship.  Setting the value to 180 will effectivelly allow roll control at any
+    ship.  Setting the value to 180 will effectively allow roll control at any
     error amount.  When :attr:`ANGLEERROR<SteeringManager:ANGLEERROR>` is
     greater than this value, kOS will only attempt to kill all roll angular
     velocity.  The value is clamped between 180 and 1e-16.

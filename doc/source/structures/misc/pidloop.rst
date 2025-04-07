@@ -25,7 +25,7 @@ PID stands for "Proportional, Integral, Derivative".  It tracks
 the thing you are measuring and how it changes over time, and
 uses that to decide how you should set the control.
 
-The kOS documenation has a 
+The kOS documentation has a
 :ref:`tutorial about what PID loops are <pidloops>` that goes over the
 general principles and shows code examples of how to create your
 own PID loop with your own script code.
@@ -39,7 +39,7 @@ read the :ref:`tutorial about what PID loops are <pidloops>` first.
 Constructors
 ------------
 
-The `PIDLoop` constructor function has a number of parametres, and
+The `PIDLoop` constructor function has a number of parameters, and
 they can be left off, leaving optional defaults.
 
 The full version is this::
@@ -86,7 +86,7 @@ Examples
     // minoutput = minimum number value
     SET PID TO PIDLOOP().
 
-    // Create a PIDLoop with a few stated paremeters:
+    // Create a PIDLoop with a few stated parameters:
     SET PID TO PIDLOOP(2.5).
     SET PID TO PIDLOOP(2.0, 0.05, 0.1).
     SET PID TO PIDLOOP(2.0, 0.05, 0.1, -1, 1).
@@ -179,7 +179,7 @@ Version (B)::
   set ctrl to myPid:UPDATE(time:seconds, measurement).
 
 Actually, with kOS's PIDLoop, the second version, Version(B), works a bit better
-and should be preferred.  The reason is that when calcualting the D term,
+and should be preferred.  The reason is that when calculating the D term,
 :struct:`PIDLoop` uses the change in the raw measure, not the error of the
 the measure, to calculate the rate of change of the value.  This becomes
 relevant when your script suddenly changes its mind what the target value is
@@ -336,7 +336,7 @@ Structure
     :type: :struct:`Scalar`
     :access: Get only
 
-    The value representing the time weighted sum of all errrors.  It will be equal to :attr:`ITERM` / :attr:`KI`.  This value is adjusted by the integral windup mitigation logic.
+    The value representing the time weighted sum of all errors.  It will be equal to :attr:`ITERM` / :attr:`KI`.  This value is adjusted by the integral windup mitigation logic.
 
 .. attribute:: PIDLoop:PTERM
 

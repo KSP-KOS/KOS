@@ -41,7 +41,7 @@ GUI structure
 
         You can alter this value to move the window.
 
-        If you use a negative value for the coordinate, then the coordiante will be
+        If you use a negative value for the coordinate, then the coordinate will be
         measured in the reverse direction, from the right edge of the screen.  (i.e.
         setting it to -200 means 200 pixels away from the right edge of the screen.)
 
@@ -54,7 +54,7 @@ GUI structure
 
         You can alter this value to move the window.
 
-        If you use a negative value for the coordinate, then the coordiante will be
+        If you use a negative value for the coordinate, then the coordinate will be
         measured in the reverse direction, from the bottom edge of the screen.  (i.e.
         setting it to -200 means 200 pixels away from the bottom edge of the screen.)
 
@@ -81,7 +81,7 @@ GUI structure
         your GUI will work under a signal delay you can use this suffix to
         force a simulated additional signal delay even if you are not using
         RemoteTech.  (Or when you are using RemoteTech but are testing your GUI in
-        situations where there isn't a noticable signal delay, like in Kerbin
+        situations where there isn't a noticeable signal delay, like in Kerbin
         low orbit).
 
     .. attribute:: SKIN

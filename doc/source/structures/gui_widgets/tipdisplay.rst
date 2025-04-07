@@ -26,11 +26,11 @@ TipDisplay
     suffixes that :struct:`Label` has.  The only special thing it does
     is that it:
 
-    - Has its own style, called "tipDisplay", which can get seperate style
+    - Has its own style, called "tipDisplay", which can get separate style
       settings.
     - Has its :attr:`TEXT` value automatically populated by the Tooltips
       of the other widgets you hover over, within limits.  If no such hover
-      text is avaiable, or the mouse isn't over a supported widget type,
+      text is available, or the mouse isn't over a supported widget type,
       then the :attr:`TEXT` field will be an empty string (``""``).
 
     Please be aware that Unity3d's IMGUI system does not support Tooltips

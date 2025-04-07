@@ -41,21 +41,21 @@ operator symbols:
     * ``not`` -> ``not A`` Logical inversion of A.  Due to the high precedence,
       if A is some complex expression you may need to write this with brackets
       as ``not(A)`` in kerboscript to make it parse right.
-    * ``=``, <>``, ``>=``, ``<=``, ``>``, ``<`` -> Comparitors.  Note
+    * ``=``, <>``, ``>=``, ``<=``, ``>``, ``<`` -> Comparators.  Note
       that equals and not-equals are different than in some common languages:
 
-        * The equals comparitor is a single character ``=`` not a double-equal ``==``.
-        * The not-equal comparitor is ``<>`` not ``!=``.
+        * The equals comparator is a single character ``=`` not a double-equal ``==``.
+        * The not-equal comparator is ``<>`` not ``!=``.
 
-    * ``and`` -> Logical AND of two Boolean expresssions.
-    * ``or`` -> Logical OR of two Boolean expresssions.
+    * ``and`` -> Logical AND of two Boolean expressions.
+    * ``or`` -> Logical OR of two Boolean expressions.
       
 ** Logic constants**: all logic operators return one of these, and you may assign them to variables:
 
-    * ``false`` -> (case insensitive, so can be writtedn as False, FALSE, etc)
+    * ``false`` -> (case insensitive, so can be written as False, FALSE, etc)
     * ``true`` -> (case insensitive, so can be written as True, TRUE, etc)
     * Although not a recommended programming style to use, numbers used in a
-      logic context get interpreted as Boolean values followng the typical
+      logic context get interpreted as Boolean values following the typical
       rule that zero is ``false`` and anything other than zero is ``true``.
 
 **Instructions and Keywords**::
@@ -114,7 +114,7 @@ The rest may be letters, digits or underscores.
     Kerboscript accepts Unicode source code, encoded using the UTF-8
     encoding method.  Because of this, the definition of a "letter"
     character for an identifier includes letters from many languages'
-    alphabets, including accented Latin alphabet characters, Cyrllic
+    alphabets, including accented Latin alphabet characters, Cyrillic
     characters, etc.  Not all languages have been tested but in
     principle they should work as long as they have a Unicode standard
     accepted definition of what counts as a "letter".  We defer to
@@ -161,7 +161,7 @@ Numbers (scalars)
 -----------------
 
 Numbers in kerboscript are referred to as "scalars", to distinguish
-them from the many cases where a values will be represnted
+them from the many cases where a values will be represented
 as a vectors.  You are allowed to use integers, decimal fractional numbers
 (numbers with a decimal point and a fractional part), and scientific
 notation numbers.
@@ -176,7 +176,7 @@ The following are valid scalar syntax::
    1.123e12
    1.234e-12
 
-Kerobscript does not support imaginary numbers or irrational numbers
+Kerboscript does not support imaginary numbers or irrational numbers
 or rational numbers that cannot be represented as a finite decimal
 (i.e.  sqrt(-1) returns a Not-a-Number error.  Pi will have to be
 an approximation.  "One third", ends up being something like 0.333333333).)
@@ -283,7 +283,7 @@ an alternate way to get the value for a key, as in the example below::
     print MyLex:key1.    // key used in an alternate way as a "suffix".
 
 There are some limits to using this syntax, as described in more detail
-:ref:`in the documentation for the Lexion type <lexicon_suffix>`.
+:ref:`in the documentation for the Lexicon type <lexicon_suffix>`.
 
 .. _syntax functions:
 

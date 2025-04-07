@@ -16,7 +16,7 @@ TODO: PUT LINKS POINTING TO A TUTORIAL WALKING THROUGH WHAT THIS IS TEACHING.
 
 THERE NEEDS TO BE TWO TUTORIALS MINIMUM:
 
-1. A Tuturial made on an ONLY STOCK (other than kOS of course) install, using only STOCK parts to do something interesting.
+1. A Tutorial made on an ONLY STOCK (other than kOS of course) install, using only STOCK parts to do something interesting.
 
 2. A Tutorial more complex showing that this can be used with mods too, probably the Leg Leveller example from the teaser video, but with the code updated to use the newer part query methods.
 
@@ -84,7 +84,7 @@ has a length of zero::
 
 Examples::
 
-    // Change the altitude at which all the drouge chutes will deploy:
+    // Change the altitude at which all the drogue chutes will deploy:
     FOR somechute IN somevessel:PARTSNAMED("parachuteDrogue") {
       somechute:GETMODULE("ModuleParachute"):SETFIELD("DEPLOYALTITUDE", 1500).
     }.
@@ -107,7 +107,7 @@ The diagram here shows an example of a small vessel and how it might get represe
 Accessing the parts list as a list
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can get a list of all the parts on a vessel using the suffix :PARTS, or by using the LIST PARTS IN command. When you do this, the resulting list is a "flattening" of the tree of parts, created by use of a depth-first search starting from the root part. In the diagram shown here, the red numbers indicate one possible way the parts might be represented in LIST indeces if you used SHIP:PARTS on such a vessel. Note there is no guarantee it would look exactly like this, as it depends on exactly what order the parts were attached in the VAB.
+You can get a list of all the parts on a vessel using the suffix :PARTS, or by using the LIST PARTS IN command. When you do this, the resulting list is a "flattening" of the tree of parts, created by use of a depth-first search starting from the root part. In the diagram shown here, the red numbers indicate one possible way the parts might be represented in LIST indexes if you used SHIP:PARTS on such a vessel. Note there is no guarantee it would look exactly like this, as it depends on exactly what order the parts were attached in the VAB.
 
 Shortcuts to smaller lists of parts
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -127,7 +127,7 @@ Return a List of just the parts that have had some sort of activity attached to 
 PartModules and the right-click menu:
 -------------------------------------
 
-Each Part, in turn has a list of what are called `PartModules <../structures/vessels/partmodule.html>`__ on it. A PartModule is a collection of variables and executable program hooks that gives the part some of its behaviors and properties. Without a PartModule, a part is really nothing more than a passive bit of structure that has nothing more than a shape, a look, and a strength to it. Some of the parts in the "structure" tab of the parts bin, like pure I-beams and girders, are like this - they have no PartModules on them. But all of the *interesting* parts you might want to do something with will have a PartModule on them. Through PartModules, \*\*kOS will now allow you to manipulate or query anything that any KSP programmer, stock or mod, has added to the rightclick menu\*\*, or action group actions, for a part.
+Each Part, in turn has a list of what are called `PartModules <../structures/vessels/partmodule.html>`__ on it. A PartModule is a collection of variables and executable program hooks that gives the part some of its behaviors and properties. Without a PartModule, a part is really nothing more than a passive bit of structure that has nothing more than a shape, a look, and a strength to it. Some of the parts in the "structure" tab of the parts bin, like pure I-beams and girders, are like this - they have no PartModules on them. But all of the *interesting* parts you might want to do something with will have a PartModule on them. Through PartModules, \*\*kOS will now allow you to manipulate or query anything that any KSP programmer, stock or mod, has added to the right-click menu\*\*, or action group actions, for a part.
 
 PartModules, Stock vs Mods:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -179,13 +179,13 @@ This causes the event to execute once.
 KSPActions:
 ~~~~~~~~~~~
 
-A KSPAction is a bit different from a KSPField or KSPEvent. A KSPAction is like a KSPEvent in that it causes some software inside the PartModule to be run. But it doesn't work via the RMB context menu for the part. Instead KSPAction's are those things you see being made avaiable to you as options you can assign into an Action Group in the VAB or SPH. When you have the action group editor tab enabled in the VAB or SPH, and then click on a part, that part asks all of its PartModules if they have any KSPActions they'd like to provide access to, and gathers all those answers and lists them in the user interface for you to select from and assign to the action group.
+A KSPAction is a bit different from a KSPField or KSPEvent. A KSPAction is like a KSPEvent in that it causes some software inside the PartModule to be run. But it doesn't work via the RMB context menu for the part. Instead KSPAction's are those things you see being made available to you as options you can assign into an Action Group in the VAB or SPH. When you have the action group editor tab enabled in the VAB or SPH, and then click on a part, that part asks all of its PartModules if they have any KSPActions they'd like to provide access to, and gathers all those answers and lists them in the user interface for you to select from and assign to the action group.
 
 kOS now allows you to access any of those actions without necessarily having had to assign them to any action groups if you didn't want to.
 
 KSPActions are manipulated by the following suffix of PartModule, called :meth:`PartModule:DoAction`.
 
--  :DOACTION("name of action", new\_boolan\_value).
+-  :DOACTION("name of action", new\_boolean\_value).
 
 The name of the action is the name you see in the action group editor interface, and the new boolean value is either True or False. Unlike KSPEvents, a KSPAction has two states, true and false. When you toggle the brakes, for example, they go from on to off, or from off to on. When you call :DOACTION, you are specifying if the KSPAction should behave as if you have just toggled the group on, or just toggled the group off. But instead of actually toggling an action group - you are just telling the single PartModule on a single Part to perform the same behavior it would have performed had that action been assigned to an action group. You don't *actually* have to assign the action to an action group for this to work.
 
@@ -245,4 +245,4 @@ That this doesn't work anymore after that, and the "Activate" event now causes a
 
 And the reason is that the PartModule chose to change the label on the event. It changed to the word "Deactivate" now. kOS can no longer trigger an event called "Activate" because that's no longer its name.
 
-Be on the lookout for cases like this. Experiment with how the context menu is being manipulated and keep in mind that the list of strings you got the last time you exectued :ALLFIELDS a few minutes ago might not be the same list you'd get if you ran it now, because the PartModule has changed what is being shown on the menu.
+Be on the lookout for cases like this. Experiment with how the context menu is being manipulated and keep in mind that the list of strings you got the last time you executed :ALLFIELDS a few minutes ago might not be the same list you'd get if you ran it now, because the PartModule has changed what is being shown on the menu.

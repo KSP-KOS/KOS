@@ -90,7 +90,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type R
           - Synonym for VACUUMISP
         * - :attr:`SEALEVELISP`
           - :struct:`Scalar`
-          - `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at Kerbin sealevel
+          - `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at Kerbin sea level
         * - :attr:`SLISP`
           - :struct:`Scalar`
           - Synonym for SEALEVELISP
@@ -190,7 +190,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type R
     widget that pops up when you right-click the rcs will automatically
     round it to the nearest 0.5 whenever you open the panel.  So if you
     do something like ``set ship:part[20]:thrustlimit to 10.5123.`` in
-    your script, then look at the rightclick menu for the rcs, the very
+    your script, then look at the right-click menu for the rcs, the very
     act of just looking at the menu will cause it to become 10.5 instead
     of 10.5123.  There isn't much that kOS can do to change this.  It's a
     user interface decision baked into the stock game.
@@ -267,7 +267,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type R
     :access: Get only
     :type: :struct:`Scalar` (kN)
 
-    How much thrust would this rcs thruster give at its current atmospheric pressure if one of the control axes that activates it (yaw, pitch, roll, fore, aft, or top) was maxxed, and the thrust limiter was max at 100%.  Note this might not be the thruster's actual max thrust it could have under other air pressure conditions.  Some thrusters have a very different value for MAXTHRUST in vacuum as opposed to at sea level pressure.
+    How much thrust would this rcs thruster give at its current atmospheric pressure if one of the control axes that activates it (yaw, pitch, roll, fore, aft, or top) was maxed, and the thrust limiter was max at 100%.  Note this might not be the thruster's actual max thrust it could have under other air pressure conditions.  Some thrusters have a very different value for MAXTHRUST in vacuum as opposed to at sea level pressure.
 
 .. _rcs_MAXTHRUSTAT:
 
@@ -276,7 +276,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type R
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
     :type: :struct:`Scalar` (kN)
 
-    How much thrust would this rcs thruster give if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxxed and thrust limiter was max at the given atmospheric pressure.  Use a pressure of 0.0 for vacuum, and 1.0 for sea level (on Kerbin) (or more than 1 for thicker atmospheres like on Eve).
+    How much thrust would this rcs thruster give if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxed and thrust limiter was max at the given atmospheric pressure.  Use a pressure of 0.0 for vacuum, and 1.0 for sea level (on Kerbin) (or more than 1 for thicker atmospheres like on Eve).
     (Pressure must be greater than or equal to zero.  If you pass in a
     negative value, it will be treated as if you had given a zero instead.)
 
@@ -294,7 +294,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type R
     :access: Get only
     :type: :struct:`Scalar` (kN)
 
-    Taking into account the thrust limiter tweakable setting, how much thrust would this rcs thruster give at its current thrust limit setting and atmospheric pressure conditions, if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxxed .
+    Taking into account the thrust limiter tweakable setting, how much thrust would this rcs thruster give at its current thrust limit setting and atmospheric pressure conditions, if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxed .
 
 .. _rcs_AVAILABLETHRUSTAT:
 
@@ -303,7 +303,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type R
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
     :type: :struct:`Scalar` (kN)
 
-    Taking into account the thrust limiter tweakable setting, how much thrust at the given atmospheric pressure would this rcs thruster give at its current thrust limit setting if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxxed.   The pressure is measured in ATMs, meaning 0.0 is a vacuum, 1.0 is sea level at Kerbin.
+    Taking into account the thrust limiter tweakable setting, how much thrust at the given atmospheric pressure would this rcs thruster give at its current thrust limit setting if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxed.   The pressure is measured in ATMs, meaning 0.0 is a vacuum, 1.0 is sea level at Kerbin.
     (Pressure must be greater than or equal to zero.  If you pass in a
     negative value, it will be treated as if you had given a zero instead.)
 
@@ -312,14 +312,14 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type R
     :access: Get only
     :type: :struct:`Scalar` (units/s)
 
-    How much fuel volume would this rcs thruster consume at standard pressure and velocity if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxxed, and the thrust limiter was max at 100%.  Note this might not be the engine's actual max fuel flow it could have under other air pressure conditions.
+    How much fuel volume would this rcs thruster consume at standard pressure and velocity if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxed, and the thrust limiter was max at 100%.  Note this might not be the engine's actual max fuel flow it could have under other air pressure conditions.
 
 .. attribute:: RCS:MAXMASSFLOW
 
     :access: Get only
     :type: :struct:`Scalar` (Mg/s)
 
-    How much fuel mass would this rcs thruster consume at standard pressure and velocity if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxxed, and the thrust limiter was max at 100%.  Note this might not be the engine's actual max fuel flow it could have under other air pressure conditions.
+    How much fuel mass would this rcs thruster consume at standard pressure and velocity if one of the control axes that activated it (yaw, pitch, roll, fore, aft, or top) was maxed, and the thrust limiter was max at 100%.  Note this might not be the engine's actual max fuel flow it could have under other air pressure conditions.
 
 .. attribute:: RCS:ISP
 
@@ -356,7 +356,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type R
     :access: Get only
     :type: :struct:`Scalar`
 
-    `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at Kerbin sealevel.
+    `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at Kerbin sea level.
 
 .. attribute:: RCS:SLISP
 

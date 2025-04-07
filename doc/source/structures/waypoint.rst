@@ -14,7 +14,7 @@ Waypoints are the location markers you can see on the map view showing you where
     :parameter name: (:struct:`String`) Name of the waypoint as it appears on the map or in the contract description
     :return: :struct:`Waypoint`
 
-    This creates a new Waypoint from a name of a waypoint you read from the contract paramters.  Note that this only works on contracts you've accpted.  Waypoints for proposed contracts haven't accepted yet  do not actually work in kOS.
+    This creates a new Waypoint from a name of a waypoint you read from the contract parameters.  Note that this only works on contracts you've accepted.  Waypoints for proposed contracts haven't accepted yet  do not actually work in kOS.
 
     SET spot TO WAYPOINT("herman's folly beta").
 
@@ -93,7 +93,7 @@ Waypoints are the location markers you can see on the map view showing you where
     :type: :struct:`Scalar`
     :access: Get only
 
-    Altitude of waypoint **above "sea" level**.  Warning, this a point somewhere in the midst of the contract altitude range, not the edge of the altitude range.  It corresponds towhere the marker tip hovers on the map, which is not actually at the very edge of the contract condition's range.  It represents a typical midling location inside the contract's altitude range.
+    Altitude of waypoint **above "sea" level**.  Warning, this a point somewhere in the midst of the contract altitude range, not the edge of the altitude range.  It corresponds to where the marker tip hovers on the map, which is not actually at the very edge of the contract condition's range.  It represents a typical middling location inside the contract's altitude range.
 
 
 .. attribute:: Waypoint:AGL
@@ -101,7 +101,7 @@ Waypoints are the location markers you can see on the map view showing you where
     :type: :struct:`Scalar`
     :access: Get only
 
-    Altitude of waypoint **above ground**.  Warning, this a point somewhere in the midst of the contract altitude range, not the edge of the altitude range.  It corresponds to where the marker tip hovers on the map, which is not actually at the very edge of the contract condition's range.  It represents a typical midling location inside the contract's altitude range.
+    Altitude of waypoint **above ground**.  Warning, this a point somewhere in the midst of the contract altitude range, not the edge of the altitude range.  It corresponds to where the marker tip hovers on the map, which is not actually at the very edge of the contract condition's range.  It represents a typical middling location inside the contract's altitude range.
 
 
 .. attribute:: Waypoint:NEARSURFACE

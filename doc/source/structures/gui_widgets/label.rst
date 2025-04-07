@@ -98,7 +98,7 @@ supported.  The list of supported tags is shown below:
 - **<color=name>string</color>** - Selects a color, which can be expressed
   by name, and is assumed to be opaque.
 - **<color=#nnnnnnnn>string</color>** - Selects a color, expressed using
-  8 hexidecimal digits in pairs representing red, green, blue, and alpha.
+  8 hexadecimal digits in pairs representing red, green, blue, and alpha.
   (For example, all red, fully opaque would be ``#ff0000ff``, while all-red
   half-transparent would be ``#ff000080``.)
 

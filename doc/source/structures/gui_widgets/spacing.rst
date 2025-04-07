@@ -25,5 +25,5 @@ Spacing
         :access: Get/Set
 
         The number of pixels for this spacing to take up.  Whether this
-        is horizontal or vertial space depends on whether this is being
+        is horizontal or vertical space depends on whether this is being
         added to a horizontal-layout box or a vertical-layout box.

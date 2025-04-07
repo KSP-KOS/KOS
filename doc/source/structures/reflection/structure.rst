@@ -182,7 +182,7 @@ or ``42`` or ``"abc"``.  For example, you can do::
         print x:typename
         Body
 
-    The kOS types described in these documentaion pages correspond
+    The kOS types described in these documentation pages correspond
     one-to-one with underlying types in the C# code the implements
     them.  However they don't have the same name as the underlying 
     C# names.  This returns an abstraction of the C# name.  There

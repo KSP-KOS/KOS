@@ -78,7 +78,7 @@ Drawing Vectors on the Screen
     :attr:`VecDraw:COLORUPDATER`, instead of :attr:`VecDraw:COLOR`.
 
     All the parameters of the ``VECDRAW()`` and ``VECDRAWARGS()`` are
-    optional.  You can leave any of the lastmost parameters off and they
+    optional.  You can leave any of the rightmost parameters off and they
     will be given a default::
 
         Set anArrow TO VECDRAW().
@@ -115,7 +115,7 @@ Drawing Vectors on the Screen
 
         // Makes a red vecdraw at the origin, pointing 5 meters north,
         // with defaults for the un-mentioned
-        // paramters LABEL, SCALE, SHOW, and WIDTH.
+        // parameters LABEL, SCALE, SHOW, and WIDTH.
         SET vd TO VECDRAW(V(0,0,0), 5*north:vector, red).
 
     To make a :struct:`VecDraw` disappear, you can either set its :attr:`VecDraw:SHOW` to false or just :ref:`UNSET <unset>` the variable, or re-assign it. An example using :struct:`VecDraw` can be seen in the documentation for :func:`POSITIONAT()`.
@@ -130,7 +130,7 @@ Drawing Vectors on the Screen
     present anymore to access the variables that hold them.  The system
     does attempt to clear any vecdraws that go "out of scope", however
     the "closures" that keep local variables alive for LOCK statements
-    and for other reasons can keep them from every truely going away
+    and for other reasons can keep them from every truly going away
     in some circumstances.  To make the arrow drawings all go away, just call
     CLEARVECDRAWS() and it will have the same effect as if you had
     done ``SET varname:show to FALSE`` for all vecdraw varnames in the
@@ -280,7 +280,7 @@ Suffixes of Vecdraw
     :access: Get/Set
     :type: :struct:`Scalar`
 
-    Define the width of the drawn line, in meters.  The deafult is 0.2 if
+    Define the width of the drawn line, in meters.  The default is 0.2 if
     left off.  Note, this also causes the font of the label to be enlarged
     to match if set to a value larger than 0.2.
 

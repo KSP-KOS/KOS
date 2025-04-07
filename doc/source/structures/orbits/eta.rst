@@ -68,10 +68,10 @@ on an Orbit, and can be obtained one of two ways:
 
     Also be aware that in the stock KSP game (things may be different
     if you install a mod like Principia that changes the orbital
-    calculation model) ``ETA:APOAPSIS`` can be decieving when looking at
+    calculation model) ``ETA:APOAPSIS`` can be deceiving when looking at
     some large orbits.  kOS will only return the fake bignum
     ``3.402823E+38`` for those orbits that are mathematically *actual*
-    hyperbolic escape tragectories, not the orbits that are elliptical
+    hyperbolic escape trajectories, not the orbits that are elliptical
     but the game still lets them escape anyway because of the limits of the
     Sphere of Influence model.
 
@@ -98,7 +98,7 @@ on an Orbit, and can be obtained one of two ways:
     :type: :struct:`Scalar` (s)
     :access: Get only
 
-    Seconds until the next manuever node's timestamp.  NOTE this is the
+    Seconds until the next maneuver node's timestamp.  NOTE this is the
     time shown on the navball for the maneuver node, and does not
     take into account the lead time shown on the navball.
     
@@ -116,9 +116,9 @@ on an Orbit, and can be obtained one of two ways:
     :access: Get only
 
     Seconds until the transition from this orbit patch to the next one.
-    This ignores the effect of any intervening manuever nodes it might
+    This ignores the effect of any intervening maneuver nodes it might
     hit before it gets there. (This will be the path you would follow
-    if you never execute any of those manuever nodes.)
+    if you never execute any of those maneuver nodes.)
 
     If there *is* no next transition (you are on a closed loop that
     will not exit the current sphere of influence), this will

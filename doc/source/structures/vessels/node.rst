@@ -44,7 +44,7 @@ Creation
 
     You can make a maneuver node in a variable using the :func:`NODE` function.
     The radial, normal, and prograde parameters represent the 3 axes you can
-    adjust on the manuever node.  The time parameter represents when the node
+    adjust on the maneuver node.  The time parameter represents when the node
     is along a vessel's path.  The time parameter has two different possible
     meanings depending on what kind of value you pass in for it.  It's either
     an absolute time since the game started, or it's a relative time (ETA)
@@ -161,7 +161,7 @@ Structure
 
         PRINT X:PROGRADE. // prints 100.
         PRINT X:ETA.      // prints seconds till maneuver
-        PRINT X:TIME.     // prints exact UT time of manuever
+        PRINT X:TIME.     // prints exact UT time of maneuver
         PRINT X:DELTAV    // prints delta-v vector
 
         REMOVE X.         // remove node from flight plan

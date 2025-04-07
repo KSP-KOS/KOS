@@ -156,7 +156,7 @@ Suffixes
 
     Time warp as an integer index.  In the tables listed above for
     :attr:`RAILSRATELIST<TimeWarp:RAILSRATELIST>` and :attr:`PHYSICSRATELIST<TimeWarp:PHYSICSRATELIST>`, this is the number
-    on the lefthand side of those tables.  (i.e. if
+    on the left-hand side of those tables.  (i.e. if
     :attr:`MODE<TimeWarp:MODE>` is "RAILS" and :attr:`RATE<TimeWarp:RATE>` is 50, then that means
     :attr:`WARP<TimeWarp:WARP>` is 3.)
 
@@ -209,7 +209,7 @@ Suffixes
     Note, the game is actually capable of warping at arbitrary rates
     in between these values, and it does so temporarily when transitioning
     to a new warp rate, but it doesn't allow you to hold the rate at those
-    in-between values indefintiely.
+    in-between values indefinitely.
 
 
 .. method:: TimeWarp:WARPTO(timestamp)
@@ -232,7 +232,7 @@ Suffixes
     :access: Method
     :return: None
 
-    Call this method to cancel any active warp.  This will both interupt any
+    Call this method to cancel any active warp.  This will both interrupt any
     current automated warp (such as one using :meth:`WARPTO<TimeWarp:WARPTO>`
     or the "Warp Here" user interface) and a manual warp setting (as if you had
     used the ``SET WARP TO 0.`` command).

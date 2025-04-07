@@ -50,7 +50,7 @@ Breaking Ground DLC
 -------------------
 
 Please note that the *Breaking Ground DLC* parts that can be configured
-to respond to the control axes, such as electric motors and propellor
+to respond to the control axes, such as electric motors and propeller
 pitches, will only respond to the settings described on the 
 :ref:`pilot controls page <pilot>` and NOT the settings described
 here on this :ref:`raw control <raw>` page, nor will it respond to
@@ -198,7 +198,7 @@ These "Raw" controls allow you the direct control of flight parameters while the
 
     The reason why this trim does nothing and you have to use the pilot
     trim instead is because KSP only looks at the trim when its part of
-    the *pilot's* own control structure, not an autpilot's control structure.
+    the *pilot's* own control structure, not an autopilot's control structure.
 
     *Warning*:
     Setting this value can cause :ref:`:NEUTRAL <SHIP CONTROL NEUTRAL>` to
@@ -215,7 +215,7 @@ These "Raw" controls allow you the direct control of flight parameters while the
 
     The reason why this trim does nothing and you have to use the pilot
     trim instead is because KSP only looks at the trim when its part of
-    the *pilot's* own control structure, not an autpilot's control structure.
+    the *pilot's* own control structure, not an autopilot's control structure.
 
     *Warning*:
     Setting this value can cause :ref:`NEUTRAL <SHIP CONTROL NEUTRAL>` to
@@ -232,7 +232,7 @@ These "Raw" controls allow you the direct control of flight parameters while the
 
     The reason why this trim does nothing here is because KSP only looks at the
     trim when its part of the *pilot's* own control structure, not an
-    autpilot's control structure.
+    autopilot's control structure.
 
     *Warning*:
     Setting this value can cause :ref:`NEUTRAL <SHIP CONTROL NEUTRAL>` to
@@ -288,7 +288,7 @@ These "Raw" controls allow you the direct control of flight parameters while the
 
     The reason why this trim does nothing here is because KSP only looks at the
     trim when its part of the *pilot's* own control structure, not an
-    autpilot's control structure.
+    autopilot's control structure.
 
     *Warning*:
     Setting this value can cause :ref:`NEUTRAL <SHIP CONTROL NEUTRAL>` to
@@ -305,7 +305,7 @@ These "Raw" controls allow you the direct control of flight parameters while the
 
     The reason why this trim does nothing here is because KSP only looks at the
     trim when its part of the *pilot's* own control structure, not an
-    autpilot's control structure.
+    autopilot's control structure.
 
     *Warning*:
     Setting this value can cause :ref:`NEUTRAL <SHIP CONTROL NEUTRAL>` to
@@ -340,7 +340,7 @@ These "Raw" controls allow you the direct control of flight parameters while the
     The two terms ``NEUTRAL`` and ``NEUTRALIZE`` are synonyms.  (They used to
     be two separate suffixes, one for getting and one for setting, but
     that made no sense so they were combined but both spellings were
-    retained for backward compantiblity with old scripts.)
+    retained for backward compatibility with old scripts.)
 
 
 Unlocking controls

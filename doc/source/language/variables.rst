@@ -234,7 +234,7 @@ function optional by defaulting them to a starting value with the ``IS`` keyword
     runpath(MYPROG,1,2,3,"hi").  // also prints "1, 2, 3, hi".
 
 Whenever arguments are missing, the system always makes up the difference by
-using defaults for the lastmost parameters until the correct number have been
+using defaults for the rightmost parameters until the correct number have been
 padded.  (So for example, if you call MYFUNC() above with 3 arguments, it's
 the last argument, P4, that gets defaulted, but P3 does not.  But if you call
 it with 2 arguments, both P4 and P3 get defaulted.)
@@ -580,7 +580,7 @@ program files::
     @CLOBBERBUILTINS on.
 
 This is a compiler directive that *MUST* occur at the top of the file,
-and the only other things that are allowed to preceed it are
+and the only other things that are allowed to precede it are
 comments, blanks, and other compiler directives such as
 :ref:`@LAZYGLOBAL <lazyglobal>`.
 
@@ -686,7 +686,7 @@ Explicit scoping keywords
 The ``DECLARE``, ``FUNCTION``, and ``LOCK`` commands can be given
 explicit ``GLOBAL`` or ``LOCAL`` keywords to define their intended
 scoping level (however in the case of functions, ``GLOBAL`` will be
-igorned, see above under 'Presumed defaults'.)::
+ignored, see above under 'Presumed defaults'.)::
 
     //
     // These are all synonymous with each other:
@@ -796,7 +796,7 @@ and
 
   - ON <any expression> { <statements> }.
 
-Can use local variables in their trigger expressions in thier
+Can use local variables in their trigger expressions in their
 headers or in the statements of their bodies.  The local scope
 they were declared inside of stays present as part of their
 "closure".
@@ -826,7 +826,7 @@ Example::
 .. note::
     .. versionadded:: 1.1.0
         In the past, triggers such as WHEN and ON were not
-        able to use local variables in their check condintions.
+        able to use local variables in their check conditions.
         They had to use only global variables in order to
         be trigger-able after the local scope goes away.  Now
         these triggers preserve their "closure scope" so they

@@ -15,7 +15,7 @@ Here's the tl;dr version of how to use a boot file:
   1. Place a kerboscript program file in the archive ``"0:/boot/"``
      directory.  For example, ``"0:/boot/myboot.ks"``.  Make sure
      the file ends in ``.ks``.
-  2. Bring up the vessel into the VAB or SPH.  Rightclick the
+  2. Bring up the vessel into the VAB or SPH.  Right-click the
      kOS computer part, and use the slider widget to select your
      file from step 1 above.
   3. When you save and launch this vessel, it should copy that
@@ -183,7 +183,7 @@ topic.
 Booting when spawning to launchpad
 ----------------------------------
 
-When you first spawn a new vessel on the launchapd from the VAB (or when
+When you first spawn a new vessel on the launchpad from the VAB (or when
 you spawn it to the runway from the SPH), kOS performs the following
 initial steps to get the boot file copied from archive to the ship:
 

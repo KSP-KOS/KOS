@@ -88,7 +88,7 @@ It is important to note that versions of kOS prior to v0.17 executed
 program code during these *update ticks* so they were tied to your 
 animation FPS.  But versions more recent than that started executing
 code on *physics ticks*, as is more proper for the simulation, and
-to make script behvaior more consistent across different computers with
+to make script behavior more consistent across different computers with
 different frame rates.
 
 .. _electricdrain:
@@ -101,7 +101,7 @@ vital to long distance probes.  In these modes the computer deliberately
 runs slowly in order to use less power, and then the program can tell it to
 speed up to normal speed again when it needs to wake up and do something.
 
-Older versions of kOS implemented this concept with a constant electric drain regardless of CPU load.  As of version 0.19.0, this concept is simplified by just draining electric charge by "micropayments" of charge per instruction executed.
+Older versions of kOS implemented this concept with a constant electric drain regardless of CPU load.  As of version 0.19.0, this concept is simplified by just draining electric charge by "micro-payments" of charge per instruction executed.
 
 To change this setting if you want to re-balance the system, see the
 page about :ref:`kOSProcessor part config values <EcPerInstruction>`.
@@ -278,7 +278,7 @@ it rudely interrupted things. Doing that can allow other triggers of
 equal priority to itself to interrupt it again.  To see how this works,
 look at :func:`DROPPRIORITY()`, explained below on this page.  In general,
 however, it's a better idea not to use this unless you fully understand
-how the prioriy system here works.
+how the priority system here works.
 
 Do Not Loop a Long Time in a Trigger Body!
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -307,7 +307,7 @@ it rudely interrupted things. Doing that can allow other triggers of
 equal priority to itself to interrupt it again.  To see how this works,
 look at :func:`DROPPRIORITY()`, explained below on this page.  In general,
 however, it's a better idea not to use this unless you fully understand
-how the prioriy system here works.
+how the priority system here works.
 
 But I Want a Loop!!
 ~~~~~~~~~~~~~~~~~~~
@@ -417,8 +417,8 @@ If you wish, you can cause your trigger, or callback, to deliberately
 relinquish its hold on other interrupts, allowing them to interrupt it
 despite the fact that it is itself in the middle of an interrupt.
 You do this by  deliberately reducing your current priority level
-back down a step to whatever it was prior to being incresed by the
-interrrupt, which is what this special built-in function does:
+back down a step to whatever it was prior to being increased by the
+interrupt, which is what this special built-in function does:
 
 .. function:: DROPPRIORITY()
 
@@ -567,7 +567,7 @@ that runs once per **physics tick**.  (A "FixedUpdate" in Unity3d terms).
 * 1. instructionsExecuted = 0
 * 2. how_many_instructions_this_time = config:IPU plus or minus one. (It
   wavers slightly because doing so can help prevent edge cases where
-  the interrupt triggers syhnc up perfectly with the end of an update
+  the interrupt triggers sync up perfectly with the end of an update
   and thus starve main code.)
   TODO: THIS +/- 1 thing ISN'T TRUE IN THE CODE YET.  I'm WRITING THIS
   DOCUMENT BEFORE I'M IMPLEMENTING THIS.  COME BACK AND REMOVe THIS

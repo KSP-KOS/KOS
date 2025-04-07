@@ -79,7 +79,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
           - Synonym for VACUUMISP
         * - :attr:`SEALEVELISP`
           - :struct:`Scalar`
-          - `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at Kerbin sealevel
+          - `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at Kerbin sea level
         * - :attr:`SLISP`
           - :struct:`Scalar`
           - Synonym for SEALEVELISP
@@ -177,7 +177,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     widget that pops up when you right-click the engine will automatically
     round it to the nearest 0.5 whenever you open the panel.  So if you
     do something like ``set ship:part[20]:thrustlimit to 10.5123.`` in
-    your script, then look at the rightclick menu for the engine, the very
+    your script, then look at the right-click menu for the engine, the very
     act of just looking at the menu will cause it to become 10.5 instead 
     of 10.5123.  There isn't much that kOS can do to change this.  It's a
     user interface decision baked into the stock game.
@@ -198,7 +198,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
     :type: :struct:`Scalar` (kN)
 
-    How much thrust would this engine give if both the throttle and thrust limtier was max at the current velocity, and at the given atmospheric pressure.  Use a pressure of 0.0 for vacuum, and 1.0 for sea level (on Kerbin) (or more than 1 for thicker atmospheres like on Eve). Note that this will read zero if the engine is currently disabled.
+    How much thrust would this engine give if both the throttle and thrust limiter was max at the current velocity, and at the given atmospheric pressure.  Use a pressure of 0.0 for vacuum, and 1.0 for sea level (on Kerbin) (or more than 1 for thicker atmospheres like on Eve). Note that this will read zero if the engine is currently disabled.
     (Pressure must be greater than or equal to zero.  If you pass in a
     negative value, it will be treated as if you had given a zero instead.)
 
@@ -314,7 +314,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :access: Get only
     :type: :struct:`Scalar`
 
-    `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at Kerbin sealevel.
+    `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at Kerbin sea level.
 
 .. attribute:: Engine:SLISP
 
@@ -377,25 +377,25 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :access: Get only
     :type: :struct:`String`
 
-    Name of the current mode. Only assessible for multi-mode engines.
+    Name of the current mode. Only accessible for multi-mode engines.
 
 .. method:: Engine:TOGGLEMODE
 
-    Call to switch to another mode. Only assessible for multi-mode engines.  
+    Call to switch to another mode. Only accessible for multi-mode engines.
 
 .. attribute:: Engine:PRIMARYMODE
 
     :access: Get/Set
     :type: :struct:`Boolean`
 
-    True for primary mode, false for secondary. Setting to other value equals toggling the mode. Only assessible for multi-mode engines. 
+    True for primary mode, false for secondary. Setting to other value equals toggling the mode. Only accessible for multi-mode engines.
 
 .. attribute:: Engine:AUTOSWITCH
 
     :access: Get/Set
     :type: :struct:`Boolean`
 
-    Is automatic switching enabled? Can set to switch between manual and automatic switching. Only assessible for multi-mode engines. 
+    Is automatic switching enabled? Can set to switch between manual and automatic switching. Only accessible for multi-mode engines.
 
 .. attribute:: Engine:HASGIMBAL
 
@@ -424,7 +424,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :access: Get only
     :type: :struct:`Scalar`
     
-    If RealFuels is installed, returns the fuel stability of this engine as a value between 0 and 1 (where 1 is fullly stable), otherwise returns 1.
+    If RealFuels is installed, returns the fuel stability of this engine as a value between 0 and 1 (where 1 is fully stable), otherwise returns 1.
     Engines that don't require ullage will always return 1, unless they are pressure fed and the feed pressure is too low.
 
 .. attribute:: Engine:PRESSUREFED

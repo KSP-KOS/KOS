@@ -39,7 +39,7 @@ Instances of this class are enumerable, every step of iteration will provide a :
     :return: :struct:`Lexicon` of :struct:`VolumeFile` or :struct:`VolumeDirectory`
 
     Returns a Lexicon of all files and directories in this directory,
-    with each pair in the Lexcion having the string name of the file or directory
+    with each pair in the Lexicon having the string name of the file or directory
     as the key, and the :struct:`VolumeFile` or :struct:`VolumeDirectory` itself
     as the value.
 

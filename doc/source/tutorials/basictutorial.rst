@@ -34,7 +34,7 @@ typing the following will create a file called 'hello', to enter the command pre
 
 
 you can now edit the file and make your script for the processor to execute, the other tutorials will show how you can make a
-working script. Keep in mind that files made in game dissapear after the vessel is gone. This happens because you locally made a file on the ship's processor.
+working script. Keep in mind that files made in game disappear after the vessel is gone. This happens because you locally made a file on the ship's processor.
 
 To run the file, type:
 
@@ -333,14 +333,14 @@ It would print ``60``. You can also set the current in-game time as a variable: 
 
   set CurrentTime to time:seconds.
 
-The variable ``CurrentTime`` will stay 60 seconds. Eventhough the in-game time changes: ::
+The variable ``CurrentTime`` will stay 60 seconds. Even though the in-game time changes: ::
 
   set CurrentTime to time:seconds.
   print CurrentTime. // shows: 60
   wait 10.
   print CurrentTime. // shows: 60
 
-As you can see, eventhough the in-game time has changed the variable ``CurrentTime`` is still 60. The ``set`` command does **NOT** constantly update the variable. If you want a constantly updating variable you have to use the ``lock`` command.
+As you can see, even though the in-game time has changed the variable ``CurrentTime`` is still 60. The ``set`` command does **NOT** constantly update the variable. If you want a constantly updating variable you have to use the ``lock`` command.
 Here's an example of what the ``lock`` command can do: ::
 
   lock TimeSecondsPlusTen to time:seconds + 10.

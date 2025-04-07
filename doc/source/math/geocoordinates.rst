@@ -154,7 +154,7 @@ Structure
     the actual surface at this latitude and longitude.  It will calculate as if you had some
     point fixed to the ground, like an imaginary tower bolted to the surface, but not at the
     ground's altitude.  (The body's rotation will impart a larger magnitude linear velocity
-    on a locaton affixed to the body the farther that location is from the body's center).
+    on a location affixed to the body the farther that location is from the body's center).
 
 Example Usage
 -------------

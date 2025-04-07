@@ -52,7 +52,7 @@ can't change the value of a body's atmosphere.
           - pressure at sea level
         * - :meth:`ALTITUDEPRESSURE(altitude)`
           - :struct:`Scalar` (atm)
-          - pressure at the givel altitude
+          - pressure at the given altitude
         * - :attr:`HEIGHT`
           - :struct:`Scalar` (m)
           - advertised atmospheric height

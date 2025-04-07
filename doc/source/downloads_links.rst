@@ -15,7 +15,7 @@ Obtaining kOS itself
       and check for updates whenever you run it.  kOS sends update information to CKAN
       so kOS updates should appear in your CKAN manager tool as soon as they're released.
     - `Download from github directly <https://github.com/KSP-KOS/KOS/releases>`__
-      Github is where development of the mod occurs, and new releases will apear there
+      Github is where development of the mod occurs, and new releases will appear there
       first, without delays, and its where old obsolete releases can be found, if you
       need one for use with an older version of KSP.
     - `Use SpaceDock <https://spacedock.info/mod/60/kOS:%20Scriptable%20Autopilot%20System>`__

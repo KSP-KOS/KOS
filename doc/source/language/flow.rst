@@ -67,7 +67,7 @@ Checks if the expression supplied returns true. If it does, ``IF`` executes the 
 CHOOSE (Ternary operator)
 -------------------------
 
-An expression that evalualtes to one of two choices depending on a
+An expression that evaluates to one of two choices depending on a
 conditional check:
 
    CHOOSE expression1 IF condition ELSE expression2
@@ -152,7 +152,7 @@ Note that if you are creating a loop in which you are watching a physical value 
     SET PREV_TIME to TIME:SECONDS.
     SET PREV_VEL to SHIP:VELOCITY.
     SET ACCEL to V(9999,9999,9999).
-    PRINT "Waiting for accellerations to stop.".
+    PRINT "Waiting for accelerations to stop.".
     UNTIL ACCEL:MAG < 0.5 {
         SET ACCEL TO (SHIP:VELOCITY - PREV_VEL) / (TIME:SECONDS - PREV_TIME).
         SET PREV_TIME to TIME:SECONDS.
@@ -261,7 +261,7 @@ What the parts mean
     only one statement present.  To create a null FROM clause, give
     it an empty set of braces.
 
-- ``DO`` one statement or a block of statements inside braxes ``{``..``}``:
+- ``DO`` one statement or a block of statements inside braces ``{``..``}``:
 
   - This is where the loop body gets put.  Much like with the UNTIL and FOR
     loops, these braces are not mandatory when there is only exactly one
@@ -555,7 +555,7 @@ Here is the difference between them:
   notices the condition is true, the trigger fires and it performs
   the statements. The condition to check for must be a boolean
   expression.
-- ``ON`` statement: When kOS checks it in the backround, if it
+- ``ON`` statement: When kOS checks it in the background, if it
   notices the expression *is now different from what it was the last
   time it checked*, the trigger fires and it performs the statements.
   The condition to check for can be any expression for which it
@@ -672,7 +672,7 @@ backward compatibility, of using the ``preserve`` keyword.
 Preserving with ``return``
 ::::::::::::::::::::::::::
 
-Triggers are essentialy functions that don't quite look like functions.
+Triggers are essentially functions that don't quite look like functions.
 They are frequently called, but they're not called *by you*.  They're
 called by the Kerbal Operating System itself.  So you can tell the
 Kerbal Operating System what your intentions were by simply deciding

@@ -263,7 +263,7 @@ Can't call dead delegates
 -------------------------
 
 You might store a KOSDelegate in a global variable.
-Global varibles continue existing even after all the programs
+Global variables continue existing even after all the programs
 are done and you are back at the terminal interpreter.
 
 This makes it possible to have a (global) variable 

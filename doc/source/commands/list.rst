@@ -18,7 +18,7 @@ Lists need to be iterated over sometimes, to help with this we have the :ref:`FO
         LIST FILES.
 
 2. ``LIST ListKeyword.``
-    This variant prints items to the termianl sceen. Depending on the *ListKeyword* used (see below), different values are printed.
+    This variant prints items to the terminal screen. Depending on the *ListKeyword* used (see below), different values are printed.
 
 3. ``LIST ListKeyword IN YourVariable.``
     This variant takes the items that would otherwise have been printed to the terminal screen, and instead makes a :struct:`List` of them in ``YourVariable``, that you can then iterate over with a :ref:`FOR loop <for>` if you like.

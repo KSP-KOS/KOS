@@ -130,13 +130,13 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
     :parameter name: (:struct:`String`) Name of the field
     :return: varies
 
-    Get the value of one of the fields that this PartModule has placed onto the rightclick menu for the part. Note the Security comments below.
+    Get the value of one of the fields that this PartModule has placed onto the right-click menu for the part. Note the Security comments below.
 
 .. method:: PartModule:SETFIELD(name,value)
 
     :parameter name: (:struct:`String`) Name of the field
 
-    Set the value of one of the fields that this PartModule has placed onto the rightclick menu for the part. Note the Security comments below.
+    Set the value of one of the fields that this PartModule has placed onto the right-click menu for the part. Note the Security comments below.
 
     WARNING: This suffix is only settable for parts attached to the :ref:`CPU Vessel <cpu vessel>`
 
@@ -157,7 +157,7 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
 
     :parameter name: (:struct:`String`) Name of the event
 
-    Trigger an "event button" that is on the rightclick part menu at the moment. Note the Security comments below.
+    Trigger an "event button" that is on the right-click part menu at the moment. Note the Security comments below.
 
     WARNING: This suffix is only callable for parts attached to the :ref:`CPU Vessel <cpu vessel>`
 
@@ -196,7 +196,7 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
 Notes
 -----
 
-In all the above cases where there is a name being passed in to :GETFIELD, :SETFIELD, :DOEVENT, or :DOACTION, the name is meant to be the name that is seen by you, the user, in the GUI screen, and NOT necessarily the actual name of the variable that the programmer of that PartModule chose to call the value behind the scenes. This is so that you can view the GUI rightclick menu to see what to call things in your script.
+In all the above cases where there is a name being passed in to :GETFIELD, :SETFIELD, :DOEVENT, or :DOACTION, the name is meant to be the name that is seen by you, the user, in the GUI screen, and NOT necessarily the actual name of the variable that the programmer of that PartModule chose to call the value behind the scenes. This is so that you can view the GUI right-click menu to see what to call things in your script.
 
 .. note::
 
@@ -239,10 +239,10 @@ Is this an action that the KSP user would have been allowed to set as part of an
 
     **If a KSPField, KSPEvent, or KSPAction has been disallowed, often in kOS it won't even appear to be a field of the PartModule at all.**
 
-    This is necessary because for some modules, the number of fields you can use are far outnumberd by the number of fields that exist but are normally hidden from view. It would become unworkable if all of the unusable ones were exposed to kOS scripts to see as fields.
+    This is necessary because for some modules, the number of fields you can use are far outnumbered by the number of fields that exist but are normally hidden from view. It would become unworkable if all of the unusable ones were exposed to kOS scripts to see as fields.
 
 .. note::
 
     **Which KSPFields, KSPEvents, and KSPActions exist on a PartModule can change during runtime!**
 
-    A PartModule is allowed to change the look and feel of its rightclick menu fields on the fly as the game runs. Therefore a field that didn't exist the last time you looked might now exist, and might not exist again next time. The list of what fields exist is context dependant. For example, a docking port may have an event button on it called "Undock Node", that only exists when that port is connected to another port. If it's not connected, the button may be gone. Similarly, a PartModule might toggle something by using a pair of two events that swap in and out depending on the current state. For example, many of the stock lights in the game have a "Turn on" button that after it's been clicked, gets replaced with a "Turn off" button until it's clicked again. A boolean toggle with a KSPFIeld would be simpler, but until "tweakables" existed in the main game, that wasn't an option so a lot of older Partmodules still do things the old way with two KSPEvents that swap in and out.
+    A PartModule is allowed to change the look and feel of its right-click menu fields on the fly as the game runs. Therefore a field that didn't exist the last time you looked might now exist, and might not exist again next time. The list of what fields exist is context dependant. For example, a docking port may have an event button on it called "Undock Node", that only exists when that port is connected to another port. If it's not connected, the button may be gone. Similarly, a PartModule might toggle something by using a pair of two events that swap in and out depending on the current state. For example, many of the stock lights in the game have a "Turn on" button that after it's been clicked, gets replaced with a "Turn off" button until it's clicked again. A boolean toggle with a KSPField would be simpler, but until "tweakables" existed in the main game, that wasn't an option so a lot of older Partmodules still do things the old way with two KSPEvents that swap in and out.

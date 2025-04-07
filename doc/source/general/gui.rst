@@ -6,7 +6,7 @@ Making GUIs in kOS
 .. versionadded:: 1.1.0
 
 Sometimes it is useful to create an in-game set of screen widgets to let
-you interact with the kOS program with mouseclicks.  You can create
+you interact with the kOS program with mouse clicks.  You can create
 GUI widgets in kOS for this purpose, making them as complex or as
 simple as you like.  The widgets will live inside windows that pop
 up on screen as you invoke them.

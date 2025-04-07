@@ -4,7 +4,7 @@
 Using the Sound/Kerbal Interface Device (SKID)
 ==============================================
 
-A hidden feature shippped with all kOS CPU's was uncovered recently.
+A hidden feature shipped with all kOS CPU's was uncovered recently.
 It turns out all kOS CPU's come with a so-called SKID chip
 (Sound/Kerbal Interface Device).  This little integrated chip can
 send audio data through the terminal lines and play the sounds on
@@ -212,7 +212,7 @@ such as a drum, that is incapable of holding a sustained note and
 instead just fades right away whenever you hit a note:
 
 * Attack = 0.0s
-* Decay = 0.2s   (Note decays immediatly on being struck)
+* Decay = 0.2s   (Note decays immediately on being struck)
 * Sustain = 0.0  (and it decays to zero, so you can't "hold" the note).
 * Release = 0.0s (Because Sustain is zero, this setting doesn't matter).
 
@@ -504,7 +504,7 @@ object using the :func:`Note()` built-in function, or the
     // if you have the voice's RELEASE value set to zero.):
     SET N2 to SLIDENOTE("A4", "A5", 0.25, 0.3).
 
-Once a note has been constructed, it's components are not changable.  The
+Once a note has been constructed, it's components are not changeable.  The
 only way to change the note is to make a new note and use it to overwrite
 the previous note.
 

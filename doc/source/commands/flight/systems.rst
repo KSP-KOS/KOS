@@ -34,7 +34,7 @@ RCS and SAS
     :access: Toggle ON/OFF; get/set
     :type: Action Group, :struct:`Boolean`
 
-    Turns the SAS **on** or **off**, like using ``T`` at the keybaord::
+    Turns the SAS **on** or **off**, like using ``T`` at the keyboard::
 
         SAS ON. // same as SET SAS TO TRUE.
         SAS OFF. // same as SET SAS TO FALSE.
@@ -96,7 +96,7 @@ RCS and SAS
 STOCK ACTION GROUPS
 -------------------
 
-    These action groups (including abovementioned :global:`SAS` and
+    These action groups (including above mentioned :global:`SAS` and
     :global:`RCS`) are stored as :struct:`Boolean` values which can be read to
     determine their current state.  Reading their value can be used by kOS as
     a form of user input::
@@ -334,7 +334,7 @@ kOS PSEUDO ACTION GROUPS
     :access: Toggle ON/OFF; get/set
     :type: Action Group, :struct:`Boolean`
 
-    Activates (has effect only on drills that are deployed and in contact with minable surface) or stops all the mining drills::
+    Activates (has effect only on drills that are deployed and in contact with mineable surface) or stops all the mining drills::
 
         DRILLS ON.
 
@@ -345,7 +345,7 @@ kOS PSEUDO ACTION GROUPS
     :access: Toggle ON/OFF; get/set
     :type: Action Group, :struct:`Boolean`
 
-    Activates or deactivates all the fuel cells (distingushed from other conveters by converter/action names)::
+    Activates or deactivates all the fuel cells (distinguished from other converters by converter/action names)::
 
         FUELCELLS ON.
 
@@ -356,7 +356,7 @@ kOS PSEUDO ACTION GROUPS
     :access: Toggle ON/OFF; get/set
     :type: Action Group, :struct:`Boolean`
 
-    Activates or deactivates all the ISRU converters (distingushed from other conveters by converter/action names)::
+    Activates or deactivates all the ISRU converters (distinguished from other converters by converter/action names)::
 
         ISRU ON.
 

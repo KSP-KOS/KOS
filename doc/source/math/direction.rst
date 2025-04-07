@@ -67,7 +67,7 @@ Creation
 
 .. function:: LOOKDIRUP(lookAt,lookUp)
 
-    A :struct:`Direction` can be created with the LOOKDIRUP function by using two vectors.   This is like converting a vector to a direction directly, except that it also provides roll information, which a single vector lacks.   *lookAt* is a vector describing the Direction's FORE orientation (its local Z axis), and *lookUp* is a vector describing the direction's TOP orientation (its local Y axis).  Note that *lookAt* and *lookUp* need not actually be perpendicualr to each other - they just need to be non-parallel in some way.  When they are not perpendicular, then a vector resulting from projecting *lookUp* into the plane that is normal to *lookAt* will be used as the effective *lookUp* instead::
+    A :struct:`Direction` can be created with the LOOKDIRUP function by using two vectors.   This is like converting a vector to a direction directly, except that it also provides roll information, which a single vector lacks.   *lookAt* is a vector describing the Direction's FORE orientation (its local Z axis), and *lookUp* is a vector describing the direction's TOP orientation (its local Y axis).  Note that *lookAt* and *lookUp* need not actually be perpendicular to each other - they just need to be non-parallel in some way.  When they are not perpendicular, then a vector resulting from projecting *lookUp* into the plane that is normal to *lookAt* will be used as the effective *lookUp* instead::
 
         // Aim up the SOI's north axis (V(0,1,0)), rolling the roof to point to the sun.
         LOCK STEERING TO LOOKDIRUP( V(0,1,0), SUN:POSITION ).

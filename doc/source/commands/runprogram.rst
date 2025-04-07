@@ -9,7 +9,7 @@ Running Programs
 
 KerboScript supports running executing code saved in files on the local or
 archive disks. The terms "program" and "script" are generally used
-interchangably when describing this behavior. Programs can either be run using
+interchangeably when describing this behavior. Programs can either be run using
 one of the :ref:`runfunctions` or the :ref:`run`.  Supported file types are:
 
     Raw Text KerboScript files
@@ -25,7 +25,7 @@ one of the :ref:`runfunctions` or the :ref:`run`.  Supported file types are:
 
 .. seealso::
     :ref:`Compiling`
-        An explaination of how scripts are compiled, as well as an explaination
+        An explanation of how scripts are compiled, as well as an explaination
         of how :key:`COMPILE` stores opcodes.
     :ref:`Filename Warning<filename_case_warning>`
         Warning detailing issues with case sensitive host file systems.

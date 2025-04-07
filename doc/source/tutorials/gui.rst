@@ -184,7 +184,7 @@ can be added.::
                 SET tab:TOGGLE TO true.
                 SET tab:EXCLUSIVE TO true.
 
-                // If this is the first tab, make it start already shown (make the tab presssed)
+                // If this is the first tab, make it start already shown (make the tab pressed)
                 // Otherwise, we hide it (even though the STACK will only show the first anyway,
                 // but by keeping everything "correct", we can be a little more efficient later.
                 IF panels:WIDGETS:LENGTH = 1 {

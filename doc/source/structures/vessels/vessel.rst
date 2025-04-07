@@ -70,7 +70,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :attr:`RCS`                              :struct:`List`                  all :struct:`RCS <RCS>`
     :attr:`DOCKINGPORTS`                     :struct:`List`                  all :struct:`DockingPorts <DockingPort>`
     :attr:`ELEMENTS`                         :struct:`List`                  all :struct:`Elements <Element>`
-    :attr:`RESOURCES`                        :struct:`List`                  all :struct:`AggrgateResources <AggregateResource>`
+    :attr:`RESOURCES`                        :struct:`List`                  all :struct:`AggregateResources <AggregateResource>`
     :meth:`PARTSNAMED(name)`                 :struct:`List`                  :struct:`Parts <Part>` by :attr:`NAME <Part:NAME>`
     :meth:`PARTSNAMEDPATTERN(namePattern)`   :struct:`List`                  :struct:`Parts <Part>` by :attr:`NAME <Part:NAME>` regex pattern
     :meth:`PARTSTITLED(title)`               :struct:`List`                  :struct:`Parts <Part>` by :attr:`TITLE <Part:TITLE>`
@@ -302,7 +302,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :return: :struct:`DeltaV`
     
     One stage's Delta-V info.  Pass in the stage number for which stage.  The
-    curent stage can be found with ``:STAGENUM``, and they count down from
+    current stage can be found with ``:STAGENUM``, and they count down from
     there to stage 0 at the "top" of the staging list.
 
     If you pass in a number that is less than zero, it will return the info about
@@ -344,7 +344,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     .. note::
         This does not change the value returned by :attr:`Vessel:TYPE`.  KSP
         internally manages the "discovery information" for vessels, including
-        assteroids, in a different system. As a result, the value kOS reads for
+        asteroids, in a different system. As a result, the value kOS reads for
         ``TYPE`` may be different from that displayed on the map.
 
 .. method:: Vessel:STOPTRACKING
@@ -561,7 +561,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
 
 .. method:: Vessel:PARTSTITLEDPATTERN(titlePattern)
 
-    :parameter titlePattern: (:struct:`String`) Patern of the title of the parts
+    :parameter titlePattern: (:struct:`String`) Pattern of the title of the parts
     :return: :struct:`List` of :struct:`Part` objects
 
     Returns a list of all the parts that have this Regex pattern in their
@@ -658,7 +658,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :return: :struct:`Scalar`
 
     The total delta-v of this vessel in its current situation, using the stock
-    calulations the KSP game shows in the staging list.  Note that this is only
+    calculations the KSP game shows in the staging list.  Note that this is only
     as accurate as the stock KSP game's numbers are.
 
 .. attribute:: Vessel:DELTAVASL
@@ -666,7 +666,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :return: :struct:`Scalar`
 
     The total delta-v of this vessel if it were at sea level, using the stock
-    calulations the KSP game shows in the staging list.  Note that this is only
+    calculations the KSP game shows in the staging list.  Note that this is only
     as accurate as the stock KSP game's numbers are.
 
 .. attribute:: Vessel:DELTAVVACUUM
@@ -674,7 +674,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :return: :struct:`Scalar`
 
     The total delta-v of this vessel if it were at sea vacuum, using the stock
-    calulations the KSP game shows in the staging list.  Note that this is only
+    calculations the KSP game shows in the staging list.  Note that this is only
     as accurate as the stock KSP game's numbers are.
 
 .. attribute:: Vessel:BURNTIME
@@ -682,7 +682,7 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :return: :struct:`Scalar`
 
     The total burn time, in seconds, of this vessel (or 5 if the vessel has 0 delta/v). Burn time is not affected by atmosphere.  This is using the stock
-    calulations the KSP game shows in the staging list.  Note that this is only
+    calculations the KSP game shows in the staging list.  Note that this is only
     as accurate as the stock KSP game's numbers are.
 
 

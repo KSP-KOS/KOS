@@ -20,7 +20,7 @@ into it to pre-populate the list with an initial list of items:
     set mylist to list(10,20,30).
     // Make a list with 3 strings in it:
     set mylist to list("10","20","30").
-    // Make a two dimensional 2x3 list with heterogenious contents
+    // Make a two dimensional 2x3 list with heterogeneous contents
     // mixing strings and numbers:
     set mylist to list( list("a","b","c"), list(1,2,3) ).
 
@@ -151,7 +151,7 @@ Structure
     :return: :struct:`Scalar`
 
     This is the same as :meth:`FIND(item)`, except that it searches
-    backward instead of forward through the list.  It finds the lastmost
+    backward instead of forward through the list.  It finds the last
     element that is equal to the item.
 
 .. method:: List:LASTINDEXOF(item)
@@ -170,7 +170,7 @@ All list indexes start counting at zero. (The list elements are numbered from 0 
 ``ITERATOR``
     An alternate means of iterating over a list. See :struct:`Iterator`.
 ``list#x`` *(deprecated)*
-    operator: access the element at postion x. Works for get or set. X must be a hardcoded number or a variable name. This is here for backward compatibility. The syntax in the next bullet point is preferred over this.
+    operator: access the element at position x. Works for get or set. X must be a hardcoded number or a variable name. This is here for backward compatibility. The syntax in the next bullet point is preferred over this.
 
 Examples::
 

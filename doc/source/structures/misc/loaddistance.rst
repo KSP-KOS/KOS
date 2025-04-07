@@ -105,7 +105,7 @@ Vessel Load Distance
     game to think things have collided together when they haven't.  This
     is the classic "space kraken" that KSP players talk about a lot.  Computer
     floating point numbers get less precise the farther from zero they are.
-    So allowing the game to try to perform microcalculations on tiny time
+    So allowing the game to try to perform micro-calculations on tiny time
     scales using floating point numbers that have imprecision because they are
     large in magnitude (i.e. the positions of parts that are many kilometers
     away from you), can cause phantom collisions, which make the game
@@ -170,7 +170,7 @@ Each of the above
   :struct:`SituationLoadDistance` is what is returned by each of the
   above suffixes mentioned in the LoadDistance suffix list above.
 
-  **Order Matters.** - Becuse of the protections in place to prevent
+  **Order Matters.** - Because of the protections in place to prevent
   you from setting some values bigger than others (see the descriptions
   below), sometimes the order in which you change the values matters
   and you have to be careful to change them in the correct order, or

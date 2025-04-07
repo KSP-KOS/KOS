@@ -72,7 +72,7 @@ Widget
 
         Note that the showing of a widget requires the showing of all widgets
         it's contained inside of.  Hiding a widget will hide all widgets inside
-        it, regardless of their infividual visibility settings.  This is what
+        it, regardless of their individual visibility settings.  This is what
         is happening when you make a :struct:`GUI` Box with a call to :func:`GUI`,
         fill it with widgets, and then show it.  The widgets inside it were already
         set to "visible", but their visibility was suppressed by the fact that
@@ -84,7 +84,7 @@ Widget
 
         (no parameters, no return value)
 
-        Call ``Widget:DISPOSE()`` to permanenly make this widget go away.
+        Call ``Widget:DISPOSE()`` to permanently make this widget go away.
         Not only will it make it invisible, but it will make it impossible
         to set it to visible again later.
 
@@ -128,7 +128,7 @@ Widget
 	:type: :struct:`GUI`
 	:access: Get-only
 
-	To be useful, all widgets (buttons, labels, textfields, etc) must
+	To be useful, all widgets (buttons, labels, text fields, etc) must
 	either be contained inside a :struct:`GUI` widget directly, or be
 	contained inside another :struct:`Widget` which in turn is also
 	contained inside a :struct:`GUI` widget.  (Or contained inside

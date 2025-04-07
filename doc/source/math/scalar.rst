@@ -77,7 +77,7 @@ The following basic arithmetic operators are defined when both ``a`` and
     * - ``-a``
       - negative of ``a``
     * - ``a * b`` ``a / b``
-      - muiltiply or divide two numbers
+      - multiply or divide two numbers
     * - ``a + b`` ``a - b``
       - add or subtract two numbers
 

@@ -104,7 +104,7 @@ ECPerBytePerSecond:
    - **Type:** float
    - **Default if omitted:** 0.0
    - **Effect:** How much ElectricCharge resource is consumed per
-     byte of disk space avaialable (not just used).
+     byte of disk space available (not just used).
 
 It is possible to make the disk cost more electricity to run the
 bigger it is.  By default this ships as zero, but it can be changed

@@ -7,7 +7,7 @@ Scrollbox
 
     ``ScrollBox`` objects are created by using :meth:`BOX:ADDSCROLLBOX`.
 
-    A scollbox is a box who's contents can be bigger than it is, accessable
+    A scollbox is a box who's contents can be bigger than it is, accessible
     via scrollbars.
 
     To constrain the actual size of the box, you can use the ``:style``

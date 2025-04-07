@@ -133,13 +133,13 @@ volume but with the following exceptions:
 
 -  It is globally the same even across save games.
 -  The archive represents the large bank of disk storage back at mission
-   control's mainframe, rather than the storage on an indivdual craft.
+   control's mainframe, rather than the storage on an individual craft.
    While "Volume 1" on one vessel might be a different disk than "Volume
    1" on another vessel, there is only one volume called "archive" in the
    entire solar system. Also, there's only one "archive" across all
    saved universes. If you play a new campaign from scratch, your
    archive in that new game will still have all the files in it from
-   your previous saved game. This is because behid the scenes it's
+   your previous saved game. This is because behind the scenes it's
    stored in the ``Ships/Script`` directory, not the save game directory.
 -  It is infinitely large.
 -  Unlike the other volumes, the archive volume does not have a byte

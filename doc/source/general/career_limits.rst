@@ -20,14 +20,14 @@ These are rules inherited from the stock KSP game that kOS is simply adhering to
    future orbit patches.
 
 -  If your mission control center AND tracking center are not upgraded enough,
-   then you cannot add manuever nodes.
+   then you cannot add maneuver nodes.
 
 The following are rules invented by kOS that are thematically very similar to stock KSP, intended to be as close to the meaning of the stock game's rules as possible:
 
 -  In order to be allowed to execute the :struct:`PartModule` :DOACTION method, either
    your VAB or your SPH must be upgraded to the point where it will allow access to
    custom action groups.  This is because otherwise the :DOACTION method would be a
-   backdoor "cheat" past the restricted access to the action group feaures of various
+   backdoor "cheat" past the restricted access to the action group features of various
    PartModules that the game is meant to have.
 
 -  In order to be allowed to add a ``nametag`` to parts inside the editor so they get
@@ -94,7 +94,7 @@ Structure
     :access: Get
 
     If your tracking center and mission control buildings are both upgraded enough, then the game allows
-    you to make manuever nodes (which the game calls "flight planning").  This will return true if you
+    you to make maneuver nodes (which the game calls "flight planning").  This will return true if you
     can make maneuver nodes.
 
 .. attribute:: Career:CANDOACTIONS

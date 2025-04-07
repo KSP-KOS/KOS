@@ -77,4 +77,4 @@ Core represents your ability to identify and interact directly with the running 
     :type: :struct:`MessageQueue`
     :access: Get only
 
-    Returns this processsor's message queue.
+    Returns this processor's message queue.

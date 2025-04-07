@@ -142,7 +142,7 @@ Button
         you to use the :ref:`callback technique <gui_callback_technique>` of widget
         interaction.
 
-        The ``ONTOGGLE`` delegate you assign will get called whenver kOS notices
+        The ``ONTOGGLE`` delegate you assign will get called whenever kOS notices
         that this button has changed from false to true or from true to false.
 
         To use ``ONTOGGLE``, your function must be written to expect a single boolean parameter,

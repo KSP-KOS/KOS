@@ -475,7 +475,7 @@ calculating a complex formula, or more milliseconds activating
 actions on a PartModule, and so on, then this feature may
 help.  The ProfileResult() was meant mainly for kOS developers
 trying to internally determine which parts of the system could
-use the most optomizing.  However, as long as it was implemented
+use the most optimizing.  However, as long as it was implemented
 for that purpose, it may as well be made available to all
 the users of kOS as well.
 

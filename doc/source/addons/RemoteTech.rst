@@ -10,7 +10,7 @@ RemoteTech is a modification for Squad's "Kerbal Space Program" (KSP) which over
 - Documentation: http://remotetechnologiesgroup.github.io/RemoteTech/
 
 You can find out if the RemoteTech addon is available in the
-current game installation by usng the boolean expression::
+current game installation by using the boolean expression::
 
     addons:available("RT")
 
@@ -44,7 +44,7 @@ Interaction with kOS
 .. note::
 
     .. versionadded:: v1.0.2
-        kOS now supports access to connection informaion from a unified location.
+        kOS now supports access to connection information from a unified location.
         See :ref:`Connectivity Managers <connectivityManagers>` for more
         information. All of the previous implementation as detailed on this page
         remains supported.

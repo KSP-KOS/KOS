@@ -56,7 +56,7 @@ The special LOCK variables for cooked steering
 
     IF you have the *Breaking Ground DLC* for Kerbal Space Program, please
     be aware that even though you can set up control groups to make parts
-    such as propellors and engines react to the throttle, they will not
+    such as propellers and engines react to the throttle, they will not
     react to ``lock throttle``.  This is because the DLC ignores the
     autopilot API in using this feature.  It only pays attention to the
     actual pilot controls, not the autopilot controls overriding them.
@@ -116,7 +116,7 @@ Like all ``LOCK`` expressions, the steering and throttle continually update on t
     **About** ``lock steering`` **and** ``SAS`` **:**  While kOS had previously supported
     enabling SAS at the same time as locking steering, this functionality broke
     when the underlying KSP method was changed in a version upgrade.  It is our
-    hope to evenentually restore this functionality.  Please check github issue
+    hope to eventually restore this functionality.  Please check github issue
     `#2117 <https://github.com/KSP-KOS/KOS/issues/2117>`_ for updates.
 
 .. _LOCK WHEELTHROTTLE:
@@ -366,8 +366,8 @@ settings that might help solve some problems, in the list below:
 
   - **explanation**: Once it's
     at the desired orientation and it has mostly zeroed the rotational
-    velocity, it's trying to hold it there with microadjustments to the
-    controls, and those microadjustments are "too tight".
+    velocity, it's trying to hold it there with micro-adjustments to the
+    controls, and those micro-adjustments are "too tight".
 
 - **problem**: The vessel is having a hard time holding on to its
   ``lock steering`` direction during a burn when you have physics

@@ -64,7 +64,7 @@ Many engines in KSP have thrust vectoring gimbals which are handled by their own
 .. note::
 
     :struct:`Gimbal` is a type of :struct:`PartModule`, and therefore can use all the suffixes of :struct:`PartModule`. Shown below are only the suffixes that are unique to :struct:`Gimbal`.
-    :struct:`Gimbal` can be accessed as :attr:`Engine:GIMBAL` atribute of  :struct:`Engine`.
+    :struct:`Gimbal` can be accessed as :attr:`Engine:GIMBAL` attribute of  :struct:`Engine`.
 
 .. attribute:: Gimbal:LOCK
 

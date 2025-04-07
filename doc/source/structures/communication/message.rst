@@ -86,7 +86,7 @@ Structure
     :type: :struct:`Boolean`
 
     Because there can be a delay between when the message was sent and
-    when it was processed by the receiving script, it's possibile that
+    when it was processed by the receiving script, it's possible that
     the vessel that sent the message might not exist anymore.  It could
     have either exploded, or been recovered, or been merged into another
     vessel via docking.  You can check the value of the ``:HASSENDER``

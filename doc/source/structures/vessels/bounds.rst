@@ -98,7 +98,7 @@ visually on screen:
 
 :ref:`Click here for an example program that displays bounds <display_bounds>`
 
-Trying that first (without necessarily understaand it right away)
+Trying that first (without necessarily understand it right away)
 will help give you a visual guide to what is happening here.
 
 A Part:BOUNDS or Vessel:BOUNDS will move and rotate with the object
@@ -178,9 +178,9 @@ it keeps re-correcting itself to that objects orientation for you
 every time you use it.
 
 The expense of calling ``Part:BOUNDS`` isn't that bad and calling it
-repeatedly probably won't really make your script suffer noticably.
+repeatedly probably won't really make your script suffer noticeably.
 But when you do it for the whole vessel, calling ``Vessel:BOUNDS``
-repeatedly, that can definitely result in noticable unnecessary
+repeatedly, that can definitely result in noticeable unnecessary
 computations being done by your computer.
 
 For a more in-depth explanation of why it's expensive to re-call
@@ -226,11 +226,11 @@ A list of events that can make a ``Bounds`` become incorrect:
   inside the vessel needs to be recalculated (see above list).
   In addition, the items on the following list will require a
   Vessel's Bounds (but not individual parts' bounds) to be
-  recaculated:
+  recalculated:
 
     * Anything that adds/removes parts obviously alters the
       bounding box of the vessel.  These are examples but not an
-      exhuastive list:
+      exhaustive list:
 
 	* Docking and Undocking
 	* Decoupling stages
@@ -310,7 +310,7 @@ for completeness.
 Obviously, a bounds box you make manually yourself this way does not
 have the "magic" linkage to a vessel or part that the ones kOS makes have,
 and therefore its position is more fixed in space unless your script
-manually re-assignes its properties.
+manually re-assigns its properties.
 
 Diagram
 -------
@@ -641,7 +641,7 @@ illustrate what is being talked about:
 
     Note that the vector in the inverse direction of this one (that you'd
     get by multiplying it by -1), points from the center to
-    the oppposite corner, the :attr:`Bounds:RELMIN`.
+    the opposite corner, the :attr:`Bounds:RELMIN`.
 
 .. attribute:: Bounds:SIZE
 
@@ -658,7 +658,7 @@ illustrate what is being talked about:
 .. method:: Bounds:FURTHESTCORNER(ray)
 
     :parameter ray: The "that-a-way" :struct:`Vector` in absolute (ship-raw) reference frame.
-    :return: :struct:`Vector` in absolute (ship-raw) referece frame.
+    :return: :struct:`Vector` in absolute (ship-raw) reference frame.
 
     Returns the position (in absolute (ship-raw) reference frame) of
     whichever of the 8 corners of this bounding box is "furthest" in
@@ -687,7 +687,7 @@ illustrate what is being talked about:
         local my_left is -ship:facing:starvector.
         local leftmost is ves_box:furthestcorner(my_left).
         print "In order to go around the other vessel, to the left, ".
-        pritn "I would need to shift myself this far to my left:".
+        print "I would need to shift myself this far to my left:".
         print vdot(-ship:facing:starvector, leftmost).
     
 .. attribute:: Bounds:BOTTOMALT
@@ -703,7 +703,7 @@ illustrate what is being talked about:
     body to decide which body is the one that defines the bounding
     box's "downward" direction for picking its bottom-most corner,
     and it uses that same body to decide what counts as "altitude",
-    regardless of wether the bounds box is a bounds box of the current
+    regardless of whether the bounds box is a bounds box of the current
     CPU vessel or something else.
 
     To put it another way: You can't "read" what the altitude of a
@@ -739,7 +739,7 @@ Side topic - what is a bounding box and how does kOS know about it?
 -------------------------------------------------------------------
 
 A bounding box is a rectangular box around an item that represents the
-smallest space that contains all verteces of the item yet is still
+smallest space that contains all vertices of the item yet is still
 shaped like a box.  It is common in graphics and video games for the
 GPU and/or game engine to maintain information about the bounding boxes
 of items in the game.  Knowing this information is part of what they
@@ -764,7 +764,7 @@ frame.  This is vital for the game engine's needs, as the speedy quick
 bounding box intersection tests work by doing simple greater-than
 and less-than tests of the coordinates.  This means the box will also be
 "too big" if the item is rotated from the world's XYZ axes, as the
-world-aligned box has to accomodate the item's "diagonal" corners pushing
+world-aligned box has to accommodate the item's "diagonal" corners pushing
 the box bigger.  For the purposes of a graphics engine, that's fine, since
 erring on the side of a too-big bounding box is okay, since it's nothing
 more than a time savings to short-circuit work, and not the final say-so
