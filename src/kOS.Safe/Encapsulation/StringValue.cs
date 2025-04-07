@@ -7,6 +7,7 @@ using kOS.Safe.Utilities;
 using kOS.Safe.Serialization;
 using System.Collections.Generic;
 using System.Collections;
+using System.Linq;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -257,7 +258,21 @@ namespace kOS.Safe.Encapsulation
         {
             if (args.Length == 0)
                 return this;
-            return new StringValue(string.Format(CultureInfo.InvariantCulture, this, args));
+
+            // Unwrap the primitive scalar value and send them
+            // into String.Format as-is. This is required to allow
+            // for numeric formatting patterns, like rounding.
+            var primitiveArgs = args
+                .Select(arg => {
+                    if (arg is ScalarValue scalar) {
+                        return scalar.ToPrimitive();
+                    }
+
+                    return arg;
+                })
+                .ToArray();
+
+            return new StringValue(string.Format(CultureInfo.InvariantCulture, this, primitiveArgs));
         }
 
         private void StringInitializeSuffixes()

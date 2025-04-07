@@ -219,5 +219,16 @@ namespace kOS.Safe.Test.Structures
             stringTest = new StringValue(" 1.23e+3a ");
             Assert.Throws(typeof(Exceptions.KOSNumberParseException), () => stringTest.ToScalar());
         }
+
+        [Test]
+        public void CanFormat()
+        {
+            var formatString = new StringValue("test1={0:0.0} test2='{0,10:0.0}'");
+
+            var expected = new StringValue("test1=13.4 test2='      13.4'");
+            var actual = formatString.Format(new ScalarDoubleValue(13.37));
+
+            Assert.That(expected.ToString(), Is.EqualTo(actual.ToString()));
+        }
     }
 }
