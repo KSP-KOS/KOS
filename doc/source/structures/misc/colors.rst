@@ -21,6 +21,12 @@ Method 1: Use one of these pre-arranged named colors:
 
         (Alias of :global:`MAGENTA`)
 
+- .. global:: GREY
+
+    - .. global:: GRAY
+
+        (Alias of :global:`GREY`)
+
 - .. global:: WHITE
 - .. global:: BLACK
 
