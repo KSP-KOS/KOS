@@ -7,6 +7,7 @@ namespace kOS.Safe.Encapsulation
     public interface IConfig: ISuffixed
     {
         int InstructionsPerUpdate { get; set; }
+        int LuaInstructionsPerUpdate { get; set; }
         bool UseCompressedPersistence { get; set; }
         bool ShowStatistics { get; set; }
         bool StartOnArchive { get; set; }

@@ -680,7 +680,7 @@ namespace kOS.Screen
                     
                     case (char)0x0004/*control-D*/: // How users of unix shells are used to doing this.
                     case (char)0x0018/*control-X*/: // How kOS did it in the past in the GUI window.
-                        if (shared.Interpreter.IsAtStartOfCommand())
+                        if (shared.Terminal.IsAtStartOfCommand())
                         {
                             if (whichTelnet == null)
                                 Close();
@@ -758,9 +758,9 @@ namespace kOS.Screen
             bool accepted = false;
             if (shared != null)
             {
-                if ((!forceQueue) && shared.Interpreter != null && shared.Interpreter.IsWaitingForCommand())
+                if ((!forceQueue) && shared.Terminal != null && shared.Terminal.IsWaitingForCommand())
                 {
-                    shared.Interpreter.Type(ch);
+                    shared.Terminal.Type(ch);
                     accepted = true;
                 }
                 else if (doQueuing)
@@ -803,10 +803,10 @@ namespace kOS.Screen
                 bool wasUsed = false;
 
                 if ((!forceQueue) &&
-                    shared.Interpreter != null && 
-                    (shared.Interpreter.IsWaitingForCommand() || rudeQueueSkipping))
+                    shared.Terminal != null && 
+                    (shared.Terminal.IsWaitingForCommand() || rudeQueueSkipping))
                 {
-                    wasUsed = shared.Interpreter.SpecialKey(key);
+                    wasUsed = shared.Terminal.SpecialKey(key);
                     accepted = true;
                 }
                 else if (doQueuing)
@@ -834,11 +834,11 @@ namespace kOS.Screen
             {
                 return; // Fix race condition (Github issue #2925) where Update() calls this before FixedUpdate() has set up the CPU.
             }
-            if (shared != null && shared.Interpreter != null && shared.Interpreter.IsWaitingForCommand())
+            if (shared != null && shared.Terminal != null && shared.Terminal.IsWaitingForCommand())
             {
                 Queue<char> q = shared.Screen.CharInputQueue;
                 
-                while (q.Count > 0 && shared.Interpreter.IsWaitingForCommand())
+                while (q.Count > 0 && shared.Terminal.IsWaitingForCommand())
                 {
                     // Setting doQueuing to false here just as an
                     // additional safety measure.  Hypothetically it

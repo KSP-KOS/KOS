@@ -66,6 +66,18 @@ namespace kOS.Safe.Test
             {
             }
         }
+        
+        public int LuaInstructionsPerUpdate
+        {
+            get
+            {
+                return 10000; // high enough to run everything in one pass (unless it waits)
+            }
+
+            set
+            {
+            }
+        }
 
         public bool ObeyHideUI
         {

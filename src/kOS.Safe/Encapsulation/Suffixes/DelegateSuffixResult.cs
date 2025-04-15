@@ -29,6 +29,10 @@ namespace kOS.Safe.Encapsulation.Suffixes
         private readonly CallDel call;
         private Structure value;
 
+        public CallDel RawCall => call;
+        public DelegateInfo RawDelInfo => delInfo;
+        public void RawSetValue(Structure newValue) { value = newValue; }
+
         public Structure Value
         {
             get { return value; }

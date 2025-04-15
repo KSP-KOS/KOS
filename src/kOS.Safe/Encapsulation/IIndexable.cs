@@ -12,8 +12,9 @@ namespace kOS.Safe.Encapsulation
         /// assume integer indeces:
         /// </summary>
         /// <param name="index"></param>
+        /// <param name="failOkay">if failed to find a value return null instead of throwing an exception</param>
         /// <returns></returns>
-        Structure GetIndex(int index);
+        Structure GetIndex(int index, bool failOkay = false);
 
         /// <summary>
         /// This should redirect to SetIndex(Structure index, Structure value), and is provided as 

@@ -11,7 +11,7 @@ using kOS.Safe.Utilities;
 
 namespace kOS.Screen
 {
-    public class Interpreter : TextEditor, IInterpreter
+    public class Terminal : TextEditor, ITerminal
     {
         public const string InterpreterName = "interpreter";
         private readonly List<string> commandHistory = new List<string>();
@@ -20,7 +20,7 @@ namespace kOS.Screen
 
         protected SharedObjects Shared { get; private set; }
 
-        public Interpreter(SharedObjects shared)
+        public Terminal(SharedObjects shared)
         {
             Shared = shared;
         }
@@ -29,7 +29,7 @@ namespace kOS.Screen
         {
             string commandText = LineBuilder.ToString();
 
-            if (Shared.ScriptHandler.IsCommandComplete(commandText))
+            if (Shared.Interpreter.IsCommandComplete(commandText))
             {
                 base.NewLine();
                 AddCommandHistoryEntry(commandText); // add to history first so that if ProcessCommand generates an exception,
@@ -67,6 +67,7 @@ namespace kOS.Screen
         {
             if (key == (char)UnicodeCommand.BREAK)
             {
+                Shared.Interpreter.BreakExecution();
                 Shared.Cpu.BreakExecution(true);
                 LineBuilder.Remove(0, LineBuilder.Length); // why isn't there a StringBuilder.Clear()?
 
@@ -123,49 +124,19 @@ namespace kOS.Screen
             return commandHistory[absoluteIndex-1];
         }
 
-        protected virtual void ProcessCommand(string commandText)
+        public int GetCommandHistoryIndex()
         {
-            CompileCommand(commandText);
+            return commandHistoryIndex;
         }
 
-        protected void CompileCommand(string commandText)
+        protected virtual void ProcessCommand(string commandText)
         {
-            if (Shared.ScriptHandler == null) return;
-
-            try
-            {
-                CompilerOptions options = new CompilerOptions
-                {
-                    LoadProgramsInSameAddressSpace = false,
-                    FuncManager = Shared.FunctionManager,
-                    BindManager = Shared.BindingMgr,
-                    AllowClobberBuiltins = SafeHouse.Config.AllowClobberBuiltIns,
-                    IsCalledFromRun = false
-                };
-
-                List<CodePart> commandParts = Shared.ScriptHandler.Compile(new InterpreterPath(this),
-                    commandHistoryIndex, commandText, InterpreterName, options);
-                if (commandParts == null) return;
-
-                var interpreterContext = ((CPU)Shared.Cpu).GetInterpreterContext();
-                interpreterContext.AddParts(commandParts);
-            }
-            catch (Exception e)
-            {
-                if (Shared.Logger != null)
-                {
-                    Shared.Logger.Log(e);
-                }
-            }
+            Shared.Interpreter.ProcessCommand(commandText);
         }
 
         public bool IsWaitingForCommand()
         {
-            IProgramContext context = ((CPU)Shared.Cpu).GetInterpreterContext();
-            // If running from a boot script, there will be no interpreter instructions,
-            // only a single OpcodeEOF.  So we check to see if the interpreter is locked,
-            // which is a sign that a sub-program is running.
-            return !locked && context.Program[context.InstructionPointer] is OpcodeEOF;
+            return !locked && Shared.Interpreter.IsWaitingForCommand();
         }
 
         public void SetInputLock(bool isLocked)
@@ -188,26 +159,6 @@ namespace kOS.Screen
             SaveCursorPos();
             base.PrintAt(textToPrint, row, column);
             RestoreCursorPos();
-        }
-
-        private class InterpreterPath : InternalPath
-        {
-            private Interpreter interpreter;
-
-            public InterpreterPath(Interpreter interpreter) : base()
-            {
-                this.interpreter = interpreter;
-            }
-
-            public override string Line(int line)
-            {
-                return interpreter.GetCommandHistoryAbsolute(line);
-            }
-
-            public override string ToString()
-            {
-                return InterpreterName;
-            }
         }
     }
 }

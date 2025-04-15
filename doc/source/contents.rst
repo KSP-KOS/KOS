@@ -23,6 +23,7 @@ Documentation Table of Contents
     Getting Help <getting_help>
     Changes <changes>
     About <about>
+    Lua Interpreter <lua_interpreter>
 
 Indices and tables
 ==================

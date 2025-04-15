@@ -1,15 +1,20 @@
-using kOS.Safe.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace kOS.Safe.Screen
 {
-    public interface IInterpreter : IScreenBuffer
+    public interface IInterpreter : IDisposable
     {
-        void Type(char ch);
-        bool SpecialKey(char key);
-        string GetCommandHistoryAbsolute(int absoluteIndex);
-        void SetInputLock(bool isLocked);
-        bool IsAtStartOfCommand();
+        string Name { get; }
+        void Boot();
+        void ProcessCommand(string commandText);
+        bool IsCommandComplete(string commandText);
         bool IsWaitingForCommand();
-        void Reset();
+        void BreakExecution();
+        int InstructionsThisUpdate();
+        int ECInstructionsThisUpdate();
     }
 }

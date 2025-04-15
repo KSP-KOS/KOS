@@ -18,13 +18,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-
 using kOS.Safe.Execution;
 using UnityEngine;
 using kOS.Safe.Encapsulation;
 using KSP.UI;
 using kOS.Suffixed;
 using kOS.Safe.Function;
+using kOS.Lua;
+using kOS.Screen;
 
 namespace kOS.Module
 {
@@ -62,6 +63,7 @@ namespace kOS.Module
         private int vesselPartCount;
         private SharedObjects shared;
         private static readonly List<kOSProcessor> allMyInstances = new List<kOSProcessor>();
+        private bool hasShutdown = true;
         public bool HasBooted { get; set; }
         private bool objectsInitialized = false;
         private int  numUpdatesAfterStartHappened = 0;
@@ -86,8 +88,14 @@ namespace kOS.Module
 
         private const string BootDirectoryName = "boot";
 
+        [KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Interpreter", groupName = PAWGroup, groupDisplayName = PAWGroup), UI_ChooseOption(scene = UI_Scene.All)]
+        public string interpreterLanguage = "kerboscript";
+
         [KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Boot File", groupName = PAWGroup, groupDisplayName = PAWGroup), UI_ChooseOption(scene = UI_Scene.Editor)]
         public string bootFile = "None";
+
+        [KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Lua Boot File", groupName = PAWGroup, groupDisplayName = PAWGroup), UI_ChooseOption(scene = UI_Scene.Editor)]
+        public string luaBootFile = "None";
 
         [KSPField(isPersistant = true, guiName = "kOS Disk Space", guiActive = true, groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public int diskSpace = 1024;
@@ -145,9 +153,9 @@ namespace kOS.Module
         public VolumePath BootFilePath {
             get
             {
-                if (string.IsNullOrEmpty(bootFile) || bootFile.Equals("None", StringComparison.OrdinalIgnoreCase))
+                if (string.IsNullOrEmpty(BootFilename) || BootFilename.Equals("None", StringComparison.OrdinalIgnoreCase))
                     return null;
-                return VolumePath.FromString(bootFile);
+                return VolumePath.FromString(BootFilename);
             }
         }
 
@@ -403,6 +411,7 @@ namespace kOS.Module
             {
                 FindRP1Modules();
                 UpdateRP1TechLevel(state == StartState.Editor);
+                InitInterpreterField(state);
                 //if in Editor, populate boot script selector, diskSpace selector and etc.
                 if (state == StartState.Editor)
                 {
@@ -438,10 +447,51 @@ namespace kOS.Module
             bootListDirty = true;
         }
 
+        private void InitInterpreterField(StartState state)
+        {
+            BaseField interpreterLanguageField = Fields["interpreterLanguage"];
+            string[] interpreterDisplayNames = { "KerboScript", "Lua" };
+            UI_ChooseOption interpreterLanguageOption;
+            if (state == StartState.Editor)
+            {
+                interpreterLanguageOption = (UI_ChooseOption)interpreterLanguageField.uiControlEditor;
+                interpreterLanguageOption.onFieldChanged = (BaseField field, object obj) => InitUI();
+            } else
+            {
+                interpreterLanguageOption = (UI_ChooseOption)interpreterLanguageField.uiControlFlight;
+                interpreterLanguageOption.onFieldChanged = OnInterpreterChanged;
+            }
+            interpreterLanguageOption.display = interpreterDisplayNames;
+            interpreterLanguageOption.options = interpreterDisplayNames.Select((display) => display.ToLower()).ToArray();
+        }
+
+        private void OnInterpreterChanged(BaseField field, object buggyPrevValue)
+        {
+            interpreterLanguage = interpreterLanguage.ToLower()[0]=='l'? "lua" : "kerboscript";
+            if (shared.Interpreter.Name == interpreterLanguage) return;
+            shared.Logger.Log("Interpreter changed. "+shared.Interpreter.Name+" to "+interpreterLanguage+". Rebooting");
+            if (ProcessorMode != ProcessorModes.READY) return;
+            SetMode(ProcessorModes.OFF);
+            SetMode(ProcessorModes.READY);
+        }
+
         private void InitUI()
         {
             //Populate selector for boot scripts
-            BaseField field = Fields["bootFile"];
+            BaseField ksField = Fields["bootFile"];
+            BaseField luaField = Fields["luaBootFile"];
+            BaseField field;
+            if (interpreterLanguage == "lua")
+            {
+                field = luaField;
+                ksField.guiActiveEditor = false;
+                ((UI_ChooseOption)ksField.uiControlEditor).controlEnabled = false;
+            } else
+            {
+                field = ksField;
+                luaField.guiActiveEditor = false;
+                ((UI_ChooseOption)luaField.uiControlEditor).controlEnabled = false;
+            }
             var options = (UI_ChooseOption)field.uiControlEditor;
 
             var bootFiles = new List<VolumePath>();
@@ -497,15 +547,15 @@ namespace kOS.Module
                 if (file != null)
                 {
                     // store the boot file information
-                    bootFile = file.Path.ToString();
+                    BootFilename = file.Path.ToString();
                     if (!bootFiles.Contains(file.Path))
                     {
-                        availableOptions.Insert(1, bootFile);
+                        availableOptions.Insert(1, BootFilename);
                         availableDisplays.Insert(1, "*" + file.Path.Name); // "*" is indication the file is not normally available
                     }
                 }
             }
-            SafeHouse.Logger.SuperVerbose("bootFile: " + bootFile);
+            SafeHouse.Logger.SuperVerbose("bootFile: " + BootFilename);
 
             options.options = availableOptions.ToArray();
             options.display = availableDisplays.ToArray();
@@ -547,8 +597,10 @@ namespace kOS.Module
 
             foreach (KeyValuePair<string, VolumeItem> pair in files)
             {
-                if (pair.Value is VolumeFile && (pair.Value.Extension.Equals(Volume.KERBOSCRIPT_EXTENSION)
-                    || pair.Value.Extension.Equals(Volume.KOS_MACHINELANGUAGE_EXTENSION)))
+                string[] filenameExtensions = interpreterLanguage == "lua" ?
+                    LuaInterpreter.FilenameExtensions :
+                    KSInterpreter.FilenameExtensions;
+                if (pair.Value is VolumeFile && filenameExtensions.Any(extension => extension == pair.Value.Extension))
                 {
                     result.Add(pair.Value.Path);
                 }
@@ -577,15 +629,16 @@ namespace kOS.Module
             shared.KSPPart = part;
             shared.UpdateHandler = new UpdateHandler();
             shared.BindingMgr = new BindingManager(shared);
-            shared.Interpreter = new Screen.ConnectivityInterpreter(shared);
-            shared.Screen = shared.Interpreter;
+            shared.Terminal = new Screen.ConnectivityTerminal(shared);
+            shared.Screen = shared.Terminal;
             shared.ScriptHandler = new KSScript();
             shared.Logger = new KSPLogger(shared);
             shared.VolumeMgr = new ConnectivityVolumeManager(shared);
             shared.ProcessorMgr = new ProcessorManager();
             shared.FunctionManager = new FunctionManager(shared);
             shared.TransferManager = new TransferManager(shared);
-            shared.Cpu = new CPU(shared);
+            shared.Cpu = interpreterLanguage == "lua" ? new LuaCPU(shared) : new CPU(shared);
+            shared.Interpreter = interpreterLanguage == "lua" ? (IInterpreter)new LuaInterpreter(shared) : new KSInterpreter(shared);
             shared.AddonManager = new AddOns.AddonManager(shared);
             shared.GameEventDispatchManager = new GameEventDispatchManager(shared);
 
@@ -762,6 +815,7 @@ namespace kOS.Module
             if (shared != null)
             {
                 shared.Cpu.BreakExecution(false);
+                shared.Interpreter.Dispose();
                 shared.Cpu.Dispose();
                 shared.DestroyObjects();
                 shared = null;
@@ -861,10 +915,45 @@ namespace kOS.Module
 
             if (!vessel.HoldPhysics)
             {
+                if (!hasShutdown)
+                {
+                    shared.Interpreter.Dispose();
+                    hasShutdown = true;
+                }
                 if (!HasBooted)
                 {
                     SafeHouse.Logger.LogWarning("First Update()");
+                    // interpreter swap
+                    // dispose current cpu and interpreter
+                    shared.Interpreter.Dispose();
+                    shared.Cpu.Dispose();
+                    // update shared cpu and interpreter
+                    if (interpreterLanguage == "lua")
+                    {
+                        shared.Cpu = new LuaCPU(shared);
+                        shared.Interpreter = new LuaInterpreter(shared);
+                    }
+                    else
+                    {
+                        shared.Cpu = new CPU(shared);
+                        shared.Interpreter = new KSInterpreter(shared);
+                    }
+                    // run boot methods
                     shared.Cpu.Boot();
+                    shared.Interpreter.Boot();
+
+                    // if booted by calling RunBootFile reset bootFile to its previous value
+                    if (beforeRunLuaBootFile != null)
+                    {
+                        luaBootFile = beforeRunLuaBootFile;
+                        beforeRunLuaBootFile = null;
+                    }
+                    if (beforeRunBootFile != null)
+                    {
+                        bootFile = beforeRunBootFile;
+                        beforeRunBootFile = null;
+                    }
+                    
                     HasBooted = true;
                 }
                 UpdateVessel();
@@ -1096,7 +1185,7 @@ namespace kOS.Module
             {
                 // Because the processor is not STARVED, evaluate the power requirement based on actual operation.
                 // For EC drain purposes, always pretend atleast 1 instruction happened, so idle drain isn't quite zero:
-                int instructions = System.Math.Max(shared.Cpu.InstructionsThisUpdate, 1);
+                int instructions = System.Math.Max(shared.Interpreter.ECInstructionsThisUpdate(), 1);
                 var request = volumePower * time + instructions * ECPerInstruction;
                 if (request > 0)
                 {
@@ -1145,15 +1234,17 @@ namespace kOS.Module
                         shared.VolumeMgr.SwitchTo(HardDisk);
                     }
                     HasBooted = false; // When FixedUpdate() first happesn, then the boot will happen.
-                    if (shared.Interpreter != null) shared.Interpreter.SetInputLock(false);
+                    if (shared.Terminal != null) shared.Terminal.SetInputLock(false);
                     if (shared.Window != null) shared.Window.IsPowered = true;
                     foreach (var w in shared.ManagedWindows) w.IsPowered = true;
                     break;
 
                 case ProcessorModes.OFF:
                 case ProcessorModes.STARVED:
+                    hasShutdown = false;
+                    if (shared.Interpreter != null) shared.Interpreter.BreakExecution();
                     if (shared.Cpu != null) shared.Cpu.BreakExecution(true);
-                    if (shared.Interpreter != null) shared.Interpreter.SetInputLock(true);
+                    if (shared.Terminal != null) shared.Terminal.SetInputLock(true);
                     if (shared.Window != null) shared.Window.IsPowered = false;
                     if (shared.SoundMaker != null) shared.SoundMaker.StopAllVoices();
                     foreach (var w in shared.ManagedWindows) w.IsPowered = false;
@@ -1162,6 +1253,39 @@ namespace kOS.Module
                     break;
             }
 
+        }
+
+        private string beforeRunLuaBootFile;
+        private string beforeRunBootFile;
+        
+        public void RunBootFile(VolumeFile file)
+        {
+            if (KSInterpreter.FilenameExtensions.Contains(file.Extension))
+            {
+                interpreterLanguage = "kerboscript";
+            }
+            else if (LuaInterpreter.FilenameExtensions.Contains(file.Extension))
+            {
+                interpreterLanguage = "lua";
+            }
+
+            if (interpreterLanguage == "kerboscript")
+            {
+                beforeRunBootFile = bootFile;
+                bootFile = file.Path.ToString();
+            }
+            else if (interpreterLanguage == "lua")
+            {
+                beforeRunLuaBootFile = luaBootFile;
+                luaBootFile = file.Path.ToString();
+            }
+            SetMode(ProcessorModes.OFF);
+            SetMode(ProcessorModes.READY);
+        }
+
+        public void RunCommand(string command)
+        {
+            shared.Interpreter.ProcessCommand(command);
         }
 
         public void ExecuteInterProcCommand(InterProcCommand command)
@@ -1180,8 +1304,8 @@ namespace kOS.Module
 
         public string BootFilename
         {
-            get { return bootFile; }
-            set { bootFile = value; }
+            get { return interpreterLanguage == "lua"? luaBootFile : bootFile; }
+            set { if (interpreterLanguage == "lua") luaBootFile = value; else bootFile = value; }
         }
 
         public bool CheckCanBoot()

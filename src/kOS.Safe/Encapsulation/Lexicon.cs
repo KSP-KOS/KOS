@@ -280,9 +280,10 @@ namespace kOS.Safe.Encapsulation
 
         // Only needed because IIndexable demands it.  For a lexicon, none of the code is
         // actually trying to call this:
-        public Structure GetIndex(int index)
+        public Structure GetIndex(int index, bool failOkay = false)
         {
-            return internalDictionary[FromPrimitiveWithAssert(index)];
+            try { return internalDictionary[FromPrimitiveWithAssert(index)]; }
+            catch { if (failOkay) return null; throw; }
         }
 
         public void SetIndex(Structure index, Structure value)
