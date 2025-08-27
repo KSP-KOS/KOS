@@ -1,7 +1,7 @@
+using System;
 using kOS.Communication;
 using kOS.Module;
-using kOS.Safe.Utilities;
-using System;
+
 
 namespace kOS.AddOns.RemoteTech
 {
