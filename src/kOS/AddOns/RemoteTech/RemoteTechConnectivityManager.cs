@@ -1,6 +1,7 @@
-using System;
 using kOS.Communication;
 using kOS.Module;
+using kOS.Safe.Utilities;
+using System;
 
 namespace kOS.AddOns.RemoteTech
 {
@@ -44,7 +45,8 @@ namespace kOS.AddOns.RemoteTech
             double delay = RemoteTechHook.Instance.GetSignalDelayToSatellite(vessel1.id, vessel2.id);
             if (Double.IsPositiveInfinity(delay) || delay < 0)
             {
-                delay = RemoteTechHook.Instance.GetShortestSignalDelay(vessel2.id);
+                delay = Math.Max(RemoteTechHook.Instance.GetShortestSignalDelay(vessel1.id), 
+                                RemoteTechHook.Instance.GetShortestSignalDelay(vessel2.id));
             }
             return Double.IsPositiveInfinity(delay) ? -1 : delay;
         }
