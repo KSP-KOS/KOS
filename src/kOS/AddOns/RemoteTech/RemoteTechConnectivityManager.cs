@@ -2,7 +2,6 @@ using System;
 using kOS.Communication;
 using kOS.Module;
 
-
 namespace kOS.AddOns.RemoteTech
 {
     /// <summary>
