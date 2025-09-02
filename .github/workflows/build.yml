@@ -6,10 +6,17 @@ on:
     paths:
       - '**/*.cs'
       - '**/*.csproj'
+      - '**/*.props'
   pull_request:
     paths:
       - '**/*.cs'
       - '**/*.csproj'
+      - '**/*.props'
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - edited
   workflow_dispatch:
   workflow_call:
 
