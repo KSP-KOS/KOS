@@ -2,5 +2,7 @@
 <Project>
   <PropertyGroup>
     <BinariesOutputRelativePath>Resources\GameData\kOS\Plugins</BinariesOutputRelativePath>
+    <Company></Company>
+    <Version>1.5.1.0</Version>
   </PropertyGroup>
 </Project>
