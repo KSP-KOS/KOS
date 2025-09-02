@@ -6,16 +6,22 @@
   <PropertyGroup>
     <ReferenceUnityAssemblies>false</ReferenceUnityAssemblies>
     <ReferenceKSPAssemblies>false</ReferenceKSPAssemblies>
+    <BinariesOutputRelativePath>Resources/UnitTests</BinariesOutputRelativePath>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="Compilation\CompiledObject-doc.md" />
+    <None Include="Compilation\KS\kRISC.tpg" />
+    <Compile Remove="$(PkgKSPBuildTools)/build/include/Log.cs" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">
       <Project>{590FFDA8-7B44-4BC3-A12A-5FFE2BB7D8FD}</Project>
       <Name>kOS.Safe</Name>
-      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NSubstitute" Version="1.8.1.0" />
     <PackageReference Include="NUnit" Version="2.7.1" />
+    <PackageReference Include="KSPBuildTools" Version="0.0.4" GeneratePathProperty="True" />
   </ItemGroup>
 </Project>

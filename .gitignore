@@ -35,6 +35,8 @@ packages/
 [Rr]esources/GameData/kOS/Plugins/
 [Rr]esources/*.dll
 [Rr]esources/GameData/*.dll
+[Rr]esources/UnitTests/*.dll
+[Rr]esources/UnitTests/*.pdb
 !Resources/GameData/kOS/ICSharpCode.SharpZipLib.dll
 
 # Symlink to KSP directory
