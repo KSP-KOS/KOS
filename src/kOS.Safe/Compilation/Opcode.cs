@@ -1111,9 +1111,9 @@ namespace kOS.Safe.Compilation
     /// <para></para>
     /// <para>... dist ...</para>
     /// </summary>
-    public class OpcodeBranchJumpStack : Opcode
+    public class OpcodeJumpStack : Opcode
     {
-        protected override string Name { get { return "jumpstack" } }
+        protected override string Name { get { return "jumpstack"; } }
         public override ByteCode Code { get { return ByteCode.JUMPSTACK; } }
 
         public override void Execute(ICpu cpu)
