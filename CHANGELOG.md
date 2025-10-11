@@ -1,6 +1,6 @@
 # kOS Mod Changelog
 
-## 1.4.1.0 - 2025-10-11
+## Unreleased
 
 ### New Features
 
