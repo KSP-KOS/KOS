@@ -1121,7 +1121,7 @@ namespace kOS.Safe.Compilation
             object popval = cpu.PopValueArgument();
             int distance = Convert.ToInt32(popval);
             if (distance == null)
-                throw new KOSCastException(typeof popval, typeof ScalarIntValue);
+                throw new KOSCastException(popval.GetType(), typeof(ScalarIntValue));
             DeltaInstructionPointer = distance;
         }
     }
