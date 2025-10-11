@@ -1105,10 +1105,11 @@ namespace kOS.Safe.Compilation
 
     /// <summary>
     /// <para>
-    /// Pops a value from the stack and then unconditionally branches to it
+    /// Pops a Int32 from the stack and then unconditionally
+    /// advances the instruction pointer by it
     /// </para>
     /// <para></para>
-    /// <para>... -- ...</para>
+    /// <para>... dist ...</para>
     /// </summary>
     public class OpcodeBranchJumpStack : Opcode
     {
@@ -1117,9 +1118,10 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            int distance = Convert.ToInt32(cpu.PopValueArgument());
+            object popval = cpu.PopValueArgument();
+            int distance = Convert.ToInt32(popval);
             if (distance == null)
-                throw new KOSArgumentMismatchException("No int on stack to jump to");
+                throw new KOSCastException(typeof popval, typeof ScalarIntValue);
             DeltaInstructionPointer = distance;
         }
     }
