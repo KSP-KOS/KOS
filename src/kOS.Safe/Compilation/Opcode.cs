@@ -87,7 +87,7 @@ namespace kOS.Safe.Compilation
         ARGBOTTOM      = 0x60,
         TESTARGBOTTOM  = 0x61,
         TESTCANCELLED  = 0x62,
-        
+        JUMPSTACK      = 0x63,
 
         // Augmented bogus placeholder versions of the normal
         // opcodes: These only exist in the program temporarily
@@ -1100,6 +1100,27 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             DeltaInstructionPointer = Distance;
+        }
+    }
+
+    /// <summary>
+    /// <para>
+    /// Pops a Int32 from the stack and then unconditionally
+    /// advances the instruction pointer by it
+    /// </para>
+    /// <para></para>
+    /// <para>... dist ...</para>
+    /// </summary>
+    public class OpcodeJumpStack : Opcode
+    {
+        protected override string Name { get { return "jumpstack"; } }
+        public override ByteCode Code { get { return ByteCode.JUMPSTACK; } }
+
+        public override void Execute(ICpu cpu)
+        {
+            object popval = cpu.PopValueArgument();
+            int distance = Convert.ToInt32(popval);
+            DeltaInstructionPointer = distance;
         }
     }
     
