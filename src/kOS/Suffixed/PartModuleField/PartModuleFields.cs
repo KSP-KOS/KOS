@@ -225,7 +225,7 @@ namespace kOS.Suffixed.PartModuleField
         /// <returns>true if it is on the PartModule, false if it is not</returns>
         public virtual BooleanValue HasField(StringValue fieldName)
         {
-            return FieldIsVisible(GetField(fieldName));
+            return GetField(fieldName) != null;
         }
 
         /// <summary>
@@ -443,8 +443,6 @@ namespace kOS.Suffixed.PartModuleField
             BaseField field = GetField(suffixName);
             if (field == null)
                 throw new KOSLookupFailException("FIELD", suffixName, this);
-            if (!FieldIsVisible(field))
-                throw new KOSLookupFailException("FIELD", suffixName, this, true);
             Structure obj = FromPrimitiveWithAssert(field.GetValue(partModule));
             return obj;
         }
