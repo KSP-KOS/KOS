@@ -5,7 +5,4 @@
     <Company></Company>
     <Version>1.5.1.0</Version>
   </PropertyGroup>
-  <PropertyGroup>
-    <KSPRoot>E:\Games\Kerbal Space Program RSS</KSPRoot>
-  </PropertyGroup>
 </Project>
