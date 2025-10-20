@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Suffixed;
@@ -113,7 +113,7 @@ namespace kOS.AddOns.RemoteTech
                 // just print the guid if we can't figure out what it is
                 return new StringValue(guid.ToString());
             }
-            return base.GetKSPFieldValue(suffixName);
+            return base.GetKSPFieldValue(suffixName, base.FieldIsVisible);
         }
 
         private Guid GetTargetGuid(Structure target)
