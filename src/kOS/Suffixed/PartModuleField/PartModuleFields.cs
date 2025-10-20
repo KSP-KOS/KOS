@@ -255,7 +255,7 @@ namespace kOS.Suffixed.PartModuleField
         /// </summary>
         /// <param name="fieldName">The field to search for</param>
         /// <returns>true if it is on the PartModule, false if it is not</returns>
-        public virtual BooleanValue HasHiddenField(StringValue fieldName)
+        public BooleanValue HasHiddenField(StringValue fieldName)
         {
             return GetField(fieldName, field => !FieldIsVisible(field)) != null;
         }
