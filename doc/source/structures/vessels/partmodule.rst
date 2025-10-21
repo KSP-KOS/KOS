@@ -31,13 +31,13 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
           - Accessible fields
         * - :attr:`ALLHIDDENFIELDS`
           - :struct:`List` of strings
-          - Fields not notmally accessible via GUI
+          - Fields not normally accessible via GUI
         * - :attr:`ALLFIELDNAMES`
           - :struct:`List` of strings
           - Accessible fields (name only)
         * - :attr:`ALLHIDDENFIELDNAMES`
           - :struct:`List` of strings
-          - Fields not notmally accessible via GUI (name only)
+          - Fields not normally accessible via GUI (name only)
         * - :attr:`ALLEVENTS`
           - :struct:`List` of strings
           - Triggerable events
@@ -237,7 +237,7 @@ Notes
 -----
 
 In all the above cases where there is a name being passed in to :GETFIELD, :SETFIELD, :DOEVENT, or :DOACTION, the name is meant to be the name that is seen by you, the user, in the GUI screen, and NOT necessarily the actual name of the variable that the programmer of that PartModule chose to call the value behind the scenes. This is so that you can view the GUI right-click menu to see what to call things in your script.
-When it comes to the hidden fields, they can be inspected using the :ALLHIDDENFIELDS method, or by looking into the source code. Generally, manipulating the hidden fields is recommended for experienced users.
+When it comes to the hidden fields, they can be inspected using the :ALLHIDDENFIELDS method, or by looking into the source code. Generally, manipulating the hidden fields is recommended for experienced users only.
 
 .. note::
 
