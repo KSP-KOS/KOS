@@ -208,7 +208,7 @@ namespace kOS.Suffixed.PartModuleField
         {
             var returnValue = new ListValue();
 
-            IEnumerable<BaseField> hiddenFields = partModule.Fields.Cast<BaseField>().Where((field) => !FieldIsVisible(field));
+            IEnumerable<BaseField> hiddenFields = partModule.Fields.Cast<BaseField>().Where(field => FieldIsVisible(field, false));
 
             foreach (BaseField field in hiddenFields)
             {
