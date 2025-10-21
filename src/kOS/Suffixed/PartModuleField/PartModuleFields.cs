@@ -183,7 +183,7 @@ namespace kOS.Suffixed.PartModuleField
         {
             var returnValue = new ListValue();
 
-            IEnumerable<BaseField> visibleFields = partModule.Fields.Cast<BaseField>().Where(FieldIsVisible);
+            IEnumerable<BaseField> visibleFields = partModule.Fields.Cast<BaseField>().Where(field => FieldIsVisible(field));
 
             foreach (BaseField field in visibleFields)
             {
@@ -227,7 +227,7 @@ namespace kOS.Suffixed.PartModuleField
         /// <returns>List of all the strings field names.</returns>
         protected virtual ListValue AllFieldNames()
         {
-            return AllFieldNames(FieldIsVisible);
+            return AllFieldNames(field => FieldIsVisible(field));
         }
 
         private ListValue AllFieldNames(Func<BaseField, bool> visibilityFilterPredicate)
@@ -262,7 +262,7 @@ namespace kOS.Suffixed.PartModuleField
         /// <returns>true if it is on the PartModule, false if it is not</returns>
         public BooleanValue HasHiddenField(StringValue fieldName)
         {
-            return GetField(fieldName, field => !FieldIsVisible(field)) != null;
+            return GetField(fieldName, field => FieldIsVisible(field, false)) != null;
         }
 
         /// <summary>
@@ -272,7 +272,7 @@ namespace kOS.Suffixed.PartModuleField
         /// <returns>a BaseField - a KSP type that can be used to get the value, or its GUI name or its reflection info.</returns>
         protected BaseField GetField(string cookedGuiName)
         {
-            return GetField(cookedGuiName, FieldIsVisible);
+            return GetField(cookedGuiName, field => FieldIsVisible(field));
         }
 
         private BaseField GetField(string cookedGuiName, Func<BaseField, bool> visibilityFilterPredicate)
@@ -460,14 +460,14 @@ namespace kOS.Suffixed.PartModuleField
             AddSuffix("DOEVENT", new OneArgsSuffix<StringValue>(CallKSPEvent));
             AddSuffix("DOACTION", new TwoArgsSuffix<StringValue, BooleanValue>(CallKSPAction));
             AddSuffix("ALLHIDDENFIELDS", new Suffix<ListValue>(() => AllHiddenFields("({0}) {1}, is {2}")));
-            AddSuffix("ALLHIDDENFIELDNAMES", new Suffix<ListValue>(() => AllFieldNames(field => !FieldIsVisible(field))));
+            AddSuffix("ALLHIDDENFIELDNAMES", new Suffix<ListValue>(() => AllFieldNames(field => FieldIsVisible(field, false))));
             AddSuffix("HASHIDDENFIELD", new OneArgsSuffix<BooleanValue, StringValue>(HasHiddenField));
-            AddSuffix("GETHIDDENFIELD", new OneArgsSuffix<Structure, StringValue>(argument => GetKSPFieldValue(argument, field => !FieldIsVisible(field))));
+            AddSuffix("GETHIDDENFIELD", new OneArgsSuffix<Structure, StringValue>(argument => GetKSPFieldValue(argument, field => FieldIsVisible(field, false))));
         }
 
-        protected bool FieldIsVisible(BaseField field)
+        private bool FieldIsVisible(BaseField field, bool isVisible = true)
         {
-            return (field != null) && (HighLogic.LoadedSceneIsEditor ? field.guiActiveEditor : field.guiActive);
+            return (field != null) && (HighLogic.LoadedSceneIsEditor ? field.guiActiveEditor == isVisible : field.guiActive == isVisible);
         }
 
         private bool EventIsVisible(BaseEvent evt)
@@ -486,7 +486,7 @@ namespace kOS.Suffixed.PartModuleField
         /// <returns></returns>
         protected Structure GetKSPFieldValue(StringValue suffixName)
         {
-            return GetKSPFieldValue(suffixName, FieldIsVisible);
+            return GetKSPFieldValue(suffixName, field => FieldIsVisible(field));
         }
 
         private Structure GetKSPFieldValue(StringValue suffixName, Func<BaseField, bool> visibilityFilterPredicate)
