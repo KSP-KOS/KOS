@@ -227,9 +227,14 @@ namespace kOS.Suffixed.PartModuleField
         /// <returns>List of all the strings field names.</returns>
         protected virtual ListValue AllFieldNames()
         {
+            return AllFieldNames(FieldIsVisible);
+        }
+
+        private ListValue AllFieldNames(Func<BaseField, bool> visibilityFilterPredicate)
+        {
             var returnValue = new ListValue();
 
-            IEnumerable<BaseField> visibleFields = partModule.Fields.Cast<BaseField>().Where(FieldIsVisible);
+            IEnumerable<BaseField> visibleFields = partModule.Fields.Cast<BaseField>().Where(visibilityFilterPredicate);
 
             foreach (BaseField field in visibleFields)
             {
@@ -246,7 +251,7 @@ namespace kOS.Suffixed.PartModuleField
         /// <returns>true if it is on the PartModule, false if it is not</returns>
         public virtual BooleanValue HasField(StringValue fieldName)
         {
-            return FieldIsVisible(GetField(fieldName, FieldIsVisible));
+            return FieldIsVisible(GetField(fieldName));
         }
 
         /// <summary>
@@ -265,7 +270,12 @@ namespace kOS.Suffixed.PartModuleField
         /// </summary>
         /// <param name="cookedGuiName">The case-insensitive guiName (or name if guiname is empty) of the field.</param>
         /// <returns>a BaseField - a KSP type that can be used to get the value, or its GUI name or its reflection info.</returns>
-        protected BaseField GetField(string cookedGuiName, Func<BaseField, bool> visibilityFilterPredicate)
+        protected BaseField GetField(string cookedGuiName)
+        {
+            return GetField(cookedGuiName, FieldIsVisible);
+        }
+
+        private BaseField GetField(string cookedGuiName, Func<BaseField, bool> visibilityFilterPredicate)
         {
             // Conceptually this should be a single hit using FirstOrDefault(), because there should only
             // be one Field with the given GUI name.  But Issue #2666 forced kOS to change it to an array of hits
@@ -445,11 +455,12 @@ namespace kOS.Suffixed.PartModuleField
             AddSuffix("ALLACTIONS", new Suffix<ListValue>(() => AllActions("({0}) {1}, is {2}")));
             AddSuffix("ALLACTIONNAMES", new Suffix<ListValue>(AllActionNames));
             AddSuffix("HASACTION", new OneArgsSuffix<BooleanValue, StringValue>(HasAction));
-            AddSuffix("GETFIELD", new OneArgsSuffix<Structure, StringValue>(argument => GetKSPFieldValue(argument, field => FieldIsVisible(field))));
+            AddSuffix("GETFIELD", new OneArgsSuffix<Structure, StringValue>(GetKSPFieldValue));
             AddSuffix("SETFIELD", new TwoArgsSuffix<StringValue, Structure>(SetKSPFieldValue));
             AddSuffix("DOEVENT", new OneArgsSuffix<StringValue>(CallKSPEvent));
             AddSuffix("DOACTION", new TwoArgsSuffix<StringValue, BooleanValue>(CallKSPAction));
             AddSuffix("ALLHIDDENFIELDS", new Suffix<ListValue>(() => AllHiddenFields("({0}) {1}, is {2}")));
+            AddSuffix("ALLHIDDENFIELDNAMES", new Suffix<ListValue>(() => AllFieldNames(field => !FieldIsVisible(field))));
             AddSuffix("HASHIDDENFIELD", new OneArgsSuffix<BooleanValue, StringValue>(HasHiddenField));
             AddSuffix("GETHIDDENFIELD", new OneArgsSuffix<Structure, StringValue>(argument => GetKSPFieldValue(argument, field => !FieldIsVisible(field))));
         }
@@ -473,7 +484,12 @@ namespace kOS.Suffixed.PartModuleField
         /// </summary>
         /// <param name="suffixName"></param>
         /// <returns></returns>
-        protected Structure GetKSPFieldValue(StringValue suffixName, Func<BaseField, bool> visibilityFilterPredicate)
+        protected Structure GetKSPFieldValue(StringValue suffixName)
+        {
+            return GetKSPFieldValue(suffixName, FieldIsVisible);
+        }
+
+        private Structure GetKSPFieldValue(StringValue suffixName, Func<BaseField, bool> visibilityFilterPredicate)
         {
             BaseField field = GetField(suffixName, visibilityFilterPredicate);
             if (field == null)
@@ -490,7 +506,7 @@ namespace kOS.Suffixed.PartModuleField
         protected virtual void SetKSPFieldValue(StringValue suffixName, Structure newValue)
         {
             ThrowIfNotCPUVessel();
-            BaseField field = GetField(suffixName, FieldIsVisible);
+            BaseField field = GetField(suffixName);
             if (field == null)
                 throw new KOSLookupFailException("FIELD", suffixName, this);
             if (!FieldIsVisible(field))

@@ -113,7 +113,7 @@ namespace kOS.AddOns.RemoteTech
                 // just print the guid if we can't figure out what it is
                 return new StringValue(guid.ToString());
             }
-            return base.GetKSPFieldValue(suffixName, base.FieldIsVisible);
+            return base.GetKSPFieldValue(suffixName);
         }
 
         private Guid GetTargetGuid(Structure target)
