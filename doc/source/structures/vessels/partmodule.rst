@@ -31,13 +31,13 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
           - Accessible fields
         * - :attr:`ALLHIDDENFIELDS`
           - :struct:`List` of strings
-          - Fields not notmally accessible via UI
+          - Fields not notmally accessible via GUI
         * - :attr:`ALLFIELDNAMES`
           - :struct:`List` of strings
           - Accessible fields (name only)
         * - :attr:`ALLHIDDENFIELDNAMES`
           - :struct:`List` of strings
-          - Fields not notmally accessible via UI (name only)
+          - Fields not notmally accessible via GUI (name only)
         * - :attr:`ALLEVENTS`
           - :struct:`List` of strings
           - Triggerable events
