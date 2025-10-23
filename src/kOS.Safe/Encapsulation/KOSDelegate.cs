@@ -62,7 +62,7 @@ namespace kOS.Safe.Encapsulation
             return merged;
         }
 
-        public Structure CallPassingArgs(params Structure[] args)
+        public virtual Structure CallPassingArgs(params Structure[] args)
         {
             if (Cpu == null)
                 throw new KOSCannotCallException();
