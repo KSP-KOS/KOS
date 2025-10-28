@@ -42,12 +42,43 @@ namespace kOS.Suffixed.Widget
             }
         }
 
+        WidgetStyleRectOffset margin;
+        WidgetStyleRectOffset padding;
+        WidgetStyleRectOffset border;
+        WidgetStyleRectOffset overflow;
+        WidgetStyleState normal;
+        WidgetStyleState focused;
+        WidgetStyleState active;
+        WidgetStyleState hover;
+        WidgetStyleState onNormal;
+        WidgetStyleState onFocused;
+        WidgetStyleState onActive;
+        WidgetStyleState onHover;
+
+        WidgetStyleRectOffset CreateWidgetStyleRectOffsetSuffix(RectOffset rectOffset, ref WidgetStyleRectOffset suffix)
+        {
+            if (suffix == null)
+            {
+                suffix = new WidgetStyleRectOffset(rectOffset);
+            }
+            return suffix;
+        }
+
+        WidgetStyleState CreateWidgetStyleStateSuffix(GUIStyleState guiStyleState, ref WidgetStyleState suffix)
+        {
+            if (suffix == null)
+            {
+                suffix = new WidgetStyleState(guiStyleState);
+            }
+            return suffix;
+        }
+
         private void InitializeSuffixes()
         {
-            AddSuffix("MARGIN", new Suffix<WidgetStyleRectOffset>(() => new WidgetStyleRectOffset(Writable.margin)));
-            AddSuffix("PADDING", new Suffix<WidgetStyleRectOffset>(() => new WidgetStyleRectOffset(Writable.padding)));
-            AddSuffix("BORDER", new Suffix<WidgetStyleRectOffset>(() => new WidgetStyleRectOffset(Writable.border)));
-            AddSuffix("OVERFLOW", new Suffix<WidgetStyleRectOffset>(() => new WidgetStyleRectOffset(Writable.overflow)));
+            AddSuffix("MARGIN", new Suffix<WidgetStyleRectOffset>(() => CreateWidgetStyleRectOffsetSuffix(Writable.margin, ref margin)));
+            AddSuffix("PADDING", new Suffix<WidgetStyleRectOffset>(() => CreateWidgetStyleRectOffsetSuffix(Writable.padding, ref padding)));
+            AddSuffix("BORDER", new Suffix<WidgetStyleRectOffset>(() => CreateWidgetStyleRectOffsetSuffix(Writable.border, ref border)));
+            AddSuffix("OVERFLOW", new Suffix<WidgetStyleRectOffset>(() => CreateWidgetStyleRectOffsetSuffix(Writable.overflow, ref overflow)));
 
             AddSuffix("WIDTH", new SetSuffix<ScalarValue>(() => ReadOnly.fixedWidth, value => Writable.fixedWidth = value));
             AddSuffix("HEIGHT", new SetSuffix<ScalarValue>(() => ReadOnly.fixedHeight, value => Writable.fixedHeight = value));
@@ -58,14 +89,14 @@ namespace kOS.Suffixed.Widget
             AddSuffix("BG", new SetSuffix<StringValue>(() => "", value => Writable.normal.background = Widget.GetTexture(value)));
             AddSuffix("TEXTCOLOR", new SetSuffix<RgbaColor>(() => TextColor, value => TextColor = value));
 
-            AddSuffix("NORMAL", new Suffix<WidgetStyleState>(() => new WidgetStyleState(Writable.normal)));
-            AddSuffix("FOCUSED", new Suffix<WidgetStyleState>(() => new WidgetStyleState(Writable.focused)));
-            AddSuffix("ACTIVE", new Suffix<WidgetStyleState>(() => new WidgetStyleState(Writable.active)));
-            AddSuffix("HOVER", new Suffix<WidgetStyleState>(() => new WidgetStyleState(Writable.hover)));
-            AddSuffix(new[] { "ON", "NORMAL_ON" }, new Suffix<WidgetStyleState>(() => new WidgetStyleState(Writable.onNormal)));
-            AddSuffix("FOCUSED_ON", new Suffix<WidgetStyleState>(() => new WidgetStyleState(Writable.onFocused)));
-            AddSuffix("ACTIVE_ON", new Suffix<WidgetStyleState>(() => new WidgetStyleState(Writable.onActive)));
-            AddSuffix("HOVER_ON", new Suffix<WidgetStyleState>(() => new WidgetStyleState(Writable.onHover)));
+            AddSuffix("NORMAL", new Suffix<WidgetStyleState>(() => CreateWidgetStyleStateSuffix(Writable.normal, ref normal)));
+            AddSuffix("FOCUSED", new Suffix<WidgetStyleState>(() => CreateWidgetStyleStateSuffix(Writable.focused, ref focused)));
+            AddSuffix("ACTIVE", new Suffix<WidgetStyleState>(() => CreateWidgetStyleStateSuffix(Writable.active, ref active)));
+            AddSuffix("HOVER", new Suffix<WidgetStyleState>(() => CreateWidgetStyleStateSuffix(Writable.hover, ref hover)));
+            AddSuffix(new[] { "ON", "NORMAL_ON" }, new Suffix<WidgetStyleState>(() => CreateWidgetStyleStateSuffix(Writable.onNormal, ref onNormal)));
+            AddSuffix("FOCUSED_ON", new Suffix<WidgetStyleState>(() => CreateWidgetStyleStateSuffix(Writable.onFocused, ref onFocused)));
+            AddSuffix("ACTIVE_ON", new Suffix<WidgetStyleState>(() => CreateWidgetStyleStateSuffix(Writable.onActive, ref onActive)));
+            AddSuffix("HOVER_ON", new Suffix<WidgetStyleState>(() => CreateWidgetStyleStateSuffix(Writable.onHover, ref onHover)));
 
             AddSuffix("FONT", new SetSuffix<StringValue>(GetFont, SetFont));
             AddSuffix("FONTSIZE", new SetSuffix<ScalarIntValue>(() => ReadOnly.fontSize, value => Writable.fontSize = value));
