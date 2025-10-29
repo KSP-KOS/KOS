@@ -9,7 +9,7 @@ on:
 
 jobs:
   create-release:
-    uses: KSPModdingLibs/KSPBuildTools/.github/workflows/create-release.yml@main
+    uses: KSPModdingLibs/KSPBuildTools/.github/workflows/create-release.yml@0.0.4
     with:
       version-string: ${{ inputs.version-string }}
       artifacts: Resources/GameData LICENSE* README* CHANGELOG*
