@@ -728,7 +728,7 @@ namespace kOS.Safe.Compilation
             Structure value = PopStructureAssertEncapsulated(cpu);
             if (ident != null)
             {
-                cpu.SetValue(ident, value);
+                cpu.SetNewLocal(ident, value);
             }
         }
     }

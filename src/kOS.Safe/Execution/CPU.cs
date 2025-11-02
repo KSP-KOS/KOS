@@ -914,8 +914,7 @@ namespace kOS.Safe.Execution
 
         /// <summary>
         /// Try to make a new local variable at the localmost scoping level and
-        /// give it a starting value.  It errors out of there is already one there
-        /// by the same name.<br/>
+        /// give it a starting value.<br/>
         /// <br/>
         /// This does NOT scan up the scoping stack like SetValue() does.
         /// It operates at the local level only.<br/>
