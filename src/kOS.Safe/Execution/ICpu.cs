@@ -19,6 +19,7 @@ namespace kOS.Safe.Execution
         object PopValueArgument(bool barewordOkay = false);
         object PeekValueArgument(int digDepth, bool barewordOkay = false);
         object PeekRawArgument(int digDepth, out bool checkOkay);
+        void PokeArgumentStack(int digDepth, object item, out bool checkOkay);
         object PeekRawScope(int digDepth, out bool checkOkay);
         object PopValueEncapsulatedArgument(bool barewordOkay = false);
         object PeekValueEncapsulatedArgument(int digDepth, bool barewordOkay = false);

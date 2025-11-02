@@ -1143,6 +1143,17 @@ namespace kOS.Safe.Execution
         }
 
         /// <summary>
+        /// Poke a value into the argument stack without evaluating it to get the variable's value.
+        /// </summary>
+        /// <param name="digDepth">Poke the element this far down the stack (0 means top, 1 means just under the top, etc)</param>
+        /// <param name="item">The object to write to that depth</param>
+        /// <param name="checkOkay">Tells you whether or not the stack was exhausted.  If it's false, then the poke went too deep.</param>
+        public void PokeArgumentStack(int digDepth, object item, out bool checkOkay)
+        {
+            checkOkay = stack.PokeCheckArgument(digDepth, item);
+        }
+
+        /// <summary>
         /// Peek at a value atop the scope stack without popping it.
         /// </summary>
         /// <param name="digDepth">Peek at the element this far down the stack (0 means top, 1 means just under the top, etc)</param>
