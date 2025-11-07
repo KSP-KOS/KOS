@@ -92,8 +92,9 @@ namespace kOS.Safe.Compilation
         POKE           = 0x65,
         STORENAME      = 0x66,
         ALLOCATE       = 0x67,
-        INSTPTR        = 0x68,
-        STACKPTR       = 0x69,
+        DEALLOCATE     = 0x68,
+        INSTPTR        = 0x69,
+        STACKPTR       = 0x6A,
 
         // Augmented bogus placeholder versions of the normal
         // opcodes: These only exist in the program temporarily
@@ -2480,6 +2481,47 @@ namespace kOS.Safe.Compilation
             for (int i = 0; i < Count; i++)
             {
                 cpu.PushArgumentStack(nul);
+            }
+        }
+    }
+
+    /// <summary>
+    /// <para>
+    /// Pops N entries from the stack, quickly freeing the space that ALLOCATE has created
+    /// </para>
+    /// <para></para>
+    /// <para>deallocate n</para>
+    /// <para>... null * N -- .. </para>
+    /// </summary>
+    public class OpcodeDeallocate : Opcode
+    {
+        protected override string Name { get { return "deallocate"; } }
+        public override ByteCode Code { get { return ByteCode.DEALLOCATE; } }
+
+        [MLField(0, false)]
+        public Int32 Count { get; set; }
+
+        public OpcodeDeallocate(int count)
+        {
+            Count = count;
+        }
+
+        protected OpcodeDeallocate()
+        {
+        }
+
+        public override void PopulateFromMLFields(List<object> fields)
+        {
+            if (fields == null || fields.Count < 1)
+                throw Exception("Saved field in ML file for OpcodeDeallocate seems to be missing.  Version mismatch?");
+            Count = (Int32)(fields[0]);
+        }
+
+        public override void Execute(ICpu cpu)
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                cpu.PopArgumentStack();
             }
         }
     }
