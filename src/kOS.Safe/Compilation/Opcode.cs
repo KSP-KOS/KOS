@@ -702,15 +702,14 @@ namespace kOS.Safe.Compilation
 
     /// <summary>
     /// <para>
-    /// Consumes the identifier atop the stack and
-    /// stores the value beneath the identifier into that
-    /// variable name <br/>
+    /// Consumes a value and identifier and stores the value
+    /// into that a local variable under that identifier<br/>
     /// Note that the ident atop the stack must be formatted like a variable
     /// name (i.e. have the leading '$').
     /// </para>
     /// <para></para>
     /// <para>storename</para>
-    /// <para>... value ident -- ...</para>
+    /// <para>... ident value -- ...</para>
     /// <para></para>
     /// </summary>
     public class OpcodeStoreName : Opcode
@@ -724,8 +723,8 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            string ident = Convert.ToString(cpu.PopArgumentStack());
             Structure value = PopStructureAssertEncapsulated(cpu);
+            string ident = Convert.ToString(cpu.PopArgumentStack());
             if (ident != null)
             {
                 cpu.SetNewLocal(ident, value);
@@ -2394,12 +2393,12 @@ namespace kOS.Safe.Compilation
 
     /// <summary>
     /// <para>
-    /// Pops an index/pointer and a value from the stack and pokes the value into that stack slot.
+    /// Pops a value and an index/pointer from the stack and pokes the value into that stack slot.
     /// Default indexing is top-to-bottom, can be set to bottom-to-tob using the FromBottom MLField.
     /// </para>
     /// <para></para>
     /// <para>poke fromBottom</para>
-    /// <para>... val ptr -- ... val ...</para>
+    /// <para>... ptr val -- ... val ...</para>
     /// </summary>
     public class OpcodePoke : Opcode
     {
@@ -2427,8 +2426,8 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            int idx = Convert.ToInt32(cpu.PopValueArgument());
             object value = cpu.PopArgumentStack();
+            int idx = Convert.ToInt32(cpu.PopValueArgument());
 
             int depth = FromBottom
                 ? cpu.GetArgumentStackSize() - 1 - idx
