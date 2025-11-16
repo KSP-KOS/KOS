@@ -8,7 +8,6 @@ using kOS.Safe.Execution;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
 using kOS.Safe.Persistence;
-using kOS.Safe.Compilation.KS;
 
 namespace kOS.Safe.Compilation
 {
