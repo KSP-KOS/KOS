@@ -970,7 +970,7 @@ namespace kOS.Safe.Compilation
         {
         }
 
-        public OpcodeAssertRange(int min, int max)
+        public OpcodeAssertRange(double min, double max)
         {
             MinValue = min;
             MaxValue = max;
