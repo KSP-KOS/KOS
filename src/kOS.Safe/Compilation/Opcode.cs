@@ -962,9 +962,9 @@ namespace kOS.Safe.Compilation
         public override ByteCode Code { get { return ByteCode.ASSERTRANGE; } }
 
         [MLField(0, false)]
-        public double MinValue { get; set; }
+        public double? MinValue { get; set; }
         [MLField(1, false)]
-        public double MaxValue { get; set; }
+        public double? MaxValue { get; set; }
 
         protected OpcodeAssertRange()
         {
@@ -980,8 +980,8 @@ namespace kOS.Safe.Compilation
         {
             if (fields == null || fields.Count < 2)
                 throw new Exception(String.Format("Saved field in ML file for OpcodeAssertRange seems to be missing.  Version mismatch?"));
-            MinValue = Convert.ToDouble(fields[0]);
-            MaxValue = Convert.ToDouble(fields[1]);
+            MinValue = !(fields[0] is PseudoNull) ? Convert.ToDouble(fields[0]) : (double?)null;
+            MaxValue = !(fields[1] is PseudoNull) ? Convert.ToDouble(fields[1]) : (double?)null;
         }
 
         public override void Execute(ICpu cpu)
@@ -995,8 +995,14 @@ namespace kOS.Safe.Compilation
             
             double actual = scalar.GetDoubleValue();
 
-            if (actual < MinValue || actual > MaxValue)
-                throw new KOSException("Value ({0}) out of range ({1}..{2})", actual, MinValue, MaxValue);
+            if ((MinValue.HasValue && actual < MinValue.Value) ||
+                (MaxValue.HasValue && actual > MaxValue.Value))
+            {
+                throw new KOSException(
+                    $"assertrange failed: value {value} not in range " +
+                    $"[{MinValue?.ToString() ?? "-infinity"}, {MaxValue?.ToString() ?? "infinity"}]"
+                );
+            }
         }
     }
 
