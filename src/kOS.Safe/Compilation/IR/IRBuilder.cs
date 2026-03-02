@@ -1,0 +1,272 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace kOS.Safe.Compilation.IR
+{
+    public class IRBuilder
+    {
+        private int nextTempId = 0;
+
+        public List<BasicBlock> Blocks { get; } = new List<BasicBlock>();
+
+        public void Lower(List<Opcode> code)
+        {
+            if (code.Count == 0)
+                return;
+            Dictionary<string, int> labels = ProgramBuilder.MapLabels(code);
+            CreateBlocks(code, labels);
+            FillBlocks(code, labels);
+        }
+
+        private void CreateBlocks(List<Opcode> code, Dictionary<string, int> labels)
+        {
+            SortedSet<int> leaders = new SortedSet<int>() { 0 };
+            for (int i = 1; i < code.Count; i++)    // The first instruction is always a leader so we can skip 0.
+            {
+                if (code[i] is BranchOpcode branch)
+                {
+                    leaders.Add(i + 1);
+                    if (branch.DestinationLabel != string.Empty)
+                        leaders.Add(labels[branch.DestinationLabel]);
+                    else
+                        leaders.Add(i + branch.Distance);
+                }
+                else if (code[i] is OpcodeJumpStack jumpstack)
+                {
+                    throw new NotImplementedException("OpcodeJumpStack is not implemented for optimization because it is non-deterministic. Use OptimizationLevel.None.");
+                }
+                else if (code[i] is OpcodeReturn)
+                {
+                    leaders.Add(i + 1);
+                }
+                //else if (code[i] is OpcodePushRelocateLater relocateLater)
+                //{
+                    //leaders.Add(labels[relocateLater.DestinationLabel]);
+                //}
+            }
+            leaders.Add(code.Count);
+            foreach (int startIndex in leaders.Take(leaders.Count - 1))
+            {
+                int endIndex = leaders.First(i => i > startIndex) - 1;
+                BasicBlock block = new BasicBlock(startIndex, endIndex, Blocks.Count);
+                Blocks.Add(block);
+            }
+            foreach (BasicBlock block in Blocks)
+            {
+                Opcode lastOpcode = code[block.EndIndex];
+                if (lastOpcode is BranchOpcode branch)
+                {
+                    int destinationIndex = branch.DestinationLabel != string.Empty ? labels[branch.DestinationLabel] : block.EndIndex + branch.Distance;
+                    Blocks.First(b => b.StartIndex == destinationIndex).Predecessors.Add(block);
+                    if (!(branch is OpcodeBranchJump))
+                        Blocks.First(b => b.StartIndex == block.EndIndex + 1).Predecessors.Add(block);
+                }
+#if DEBUG
+                block.OriginalOpcodes = code.ToArray();
+#endif
+            }
+        }
+
+        private void FillBlocks(List<Opcode> code, Dictionary<string, int> labels)
+        {
+            Stack<IRValue> stack = new Stack<IRValue>();
+            BasicBlock currentBlock = Blocks.First(b => b.StartIndex == 0);
+            for (int i = 0; i < code.Count; i++)
+            {
+                if (i > currentBlock.EndIndex)
+                {
+                    currentBlock.SetStackState(stack);
+                    currentBlock = Blocks.First(b => b.StartIndex == i);
+                }
+                ParseInstruction(code[i], currentBlock, stack, labels, i);
+            }
+        }
+
+        private IRTemp CreateTemp()
+        {
+            IRTemp result = new IRTemp(nextTempId);
+            nextTempId++;
+            return result;
+        }
+
+        private void ParseInstruction(Opcode opcode, BasicBlock currentBlock, Stack<IRValue> stack, Dictionary<string, int> labels, int index)
+        {
+            HashSet<string> variables = new HashSet<string>();
+            switch (opcode)
+            {
+                case OpcodeStore store:
+                    IRAssign assignment = new IRAssign(store, stack.Pop()) { Scope = IRAssign.StoreScope.Ambivalent };
+                    variables.Add(assignment.Target);
+                    currentBlock.Add(assignment);
+                    break;
+                case OpcodeStoreExist storeExist:
+                    assignment = new IRAssign(storeExist, stack.Pop()) { AssertExists = true };
+                    variables.Add(assignment.Target);
+                    currentBlock.Add(assignment);
+                    break;
+                case OpcodeStoreLocal storeLocal:
+                    assignment = new IRAssign(storeLocal, stack.Pop()) { Scope = IRAssign.StoreScope.Local };
+                    currentBlock.Add(assignment);
+                    variables.Add(assignment.Target);
+                    break;
+                case OpcodeStoreGlobal storeGlobal:
+                    assignment = new IRAssign(storeGlobal, stack.Pop()) { Scope = IRAssign.StoreScope.Global };
+                    currentBlock.Add(assignment);
+                    variables.Add(assignment.Target);
+                    break;
+                case OpcodeExists exists:
+                    IRTemp temp = CreateTemp();
+                    IRInstruction instruction = new IRUnaryOp(temp, exists, stack.Pop());
+                    temp.Parent = instruction;
+                    //currentBlock.Add(instruction);
+                    stack.Push(temp);
+                    break;
+                case OpcodeUnset unset:
+                    currentBlock.Add(new IRUnaryConsumer(unset, stack.Pop(), true));
+                    break;
+                case OpcodeGetMethod getMethod:
+                    temp = CreateTemp();
+                    instruction = new IRSuffixGetMethod(temp, stack.Pop(), getMethod);
+                    //currentBlock.Add(instruction);
+                    temp.Parent = instruction;
+                    stack.Push(temp);
+                    break;
+                case OpcodeGetMember getMember:
+                    temp = CreateTemp();
+                    instruction = new IRSuffixGet(temp, stack.Pop(), getMember);
+                    temp.Parent = instruction;
+                    //currentBlock.Add(instruction);
+                    stack.Push(temp);
+                    break;
+                case OpcodeSetMember setMember:
+                    IRValue value = stack.Pop();
+                    IRValue memberObj = stack.Pop();
+                    currentBlock.Add(new IRSuffixSet(memberObj, value, setMember));
+                    break;
+                case OpcodeGetIndex _:
+                    IRValue targetIndex = stack.Pop();
+                    IRValue indexObj = stack.Pop();
+                    temp = CreateTemp();
+                    instruction = new IRIndexGet(temp, indexObj, targetIndex);
+                    //currentBlock.Add(instruction);
+                    temp.Parent = instruction;
+                    stack.Push(temp);
+                    break;
+                case OpcodeSetIndex _:
+                    value = stack.Pop();
+                    targetIndex = stack.Pop();
+                    indexObj = stack.Pop();
+                    currentBlock.Add(new IRIndexSet(indexObj, targetIndex, value));
+                    break;
+                case OpcodeEOF _:
+                case OpcodeEOP _:
+                case OpcodeNOP _:
+                case OpcodeBogus _:
+                case OpcodePushScope _:
+                case OpcodePopScope _:
+                    currentBlock.Add(new IRNoStackInstruction(opcode));
+                    break;
+                case OpcodeBranchIfTrue branchIfTrue:
+                    currentBlock.Add(new IRBranch(stack.Pop(),
+                        Blocks.First(b => b.StartIndex == labels[branchIfTrue.DestinationLabel]),
+                        Blocks.First(b => b.StartIndex == currentBlock.EndIndex + 1)));
+                    break;
+                case OpcodeBranchIfFalse branchIfFalse:
+                    currentBlock.Add(new IRBranch(stack.Pop(),
+                        Blocks.First(b => b.StartIndex == currentBlock.EndIndex + 1),
+                        Blocks.First(b => b.StartIndex == labels[branchIfFalse.DestinationLabel]))
+                        { PreferFalse = true });
+                    break;
+                case OpcodeBranchJump branchJump:
+                    int destinationIndex = branchJump.DestinationLabel != string.Empty ? labels[branchJump.DestinationLabel] : index + branchJump.Distance;
+                    if (branchJump.DestinationLabel == string.Empty)
+                    {
+                        // TODO
+                        bool test = index == currentBlock.EndIndex;
+                    }
+                    currentBlock.Add(new IRJump(Blocks.First(b => b.StartIndex == destinationIndex)));
+                    break;
+                case OpcodeJumpStack _:
+                    throw new NotImplementedException("OpcodeJumpStack is not implemented for optimization because it is non-deterministic. Use OptimizationLevel.None.");
+                case OpcodeCompareGT _:
+                case OpcodeCompareLT _:
+                case OpcodeCompareGTE _:
+                case OpcodeCompareLTE _:
+                case OpcodeCompareNE _:
+                case OpcodeCompareEqual _:
+                case OpcodeMathAdd _:
+                case OpcodeMathSubtract _:
+                case OpcodeMathMultiply _:
+                case OpcodeMathDivide _:
+                case OpcodeMathPower _:
+                    temp = CreateTemp();
+                    IRValue right = stack.Pop();
+                    IRValue left = stack.Pop();
+                    instruction = new IRBinaryOp(temp, (BinaryOpcode)opcode, left, right);
+                    //currentBlock.Add(instruction);
+                    temp.Parent = instruction;
+                    stack.Push(temp);
+                    break;
+                case OpcodeMathNegate _:
+                case OpcodeLogicToBool _:
+                case OpcodeLogicNot _:
+                    temp = CreateTemp();
+                    instruction = new IRUnaryOp(temp, opcode, stack.Pop());
+                    temp.Parent = instruction;
+                    //currentBlock.Add(instruction);
+                    stack.Push(temp);
+                    break;
+                case OpcodeCall call:
+                    temp = CreateTemp();
+                    Stack<IRValue> arguments = new Stack<IRValue>();
+                    bool hasArgmarker = stack.Count > 0;   // Not even an argument marker on the stack - the dominator block must have it
+                    while (stack.Count > 0)
+                    {
+                        IRValue stackResult = stack.Pop();
+                        if (stackResult is IRConstant constant && constant.Value is Execution.KOSArgMarkerType)
+                            break;
+                        arguments.Push(stackResult);
+                    }
+                    instruction = new IRCall(temp, call, hasArgmarker, arguments);
+                    if (stack.Count > 0 && !((IRCall)instruction).Direct)
+                    {
+                        ((IRCall)instruction).IndirectMethod = stack.Pop();
+                    }
+                    temp.Parent = instruction;
+                    currentBlock.Add(instruction);
+                    stack.Push(temp);
+                    break;
+                case OpcodeReturn opcodeReturn:
+                    currentBlock.Add(new IRReturn(opcodeReturn.Depth) { Value = stack.Pop() });
+                    break;
+                case OpcodePush opcodePush:
+                    object argument = opcodePush.Argument;
+                    if (argument is string identifier && identifier.StartsWith("$"))
+                        stack.Push(new IRVariable(identifier));
+                    else
+                        stack.Push(new IRConstant(argument));
+                    break;
+                case OpcodePushDelegateRelocateLater delegateRelocateLater:
+                    stack.Push(new IRDelegateRelocateLater(delegateRelocateLater.DestinationLabel, delegateRelocateLater.WithClosure));
+                    break;
+                case OpcodePushRelocateLater relocateLater:
+                    stack.Push(new IRRelocateLater(relocateLater.DestinationLabel));
+                    break;
+                case OpcodeAddTrigger _:
+                case OpcodeRemoveTrigger _:
+                    currentBlock.Add(new IRUnaryConsumer(opcode, stack.Pop(), false));
+                    break;
+                case OpcodeWait _:
+                    currentBlock.Add(new IRUnaryConsumer(opcode, stack.Pop(), true));
+                    break;
+                case OpcodePop pop:
+                    stack.Pop();
+                    currentBlock.Add(new IRPop());
+                    break;
+                default:
+                    throw new NotImplementedException($"The Opcode of type {opcode.GetType()} is not implemented.");
+            }
+        }
+    }
+}

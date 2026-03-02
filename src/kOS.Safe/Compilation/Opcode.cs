@@ -2004,7 +2004,7 @@ namespace kOS.Safe.Compilation
     public class OpcodePush : Opcode
     {
         [MLField(1,false)]
-        private object Argument { get; set; }
+        public object Argument { get; private set; }
 
         protected override string Name { get { return "push"; } }
         public override ByteCode Code { get { return ByteCode.PUSH; } }
