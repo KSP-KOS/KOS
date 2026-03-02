@@ -39,6 +39,7 @@ namespace kOS.Safe.Test.Execution
         private SafeSharedObjects shared;
         private Screen screen;
         private string baseDir;
+        protected virtual OptimizationLevel OptimizationLevel => OptimizationLevel.None;
 
         private string FindKerboscriptTests()
         {
@@ -86,7 +87,8 @@ namespace kOS.Safe.Test.Execution
                 IsCalledFromRun = false,
                 FuncManager = shared.FunctionManager,
                 BindManager = shared.BindingMgr,
-                AllowClobberBuiltins = SafeHouse.Config.AllowClobberBuiltIns
+                AllowClobberBuiltins = SafeHouse.Config.AllowClobberBuiltIns,
+                OptimizationLevel = OptimizationLevel
             });
             cpu.Boot();
 
