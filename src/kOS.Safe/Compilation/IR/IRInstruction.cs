@@ -5,15 +5,36 @@ namespace kOS.Safe.Compilation.IR
 {
     public abstract class IRInstruction
     {
+        public short SourceLine { get; } // line number in the source code that this was compiled from.
+        public short SourceColumn { get; }  // column number of the token nearest the cause of this Opcode.
+
         // Should-be-static
         public abstract bool SideEffects { get; }
         internal abstract IEnumerable<Opcode> EmitOpcode();
+        protected IRInstruction(Opcode originalOpcode)
+        {
+            SourceLine = originalOpcode.SourceLine;
+            SourceColumn = originalOpcode.SourceColumn;
+        }
+        protected Opcode SetSourceLocation(Opcode opcode)
+        {
+            if (opcode == null)
+                return opcode;
+            opcode.SourceLine = SourceLine;
+            opcode.SourceColumn = SourceColumn;
+            return opcode;
+        }
     }
     public abstract class IRInteractsInstruction : IRInstruction
     {
         public override bool SideEffects { get; }
-        public IRInteractsInstruction(IRValue interactor)
+        protected IRInteractsInstruction(IRValue interactor, Opcode originalOpcode) : base(originalOpcode)
         {
+            if (interactor is IRConstant)
+            {
+                SideEffects = false;
+                return;
+            }
             switch (interactor.Type)
             {
                 case IRValue.ValueType.Value:
@@ -38,32 +59,31 @@ namespace kOS.Safe.Compilation.IR
         public IRValue Value { get; }
         public StoreScope Scope { get; set; } = StoreScope.Ambivalent;
         public bool AssertExists { get; set; } = false;
-        public IRAssign(string target, IRValue value)
+        public IRAssign(OpcodeIdentifierBase opcode, IRValue value) : base(opcode)
         {
-            Target = target;
+            Target = opcode.Identifier;
             Value = value;
         }
-        public IRAssign(OpcodeIdentifierBase opcode, IRValue value) : this(opcode.Identifier, value) { }
         internal override IEnumerable<Opcode> EmitOpcode()
         {
             foreach (Opcode opcode in Value.EmitPush())
                 yield return opcode;
             if (AssertExists)
             {
-                yield return new OpcodeStoreExist(Target);
+                yield return SetSourceLocation(new OpcodeStoreExist(Target));
                 yield break;
             }
             switch (Scope)
             {
                 case StoreScope.Local:
-                    yield return new OpcodeStoreLocal(Target);
+                    yield return SetSourceLocation(new OpcodeStoreLocal(Target));
                     yield break;
                 case StoreScope.Global:
-                    yield return new OpcodeStoreGlobal(Target);
+                    yield return SetSourceLocation(new OpcodeStoreGlobal(Target));
                     yield break;
                 default:
                 case StoreScope.Ambivalent:
-                    yield return new OpcodeStore(Target);
+                    yield return SetSourceLocation(new OpcodeStore(Target));
                     yield break;
             }
         }
@@ -78,7 +98,7 @@ namespace kOS.Safe.Compilation.IR
         public IRValue Left { get; protected set; }
         public IRValue Right { get; protected set; }
         public bool Commutative { get; }
-        public IRBinaryOp(IRTemp result, BinaryOpcode operation, IRValue left, IRValue right)
+        public IRBinaryOp(IRTemp result, BinaryOpcode operation, IRValue left, IRValue right) : base(operation)
         {
             Result = result;
             Operation = operation;
@@ -121,7 +141,7 @@ namespace kOS.Safe.Compilation.IR
             foreach (Opcode opcode in Right.EmitPush())
                 yield return opcode;
             Operation.Label = string.Empty;
-            yield return Operation;
+            yield return SetSourceLocation(Operation);
         }
         public override string ToString()
             => Operation.ToString();
@@ -132,7 +152,7 @@ namespace kOS.Safe.Compilation.IR
         public IRTemp Result { get; }
         public Opcode Operation { get; }
         public IRValue Operand { get; }
-        public IRUnaryOp(IRTemp result, Opcode operation, IRValue operand)
+        public IRUnaryOp(IRTemp result, Opcode operation, IRValue operand) : base(operation)
         {
             Result = result;
             Operation = operation;
@@ -152,7 +172,7 @@ namespace kOS.Safe.Compilation.IR
     {
         public override bool SideEffects => false;
         public Opcode Operation { get; }
-        public IRNoStackInstruction(Opcode opcode)
+        public IRNoStackInstruction(Opcode opcode) : base(opcode)
             => Operation = opcode;
         internal override IEnumerable<Opcode> EmitOpcode()
         {
@@ -167,7 +187,7 @@ namespace kOS.Safe.Compilation.IR
         public override bool SideEffects { get; }
         public Opcode Operation { get; }
         public IRValue Operand { get; }
-        public IRUnaryConsumer(Opcode opcode, IRValue operand, bool sideEffects = false)
+        public IRUnaryConsumer(Opcode opcode, IRValue operand, bool sideEffects = false) : base(opcode)
         {
             Operation = opcode;
             Operand = operand;
@@ -186,9 +206,17 @@ namespace kOS.Safe.Compilation.IR
     public class IRPop : IRInstruction
     {
         public override bool SideEffects => false;
+        public IRValue Value { get; }
+        public IRPop(IRValue value, OpcodePop opcode) : base(opcode)
+            => Value = value;
+
         internal override IEnumerable<Opcode> EmitOpcode()
         {
-            yield return new OpcodePop();
+            if (Value is IRConstant || (Value is IRVariable && !(Value is IRTemp)))
+                yield break;
+            foreach (Opcode opcode in Value.EmitPush())
+                yield return opcode;
+            yield return SetSourceLocation(new OpcodePop());
         }
         public override string ToString()
             => "{pop}";
@@ -197,7 +225,7 @@ namespace kOS.Safe.Compilation.IR
     {
         public override bool SideEffects => false;
         public Opcode Operation { get; }
-        public IRNonVarPush(Opcode opcode)
+        public IRNonVarPush(Opcode opcode) : base(opcode)
             => Operation = opcode;
         internal override IEnumerable<Opcode> EmitOpcode()
         {
@@ -212,18 +240,17 @@ namespace kOS.Safe.Compilation.IR
         public IRTemp Result { get; }
         public IRValue Object {  get; }
         public string Suffix { get; }
-        public IRSuffixGet(IRTemp result, IRValue obj, string suffix) : base(obj)
+        public IRSuffixGet(IRTemp result, IRValue obj, OpcodeGetMember opcodeGetMember) : base(obj, opcodeGetMember)
         {
             Result = result;
             Object = obj;
-            Suffix = suffix;
+            Suffix = opcodeGetMember.Identifier;
         }
-        public IRSuffixGet(IRTemp result, IRValue obj, OpcodeGetMember opcode) : this(result, obj, opcode.Identifier) { }
         internal override IEnumerable<Opcode> EmitOpcode()
         {
             foreach (Opcode opcode in Object.EmitPush())
                 yield return opcode;
-            yield return new OpcodeGetMember(Suffix);
+            yield return SetSourceLocation(new OpcodeGetMember(Suffix));
         }
         public override string ToString()
             => string.Format("{{gmb \"{0}\"}}", Suffix);
@@ -231,13 +258,12 @@ namespace kOS.Safe.Compilation.IR
     public class IRSuffixGetMethod : IRSuffixGet
     {
         public override bool SideEffects => false;
-        public IRSuffixGetMethod(IRTemp result, IRValue obj, string suffix) : base(result, obj, suffix) { }
-        public IRSuffixGetMethod(IRTemp result, IRValue obj, OpcodeGetMethod opcode) : this(result, obj, opcode.Identifier) { }
+        public IRSuffixGetMethod(IRTemp result, IRValue obj, OpcodeGetMethod opcode) : base(result, obj, opcode) { }
         internal override IEnumerable<Opcode> EmitOpcode()
         {
             foreach (Opcode opcode in Object.EmitPush())
                 yield return opcode;
-            yield return new OpcodeGetMethod(Suffix);
+            yield return SetSourceLocation(new OpcodeGetMethod(Suffix));
         }
         public override string ToString()
             => string.Format("{{gmet \"{0}\"}}", Suffix);
@@ -248,20 +274,19 @@ namespace kOS.Safe.Compilation.IR
         public IRValue Object { get; }
         public IRValue Value { get; }
         public string Suffix { get; }
-        public IRSuffixSet(IRValue obj, IRValue value, string suffix) : base(obj)
+        public IRSuffixSet(IRValue obj, IRValue value, OpcodeSetMember opcodeSetMember) : base(obj, opcodeSetMember)
         {
             Object = obj;
             Value = value;
-            Suffix = suffix;
+            Suffix = opcodeSetMember.Identifier;
         }
-        public IRSuffixSet(IRValue obj, IRValue value, OpcodeSetMember opcode) : this(obj, value, opcode.Identifier) { }
         internal override IEnumerable<Opcode> EmitOpcode()
         {
             foreach (Opcode opcode in Object.EmitPush())
                 yield return opcode;
             foreach (Opcode opcode in Value.EmitPush())
                 yield return opcode;
-            yield return new OpcodeSetMember(Suffix);
+            yield return SetSourceLocation(new OpcodeSetMember(Suffix));
         }
         public override string ToString()
             => string.Format("{{smb \"{0}\"}}", Suffix);
@@ -272,7 +297,7 @@ namespace kOS.Safe.Compilation.IR
         public IRValue Result { get; }
         public IRValue Object { get; }
         public IRValue Index { get; }
-        public IRIndexGet(IRValue result, IRValue obj, IRValue index)
+        public IRIndexGet(IRTemp result, IRValue obj, IRValue index, OpcodeGetIndex opcode) : base(opcode)
         {
             Result = result;
             Object = obj;
@@ -284,7 +309,7 @@ namespace kOS.Safe.Compilation.IR
                 yield return opcode;
             foreach (Opcode opcode in Index.EmitPush())
                 yield return opcode;
-            yield return new OpcodeGetIndex();
+            yield return SetSourceLocation(new OpcodeGetIndex());
         }
         public override string ToString()
             => "{gidx}";
@@ -295,7 +320,7 @@ namespace kOS.Safe.Compilation.IR
         public IRValue Object { get; }
         public IRValue Index { get; }
         public IRValue Value { get; }
-        public IRIndexSet(IRValue obj, IRValue index, IRValue value)
+        public IRIndexSet(IRValue obj, IRValue index, IRValue value, OpcodeSetIndex opcode) : base(opcode)
         {
             Object = obj;
             Index = index;
@@ -309,7 +334,7 @@ namespace kOS.Safe.Compilation.IR
                 yield return opcode;
             foreach (Opcode opcode in Value.EmitPush())
                 yield return opcode;
-            yield return new OpcodeSetIndex();
+            yield return SetSourceLocation(new OpcodeSetIndex());
         }
         public override string ToString()
             => "{sidx}";
@@ -318,13 +343,15 @@ namespace kOS.Safe.Compilation.IR
     {
         public override bool SideEffects => false;
         public BasicBlock Target { get; }
-        public IRJump(BasicBlock target)
+        public IRJump(BasicBlock target, OpcodeBranchJump opcode) : base(opcode)
         {
             Target = target;
         }
+        public IRJump(BasicBlock target, short sourceLine, short sourceColumn)
+            : this(target, new OpcodeBranchJump() { SourceLine = sourceLine, SourceColumn = sourceColumn }) { }
         internal override IEnumerable<Opcode> EmitOpcode()
         {
-            yield return new OpcodeBranchJump() { DestinationLabel = Target.Label };
+            yield return SetSourceLocation(new OpcodeBranchJump() { DestinationLabel = Target.Label });
         }
         public override string ToString()
             => string.Format("{{jump {0}}}", Target.Label);
@@ -334,7 +361,7 @@ namespace kOS.Safe.Compilation.IR
         public override bool SideEffects => false;
         public IRValue Distance { get; }
         public List<BasicBlock> Targets { get; } = new List<BasicBlock>();
-        public IRJumpStack(IRValue distance, IEnumerable<BasicBlock> targets)
+        public IRJumpStack(IRValue distance, IEnumerable<BasicBlock> targets, OpcodeJumpStack jumpStack) : base(jumpStack)
         {
             Distance = distance;
             Targets.AddRange(targets);
@@ -343,7 +370,7 @@ namespace kOS.Safe.Compilation.IR
         {
             foreach (Opcode opcode in Distance.EmitPush())
                 yield return opcode;
-            yield return new OpcodeJumpStack();
+            yield return SetSourceLocation(new OpcodeJumpStack());
         }
     }
     public class IRBranch : IRInstruction
@@ -353,11 +380,12 @@ namespace kOS.Safe.Compilation.IR
         public BasicBlock True { get; }
         public BasicBlock False { get; }
         public bool PreferFalse { get; set; } = false;
-        public IRBranch(IRValue condition, BasicBlock onTrue, BasicBlock onFalse)
+        public IRBranch(IRValue condition, BasicBlock onTrue, BasicBlock onFalse, BranchOpcode opcodeBranch) : base(opcodeBranch)
         {
             Condition = condition;
             True = onTrue;
             False = onFalse;
+            PreferFalse = opcodeBranch is OpcodeBranchIfFalse;
         }
         internal override IEnumerable<Opcode> EmitOpcode()
         {
@@ -365,13 +393,13 @@ namespace kOS.Safe.Compilation.IR
                 yield return opcode;
             if (PreferFalse)
             {
-                yield return new OpcodeBranchIfFalse() { DestinationLabel = False.Label };
-                yield return new OpcodeBranchJump() { DestinationLabel = True.Label };
+                yield return SetSourceLocation(new OpcodeBranchIfFalse() { DestinationLabel = False.Label });
+                yield return SetSourceLocation(new OpcodeBranchJump() { DestinationLabel = True.Label });
             }
             else
             {
-                yield return new OpcodeBranchIfTrue() { DestinationLabel = True.Label };
-                yield return new OpcodeBranchJump() { DestinationLabel = False.Label };
+                yield return SetSourceLocation(new OpcodeBranchIfTrue() { DestinationLabel = True.Label });
+                yield return SetSourceLocation(new OpcodeBranchJump() { DestinationLabel = False.Label });
             }
         }
         public override string ToString()
@@ -387,7 +415,7 @@ namespace kOS.Safe.Compilation.IR
         public IRValue IndirectMethod { get; internal set; }
         public bool Direct { get; }
         public bool EmitArgMarker;
-        private IRCall(IRTemp target, OpcodeCall opcode, bool emitArgMarker)
+        private IRCall(IRTemp target, OpcodeCall opcode, bool emitArgMarker) : base(opcode)
         {
             Target = target;
             Function = (string)opcode.Destination;
@@ -548,7 +576,7 @@ namespace kOS.Safe.Compilation.IR
                 foreach (Opcode opcode in argument.EmitPush())
                     yield return opcode;
             }
-            yield return new OpcodeCall(Function);
+            yield return SetSourceLocation(new OpcodeCall(Function));
         }
 
         public IRCall(IRTemp target, OpcodeCall opcode, bool emitArgMarker, IRValue argument) : this(target, opcode, emitArgMarker)
@@ -571,7 +599,7 @@ namespace kOS.Safe.Compilation.IR
         public override bool SideEffects => false;
         public IRValue Value { get; set; }
         public short Depth { get; internal set; }
-        public IRReturn(short depth)
+        public IRReturn(short depth, OpcodeReturn opcode) : base(opcode)
             => Depth = depth;
         internal override IEnumerable<Opcode> EmitOpcode()
         {
@@ -579,8 +607,8 @@ namespace kOS.Safe.Compilation.IR
                 foreach (Opcode opcode in Value.EmitPush())
                     yield return opcode;
             else
-                yield return new OpcodePush(null);
-            yield return new OpcodeReturn(Depth);
+                yield return SetSourceLocation(new OpcodePush(null));
+            yield return SetSourceLocation(new OpcodeReturn(Depth));
         }
         public override string ToString()
             => string.Format("{{ret {0}}}", Depth);

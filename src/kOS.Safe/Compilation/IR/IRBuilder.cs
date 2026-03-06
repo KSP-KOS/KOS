@@ -58,9 +58,15 @@ namespace kOS.Safe.Compilation.IR
                 if (lastOpcode is BranchOpcode branch)
                 {
                     int destinationIndex = branch.DestinationLabel != string.Empty ? labels[branch.DestinationLabel] : block.EndIndex + branch.Distance;
-                    Blocks.First(b => b.StartIndex == destinationIndex).Predecessors.Add(block);
+                    block.AddSuccessor(GetBlockFromStartIndex(destinationIndex));
                     if (!(branch is OpcodeBranchJump))
-                        Blocks.First(b => b.StartIndex == block.EndIndex + 1).Predecessors.Add(block);
+                        block.AddSuccessor(GetBlockFromStartIndex(block.EndIndex + 1));
+                }
+                else if (Blocks.Any(b => b.StartIndex == block.EndIndex + 1))
+                {
+                    BasicBlock successor = GetBlockFromStartIndex(block.EndIndex + 1);
+                    block.Add(new IRJump(successor, lastOpcode.SourceLine, lastOpcode.SourceColumn));
+                    block.AddSuccessor(successor);
                 }
 #if DEBUG
                 block.OriginalOpcodes = code.ToArray();
@@ -68,16 +74,19 @@ namespace kOS.Safe.Compilation.IR
             }
         }
 
+        private BasicBlock GetBlockFromStartIndex(int startIndex)
+            => Blocks.First(b => b.StartIndex == startIndex);
+
         private void FillBlocks(List<Opcode> code, Dictionary<string, int> labels)
         {
             Stack<IRValue> stack = new Stack<IRValue>();
-            BasicBlock currentBlock = Blocks.First(b => b.StartIndex == 0);
+            BasicBlock currentBlock = GetBlockFromStartIndex(0);
             for (int i = 0; i < code.Count; i++)
             {
                 if (i > currentBlock.EndIndex)
                 {
                     currentBlock.SetStackState(stack);
-                    currentBlock = Blocks.First(b => b.StartIndex == i);
+                    currentBlock = GetBlockFromStartIndex(i);
                 }
                 ParseInstruction(code[i], currentBlock, stack, labels, i);
             }
@@ -144,20 +153,20 @@ namespace kOS.Safe.Compilation.IR
                     IRValue memberObj = stack.Pop();
                     currentBlock.Add(new IRSuffixSet(memberObj, value, setMember));
                     break;
-                case OpcodeGetIndex _:
+                case OpcodeGetIndex getIndex:
                     IRValue targetIndex = stack.Pop();
                     IRValue indexObj = stack.Pop();
                     temp = CreateTemp();
-                    instruction = new IRIndexGet(temp, indexObj, targetIndex);
+                    instruction = new IRIndexGet(temp, indexObj, targetIndex, getIndex);
                     //currentBlock.Add(instruction);
                     temp.Parent = instruction;
                     stack.Push(temp);
                     break;
-                case OpcodeSetIndex _:
+                case OpcodeSetIndex setIndex:
                     value = stack.Pop();
                     targetIndex = stack.Pop();
                     indexObj = stack.Pop();
-                    currentBlock.Add(new IRIndexSet(indexObj, targetIndex, value));
+                    currentBlock.Add(new IRIndexSet(indexObj, targetIndex, value, setIndex));
                     break;
                 case OpcodeEOF _:
                 case OpcodeEOP _:
@@ -169,14 +178,15 @@ namespace kOS.Safe.Compilation.IR
                     break;
                 case OpcodeBranchIfTrue branchIfTrue:
                     currentBlock.Add(new IRBranch(stack.Pop(),
-                        Blocks.First(b => b.StartIndex == labels[branchIfTrue.DestinationLabel]),
-                        Blocks.First(b => b.StartIndex == currentBlock.EndIndex + 1)));
+                        GetBlockFromStartIndex(labels[branchIfTrue.DestinationLabel]),
+                        GetBlockFromStartIndex(currentBlock.EndIndex + 1),
+                        branchIfTrue));
                     break;
                 case OpcodeBranchIfFalse branchIfFalse:
                     currentBlock.Add(new IRBranch(stack.Pop(),
-                        Blocks.First(b => b.StartIndex == currentBlock.EndIndex + 1),
-                        Blocks.First(b => b.StartIndex == labels[branchIfFalse.DestinationLabel]))
-                        { PreferFalse = true });
+                        GetBlockFromStartIndex(currentBlock.EndIndex + 1),
+                        GetBlockFromStartIndex(labels[branchIfFalse.DestinationLabel]),
+                        branchIfFalse));
                     break;
                 case OpcodeBranchJump branchJump:
                     int destinationIndex = branchJump.DestinationLabel != string.Empty ? labels[branchJump.DestinationLabel] : index + branchJump.Distance;
@@ -185,7 +195,7 @@ namespace kOS.Safe.Compilation.IR
                         // TODO
                         bool test = index == currentBlock.EndIndex;
                     }
-                    currentBlock.Add(new IRJump(Blocks.First(b => b.StartIndex == destinationIndex)));
+                    currentBlock.Add(new IRJump(GetBlockFromStartIndex(destinationIndex), branchJump));
                     break;
                 case OpcodeJumpStack _:
                     throw new NotImplementedException("OpcodeJumpStack is not implemented for optimization because it is non-deterministic. Use OptimizationLevel.None.");
@@ -234,16 +244,15 @@ namespace kOS.Safe.Compilation.IR
                         ((IRCall)instruction).IndirectMethod = stack.Pop();
                     }
                     temp.Parent = instruction;
-                    currentBlock.Add(instruction);
                     stack.Push(temp);
                     break;
                 case OpcodeReturn opcodeReturn:
-                    currentBlock.Add(new IRReturn(opcodeReturn.Depth) { Value = stack.Pop() });
+                    currentBlock.Add(new IRReturn(opcodeReturn.Depth, opcodeReturn) { Value = stack.Pop() });
                     break;
                 case OpcodePush opcodePush:
                     object argument = opcodePush.Argument;
                     if (argument is string identifier && identifier.StartsWith("$"))
-                        stack.Push(new IRVariable(identifier));
+                        stack.Push(new IRVariable(identifier, false));
                     else
                         stack.Push(new IRConstant(argument));
                     break;
@@ -261,8 +270,7 @@ namespace kOS.Safe.Compilation.IR
                     currentBlock.Add(new IRUnaryConsumer(opcode, stack.Pop(), true));
                     break;
                 case OpcodePop pop:
-                    stack.Pop();
-                    currentBlock.Add(new IRPop());
+                    currentBlock.Add(new IRPop(stack.Pop(), pop));
                     break;
                 default:
                     throw new NotImplementedException($"The Opcode of type {opcode.GetType()} is not implemented.");

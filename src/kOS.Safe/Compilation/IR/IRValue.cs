@@ -75,7 +75,7 @@ namespace kOS.Safe.Compilation.IR
         public IRAssign PromoteToVariable()
         {
             isPromoted = true;
-            return new IRAssign(Name, this) { Scope = IRAssign.StoreScope.Local };
+            return new IRAssign(new OpcodeStoreLocal(Name), this) { Scope = IRAssign.StoreScope.Local };
         }
         internal override IEnumerable<Opcode> EmitPush()
         {

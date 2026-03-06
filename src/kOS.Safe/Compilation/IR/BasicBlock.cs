@@ -8,7 +8,8 @@ namespace kOS.Safe.Compilation.IR
         public int StartIndex { get; }
         public int EndIndex { get; }
         public List<IRInstruction> Instructions { get; } = new List<IRInstruction>();
-        public List<BasicBlock> Predecessors { get; } = new List<BasicBlock>();
+        protected internal readonly HashSet<BasicBlock> predecessors = new HashSet<BasicBlock>();
+        protected internal readonly HashSet<BasicBlock> sucessors = new HashSet<BasicBlock>();
         public string Label => $"@BB#{ID}";
         public int ID { get; }
         private readonly Stack<IRValue> exitStackState = new Stack<IRValue>();  // Note that this is reversed from the real stack. Just now we don't reverse it four times.
@@ -27,6 +28,16 @@ namespace kOS.Safe.Compilation.IR
         public void Add(IRInstruction instruction)
             => Instructions.Add(instruction);
 
+        public void AddSuccessor(BasicBlock successor)
+        {
+            sucessors.Add(successor);
+            successor.AddPredecessor(this);
+        }
+        protected void AddPredecessor(BasicBlock predecessor)
+        {
+            predecessors.Add(predecessor);
+        }
+
         public void SetStackState(Stack<IRValue> stack)
         {
             while (stack.Count > 0)
@@ -41,19 +52,16 @@ namespace kOS.Safe.Compilation.IR
         public IEnumerable<Opcode> EmitOpCodes()
         {
             bool first = true;
-            if (Instructions.Any())
+            foreach (IRInstruction instruction in Instructions.Take(Instructions.Count - 1))
             {
-                foreach (IRInstruction instruction in Instructions.Take(Instructions.Count - 1))
+                foreach (Opcode opcode in instruction.EmitOpcode())
                 {
-                    foreach (Opcode opcode in instruction.EmitOpcode())
+                    if (first)
                     {
-                        if (first)
-                        {
-                            opcode.Label = Label;
-                            first = false;
-                        }
-                        yield return opcode;
+                        opcode.Label = Label;
+                        first = false;
                     }
+                    yield return opcode;
                 }
             }
             foreach (IRValue stackValue in exitStackState)

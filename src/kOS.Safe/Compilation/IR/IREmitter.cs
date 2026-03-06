@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,20 +11,17 @@ namespace kOS.Safe.Compilation.IR
             Dictionary<string, int> jumpLabels = new Dictionary<string, int>();
             // Emit Opcodes for each block
             foreach (BasicBlock block in blocks)
-            {
-                jumpLabels.Add(block.Label, result.Count);
-                result.AddRange(block.EmitOpCodes());
-            }
+                LabelAndEmit(block, jumpLabels, result);
             // Remove single-line jumps from fallthrough blocks
-            for (int i = 0; i < result.Count; i++)
+            for (int i = 0; i < result.Count - 1; i++)
             {
                 Opcode opcode = result[i];
-                if (i < result.Count - 1 && opcode is OpcodeBranchJump jump &&
+                if (opcode is OpcodeBranchJump jump &&
                     jump.DestinationLabel != null && jump.DestinationLabel == result[i + 1].Label)
                 {
-                    foreach (BasicBlock block in blocks)
-                        if (jumpLabels[block.Label] >= i)
-                            jumpLabels[block.Label] = jumpLabels[block.Label] - 1;
+                    foreach (var key in jumpLabels.Keys.ToArray())
+                        if (jumpLabels[key] >= i)
+                            jumpLabels[key] = jumpLabels[key] - 1;
                     result.RemoveAt(i);
                     i--;
                 }
@@ -41,7 +37,13 @@ namespace kOS.Safe.Compilation.IR
             return result;
         }
 
+        private static void LabelAndEmit(BasicBlock block, Dictionary<string, int> jumpLabels, List<Opcode> result)
+        {
+            jumpLabels.Add(block.Label, result.Count);
+            result.AddRange(block.EmitOpCodes());
+        }
+
         private static string CreateLabel(int index)
-            => string.Format("@{0:0000}", index);
+            => string.Format("@{0:0000}", index);   // TODO: + 1
     }
 }
