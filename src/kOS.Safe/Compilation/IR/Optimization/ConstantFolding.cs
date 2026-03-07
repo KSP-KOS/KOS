@@ -6,15 +6,19 @@ using kOS.Safe.Function;
 
 namespace kOS.Safe.Compilation.IR.Optimization
 {
-    public static class ConstantFolding
+    public class ConstantFolding : IOptimizationPass<BasicBlock>
     {
         private static readonly InterimCPU interimCPU = new InterimCPU();
         private static readonly SafeSharedObjects shared = new SafeSharedObjects() { Cpu = interimCPU };
+
+        public OptimizationLevel OptimizationLevel => OptimizationLevel.Minimal;
+        public short SortIndex => 1;
+
         static ConstantFolding()
         {
             shared.FunctionManager = new FunctionManager(shared);
         }
-        public static void ApplyPass(IEnumerable<BasicBlock> blocks)
+        public void ApplyPass(List<BasicBlock> blocks)
         {
             Queue<BasicBlock> worklist = new Queue<BasicBlock>(blocks);
             IEnumerator<BasicBlock> enumerator = blocks.GetEnumerator();
