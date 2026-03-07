@@ -8,16 +8,9 @@ namespace kOS.Safe.Compilation.IR.Optimization
 {
     public class ConstantFolding : IOptimizationPass<BasicBlock>
     {
-        private static readonly InterimCPU interimCPU = new InterimCPU();
-        private static readonly SafeSharedObjects shared = new SafeSharedObjects() { Cpu = interimCPU };
-
         public OptimizationLevel OptimizationLevel => OptimizationLevel.Minimal;
         public short SortIndex => 1;
 
-        static ConstantFolding()
-        {
-            shared.FunctionManager = new FunctionManager(shared);
-        }
         public void ApplyPass(List<BasicBlock> blocks)
         {
             Queue<BasicBlock> worklist = new Queue<BasicBlock>(blocks);
@@ -282,7 +275,7 @@ namespace kOS.Safe.Compilation.IR.Optimization
                     instruction.Arguments[i] = AttemptReduction(temp.Parent);
             }
             string functionName = instruction.Function.Replace("()", "");
-            if (shared.FunctionManager.Exists(functionName) && instruction.Arguments.All(arg => arg is IRConstant))
+            if (IROptimizer.FunctionManager.Exists(functionName) && instruction.Arguments.All(arg => arg is IRConstant))
             {
                 try
                 {
@@ -306,11 +299,12 @@ namespace kOS.Safe.Compilation.IR.Optimization
                         case "arctan":
                         case "arctan2":
                         case "anglediff":
+                            InterimCPU interimCPU = IROptimizer.InterimCPU;
                             interimCPU.Boot();  // Clear the stack out of caution.
                             interimCPU.PushArgumentStack(new Execution.KOSArgMarkerType());
                             foreach (IRValue arg in instruction.Arguments)
                                 interimCPU.PushArgumentStack(((IRConstant)arg).Value);
-                            shared.FunctionManager.CallFunction(functionName);
+                            IROptimizer.FunctionManager.CallFunction(functionName);
                             instruction.Result = new IRConstant(interimCPU.PopValueArgument());
                             return instruction.Result;
                     }

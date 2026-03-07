@@ -25,6 +25,8 @@ namespace kOS.Safe.Compilation.IR.Optimization
             => GetValue(PopArgumentStack(), barewordOkay);
         public void PushArgumentStack(object item)
             => stack.PushArgument(item);
+        public object PopValueEncapsulatedArgument(bool barewordOkay = false)
+            => Structure.FromPrimitive(PopValueArgument(barewordOkay));
         public object GetValue(object testValue, bool barewordOkay = false)
         {
             // $cos     cos named variable
@@ -115,8 +117,6 @@ namespace kOS.Safe.Compilation.IR.Optimization
         public object PopScopeStack(int howMany)
             => throw new NotImplementedException();
         public Structure PopStructureEncapsulatedArgument(bool barewordOkay = false)
-            => throw new NotImplementedException();
-        public object PopValueEncapsulatedArgument(bool barewordOkay = false)
             => throw new NotImplementedException();
 
         public void PushNewScope(short scopeId, short parentScopeId)

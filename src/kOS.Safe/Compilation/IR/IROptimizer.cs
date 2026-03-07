@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using kOS.Safe.Compilation.IR.Optimization;
+using kOS.Safe.Function;
 using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Compilation.IR
@@ -8,10 +9,18 @@ namespace kOS.Safe.Compilation.IR
     [AssemblyWalk(InterfaceType = typeof(IOptimizationPass), StaticRegisterMethod = "RegisterMethod")]
     public class IROptimizer
     {
+        internal static InterimCPU InterimCPU { get; } = new InterimCPU();
+        private static readonly SafeSharedObjects shared = new SafeSharedObjects() { Cpu = InterimCPU };
+        public static IFunctionManager FunctionManager => shared.FunctionManager;
+
         private static readonly SortedSet<IOptimizationPass> optimizationPasses = new SortedSet<IOptimizationPass>(
             Comparer<IOptimizationPass>.Create((a, b) => a.SortIndex.CompareTo(b.SortIndex)));
         public OptimizationLevel OptimizationLevel { get; }
 
+        static IROptimizer()
+        {
+            shared.FunctionManager = new FunctionManager(shared);
+        }
         public IROptimizer(OptimizationLevel optimizationLevel)
         {
             OptimizationLevel = optimizationLevel;
@@ -56,6 +65,8 @@ namespace kOS.Safe.Compilation.IR
                 }
                 catch (Exception e)
                 {
+                    if (e is Exceptions.KOSCompileException)
+                        throw;
                     throw new Exceptions.KOSCompileException(new KS.LineCol(0, 0), e.Message);
                 }
             }

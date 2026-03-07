@@ -37,7 +37,7 @@ namespace kOS.Safe.Exceptions
         {
         }
 
-        public KOSCompileException(Compilation.IR.IRInstruction irInstruction, KOSException innerException)
+        public KOSCompileException(Compilation.IR.IRInstruction irInstruction, System.Exception innerException)
             : this(new LineCol(irInstruction.SourceLine, irInstruction.SourceColumn), innerException.Message)
         {
         }
