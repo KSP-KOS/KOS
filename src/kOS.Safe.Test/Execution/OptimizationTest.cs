@@ -133,5 +133,18 @@ namespace kOS.Safe.Test.Execution
                 "False"
             );
         }
+
+        [Test]
+        public void TestSuffixReplacement()
+        {
+            // Test that certain suffixes are replaced
+            RunScript("integration/suffixReplacement.ks");
+            RunSingleStep();
+            AssertOutput(
+                "9.80665",
+                "3.14159265358979",
+                "100"
+            );
+        }
     }
 }

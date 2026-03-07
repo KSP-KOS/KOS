@@ -2,13 +2,13 @@ namespace kOS.Safe.Compilation
 {
     /*
      * O1:
+     *  Replace CONSTANT: values with the constant
+     *  Replace ship fields with their alias
      *  Constant folding
      *  
-     *  Replace ship fields with their alias
      *  Constant propagation
      *  Replace lex indexing with string constant with suffixing where possible
      *  Dead code elimination (for the never used case)
-     *  Replace constant() with constant
      * O2:
      *  Redundant expression elimination
      *      Particularly: Any expression of 3 opcodes used more than twice,

@@ -243,7 +243,7 @@ namespace kOS.Safe.Compilation.IR
     }
     public class IRSuffixGet : IRInteractsInstruction, IResultingInstruction, ISingleOperandInstruction
     {
-        public IRValue Result { get; }
+        public IRValue Result { get; set; }
         public IRValue Object { get; set; }
         public string Suffix { get; set; }
         IRValue ISingleOperandInstruction.Operand => Object;
