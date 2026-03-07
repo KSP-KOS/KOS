@@ -21,3 +21,5 @@ print(true or false).
 print("A" + "b").
 print(a * 0).
 print(a ^ 0).
+print(arcTan2(0,1)).
+print(abs(-1)).

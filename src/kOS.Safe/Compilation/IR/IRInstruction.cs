@@ -421,7 +421,7 @@ namespace kOS.Safe.Compilation.IR
     {
         protected static readonly Function.FunctionManager functionManager = new Function.FunctionManager(null);
         public override bool SideEffects { get; }
-        public IRValue Result { get; }
+        public IRValue Result { get; set; }
         public string Function { get; }
         public List<IRValue> Arguments { get; } = new List<IRValue>();
         public IEnumerable<IRValue> Operands => Enumerable.Reverse(Arguments);

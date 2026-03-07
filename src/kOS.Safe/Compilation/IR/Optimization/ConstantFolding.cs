@@ -1,11 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Function;
 
 namespace kOS.Safe.Compilation.IR.Optimization
 {
     public static class ConstantFolding
     {
+        private static readonly InterimCPU interimCPU = new InterimCPU();
+        private static readonly SafeSharedObjects shared = new SafeSharedObjects() { Cpu = interimCPU };
+        static ConstantFolding()
+        {
+            shared.FunctionManager = new FunctionManager(shared);
+        }
         public static void ApplyPass(IEnumerable<BasicBlock> blocks)
         {
             Queue<BasicBlock> worklist = new Queue<BasicBlock>(blocks);
@@ -268,6 +276,45 @@ namespace kOS.Safe.Compilation.IR.Optimization
             {
                 if (instruction.Arguments[i] is IRTemp temp)
                     instruction.Arguments[i] = AttemptReduction(temp.Parent);
+            }
+            string functionName = instruction.Function.Replace("()", "");
+            if (shared.FunctionManager.Exists(functionName) && instruction.Arguments.All(arg => arg is IRConstant))
+            {
+                try
+                {
+                    switch (functionName)
+                    {
+                        case "abs":
+                        case "mod":
+                        case "floor":
+                        case "ceiling":
+                        case "round":
+                        case "sqrt":
+                        case "ln":
+                        case "log10":
+                        case "min":
+                        case "max":
+                        case "sin":
+                        case "cos":
+                        case "tan":
+                        case "arcsin":
+                        case "arccos":
+                        case "arctan":
+                        case "arctan2":
+                        case "anglediff":
+                            interimCPU.Boot();  // Clear the stack out of caution.
+                            interimCPU.PushArgumentStack(new Execution.KOSArgMarkerType());
+                            foreach (IRValue arg in instruction.Arguments)
+                                interimCPU.PushArgumentStack(((IRConstant)arg).Value);
+                            shared.FunctionManager.CallFunction(functionName);
+                            instruction.Result = new IRConstant(interimCPU.PopValueArgument());
+                            return instruction.Result;
+                    }
+                }
+                catch (KOSException e)
+                {
+                    throw new KOSCompileException(instruction, e);
+                }
             }
             return instruction.Result;
         }
