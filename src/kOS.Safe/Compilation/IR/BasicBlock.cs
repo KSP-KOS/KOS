@@ -8,10 +8,13 @@ namespace kOS.Safe.Compilation.IR
         public int StartIndex { get; }
         public int EndIndex { get; }
         public List<IRInstruction> Instructions { get; } = new List<IRInstruction>();
-        protected internal readonly HashSet<BasicBlock> predecessors = new HashSet<BasicBlock>();
-        protected internal readonly HashSet<BasicBlock> sucessors = new HashSet<BasicBlock>();
+        public IEnumerable<BasicBlock> Sucessors => sucessors;
+        public IEnumerable<BasicBlock> Predecessors => predecessors;
+        private readonly HashSet<BasicBlock> predecessors = new HashSet<BasicBlock>();
+        private readonly HashSet<BasicBlock> sucessors = new HashSet<BasicBlock>();
         public string Label => $"@BB#{ID}";
         public int ID { get; }
+        public Optimization.ExtendedBasicBlock ExtendedBlock { get; set; }
         private readonly Stack<IRValue> exitStackState = new Stack<IRValue>();  // Note that this is reversed from the real stack. Just now we don't reverse it four times.
 #if DEBUG
         internal Opcode[] OriginalOpcodes { get; set; }
@@ -36,6 +39,12 @@ namespace kOS.Safe.Compilation.IR
         protected void AddPredecessor(BasicBlock predecessor)
         {
             predecessors.Add(predecessor);
+        }
+        public void RemoveSuccessor(BasicBlock sucessor)
+        {
+            if (!sucessors.Remove(sucessor))
+                throw new System.ArgumentException(nameof(sucessor));
+            sucessor.predecessors.Remove(this);
         }
 
         public void SetStackState(Stack<IRValue> stack)
