@@ -37,6 +37,11 @@ namespace kOS.Safe.Exceptions
         {
         }
 
+        public KOSCompileException(Compilation.IR.IRInstruction irInstruction, KOSException innerException)
+            : this(new LineCol(irInstruction.SourceLine, irInstruction.SourceColumn), innerException.Message)
+        {
+        }
+
         public KOSCompileException(LineCol location, string message)
         {
             Location = location;
