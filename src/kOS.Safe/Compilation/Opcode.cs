@@ -479,12 +479,17 @@ namespace kOS.Safe.Compilation
             object right = cpu.PopValueArgument();
             object left = cpu.PopValueArgument();
 
+            object result = ExecuteCalculation(left, right);
+            cpu.PushArgumentStack(result);
+        }
+
+        public object ExecuteCalculation(object left, object right)
+        {
             var operands = new OperandPair(left, right);
 
             Calculator calc = Calculator.GetCalculator(operands);
             Operands = operands;
-            object result = ExecuteCalculation(calc);
-            cpu.PushArgumentStack(result);
+            return ExecuteCalculation(calc);
         }
 
         protected virtual object ExecuteCalculation(Calculator calc)
@@ -1313,27 +1318,29 @@ namespace kOS.Safe.Compilation
         {
             Structure value = cpu.PopStructureEncapsulatedArgument();
 
+            cpu.PushArgumentStack(StaticOperation(value));
+        }
+
+        public static object StaticOperation(object value)
+        {
             var scalarValue = value as ScalarValue;
 
             if (scalarValue != null && scalarValue.IsValid)
             {
-                cpu.PushArgumentStack(-scalarValue);
-                return;
+                return -scalarValue;
             }
-
+            
             // Generic last-ditch to catch any sort of object that has
             // overloaded the unary negate operator '-'.
             // (For example, kOS.Suffixed.Vector and kOS.Suffixed.Direction)
             Type t = value.GetType();
-            MethodInfo negateMe = t.GetMethod("op_UnaryNegation", BindingFlags.FlattenHierarchy |BindingFlags.Static | BindingFlags.Public);
+            MethodInfo negateMe = t.GetMethod("op_UnaryNegation", BindingFlags.FlattenHierarchy | BindingFlags.Static | BindingFlags.Public);
             if (negateMe != null)
             {
-                object result = negateMe.Invoke(null, new[]{value});
-                cpu.PushArgumentStack(result);
+                return negateMe.Invoke(null, new[] { value });
             }
             else
                 throw new KOSUnaryOperandTypeException("negate", value);
-
         }
     }
 
@@ -1462,8 +1469,12 @@ namespace kOS.Safe.Compilation
             // is to also change integers and floats into booleans. Thus the call to
             // Convert.ToBoolean():
             object value = cpu.PopValueArgument();
+            cpu.PushArgumentStack(StaticOperation(value));
+        }
+        public static object StaticOperation(object value)
+        {
             bool result = Convert.ToBoolean(value);
-            cpu.PushArgumentStack(Structure.FromPrimitive(result));
+            return Structure.FromPrimitive(result);
         }
     }
 
@@ -1485,21 +1496,22 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             object value = cpu.PopValueArgument();
-            object result;
-
+            cpu.PushArgumentStack(StaticOperation(value));
+        }
+        public static object StaticOperation(object value)
+        {
             // Convert to bool instead of cast in case the identifier is stored
             // as an encapsulated BooleanValue, preventing an unboxing collision.
             // Wrapped in a try/catch since the Convert framework doesn't have a
             // way to determine if a type can be converted.
             try
             {
-                result = !Convert.ToBoolean(value);
+                return Structure.FromPrimitive(!Convert.ToBoolean(value));
             }
             catch
             {
                 throw new KOSCastException(value.GetType(), typeof(BooleanValue));
             }
-            cpu.PushArgumentStack(Structure.FromPrimitive(result));
         }
     }
 
