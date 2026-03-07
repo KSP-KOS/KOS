@@ -26,13 +26,17 @@ namespace kOS.Safe.Compilation.IR
         public override string ToString()
             => Value.ToString();
     }
-    public class IRVariable : IRValue
+    public abstract class IRVariableBase : IRValue
     {
         public string Name { get; }
+        public IRVariableBase(string name)
+            => Name = name;
+    }
+    public class IRVariable : IRVariableBase
+    {
         public bool IsLock { get; }
-        public IRVariable(string name, bool isLock = false)
+        public IRVariable(string name, bool isLock = false) : base(name)
         {
-            Name = name;
             IsLock = isLock;
         }
         internal override IEnumerable<Opcode> EmitPush()
@@ -63,12 +67,13 @@ namespace kOS.Safe.Compilation.IR
             yield return new OpcodePushDelegateRelocateLater((string)Value, WithClosure);
         }
     }
-    public class IRTemp : IRVariable
+    public class IRTemp : IRVariableBase
     {
         public int ID { get; }
         public IRInstruction Parent { get; internal set; }
+
         private bool isPromoted = false;
-        public IRTemp(int id) : base($"$.temp.{id}", false)
+        public IRTemp(int id) : base($"$.temp.{id}")
         {
             ID = id;
         }
