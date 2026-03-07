@@ -18,6 +18,4 @@ print(1 = 1).
 print(1 <> 2).
 print(true and true).
 print(true or false).
-print("A" + "b").
-print(a * 0).
-print(a ^ 0).
+print(1 + false).

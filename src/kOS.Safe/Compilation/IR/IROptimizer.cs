@@ -21,6 +21,8 @@ namespace kOS.Safe.Compilation.IR
 
             ExtendedBasicBlock extendedRootBlock = ExtendedBasicBlock.CreateExtendedBlockTree(blocks[0]);
             HashSet<ExtendedBasicBlock> extendedBlocks = new HashSet<ExtendedBasicBlock>(ExtendedBasicBlock.DumpTree(extendedRootBlock));
+
+            ConstantFolding.ApplyPass(blocks);
             return blocks;
         }
     }

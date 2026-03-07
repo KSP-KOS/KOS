@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace kOS.Safe.Compilation
 {
     /*
      * O1:
+     *  Constant folding
+     *  
      *  Replace ship fields with their alias
-     *  Constant propagation, including items from the constant structure
+     *  Constant propagation
      *  Replace lex indexing with string constant with suffixing where possible
      *  Dead code elimination (for the never used case)
      *  Replace constant() with constant

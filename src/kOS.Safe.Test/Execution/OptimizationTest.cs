@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using kOS.Safe.Compilation;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Test.Execution
 {
@@ -85,8 +86,20 @@ namespace kOS.Safe.Test.Execution
                 "True",
                 "True",
                 "True",
-                "True"
+                "True",
+                "Ab",
+                "0",
+                "1"
             );
+        }
+
+        [Test]
+        [ExpectedException(typeof(KOSCompileException))]
+        public void TestOperatorsException()
+        {
+            // Test that an invalid operation throws a compile error during constant folding
+            RunScript("integration/operators_invalid.ks");
+            RunSingleStep();
         }
 
         [Test]
