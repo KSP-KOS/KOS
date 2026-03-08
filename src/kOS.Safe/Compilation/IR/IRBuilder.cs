@@ -47,7 +47,10 @@ namespace kOS.Safe.Compilation.IR
             foreach (int startIndex in leaders.Take(leaders.Count - 1))
             {
                 int endIndex = leaders.First(i => i > startIndex) - 1;
-                BasicBlock block = new BasicBlock(startIndex, endIndex, blocks.Count);
+                string label = code[startIndex].Label;
+                if (label.StartsWith("@"))
+                    label = null;
+                BasicBlock block = new BasicBlock(startIndex, endIndex, blocks.Count, label);
                 blocks.Add(block);
             }
             foreach (BasicBlock block in blocks)
@@ -63,7 +66,7 @@ namespace kOS.Safe.Compilation.IR
                 else if (blocks.Any(b => b.StartIndex == block.EndIndex + 1))
                 {
                     BasicBlock successor = GetBlockFromStartIndex(blocks, block.EndIndex + 1);
-                    block.Add(new IRJump(successor, lastOpcode.SourceLine, lastOpcode.SourceColumn));
+                    block.FallthroughJump = new IRJump(successor, lastOpcode.SourceLine, lastOpcode.SourceColumn);
                     block.AddSuccessor(successor);
                 }
 #if DEBUG

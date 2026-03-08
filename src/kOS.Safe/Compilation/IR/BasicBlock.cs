@@ -12,20 +12,23 @@ namespace kOS.Safe.Compilation.IR
         public IEnumerable<BasicBlock> Predecessors => predecessors;
         private readonly HashSet<BasicBlock> predecessors = new HashSet<BasicBlock>();
         private readonly HashSet<BasicBlock> sucessors = new HashSet<BasicBlock>();
-        public string Label => $"@BB#{ID}";
+        public string Label => nonSequentialLabel ?? $"@BB#{ID}";
+        private string nonSequentialLabel = null;
         public int ID { get; }
         public Optimization.ExtendedBasicBlock ExtendedBlock { get; set; }
         private readonly Stack<IRValue> exitStackState = new Stack<IRValue>();  // Note that this is reversed from the real stack. Just now we don't reverse it four times.
+        public IRJump FallthroughJump { get; set; } = null;
 #if DEBUG
         internal Opcode[] OriginalOpcodes { get; set; }
         internal Opcode[] GeneratedOpcodes => EmitOpCodes().ToArray();
 #endif
 
-        public BasicBlock(int startIndex, int endIndex, int id)
+        public BasicBlock(int startIndex, int endIndex, int id, string nonSequentialLabel = null)
         {
             StartIndex = startIndex;
             EndIndex = endIndex;
             ID = id;
+            this.nonSequentialLabel = nonSequentialLabel;
         }
 
         public void Add(IRInstruction instruction)
@@ -60,6 +63,9 @@ namespace kOS.Safe.Compilation.IR
 
         public IEnumerable<Opcode> EmitOpCodes()
         {
+            bool addedFallthrough = FallthroughJump != null && Instructions.LastOrDefault() == FallthroughJump;
+            if (addedFallthrough)
+                Instructions.Add(FallthroughJump);
             bool first = true;
             foreach (IRInstruction instruction in Instructions.Take(Instructions.Count - 1))
             {
@@ -97,6 +103,8 @@ namespace kOS.Safe.Compilation.IR
                     yield return opcode;
                 }
             }
+            if (addedFallthrough)
+                Instructions.Remove(FallthroughJump);
         }
     }
 }
