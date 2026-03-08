@@ -68,8 +68,9 @@ namespace kOS.Safe.Compilation.IR
         }
         internal override IEnumerable<Opcode> EmitOpcode()
         {
-            foreach (Opcode opcode in Value.EmitPush())
-                yield return opcode;
+            if (Value != null)
+                foreach (Opcode opcode in Value.EmitPush())
+                    yield return opcode;
             if (AssertExists)
             {
                 yield return SetSourceLocation(new OpcodeStoreExist(Target));

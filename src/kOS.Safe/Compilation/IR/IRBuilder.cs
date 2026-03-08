@@ -106,22 +106,26 @@ namespace kOS.Safe.Compilation.IR
             switch (opcode)
             {
                 case OpcodeStore store:
-                    IRAssign assignment = new IRAssign(store, stack.Pop()) { Scope = IRAssign.StoreScope.Ambivalent };
+                    IRValue storedValue = stack.Count > 0 ? stack.Pop() : null;
+                    IRAssign assignment = new IRAssign(store, storedValue) { Scope = IRAssign.StoreScope.Ambivalent };
                     variables.Add(assignment.Target);
                     currentBlock.Add(assignment);
                     break;
                 case OpcodeStoreExist storeExist:
-                    assignment = new IRAssign(storeExist, stack.Pop()) { AssertExists = true };
+                    storedValue = stack.Count > 0 ? stack.Pop() : null;
+                    assignment = new IRAssign(storeExist, storedValue) { AssertExists = true };
                     variables.Add(assignment.Target);
                     currentBlock.Add(assignment);
                     break;
                 case OpcodeStoreLocal storeLocal:
-                    assignment = new IRAssign(storeLocal, stack.Pop()) { Scope = IRAssign.StoreScope.Local };
+                    storedValue = stack.Count > 0 ? stack.Pop() : null;
+                    assignment = new IRAssign(storeLocal, storedValue) { Scope = IRAssign.StoreScope.Local };
                     currentBlock.Add(assignment);
                     variables.Add(assignment.Target);
                     break;
                 case OpcodeStoreGlobal storeGlobal:
-                    assignment = new IRAssign(storeGlobal, stack.Pop()) { Scope = IRAssign.StoreScope.Global };
+                    storedValue = stack.Count > 0 ? stack.Pop() : null;
+                    assignment = new IRAssign(storeGlobal, storedValue) { Scope = IRAssign.StoreScope.Global };
                     currentBlock.Add(assignment);
                     variables.Add(assignment.Target);
                     break;
