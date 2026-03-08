@@ -100,68 +100,73 @@ namespace kOS.Safe.Compilation.IR
             nextTempId++;
             return result;
         }
+        private static IRValue PopFromStack(Stack<IRValue> stack, BasicBlock block)
+        {
+            if (stack.Count > 0)
+                return stack.Pop();
+            IRParameter parameter = new IRParameter();
+            block.AddParameter(parameter);
+            return parameter;
+        }
 
         private void ParseInstruction(Opcode opcode, BasicBlock currentBlock, Stack<IRValue> stack, Dictionary<string, int> labels, int index, List<BasicBlock> blocks)
         {
+            IRValue PopStack() => PopFromStack(stack, currentBlock);
             HashSet<string> variables = new HashSet<string>();
             switch (opcode)
             {
                 case OpcodeStore store:
-                    IRValue storedValue = stack.Count > 0 ? stack.Pop() : null;
-                    IRAssign assignment = new IRAssign(store, storedValue) { Scope = IRAssign.StoreScope.Ambivalent };
+                    IRAssign assignment = new IRAssign(store, PopStack()) { Scope = IRAssign.StoreScope.Ambivalent };
                     variables.Add(assignment.Target);
                     currentBlock.Add(assignment);
                     break;
                 case OpcodeStoreExist storeExist:
-                    storedValue = stack.Count > 0 ? stack.Pop() : null;
-                    assignment = new IRAssign(storeExist, storedValue) { AssertExists = true };
+                    assignment = new IRAssign(storeExist, PopStack()) { AssertExists = true };
                     variables.Add(assignment.Target);
                     currentBlock.Add(assignment);
                     break;
                 case OpcodeStoreLocal storeLocal:
-                    storedValue = stack.Count > 0 ? stack.Pop() : null;
-                    assignment = new IRAssign(storeLocal, storedValue) { Scope = IRAssign.StoreScope.Local };
+                    assignment = new IRAssign(storeLocal, PopStack()) { Scope = IRAssign.StoreScope.Local };
                     currentBlock.Add(assignment);
                     variables.Add(assignment.Target);
                     break;
                 case OpcodeStoreGlobal storeGlobal:
-                    storedValue = stack.Count > 0 ? stack.Pop() : null;
-                    assignment = new IRAssign(storeGlobal, storedValue) { Scope = IRAssign.StoreScope.Global };
+                    assignment = new IRAssign(storeGlobal, PopStack()) { Scope = IRAssign.StoreScope.Global };
                     currentBlock.Add(assignment);
                     variables.Add(assignment.Target);
                     break;
                 case OpcodeExists exists:
                     IRTemp temp = CreateTemp();
-                    IRInstruction instruction = new IRUnaryOp(temp, exists, stack.Pop());
+                    IRInstruction instruction = new IRUnaryOp(temp, exists, PopStack());
                     temp.Parent = instruction;
                     //currentBlock.Add(instruction);
                     stack.Push(temp);
                     break;
                 case OpcodeUnset unset:
-                    currentBlock.Add(new IRUnaryConsumer(unset, stack.Pop(), true));
+                    currentBlock.Add(new IRUnaryConsumer(unset, PopStack(), true));
                     break;
                 case OpcodeGetMethod getMethod:
                     temp = CreateTemp();
-                    instruction = new IRSuffixGetMethod(temp, stack.Pop(), getMethod);
+                    instruction = new IRSuffixGetMethod(temp, PopStack(), getMethod);
                     //currentBlock.Add(instruction);
                     temp.Parent = instruction;
                     stack.Push(temp);
                     break;
                 case OpcodeGetMember getMember:
                     temp = CreateTemp();
-                    instruction = new IRSuffixGet(temp, stack.Pop(), getMember);
+                    instruction = new IRSuffixGet(temp, PopStack(), getMember);
                     temp.Parent = instruction;
                     //currentBlock.Add(instruction);
                     stack.Push(temp);
                     break;
                 case OpcodeSetMember setMember:
-                    IRValue value = stack.Pop();
-                    IRValue memberObj = stack.Pop();
+                    IRValue value = PopStack();
+                    IRValue memberObj = PopStack();
                     currentBlock.Add(new IRSuffixSet(memberObj, value, setMember));
                     break;
                 case OpcodeGetIndex getIndex:
-                    IRValue targetIndex = stack.Pop();
-                    IRValue indexObj = stack.Pop();
+                    IRValue targetIndex = PopStack();
+                    IRValue indexObj = PopStack();
                     temp = CreateTemp();
                     instruction = new IRIndexGet(temp, indexObj, targetIndex, getIndex);
                     //currentBlock.Add(instruction);
@@ -169,9 +174,9 @@ namespace kOS.Safe.Compilation.IR
                     stack.Push(temp);
                     break;
                 case OpcodeSetIndex setIndex:
-                    value = stack.Pop();
-                    targetIndex = stack.Pop();
-                    indexObj = stack.Pop();
+                    value = PopStack();
+                    targetIndex = PopStack();
+                    indexObj = PopStack();
                     currentBlock.Add(new IRIndexSet(indexObj, targetIndex, value, setIndex));
                     break;
                 case OpcodeEOF _:
@@ -191,13 +196,13 @@ namespace kOS.Safe.Compilation.IR
                     stack.Push(temp);
                     break;
                 case OpcodeBranchIfTrue branchIfTrue:
-                    currentBlock.Add(new IRBranch(stack.Pop(),
+                    currentBlock.Add(new IRBranch(PopStack(),
                         GetBlockFromStartIndex(blocks, labels[branchIfTrue.DestinationLabel]),
                         GetBlockFromStartIndex(blocks, currentBlock.EndIndex + 1),
                         branchIfTrue));
                     break;
                 case OpcodeBranchIfFalse branchIfFalse:
-                    currentBlock.Add(new IRBranch(stack.Pop(),
+                    currentBlock.Add(new IRBranch(PopStack(),
                         GetBlockFromStartIndex(blocks, currentBlock.EndIndex + 1),
                         GetBlockFromStartIndex(blocks, labels[branchIfFalse.DestinationLabel]),
                         branchIfFalse));
@@ -225,8 +230,8 @@ namespace kOS.Safe.Compilation.IR
                 case OpcodeMathDivide _:
                 case OpcodeMathPower _:
                     temp = CreateTemp();
-                    IRValue right = stack.Pop();
-                    IRValue left = stack.Pop();
+                    IRValue right = PopStack();
+                    IRValue left = PopStack();
                     instruction = new IRBinaryOp(temp, (BinaryOpcode)opcode, left, right);
                     //currentBlock.Add(instruction);
                     temp.Parent = instruction;
@@ -236,7 +241,7 @@ namespace kOS.Safe.Compilation.IR
                 case OpcodeLogicToBool _:
                 case OpcodeLogicNot _:
                     temp = CreateTemp();
-                    instruction = new IRUnaryOp(temp, opcode, stack.Pop());
+                    instruction = new IRUnaryOp(temp, opcode, PopStack());
                     temp.Parent = instruction;
                     //currentBlock.Add(instruction);
                     stack.Push(temp);
@@ -247,7 +252,7 @@ namespace kOS.Safe.Compilation.IR
                     bool hasArgmarker = stack.Count > 0;   // Not even an argument marker on the stack - the dominator block must have it
                     while (stack.Count > 0)
                     {
-                        IRValue stackResult = stack.Pop();
+                        IRValue stackResult = PopStack();
                         if (stackResult is IRConstant constant && constant.Value is Execution.KOSArgMarkerType)
                             break;
                         arguments.Push(stackResult);
@@ -255,18 +260,18 @@ namespace kOS.Safe.Compilation.IR
                     instruction = new IRCall(temp, call, hasArgmarker, arguments);
                     if (stack.Count > 0 && !((IRCall)instruction).Direct)
                     {
-                        ((IRCall)instruction).IndirectMethod = stack.Pop();
+                        ((IRCall)instruction).IndirectMethod = PopStack();
                     }
                     temp.Parent = instruction;
                     stack.Push(temp);
                     break;
                 case OpcodeReturn opcodeReturn:
-                    currentBlock.Add(new IRReturn(opcodeReturn.Depth, opcodeReturn) { Value = stack.Pop() });
+                    currentBlock.Add(new IRReturn(opcodeReturn.Depth, opcodeReturn) { Value = PopStack() });
                     break;
                 case OpcodePush opcodePush:
                     object argument = opcodePush.Argument;
                     if (argument is string identifier && identifier.StartsWith("$"))
-                        stack.Push(new IRVariable(identifier, opcodePush, false));
+                        stack.Push(currentBlock.PushVariable(identifier, opcodePush));
                     else
                         stack.Push(new IRConstant(argument, opcodePush));
                     break;
@@ -278,13 +283,13 @@ namespace kOS.Safe.Compilation.IR
                     break;
                 case OpcodeAddTrigger _:
                 case OpcodeRemoveTrigger _:
-                    currentBlock.Add(new IRUnaryConsumer(opcode, stack.Pop(), false));
+                    currentBlock.Add(new IRUnaryConsumer(opcode, PopStack(), false));
                     break;
                 case OpcodeWait _:
-                    currentBlock.Add(new IRUnaryConsumer(opcode, stack.Pop(), true));
+                    currentBlock.Add(new IRUnaryConsumer(opcode, PopStack(), true));
                     break;
                 case OpcodePop pop:
-                    currentBlock.Add(new IRPop(stack.Pop(), pop));
+                    currentBlock.Add(new IRPop(PopStack(), pop));
                     break;
                 default:
                     throw new NotImplementedException($"The Opcode of type {opcode.GetType()} is not implemented.");

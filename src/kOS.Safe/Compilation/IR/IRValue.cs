@@ -130,4 +130,8 @@ namespace kOS.Safe.Compilation.IR
                     yield return opcode;
         }
     }
+    public class IRParameter : IRValue
+    {
+        internal override IEnumerable<Opcode> EmitPush() => System.Linq.Enumerable.Empty<Opcode>();
+    }
 }

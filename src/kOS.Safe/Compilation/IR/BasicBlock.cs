@@ -7,6 +7,9 @@ namespace kOS.Safe.Compilation.IR
     {
         private readonly HashSet<BasicBlock> predecessors = new HashSet<BasicBlock>();
         private readonly HashSet<BasicBlock> successors = new HashSet<BasicBlock>();
+        private readonly List<IRParameter> parameters = new List<IRParameter>();
+        private readonly Dictionary<string, IRVariable> variables = new Dictionary<string, IRVariable>();
+        private readonly Dictionary<string, IRVariable> externalGlobalVariables = new Dictionary<string, IRVariable>();
         private readonly Stack<IRValue> exitStackState = new Stack<IRValue>();  // Note that this is reversed from the real stack. Just now we don't reverse it four times.
         private readonly string nonSequentialLabel = null;
 
@@ -125,6 +128,26 @@ namespace kOS.Safe.Compilation.IR
 
             postorder.Add(block);
         }
+
+        public void AddParameter(IRParameter parameter)
+        {
+            parameters.Add(parameter);
+        }
+        public void StoreVariable(IRVariable variable)
+        {
+            variables[variable.Name] = variable;
+        }
+        public IRVariable PushVariable(string name, Opcode opcode)
+        {
+            if (variables.ContainsKey(name))
+                return variables[name];
+            if (Dominator != null)
+                return Dominator.PushVariable(name, opcode);
+            if (externalGlobalVariables.ContainsKey(name))
+                return externalGlobalVariables[name];
+            IRVariable newExternalGlobal = new IRVariable(name, opcode);
+            externalGlobalVariables.Add(name, newExternalGlobal);
+            return newExternalGlobal;
         }
 
         public void SetStackState(Stack<IRValue> stack)
