@@ -113,6 +113,8 @@ namespace kOS.Safe.Compilation.KS
             return GetParts(userFuncs.Values.ToList());
         }
 
+        internal List<UserFunction> PeekNewFunctions()
+            => newUserFuncs;
         public IEnumerable<CodePart> GetNewParts()
         {
             // new locks or functions

@@ -3,9 +3,10 @@ using System.Linq;
 
 namespace kOS.Safe.Compilation.IR
 {
-    public static class IREmitter
+    public class IREmitter
     {
-        public static List<Opcode> Emit(List<BasicBlock> blocks)
+        int labelIndex = 0;
+        public List<Opcode> Emit(List<BasicBlock> blocks)
         {
             List<Opcode> result = new List<Opcode>();
             Dictionary<string, int> jumpLabels = new Dictionary<string, int>();
@@ -13,9 +14,13 @@ namespace kOS.Safe.Compilation.IR
             foreach (BasicBlock block in blocks)
                 LabelAndEmit(block, jumpLabels, result);
             // Remove single-line jumps from fallthrough blocks
-            for (int i = 0; i < result.Count - 1; i++)
+            for (int i = 0; i < result.Count; i++)
             {
                 Opcode opcode = result[i];
+                if (string.IsNullOrEmpty(opcode.Label) || opcode.Label.StartsWith("@"))
+                    opcode.Label = CreateLabel(i + labelIndex);
+                if (i >= result.Count - 2)
+                    continue;
                 if (opcode is OpcodeBranchJump jump &&
                     jump.DestinationLabel != null && jump.DestinationLabel == result[i + 1].Label)
                 {
@@ -29,21 +34,24 @@ namespace kOS.Safe.Compilation.IR
             // Restore original labels
             foreach (Opcode opcode in result)
             {
-                if (opcode.Label != null && jumpLabels.ContainsKey(opcode.Label))
-                    opcode.Label = CreateLabel(jumpLabels[opcode.Label]);
-                if (opcode.DestinationLabel != null && jumpLabels.ContainsKey(opcode.DestinationLabel))
+                if (opcode.DestinationLabel != null &&
+                    opcode.DestinationLabel.StartsWith("@") &&
+                    jumpLabels.ContainsKey(opcode.DestinationLabel))
+                {
                     opcode.DestinationLabel = CreateLabel(jumpLabels[opcode.DestinationLabel]);
+                }
             }
+            labelIndex += result.Count;
             return result;
         }
 
-        private static void LabelAndEmit(BasicBlock block, Dictionary<string, int> jumpLabels, List<Opcode> result)
+        private void LabelAndEmit(BasicBlock block, Dictionary<string, int> jumpLabels, List<Opcode> result)
         {
-            jumpLabels.Add(block.Label, result.Count);
+            jumpLabels.Add(block.Label, result.Count + labelIndex);
             result.AddRange(block.EmitOpCodes());
         }
 
         private static string CreateLabel(int index)
-            => string.Format("@{0:0000}", index);   // TODO: + 1
+            => string.Format("@{0:0000}", index + 1);
     }
 }

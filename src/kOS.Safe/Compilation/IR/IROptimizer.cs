@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using kOS.Safe.Compilation.IR.Optimization;
 using kOS.Safe.Function;
 using kOS.Safe.Utilities;
@@ -32,22 +33,12 @@ namespace kOS.Safe.Compilation.IR
 
         public List<BasicBlock> Optimize(IRCodePart codePart)
         {
-            List<BasicBlock> blocks = new List<BasicBlock>();
-            blocks.AddRange(codePart.InitializationCode);
-            blocks.AddRange(codePart.FunctionsCode);
-            blocks.AddRange(codePart.MainCode);
+            List<BasicBlock> blocks = codePart.Blocks;
 
-            ExtendedBasicBlock initializationRoot = codePart.InitializationCode.Count > 0 ? ExtendedBasicBlock.CreateExtendedBlockTree(codePart.InitializationCode[0]) : null;
-            ExtendedBasicBlock functionsRoot = codePart.FunctionsCode.Count > 0 ? ExtendedBasicBlock.CreateExtendedBlockTree(codePart.FunctionsCode[0]) : null;
-            ExtendedBasicBlock mainRoot = codePart.MainCode.Count > 0 ? ExtendedBasicBlock.CreateExtendedBlockTree(codePart.MainCode[0]) : null;
-
-            List<ExtendedBasicBlock> extendedBlocks = new List<ExtendedBasicBlock>();
-            if (initializationRoot != null)
-                extendedBlocks.AddRange(ExtendedBasicBlock.DumpTree(initializationRoot));
-            if (functionsRoot != null)
-                extendedBlocks.AddRange(ExtendedBasicBlock.DumpTree(functionsRoot));
-            if (mainRoot != null)
-                extendedBlocks.AddRange(ExtendedBasicBlock.DumpTree(mainRoot));
+            List<ExtendedBasicBlock> rootExtendedBlocks = new List<ExtendedBasicBlock>(
+                codePart.RootBlocks.Select(b => ExtendedBasicBlock.CreateExtendedBlockTree(b)));
+            List<ExtendedBasicBlock> extendedBlocks = new List<ExtendedBasicBlock>(
+                rootExtendedBlocks.SelectMany(ExtendedBasicBlock.DumpTree));
 
             foreach (IOptimizationPass pass in optimizationPasses)
             {
@@ -55,33 +46,24 @@ namespace kOS.Safe.Compilation.IR
                     continue;
 
                 SafeHouse.Logger.Log($"Applying optimization pass: {pass.GetType()}.");
-                try
+                switch (pass)
                 {
-                    switch (pass)
-                    {
-                        case IHolisticOptimizationPass codePartpass:
-                            codePartpass.ApplyPass(codePart);
-                            break;
-                        case IOptimizationPass<BasicBlock> blockPass:
-                            blockPass.ApplyPass(blocks);
-                            break;
-                        case IOptimizationPass<ExtendedBasicBlock> extendedBlockPass:
-                            extendedBlockPass.ApplyPass(extendedBlocks);
-                            break;
-                        case IOptimizationPass<IRInstruction> instructionPass:
-                            foreach (BasicBlock block in blocks)
-                                instructionPass.ApplyPass(block.Instructions);
-                            break;
-                        default:
-                            SafeHouse.Logger.LogWarning($"{pass.GetType()}, implementing IOptimizingPass<T>, uses an unsupported generic parameter.");
-                            break;
-                    }
-                }
-                catch (Exception e)
-                {
-                    if (e is Exceptions.KOSCompileException)
-                        throw;
-                    throw new Exceptions.KOSCompileException(new KS.LineCol(0, 0), e.Message);
+                    case IHolisticOptimizationPass codePartpass:
+                        codePartpass.ApplyPass(codePart);
+                        break;
+                    case IOptimizationPass<BasicBlock> blockPass:
+                        blockPass.ApplyPass(blocks);
+                        break;
+                    case IOptimizationPass<ExtendedBasicBlock> extendedBlockPass:
+                        extendedBlockPass.ApplyPass(extendedBlocks);
+                        break;
+                    case IOptimizationPass<IRInstruction> instructionPass:
+                        foreach (BasicBlock block in blocks)
+                            instructionPass.ApplyPass(block.Instructions);
+                        break;
+                    default:
+                        SafeHouse.Logger.LogWarning($"{pass.GetType()}, implementing IOptimizingPass<T>, uses an unsupported generic parameter.");
+                        break;
                 }
             }
             return blocks;

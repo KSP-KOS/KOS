@@ -204,18 +204,18 @@ namespace kOS.Safe.Compilation.KS
                 CompileProgram(tree);
                 if (options.OptimizationLevel != OptimizationLevel.None)
                 {
-                    Optimize(part, options);
+                    Optimize(part, context, options);
                 }
             }
             return part;
         }
 
-        public static void Optimize(CodePart code, CompilerOptions options)
+        public static void Optimize(CodePart code, Context context, CompilerOptions options)
         {
-            IR.IRCodePart irCode = new IR.IRCodePart(code);
+            IR.IRCodePart irCodePart = new IR.IRCodePart(code, context.UserFunctions.PeekNewFunctions());
             IR.IROptimizer optimizer = new IR.IROptimizer(options.OptimizationLevel);
-            optimizer.Optimize(irCode);
-            irCode.EmitToCodePart(code);
+            optimizer.Optimize(irCodePart);
+            irCodePart.EmitCode(code);
         }
 
         private void CompileProgram(ParseTree tree)
