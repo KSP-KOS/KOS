@@ -81,6 +81,8 @@ namespace kOS.Safe.Compilation.IR.Optimization
                     return ReduceIndexGet(indexGet);
                 case IRCall call:
                     return ReduceCall(call);
+                case IResultingInstruction resulting:
+                    return resulting.Result;
             }
             throw new ArgumentException($"{instruction.GetType()} is not supported.");
         }

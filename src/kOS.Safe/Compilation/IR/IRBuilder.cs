@@ -175,7 +175,15 @@ namespace kOS.Safe.Compilation.IR
                 case OpcodeBogus _:
                 case OpcodePushScope _:
                 case OpcodePopScope _:
+                case OpcodeArgBottom _:
                     currentBlock.Add(new IRNoStackInstruction(opcode));
+                    break;
+                case OpcodeTestArgBottom _:
+                    temp = CreateTemp();
+                    instruction = new IRNonVarPush(temp, opcode);
+                    temp.Parent = instruction;
+                    //currentBlock.Add(instruction);
+                    stack.Push(temp);
                     break;
                 case OpcodeBranchIfTrue branchIfTrue:
                     currentBlock.Add(new IRBranch(stack.Pop(),

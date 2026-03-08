@@ -227,12 +227,18 @@ namespace kOS.Safe.Compilation.IR
         public override string ToString()
             => "{pop}";
     }
-    public class IRNonVarPush : IRInstruction
+    public class IRNonVarPush : IRInstruction, IResultingInstruction
     {
         public override bool SideEffects => false;
         public Opcode Operation { get; }
-        public IRNonVarPush(Opcode opcode) : base(opcode)
-            => Operation = opcode;
+
+        public IRValue Result { get; }
+
+        public IRNonVarPush(IRValue result, Opcode opcode) : base(opcode)
+        {
+            Operation = opcode;
+            Result = result;
+        }
         internal override IEnumerable<Opcode> EmitOpcode()
         {
             Operation.Label = string.Empty;
@@ -625,6 +631,6 @@ namespace kOS.Safe.Compilation.IR
             yield return SetSourceLocation(new OpcodeReturn(Depth));
         }
         public override string ToString()
-            => string.Format("{{ret {0}}}", Depth);
+            => string.Format("{return {0} deep}", Depth);
     }
 }
