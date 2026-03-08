@@ -30,13 +30,24 @@ namespace kOS.Safe.Compilation.IR
             optimizationPasses.Add((IOptimizationPass)Activator.CreateInstance(type));
         }
 
-        public List<BasicBlock> Optimize(List<BasicBlock> blocks)
+        public List<BasicBlock> Optimize(IRCodePart codePart)
         {
-            if (blocks.Count == 0)
-                return blocks;
+            List<BasicBlock> blocks = new List<BasicBlock>();
+            blocks.AddRange(codePart.InitializationCode);
+            blocks.AddRange(codePart.FunctionsCode);
+            blocks.AddRange(codePart.MainCode);
 
-            ExtendedBasicBlock extendedRootBlock = ExtendedBasicBlock.CreateExtendedBlockTree(blocks[0]);
-            List<ExtendedBasicBlock> extendedBlocks = new List<ExtendedBasicBlock>(ExtendedBasicBlock.DumpTree(extendedRootBlock));
+            ExtendedBasicBlock initializationRoot = codePart.InitializationCode.Count > 0 ? ExtendedBasicBlock.CreateExtendedBlockTree(codePart.InitializationCode[0]) : null;
+            ExtendedBasicBlock functionsRoot = codePart.FunctionsCode.Count > 0 ? ExtendedBasicBlock.CreateExtendedBlockTree(codePart.FunctionsCode[0]) : null;
+            ExtendedBasicBlock mainRoot = codePart.MainCode.Count > 0 ? ExtendedBasicBlock.CreateExtendedBlockTree(codePart.MainCode[0]) : null;
+
+            List<ExtendedBasicBlock> extendedBlocks = new List<ExtendedBasicBlock>();
+            if (initializationRoot != null)
+                extendedBlocks.AddRange(ExtendedBasicBlock.DumpTree(initializationRoot));
+            if (functionsRoot != null)
+                extendedBlocks.AddRange(ExtendedBasicBlock.DumpTree(functionsRoot));
+            if (mainRoot != null)
+                extendedBlocks.AddRange(ExtendedBasicBlock.DumpTree(mainRoot));
 
             foreach (IOptimizationPass pass in optimizationPasses)
             {
@@ -48,6 +59,9 @@ namespace kOS.Safe.Compilation.IR
                 {
                     switch (pass)
                     {
+                        case IHolisticOptimizationPass codePartpass:
+                            codePartpass.ApplyPass(codePart);
+                            break;
                         case IOptimizationPass<BasicBlock> blockPass:
                             blockPass.ApplyPass(blocks);
                             break;

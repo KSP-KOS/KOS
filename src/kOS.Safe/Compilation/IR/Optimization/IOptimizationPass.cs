@@ -12,4 +12,8 @@ namespace kOS.Safe.Compilation.IR.Optimization
     {
         void ApplyPass(List<T> code);
     }
+    public interface IHolisticOptimizationPass : IOptimizationPass
+    {
+        void ApplyPass(IRCodePart codePart);
+    }
 }

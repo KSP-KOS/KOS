@@ -8,18 +8,18 @@ namespace kOS.Safe.Compilation.IR
     {
         private int nextTempId = 0;
 
-        public List<BasicBlock> Blocks { get; } = new List<BasicBlock>();
-
-        public void Lower(List<Opcode> code)
+        public List<BasicBlock> Lower(List<Opcode> code)
         {
+            List<BasicBlock> blocks = new List<BasicBlock>();
             if (code.Count == 0)
-                return;
+                return blocks;
             Dictionary<string, int> labels = ProgramBuilder.MapLabels(code);
-            CreateBlocks(code, labels);
-            FillBlocks(code, labels);
+            CreateBlocks(code, labels, blocks);
+            FillBlocks(code, labels, blocks);
+            return blocks;
         }
 
-        private void CreateBlocks(List<Opcode> code, Dictionary<string, int> labels)
+        private void CreateBlocks(List<Opcode> code, Dictionary<string, int> labels, List<BasicBlock> blocks)
         {
             SortedSet<int> leaders = new SortedSet<int>() { 0 };
             for (int i = 1; i < code.Count; i++)    // The first instruction is always a leader so we can skip 0.
@@ -32,39 +32,37 @@ namespace kOS.Safe.Compilation.IR
                     else
                         leaders.Add(i + branch.Distance);
                 }
-                else if (code[i] is OpcodeJumpStack jumpstack)
+                else if (code[i] is OpcodeJumpStack)
                 {
                     throw new NotImplementedException("OpcodeJumpStack is not implemented for optimization because it is non-deterministic. Use OptimizationLevel.None.");
                 }
                 else if (code[i] is OpcodeReturn)
-                {
                     leaders.Add(i + 1);
-                }
-                //else if (code[i] is OpcodePushRelocateLater relocateLater)
-                //{
-                    //leaders.Add(labels[relocateLater.DestinationLabel]);
-                //}
+                else if (code[i] is OpcodePushScope)
+                    leaders.Add(i);
+                else if (code[i] is OpcodePopScope)
+                    leaders.Add(i + 1);
             }
             leaders.Add(code.Count);
             foreach (int startIndex in leaders.Take(leaders.Count - 1))
             {
                 int endIndex = leaders.First(i => i > startIndex) - 1;
-                BasicBlock block = new BasicBlock(startIndex, endIndex, Blocks.Count);
-                Blocks.Add(block);
+                BasicBlock block = new BasicBlock(startIndex, endIndex, blocks.Count);
+                blocks.Add(block);
             }
-            foreach (BasicBlock block in Blocks)
+            foreach (BasicBlock block in blocks)
             {
                 Opcode lastOpcode = code[block.EndIndex];
                 if (lastOpcode is BranchOpcode branch)
                 {
                     int destinationIndex = branch.DestinationLabel != string.Empty ? labels[branch.DestinationLabel] : block.EndIndex + branch.Distance;
-                    block.AddSuccessor(GetBlockFromStartIndex(destinationIndex));
+                    block.AddSuccessor(GetBlockFromStartIndex(blocks, destinationIndex));
                     if (!(branch is OpcodeBranchJump))
-                        block.AddSuccessor(GetBlockFromStartIndex(block.EndIndex + 1));
+                        block.AddSuccessor(GetBlockFromStartIndex(blocks, block.EndIndex + 1));
                 }
-                else if (Blocks.Any(b => b.StartIndex == block.EndIndex + 1))
+                else if (blocks.Any(b => b.StartIndex == block.EndIndex + 1))
                 {
-                    BasicBlock successor = GetBlockFromStartIndex(block.EndIndex + 1);
+                    BasicBlock successor = GetBlockFromStartIndex(blocks, block.EndIndex + 1);
                     block.Add(new IRJump(successor, lastOpcode.SourceLine, lastOpcode.SourceColumn));
                     block.AddSuccessor(successor);
                 }
@@ -74,21 +72,21 @@ namespace kOS.Safe.Compilation.IR
             }
         }
 
-        private BasicBlock GetBlockFromStartIndex(int startIndex)
-            => Blocks.First(b => b.StartIndex == startIndex);
+        private BasicBlock GetBlockFromStartIndex(List<BasicBlock> blocks, int startIndex)
+            => blocks.First(b => b.StartIndex == startIndex);
 
-        private void FillBlocks(List<Opcode> code, Dictionary<string, int> labels)
+        private void FillBlocks(List<Opcode> code, Dictionary<string, int> labels, List<BasicBlock> blocks)
         {
             Stack<IRValue> stack = new Stack<IRValue>();
-            BasicBlock currentBlock = GetBlockFromStartIndex(0);
+            BasicBlock currentBlock = GetBlockFromStartIndex(blocks, 0);
             for (int i = 0; i < code.Count; i++)
             {
                 if (i > currentBlock.EndIndex)
                 {
                     currentBlock.SetStackState(stack);
-                    currentBlock = GetBlockFromStartIndex(i);
+                    currentBlock = GetBlockFromStartIndex(blocks, i);
                 }
-                ParseInstruction(code[i], currentBlock, stack, labels, i);
+                ParseInstruction(code[i], currentBlock, stack, labels, i, blocks);
             }
         }
 
@@ -99,7 +97,7 @@ namespace kOS.Safe.Compilation.IR
             return result;
         }
 
-        private void ParseInstruction(Opcode opcode, BasicBlock currentBlock, Stack<IRValue> stack, Dictionary<string, int> labels, int index)
+        private void ParseInstruction(Opcode opcode, BasicBlock currentBlock, Stack<IRValue> stack, Dictionary<string, int> labels, int index, List<BasicBlock> blocks)
         {
             HashSet<string> variables = new HashSet<string>();
             switch (opcode)
@@ -178,14 +176,14 @@ namespace kOS.Safe.Compilation.IR
                     break;
                 case OpcodeBranchIfTrue branchIfTrue:
                     currentBlock.Add(new IRBranch(stack.Pop(),
-                        GetBlockFromStartIndex(labels[branchIfTrue.DestinationLabel]),
-                        GetBlockFromStartIndex(currentBlock.EndIndex + 1),
+                        GetBlockFromStartIndex(blocks, labels[branchIfTrue.DestinationLabel]),
+                        GetBlockFromStartIndex(blocks, currentBlock.EndIndex + 1),
                         branchIfTrue));
                     break;
                 case OpcodeBranchIfFalse branchIfFalse:
                     currentBlock.Add(new IRBranch(stack.Pop(),
-                        GetBlockFromStartIndex(currentBlock.EndIndex + 1),
-                        GetBlockFromStartIndex(labels[branchIfFalse.DestinationLabel]),
+                        GetBlockFromStartIndex(blocks, currentBlock.EndIndex + 1),
+                        GetBlockFromStartIndex(blocks, labels[branchIfFalse.DestinationLabel]),
                         branchIfFalse));
                     break;
                 case OpcodeBranchJump branchJump:
@@ -195,7 +193,7 @@ namespace kOS.Safe.Compilation.IR
                         // TODO
                         bool test = index == currentBlock.EndIndex;
                     }
-                    currentBlock.Add(new IRJump(GetBlockFromStartIndex(destinationIndex), branchJump));
+                    currentBlock.Add(new IRJump(GetBlockFromStartIndex(blocks, destinationIndex), branchJump));
                     break;
                 case OpcodeJumpStack _:
                     throw new NotImplementedException("OpcodeJumpStack is not implemented for optimization because it is non-deterministic. Use OptimizationLevel.None.");

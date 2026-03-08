@@ -187,17 +187,6 @@ namespace kOS.Safe.Compilation.KS
             return;
         }
 
-        public static void Optimize(List<Opcode> code, CompilerOptions options)
-        {
-            IR.IRBuilder irBuilder = new IR.IRBuilder();
-            irBuilder.Lower(code);
-            List<IR.BasicBlock> blocks = irBuilder.Blocks;
-            IR.IROptimizer optimizer = new IR.IROptimizer(options.OptimizationLevel);
-            blocks = optimizer.Optimize(blocks);
-            code.Clear();
-            code.AddRange(IR.IREmitter.Emit(blocks));
-        }
-
         public CodePart Compile(int startLineNum, ParseTree tree, Context context, CompilerOptions options)
         {
             this.options = options;
@@ -215,11 +204,18 @@ namespace kOS.Safe.Compilation.KS
                 CompileProgram(tree);
                 if (options.OptimizationLevel != OptimizationLevel.None)
                 {
-                    foreach (List<Opcode> code in new[] { part.InitializationCode, part.FunctionsCode, part.MainCode })
-                        Optimize(code, options);
+                    Optimize(part, options);
                 }
             }
             return part;
+        }
+
+        public static void Optimize(CodePart code, CompilerOptions options)
+        {
+            IR.IRCodePart irCode = new IR.IRCodePart(code);
+            IR.IROptimizer optimizer = new IR.IROptimizer(options.OptimizationLevel);
+            optimizer.Optimize(irCode);
+            irCode.EmitToCodePart(code);
         }
 
         private void CompileProgram(ParseTree tree)
