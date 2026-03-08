@@ -5,18 +5,20 @@ namespace kOS.Safe.Compilation.IR
 {
     public class BasicBlock
     {
+        private readonly HashSet<BasicBlock> predecessors = new HashSet<BasicBlock>();
+        private readonly HashSet<BasicBlock> successors = new HashSet<BasicBlock>();
+        private readonly Stack<IRValue> exitStackState = new Stack<IRValue>();  // Note that this is reversed from the real stack. Just now we don't reverse it four times.
+        private readonly string nonSequentialLabel = null;
+
         public int StartIndex { get; }
         public int EndIndex { get; }
         public List<IRInstruction> Instructions { get; } = new List<IRInstruction>();
-        public IEnumerable<BasicBlock> Sucessors => sucessors;
+        public IEnumerable<BasicBlock> Successors => successors;
         public IEnumerable<BasicBlock> Predecessors => predecessors;
-        private readonly HashSet<BasicBlock> predecessors = new HashSet<BasicBlock>();
-        private readonly HashSet<BasicBlock> sucessors = new HashSet<BasicBlock>();
         public string Label => nonSequentialLabel ?? $"@BB#{ID}";
-        private string nonSequentialLabel = null;
         public int ID { get; }
+        public BasicBlock Dominator { get; protected set; }
         public Optimization.ExtendedBasicBlock ExtendedBlock { get; set; }
-        private readonly Stack<IRValue> exitStackState = new Stack<IRValue>();  // Note that this is reversed from the real stack. Just now we don't reverse it four times.
         public IRJump FallthroughJump { get; set; } = null;
 #if DEBUG
         internal Opcode[] OriginalOpcodes { get; set; }
@@ -36,18 +38,93 @@ namespace kOS.Safe.Compilation.IR
 
         public void AddSuccessor(BasicBlock successor)
         {
-            sucessors.Add(successor);
+            successors.Add(successor);
             successor.AddPredecessor(this);
         }
         protected void AddPredecessor(BasicBlock predecessor)
         {
             predecessors.Add(predecessor);
         }
-        public void RemoveSuccessor(BasicBlock sucessor)
+        public void RemoveSuccessor(BasicBlock successor)
         {
-            if (!sucessors.Remove(sucessor))
-                throw new System.ArgumentException(nameof(sucessor));
-            sucessor.predecessors.Remove(this);
+            if (!successors.Remove(successor))
+                throw new System.ArgumentException(nameof(successor));
+            successor.predecessors.Remove(this);
+            if (successor.predecessors.Count == 0)
+                successor.Dominator = null;
+            else
+                successor.Dominator.EstablishDominance();
+        }
+        public void EstablishDominance()
+        {
+            // Compute reverse postorder
+            var postorder = new List<BasicBlock>();
+            var visited = new HashSet<BasicBlock>();
+            DepthFirstSearch(this, visited, postorder);
+            
+            postorder.Reverse();
+
+            // Map block to index
+            Dictionary<BasicBlock, int> index = new Dictionary<BasicBlock, int>();
+            for (int i = 0; i < postorder.Count; i++)
+                index[postorder[i]] = i;
+
+            // Initialize
+            postorder.Remove(this);
+            bool changed = true;
+            while (changed)
+            {
+                changed = false;
+
+                foreach (BasicBlock block in postorder)
+                {
+                    // Pick first predecessor with defined dominator
+                    BasicBlock newIdom = block.predecessors.Where(p => p != block).FirstOrDefault
+                        (p => p == this || p.Dominator != null);
+
+                    if (newIdom == null)
+                        continue;
+
+                    foreach (BasicBlock predecessor in block.predecessors)
+                    {
+                        if (predecessor == newIdom)
+                            continue;
+
+                        if (predecessor.Dominator != null)
+                            newIdom = Intersect(predecessor, newIdom, index);
+                    }
+
+                    if (block.Dominator != newIdom)
+                    {
+                        block.Dominator = newIdom;
+                        changed = true;
+                    }
+                }
+            }
+        }
+        private static BasicBlock Intersect(BasicBlock b1, BasicBlock b2, Dictionary<BasicBlock, int> index)
+        {
+            while (b1 != b2)
+            {
+                while (index[b1] > index[b2])
+                    b1 = b1.Dominator;
+
+                while (index[b2] > index[b1])
+                    b2 = b2.Dominator;
+            }
+
+            return b1;
+        }
+        private static void DepthFirstSearch(BasicBlock block, HashSet<BasicBlock> visited, List<BasicBlock> postorder)
+        {
+            if (!visited.Add(block))
+                return;
+
+            foreach (BasicBlock successor in block.successors)
+                DepthFirstSearch(successor, visited, postorder);
+
+            postorder.Add(block);
+        }
         }
 
         public void SetStackState(Stack<IRValue> stack)

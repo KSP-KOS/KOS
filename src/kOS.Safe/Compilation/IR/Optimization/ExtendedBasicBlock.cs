@@ -19,7 +19,7 @@ namespace kOS.Safe.Compilation.IR.Optimization
         {
             Blocks.Add(block);
             block.ExtendedBlock = this;
-            foreach (BasicBlock successor in block.Sucessors)
+            foreach (BasicBlock successor in block.Successors)
             {
                 if (!successor.Predecessors.Skip(1).Any())
                     AddBlock(successor);
