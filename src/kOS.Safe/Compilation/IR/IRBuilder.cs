@@ -7,6 +7,7 @@ namespace kOS.Safe.Compilation.IR
     public class IRBuilder
     {
         private int nextTempId = 0;
+        private int blockID = 0;
 
         public List<BasicBlock> Lower(List<Opcode> code)
         {
@@ -50,7 +51,7 @@ namespace kOS.Safe.Compilation.IR
                 string label = code[startIndex].Label;
                 if (label.StartsWith("@"))
                     label = null;
-                BasicBlock block = new BasicBlock(startIndex, endIndex, blocks.Count, label);
+                BasicBlock block = new BasicBlock(startIndex, endIndex, blockID++, label);
                 blocks.Add(block);
             }
             foreach (BasicBlock block in blocks)
