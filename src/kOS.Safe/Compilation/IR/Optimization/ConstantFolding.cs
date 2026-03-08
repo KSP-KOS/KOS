@@ -98,13 +98,13 @@ namespace kOS.Safe.Compilation.IR.Optimization
                     switch (instruction.Operation)
                     {
                         case OpcodeMathNegate _:
-                            result = new IRConstant(OpcodeMathNegate.StaticOperation(input));
+                            result = new IRConstant(OpcodeMathNegate.StaticOperation(input), instruction);
                             break;
                         case OpcodeLogicNot _:
-                            result = new IRConstant(OpcodeLogicNot.StaticOperation(input));
+                            result = new IRConstant(OpcodeLogicNot.StaticOperation(input), instruction);
                             break;
                         case OpcodeLogicToBool _:
-                            result = new IRConstant(OpcodeLogicToBool.StaticOperation(input));
+                            result = new IRConstant(OpcodeLogicToBool.StaticOperation(input), instruction);
                             break;
                         default:
                             result = instruction.Result;
@@ -144,7 +144,7 @@ namespace kOS.Safe.Compilation.IR.Optimization
                     object right = constantR.Value;
                     try
                     {
-                        IRConstant result = new IRConstant(instruction.Operation.ExecuteCalculation(left, right));
+                        IRConstant result = new IRConstant(instruction.Operation.ExecuteCalculation(left, right), instruction);
                         instruction.Result = result;
                     }
                     catch (KOSBinaryOperandTypeException binaryTypeException)
@@ -166,7 +166,7 @@ namespace kOS.Safe.Compilation.IR.Optimization
                         object left = constantL1.Value;
                         try
                         {
-                            IRConstant result = new IRConstant(instruction.Operation.ExecuteCalculation(left, right));
+                            IRConstant result = new IRConstant(instruction.Operation.ExecuteCalculation(left, right), instruction);
                             instruction.Result = result;
                             leftOp.Right = result;
                         }
@@ -200,7 +200,7 @@ namespace kOS.Safe.Compilation.IR.Optimization
                     case OpcodeMathPower _:
                         // X^0 = 1
                         if (Encapsulation.ScalarIntValue.Zero.Equals(constantR.Value))
-                            return new IRConstant(Encapsulation.ScalarIntValue.One);
+                            return new IRConstant(Encapsulation.ScalarIntValue.One, instruction);
                         // X^1 = X
                         if (Encapsulation.ScalarIntValue.One.Equals(constantR.Value))
                             return instruction.Left;
@@ -305,7 +305,7 @@ namespace kOS.Safe.Compilation.IR.Optimization
                             foreach (IRValue arg in instruction.Arguments)
                                 interimCPU.PushArgumentStack(((IRConstant)arg).Value);
                             IROptimizer.FunctionManager.CallFunction(functionName);
-                            instruction.Result = new IRConstant(interimCPU.PopValueArgument());
+                            instruction.Result = new IRConstant(interimCPU.PopValueArgument(), instruction);
                             return instruction.Result;
                     }
                 }

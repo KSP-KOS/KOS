@@ -252,15 +252,15 @@ namespace kOS.Safe.Compilation.IR
                 case OpcodePush opcodePush:
                     object argument = opcodePush.Argument;
                     if (argument is string identifier && identifier.StartsWith("$"))
-                        stack.Push(new IRVariable(identifier, false));
+                        stack.Push(new IRVariable(identifier, opcodePush, false));
                     else
-                        stack.Push(new IRConstant(argument));
+                        stack.Push(new IRConstant(argument, opcodePush));
                     break;
                 case OpcodePushDelegateRelocateLater delegateRelocateLater:
-                    stack.Push(new IRDelegateRelocateLater(delegateRelocateLater.DestinationLabel, delegateRelocateLater.WithClosure));
+                    stack.Push(new IRDelegateRelocateLater(delegateRelocateLater.DestinationLabel, delegateRelocateLater.WithClosure, delegateRelocateLater));
                     break;
                 case OpcodePushRelocateLater relocateLater:
-                    stack.Push(new IRRelocateLater(relocateLater.DestinationLabel));
+                    stack.Push(new IRRelocateLater(relocateLater.DestinationLabel, relocateLater));
                     break;
                 case OpcodeAddTrigger _:
                 case OpcodeRemoveTrigger _:
