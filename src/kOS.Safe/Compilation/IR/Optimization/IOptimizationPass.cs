@@ -16,4 +16,9 @@ namespace kOS.Safe.Compilation.IR.Optimization
     {
         void ApplyPass(IRCodePart codePart);
     }
+    public interface ILinkedOptimizationPass : IOptimizationPass
+    {
+        IROptimizer Optimizer { set; }
+        void ApplyPass();
+    }
 }

@@ -10,34 +10,49 @@ namespace kOS.Safe.Compilation.IR
     [AssemblyWalk(InterfaceType = typeof(IOptimizationPass), StaticRegisterMethod = "RegisterMethod")]
     public class IROptimizer
     {
+        public OptimizationLevel OptimizationLevel { get; }
+        public List<BasicBlock> Blocks { get; private set; }
+        public List<ExtendedBasicBlock> ExtendedBlocks { get; private set; }
+        public HashSet<BasicBlock> RootBlocks { get; private set; }
+        public IRCodePart Code { get; private set; }
         internal static InterimCPU InterimCPU { get; } = new InterimCPU();
-        private static readonly SafeSharedObjects shared = new SafeSharedObjects() { Cpu = InterimCPU };
         public static IFunctionManager FunctionManager => shared.FunctionManager;
 
-        private static readonly SortedSet<IOptimizationPass> optimizationPasses = new SortedSet<IOptimizationPass>(
+        private static readonly SafeSharedObjects shared = new SafeSharedObjects() { Cpu = InterimCPU };
+        private readonly SortedSet<IOptimizationPass> optimizationPasses = new SortedSet<IOptimizationPass>(
             Comparer<IOptimizationPass>.Create((a, b) => a.SortIndex.CompareTo(b.SortIndex)));
-        public OptimizationLevel OptimizationLevel { get; }
+        private readonly static HashSet<Type> availablePassTypes = new HashSet<Type>();
 
         static IROptimizer()
         {
             shared.FunctionManager = new FunctionManager(shared);
         }
+
         public IROptimizer(OptimizationLevel optimizationLevel)
         {
             OptimizationLevel = optimizationLevel;
+            foreach (Type type in availablePassTypes)
+            {
+                IOptimizationPass pass = (IOptimizationPass)Activator.CreateInstance(type);
+                optimizationPasses.Add(pass);
+                if (pass is ILinkedOptimizationPass linkedPass)
+                    linkedPass.Optimizer = this;
+            }
         }
         public static void RegisterMethod(Type type)
         {
-            optimizationPasses.Add((IOptimizationPass)Activator.CreateInstance(type));
+            availablePassTypes.Add(type);
         }
 
         public List<BasicBlock> Optimize(IRCodePart codePart)
         {
-            List<BasicBlock> blocks = codePart.Blocks;
+            Code = codePart;
+            Blocks = codePart.Blocks;
+            RootBlocks = new HashSet<BasicBlock>(codePart.RootBlocks);
 
             List<ExtendedBasicBlock> rootExtendedBlocks = new List<ExtendedBasicBlock>(
                 codePart.RootBlocks.Select(b => ExtendedBasicBlock.CreateExtendedBlockTree(b)));
-            List<ExtendedBasicBlock> extendedBlocks = new List<ExtendedBasicBlock>(
+            ExtendedBlocks = new List<ExtendedBasicBlock>(
                 rootExtendedBlocks.SelectMany(ExtendedBasicBlock.DumpTree));
 
             foreach (IOptimizationPass pass in optimizationPasses)
@@ -48,17 +63,20 @@ namespace kOS.Safe.Compilation.IR
                 SafeHouse.Logger.Log($"Applying optimization pass: {pass.GetType()}.");
                 switch (pass)
                 {
+                    case ILinkedOptimizationPass linkedPass:
+                        linkedPass.ApplyPass();
+                        break;
                     case IHolisticOptimizationPass codePartpass:
-                        codePartpass.ApplyPass(codePart);
+                        codePartpass.ApplyPass(Code);
                         break;
                     case IOptimizationPass<BasicBlock> blockPass:
-                        blockPass.ApplyPass(blocks);
+                        blockPass.ApplyPass(Blocks);
                         break;
                     case IOptimizationPass<ExtendedBasicBlock> extendedBlockPass:
-                        extendedBlockPass.ApplyPass(extendedBlocks);
+                        extendedBlockPass.ApplyPass(ExtendedBlocks);
                         break;
                     case IOptimizationPass<IRInstruction> instructionPass:
-                        foreach (BasicBlock block in blocks)
+                        foreach (BasicBlock block in Blocks)
                             instructionPass.ApplyPass(block.Instructions);
                         break;
                     default:
@@ -66,7 +84,7 @@ namespace kOS.Safe.Compilation.IR
                         break;
                 }
             }
-            return blocks;
+            return Blocks;
         }
     }
 }

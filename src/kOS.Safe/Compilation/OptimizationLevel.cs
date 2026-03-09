@@ -5,12 +5,12 @@ namespace kOS.Safe.Compilation
      *  Replace CONSTANT: values with the constant
      *  Replace ship fields with their alias
      *  Constant folding
+     *  Dead code elimination
      *  
      *  Constant propagation
      *  Replace lex indexing with string constant with suffixing where possible
-     *  Dead code elimination (for the never used case)
      * O2:
-     *  Redundant expression elimination
+     *  Common expression elimination
      *      Particularly: Any expression of 3 opcodes used more than twice,
      *      or any expression of >3 opcodes used more than once
      *  Replace parameterless suffix method calls with get member (this feels like cheating...)
