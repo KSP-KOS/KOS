@@ -4,26 +4,39 @@ using kOS.Safe.Compilation.IR;
 
 namespace kOS.Safe.Compilation.Optimization.Passes
 {
-    internal class DeadCodeElimination : ILinkedOptimizationPass
+    internal class DeadCodeElimination : IHolisticOptimizationPass
     {
-        public Optimizer Optimizer { set => optimizer = value; }
         public OptimizationLevel OptimizationLevel => OptimizationLevel.Minimal;
         public short SortIndex => 50;
 
-        private Optimizer optimizer;
+        public void ApplyPass(IRCodePart code)
+        {
+            HashSet<BasicBlock> rootBlocks = new HashSet<BasicBlock>(code.RootBlocks);
 
-        public void ApplyPass()
+            RemoveDeadBlocks(code.Blocks, rootBlocks);
+
+            foreach (IRCodePart.IRFunction function in code.Functions)
+            {
+                RemoveDeadBlocks(function.InitializationCode, rootBlocks);
+                foreach (IRCodePart.IRFunction.IRFunctionFragment fragment in function.Fragments.Values)
+                {
+                    RemoveDeadBlocks(fragment.FunctionCode, rootBlocks);
+                }
+            }
+        }
+
+        private static void RemoveDeadBlocks(List<BasicBlock> blocks, HashSet<BasicBlock> rootBlocks)
         {
             List<BasicBlock> blocksToRemove = new List<BasicBlock>();
-            foreach (BasicBlock block in optimizer.Blocks)
+            foreach (BasicBlock block in blocks)
             {
-                if (block.Predecessors.Any() || optimizer.RootBlocks.Contains(block))
+                if (block.Predecessors.Any() || rootBlocks.Contains(block))
                     continue;
                 blocksToRemove.Add(block);
             }
             foreach (BasicBlock block in blocksToRemove)
             {
-                optimizer.Blocks.Remove(block);
+                blocks.Remove(block);
                 foreach (BasicBlock successor in block.Successors.ToArray())
                     block.RemoveSuccessor(successor);
             }
