@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using kOS.Safe.Compilation.IR.Optimization;
+using kOS.Safe.Compilation.IR;
 using kOS.Safe.Function;
 using kOS.Safe.Utilities;
 
-namespace kOS.Safe.Compilation.IR
+namespace kOS.Safe.Compilation.Optimization
 {
     [AssemblyWalk(InterfaceType = typeof(IOptimizationPass), StaticRegisterMethod = "RegisterMethod")]
-    public class IROptimizer
+    public class Optimizer
     {
         public OptimizationLevel OptimizationLevel { get; }
         public List<BasicBlock> Blocks { get; private set; }
@@ -23,12 +23,12 @@ namespace kOS.Safe.Compilation.IR
             Comparer<IOptimizationPass>.Create((a, b) => a.SortIndex.CompareTo(b.SortIndex)));
         private readonly static HashSet<Type> availablePassTypes = new HashSet<Type>();
 
-        static IROptimizer()
+        static Optimizer()
         {
             shared.FunctionManager = new FunctionManager(shared);
         }
 
-        public IROptimizer(OptimizationLevel optimizationLevel)
+        public Optimizer(OptimizationLevel optimizationLevel)
         {
             OptimizationLevel = optimizationLevel;
             foreach (Type type in availablePassTypes)

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using kOS.Safe.Compilation.Optimization;
 
 namespace kOS.Safe.Compilation.IR
 {
@@ -21,7 +22,7 @@ namespace kOS.Safe.Compilation.IR
         public string Label => nonSequentialLabel ?? $"@BB#{ID}";
         public int ID { get; }
         public BasicBlock Dominator { get; protected set; }
-        public Optimization.ExtendedBasicBlock ExtendedBlock { get; set; }
+        public ExtendedBasicBlock ExtendedBlock { get; set; }
         public IRJump FallthroughJump { get; set; } = null;
 #if DEBUG
         internal Opcode[] OriginalOpcodes { get; set; }

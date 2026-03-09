@@ -1,16 +1,16 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using kOS.Safe.Compilation.IR;
 
-namespace kOS.Safe.Compilation.IR.Optimization
+namespace kOS.Safe.Compilation.Optimization.Passes
 {
     internal class DeadCodeElimination : ILinkedOptimizationPass
     {
-        public IROptimizer Optimizer { set => optimizer = value; }
+        public Optimizer Optimizer { set => optimizer = value; }
         public OptimizationLevel OptimizationLevel => OptimizationLevel.Minimal;
-        public short SortIndex => 3;
+        public short SortIndex => 50;
 
-        private IROptimizer optimizer;
+        private Optimizer optimizer;
 
         public void ApplyPass()
         {

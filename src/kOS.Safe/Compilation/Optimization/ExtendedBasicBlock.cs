@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using kOS.Safe.Compilation.IR;
 
-namespace kOS.Safe.Compilation.IR.Optimization
+namespace kOS.Safe.Compilation.Optimization
 {
     public class ExtendedBasicBlock
     {

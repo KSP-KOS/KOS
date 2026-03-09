@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
+using kOS.Safe.Compilation.IR;
 
-namespace kOS.Safe.Compilation.IR.Optimization
+namespace kOS.Safe.Compilation.Optimization
 {
     public interface IOptimizationPass
     {
@@ -18,7 +18,7 @@ namespace kOS.Safe.Compilation.IR.Optimization
     }
     public interface ILinkedOptimizationPass : IOptimizationPass
     {
-        IROptimizer Optimizer { set; }
+        Optimizer Optimizer { set; }
         void ApplyPass();
     }
 }

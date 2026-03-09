@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using kOS.Safe.Compilation.IR;
 using kOS.Safe.Exceptions;
-using kOS.Safe.Function;
 
-namespace kOS.Safe.Compilation.IR.Optimization
+namespace kOS.Safe.Compilation.Optimization.Passes
 {
     public class ConstantFolding : IOptimizationPass<BasicBlock>
     {
         public OptimizationLevel OptimizationLevel => OptimizationLevel.Minimal;
-        public short SortIndex => 1;
+        public short SortIndex => 30;
 
         public void ApplyPass(List<BasicBlock> blocks)
         {
@@ -47,7 +47,9 @@ namespace kOS.Safe.Compilation.IR.Optimization
                         indexSet.Index = AttemptReductionToConstant(indexSet.Index);
                         break;
                     case IRBranch branch:
-                        if (AttemptReductionToConstant(branch.Condition) is IRConstant branchConstant)
+                        if (branch.True == branch.False)
+                            block.Instructions[i] = new IRJump(branch.True, branch.SourceLine, branch.SourceColumn);
+                        else if (AttemptReductionToConstant(branch.Condition) is IRConstant branchConstant)
                         {
                             BasicBlock permanentBlock, deprecatedBlock;
                             (permanentBlock, deprecatedBlock) = Convert.ToBoolean(branchConstant.Value) ? (branch.True, branch.False) : (branch.False, branch.True);
@@ -277,7 +279,7 @@ namespace kOS.Safe.Compilation.IR.Optimization
                     instruction.Arguments[i] = AttemptReduction(temp.Parent);
             }
             string functionName = instruction.Function.Replace("()", "");
-            if (IROptimizer.FunctionManager.Exists(functionName) && instruction.Arguments.All(arg => arg is IRConstant))
+            if (Optimizer.FunctionManager.Exists(functionName) && instruction.Arguments.All(arg => arg is IRConstant))
             {
                 try
                 {
@@ -301,12 +303,12 @@ namespace kOS.Safe.Compilation.IR.Optimization
                         case "arctan":
                         case "arctan2":
                         case "anglediff":
-                            InterimCPU interimCPU = IROptimizer.InterimCPU;
+                            InterimCPU interimCPU = Optimizer.InterimCPU;
                             interimCPU.Boot();  // Clear the stack out of caution.
                             interimCPU.PushArgumentStack(new Execution.KOSArgMarkerType());
                             foreach (IRValue arg in instruction.Arguments)
                                 interimCPU.PushArgumentStack(((IRConstant)arg).Value);
-                            IROptimizer.FunctionManager.CallFunction(functionName);
+                            Optimizer.FunctionManager.CallFunction(functionName);
                             instruction.Result = new IRConstant(interimCPU.PopValueArgument(), instruction);
                             return instruction.Result;
                     }

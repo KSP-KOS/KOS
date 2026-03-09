@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using kOS.Safe.Compilation.IR;
 
-namespace kOS.Safe.Compilation.IR.Optimization
+namespace kOS.Safe.Compilation.Optimization.Passes
 {
     public class SuffixReplacement : IOptimizationPass<IRInstruction>
     {
         public OptimizationLevel OptimizationLevel => OptimizationLevel.Minimal;
-        public short SortIndex => 0;
+        public short SortIndex => 10;
 
         public void ApplyPass(List<IRInstruction> code)
         {
@@ -116,16 +117,16 @@ namespace kOS.Safe.Compilation.IR.Optimization
         }
         private static IRConstant ReplaceConstantSuffix(IRSuffixGet suffixGet)
         {
-            IROptimizer.InterimCPU.PushArgumentStack(new Encapsulation.ConstantValue());
+            Optimizer.InterimCPU.PushArgumentStack(new Encapsulation.ConstantValue());
             try
             {
-                new OpcodeGetMember(suffixGet.Suffix).Execute(IROptimizer.InterimCPU);
+                new OpcodeGetMember(suffixGet.Suffix).Execute(Optimizer.InterimCPU);
             }
             catch (Exception e)
             {
                 throw new Exceptions.KOSCompileException(suffixGet, e);
             }
-            IRConstant result = new IRConstant(IROptimizer.InterimCPU.PopValueArgument(), suffixGet);
+            IRConstant result = new IRConstant(Optimizer.InterimCPU.PopValueArgument(), suffixGet);
             suffixGet.Result = result;
             return result;
         }

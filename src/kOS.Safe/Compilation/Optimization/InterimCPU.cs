@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Execution;
 
-namespace kOS.Safe.Compilation.IR.Optimization
+namespace kOS.Safe.Compilation.Optimization
 {
     internal class InterimCPU : ICpu
     {
