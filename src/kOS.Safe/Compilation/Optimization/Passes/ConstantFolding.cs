@@ -192,6 +192,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             return newResult;
                         break;
                     case OpcodeMathDivide _:
+                        if (Encapsulation.ScalarIntValue.Zero.Equals(constantR.Value))
+                            throw new KOSCompileException(instruction, new DivideByZeroException());
                         if (ReduceDivMult(instruction, constantR, out newResult))
                             return newResult;
                         break;
@@ -211,13 +213,26 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         break;
                 }
             }
-            else if (!instruction.IsCommutative && instruction.Left is IRConstant constantL)
+            else
             {
                 switch (instruction.Operation)
                 {
                     case OpcodeMathDivide _:
-                        if (Encapsulation.ScalarIntValue.Zero.Equals(constantL))
+                        // 0 / X = 0
+                        // Technically not true when X = 0
+                        // But that would otherwise throw a "Tried to push infinite on to the stack" error
+                        // So this is an acceptable assumption that improves performance and eliminates an error.
+                        // TODO: Add an "EXIT" (EOP) command to the language because this will break the
+                        // PRINT(1/0) shortcut to cause a program to terminate.
+                        if (instruction.Left is IRConstant constantL &&
+                            Encapsulation.ScalarIntValue.Zero.Equals(constantL.Value))
                             return constantL;
+                        // X / X = 1
+                        // Technically not true when X = 0
+                        // But that would otherwise throw a "Tried to push infinite on to the stack" error
+                        // So this is an acceptable assumption that improves performance and eliminates an error.
+                        if (instruction.Left == instruction.Right)
+                            return new IRConstant(Encapsulation.ScalarIntValue.One, instruction);
                         break;
                 }
             }
