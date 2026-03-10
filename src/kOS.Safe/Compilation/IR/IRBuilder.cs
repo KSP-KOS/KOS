@@ -112,28 +112,28 @@ namespace kOS.Safe.Compilation.IR
         private void ParseInstruction(Opcode opcode, BasicBlock currentBlock, Stack<IRValue> stack, Dictionary<string, int> labels, int index, List<BasicBlock> blocks)
         {
             IRValue PopStack() => PopFromStack(stack, currentBlock);
-            HashSet<string> variables = new HashSet<string>();
             switch (opcode)
             {
                 case OpcodeStore store:
                     IRAssign assignment = new IRAssign(store, PopStack()) { Scope = IRAssign.StoreScope.Ambivalent };
-                    variables.Add(assignment.Target);
+                    currentBlock.StoreVariable(new IRVariable(assignment.Target, assignment));
                     currentBlock.Add(assignment);
                     break;
                 case OpcodeStoreExist storeExist:
                     assignment = new IRAssign(storeExist, PopStack()) { AssertExists = true };
-                    variables.Add(assignment.Target);
+                    if (!currentBlock.TryStoreVariable(new IRVariable(assignment.Target, assignment)))
+                        throw new Exceptions.KOSCompileException(new KS.LineCol(assignment.SourceLine, assignment.SourceColumn), "Assert that variable exists failed.");
                     currentBlock.Add(assignment);
                     break;
                 case OpcodeStoreLocal storeLocal:
                     assignment = new IRAssign(storeLocal, PopStack()) { Scope = IRAssign.StoreScope.Local };
+                    currentBlock.StoreLocalVariable(new IRVariable(assignment.Target, assignment));
                     currentBlock.Add(assignment);
-                    variables.Add(assignment.Target);
                     break;
                 case OpcodeStoreGlobal storeGlobal:
                     assignment = new IRAssign(storeGlobal, PopStack()) { Scope = IRAssign.StoreScope.Global };
+                    currentBlock.StoreGlobalVariable(new IRVariable(assignment.Target, assignment));
                     currentBlock.Add(assignment);
-                    variables.Add(assignment.Target);
                     break;
                 case OpcodeExists exists:
                     IRTemp temp = CreateTemp();

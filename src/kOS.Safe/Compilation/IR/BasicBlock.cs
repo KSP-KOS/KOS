@@ -134,9 +134,34 @@ namespace kOS.Safe.Compilation.IR
         {
             parameters.Add(parameter);
         }
-        public void StoreVariable(IRVariable variable)
+        public void StoreLocalVariable(IRVariable variable)
         {
             variables[variable.Name] = variable;
+        }
+        public void StoreGlobalVariable(IRVariable variable)
+        {
+            if (Dominator != null)
+            {
+                Dominator.StoreGlobalVariable(variable);
+                return;
+            }
+            externalGlobalVariables[variable.Name] = variable;
+        }
+        public void StoreVariable(IRVariable variable)
+        {
+            if (!TryStoreVariable(variable))
+                StoreGlobalVariable(variable);
+        }
+        public bool TryStoreVariable(IRVariable variable)
+        {
+            if (variables.ContainsKey(variable.Name))
+            {
+                variables[variable.Name] = variable;
+                return true;
+            }
+            if (Dominator != null)
+                return Dominator.TryStoreVariable(variable);
+            return false;
         }
         public IRVariable PushVariable(string name, Opcode opcode)
         {
