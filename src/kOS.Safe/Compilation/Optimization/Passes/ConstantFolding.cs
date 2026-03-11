@@ -69,7 +69,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 return input;
             return AttemptReduction(temp.Parent);
         }
-        private static IRValue AttemptReduction(IRInstruction instruction)
+        public static IRValue AttemptReduction(IRInstruction instruction)
         {
             switch (instruction)
             {
@@ -86,7 +86,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 case IResultingInstruction resulting:
                     return resulting.Result;
             }
-            throw new ArgumentException($"{instruction.GetType()} is not supported.");
+            throw new ArgumentException($"{instruction.GetType()} is not supported for constant folding.");
         }
         private static IRValue ReduceUnary(IRUnaryOp instruction)
         {
