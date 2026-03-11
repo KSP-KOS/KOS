@@ -59,7 +59,7 @@ namespace kOS.Safe.Compilation.IR
         public IRValue Value { get; set; }
         public StoreScope Scope { get; set; } = StoreScope.Ambivalent;
         public bool AssertExists { get; set; } = false;
-        IRValue ISingleOperandInstruction.Operand => Value;
+        IRValue ISingleOperandInstruction.Operand { get => Value; set => Value = value; }
 
         public IRAssign(OpcodeIdentifierBase opcode, IRValue value) : base(opcode)
         {
@@ -97,10 +97,24 @@ namespace kOS.Safe.Compilation.IR
     {
         public override bool SideEffects => false;
         public IRValue Result { get; set; }
-        public BinaryOpcode Operation { get; protected set; }
+        public BinaryOpcode Operation { get; set; }
         public IRValue Left { get; set; }
         public IRValue Right { get; set; }
         public IEnumerable<IRValue> Operands { get { yield return Left; yield return Right; } }
+        public int OperandCount => 2;
+        IRValue IMultipleOperandInstruction.this[int index]
+        {
+            get => index == 0 ? Left : index == 1 ? Right : throw new System.ArgumentOutOfRangeException();
+            set
+            {
+                if (index == 0)
+                    Left = value;
+                else if (index == 1)
+                    Right = value;
+                else
+                    throw new System.ArgumentOutOfRangeException();
+            }
+        }
         public bool IsCommutative { get; }
 
         public IRBinaryOp(IRTemp result, BinaryOpcode operation, IRValue left, IRValue right) : base(operation)
@@ -192,7 +206,7 @@ namespace kOS.Safe.Compilation.IR
     {
         public override bool SideEffects { get; }
         public Opcode Operation { get; }
-        public IRValue Operand { get; }
+        public IRValue Operand { get; set; }
         public IRUnaryConsumer(Opcode opcode, IRValue operand, bool sideEffects = false) : base(opcode)
         {
             Operation = opcode;
@@ -213,7 +227,7 @@ namespace kOS.Safe.Compilation.IR
     {
         public override bool SideEffects => false;
         public IRValue Value { get; set; }
-        IRValue ISingleOperandInstruction.Operand => Value;
+        IRValue ISingleOperandInstruction.Operand { get => Value; set => Value = value; }
         public IRPop(IRValue value, OpcodePop opcode) : base(opcode)
             => Value = value;
 
@@ -253,7 +267,7 @@ namespace kOS.Safe.Compilation.IR
         public IRValue Result { get; set; }
         public IRValue Object { get; set; }
         public string Suffix { get; set; }
-        IRValue ISingleOperandInstruction.Operand => Object;
+        IRValue ISingleOperandInstruction.Operand { get => Object; set => Object = value; }
         public IRSuffixGet(IRTemp result, IRValue obj, OpcodeGetMember opcodeGetMember) : base(obj, opcodeGetMember)
         {
             Result = result;
@@ -288,6 +302,20 @@ namespace kOS.Safe.Compilation.IR
         public IRValue Object { get; set; }
         public IRValue Value { get; set; }
         public IEnumerable<IRValue> Operands { get { yield return Object; yield return Value; } }
+        public int OperandCount => 2;
+        IRValue IMultipleOperandInstruction.this[int index]
+        {
+            get => index == 0 ? Object : index == 1 ? Value : throw new System.ArgumentOutOfRangeException();
+            set
+            {
+                if (index == 0)
+                    Object = value;
+                else if (index == 1)
+                    Value = value;
+                else
+                    throw new System.ArgumentOutOfRangeException();
+            }
+        }
         public string Suffix { get; }
         public IRSuffixSet(IRValue obj, IRValue value, OpcodeSetMember opcodeSetMember) : base(obj, opcodeSetMember)
         {
@@ -313,6 +341,20 @@ namespace kOS.Safe.Compilation.IR
         public IRValue Object { get; set; }
         public IRValue Index { get; set; }
         public IEnumerable<IRValue> Operands { get { yield return Object; yield return Index; } }
+        public int OperandCount => 2;
+        IRValue IMultipleOperandInstruction.this[int index]
+        {
+            get => index == 0 ? Object : index == 1 ? Index : throw new System.ArgumentOutOfRangeException();
+            set
+            {
+                if (index == 0)
+                    Object = value;
+                else if (index == 1)
+                    Index = value;
+                else
+                    throw new System.ArgumentOutOfRangeException();
+            }
+        }
         public IRIndexGet(IRTemp result, IRValue obj, IRValue index, OpcodeGetIndex opcode) : base(opcode)
         {
             Result = result;
@@ -337,6 +379,22 @@ namespace kOS.Safe.Compilation.IR
         public IRValue Index { get; set; }
         public IRValue Value { get; set; }
         public IEnumerable<IRValue> Operands { get { yield return Object; yield return Index; yield return Value; } }
+        public int OperandCount => 3;
+        IRValue IMultipleOperandInstruction.this[int index]
+        {
+            get => index == 0 ? Object : index == 1 ? Index : index == 2 ? Value : throw new System.ArgumentOutOfRangeException();
+            set
+            {
+                if (index == 0)
+                    Object = value;
+                else if (index == 1)
+                    Index = value;
+                else if (index == 2)
+                    Value = value;
+                else
+                    throw new System.ArgumentOutOfRangeException();
+            }
+        }
         public IRIndexSet(IRValue obj, IRValue index, IRValue value, OpcodeSetIndex opcode) : base(opcode)
         {
             Object = obj;
@@ -377,7 +435,7 @@ namespace kOS.Safe.Compilation.IR
     {
         public override bool SideEffects => false;
         public IRValue Distance { get; set; }
-        IRValue ISingleOperandInstruction.Operand => Distance;
+        IRValue ISingleOperandInstruction.Operand { get => Distance; set => Distance = value; }
         public List<BasicBlock> Targets { get; } = new List<BasicBlock>();
         public IRJumpStack(IRValue distance, IEnumerable<BasicBlock> targets, OpcodeJumpStack jumpStack) : base(jumpStack)
         {
@@ -395,7 +453,7 @@ namespace kOS.Safe.Compilation.IR
     {
         public override bool SideEffects => false;
         public IRValue Condition { get; set; }
-        IRValue ISingleOperandInstruction.Operand => Condition;
+        IRValue ISingleOperandInstruction.Operand { get => Condition; set => Condition = value; }
         public BasicBlock True { get; set; }
         public BasicBlock False { get; set; }
         public bool PreferFalse { get; set; } = false;
@@ -432,6 +490,12 @@ namespace kOS.Safe.Compilation.IR
         public string Function { get; }
         public List<IRValue> Arguments { get; } = new List<IRValue>();
         public IEnumerable<IRValue> Operands => Enumerable.Reverse(Arguments);
+        public int OperandCount => Arguments.Count;
+        IRValue IMultipleOperandInstruction.this[int index]
+        {
+            get => Arguments[index];
+            set => Arguments[index] = value;
+        }
         public IRValue IndirectMethod { get; internal set; }
         public bool Direct { get; }
         public bool EmitArgMarker { get; set; }
@@ -618,7 +682,7 @@ namespace kOS.Safe.Compilation.IR
     {
         public override bool SideEffects => false;
         public IRValue Value { get; set; }
-        IRValue ISingleOperandInstruction.Operand => Value;
+        IRValue ISingleOperandInstruction.Operand { get => Value; set => Value = value; }
         public short Depth { get; internal set; }
         public IRReturn(short depth, OpcodeReturn opcode) : base(opcode)
             => Depth = depth;
