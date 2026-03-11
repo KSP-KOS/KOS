@@ -5,8 +5,8 @@ namespace kOS.Safe.Compilation.IR
 {
     public abstract class IRInstruction
     {
-        public short SourceLine { get; } // line number in the source code that this was compiled from.
-        public short SourceColumn { get; }  // column number of the token nearest the cause of this Opcode.
+        public short SourceLine { get; private set; }   // line number in the source code that this was compiled from.
+        public short SourceColumn { get; private set; } // column number of the token nearest the cause of this Opcode.
 
         // Should-be-static
         public abstract bool SideEffects { get; }
@@ -23,6 +23,11 @@ namespace kOS.Safe.Compilation.IR
             opcode.SourceLine = SourceLine;
             opcode.SourceColumn = SourceColumn;
             return opcode;
+        }
+        public void OverwriteSourceLocation(short sourceLine, short sourceColumn)
+        {
+            SourceLine = sourceLine;
+            SourceColumn = sourceColumn;
         }
     }
     public abstract class IRInteractsInstruction : IRInstruction
