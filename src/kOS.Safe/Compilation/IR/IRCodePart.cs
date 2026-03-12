@@ -38,11 +38,6 @@ namespace kOS.Safe.Compilation.IR
                         RootBlocks.Add(fragment.FunctionCode[0]);
                 }
             }
-
-            foreach (BasicBlock block in RootBlocks)
-            {
-                block.EstablishDominance();
-            }
         }
 
         public void EmitCode(CodePart codePart)

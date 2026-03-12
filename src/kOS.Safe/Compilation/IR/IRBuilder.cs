@@ -22,8 +22,11 @@ namespace kOS.Safe.Compilation.IR
 
         private void CreateBlocks(List<Opcode> code, Dictionary<string, int> labels, List<BasicBlock> blocks)
         {
+            IRScope globalScope = new IRScope(null) { IsGlobalScope = true };
             SortedSet<int> leaders = new SortedSet<int>() { 0 };
-            for (int i = 1; i < code.Count; i++)    // The first instruction is always a leader so we can skip 0.
+            HashSet<int> scopePushes = new HashSet<int>();
+            HashSet<int> scopePops = new HashSet<int>();
+            for (int i = 0; i < code.Count; i++)
             {
                 if (code[i] is BranchOpcode branch)
                 {
@@ -37,12 +40,22 @@ namespace kOS.Safe.Compilation.IR
                 {
                     throw new NotImplementedException("OpcodeJumpStack is not implemented for optimization because it is non-deterministic. Use OptimizationLevel.None.");
                 }
-                else if (code[i] is OpcodeReturn)
+                else if (code[i] is OpcodeReturn ret)
+                {
                     leaders.Add(i + 1);
+                    if (ret.Depth > 0)
+                        scopePops.Add(i);
+                }
                 else if (code[i] is OpcodePushScope)
+                {
                     leaders.Add(i);
+                    scopePushes.Add(i);
+                }
                 else if (code[i] is OpcodePopScope)
+                {
                     leaders.Add(i + 1);
+                    scopePops.Add(i);
+                }
             }
             leaders.Add(code.Count);
             foreach (int startIndex in leaders.Take(leaders.Count - 1))
@@ -52,6 +65,7 @@ namespace kOS.Safe.Compilation.IR
                 if (label.StartsWith("@"))
                     label = null;
                 BasicBlock block = new BasicBlock(startIndex, endIndex, blockID++, label);
+
                 blocks.Add(block);
             }
             foreach (BasicBlock block in blocks)
@@ -74,10 +88,42 @@ namespace kOS.Safe.Compilation.IR
                 block.OriginalOpcodes = code.ToArray();
 #endif
             }
+
+            BasicBlock rootBlock = GetBlockFromStartIndex(blocks, 0);
+            rootBlock.EstablishDominance();
+
+            AssignScopes(rootBlock, globalScope, scopePushes, scopePops);
         }
 
         private BasicBlock GetBlockFromStartIndex(List<BasicBlock> blocks, int startIndex)
             => blocks.First(b => b.StartIndex == startIndex);
+
+        private static void AssignScopes(BasicBlock root, IRScope globalScope, HashSet<int> scopePushIndices, HashSet<int> scopePopIndices)
+        {
+            Stack<IRScope> scopeStack = new Stack<IRScope>();
+            scopeStack.Push(globalScope);
+
+            void Visit(BasicBlock block)
+            {
+                if (scopePushIndices.Contains(block.StartIndex))
+                    scopeStack.Push(
+                        new IRScope(scopeStack.Peek())
+                        {
+                            HeaderBlock = block
+                        });
+
+                block.Scope = scopeStack.Peek();
+
+                // Return statements can pop multiple scopes
+                if (scopePopIndices.Contains(block.EndIndex))
+                    scopeStack.Pop().FooterBlock = block;
+
+                foreach (BasicBlock child in block.Dominates)
+                    Visit(child);
+            }
+
+            Visit(root);
+        }
 
         private void FillBlocks(List<Opcode> code, Dictionary<string, int> labels, List<BasicBlock> blocks)
         {
@@ -209,11 +255,6 @@ namespace kOS.Safe.Compilation.IR
                     break;
                 case OpcodeBranchJump branchJump:
                     int destinationIndex = branchJump.DestinationLabel != string.Empty ? labels[branchJump.DestinationLabel] : index + branchJump.Distance;
-                    if (branchJump.DestinationLabel == string.Empty)
-                    {
-                        // TODO
-                        bool test = index == currentBlock.EndIndex;
-                    }
                     currentBlock.Add(new IRJump(GetBlockFromStartIndex(blocks, destinationIndex), branchJump));
                     break;
                 case OpcodeJumpStack _:

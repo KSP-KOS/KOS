@@ -11,11 +11,20 @@ namespace kOS.Safe.Compilation.IR
         private BasicBlock dominator;
         private readonly HashSet<BasicBlock> dominates = new HashSet<BasicBlock>();
         private readonly List<IRParameter> parameters = new List<IRParameter>();
-        private readonly Dictionary<string, IRVariable> variables = new Dictionary<string, IRVariable>();
-        private readonly Dictionary<string, IRVariable> externalGlobalVariables = new Dictionary<string, IRVariable>();
         private readonly Stack<IRValue> exitStackState = new Stack<IRValue>();  // Note that this is reversed from the real stack. Just now we don't reverse it four times.
         private readonly string nonSequentialLabel = null;
+        private IRScope scope;
 
+        public IRScope Scope
+        {
+            get => scope;
+            set
+            {
+                scope?.RemoveBlock(this);
+                scope = value;
+                scope.EnrollBlock(this);
+            }
+        }
         public int StartIndex { get; }
         public int EndIndex { get; }
         public List<IRInstruction> Instructions { get; } = new List<IRInstruction>();
@@ -146,46 +155,23 @@ namespace kOS.Safe.Compilation.IR
         {
             parameters.Add(parameter);
         }
-        public void StoreLocalVariable(IRVariable variable)
+        public void StoreLocalVariable(IRVariableBase variable)
+            => Scope.StoreLocalVariable(variable);
+        public void StoreGlobalVariable(IRVariableBase variable)
+            => Scope.StoreGlobalVariable(variable);
+        public void StoreVariable(IRVariableBase variable)
+            => Scope.StoreVariable(variable);
+        public bool TryStoreVariable(IRVariableBase variable)
+            => Scope.TryStoreVariable(variable);
+        public IRVariableBase PushVariable(string name, Opcode opcode)
         {
-            variables[variable.Name] = variable;
-        }
-        public void StoreGlobalVariable(IRVariable variable)
-        {
-            if (Dominator != null)
+            IRVariableBase result = Scope.GetVariable(name);
+            if (result == null)
             {
-                Dominator.StoreGlobalVariable(variable);
-                return;
+                result = new IRVariable(name, opcode);
+                Scope.StoreGlobalVariable(result);
             }
-            externalGlobalVariables[variable.Name] = variable;
-        }
-        public void StoreVariable(IRVariable variable)
-        {
-            if (!TryStoreVariable(variable))
-                StoreGlobalVariable(variable);
-        }
-        public bool TryStoreVariable(IRVariable variable)
-        {
-            if (variables.ContainsKey(variable.Name))
-            {
-                variables[variable.Name] = variable;
-                return true;
-            }
-            if (Dominator != null)
-                return Dominator.TryStoreVariable(variable);
-            return false;
-        }
-        public IRVariable PushVariable(string name, Opcode opcode)
-        {
-            if (variables.ContainsKey(name))
-                return variables[name];
-            if (Dominator != null)
-                return Dominator.PushVariable(name, opcode);
-            if (externalGlobalVariables.ContainsKey(name))
-                return externalGlobalVariables[name];
-            IRVariable newExternalGlobal = new IRVariable(name, opcode);
-            externalGlobalVariables.Add(name, newExternalGlobal);
-            return newExternalGlobal;
+            return result;
         }
 
         public void SetStackState(Stack<IRValue> stack)
