@@ -146,5 +146,37 @@ namespace kOS.Safe.Test.Execution
                 "100"
             );
         }
+
+
+        [Test]
+        public void TestPeepholeOptimizations()
+        {
+            // Test that certain suffixes are replaced
+            RunScript("integration/peepholeOptimizations.ks");
+            RunSingleStep();
+            AssertOutput(
+                "String",
+                "6",
+                "6",
+                "Print this.",
+                "21",
+                "21",
+                "21",
+                "21",
+                "3",
+                "-3",
+                "7",
+                "16",
+                "125",
+                "64",
+                "3125",
+                "256",
+                "4",
+                "25",
+                "125",
+                "125",
+                "512"
+            );
+        }
     }
 }

@@ -9,16 +9,16 @@ namespace kOS.Safe.Compilation
      *          Replace ship fields with their alias
      *  30. Constant folding
      *  50. Dead code elimination
-     *  
-     *  20. Constant propagation
      *  1050. Peephole optimizations:
      *          Replace lex indexing with string constant with suffixing where possible
      *          Replace parameterless suffix method calls with get member (this feels like cheating...)
      *          Replace calls to VectorDotProduct with multiplication
      *          Replace --X with X
      *          Replace !!X with X
-     *          Branch logical simplification (e.g. !A branch = A branch!)
+     *          Branch logical simplification (e.g. !X branch = X branch!)
      *          Algebraic simplification (e.g. A*B+A*C = A*(B+C), A+-B=A-B, A--B=A+B, -A+B=B-A, X*X*...*X=N^X)
+     *  
+     *  20. Constant propagation
      * O2:
      *  1000. Common expression elimination
      *          Particularly: Any expression of 3 opcodes used more than twice,
