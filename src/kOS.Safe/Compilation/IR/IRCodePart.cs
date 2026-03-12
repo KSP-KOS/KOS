@@ -31,7 +31,7 @@ namespace kOS.Safe.Compilation.IR
                 Blocks.AddRange(function.InitializationCode);
                 if (function.InitializationCode.Count > 0)
                     RootBlocks.Add(function.InitializationCode[0]);
-                foreach (IRFunction.IRFunctionFragment fragment in function.Fragments.Values)
+                foreach (IRFunction.IRFunctionFragment fragment in function.Fragments)
                 {
                     Blocks.AddRange(fragment.FunctionCode);
                     if (fragment.FunctionCode.Count > 0)
@@ -53,35 +53,39 @@ namespace kOS.Safe.Compilation.IR
         public class IRFunction
         {
             private readonly UserFunction function;
+            private readonly List<UserFunctionCodeFragment> userFunctionFragments;
+
+            public string Identifier => function.Identifier;
+            public List<BasicBlock> InitializationCode { get; set; }
+            private readonly Dictionary<UserFunctionCodeFragment, IRFunctionFragment> fragments = new Dictionary<UserFunctionCodeFragment, IRFunctionFragment>();
+            public IReadOnlyCollection<IRFunctionFragment> Fragments => fragments.Values;
+
             public IRFunction(IRBuilder builder, UserFunction function)
             {
                 this.function = function;
                 InitializationCode = builder.Lower(function.InitializationCode);
-                fragments = function.PeekNewCodeFragments().ToList();
-                foreach (UserFunctionCodeFragment fragment in fragments)
+                userFunctionFragments = function.PeekNewCodeFragments().ToList();
+                foreach (UserFunctionCodeFragment fragment in userFunctionFragments)
                 {
-                    Fragments.Add(fragment, new IRFunctionFragment(builder, fragment));
+                    fragments.Add(fragment, new IRFunctionFragment(builder, fragment));
                 }
-                fragments.Reverse();
+                userFunctionFragments.Reverse();
             }
 
             public void EmitCode(IREmitter emitter)
             {
                 function.InitializationCode.Clear();
                 function.InitializationCode.AddRange(emitter.Emit(InitializationCode));
-                foreach (UserFunctionCodeFragment fragment in fragments)
+                foreach (UserFunctionCodeFragment fragment in userFunctionFragments)
                 {
-                    Fragments[fragment].EmitCode(emitter);
+                    fragments[fragment].EmitCode(emitter);
                 }
             }
 
-            public List<BasicBlock> InitializationCode { get; set; }
-            public Dictionary<UserFunctionCodeFragment, IRFunctionFragment> Fragments { get; } = new Dictionary<UserFunctionCodeFragment, IRFunctionFragment>();
-            private readonly List<UserFunctionCodeFragment> fragments;
             public class IRFunctionFragment
             {
-                public List<BasicBlock> FunctionCode { get; set; }
                 private readonly UserFunctionCodeFragment fragment;
+                public List<BasicBlock> FunctionCode { get; set; }
                 public IRFunctionFragment(IRBuilder builder, UserFunctionCodeFragment codeFragment)
                 {
                     fragment = codeFragment;

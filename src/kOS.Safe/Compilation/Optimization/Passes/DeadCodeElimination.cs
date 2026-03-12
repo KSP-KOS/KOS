@@ -18,7 +18,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             foreach (IRCodePart.IRFunction function in code.Functions)
             {
                 RemoveDeadBlocks(function.InitializationCode, rootBlocks);
-                foreach (IRCodePart.IRFunction.IRFunctionFragment fragment in function.Fragments.Values)
+                foreach (IRCodePart.IRFunction.IRFunctionFragment fragment in function.Fragments)
                 {
                     RemoveDeadBlocks(fragment.FunctionCode, rootBlocks);
                 }
