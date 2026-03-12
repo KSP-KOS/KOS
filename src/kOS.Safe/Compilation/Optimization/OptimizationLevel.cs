@@ -17,6 +17,7 @@ namespace kOS.Safe.Compilation
      *          Replace !!X with X
      *          Branch logical simplification (e.g. !X branch = X branch!)
      *          Algebraic simplification (e.g. A*B+A*C = A*(B+C), A+-B=A-B, A--B=A+B, -A+B=B-A, X*X*...*X=N^X)
+     *  32000. Remove unnecessary scope pushes/pops
      *  
      *  20. Constant propagation
      * O2:
