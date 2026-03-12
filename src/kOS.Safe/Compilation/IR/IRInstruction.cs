@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -116,6 +117,17 @@ namespace kOS.Safe.Compilation.IR
         public IRValue Right { get; set; }
         public IEnumerable<IRValue> Operands { get { yield return Left; yield return Right; } }
         public int OperandCount => 2;
+        private static Type[] commutativeTypes =
+        {
+            typeof(OpcodeCompareEqual),
+            typeof(OpcodeCompareNE),
+            typeof(OpcodeCompareGT),
+            typeof(OpcodeCompareLT),
+            typeof(OpcodeCompareGTE),
+            typeof(OpcodeCompareLTE),
+            typeof(OpcodeMathAdd),
+            typeof(OpcodeMathMultiply)
+        };
         IRValue IMultipleOperandInstruction.this[int index]
         {
             get => index == 0 ? Left : index == 1 ? Right : throw new System.ArgumentOutOfRangeException();
@@ -129,7 +141,7 @@ namespace kOS.Safe.Compilation.IR
                     throw new System.ArgumentOutOfRangeException();
             }
         }
-        public bool IsCommutative { get; }
+        public bool IsCommutative => commutativeTypes.Contains(Operation.GetType());
 
         public IRBinaryOp(IRTemp result, BinaryOpcode operation, IRValue left, IRValue right) : base(operation)
         {
@@ -137,14 +149,6 @@ namespace kOS.Safe.Compilation.IR
             Operation = operation;
             Left = left;
             Right = right;
-            IsCommutative = (operation is OpcodeCompareEqual) ||
-                (operation is OpcodeCompareNE) ||
-                (operation is OpcodeCompareGT) ||
-                (operation is OpcodeCompareLT) ||
-                (operation is OpcodeCompareGTE) ||
-                (operation is OpcodeCompareLTE) ||
-                (operation is OpcodeMathAdd) ||
-                (operation is OpcodeMathMultiply);
         }
         public void SwapOperands()
         {
