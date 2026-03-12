@@ -101,7 +101,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             return suffixGet.Result;
                     }
                     // Instead of the IRTemp, which leads to resolving the suffix, return just the alias shortcut.
-                    suffixGet.Result = new IRVariable($"${suffixGet.Suffix}", suffixGet);
+                    suffixGet.Result = new IRVariable($"${suffixGet.Suffix}", null, suffixGet);
                     return suffixGet.Result;
                 }
                 if (objVariable.Name == "$constant")

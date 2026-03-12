@@ -83,6 +83,22 @@ namespace kOS.Safe.Compilation.IR
             return ParentScope?.IsVariableInScope(name) ?? false;
         }
 
+        public IRScope GetScopeForVariableNamed(string name)
+        {
+            if (IsGlobalScope)
+                return this;
+            if (variables.ContainsKey(name))
+                return this;
+            return ParentScope.GetScopeForVariableNamed(name);
+        }
+
+        public IRScope GetGlobalScope()
+        {
+            if (IsGlobalScope)
+                return this;
+            return ParentScope.GetGlobalScope();
+        }
+
         public void EnrollBlock(BasicBlock block)
         {
             block.Scope?.RemoveBlock(block);

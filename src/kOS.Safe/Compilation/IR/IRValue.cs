@@ -44,17 +44,24 @@ namespace kOS.Safe.Compilation.IR
     public abstract class IRVariableBase : IRValue
     {
         public string Name { get; }
-        public IRVariableBase(string name)
-            => Name = name;
-        public BasicBlock Scope { get; }
+        public virtual IRScope Scope { get; protected set; }
+        public IRVariableBase(string name, IRScope declaringScope)
+        {
+            Name = name;
+            Scope = declaringScope;
+        }
     }
     public class IRVariable : IRVariableBase
     {
         protected readonly short sourceLine, sourceColumn;
         public bool IsLock { get; }
-        public IRVariable(string name, IRInstruction instruction, bool isLock = false) : this(name, instruction.SourceLine, instruction.SourceColumn, isLock) { }
-        public IRVariable(string name, Opcode opcode, bool isLock = false) : this(name, opcode.SourceLine, opcode.SourceColumn, isLock) { }
-        public IRVariable(string name, short sourceLine, short sourceColumn, bool isLock = false) : base(name)
+        public override IRScope Scope { get => base.Scope; }
+        public IRVariable(string name, IRScope scope, IRInstruction instruction, bool isLock = false) :
+            this(name, scope, instruction.SourceLine, instruction.SourceColumn, isLock) { }
+        public IRVariable(string name, IRScope scope, Opcode opcode, bool isLock = false) :
+            this(name, scope, opcode.SourceLine, opcode.SourceColumn, isLock) { }
+        public IRVariable(string name, IRScope scope, short sourceLine, short sourceColumn, bool isLock = false) :
+            base(name, scope)
         {
             IsLock = isLock;
             this.sourceLine = sourceLine;
@@ -108,17 +115,20 @@ namespace kOS.Safe.Compilation.IR
     }
     public class IRTemp : IRVariableBase
     {
+        private bool isPromoted = false;
+
         public int ID { get; }
         public IRInstruction Parent { get; internal set; }
 
-        private bool isPromoted = false;
-        public IRTemp(int id) : base($"$.temp.{id}")
+        public IRTemp(int id) : base($"$.temp.{id}", null)
         {
             ID = id;
+            Scope = null;
         }
-        public IRAssign PromoteToVariable()
+        public IRAssign PromoteToVariable(IRScope scope)
         {
             isPromoted = true;
+            Scope = scope;
             return new IRAssign(new OpcodeStoreLocal(Name)
             {
                 SourceLine = -1,

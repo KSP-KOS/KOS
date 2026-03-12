@@ -165,14 +165,17 @@ namespace kOS.Safe.Compilation.IR
             => Scope.TryStoreVariable(variable);
         public IRVariableBase PushVariable(string name, Opcode opcode)
         {
+            IRScope globalScope = Scope.GetGlobalScope();
             IRVariableBase result = Scope.GetVariable(name);
             if (result == null)
             {
-                result = new IRVariable(name, opcode);
+                result = new IRVariable(name, globalScope, opcode);
                 Scope.StoreGlobalVariable(result);
             }
             return result;
         }
+        public IRScope GetScopeForVariableNamed(string name)
+            => Scope.GetScopeForVariableNamed(name);
 
         public void SetStackState(Stack<IRValue> stack)
         {
