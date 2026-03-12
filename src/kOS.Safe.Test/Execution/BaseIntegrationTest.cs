@@ -94,6 +94,7 @@ namespace kOS.Safe.Test.Execution
 
             screen.ClearOutput();
 
+            cpu.PushArgumentStack(new KOSArgMarkerType());
             cpu.GetCurrentContext().AddParts(compiled);
         }
 
