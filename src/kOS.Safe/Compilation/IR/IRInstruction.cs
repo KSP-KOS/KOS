@@ -97,6 +97,15 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => string.Format("{{store {0}}}", Value.ToString());
+        public override bool Equals(object obj)
+        {
+            if (obj is IRAssign assignment)
+                return string.Equals(Target, assignment.Target, System.StringComparison.OrdinalIgnoreCase) &&
+                    Value.Equals(assignment.Value);
+            return base.Equals(obj);
+        }
+        public override int GetHashCode()
+            => Target.ToLower().GetHashCode();
     }
     public class IRBinaryOp : IRInstruction, IResultingInstruction, IMultipleOperandInstruction
     {
@@ -170,6 +179,18 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => Operation.ToString();
+        public override bool Equals(object obj)
+        {
+            if (obj is IRBinaryOp binaryOp &&
+                Operation.GetType() == binaryOp.Operation.GetType())
+            {
+                return (Left.Equals(binaryOp.Left) && Right.Equals(binaryOp.Right)) ||
+                    (IsCommutative && Left.Equals(binaryOp.Right) && Right.Equals(binaryOp.Left));
+            }
+            return false;
+        }
+        public override int GetHashCode()
+            => Operation.GetHashCode();
     }
     public class IRUnaryOp : IRInstruction, IResultingInstruction, ISingleOperandInstruction
     {
@@ -192,6 +213,12 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => Operation.ToString();
+        public override bool Equals(object obj)
+            => obj is IRUnaryOp unaryOp &&
+                Operation.GetType() == unaryOp.Operation.GetType() &&
+                Operand.Equals(unaryOp.Operand);
+        public override int GetHashCode()
+            => Operation.GetHashCode();
     }
     public class IRNoStackInstruction : IRInstruction
     {
@@ -206,6 +233,10 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => Operation.ToString();
+        public override bool Equals(object obj)
+            => obj is IRNoStackInstruction instruction && Operation.GetType() == instruction.Operation.GetType();
+        public override int GetHashCode()
+            => Operation.GetHashCode();
     }
     public class IRUnaryConsumer : IRInstruction, ISingleOperandInstruction
     {
@@ -227,6 +258,12 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => Operation.ToString();
+        public override bool Equals(object obj)
+            => obj is IRUnaryConsumer unaryConsumer &&
+                Operation.GetType() == unaryConsumer.Operation.GetType() &&
+                Operand.Equals(unaryConsumer.Operand);
+        public override int GetHashCode()
+            => Operation.GetHashCode();
     }
     public class IRPop : IRInstruction, ISingleOperandInstruction
     {
@@ -246,6 +283,10 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => "{pop}";
+        public override bool Equals(object obj)
+            => obj is IRPop pop && Value.Equals(pop.Value);
+        public override int GetHashCode()
+            => Value.GetHashCode();
     }
     public class IRNonVarPush : IRInstruction, IResultingInstruction
     {
@@ -266,6 +307,11 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => Operation.ToString();
+        public override bool Equals(object obj)
+            => obj is IRNonVarPush instruction &&
+            Operation.GetType() == instruction.Operation.GetType();
+        public override int GetHashCode()
+            => Operation.GetHashCode();
     }
     public class IRSuffixGet : IRInteractsInstruction, IResultingInstruction, ISingleOperandInstruction
     {
@@ -287,6 +333,13 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => string.Format("{{gmb \"{0}\"}}", Suffix);
+        public override bool Equals(object obj)
+            => obj is IRSuffixGet suffixGet &&
+            !(suffixGet is IRSuffixGetMethod) &&
+            string.Equals(Suffix, suffixGet.Suffix, System.StringComparison.OrdinalIgnoreCase) &&
+            Object == suffixGet.Object;
+        public override int GetHashCode()
+            => (Object, Suffix).GetHashCode();
     }
     public class IRSuffixGetMethod : IRSuffixGet
     {
@@ -300,6 +353,12 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => string.Format("{{gmet \"{0}\"}}", Suffix);
+        public override bool Equals(object obj)
+            => obj is IRSuffixGetMethod suffixGet &&
+            string.Equals(Suffix, suffixGet.Suffix, System.StringComparison.OrdinalIgnoreCase) &&
+            Object == suffixGet.Object;
+        public override int GetHashCode()
+            => (Object, Suffix).GetHashCode();
     }
     public class IRSuffixSet : IRInteractsInstruction, IMultipleOperandInstruction
     {
@@ -338,6 +397,13 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => string.Format("{{smb \"{0}\"}}", Suffix);
+        public override bool Equals(object obj)
+            => obj is IRSuffixSet suffixSet &&
+                string.Equals(Suffix, suffixSet.Suffix, System.StringComparison.OrdinalIgnoreCase) &&
+                Object.Equals(suffixSet.Object) &&
+                Value.Equals(suffixSet.Value);
+        public override int GetHashCode()
+            => (Object, Suffix).GetHashCode();
     }
     public class IRIndexGet : IRInstruction, IResultingInstruction, IMultipleOperandInstruction
     {
@@ -376,6 +442,12 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => "{gidx}";
+        public override bool Equals(object obj)
+            => obj is IRIndexGet indexGet &&
+            Object.Equals(indexGet.Object) &&
+            Index.Equals(indexGet.Index);
+        public override int GetHashCode()
+            => Object.GetHashCode();
     }
     public class IRIndexSet : IRInstruction, IMultipleOperandInstruction
     {
@@ -418,6 +490,13 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => "{sidx}";
+        public override bool Equals(object obj)
+            => obj is IRIndexSet indexGet &&
+            Object.Equals(indexGet.Object) &&
+            Index.Equals(indexGet.Index) &&
+            Value.Equals(indexGet.Value);
+        public override int GetHashCode()
+            => Object.GetHashCode();
     }
     public class IRJump : IRInstruction
     {
@@ -435,6 +514,11 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => string.Format("{{jump {0}}}", Target.Label);
+        public override bool Equals(object obj)
+            => obj is IRJump jump &&
+                Target == jump.Target;
+        public override int GetHashCode()
+            => Target.GetHashCode();
     }
     public class IRJumpStack : IRInstruction, ISingleOperandInstruction
     {
@@ -453,6 +537,12 @@ namespace kOS.Safe.Compilation.IR
                 yield return opcode;
             yield return SetSourceLocation(new OpcodeJumpStack());
         }
+        public override bool Equals(object obj)
+            => obj is IRJumpStack jumpStack &&
+                Distance == jumpStack.Distance &&
+                Targets.SequenceEqual(jumpStack.Targets);
+        public override int GetHashCode()
+            => Targets.GetHashCode();
     }
     public class IRBranch : IRInstruction, ISingleOperandInstruction
     {
@@ -486,6 +576,13 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => string.Format("{{br.? {0}/{1}}}", True.Label, False.Label);
+        public override bool Equals(object obj)
+            => obj is IRBranch branch &&
+                Condition.Equals(branch.Condition) &&
+                True == branch.True &&
+                False == branch.False;
+        public override int GetHashCode()
+            => True.GetHashCode() ^ False.GetHashCode();
     }
     public class IRCall : IRInstruction, IResultingInstruction, IMultipleOperandInstruction
     {
@@ -682,6 +779,12 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => string.Format("{{call {0}({1})}}", Function.Trim('(', ')'), string.Join(",", Arguments.Select(a => a.ToString())));
+        public override bool Equals(object obj)
+            => obj is IRCall call &&
+                string.Equals(Function.Replace("()", ""), call.Function.Replace("()", ""), System.StringComparison.OrdinalIgnoreCase) &&
+                Arguments.SequenceEqual(call.Arguments);
+        public override int GetHashCode()
+            => Function.ToLower().GetHashCode();
     }
     public class IRReturn : IRInstruction, ISingleOperandInstruction
     {
@@ -702,5 +805,11 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => string.Format("{return {0} deep}", Depth);
+        public override bool Equals(object obj)
+            => obj is IRReturn ret &&
+                Depth == ret.Depth &&
+                Value.Equals(ret.Value);
+        public override int GetHashCode()
+            => base.GetHashCode();
     }
 }

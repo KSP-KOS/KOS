@@ -34,6 +34,10 @@ namespace kOS.Safe.Compilation.IR
                 SourceColumn = sourceColumn
             };
         }
+        public override bool Equals(object obj)
+            => Value.Equals(obj);
+        public override int GetHashCode()
+            => Value.GetHashCode();
         public override string ToString()
             => Value.ToString();
     }
@@ -42,6 +46,7 @@ namespace kOS.Safe.Compilation.IR
         public string Name { get; }
         public IRVariableBase(string name)
             => Name = name;
+        public BasicBlock Scope { get; }
     }
     public class IRVariable : IRVariableBase
     {
@@ -65,6 +70,12 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => Name;
+        public override bool Equals(object obj)
+            => obj is IRVariable variable &&
+                Scope == variable.Scope &&
+                string.Equals(Name, variable.Name, System.StringComparison.OrdinalIgnoreCase);
+        public override int GetHashCode()
+            => Name.ToLower().GetHashCode();
     }
     public class IRRelocateLater : IRConstant
     {
@@ -129,6 +140,28 @@ namespace kOS.Safe.Compilation.IR
                 foreach (Opcode opcode in Parent.EmitOpcode())
                     yield return opcode;
         }
+        public override bool Equals(object obj)
+        {
+            if (obj is IRTemp temp)
+            {
+                /*if (isPromoted)
+                {
+                    return temp.isPromoted &&
+                        Scope == temp.Scope &&
+                        string.Equals(Name, temp.Name, System.StringComparison.OrdinalIgnoreCase);
+                }*/
+                return Parent.Equals(temp.Parent);
+            }
+            if (obj is IRVariable variable)
+            {
+                return isPromoted &&
+                    Scope == variable.Scope &&
+                    string.Equals(Name, variable.Name, System.StringComparison.OrdinalIgnoreCase);
+            }
+            return false;
+        }
+        public override int GetHashCode()
+            => Name.ToLower().GetHashCode();
     }
     public class IRParameter : IRValue
     {
