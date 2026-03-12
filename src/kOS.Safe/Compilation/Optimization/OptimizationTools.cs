@@ -96,7 +96,7 @@ namespace kOS.Safe.Compilation.Optimization
                 yield return match;
         }
 
-        private static IEnumerable<IRInstruction> DepthFirst(IRInstruction instruction)
+        public static IEnumerable<IRInstruction> DepthFirst(this IRInstruction instruction)
         {
             if (instruction is ISingleOperandInstruction singleOperandInstruction)
             {

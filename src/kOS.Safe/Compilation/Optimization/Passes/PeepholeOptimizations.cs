@@ -10,21 +10,28 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 
         public short SortIndex => 1050;
 
-        //  TODO: Replace lex indexing with string constant with suffixing where possible.
         public void ApplyPass(List<IRInstruction> code)
         {
-            foreach (IRInstruction instruction in code.DepthFirst())
+            for (int i = 0; i < code.Count; i++)
             {
-                PeepholeFilter(instruction);
+                IRInstruction instruction = code[i];
+                foreach (IRInstruction nestedInstruction in instruction.DepthFirst())
+                    PeepholeFilter(nestedInstruction);
+
+                //  Replace lex indexing with string constant with suffixing where possible.
+                if (instruction is IRIndexSet indexSet)
+                {
+                    IRInstruction potentialResult = AttemptReplaceIndexSetWithSuffixSet(indexSet);
+                    if (potentialResult != null)
+                        code[i] = potentialResult;
+                }
             }
         }
 
         private static void PeepholeFilter(IRInstruction instruction)
         {
-            // Replace lex indexing using string constant with suffixing where possible
-            // TODO: this is harder since it requires knowing the object type being indexed against.
-
             // Replace parameterless suffix method calls with get member
+            // TODO: Skip this if clobber built-ins is active.
             if (instruction is IRCall suffixCall &&
                 !suffixCall.Direct &&
                 suffixCall.Arguments.Count == 0 &&
@@ -35,6 +42,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 return;
             }
             // Replace calls to VectorDotProduct with multiplication
+            // TODO: Skip this if clobber built-ins is active.
             if (instruction is IRCall vDotCall &&
                 (vDotCall.Function == "vdot" || vDotCall.Function == "vectordotproduct") &&
                 vDotCall.Arguments.Count == 2)
@@ -220,16 +228,29 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         break;
                 }
             }
-            // Redundant unary operation replacements
-            // E.g. !!X = X and --X = X
+            
             if (instruction is ISingleOperandInstruction singleOperandInstruction)
             {
-                if (singleOperandInstruction.Operand is IRTemp tempOperand &&
-                    tempOperand.Parent is IRUnaryOp unaryParent)
+                if (singleOperandInstruction.Operand is IRTemp tempOperand)
                 {
-                    IRValue potentialResult = AttempReplaceRedundantUnaryOp(unaryParent);
-                    if (potentialResult != null)
-                        singleOperandInstruction.Operand = potentialResult;
+                    // Redundant unary operation replacements
+                    // E.g. !!X = X and --X = X
+                    if (tempOperand.Parent is IRUnaryOp unaryParent)
+                    {
+                        IRValue potentialResult = AttempReplaceRedundantUnaryOp(unaryParent);
+                        if (potentialResult != null)
+                            singleOperandInstruction.Operand = potentialResult;
+                    }
+                    // Replace lex indexing using string constant with suffixing where possible
+                    if (tempOperand.Parent is IRIndexGet indexGet &&
+                        indexGet.Index is IRConstant indexConstant &&
+                        (indexConstant.Value is string ||
+                        indexConstant.Value is Encapsulation.StringValue))
+                    {
+                        IRInstruction potentialResult = AttemptReplaceIndexGetWithSuffixGet(indexGet);
+                        if (potentialResult != null)
+                            tempOperand.Parent = potentialResult;
+                    }
                 }
             }
             else if (instruction is IMultipleOperandInstruction multipleOperandInstruction)
@@ -237,12 +258,23 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 for (int i = multipleOperandInstruction.OperandCount - 1; i >= 0; i--)
                 {
                     IRValue operand = multipleOperandInstruction[i];
-                    if (operand is IRTemp tempOperand &&
-                        tempOperand.Parent is IRUnaryOp unaryParent)
+                    if (operand is IRTemp tempOperand)
                     {
-                        IRValue potentialResult = AttempReplaceRedundantUnaryOp(unaryParent);
-                        if (potentialResult != null)
-                            multipleOperandInstruction[i] = potentialResult;
+                        // Redundant unary operation replacements
+                        // E.g. !!X = X and --X = X
+                        if (tempOperand.Parent is IRUnaryOp unaryParent)
+                        {
+                            IRValue potentialResult = AttempReplaceRedundantUnaryOp(unaryParent);
+                            if (potentialResult != null)
+                                multipleOperandInstruction[i] = potentialResult;
+                        }
+                        // Replace lex indexing using string constant with suffixing where possible
+                        if (tempOperand.Parent is IRIndexGet indexGet)
+                        {
+                            IRInstruction potentialResult = AttemptReplaceIndexGetWithSuffixGet(indexGet);
+                            if (potentialResult != null)
+                                tempOperand.Parent = potentialResult;
+                        }
                     }
                 }
             }
@@ -303,6 +335,40 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         private static IRValue GetDoubleNestedValue(ISingleOperandInstruction operation)
         {
             return ((IRUnaryOp)((IRTemp)operation.Operand).Parent).Operand;
+        }
+
+        private static IRInstruction AttemptReplaceIndexGetWithSuffixGet(IRIndexGet indexGet)
+        {
+            if (indexGet.Index is IRConstant indexConstant &&
+                indexConstant.Value is Encapsulation.StringValue stringIndex &&
+                StringUtil.IsValidIdentifier(stringIndex))
+            {
+                return new IRSuffixGet((IRTemp)indexGet.Result,
+                    indexGet.Object,
+                    new OpcodeGetMember(stringIndex)
+                    {
+                        SourceLine = indexGet.SourceLine,
+                        SourceColumn = indexGet.SourceColumn
+                    });
+            }
+            return null;
+        }
+
+        private static IRInstruction AttemptReplaceIndexSetWithSuffixSet(IRIndexSet indexSet)
+        {
+            if (indexSet.Index is IRConstant indexConstant &&
+                indexConstant.Value is Encapsulation.StringValue stringIndex &&
+                StringUtil.IsValidIdentifier(stringIndex))
+            {
+                return new IRSuffixSet(indexSet.Object,
+                    indexSet.Value,
+                    new OpcodeSetMember(stringIndex)
+                    {
+                        SourceLine = indexSet.SourceLine,
+                        SourceColumn = indexSet.SourceColumn
+                    });
+            }
+            return null;
         }
 
         private static void ReplaceRedundantNotBranch(IRBranch branch)
