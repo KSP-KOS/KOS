@@ -8,6 +8,8 @@ namespace kOS.Safe.Compilation.IR
     {
         private readonly HashSet<BasicBlock> predecessors = new HashSet<BasicBlock>();
         private readonly HashSet<BasicBlock> successors = new HashSet<BasicBlock>();
+        private BasicBlock dominator;
+        private readonly HashSet<BasicBlock> dominates = new HashSet<BasicBlock>();
         private readonly List<IRParameter> parameters = new List<IRParameter>();
         private readonly Dictionary<string, IRVariable> variables = new Dictionary<string, IRVariable>();
         private readonly Dictionary<string, IRVariable> externalGlobalVariables = new Dictionary<string, IRVariable>();
@@ -17,11 +19,21 @@ namespace kOS.Safe.Compilation.IR
         public int StartIndex { get; }
         public int EndIndex { get; }
         public List<IRInstruction> Instructions { get; } = new List<IRInstruction>();
-        public IEnumerable<BasicBlock> Successors => successors;
-        public IEnumerable<BasicBlock> Predecessors => predecessors;
+        public IReadOnlyCollection<BasicBlock> Successors => successors;
+        public IReadOnlyCollection<BasicBlock> Predecessors => predecessors;
         public string Label => nonSequentialLabel ?? $"@BB#{ID}";
         public int ID { get; }
-        public BasicBlock Dominator { get; protected set; }
+        public BasicBlock Dominator
+        {
+            get => dominator;
+            protected set
+            {
+                dominator?.dominates.Remove(this);
+                dominator = value;
+                dominator?.dominates.Add(this);
+            }
+        }
+        public IReadOnlyCollection<BasicBlock> Dominates => dominates;
         public ExtendedBasicBlock ExtendedBlock { get; set; }
         public IRJump FallthroughJump { get; set; } = null;
 #if DEBUG
