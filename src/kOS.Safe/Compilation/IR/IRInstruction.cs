@@ -97,7 +97,7 @@ namespace kOS.Safe.Compilation.IR
             }
         }
         public override string ToString()
-            => string.Format("{{store {0}}}", Value.ToString());
+            => string.Format("{{store {0} -> {1}}}", Value.ToString(), Target.ToString());
         public override bool Equals(object obj)
             => obj is IRAssign assignment &&
                 Target.Equals(assignment.Target) &&
@@ -283,7 +283,7 @@ namespace kOS.Safe.Compilation.IR
             yield return SetSourceLocation(new OpcodePop());
         }
         public override string ToString()
-            => "{pop}";
+            => $"{{pop {Value}}}";
         public override bool Equals(object obj)
             => obj is IRPop pop && Value.Equals(pop.Value);
         public override int GetHashCode()
