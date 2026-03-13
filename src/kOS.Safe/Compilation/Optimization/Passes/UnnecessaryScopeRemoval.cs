@@ -50,7 +50,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         private static void CollapseScope(IRScope scope)
         {
             IRScope newScope = scope.ParentScope;
-            foreach (IRScope childScope in scope.Children)
+            foreach (IRScope childScope in scope.Children.ToArray())
                 childScope.ParentScope = newScope;
             foreach (BasicBlock block in scope.Blocks.ToArray())
                 block.Scope = newScope;
