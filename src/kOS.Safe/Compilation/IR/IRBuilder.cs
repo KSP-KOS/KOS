@@ -169,7 +169,9 @@ namespace kOS.Safe.Compilation.IR
                 case OpcodeStoreExist storeExist:
                     assignment = new IRAssign(storeExist, PopStack()) { AssertExists = true };
                     scope = currentBlock.GetScopeForVariableNamed(assignment.Target);
-                    if (!currentBlock.TryStoreVariable(new IRVariable(assignment.Target, scope, assignment)))
+                    if (scope.IsGlobalScope)
+                        currentBlock.StoreGlobalVariable(new IRVariable(assignment.Target, scope, assignment));
+                    else if (!currentBlock.TryStoreVariable(new IRVariable(assignment.Target, scope, assignment)))
                         throw new Exceptions.KOSCompileException(new KS.LineCol(assignment.SourceLine, assignment.SourceColumn), "Assert that variable exists failed.");
                     currentBlock.Add(assignment);
                     break;
@@ -248,15 +250,24 @@ namespace kOS.Safe.Compilation.IR
                     stack.Push(temp);
                     break;
                 case OpcodeBranchIfTrue branchIfTrue:
+                    int target;
+                    if (string.IsNullOrEmpty(branchIfTrue.DestinationLabel))
+                        target = index + branchIfTrue.Distance;
+                    else
+                        target = labels[branchIfTrue.DestinationLabel];
                     currentBlock.Add(new IRBranch(PopStack(),
-                        GetBlockFromStartIndex(blocks, labels[branchIfTrue.DestinationLabel]),
+                        GetBlockFromStartIndex(blocks, target),
                         GetBlockFromStartIndex(blocks, currentBlock.EndIndex + 1),
                         branchIfTrue));
                     break;
                 case OpcodeBranchIfFalse branchIfFalse:
+                    if (string.IsNullOrEmpty(branchIfFalse.DestinationLabel))
+                        target = index + branchIfFalse.Distance;
+                    else
+                        target = labels[branchIfFalse.DestinationLabel];
                     currentBlock.Add(new IRBranch(PopStack(),
                         GetBlockFromStartIndex(blocks, currentBlock.EndIndex + 1),
-                        GetBlockFromStartIndex(blocks, labels[branchIfFalse.DestinationLabel]),
+                        GetBlockFromStartIndex(blocks, target),
                         branchIfFalse));
                     break;
                 case OpcodeBranchJump branchJump:
