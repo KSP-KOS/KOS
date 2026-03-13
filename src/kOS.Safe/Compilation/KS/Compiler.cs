@@ -212,7 +212,7 @@ namespace kOS.Safe.Compilation.KS
 
         public static void Optimize(CodePart code, Context context, CompilerOptions options)
         {
-            IR.IRCodePart irCodePart = new IR.IRCodePart(code, context.UserFunctions.PeekNewFunctions());
+            IR.IRCodePart irCodePart = new IR.IRCodePart(code, context.UserFunctions.PeekNewFunctions(), context.Triggers.PeekNewParts());
             Optimization.Optimizer optimizer = new Optimization.Optimizer(options.OptimizationLevel);
             optimizer.Optimize(irCodePart);
             irCodePart.EmitCode(code);

@@ -9,10 +9,11 @@ namespace kOS.Safe.Compilation.IR
     {
         public List<BasicBlock> MainCode { get; set; }
         public List<IRFunction> Functions { get; set; }
+        public List<IRTrigger> Triggers { get; set; }
         public List<BasicBlock> RootBlocks { get; } = new List<BasicBlock>();
         public List<BasicBlock> Blocks { get; } = new List<BasicBlock>();
 
-        public IRCodePart(CodePart codePart, List<UserFunction> userFunctions)
+        public IRCodePart(CodePart codePart, List<UserFunction> userFunctions, List<Trigger> triggers)
         {
             if (codePart.InitializationCode.Count > 0)
                 throw new ArgumentException($"{nameof(codePart)} has initialization code and is structured unexpectedly.");
@@ -22,10 +23,17 @@ namespace kOS.Safe.Compilation.IR
             IRBuilder builder = new IRBuilder();
             MainCode = builder.Lower(codePart.MainCode);
             Functions = userFunctions.Select(f => new IRFunction(builder, f)).ToList();
+            Triggers = triggers.Select(t => new IRTrigger(builder, t)).ToList();
 
             Blocks.AddRange(MainCode);
             if (MainCode.Count > 0)
                 RootBlocks.Add(MainCode[0]);
+            foreach (IRTrigger trigger in Triggers)
+            {
+                Blocks.AddRange(trigger.Code);
+                if (trigger.Code.Count > 0)
+                    RootBlocks.Add(trigger.Code[0]);
+            }
             foreach (IRFunction function in Functions)
             {
                 Blocks.AddRange(function.InitializationCode);
@@ -43,11 +51,33 @@ namespace kOS.Safe.Compilation.IR
         public void EmitCode(CodePart codePart)
         {
             IREmitter emitter = new IREmitter();
+            foreach (IRTrigger trigger in Triggers)
+            {
+                trigger.EmitCode(emitter);
+            }
             foreach (IRFunction function in Functions)
             {
                 function.EmitCode(emitter);
             }
             codePart.MainCode = emitter.Emit(MainCode);
+        }
+
+        public class IRTrigger
+        {
+            private readonly Trigger trigger;
+            public string Identifier { get; }
+            public List<BasicBlock> Code { get; set; }
+            public IRTrigger(IRBuilder builder, Trigger trigger)
+            {
+                this.trigger = trigger;
+                Identifier = trigger.Code.FirstOrDefault()?.Label ?? "";
+                Code = builder.Lower(trigger.Code);
+            }
+            public void EmitCode(IREmitter emitter)
+            {
+                trigger.Code.Clear();
+                trigger.Code.AddRange(emitter.Emit(Code));
+            }
         }
 
         public class IRFunction
