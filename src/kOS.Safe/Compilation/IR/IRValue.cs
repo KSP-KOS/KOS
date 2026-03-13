@@ -68,6 +68,8 @@ namespace kOS.Safe.Compilation.IR
         public override IRScope Scope { get => base.Scope; }
         public IRVariable(string name, IRScope scope, IRInstruction instruction, bool isLock = false) :
             this(name, scope, instruction.SourceLine, instruction.SourceColumn, isLock) { }
+        public IRVariable(OpcodeIdentifierBase opcode, IRScope scope, bool isLock = false) :
+            this(opcode.Identifier, scope, opcode, isLock) { }
         public IRVariable(string name, IRScope scope, Opcode opcode, bool isLock = false) :
             this(name, scope, opcode.SourceLine, opcode.SourceColumn, isLock) { }
         public IRVariable(string name, IRScope scope, short sourceLine, short sourceColumn, bool isLock = false) :
@@ -135,7 +137,9 @@ namespace kOS.Safe.Compilation.IR
             {
                 SourceLine = -1,
                 SourceColumn = 0
-            }, this)
+            },
+            this,
+            this)
             {
                 Scope = IRAssign.StoreScope.Local
             };

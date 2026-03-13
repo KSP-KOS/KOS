@@ -61,15 +61,15 @@ namespace kOS.Safe.Compilation.IR
             Global
         }
         public override bool SideEffects => false;
-        public string Target { get; set; }
+        public IRVariableBase Target { get; set; }
         public IRValue Value { get; set; }
         public StoreScope Scope { get; set; } = StoreScope.Ambivalent;
         public bool AssertExists { get; set; } = false;
         IRValue ISingleOperandInstruction.Operand { get => Value; set => Value = value; }
 
-        public IRAssign(OpcodeIdentifierBase opcode, IRValue value) : base(opcode)
+        public IRAssign(OpcodeIdentifierBase opcode, IRVariableBase target, IRValue value) : base(opcode)
         {
-            Target = opcode.Identifier;
+            Target = target;
             Value = value;
         }
         internal override IEnumerable<Opcode> EmitOpcode()
@@ -79,34 +79,31 @@ namespace kOS.Safe.Compilation.IR
                     yield return opcode;
             if (AssertExists)
             {
-                yield return SetSourceLocation(new OpcodeStoreExist(Target));
+                yield return SetSourceLocation(new OpcodeStoreExist(Target.Name));
                 yield break;
             }
             switch (Scope)
             {
                 case StoreScope.Local:
-                    yield return SetSourceLocation(new OpcodeStoreLocal(Target));
+                    yield return SetSourceLocation(new OpcodeStoreLocal(Target.Name));
                     yield break;
                 case StoreScope.Global:
-                    yield return SetSourceLocation(new OpcodeStoreGlobal(Target));
+                    yield return SetSourceLocation(new OpcodeStoreGlobal(Target.Name));
                     yield break;
                 default:
                 case StoreScope.Ambivalent:
-                    yield return SetSourceLocation(new OpcodeStore(Target));
+                    yield return SetSourceLocation(new OpcodeStore(Target.Name));
                     yield break;
             }
         }
         public override string ToString()
             => string.Format("{{store {0}}}", Value.ToString());
         public override bool Equals(object obj)
-        {
-            if (obj is IRAssign assignment)
-                return string.Equals(Target, assignment.Target, System.StringComparison.OrdinalIgnoreCase) &&
-                    Value.Equals(assignment.Value);
-            return base.Equals(obj);
-        }
+            => obj is IRAssign assignment &&
+                Target.Equals(assignment.Target) &&
+                Value.Equals(assignment.Value);
         public override int GetHashCode()
-            => Target.ToLower().GetHashCode();
+            => Target.GetHashCode();
     }
     public class IRBinaryOp : IRInstruction, IResultingInstruction, IMultipleOperandInstruction
     {

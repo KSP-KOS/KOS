@@ -35,7 +35,8 @@ namespace kOS.Safe.Compilation.IR
         public IReadOnlyCollection<BasicBlock> Blocks => blocks;
         public BasicBlock HeaderBlock { get; set; }
         public BasicBlock FooterBlock { get; set; }
-        public IReadOnlyCollection<string> Variables => variables.Keys;
+        public IReadOnlyCollection<IRVariableBase> Variables => variables.Values;
+        public IReadOnlyCollection<string> VariableNames => variables.Keys;
         public bool IsGlobalScope { get; internal set; } = false;
 
         public IRScope(IRScope parent)
@@ -69,11 +70,11 @@ namespace kOS.Safe.Compilation.IR
             return ParentScope?.TryStoreVariable(variable) ?? false;
         }
 
-        public IRVariableBase GetVariable(string name)
+        public IRVariableBase GetVariableNamed(string name)
         {
             if (variables.ContainsKey(name))
                 return variables[name];
-            return ParentScope?.GetVariable(name);
+            return ParentScope?.GetVariableNamed(name);
         }
 
         public bool IsVariableInScope(string name)
@@ -81,6 +82,10 @@ namespace kOS.Safe.Compilation.IR
             if (variables.ContainsKey(name))
                 return true;
             return ParentScope?.IsVariableInScope(name) ?? false;
+        }
+        public bool IsVariableInScope(IRVariableBase variable)
+        {
+            return variable.Scope.IsEncompassedBy(this);
         }
 
         public IRScope GetScopeForVariableNamed(string name)
@@ -90,6 +95,22 @@ namespace kOS.Safe.Compilation.IR
             if (variables.ContainsKey(name))
                 return this;
             return ParentScope.GetScopeForVariableNamed(name);
+        }
+
+        public void ClearVariable(string name)
+        {
+            variables.Remove(name);
+        }
+        public void ClearVariable(IRVariableBase variable)
+            => ClearVariable(variable.Name);
+
+        public bool IsEncompassedBy(IRScope scope)
+        {
+            if (scope.IsGlobalScope)
+                return true;
+            if (scope.childScopes.Contains(this))
+                return true;
+            return ParentScope?.IsEncompassedBy(scope) ?? false;
         }
 
         public IRScope GetGlobalScope()

@@ -161,32 +161,36 @@ namespace kOS.Safe.Compilation.IR
             switch (opcode)
             {
                 case OpcodeStore store:
-                    IRAssign assignment = new IRAssign(store, PopStack()) { Scope = IRAssign.StoreScope.Ambivalent };
-                    IRScope scope = currentBlock.GetScopeForVariableNamed(assignment.Target);
-                    currentBlock.StoreVariable(new IRVariable(assignment.Target, scope, assignment));
+                    IRScope scope = currentBlock.GetScopeForVariableNamed(store.Identifier);
+                    IRVariable variable = new IRVariable(store, scope);
+                    IRAssign assignment = new IRAssign(store, variable, PopStack()) { Scope = IRAssign.StoreScope.Ambivalent };
+                    currentBlock.StoreVariable(variable);
                     currentBlock.Add(assignment);
                     break;
                 case OpcodeStoreExist storeExist:
-                    assignment = new IRAssign(storeExist, PopStack()) { AssertExists = true };
-                    scope = currentBlock.GetScopeForVariableNamed(assignment.Target);
+                    scope = currentBlock.GetScopeForVariableNamed(storeExist.Identifier);
+                    variable = new IRVariable(storeExist, scope);
+                    assignment = new IRAssign(storeExist, variable, PopStack()) { AssertExists = true };
                     if (scope.IsGlobalScope)
-                        currentBlock.StoreGlobalVariable(new IRVariable(assignment.Target, scope, assignment));
-                    else if (!currentBlock.TryStoreVariable(new IRVariable(assignment.Target, scope, assignment)))
+                        currentBlock.StoreGlobalVariable(variable);
+                    else if (!currentBlock.TryStoreVariable(variable))
                         throw new Exceptions.KOSCompileException(new KS.LineCol(assignment.SourceLine, assignment.SourceColumn), "Assert that variable exists failed.");
                     currentBlock.Add(assignment);
                     break;
                 case OpcodeStoreLocal storeLocal:
-                    assignment = new IRAssign(storeLocal, PopStack()) { Scope = IRAssign.StoreScope.Local };
-                    scope = currentBlock.GetScopeForVariableNamed(assignment.Target);
-                    currentBlock.StoreLocalVariable(new IRVariable(assignment.Target, scope, assignment));
+                    scope = currentBlock.Scope;
+                    variable = new IRVariable(storeLocal, scope);
+                    assignment = new IRAssign(storeLocal, variable, PopStack()) { Scope = IRAssign.StoreScope.Local };
+                    currentBlock.StoreLocalVariable(variable);
                     currentBlock.Add(assignment);
                     break;
                 case OpcodeStoreGlobal storeGlobal:
-                    assignment = new IRAssign(storeGlobal, PopStack()) { Scope = IRAssign.StoreScope.Global };
-                    scope = currentBlock.GetScopeForVariableNamed(assignment.Target);
+                    scope = currentBlock.Scope.GetGlobalScope();
                     if (!scope.IsGlobalScope)
                         throw new Exceptions.KOSYouShouldNeverSeeThisException("Tried to store a variable in global scope when it already exists locally.");
-                    currentBlock.StoreGlobalVariable(new IRVariable(assignment.Target, scope, assignment));
+                    variable = new IRVariable(storeGlobal, scope);
+                    assignment = new IRAssign(storeGlobal, variable, PopStack()) { Scope = IRAssign.StoreScope.Global };
+                    currentBlock.StoreGlobalVariable(variable);
                     currentBlock.Add(assignment);
                     break;
                 case OpcodeExists exists:

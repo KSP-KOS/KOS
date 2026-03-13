@@ -166,7 +166,7 @@ namespace kOS.Safe.Compilation.IR
         public IRVariableBase PushVariable(string name, Opcode opcode)
         {
             IRScope globalScope = Scope.GetGlobalScope();
-            IRVariableBase result = Scope.GetVariable(name);
+            IRVariableBase result = Scope.GetVariableNamed(name);
             if (result == null)
             {
                 result = new IRVariable(name, globalScope, opcode);
