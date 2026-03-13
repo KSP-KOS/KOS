@@ -38,7 +38,22 @@ namespace kOS.Safe.Compilation.Optimization
             return resultBlock;
         }
         public static IEnumerable<ExtendedBasicBlock> DumpTree(ExtendedBasicBlock root)
-            => Enumerable.Repeat(root, 1).Concat(root.sucessors.SelectMany(DumpTree));
+        {
+            HashSet<ExtendedBasicBlock> visited = new HashSet<ExtendedBasicBlock>();
+            return DumpTree(root, visited);
+        }
+        private static IEnumerable<ExtendedBasicBlock> DumpTree(ExtendedBasicBlock root, HashSet<ExtendedBasicBlock> visited)
+        {
+            yield return root;
+            foreach (ExtendedBasicBlock successor in root.Sucessors)
+            {
+                if (visited.Add(successor))
+                {
+                    foreach (ExtendedBasicBlock further in DumpTree(successor, visited))
+                        yield return further;
+                }
+            }
+        }
 
         public void AddSuccessor(ExtendedBasicBlock successor)
         {
