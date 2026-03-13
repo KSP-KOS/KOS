@@ -50,6 +50,16 @@ namespace kOS.Safe.Compilation.IR
             Name = name;
             Scope = declaringScope;
         }
+        public override string ToString()
+            => $"{Name} {Scope.IndexString()}";
+        public override bool Equals(object obj)
+            => obj is IRVariableBase variable &&
+                (Scope == variable.Scope ||
+                Scope.IsEncompassedBy(variable.Scope) ||
+                variable.Scope.IsEncompassedBy(Scope)) &&
+                string.Equals(Name, variable.Name, System.StringComparison.OrdinalIgnoreCase);
+        public override int GetHashCode()
+            => Name.ToLower().GetHashCode();
     }
     public class IRVariable : IRVariableBase
     {
@@ -75,14 +85,6 @@ namespace kOS.Safe.Compilation.IR
                 SourceColumn = sourceColumn
             };
         }
-        public override string ToString()
-            => Name;
-        public override bool Equals(object obj)
-            => obj is IRVariable variable &&
-                Scope == variable.Scope &&
-                string.Equals(Name, variable.Name, System.StringComparison.OrdinalIgnoreCase);
-        public override int GetHashCode()
-            => Name.ToLower().GetHashCode();
     }
     public class IRRelocateLater : IRConstant
     {
@@ -165,13 +167,18 @@ namespace kOS.Safe.Compilation.IR
             if (obj is IRVariable variable)
             {
                 return isPromoted &&
-                    Scope == variable.Scope &&
-                    string.Equals(Name, variable.Name, System.StringComparison.OrdinalIgnoreCase);
+                    base.Equals(variable);
             }
             return false;
         }
+        public override string ToString()
+        {
+            if (isPromoted)
+                return base.ToString();
+            return $"| {Parent}";
+        }
         public override int GetHashCode()
-            => Name.ToLower().GetHashCode();
+            => base.GetHashCode();
     }
     public class IRParameter : IRValue
     {

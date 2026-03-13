@@ -108,14 +108,12 @@ namespace kOS.Safe.Compilation.IR
             => blocks.Remove(block);
 
         public override string ToString()
+            => $"IRScope: {IndexString()}";
+        public string IndexString()
         {
-            if (IsGlobalScope)
-                return "IRScope: Global";
-            return $"IRScope: {IndexString()}";
-        }
-        private string IndexString()
-        {
-            if (ParentScope == null)
+            if (IsGlobalScope || ParentScope == null)
+                return "Global";
+            if (ParentScope.IsGlobalScope)
                 return $"{index}";
             return $"{ParentScope.IndexString()}.{index}";
         }
