@@ -50,11 +50,23 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         private static void CollapseScope(IRScope scope)
         {
             IRScope newScope = scope.ParentScope;
+            short parentID = GetPushOpcode(newScope).ScopeId;
             foreach (IRScope childScope in scope.Children.ToArray())
+            {
                 childScope.ParentScope = newScope;
+                OpcodePushScope opcode = GetPushOpcode(childScope);
+                opcode.ParentScopeId = parentID;
+            }
             foreach (BasicBlock block in scope.Blocks.ToArray())
                 block.Scope = newScope;
             scope.ParentScope = null;
+        }
+        private static OpcodePushScope GetPushOpcode(IRScope scope)
+        {
+            if (scope.IsGlobalScope)
+                return new OpcodePushScope(0, 0);
+            IRNoStackInstruction pushScopeInstruction = scope.HeaderBlock.Instructions[0] as IRNoStackInstruction;
+            return (OpcodePushScope)pushScopeInstruction.Operation;
         }
 
         private static void RemovePushScope(BasicBlock header)
