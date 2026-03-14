@@ -178,5 +178,33 @@ namespace kOS.Safe.Test.Execution
                 "512"
             );
         }
+
+
+        [Test]
+        public void TestConstantPropagation()
+        {
+            // Test that local constant variables propagate
+            RunScript("integration/constantPropagation.ks");
+            RunSingleStep();
+            AssertOutput(
+                "test",
+                "6",
+                "False",
+                "6",
+                "9",
+                "7",
+                "10",
+                "14",
+                "True",
+                "False",
+                "7",
+                "6",
+                "11",
+                "9",
+                "5",
+                "6",
+                "1"
+            );
+        }
     }
 }

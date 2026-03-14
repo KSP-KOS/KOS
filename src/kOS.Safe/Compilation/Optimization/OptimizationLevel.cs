@@ -7,6 +7,7 @@ namespace kOS.Safe.Compilation
      *  10. Suffix replacement:
      *          Replace CONSTANT: values with the constant
      *          Replace ship fields with their alias
+     *  20. Constant propagation
      *  30. Constant folding
      *  50. Dead code elimination
      *  1050. Peephole optimizations:
@@ -19,7 +20,6 @@ namespace kOS.Safe.Compilation
      *          Algebraic simplification (e.g. A*B+A*C = A*(B+C), A+-B=A-B, A--B=A+B, -A+B=B-A, X*X*...*X=N^X)
      *  32000. Remove unnecessary scope pushes/pops
      *  
-     *  20. Constant propagation
      * O2:
      *  1000. Common expression elimination
      *          Particularly: Any expression of 3 opcodes used more than twice,
@@ -29,10 +29,12 @@ namespace kOS.Safe.Compilation
      *  Loop jamming? (Combining adjacent loops into one)
      *  Unswitching (moving conditional evaluation outside the loop) - low priority
      *  Linear function test replacement - low priority
+     *  
      * O3:
      *  3100. Local function inlining
      *  3200. Constant propagation to local functions
      *  3500. Loop stack manipulation (delayed setting of either index or aggregator)
+     *  
      * O4:
      *  4000. Constant loop unrolling
      */
