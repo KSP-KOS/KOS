@@ -35,7 +35,7 @@ namespace kOS.Safe.Compilation.IR
             };
         }
         public override bool Equals(object obj)
-            => Value.Equals(obj);
+            => obj is IRConstant constant && Value.Equals(constant.Value) || Value.Equals(obj);
         public override int GetHashCode()
             => Value.GetHashCode();
         public override string ToString()
