@@ -11,7 +11,7 @@ namespace kOS.Safe.Function
             get => returnType;
             set
             {
-                if (value != null && !value.IsSubclassOf(typeof(Encapsulation.Structure)))
+                if (value != null && !typeof(Encapsulation.Structure).IsAssignableFrom(value))
                 {
 #if DEBUG
                     throw new ArgumentException($"{value} is not an accepted return type for a kOS function since it does not subclass {typeof(Encapsulation.Structure)}.");
