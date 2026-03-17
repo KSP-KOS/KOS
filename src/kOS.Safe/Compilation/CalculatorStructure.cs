@@ -28,6 +28,8 @@ namespace kOS.Safe.Compilation
 
             throw new KOSException(GetMessage("+", pair));
         }
+        public override Type GetAddResultType(Type leftType, Type rightType)
+            => GetTypeForOperation(leftType, rightType, "Add", "op_Addition", "+");
 
         public override object Subtract(OperandPair pair)
         {
@@ -47,6 +49,8 @@ namespace kOS.Safe.Compilation
 
             throw new KOSException(GetMessage("-", pair));
         }
+        public override Type GetSubtractResultType(Type leftType, Type rightType)
+            => GetTypeForOperation(leftType, rightType, "Subtract", "op_Subtraction", "-");
 
         public override object Multiply(OperandPair pair)
         {
@@ -66,6 +70,8 @@ namespace kOS.Safe.Compilation
 
             throw new KOSException(GetMessage("*", pair));
         }
+        public override Type GetMultiplyResultType(Type leftType, Type rightType)
+            => GetTypeForOperation(leftType, rightType, "Multiply", "op_Multiply", "*");
 
         public override object Divide(OperandPair pair)
         {
@@ -85,6 +91,8 @@ namespace kOS.Safe.Compilation
 
             throw new KOSException(GetMessage("/", pair));
         }
+        public override Type GetDivideResultType(Type leftType, Type rightType)
+            => GetTypeForOperation(leftType, rightType, "Divide", "op_Division", "/");
 
         public override object Power(OperandPair pair)
         {
@@ -104,6 +112,8 @@ namespace kOS.Safe.Compilation
 
             throw new KOSException(GetMessage("^", pair));
         }
+        public override Type GetPowerResultType(Type leftType, Type rightType)
+            => GetTypeForOperation(leftType, rightType, "Power", "op_ExclusiveOr", "^");
 
         public override object GreaterThan(OperandPair pair)
         {
@@ -123,6 +133,8 @@ namespace kOS.Safe.Compilation
 
             throw new KOSException(GetMessage(">", pair));
         }
+        public override Type GetGreaterThanResultType(Type leftType, Type rightType)
+            => GetTypeForOperation(leftType, rightType, "GreaterThan", "op_GreaterThan", ">");
 
         public override object LessThan(OperandPair pair)
         {
@@ -142,6 +154,8 @@ namespace kOS.Safe.Compilation
 
             throw new KOSException(GetMessage("<", pair));
         }
+        public override Type GetLessThanResultType(Type leftType, Type rightType)
+            => GetTypeForOperation(leftType, rightType, "LessThan", "op_LessThan", "<");
 
         public override object GreaterThanEqual(OperandPair pair)
         {
@@ -161,6 +175,8 @@ namespace kOS.Safe.Compilation
 
             throw new KOSException(GetMessage(">=", pair));
         }
+        public override Type GetGreaterThanEqualResultType(Type leftType, Type rightType)
+            => GetTypeForOperation(leftType, rightType, "GreaterThanEqual", "op_GreaterThanEqual", ">=");
 
         public override object LessThanEqual(OperandPair pair)
         {
@@ -180,6 +196,8 @@ namespace kOS.Safe.Compilation
 
             throw new KOSException(GetMessage("<=", pair));
         }
+        public override Type GetLessThanEqualResultType(Type leftType, Type rightType)
+            => GetTypeForOperation(leftType, rightType, "LessThanEqual", "op_LessThanEqual", "<=");
 
         public override object NotEqual(OperandPair pair)
         {
@@ -198,6 +216,17 @@ namespace kOS.Safe.Compilation
             }
 
             return !pair.Left.Equals(pair.Right);
+        }
+        public override Type GetNotEqualResultType(Type leftType, Type rightType)
+        {
+            CheckTypesForNull(leftType, rightType, "NotEqual");
+            if (TryTypingExplicit(leftType, rightType, "op_Inequality", out Type result))
+                return result;
+
+            if (TryTypingImplicit(leftType, rightType, out Type newLeftType, out Type newRightType))
+                return GetNotEqualResultType(newLeftType, newRightType);
+
+            return typeof(BooleanValue);
         }
 
         public override object Equal(OperandPair pair)
@@ -218,11 +247,40 @@ namespace kOS.Safe.Compilation
 
             return pair.Left.Equals(pair.Right);
         }
+        public override Type GetEqualResultType(Type leftType, Type rightType)
+        {
+            CheckTypesForNull(leftType, rightType, "Equal");
+            if (TryTypingExplicit(leftType, rightType, "op_Equality", out Type result))
+                return result;
+
+            if (TryTypingImplicit(leftType, rightType, out Type newLeftType, out Type newRightType))
+                return GetNotEqualResultType(newLeftType, newRightType);
+
+            return typeof(BooleanValue);
+        }
+
+        private Type GetTypeForOperation(Type leftType, Type rightType, string opName, string methodName, string opAbbreviation)
+        {
+            CheckTypesForNull(leftType, rightType, opName);
+            if (TryTypingExplicit(leftType, rightType, methodName, out Type result))
+                return result;
+
+            if (TryTypingImplicit(leftType, rightType, out Type newLeftType, out Type newRightType))
+                return GetTypeForOperation(newLeftType, newRightType, opName, methodName, opAbbreviation);
+
+            throw new KOSException(GetMessage(opAbbreviation, leftType, rightType));
+        }
 
         private static string GetMessage(string op, OperandPair pair)
         {
             string t1 = pair.Left == null ? "<null>" : KOSNomenclature.GetKOSName(pair.Left.GetType());
             string t2 = pair.Right == null ? "<null>" : KOSNomenclature.GetKOSName(pair.Right.GetType());
+            return string.Format("Cannot perform the operation: {0} On Structures {1} and {2}", op, t1, t2);
+        }
+        private static string GetMessage(string op, Type left, Type right)
+        {
+            string t1 = left == null ? "<null>" : KOSNomenclature.GetKOSName(left.GetType());
+            string t2 = right == null ? "<null>" : KOSNomenclature.GetKOSName(right.GetType());
             return string.Format("Cannot perform the operation: {0} On Structures {1} and {2}", op, t1, t2);
         }
 
@@ -268,12 +326,35 @@ namespace kOS.Safe.Compilation
             return false;
         }
 
+        private bool TryTypingExplicit(Type left, Type right, string methodName, out Type result)
+        {
+            MethodInfo method1 = left.GetMethod(methodName, FLAGS, null, new[] { left, right }, null);
+            if (method1 != null)
+            {
+                result = method1.ReturnType;
+                return true;
+            }
+            MethodInfo method2 = right.GetMethod(methodName, FLAGS, null, new[] { left, right }, null);
+            if (method2 != null)
+            {
+                result = method2.ReturnType;
+                return true;
+            }
+            result = null;
+            return false;
+        }
+
         private void CheckPairForNull(OperandPair pair, string opName)
         {
             if (pair.Left == null || pair.Right == null)
             {
                 throw new InvalidOperationException(GetMessage(opName, pair));
             }
+        }
+        private void CheckTypesForNull(Type left, Type right, string opName)
+        {
+            if (left == null || right == null)
+                throw new InvalidOperationException(GetMessage(opName, left, right));
         }
 
         private bool TryCoerceImplicit(OperandPair pair, out OperandPair resultPair)
@@ -312,6 +393,40 @@ namespace kOS.Safe.Compilation
             }
 
             resultPair = new OperandPair(newLeft, newRight);
+
+            return couldCoerce;
+        }
+
+        private bool TryTypingImplicit(Type left, Type right, out Type newLeft, out Type newRight)
+        {
+            bool couldCoerce = false;
+            if (left == right)
+            {
+                newLeft = null;
+                newRight = null;
+                return false;
+            }
+            MethodInfo convert2 = left.GetMethod("op_Implicit", FLAGS | BindingFlags.ExactBinding, null, new[] { right }, null);
+            if (convert2 != null)
+            {
+                couldCoerce = true;
+                newRight = convert2.ReturnType;
+            }
+            else
+            {
+                newRight = right;
+            }
+
+            MethodInfo convert1 = right.GetMethod("op_Implicit", FLAGS | BindingFlags.ExactBinding, null, new[] { left }, null);
+            if (convert1 != null)
+            {
+                couldCoerce = true;
+                newLeft = convert1.ReturnType;
+            }
+            else
+            {
+                newLeft = left;
+            }
 
             return couldCoerce;
         }
