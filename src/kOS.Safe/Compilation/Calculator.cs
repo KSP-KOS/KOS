@@ -29,10 +29,10 @@ namespace kOS.Safe.Compilation
         public virtual Type GetNotEqualResultType(Type leftType, Type rightType) => typeof(BooleanValue);
         public virtual Type GetEqualResultType(Type leftType, Type rightType) => typeof(BooleanValue);
 
-        private static CalculatorScalar calculatorScalar;
-        private static CalculatorString calculatorString;
-        private static CalculatorBool calculatorBool;
-        private static CalculatorStructure calculatorStructure;
+        private static readonly CalculatorScalar calculatorScalar = new CalculatorScalar();
+        private static readonly CalculatorString calculatorString = new CalculatorString();
+        private static readonly CalculatorBool calculatorBool = new CalculatorBool();
+        private static readonly CalculatorStructure calculatorStructure = new CalculatorStructure();
 
         public static Calculator GetCalculator(OperandPair operandPair)
         {
@@ -50,10 +50,10 @@ namespace kOS.Safe.Compilation
             if (operandPair.Right is ISuffixed) specialCount++;
             if (operandPair.Right is BooleanValue) boolCount++;
 
-            if (scalarCount == 2) return calculatorScalar ?? (calculatorScalar = new CalculatorScalar());
-            if (stringCount > 0) return calculatorString ?? (calculatorString = new CalculatorString());
-            if (boolCount > 0) return calculatorBool ?? (calculatorBool = new CalculatorBool());
-            if (specialCount > 0) return calculatorStructure ?? (calculatorStructure = new CalculatorStructure());
+            if (scalarCount == 2) return calculatorScalar;
+            if (stringCount > 0) return calculatorString;
+            if (boolCount > 0) return calculatorBool;
+            if (specialCount > 0) return calculatorStructure;
 
             throw new NotImplementedException(string.Format("Can't operate types {0} and {1}", operandPair.Left.GetType(), operandPair.Right.GetType()));
         }
@@ -74,10 +74,10 @@ namespace kOS.Safe.Compilation
             if (typeof(ISuffixed).IsAssignableFrom(rightType)) specialCount++;
             if (typeof(BooleanValue).IsAssignableFrom(rightType)) boolCount++;
 
-            if (scalarCount == 2) return calculatorScalar ?? (calculatorScalar = new CalculatorScalar());
-            if (stringCount > 0) return calculatorString ?? (calculatorString = new CalculatorString());
-            if (boolCount > 0) return calculatorBool ?? (calculatorBool = new CalculatorBool());
-            if (specialCount > 0) return calculatorStructure ?? (calculatorStructure = new CalculatorStructure());
+            if (scalarCount == 2) return calculatorScalar;
+            if (stringCount > 0) return calculatorString;
+            if (boolCount > 0) return calculatorBool;
+            if (specialCount > 0) return calculatorStructure;
 
             throw new NotImplementedException(string.Format("Can't operate types {0} and {1}", leftType, rightType));
         }
