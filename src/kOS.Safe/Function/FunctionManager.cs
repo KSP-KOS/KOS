@@ -10,7 +10,9 @@ namespace kOS.Safe.Function
     public class FunctionManager : IFunctionManager
     {
         private readonly SafeSharedObjects shared;
-        private Dictionary<string, SafeFunctionBase> functions;
+        private readonly Dictionary<string, SafeFunctionBase> functions = new Dictionary<string, SafeFunctionBase>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, Type> functionTypes = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
+        private readonly HashSet<string> invariantFunctions = new HashSet<string>();
         private static readonly Dictionary<FunctionAttribute, Type> rawAttributes = new Dictionary<FunctionAttribute, Type>();
 
         public FunctionManager(SafeSharedObjects shared)
@@ -21,7 +23,10 @@ namespace kOS.Safe.Function
 
         public void Load()
         {
-            functions = new Dictionary<string, SafeFunctionBase>(StringComparer.OrdinalIgnoreCase);
+            functions.Clear();
+            functionTypes.Clear();
+            invariantFunctions.Clear();
+
             foreach (FunctionAttribute attr in rawAttributes.Keys)
             {
                 var type = rawAttributes[attr];
@@ -32,6 +37,9 @@ namespace kOS.Safe.Function
                     if (functionName != string.Empty)
                     {
                         functions.Add(functionName, (SafeFunctionBase)functionObject);
+                        functionTypes.Add(functionName, attr.ReturnType);
+                        if (attr.IsInvariant)
+                            invariantFunctions.Add(functionName);
                     }
                 }
             }
@@ -69,6 +77,20 @@ namespace kOS.Safe.Function
         public bool Exists(string functionName)
         {
             return functions.ContainsKey(functionName);
+        }
+
+        public bool IsFunctionInvariant(string functionName)
+        {
+            return invariantFunctions.Contains(functionName);
+        }
+
+        public Type FunctionReturnType(string functionName)
+        {
+            if (!functions.ContainsKey(functionName))
+            {
+                throw new Exception("Queried return type of a non-existent function " + functionName);
+            }
+            return functionTypes[functionName];
         }
     }
 }
