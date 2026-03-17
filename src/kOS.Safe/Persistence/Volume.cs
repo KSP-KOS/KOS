@@ -10,7 +10,7 @@ namespace kOS.Safe.Persistence
     [kOS.Safe.Utilities.KOSNomenclature("Volume")]
     public abstract class Volume : Structure
     {
-        [Function("volume")]
+        [Function("volume", ReturnType = typeof(Volume), IsInvariant = false)]
         public class FunctionVolume : SafeFunctionBase
         {
             public override void Execute(SafeSharedObjects shared)

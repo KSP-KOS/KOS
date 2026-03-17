@@ -1,4 +1,4 @@
-﻿using kOS.Function;
+using kOS.Function;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Function;
@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace kOS.AddOns.KerbalAlarmClock
 {
-    [Function("addAlarm")]
+    [Function("addAlarm", ReturnType = typeof(Structure), IsInvariant = false)]
     public class FunctionAddAlarm : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -66,12 +66,12 @@ namespace kOS.AddOns.KerbalAlarmClock
         }
     }
 
-    [Function("listAlarms")]
+    [Function("listAlarms", ReturnType = typeof(ListValue<KACAlarmWrapper>), IsInvariant = false)]
     public class FunctionListAlarms : FunctionBase
     {
         public override void Execute(SharedObjects shared)
         {
-            var list = new ListValue();
+            var list = new ListValue<KACAlarmWrapper>();
 
             string alarmTypes = PopValueAssert(shared).ToString();
             AssertArgBottomAndConsume(shared);
@@ -100,7 +100,7 @@ namespace kOS.AddOns.KerbalAlarmClock
         }
     }
 
-    [Function("deleteAlarm")]
+    [Function("deleteAlarm", ReturnType = typeof(BooleanValue), IsInvariant = false)]
     public class FunctionDeleteAlarm : FunctionBase
     {
         public override void Execute(SharedObjects shared)

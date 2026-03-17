@@ -9,7 +9,7 @@ namespace kOS.Safe.Encapsulation
     [kOS.Safe.Utilities.KOSNomenclature("PIDLoop")]
     public class PIDLoop : SerializableStructure
     {
-        [Function("pidloop")]
+        [Function("pidloop", ReturnType = typeof(PIDLoop), IsInvariant = true)]
         public class PIDLoopConstructor : SafeFunctionBase
         {
             public override void Execute(SafeSharedObjects shared)

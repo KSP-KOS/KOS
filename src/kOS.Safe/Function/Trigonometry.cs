@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Function
 {
-    [Function("sin")]
+    [Function("sin", ReturnType = typeof(ScalarDoubleValue), IsInvariant = true)]
     public class FunctionSin : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -17,7 +17,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("cos")]
+    [Function("cos", ReturnType = typeof(ScalarDoubleValue), IsInvariant = true)]
     public class FunctionCos : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -30,7 +30,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("tan")]
+    [Function("tan", ReturnType = typeof(ScalarDoubleValue), IsInvariant = true)]
     public class FunctionTan : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -43,7 +43,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("arcsin")]
+    [Function("arcsin", ReturnType = typeof(ScalarDoubleValue), IsInvariant = true)]
     public class FunctionArcSin : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -55,7 +55,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("arccos")]
+    [Function("arccos", ReturnType = typeof(ScalarDoubleValue), IsInvariant = true)]
     public class FunctionArcCos : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -67,7 +67,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("arctan")]
+    [Function("arctan", ReturnType = typeof(ScalarDoubleValue), IsInvariant = true)]
     public class FunctionArcTan : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -79,7 +79,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("arctan2")]
+    [Function("arctan2", ReturnType = typeof(ScalarDoubleValue), IsInvariant = true)]
     public class FunctionArcTan2 : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -92,7 +92,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("anglediff")]
+    [Function("anglediff", ReturnType = typeof(ScalarDoubleValue), IsInvariant = true)]
     public class FunctionAngleDiff : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)

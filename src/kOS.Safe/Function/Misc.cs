@@ -10,7 +10,7 @@ using System.Text;
 
 namespace kOS.Safe.Function
 {
-    [Function("print")]
+    [Function("print", ReturnType = null, IsInvariant = false)]
     public class FunctionPrint : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -21,7 +21,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("printat")]
+    [Function("printat", ReturnType = null, IsInvariant = false)]
     public class FunctionPrintAt : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -34,7 +34,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("toggleflybywire")]
+    [Function("toggleflybywire", ReturnType = null, IsInvariant = false)]
     public class FunctionToggleFlyByWire : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -46,7 +46,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("selectautopilotmode")]
+    [Function("selectautopilotmode", ReturnType = null, IsInvariant = false)]
     public class FunctionSelectAutopilotMode : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -57,7 +57,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("run")]
+    [Function("run", ReturnType = null, IsInvariant = false)]
     public class FunctionRun : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -133,7 +133,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [FunctionAttribute("load")]
+    [Function("load", ReturnType = null, IsInvariant = false)]
     public class FunctionLoad : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -262,7 +262,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("logfile")]
+    [Function("logfile", ReturnType = null, IsInvariant = false)]
     public class FunctionLogFile : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -300,7 +300,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("reboot")]
+    [Function("reboot", ReturnType = null, IsInvariant = false)]
     public class FunctionReboot : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -315,7 +315,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("shutdown")]
+    [Function("shutdown", ReturnType = null, IsInvariant = false)]
     public class FunctionShutdown : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -326,7 +326,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("debugdump")]
+    [Function("debugdump", ReturnType = null, IsInvariant = false)]
     public class DebugDump : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -336,7 +336,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("debugfreezegame")]
+    [Function("debugfreezegame", ReturnType = null, IsInvariant = false)]
     /// <summary>
     /// Deliberately cause physics lag by making the main game thread sleep.
     /// Clearly not something there's a good reason to do *except* when
@@ -361,7 +361,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("profileresult")]
+    [Function("profileresult", ReturnType = typeof(StringValue), IsInvariant = false)]
     public class ProfileResult : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -383,7 +383,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("makebuiltindelegate")]
+    [Function("makebuiltindelegate", ReturnType = typeof(BuiltinDelegate), IsInvariant = false)]
     public class MakeBuiltinDelegate : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -395,7 +395,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("droppriority")]
+    [Function("droppriority", ReturnType = null, IsInvariant = false)]
     public class AllowInterrupt : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)

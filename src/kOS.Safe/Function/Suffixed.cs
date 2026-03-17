@@ -3,7 +3,7 @@ using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Function
 {
-    [Function("range")]
+    [Function("range", ReturnType = typeof(RangeValue), IsInvariant = true)]
     public class FunctionRange : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -38,7 +38,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("constant")]
+    [Function("constant", ReturnType = typeof(ConstantValue), IsInvariant = true)]
     public class FunctionConstant : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
