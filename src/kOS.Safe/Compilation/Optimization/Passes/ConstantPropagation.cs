@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace kOS.Safe.Compilation.Optimization.Passes
 {
-    public class ConstantPropagation : IHolisticOptimizationPass
+    public class ConstantPropagation// : IHolisticOptimizationPass
     {
         public OptimizationLevel OptimizationLevel => OptimizationLevel.Minimal;
 

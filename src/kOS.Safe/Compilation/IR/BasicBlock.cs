@@ -14,6 +14,8 @@ namespace kOS.Safe.Compilation.IR
         private readonly Stack<IRValue> exitStackState = new Stack<IRValue>();  // Note that this is reversed from the real stack. Just now we don't reverse it four times.
         private readonly string nonSequentialLabel = null;
         private IRScope scope;
+        private readonly HashSet<SSAVariable> variablesWritten = new HashSet<SSAVariable>();
+        private readonly HashSet<IRVariableBase> variablesRead = new HashSet<IRVariableBase>();
 
         public IRScope Scope
         {
@@ -30,6 +32,12 @@ namespace kOS.Safe.Compilation.IR
         public List<IRInstruction> Instructions { get; } = new List<IRInstruction>();
         public IReadOnlyCollection<BasicBlock> Successors => successors;
         public IReadOnlyCollection<BasicBlock> Predecessors => predecessors;
+        public HashSet<SSAVariable> VariablesWritten => variablesWritten;
+        public IReadOnlyCollection<IRVariableBase> VariablesRead => variablesRead;
+        public Dictionary<IRVariable, (SSAVariable phiVar, Dictionary<BasicBlock, SSAVariable> values)> Phis { get; } =
+            new Dictionary<IRVariable, (SSAVariable phiVar, Dictionary<BasicBlock, SSAVariable> values)>();
+        public HashSet<SSAVariable> IncomingVariableDefinitions { get; set; }
+        public HashSet<IRVariable> TriggerPropagationBlacklist { get; } = new HashSet<IRVariable>();
         public string Label => nonSequentialLabel ?? $"@BB#{ID}";
         public int ID { get; }
         public BasicBlock Dominator
@@ -151,27 +159,44 @@ namespace kOS.Safe.Compilation.IR
             postorder.Add(block);
         }
 
+
         public void AddParameter(IRParameter parameter)
         {
             parameters.Add(parameter);
         }
-        public void StoreLocalVariable(IRVariableBase variable)
-            => Scope.StoreLocalVariable(variable);
-        public void StoreGlobalVariable(IRVariableBase variable)
-            => Scope.StoreGlobalVariable(variable);
-        public void StoreVariable(IRVariableBase variable)
-            => Scope.StoreVariable(variable);
-        public bool TryStoreVariable(IRVariableBase variable)
-            => Scope.TryStoreVariable(variable);
+        public void StoreLocalVariable(SSAVariable variable)
+        {
+            SingleStaticAssignment.OverwriteVariable(variablesWritten, variable);
+            Scope.StoreLocalVariable(variable.Parent);
+        }
+        public void StoreGlobalVariable(SSAVariable variable)
+        {
+            SingleStaticAssignment.OverwriteVariable(variablesWritten, variable);
+            Scope.StoreGlobalVariable(variable.Parent);
+        }
+        public void StoreVariable(SSAVariable variable)
+        {
+            SingleStaticAssignment.OverwriteVariable(variablesWritten, variable);
+            Scope.StoreVariable(variable.Parent);
+        }
+        public bool TryStoreVariable(SSAVariable variable)
+        {
+            bool result = Scope.TryStoreVariable(variable.Parent);
+            if (result)
+                SingleStaticAssignment.OverwriteVariable(variablesWritten, variable);
+            return result;
+        }
+        
         public IRVariableBase PushVariable(string name, Opcode opcode)
         {
-            IRScope globalScope = Scope.GetGlobalScope();
             IRVariableBase result = Scope.GetVariableNamed(name);
             if (result == null)
             {
+                IRScope globalScope = Scope.GetGlobalScope();
                 result = new IRVariable(name, globalScope, opcode);
                 Scope.StoreGlobalVariable(result);
             }
+            variablesRead.Add(result);
             return result;
         }
         public IRScope GetScopeForVariableNamed(string name)

@@ -58,6 +58,10 @@ namespace kOS.Safe.Compilation.IR
             Name = name;
             Scope = declaringScope;
         }
+
+        public void RedefineScope(IRScope newScope)
+            => Scope = newScope;
+
         public override string ToString()
             => $"{Name} {Scope.IndexString()}";
         protected bool NameAndScopeEquals(IRVariableBase variable)
@@ -88,6 +92,15 @@ namespace kOS.Safe.Compilation.IR
             this.sourceLine = sourceLine;
             this.sourceColumn = sourceColumn;
         }
+
+        public virtual SSAVariable GetNewSSAVariable()
+        {
+            SSAVariable nextIteration = new SSAVariable(this, nextSSAIndex);
+            iterations[nextSSAIndex] = nextIteration;
+            nextSSAIndex += 1;
+            return nextIteration;
+        }
+
         internal override IEnumerable<Opcode> EmitPush()
         {
             yield return new OpcodePush(Name)
@@ -102,6 +115,35 @@ namespace kOS.Safe.Compilation.IR
             NameAndScopeEquals(variable);
         public override int GetHashCode()
             => GetBaseHashCode();
+    }
+    public class SSAVariable : IRVariable
+    {
+        private readonly ushort ssaIndex;
+
+        public override bool IsInvariant { get; set; } = true;
+        public IRVariable Parent { get; }
+        internal SSAVariable(IRVariable baseVariable, ushort ssaIndex) :
+            base(baseVariable.Name, baseVariable.Scope, baseVariable.sourceLine, baseVariable.sourceColumn)
+        {
+            this.ssaIndex = ssaIndex;
+            Parent = baseVariable;
+            ValueType = baseVariable.ValueType;
+        }
+
+        public override SSAVariable GetNewSSAVariable()
+            => Parent.GetNewSSAVariable();
+
+        public override string ToString()
+        {
+            string baseString = base.ToString();
+            return baseString.Insert(baseString.IndexOf(" "), $".{ssaIndex}");
+        }
+        public override bool Equals(object obj)
+            => obj is SSAVariable ssaVariable &&
+            ssaIndex == ssaVariable.ssaIndex &&
+            NameAndScopeEquals(ssaVariable);
+        public override int GetHashCode()
+            => (ssaIndex, GetBaseHashCode()).GetHashCode();
     }
     public class IRRelocateLater : IRConstant
     {
@@ -218,7 +260,7 @@ namespace kOS.Safe.Compilation.IR
     {
         public override Type ValueType
         {
-            get => null;
+            get => typeof(Encapsulation.Structure);
             set => throw new InvalidOperationException("Cannot set the value type of a parameter.");
         }
         public override bool IsInvariant

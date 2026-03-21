@@ -46,6 +46,8 @@ namespace kOS.Safe.Compilation.IR
                         RootBlocks.Add(fragment.FunctionCode[0]);
                 }
             }
+
+            SingleStaticAssignment.FinalizeSSA(this);
         }
 
         public void EmitCode(CodePart codePart)
@@ -62,16 +64,34 @@ namespace kOS.Safe.Compilation.IR
             codePart.MainCode = emitter.Emit(MainCode);
         }
 
-        public class IRTrigger
+        public class IRTrigger : IClosureVariableUser
         {
             private readonly Trigger trigger;
             public string Identifier { get; }
             public List<BasicBlock> Code { get; set; }
+
+            public HashSet<IRVariable> ExternalReads { get; } = new HashSet<IRVariable>();
+            public HashSet<SSAVariable> ExternalWrites { get; } = new HashSet<SSAVariable>();
+
             public IRTrigger(IRBuilder builder, Trigger trigger)
             {
                 this.trigger = trigger;
                 Identifier = trigger.Code.FirstOrDefault()?.Label ?? "";
                 Code = builder.Lower(trigger.Code);
+                if (Code.Count > 0)
+                {
+                    ExternalReads.UnionWith(Code[0].Scope.GetGlobalScope().Variables.Cast<IRVariable>());
+                    foreach (BasicBlock block in Code)
+                    {
+                        ExternalWrites.UnionWith(block.VariablesWritten.Where(v => v.Scope.IsGlobalScope));
+                        /*foreach (IRInstruction instruction in block.Instructions)
+                        {
+                            if (instruction is IRAssign assignment &&
+                                assignment.Target.Scope.IsGlobalScope)
+                                writes.Add(assignment.Target);
+                        }*/
+                    }
+                }
             }
             public void EmitCode(IREmitter emitter)
             {
@@ -80,15 +100,17 @@ namespace kOS.Safe.Compilation.IR
             }
         }
 
-        public class IRFunction
+        public class IRFunction : IClosureVariableUser
         {
             private readonly UserFunction function;
             private readonly List<UserFunctionCodeFragment> userFunctionFragments;
+            private readonly Dictionary<UserFunctionCodeFragment, IRFunctionFragment> fragments = new Dictionary<UserFunctionCodeFragment, IRFunctionFragment>();
 
             public string Identifier => function.Identifier;
             public List<BasicBlock> InitializationCode { get; set; }
-            private readonly Dictionary<UserFunctionCodeFragment, IRFunctionFragment> fragments = new Dictionary<UserFunctionCodeFragment, IRFunctionFragment>();
             public IReadOnlyCollection<IRFunctionFragment> Fragments => fragments.Values;
+            public HashSet<IRVariable> ExternalReads { get; } = new HashSet<IRVariable>();
+            public HashSet<SSAVariable> ExternalWrites { get; } = new HashSet<SSAVariable>();
 
             public IRFunction(IRBuilder builder, UserFunction function)
             {
@@ -100,6 +122,23 @@ namespace kOS.Safe.Compilation.IR
                     fragments.Add(fragment, new IRFunctionFragment(builder, fragment));
                 }
                 userFunctionFragments.Reverse();
+
+                foreach (IRFunctionFragment fragment in Fragments)
+                {
+                    if (fragment.FunctionCode.Count == 0)
+                        continue;
+                    ExternalReads.UnionWith(fragment.FunctionCode[0].Scope.GetGlobalScope().Variables.Cast<IRVariable>());
+                    foreach (BasicBlock block in fragment.FunctionCode)
+                    {
+                        ExternalWrites.UnionWith(block.VariablesWritten.Where(v => v.Scope.IsGlobalScope));
+                        /*foreach (IRInstruction instruction in block.Instructions)
+                        {
+                            if (instruction is IRAssign assignment &&
+                                assignment.Target.Scope.IsGlobalScope)
+                                writes.Add(assignment.Target);
+                        }*/
+                    }
+                }
             }
 
             public void EmitCode(IREmitter emitter)
@@ -127,6 +166,34 @@ namespace kOS.Safe.Compilation.IR
                     fragment.Code.AddRange(emitter.Emit(FunctionCode));
                 }
             }
+        }
+
+        public static void SetDefiningScope(IClosureVariableUser function, IRScope scope)
+        {
+            HashSet<SSAVariable> tempWrites = new HashSet<SSAVariable>(function.ExternalWrites);
+            foreach (SSAVariable variable in tempWrites)
+            {
+                if (scope.IsVariableInScope(variable.Name))
+                {
+                    variable.RedefineScope(scope.GetVariableNamed(variable.Name).Scope);
+                }
+            }
+
+            HashSet<IRVariable> tempReads = new HashSet<IRVariable>(function.ExternalReads);
+            foreach (IRVariable variable in tempReads)
+            {
+                if (scope.IsVariableInScope(variable.Name))
+                {
+                    function.ExternalReads.Remove(variable);
+                    function.ExternalReads.Add((IRVariable)scope.GetVariableNamed(variable.Name));
+                }
+            }
+        }
+
+        public interface IClosureVariableUser
+        {
+            HashSet<IRVariable> ExternalReads { get; }
+            HashSet<SSAVariable> ExternalWrites { get; }
         }
     }
 }

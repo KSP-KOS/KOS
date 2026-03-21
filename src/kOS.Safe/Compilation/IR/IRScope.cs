@@ -11,6 +11,7 @@ namespace kOS.Safe.Compilation.IR
         private IRScope parent;
         private readonly HashSet<IRScope> childScopes = new HashSet<IRScope>();
         private readonly HashSet<BasicBlock> blocks = new HashSet<BasicBlock>();
+        private Dictionary<string, string> functionRefs = new Dictionary<string, string>();
 
         private int nextChildIndex = 0;
         private int index;
@@ -64,10 +65,21 @@ namespace kOS.Safe.Compilation.IR
         {
             if (variables.ContainsKey(variable.Name))
             {
-                variables[variable.Name] = variable;
+                StoreLocalVariable(variable);
                 return true;
             }
             return ParentScope?.TryStoreVariable(variable) ?? false;
+        }
+
+        public void EnrollFunction(string variable, string functionRef)
+        {
+            functionRefs[variable] = functionRef.Split('-').First();
+        }
+        public string GetFunctionNameFromVariable(string variable)
+        {
+            if (GetScopeForVariableNamed(variable).functionRefs.TryGetValue(variable, out var functionRef))
+                return functionRef;
+            return null;
         }
 
         public IRVariableBase GetVariableNamed(string name)
@@ -85,7 +97,7 @@ namespace kOS.Safe.Compilation.IR
         }
         public bool IsVariableInScope(IRVariableBase variable)
         {
-            return variable.Scope.IsEncompassedBy(this);
+            return variable.Scope.IsEqualOrEncompassedBy(this);
         }
 
         public IRScope GetScopeForVariableNamed(string name)
@@ -104,6 +116,8 @@ namespace kOS.Safe.Compilation.IR
         public void ClearVariable(IRVariableBase variable)
             => ClearVariable(variable.Name);
 
+        public bool IsEqualOrEncompassedBy(IRScope scope)
+            => this == scope || IsEncompassedBy(scope);
         public bool IsEncompassedBy(IRScope scope)
         {
             if (scope.IsGlobalScope)

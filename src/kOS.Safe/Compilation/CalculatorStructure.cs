@@ -268,7 +268,7 @@ namespace kOS.Safe.Compilation
             if (TryTypingImplicit(leftType, rightType, out Type newLeftType, out Type newRightType))
                 return GetTypeForOperation(newLeftType, newRightType, opName, methodName, opAbbreviation);
 
-            throw new KOSException(GetMessage(opAbbreviation, leftType, rightType));
+            return typeof(Structure);
         }
 
         private static string GetMessage(string op, OperandPair pair)
@@ -279,8 +279,8 @@ namespace kOS.Safe.Compilation
         }
         private static string GetMessage(string op, Type left, Type right)
         {
-            string t1 = left == null ? "<null>" : KOSNomenclature.GetKOSName(left.GetType());
-            string t2 = right == null ? "<null>" : KOSNomenclature.GetKOSName(right.GetType());
+            string t1 = left == null ? "<null>" : KOSNomenclature.GetKOSName(left);
+            string t2 = right == null ? "<null>" : KOSNomenclature.GetKOSName(right);
             return string.Format("Cannot perform the operation: {0} On Structures {1} and {2}", op, t1, t2);
         }
 
