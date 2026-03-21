@@ -9,8 +9,7 @@ namespace kOS.Safe.Compilation.IR
         public short SourceLine { get; private set; }   // line number in the source code that this was compiled from.
         public short SourceColumn { get; private set; } // column number of the token nearest the cause of this Opcode.
 
-        // Should-be-static
-        public abstract bool SideEffects { get; }
+        public abstract bool IsInvariant { get; }
         internal abstract IEnumerable<Opcode> EmitOpcode();
         protected IRInstruction(Opcode originalOpcode)
         {
@@ -31,27 +30,7 @@ namespace kOS.Safe.Compilation.IR
             SourceColumn = sourceColumn;
         }
     }
-    public abstract class IRInteractsInstruction : IRInstruction
-    {
-        public override bool SideEffects { get; }
-        protected IRInteractsInstruction(IRValue interactor, Opcode originalOpcode) : base(originalOpcode)
-        {
-            if (interactor is IRConstant)
-            {
-                SideEffects = false;
-                return;
-            }
-            switch (interactor.Type)
-            {
-                case IRValue.ValueType.Value:
-                    SideEffects = false;
-                    break;
-                default:
-                    SideEffects = true;
-                    break;
-            }
-        }
-    }
+
     public class IRAssign : IRInstruction, ISingleOperandInstruction
     {
         public enum StoreScope
@@ -60,7 +39,7 @@ namespace kOS.Safe.Compilation.IR
             Local,
             Global
         }
-        public override bool SideEffects => false;
+        public override bool IsInvariant => Value.IsInvariant;
         public IRVariableBase Target { get; set; }
         public IRValue Value { get; set; }
         public StoreScope Scope { get; set; } = StoreScope.Ambivalent;
@@ -107,14 +86,7 @@ namespace kOS.Safe.Compilation.IR
     }
     public class IRBinaryOp : IRInstruction, IResultingInstruction, IMultipleOperandInstruction
     {
-        public override bool SideEffects => false;
-        public IRValue Result { get; set; }
-        public BinaryOpcode Operation { get; set; }
-        public IRValue Left { get; set; }
-        public IRValue Right { get; set; }
-        public IEnumerable<IRValue> Operands { get { yield return Left; yield return Right; } }
-        public int OperandCount => 2;
-        private static Type[] commutativeTypes =
+        private static readonly Type[] commutativeTypes =
         {
             typeof(OpcodeCompareEqual),
             typeof(OpcodeCompareNE),
@@ -125,9 +97,52 @@ namespace kOS.Safe.Compilation.IR
             typeof(OpcodeMathAdd),
             typeof(OpcodeMathMultiply)
         };
+
+        public override bool IsInvariant => Left.IsInvariant && Right.IsInvariant;
+        public IRValue Result { get; set; }
+        public BinaryOpcode Operation { get; set; }
+        public IRValue Left { get; set; }
+        public IRValue Right { get; set; }
+        public IEnumerable<IRValue> Operands { get { yield return Left; yield return Right; } }
+        public int OperandCount => 2;
+        public Type ResultType
+        {
+            get
+            {
+                Calculator calculator = Calculator.GetCalculator(Left.ValueType, Right.ValueType);
+                switch (Operation)
+                {
+                    case OpcodeMathAdd _:
+                        return calculator.GetAddResultType(Left.ValueType, Right.ValueType);
+                    case OpcodeMathSubtract _:
+                        return calculator.GetSubtractResultType(Left.ValueType, Right.ValueType);
+                    case OpcodeMathMultiply _:
+                        return calculator.GetMultiplyResultType(Left.ValueType, Right.ValueType);
+                    case OpcodeMathDivide _:
+                        return calculator.GetDivideResultType(Left.ValueType, Right.ValueType);
+                    case OpcodeMathPower _:
+                        return calculator.GetPowerResultType(Left.ValueType, Right.ValueType);
+                    case OpcodeCompareEqual _:
+                        return calculator.GetEqualResultType(Left.ValueType, Right.ValueType);
+                    case OpcodeCompareNE _:
+                        return calculator.GetNotEqualResultType(Left.ValueType, Right.ValueType);
+                    case OpcodeCompareGT _:
+                        return calculator.GetGreaterThanResultType(Left.ValueType, Right.ValueType);
+                    case OpcodeCompareLT _:
+                        return calculator.GetLessThanResultType(Left.ValueType, Right.ValueType);
+                    case OpcodeCompareGTE _:
+                        return calculator.GetGreaterThanEqualResultType(Left.ValueType, Right.ValueType);
+                    case OpcodeCompareLTE _:
+                        return calculator.GetLessThanEqualResultType(Left.ValueType, Right.ValueType);
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+        }
+
         IRValue IMultipleOperandInstruction.this[int index]
         {
-            get => index == 0 ? Left : index == 1 ? Right : throw new System.ArgumentOutOfRangeException();
+            get => index == 0 ? Left : index == 1 ? Right : throw new ArgumentOutOfRangeException();
             set
             {
                 if (index == 0)
@@ -135,7 +150,7 @@ namespace kOS.Safe.Compilation.IR
                 else if (index == 1)
                     Right = value;
                 else
-                    throw new System.ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException();
             }
         }
         public bool IsCommutative => commutativeTypes.Contains(Operation.GetType());
@@ -195,10 +210,27 @@ namespace kOS.Safe.Compilation.IR
     }
     public class IRUnaryOp : IRInstruction, IResultingInstruction, ISingleOperandInstruction
     {
-        public override bool SideEffects => false;
+        public override bool IsInvariant => Operand.IsInvariant;
         public IRValue Result { get; set; }
         public Opcode Operation { get; }
         public IRValue Operand { get; set; }
+        public Type ResultType
+        {
+            get
+            {
+                switch (Operation)
+                {
+                    case OpcodeExists _:
+                    case OpcodeLogicNot _:
+                    case OpcodeLogicToBool _:
+                        return typeof(Encapsulation.BooleanValue);
+                    case OpcodeMathNegate _:
+                        return Operand.ValueType;
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+        }
         public IRUnaryOp(IRTemp result, Opcode operation, IRValue operand) : base(operation)
         {
             Result = result;
@@ -223,7 +255,7 @@ namespace kOS.Safe.Compilation.IR
     }
     public class IRNoStackInstruction : IRInstruction
     {
-        public override bool SideEffects => false;
+        public override bool IsInvariant => false;
         public Opcode Operation { get; }
         public IRNoStackInstruction(Opcode opcode) : base(opcode)
             => Operation = opcode;
@@ -241,14 +273,15 @@ namespace kOS.Safe.Compilation.IR
     }
     public class IRUnaryConsumer : IRInstruction, ISingleOperandInstruction
     {
-        public override bool SideEffects { get; }
+        private readonly bool operationHasSideEffects;
+        public override bool IsInvariant => !operationHasSideEffects && Operand.IsInvariant;
         public Opcode Operation { get; }
         public IRValue Operand { get; set; }
         public IRUnaryConsumer(Opcode opcode, IRValue operand, bool sideEffects = false) : base(opcode)
         {
             Operation = opcode;
             Operand = operand;
-            SideEffects = sideEffects;
+            operationHasSideEffects = sideEffects;
         }
         internal override IEnumerable<Opcode> EmitOpcode()
         {
@@ -268,7 +301,7 @@ namespace kOS.Safe.Compilation.IR
     }
     public class IRPop : IRInstruction, ISingleOperandInstruction
     {
-        public override bool SideEffects => false;
+        public override bool IsInvariant => Value.IsInvariant;
         public IRValue Value { get; set; }
         IRValue ISingleOperandInstruction.Operand { get => Value; set => Value = value; }
         public IRPop(IRValue value, OpcodePop opcode) : base(opcode)
@@ -291,10 +324,22 @@ namespace kOS.Safe.Compilation.IR
     }
     public class IRNonVarPush : IRInstruction, IResultingInstruction
     {
-        public override bool SideEffects => false;
+        public override bool IsInvariant => false;
         public Opcode Operation { get; }
-
         public IRValue Result { get; }
+        public Type ResultType
+        {
+            get
+            {
+                switch (Operation)
+                {
+                    case OpcodeTestArgBottom _:
+                        return typeof(Encapsulation.BooleanValue);
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+        }
 
         public IRNonVarPush(IRValue result, Opcode opcode) : base(opcode)
         {
@@ -314,13 +359,15 @@ namespace kOS.Safe.Compilation.IR
         public override int GetHashCode()
             => Operation.GetHashCode();
     }
-    public class IRSuffixGet : IRInteractsInstruction, IResultingInstruction, ISingleOperandInstruction
+    public class IRSuffixGet : IRInstruction, IResultingInstruction, ISingleOperandInstruction
     {
+        public override bool IsInvariant => Object.IsInvariant;
         public IRValue Result { get; set; }
         public IRValue Object { get; set; }
         public string Suffix { get; set; }
         IRValue ISingleOperandInstruction.Operand { get => Object; set => Object = value; }
-        public IRSuffixGet(IRTemp result, IRValue obj, OpcodeGetMember opcodeGetMember) : base(obj, opcodeGetMember)
+        public Type ResultType => TypeInferencer.GetTypeForSuffix(Object.ValueType, Suffix);
+        public IRSuffixGet(IRTemp result, IRValue obj, OpcodeGetMember opcodeGetMember) : base(opcodeGetMember)
         {
             Result = result;
             Object = obj;
@@ -344,7 +391,6 @@ namespace kOS.Safe.Compilation.IR
     }
     public class IRSuffixGetMethod : IRSuffixGet
     {
-        public override bool SideEffects => false;
         public IRSuffixGetMethod(IRTemp result, IRValue obj, OpcodeGetMethod opcode) : base(result, obj, opcode) { }
         internal override IEnumerable<Opcode> EmitOpcode()
         {
@@ -361,16 +407,16 @@ namespace kOS.Safe.Compilation.IR
         public override int GetHashCode()
             => (Object, Suffix).GetHashCode();
     }
-    public class IRSuffixSet : IRInteractsInstruction, IMultipleOperandInstruction
+    public class IRSuffixSet : IRInstruction, IMultipleOperandInstruction
     {
-        public override bool SideEffects { get; }
+        public override bool IsInvariant => false;
         public IRValue Object { get; set; }
         public IRValue Value { get; set; }
         public IEnumerable<IRValue> Operands { get { yield return Object; yield return Value; } }
         public int OperandCount => 2;
         IRValue IMultipleOperandInstruction.this[int index]
         {
-            get => index == 0 ? Object : index == 1 ? Value : throw new System.ArgumentOutOfRangeException();
+            get => index == 0 ? Object : index == 1 ? Value : throw new ArgumentOutOfRangeException();
             set
             {
                 if (index == 0)
@@ -378,11 +424,11 @@ namespace kOS.Safe.Compilation.IR
                 else if (index == 1)
                     Value = value;
                 else
-                    throw new System.ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException();
             }
         }
         public string Suffix { get; }
-        public IRSuffixSet(IRValue obj, IRValue value, OpcodeSetMember opcodeSetMember) : base(obj, opcodeSetMember)
+        public IRSuffixSet(IRValue obj, IRValue value, OpcodeSetMember opcodeSetMember) : base(opcodeSetMember)
         {
             Object = obj;
             Value = value;
@@ -408,12 +454,13 @@ namespace kOS.Safe.Compilation.IR
     }
     public class IRIndexGet : IRInstruction, IResultingInstruction, IMultipleOperandInstruction
     {
-        public override bool SideEffects => false;
+        public override bool IsInvariant => Object.IsInvariant && Index.IsInvariant;
         public IRValue Result { get; }
         public IRValue Object { get; set; }
         public IRValue Index { get; set; }
         public IEnumerable<IRValue> Operands { get { yield return Object; yield return Index; } }
         public int OperandCount => 2;
+        public Type ResultType => TypeInferencer.GetTypeForIndex(Object.ValueType);
         IRValue IMultipleOperandInstruction.this[int index]
         {
             get => index == 0 ? Object : index == 1 ? Index : throw new System.ArgumentOutOfRangeException();
@@ -452,7 +499,7 @@ namespace kOS.Safe.Compilation.IR
     }
     public class IRIndexSet : IRInstruction, IMultipleOperandInstruction
     {
-        public override bool SideEffects => false;
+        public override bool IsInvariant => false;
         public IRValue Object { get; set; }
         public IRValue Index { get; set; }
         public IRValue Value { get; set; }
@@ -501,7 +548,7 @@ namespace kOS.Safe.Compilation.IR
     }
     public class IRJump : IRInstruction
     {
-        public override bool SideEffects => false;
+        public override bool IsInvariant => true;
         public BasicBlock Target { get; set; }
         public IRJump(BasicBlock target, OpcodeBranchJump opcode) : base(opcode)
         {
@@ -523,7 +570,7 @@ namespace kOS.Safe.Compilation.IR
     }
     public class IRJumpStack : IRInstruction, ISingleOperandInstruction
     {
-        public override bool SideEffects => false;
+        public override bool IsInvariant => Distance.IsInvariant;
         public IRValue Distance { get; set; }
         IRValue ISingleOperandInstruction.Operand { get => Distance; set => Distance = value; }
         public List<BasicBlock> Targets { get; } = new List<BasicBlock>();
@@ -547,7 +594,7 @@ namespace kOS.Safe.Compilation.IR
     }
     public class IRBranch : IRInstruction, ISingleOperandInstruction
     {
-        public override bool SideEffects => false;
+        public override bool IsInvariant => Condition.IsInvariant;
         public IRValue Condition { get; set; }
         IRValue ISingleOperandInstruction.Operand { get => Condition; set => Condition = value; }
         public BasicBlock True { get; set; }
@@ -587,13 +634,31 @@ namespace kOS.Safe.Compilation.IR
     }
     public class IRCall : IRInstruction, IResultingInstruction, IMultipleOperandInstruction
     {
+        private bool isResultTypeInformed = false;
+        private Type resultType = null;
+        private bool? isFunctionInvariant = null;
+
         protected static readonly Function.FunctionManager functionManager = new Function.FunctionManager(null);
-        public override bool SideEffects { get; }
+        public bool IsFunctionInvariant
+        {
+            get => isFunctionInvariant ?? IsCallInvariant(Function);
+            set => isFunctionInvariant = value;
+        }
+        public override bool IsInvariant => IsFunctionInvariant && Arguments.All(a => a.IsInvariant);
         public IRValue Result { get; set; }
         public string Function { get; }
         public List<IRValue> Arguments { get; } = new List<IRValue>();
         public IEnumerable<IRValue> Operands => Enumerable.Reverse(Arguments);
         public int OperandCount => Arguments.Count;
+        public Type ResultType
+        {
+            get => isResultTypeInformed ? resultType : GetDefaultReturnType();
+            set
+            {
+                resultType = value;
+                isResultTypeInformed = true;
+            }
+        }
         IRValue IMultipleOperandInstruction.this[int index]
         {
             get => Arguments[index];
@@ -607,147 +672,27 @@ namespace kOS.Safe.Compilation.IR
             Result = target;
             Function = (string)opcode.Destination;
             Direct = opcode.Direct;
-            SideEffects = CheckIfFunctionHasSideEffects(opcode);
             EmitArgMarker = emitArgMarker;
         }
-        private bool CheckIfFunctionHasSideEffects(OpcodeCall opcode)
+        private bool IsCallInvariant(string functionName)
         {
             if (!Direct)
-                return true;
-            if (opcode.Destination is string functionName && functionManager.Exists(functionName))
+                return false;
+            if (functionManager.Exists(functionName))
             {
-                functionName = functionName.ToLower().Replace("()", "");
-                switch (functionName)
-                {
-                    case "vcrs":
-                    case "vectorcrossproduct":
-                    case "vdot":
-                    case "vectordotproduct":
-                    case "vxcl":
-                    case "vectorexclude":
-                    case "vang":
-                    case "vectorangle":
-                    case "clearscreen":
-                    case "hudtext":
-                    case "add":
-                    case "remove":
-                    case "processor":
-                    case "edit":
-                    case "printlist":
-                    case "node":
-                    case "v":
-                    case "r":
-                    case "q":
-                    case "createorbit":
-                    case "rotatefromto":
-                    case "lookdirup":
-                    case "angleaxis":
-                    case "latlng":
-                    case "vessel":
-                    case "body":
-                    case "bodyexists":
-                    case "bodyatmosphere":
-                    case "bounds":
-                    case "heading":
-                    case "slidenote":
-                    case "note":
-                    case "getvoice":
-                    case "stopallvoices":
-                    case "time":
-                    case "timestamp":
-                    case "timespan":
-                    case "hsv":
-                    case "hsva":
-                    case "vecdraw":
-                    case "vecdrawargs":
-                    case "clearvecdraws":
-                    case "clearguis":
-                    case "gui":
-                    case "career":
-                    case "lex":
-                    case "lexicon":
-                    case "list":
-                    case "pidloop":
-                    case "queue":
-                    case "stack":
-                    case "uniqueset":
-                    case "abs":
-                    case "mod":
-                    case "floor":
-                    case "ceiling":
-                    case "round":
-                    case "sqrt":
-                    case "ln":
-                    case "log10":
-                    case "min":
-                    case "max":
-                    case "random":
-                    case "randomseed":
-                    case "char":
-                    case "unchar":
-                    case "range":
-                    case "constant":
-                    case "sin":
-                    case "cos":
-                    case "tan":
-                    case "arcsin":
-                    case "arccos":
-                    case "arctan":
-                    case "arctan2":
-                    case "anglediff":
-                        return false;
-                    case "addAlarm":
-                    case "listAlarms":
-                    case "deleteAlarm":
-                    case "buildlist":
-                    case "positionat":
-                    case "velocityat":
-                    case "orbitat":
-                    case "allwaypoints":
-                    case "waypoint":
-                    case "print":
-                    case "printat":
-                    case "logfile":
-                    case "debugdump":
-                    case "debugfreezegame":
-                    case "profileresult":
-                    case "makebuiltindelegate":
-                    case "droppriority":
-                    case "stage":
-                    case "warpto":
-                    case "transfer":
-                    case "transferall":
-                    case "run":
-                    case "load":
-                    case "toggleflybywire":
-                    case "selectautopilotmode":
-                    case "reboot":
-                    case "shutdown":
-                    case "scriptpath":
-                    case "switch":
-                    case "cd":
-                    case "chdir":
-                    case "copy_deprecated":
-                    case "rename_file_deprecated":
-                    case "rename_volume_deprecated":
-                    case "delete_deprecated":
-                    case "copypath":
-                    case "movepath":
-                    case "deletepath":
-                    case "writejson":
-                    case "readjson":
-                    case "exists":
-                    case "open":
-                    case "create":
-                    case "createdir":
-                    case "path":
-                    case "volume":
-                    default:
-                        return true;
-                }
+                return functionManager.IsFunctionInvariant(functionName);
             }
-            else
-                return true;
+            return false;
+
+        }
+        private Type GetDefaultReturnType()
+        {
+            if (functionManager.Exists(Function))
+                return functionManager.FunctionReturnType(Function);
+            if (IndirectMethod is IRTemp tempSuffixCall &&
+                tempSuffixCall.Parent is IRSuffixGetMethod suffixGetMethod)
+                return suffixGetMethod.ResultType;
+            return typeof(Encapsulation.Structure);
         }
         internal override IEnumerable<Opcode> EmitOpcode()
         {
@@ -789,7 +734,7 @@ namespace kOS.Safe.Compilation.IR
     }
     public class IRReturn : IRInstruction, ISingleOperandInstruction
     {
-        public override bool SideEffects => false;
+        public override bool IsInvariant => Value.IsInvariant;
         public IRValue Value { get; set; }
         IRValue ISingleOperandInstruction.Operand { get => Value; set => Value = value; }
         public short Depth { get; internal set; }

@@ -1,10 +1,36 @@
 using System;
 using NUnit.Framework;
-using kOS.Safe.Encapsulation;
+using kOS.Safe.Compilation;
 using kOS.Safe.Compilation.IR;
+using kOS.Safe.Encapsulation;
+using kOS.Safe.Test.Execution;
+using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Test.Compilation
 {
+
+    [SetUpFixture]
+    public class StaticSetup
+    {
+        [SetUp]
+        public void Setup()
+        {
+            SafeHouse.Init(new Config(), new VersionInfo(0, 0, 0, 0), "", false, "./");
+            SafeHouse.Logger = new NoopLogger();
+
+            try
+            {
+                AssemblyWalkAttribute.Walk();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Console.WriteLine(e.StackTrace);
+                throw;
+            }
+        }
+    }
+
     [TestFixture]
     public class TypeInferencing
     {
@@ -42,6 +68,26 @@ namespace kOS.Safe.Test.Compilation
             listType = typeof(EnumerableValue<Encapsulation.Structure, System.Collections.Generic.IEnumerable<Encapsulation.Structure>>);
             result = TypeInferencer.GetTypeForSuffix(listType, "ITERATOR");
             Assert.AreEqual(result, typeof(Enumerator));
+        }
+
+        [Test]
+        public void TestInstructionInferencing()
+        {
+            IRConstant a = new IRConstant(ScalarIntValue.One, 0, 0);
+            IRConstant b = new IRConstant(ScalarIntValue.Two, 0, 0);
+            IRTemp result = new IRTemp(0);
+            IRBinaryOp add = new IRBinaryOp(result, new OpcodeMathAdd(), a, b);
+
+            Assert.AreEqual(add.ResultType, typeof(ScalarValue));
+
+            IRCall call = new IRCall(result, new OpcodeCall("sin"), true, b);
+            Assert.IsTrue(typeof(ScalarValue).IsAssignableFrom(call.ResultType));
+
+            IRCall print = new IRCall(result, new OpcodeCall("print"), true, a);
+            Assert.AreEqual(print.ResultType, null);
+
+            IRCall userCall = new IRCall(result, new OpcodeCall("$test*"), true, a, b);
+            Assert.AreEqual(userCall.ResultType, typeof(Encapsulation.Structure));
         }
     }
 }

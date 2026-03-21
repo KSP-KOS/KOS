@@ -1,23 +1,30 @@
+using System;
 using System.Collections.Generic;
 
 namespace kOS.Safe.Compilation.IR
 {
     public abstract class IRValue
     {
-        public enum ValueType
-        {
-            Unknown = 0,
-            Value = 1,
-            GameObject = 2
-        }
-        public ValueType Type { get; }
+        public virtual Type ValueType { get; set; } = typeof(Encapsulation.Structure);
+        public abstract bool IsInvariant { get; set; }
         internal abstract IEnumerable<Opcode> EmitPush();
     }
 
     public class IRConstant : IRValue
     {
-        public object Value { get; }
         protected readonly short sourceLine, sourceColumn;
+
+        public override bool IsInvariant
+        {
+            get => true;
+            set
+            {
+                if (value)
+                    return;
+                throw new InvalidOperationException("Cannot set the invariant state of a constant to false.");
+            }
+        }
+        public object Value { get; }
         public IRConstant(object value, Opcode opcode) : this(value, opcode.SourceLine, opcode.SourceColumn) { }
         public IRConstant(object value, IRInstruction instruction) : this(value, instruction.SourceLine, instruction.SourceColumn) { }
         public IRConstant(object value, short sourceLine, short sourceColumn)
@@ -25,6 +32,7 @@ namespace kOS.Safe.Compilation.IR
             Value = value;
             this.sourceLine = sourceLine;
             this.sourceColumn = sourceColumn;
+            ValueType = value.GetType();
         }
         internal override IEnumerable<Opcode> EmitPush()
         {
@@ -52,22 +60,23 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => $"{Name} {Scope.IndexString()}";
-        public override bool Equals(object obj)
-            => obj is IRVariableBase variable &&
-                (Scope == variable.Scope ||
-                Scope.IsEncompassedBy(variable.Scope) ||
-                variable.Scope.IsEncompassedBy(Scope)) &&
-                string.Equals(Name, variable.Name, System.StringComparison.OrdinalIgnoreCase);
-        public override int GetHashCode()
+        protected bool NameAndScopeEquals(IRVariableBase variable)
+            => string.Equals(Name, variable.Name, StringComparison.OrdinalIgnoreCase) &&
+                (Scope.IsEqualOrEncompassedBy(variable.Scope) ||
+                variable.Scope.IsEncompassedBy(Scope));
+        protected int GetBaseHashCode()
             => Name.ToLower().GetHashCode();
     }
     public class IRVariable : IRVariableBase
     {
-        protected readonly short sourceLine, sourceColumn;
+        private ushort nextSSAIndex = 0;
+        private readonly Dictionary<ushort, SSAVariable> iterations = new Dictionary<ushort, SSAVariable>();
+        internal readonly short sourceLine, sourceColumn;
+
+        public override bool IsInvariant { get; set; } = false;
         public bool IsLock { get; }
-        public override IRScope Scope { get => base.Scope; }
-        public IRVariable(string name, IRScope scope, IRInstruction instruction, bool isLock = false) :
-            this(name, scope, instruction.SourceLine, instruction.SourceColumn, isLock) { }
+        public IReadOnlyDictionary<ushort, SSAVariable> Iterations => iterations;
+
         public IRVariable(OpcodeIdentifierBase opcode, IRScope scope, bool isLock = false) :
             this(opcode.Identifier, scope, opcode, isLock) { }
         public IRVariable(string name, IRScope scope, Opcode opcode, bool isLock = false) :
@@ -87,10 +96,20 @@ namespace kOS.Safe.Compilation.IR
                 SourceColumn = sourceColumn
             };
         }
+        public override bool Equals(object obj)
+            => !(obj is SSAVariable) &&
+            obj is IRVariable variable &&
+            NameAndScopeEquals(variable);
+        public override int GetHashCode()
+            => GetBaseHashCode();
     }
     public class IRRelocateLater : IRConstant
     {
-        public IRRelocateLater(string value, OpcodePushRelocateLater opcode) : base(value, opcode) { }
+        public IRRelocateLater(string value, OpcodePushRelocateLater opcode) : base(value, opcode)
+        {
+            // Not technically correct, but this removes it from any optimization.
+            ValueType = null;
+        }
 
         internal override IEnumerable<Opcode> EmitPush()
         {
@@ -121,8 +140,18 @@ namespace kOS.Safe.Compilation.IR
     {
         private bool isPromoted = false;
 
+        public override Type ValueType
+        {
+            get => ((IResultingInstruction)Parent).ResultType;
+            set => throw new InvalidOperationException($"Cannot set the result type state of an {nameof(IRTemp)}.");
+        }
         public int ID { get; }
         public IRInstruction Parent { get; internal set; }
+        public override bool IsInvariant
+        {
+            get => Parent.IsInvariant;
+            set => throw new InvalidOperationException($"Cannot set the invariant state of an {nameof(IRTemp)}.");
+        }
 
         public IRTemp(int id) : base($"$.temp.{id}", null)
         {
@@ -156,6 +185,13 @@ namespace kOS.Safe.Compilation.IR
                 foreach (Opcode opcode in Parent.EmitOpcode())
                     yield return opcode;
         }
+
+        public override string ToString()
+        {
+            if (isPromoted)
+                return base.ToString();
+            return $"| {Parent}";
+        }
         public override bool Equals(object obj)
         {
             if (obj is IRTemp temp)
@@ -171,21 +207,30 @@ namespace kOS.Safe.Compilation.IR
             if (obj is IRVariable variable)
             {
                 return isPromoted &&
-                    base.Equals(variable);
+                    NameAndScopeEquals(variable);
             }
             return false;
         }
-        public override string ToString()
-        {
-            if (isPromoted)
-                return base.ToString();
-            return $"| {Parent}";
-        }
         public override int GetHashCode()
-            => base.GetHashCode();
+            => GetBaseHashCode();
     }
     public class IRParameter : IRValue
     {
+        public override Type ValueType
+        {
+            get => null;
+            set => throw new InvalidOperationException("Cannot set the value type of a parameter.");
+        }
+        public override bool IsInvariant
+        {
+            get => false;
+            set
+            {
+                if (!value)
+                    return;
+                throw new InvalidOperationException("Cannot set the invariant state of a parameter to true.");
+            }
+        }
         internal override IEnumerable<Opcode> EmitPush() => System.Linq.Enumerable.Empty<Opcode>();
     }
 }
