@@ -245,9 +245,16 @@ namespace kOS.UserIO
             // refresh the port information, don't need to refresh address because it's refreshed every Update
             port = SafeHouse.Config.TelnetPort; 
 
-            server = new TcpListener(bindAddr, port);
+            // Bind to IPAddress.Any instead of the specific bindAddr when using loopback.
+            // On Windows, Npcap (installed by Wireshark/Nmap) installs a "Npcap Loopback Adapter"
+            // that intercepts traffic bound specifically to the loopback interface (127.0.0.1),
+            // causing TCP connections to time out with no SYN-ACK. Binding to IPAddress.Any
+            // routes through the normal network stack and avoids this issue.
+            // Non-loopback addresses are used as-is since users explicitly chose them.
+            var listenAddr = IPAddress.IsLoopback(bindAddr) ? IPAddress.Any : bindAddr;
+            server = new TcpListener(listenAddr, port);
             server.Start();
-            SafeHouse.Logger.Log(string.Format("{2} TelnetMainServer started listening on {0} {1}", bindAddr, port, KSPLogger.LOGGER_PREFIX));
+            SafeHouse.Logger.Log(string.Format("{2} TelnetMainServer started listening on {0} (requested {1}) port {3}", listenAddr, bindAddr, KSPLogger.LOGGER_PREFIX, port));
             isListening = true;
         }
 
@@ -333,10 +340,24 @@ namespace kOS.UserIO
                 return;
 
             TcpClient incomingClient = server.AcceptTcpClient();
-            
+
             string remoteIdent = ((IPEndPoint)(incomingClient.Client.RemoteEndPoint)).Address.ToString();
             SafeHouse.Logger.Log(string.Format("{0} telnet server got an incoming connection from {1}", KSPLogger.LOGGER_PREFIX, remoteIdent));
-            
+
+            // When the user configured loopback mode, reject connections from non-loopback addresses.
+            // We bind to IPAddress.Any to work around Npcap intercepting the loopback interface,
+            // but we still enforce the user's intent to only allow local connections.
+            if (IPAddress.IsLoopback(bindAddr))
+            {
+                var remoteAddr = ((IPEndPoint)(incomingClient.Client.RemoteEndPoint)).Address;
+                if (!IPAddress.IsLoopback(remoteAddr))
+                {
+                    SafeHouse.Logger.Log(string.Format("{0} Rejected non-loopback connection from {1} (server is in loopback mode)", KSPLogger.LOGGER_PREFIX, remoteIdent));
+                    incomingClient.Close();
+                    return;
+                }
+            }
+
             TelnetSingletonServer newServer = new TelnetSingletonServer(this, incomingClient, ++howManySpawned);
             telnets.Add(newServer);
             newServer.StartListening();
