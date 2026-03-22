@@ -13,6 +13,7 @@
 
 ### Bug Fixes
 
+- Fixed telnet server failing to accept connections on Windows when loopback interface is intercepted by third-party software (e.g. Npcap/Wireshark) (#3171)
 - Fixed numeric formatting patters (thanks @sisve) [commit](https://github.com/KSP-KOS/KOS/commit/5780b75ff90e238c441ab71d366391b051e8bd14)
 - Fixed many documentation issues (thanks @sisve) [commit1](https://github.com/KSP-KOS/KOS/commit/727d345679fe992077fa5604c27b43c34a80fbe7) [commit2](https://github.com/KSP-KOS/KOS/commit/afabb19e860adc67ad63f939a3d624e9344ad7b8) [commit3](https://github.com/KSP-KOS/KOS/commit/110b209ad89225bf447caa079334c434df0e9746)
 - Fixed `GetSignalDelayToSatellite` for RemoteTech (thanks @KerbalOne) [commit](https://github.com/KSP-KOS/KOS/commit/b76759f24ba43e7cb2d82437c2251caf7d3a582f)
