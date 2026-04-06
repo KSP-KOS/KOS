@@ -4,11 +4,22 @@ using System.Linq;
 
 namespace kOS.Safe.Compilation.IR
 {
+    /// <summary>
+    /// This class is used to convert the Opcode representation to a form
+    /// that is more appropriate for optimization passes. A single
+    /// instance must be used for a complete program element
+    /// (i.e. a <see cref="CodePart"/>).
+    /// </summary>
     public class IRBuilder
     {
         private int nextTempId = 0;
-        private int blockID = 0;
 
+        /// <summary>
+        /// Lowers the specified code from a sequence of <see cref="Opcode"/>s
+        /// to a three-address code interim representation.
+        /// </summary>
+        /// <param name="code">The code to lower.</param>
+        /// <returns>A sequence of <see cref="BasicBlock"/> objects, representing the instructions.</returns>
         public List<BasicBlock> Lower(List<Opcode> code)
         {
             List<BasicBlock> blocks = new List<BasicBlock>();
@@ -64,7 +75,7 @@ namespace kOS.Safe.Compilation.IR
                 string label = code[startIndex].Label;
                 if (label.StartsWith("@"))
                     label = null;
-                BasicBlock block = new BasicBlock(startIndex, endIndex, blockID++, label);
+                BasicBlock block = new BasicBlock(startIndex, endIndex, label);
 
                 blocks.Add(block);
             }

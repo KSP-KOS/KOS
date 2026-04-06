@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace kOS.Safe.Compilation.IR
 {
+    /// <summary>
+    /// This class represents a variable scope, analogous to <see cref="kOS.Safe.Execution.VariableScope"/>.
+    /// </summary>
     public class IRScope
     {
         private readonly Dictionary<string, IRVariableBase> variables =
@@ -11,11 +14,14 @@ namespace kOS.Safe.Compilation.IR
         private IRScope parent;
         private readonly HashSet<IRScope> childScopes = new HashSet<IRScope>();
         private readonly HashSet<BasicBlock> blocks = new HashSet<BasicBlock>();
-        private Dictionary<string, string> functionRefs = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> functionRefs = new Dictionary<string, string>();
 
         private int nextChildIndex = 0;
         private int index;
 
+        /// <summary>
+        /// Gets or sets the parent scope.
+        /// </summary>
         public IRScope ParentScope
         {
             get => parent;
@@ -32,14 +38,55 @@ namespace kOS.Safe.Compilation.IR
                     index = 0;
             }
         }
+        /// <summary>
+        /// Gets the collection of child scopes.
+        /// </summary>
         public IReadOnlyCollection<IRScope> Children => childScopes;
+        /// <summary>
+        /// Gets the collection of blocks that associate with this scope.
+        /// </summary>
         public IReadOnlyCollection<BasicBlock> Blocks => blocks;
+        /// <summary>
+        /// Gets or sets the block where this scope is pushed upon entered.
+        /// </summary>
         public BasicBlock HeaderBlock { get; set; }
+        /// <summary>
+        /// Gets or sets the block where this scope is popped upon exiting.
+        /// </summary>
         public BasicBlock FooterBlock { get; set; }
+        /// <summary>
+        /// Gets the collection of variables associated with this scope.
+        /// </summary>
         public IReadOnlyCollection<IRVariableBase> Variables => variables.Values;
+        /// <summary>
+        /// Gets the collection of variable names associated with this
+        /// scope.
+        /// </summary>
         public IReadOnlyCollection<string> VariableNames => variables.Keys;
+        /// <summary>
+        /// Gets the collection of variables written to within this scope.
+        /// This differs from <see cref="Variables"/> in that it can
+        /// contain multiple SSA variables of the same base name.
+        /// </summary>
+        public HashSet<IRVariableBase> VariablesWritten { get; } = new HashSet<IRVariableBase>();
+        /// <summary>
+        /// Gets a value indicating whether this instance represents the
+        /// global scope.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance represents the global scope; otherwise, <c>false</c>.
+        /// </value>
+        /// <remarks>
+        /// Multiple instances can represent the global scope
+        /// simultaneously. The global scope implicitly contains every
+        /// variable name.
+        /// </remarks>
         public bool IsGlobalScope { get; internal set; } = false;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IRScope"/> class.
+        /// </summary>
+        /// <param name="parent">The parent scope.</param>
         public IRScope(IRScope parent)
         {
             ParentScope = parent;

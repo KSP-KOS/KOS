@@ -5,11 +5,18 @@ using kOS.Safe.Compilation.Optimization;
 
 namespace kOS.Safe.Compilation.IR
 {
+    /// <summary>
+    /// This utility class converts an IRCodePart into single static
+    /// assignment form.
+    /// </summary>
     public static class SingleStaticAssignment
     {
         private static readonly Dictionary<IRCall, IEnumerable<SSAVariable>> postCallSSAVariables =
             new Dictionary<IRCall, IEnumerable<SSAVariable>>();
 
+        /// <summary>
+        /// Finalizes a program into single static assignment form.
+        /// </summary>
         public static void FinalizeSSA(IRCodePart codePart)
         {
             foreach (BasicBlock block in codePart.Blocks)
@@ -274,6 +281,11 @@ namespace kOS.Safe.Compilation.IR
             }
         }
 
+        /// <summary>
+        /// Overwrites an SSA variable with the latest assignment.
+        /// </summary>
+        /// <param name="variables">The active variables.</param>
+        /// <param name="newVariable">The new variable as assigned.</param>
         public static void OverwriteVariable(HashSet<SSAVariable> variables, SSAVariable newVariable)
         {
             variables.RemoveWhere(v => v.Parent == newVariable.Parent);

@@ -5,14 +5,41 @@ using kOS.Safe.Compilation.KS;
 
 namespace kOS.Safe.Compilation.IR
 {
+    /// <summary>
+    /// This class is the interim representation of a program, including
+    /// the functions, triggers, and mainline code defined therein.
+    /// </summary>
     public class IRCodePart
     {
+        /// <summary>
+        /// Gets or sets the mainline code, in BasicBlock format.
+        /// </summary>
         public List<BasicBlock> MainCode { get; set; }
+        /// <summary>
+        /// Gets or sets the function definitions.
+        /// </summary>
         public List<IRFunction> Functions { get; set; }
+        /// <summary>
+        /// Gets or sets the trigger definitions.
+        /// </summary>
         public List<IRTrigger> Triggers { get; set; }
+        /// <summary>
+        /// Gets the collection of root blocks, across all mainline
+        /// code, functions, and triggers.
+        /// </summary>
         public List<BasicBlock> RootBlocks { get; } = new List<BasicBlock>();
+        /// <summary>
+        /// Gets the collection of blocks, across all program elements.
+        /// </summary>
         public List<BasicBlock> Blocks { get; } = new List<BasicBlock>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IRCodePart"/> class.
+        /// </summary>
+        /// <param name="codePart">The code part containing main code.</param>
+        /// <param name="userFunctions">The user functions defined in this program.</param>
+        /// <param name="triggers">The triggers defined in this program.</param>
+        /// <exception cref="System.ArgumentException"></exception>
         public IRCodePart(CodePart codePart, List<UserFunction> userFunctions, List<Trigger> triggers)
         {
             if (codePart.InitializationCode.Count > 0)
@@ -50,6 +77,11 @@ namespace kOS.Safe.Compilation.IR
             SingleStaticAssignment.FinalizeSSA(this);
         }
 
+        /// <summary>
+        /// Emits the code into Opcode representation, and back into
+        /// its source objects.
+        /// </summary>
+        /// <param name="codePart">The code part into which to emit mainline code.</param>
         public void EmitCode(CodePart codePart)
         {
             IREmitter emitter = new IREmitter();
@@ -64,15 +96,38 @@ namespace kOS.Safe.Compilation.IR
             codePart.MainCode = emitter.Emit(MainCode);
         }
 
+        /// <summary>
+        /// This class represents a trigger definition.
+        /// </summary>
+        /// <seealso cref="kOS.Safe.Compilation.IR.IRCodePart.IClosureVariableUser" />
         public class IRTrigger : IClosureVariableUser
         {
             private readonly Trigger trigger;
+            /// <summary>
+            /// Gets the identifier string for this trigger.
+            /// </summary>
             public string Identifier { get; }
+            /// <summary>
+            /// Gets or sets the code for this trigger, in BasicBlock representation.
+            /// </summary>
             public List<BasicBlock> Code { get; set; }
 
+            /// <summary>
+            /// Gets the collection of external variables that are read
+            /// within the trigger.
+            /// </summary>
             public HashSet<IRVariable> ExternalReads { get; } = new HashSet<IRVariable>();
+            /// <summary>
+            /// Gets the collection of external variables that are written
+            /// to within the trigger.
+            /// </summary>
             public HashSet<SSAVariable> ExternalWrites { get; } = new HashSet<SSAVariable>();
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="IRTrigger"/> class.
+            /// </summary>
+            /// <param name="builder">The IRBuilder object in use.</param>
+            /// <param name="trigger">The trigger object to convert.</param>
             public IRTrigger(IRBuilder builder, Trigger trigger)
             {
                 this.trigger = trigger;
@@ -93,6 +148,11 @@ namespace kOS.Safe.Compilation.IR
                     }
                 }
             }
+            /// <summary>
+            /// Emits the code into Opcode representation back into the
+            /// trigger's source object.
+            /// </summary>
+            /// <param name="emitter">The IREmitter object in use.</param>
             public void EmitCode(IREmitter emitter)
             {
                 trigger.Code.Clear();
@@ -100,18 +160,44 @@ namespace kOS.Safe.Compilation.IR
             }
         }
 
+        /// <summary>
+        /// This class represents a user-defined function.
+        /// </summary>
+        /// <seealso cref="kOS.Safe.Compilation.IR.IRCodePart.IClosureVariableUser" />
         public class IRFunction : IClosureVariableUser
         {
             private readonly UserFunction function;
             private readonly List<UserFunctionCodeFragment> userFunctionFragments;
             private readonly Dictionary<UserFunctionCodeFragment, IRFunctionFragment> fragments = new Dictionary<UserFunctionCodeFragment, IRFunctionFragment>();
 
+            /// <summary>
+            /// Gets the identifier string for this function.
+            /// </summary>
             public string Identifier => function.Identifier;
+            /// <summary>
+            /// Gets or sets the initialization code, in BasicBlock format.
+            /// </summary>
             public List<BasicBlock> InitializationCode { get; set; }
+            /// <summary>
+            /// Gets the collection of function fragments.
+            /// </summary>
             public IReadOnlyCollection<IRFunctionFragment> Fragments => fragments.Values;
+            /// <summary>
+            /// Gets the collection of external variables that are read
+            /// within the function.
+            /// </summary>
             public HashSet<IRVariable> ExternalReads { get; } = new HashSet<IRVariable>();
+            /// <summary>
+            /// Gets the collection of external variables that are written
+            /// to within the function.
+            /// </summary>
             public HashSet<SSAVariable> ExternalWrites { get; } = new HashSet<SSAVariable>();
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="IRFunction"/> class.
+            /// </summary>
+            /// <param name="builder">The IRBuilder object in use.</param>
+            /// <param name="function">The user function object to convert.</param>
             public IRFunction(IRBuilder builder, UserFunction function)
             {
                 this.function = function;
@@ -141,6 +227,11 @@ namespace kOS.Safe.Compilation.IR
                 }
             }
 
+            /// <summary>
+            /// Emits the code into Opcode representation back into the
+            /// trigger's source object.
+            /// </summary>
+            /// <param name="emitter">The IREmitter object in use.</param>
             public void EmitCode(IREmitter emitter)
             {
                 function.InitializationCode.Clear();
@@ -151,15 +242,31 @@ namespace kOS.Safe.Compilation.IR
                 }
             }
 
+            /// <summary>
+            /// This class represents a function fragment. See <seealso cref="UserFunctionCodeFragment"/>.
+            /// </summary>
             public class IRFunctionFragment
             {
                 private readonly UserFunctionCodeFragment fragment;
+                /// <summary>
+                /// Gets or sets the function code, in BasicBlock representation.
+                /// </summary>
                 public List<BasicBlock> FunctionCode { get; set; }
+                /// <summary>
+                /// Initializes a new instance of the <see cref="IRFunctionFragment"/> class.
+                /// </summary>
+                /// <param name="builder">The IRBuilder object in use.</param>
+                /// <param name="codeFragment">The function code fragment to convert.</param>
                 public IRFunctionFragment(IRBuilder builder, UserFunctionCodeFragment codeFragment)
                 {
                     fragment = codeFragment;
                     FunctionCode = builder.Lower(codeFragment.Code);
                 }
+                /// <summary>
+                /// Emits the code into Opcode representation back into the
+                /// trigger's source object.
+                /// </summary>
+                /// <param name="emitter">The IREmitter object in use.</param>
                 public void EmitCode(IREmitter emitter)
                 {
                     fragment.Code.Clear();
@@ -168,6 +275,11 @@ namespace kOS.Safe.Compilation.IR
             }
         }
 
+        /// <summary>
+        /// Sets the scope in which a function or trigger is defined.
+        /// </summary>
+        /// <param name="function">The function or trigger to target.</param>
+        /// <param name="scope">The scope to set as parent.</param>
         public static void SetDefiningScope(IClosureVariableUser function, IRScope scope)
         {
             HashSet<SSAVariable> tempWrites = new HashSet<SSAVariable>(function.ExternalWrites);
@@ -190,9 +302,20 @@ namespace kOS.Safe.Compilation.IR
             }
         }
 
+        /// <summary>
+        /// Represents a user of a closure and its contained variables.
+        /// </summary>
         public interface IClosureVariableUser
         {
+            /// <summary>
+            /// Gets the collection of external variables that are read
+            /// within the closure.
+            /// </summary>
             HashSet<IRVariable> ExternalReads { get; }
+            /// <summary>
+            /// Gets the collection of external variables that are written
+            /// to within the closure.
+            /// </summary>
             HashSet<SSAVariable> ExternalWrites { get; }
         }
     }

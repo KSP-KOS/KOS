@@ -7,27 +7,53 @@ using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Compilation.Optimization
 {
+    /// <summary>
+    /// This class performs the actual optimization by applying all
+    /// optimization passes, as identified by implementation of <see cref="IOptimizationPass"/>.
+    /// </summary>
     [AssemblyWalk(InterfaceType = typeof(IOptimizationPass), StaticRegisterMethod = "RegisterMethod")]
     public class Optimizer
     {
-        public OptimizationLevel OptimizationLevel { get; }
-        public List<BasicBlock> Blocks { get; private set; }
-        public List<ExtendedBasicBlock> ExtendedBlocks { get; private set; }
-        public HashSet<BasicBlock> RootBlocks { get; private set; }
-        public IRCodePart Code { get; private set; }
         internal static InterimCPU InterimCPU { get; } = new InterimCPU();
-        public static IFunctionManager FunctionManager => shared.FunctionManager;
-
         private static readonly SafeSharedObjects shared = new SafeSharedObjects() { Cpu = InterimCPU };
         private readonly SortedSet<IOptimizationPass> optimizationPasses = new SortedSet<IOptimizationPass>(
             Comparer<IOptimizationPass>.Create((a, b) => a.SortIndex.CompareTo(b.SortIndex)));
         private readonly static HashSet<Type> availablePassTypes = new HashSet<Type>();
+
+        /// <summary>
+        /// Gets the optimization level to be applied.
+        /// </summary>
+        public OptimizationLevel OptimizationLevel { get; }
+        /// <summary>
+        /// Gets the collection of Basic Blocks being operated upon.
+        /// </summary>
+        public List<BasicBlock> Blocks { get; private set; }
+        /// <summary>
+        /// Gets the collection of extended basic blocks being operated upon.
+        /// </summary>
+        public List<ExtendedBasicBlock> ExtendedBlocks { get; private set; }
+        /// <summary>
+        /// Gets the collection of root blocks.
+        /// </summary>
+        public HashSet<BasicBlock> RootBlocks { get; private set; }
+        /// <summary>
+        /// Gets the IRCodePart object being operated upon.
+        /// </summary>
+        public IRCodePart Code { get; private set; }
+        /// <summary>
+        /// Gets the function manager.
+        /// </summary>
+        public static IFunctionManager FunctionManager => shared.FunctionManager;
 
         static Optimizer()
         {
             shared.FunctionManager = new FunctionManager(shared);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Optimizer"/> class.
+        /// </summary>
+        /// <param name="optimizationLevel">The optimization level to be applied.</param>
         public Optimizer(OptimizationLevel optimizationLevel)
         {
             OptimizationLevel = optimizationLevel;
@@ -44,6 +70,9 @@ namespace kOS.Safe.Compilation.Optimization
             availablePassTypes.Add(type);
         }
 
+        /// <summary>
+        /// Applies the optimization passes to the specified code part.
+        /// </summary>
         public List<BasicBlock> Optimize(IRCodePart codePart)
         {
             Code = codePart;

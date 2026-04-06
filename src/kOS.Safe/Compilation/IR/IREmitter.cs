@@ -3,9 +3,18 @@ using System.Linq;
 
 namespace kOS.Safe.Compilation.IR
 {
+    /// <summary>
+    /// This class is used to emit code back into Opcode representation
+    /// from the Three-Address Code interim representation.
+    /// </summary>
     public class IREmitter
     {
         int labelIndex = 0;
+        /// <summary>
+        /// Emits the specified blocks to Opcode representation.
+        /// </summary>
+        /// <param name="blocks">The interim representation basic blocks for which to emit.</param>
+        /// <returns>The sequence of Opcodes representing the code.</returns>
         public List<Opcode> Emit(List<BasicBlock> blocks)
         {
             List<Opcode> result = new List<Opcode>();

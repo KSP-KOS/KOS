@@ -5,6 +5,12 @@ using kOS.Safe.Execution;
 
 namespace kOS.Safe.Compilation.Optimization
 {
+    /// <summary>
+    /// A partial implementation of <see cref="kOS.Safe.Execution.CPU"/>
+    /// that can implement a stack for executing certain functions
+    /// at compile time.
+    /// </summary>
+    /// <seealso cref="kOS.Safe.Execution.ICpu" />
     internal class InterimCPU : ICpu
     {
         public int InstructionPointer { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
