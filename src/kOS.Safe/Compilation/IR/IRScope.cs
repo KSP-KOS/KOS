@@ -117,6 +117,13 @@ namespace kOS.Safe.Compilation.IR
             }
             return ParentScope?.TryStoreVariable(variable) ?? false;
         }
+        public void UnsetVariable(string variable)
+        {
+            if (variables.ContainsKey(variable))
+                variables.Remove(variable);
+            else
+                ParentScope?.UnsetVariable(variable);
+        }
 
         public void EnrollFunction(string variable, string functionRef)
         {
@@ -129,18 +136,18 @@ namespace kOS.Safe.Compilation.IR
             return null;
         }
 
-        public IRVariableBase GetVariableNamed(string name)
+        public IRVariableBase GetVariableNamed(string name, bool includeParent = true)
         {
             if (variables.ContainsKey(name))
                 return variables[name];
-            return ParentScope?.GetVariableNamed(name);
+            return includeParent ? ParentScope?.GetVariableNamed(name, includeParent) : null;
         }
 
-        public bool IsVariableInScope(string name)
+        public bool IsVariableInScope(string name, bool includeParent = true)
         {
             if (variables.ContainsKey(name))
                 return true;
-            return ParentScope?.IsVariableInScope(name) ?? false;
+            return includeParent && (ParentScope?.IsVariableInScope(name, includeParent) ?? false);
         }
         public bool IsVariableInScope(IRVariableBase variable)
         {

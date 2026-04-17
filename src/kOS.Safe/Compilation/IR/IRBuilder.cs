@@ -172,48 +172,16 @@ namespace kOS.Safe.Compilation.IR
             switch (opcode)
             {
                 case OpcodeStore store:
-                    IRScope scope = currentBlock.GetScopeForVariableNamed(store.Identifier);
-                    SSAVariable variable = GetSSAVariable(scope, store);
-                    IRValue stackValue = PopStack();
-                    if (stackValue is IRRelocateLater lockOrFunctionPointer1)
-                        scope.EnrollFunction(variable.Name, (string)lockOrFunctionPointer1.Value);
-                    IRAssign assignment = new IRAssign(store, variable, stackValue) { Scope = IRAssign.StoreScope.Ambivalent };
-                    currentBlock.StoreVariable(variable);
-                    currentBlock.Add(assignment);
+                    Store(PopStack(), currentBlock, currentBlock.Scope, store);
                     break;
                 case OpcodeStoreExist storeExist:
-                    scope = currentBlock.GetScopeForVariableNamed(storeExist.Identifier);
-                    variable = GetSSAVariable(scope, storeExist);
-                    stackValue = PopStack();
-                    if (stackValue is IRRelocateLater lockOrFunctionPointer2)
-                        scope.EnrollFunction(variable.Name, (string)lockOrFunctionPointer2.Value);
-                    assignment = new IRAssign(storeExist, variable, stackValue) { AssertExists = true };
-                    currentBlock.StoreVariable(variable);
-                    currentBlock.Add(assignment);
+                    Store(PopStack(), currentBlock, currentBlock.Scope, storeExist, assertExist: true);
                     break;
                 case OpcodeStoreLocal storeLocal:
-                    scope = currentBlock.Scope;
-                    if (scope.IsVariableInScope(storeLocal.Identifier))
-                        scope = scope.GetScopeForVariableNamed(storeLocal.Identifier);
-                    variable = GetSSAVariable(scope, storeLocal);
-                    stackValue = PopStack();
-                    if (stackValue is IRRelocateLater lockOrFunctionPointer3)
-                        scope.EnrollFunction(variable.Name, (string)lockOrFunctionPointer3.Value);
-                    assignment = new IRAssign(storeLocal, variable, stackValue) { Scope = IRAssign.StoreScope.Local };
-                    currentBlock.StoreLocalVariable(variable);
-                    currentBlock.Add(assignment);
+                    Store(PopStack(), currentBlock, currentBlock.Scope, storeLocal, IRAssign.StoreScope.Local);
                     break;
                 case OpcodeStoreGlobal storeGlobal:
-                    scope = currentBlock.Scope.GetScopeForVariableNamed(storeGlobal.Identifier);
-                    if (!scope.IsGlobalScope)
-                        throw new Exceptions.KOSYouShouldNeverSeeThisException("Tried to store a variable in global scope when it already exists in the local scope.");
-                    variable = GetSSAVariable(scope, storeGlobal);
-                    stackValue = PopStack();
-                    if (stackValue is IRRelocateLater lockOrFunctionPointer4)
-                        scope.EnrollFunction(variable.Name, (string)lockOrFunctionPointer4.Value);
-                    assignment = new IRAssign(storeGlobal, variable, stackValue) { Scope = IRAssign.StoreScope.Global };
-                    currentBlock.StoreGlobalVariable(variable);
-                    currentBlock.Add(assignment);
+                    Store(PopStack(), currentBlock, currentBlock.Scope.GetGlobalScope(), storeGlobal, IRAssign.StoreScope.Global);
                     break;
                 case OpcodeExists exists:
                     IRTemp temp = CreateTemp();
@@ -380,12 +348,34 @@ namespace kOS.Safe.Compilation.IR
             }
         }
 
+        private static void Store(IRValue value, BasicBlock block, IRScope scope, OpcodeIdentifierBase opcode, IRAssign.StoreScope storeScope = IRAssign.StoreScope.Ambivalent, bool assertExist = false)
+        {
+            SSAVariable variable = GetSSAVariable(scope, opcode, storeScope != IRAssign.StoreScope.Local);
+            IRValue stackValue = value;
+            if (stackValue is IRRelocateLater lockOrFunctionPointer)
+                block.Scope.EnrollFunction(variable.Name, (string)lockOrFunctionPointer.Value);
+            IRAssign assignment = new IRAssign(opcode, variable, stackValue) { Scope = storeScope, AssertExists = assertExist };
+            switch (storeScope)
+            {
+                case IRAssign.StoreScope.Ambivalent:
+
+                    block.StoreVariable(variable);
+                    break;
+                case IRAssign.StoreScope.Local:
+                    block.StoreLocalVariable(variable);
+                    break;
+                case IRAssign.StoreScope.Global:
+                    block.StoreGlobalVariable(variable);
+                    break;
+            }
+            block.Add(assignment);
+        }
         private static bool IsPushingVariable(OpcodePush opcodePush)
             => opcodePush.Argument is string identifier && identifier.StartsWith("$");
 
-        private SSAVariable GetSSAVariable(IRScope scope, OpcodeIdentifierBase store)
+        private static SSAVariable GetSSAVariable(IRScope scope, OpcodeIdentifierBase store, bool includeParents = true)
         {
-            IRVariable variable = (IRVariable)scope.GetVariableNamed(store.Identifier) ?? new IRVariable(store, scope);
+            IRVariable variable = (IRVariable)scope.GetVariableNamed(store.Identifier, includeParents) ?? new IRVariable(store, scope);
             return variable.GetNewSSAVariable();
         }
     }
