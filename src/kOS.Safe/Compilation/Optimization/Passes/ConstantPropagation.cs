@@ -445,26 +445,16 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         constantCache.Remove(variable);
                 }
             }
-            if (instruction is ISingleOperandInstruction singleOperandInstruction)
+            if (instruction is IOperandInstructionBase operandInstruction)
             {
-                if (singleOperandInstruction.Operand is IRVariable variable &&
+                operandInstruction.MutateEachOperand(op =>
+                {
+                    if (op is IRVariable variable &&
                     constantCache.ContainsKey(variable) &&
                     constantCache[variable] is IRConstant)
-                {
-                    singleOperandInstruction.Operand = constantCache[variable];
-                }
-            }
-            else if (instruction is IMultipleOperandInstruction multipleOperandInstruction)
-            {
-                for (int j = multipleOperandInstruction.OperandCount - 1; j >= 0; j--)
-                {
-                    if (multipleOperandInstruction[j] is IRVariable variable &&
-                        constantCache.ContainsKey(variable) &&
-                        constantCache[variable] is IRConstant)
-                    {
-                        multipleOperandInstruction[j] = constantCache[variable];
-                    }
-                }
+                        return constantCache[variable];
+                    return op;
+                });
             }
         }
 

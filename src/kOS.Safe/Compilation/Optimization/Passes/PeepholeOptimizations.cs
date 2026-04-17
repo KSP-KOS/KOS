@@ -228,55 +228,38 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         break;
                 }
             }
-            
-            if (instruction is ISingleOperandInstruction singleOperandInstruction)
+
+            if (instruction is IOperandInstructionBase operandInstruction)
             {
-                if (singleOperandInstruction.Operand is IRTemp tempOperand)
+                // Redundant unary operation replacements
+                // E.g. !!X = X and --X = X
+                operandInstruction.MutateEachOperand(op =>
                 {
-                    // Redundant unary operation replacements
-                    // E.g. !!X = X and --X = X
-                    if (tempOperand.Parent is IRUnaryOp unaryParent)
+                    if (op is IRTemp tempOperand &&
+                    tempOperand.Parent is IRUnaryOp unaryParent)
                     {
                         IRValue potentialResult = AttempReplaceRedundantUnaryOp(unaryParent);
                         if (potentialResult != null)
-                            singleOperandInstruction.Operand = potentialResult;
+                            return potentialResult;
                     }
-                    // Replace lex indexing using string constant with suffixing where possible
-                    if (tempOperand.Parent is IRIndexGet indexGet &&
+                    return op;
+                });
+
+                // Replace lex indexing using string constant with suffixing where possible
+                operandInstruction.ForEachOperand(op =>
+                {
+                    if (op is IRTemp tempOperand &&
+                        tempOperand.Parent is IRIndexGet indexGet &&
                         indexGet.Index is IRConstant indexConstant &&
-                        (indexConstant.Value is string ||
-                        indexConstant.Value is Encapsulation.StringValue))
+                        (indexConstant.Value is Encapsulation.StringValue ||
+                        indexConstant.Value is string))
                     {
                         IRInstruction potentialResult = AttemptReplaceIndexGetWithSuffixGet(indexGet);
                         if (potentialResult != null)
                             tempOperand.Parent = potentialResult;
                     }
-                }
-            }
-            else if (instruction is IMultipleOperandInstruction multipleOperandInstruction)
-            {
-                for (int i = multipleOperandInstruction.OperandCount - 1; i >= 0; i--)
-                {
-                    IRValue operand = multipleOperandInstruction[i];
-                    if (operand is IRTemp tempOperand)
-                    {
-                        // Redundant unary operation replacements
-                        // E.g. !!X = X and --X = X
-                        if (tempOperand.Parent is IRUnaryOp unaryParent)
-                        {
-                            IRValue potentialResult = AttempReplaceRedundantUnaryOp(unaryParent);
-                            if (potentialResult != null)
-                                multipleOperandInstruction[i] = potentialResult;
-                        }
-                        // Replace lex indexing using string constant with suffixing where possible
-                        if (tempOperand.Parent is IRIndexGet indexGet)
-                        {
-                            IRInstruction potentialResult = AttemptReplaceIndexGetWithSuffixGet(indexGet);
-                            if (potentialResult != null)
-                                tempOperand.Parent = potentialResult;
-                        }
-                    }
-                }
+
+                });
             }
             // Branch logical simplification (e.g. !X branch = X branch!)
             if (instruction is IRBranch branch &&

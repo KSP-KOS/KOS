@@ -253,29 +253,16 @@ namespace kOS.Safe.Compilation.IR
                             }
                         }
                     }
-                    switch (inst)
+                    if (inst is IOperandInstructionBase operandInstruction)
                     {
-                        case ISingleOperandInstruction singleOperandInstruction:
-                            {
-                                if (singleOperandInstruction.Operand is IRVariable variable &&
-                                    !triggerBlacklist.Contains(variable) &&
-                                    liveDefinitions.TryGetValue(variable, out SSAVariable currentValue))
-                                {
-                                    singleOperandInstruction.Operand = currentValue;
-                                }
-                            }
-                            break;
-                        case IMultipleOperandInstruction multipleOperandInstruction:
-                            for (int j = 0; j < multipleOperandInstruction.OperandCount; j++)
-                            {
-                                if (multipleOperandInstruction[j] is IRVariable variable &&
-                                    !triggerBlacklist.Contains(variable) &&
-                                    liveDefinitions.TryGetValue(variable, out SSAVariable currentValue))
-                                {
-                                    multipleOperandInstruction[j] = currentValue;
-                                }
-                            }
-                            break;
+                        operandInstruction.MutateEachOperand(op =>
+                        {
+                            if (op is IRVariable variable &&
+                            !triggerBlacklist.Contains(variable) &&
+                            liveDefinitions.TryGetValue(variable, out SSAVariable currentValue))
+                                return currentValue;
+                            return op;
+                        });
                     }
                 }
             }

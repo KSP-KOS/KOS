@@ -31,7 +31,42 @@ namespace kOS.Safe.Compilation.IR
         }
     }
 
-    public class IRAssign : IRInstruction, ISingleOperandInstruction
+    public abstract class SingleOperandInstruction : IRInstruction, ISingleOperandInstruction
+    {
+        protected IRValue operand;
+
+        protected SingleOperandInstruction(Opcode originalOpcode) : base(originalOpcode) { }
+
+        IRValue ISingleOperandInstruction.Operand { get => operand; set => operand = value; }
+
+        public void ForEachOperand(Action<IRValue> action)
+            => action(operand);
+
+        public void MutateEachOperand(Func<IRValue, IRValue> mutateFunc)
+            => operand = mutateFunc(operand);
+    }
+    public abstract class MultipleOperandInstruction : IRInstruction, IMultipleOperandInstruction
+    {
+        protected MultipleOperandInstruction(Opcode originalOpcode) : base(originalOpcode) { }
+
+        public abstract IEnumerable<IRValue> Operands { get; }
+        public abstract int OperandCount { get; }
+        protected abstract IRValue this[int index] { get; set; }
+
+        public void ForEachOperand(Action<IRValue> action)
+        {
+            foreach (IRValue operand in Operands)
+                action(operand);
+        }
+
+        public void MutateEachOperand(Func<IRValue, IRValue> mutateFunc)
+        {
+            for (int i = 0; i < OperandCount; i++)
+                this[i] = mutateFunc(this[i]);
+        }
+    }
+
+    public class IRAssign : SingleOperandInstruction
     {
         public enum StoreScope
         {
@@ -41,10 +76,9 @@ namespace kOS.Safe.Compilation.IR
         }
         public override bool IsInvariant => Value.IsInvariant;
         public IRVariableBase Target { get; set; }
-        public IRValue Value { get; set; }
+        public IRValue Value { get => operand; set => operand = value; }
         public StoreScope Scope { get; set; } = StoreScope.Ambivalent;
         public bool AssertExists { get; set; } = false;
-        IRValue ISingleOperandInstruction.Operand { get => Value; set => Value = value; }
 
         public IRAssign(OpcodeIdentifierBase opcode, IRVariableBase target, IRValue value) : base(opcode)
         {
@@ -84,7 +118,7 @@ namespace kOS.Safe.Compilation.IR
         public override int GetHashCode()
             => Target.GetHashCode();
     }
-    public class IRBinaryOp : IRInstruction, IResultingInstruction, IMultipleOperandInstruction
+    public class IRBinaryOp : MultipleOperandInstruction, IResultingInstruction
     {
         private static readonly Type[] commutativeTypes =
         {
@@ -103,8 +137,8 @@ namespace kOS.Safe.Compilation.IR
         public BinaryOpcode Operation { get; set; }
         public IRValue Left { get; set; }
         public IRValue Right { get; set; }
-        public IEnumerable<IRValue> Operands { get { yield return Left; yield return Right; } }
-        public int OperandCount => 2;
+        public override IEnumerable<IRValue> Operands { get { yield return Left; yield return Right; } }
+        public override int OperandCount => 2;
         public Type ResultType
         {
             get
@@ -140,7 +174,7 @@ namespace kOS.Safe.Compilation.IR
             }
         }
 
-        IRValue IMultipleOperandInstruction.this[int index]
+        protected override IRValue this[int index]
         {
             get => index == 0 ? Left : index == 1 ? Right : throw new ArgumentOutOfRangeException();
             set
@@ -208,12 +242,12 @@ namespace kOS.Safe.Compilation.IR
         public override int GetHashCode()
             => Operation.GetHashCode();
     }
-    public class IRUnaryOp : IRInstruction, IResultingInstruction, ISingleOperandInstruction
+    public class IRUnaryOp : SingleOperandInstruction, IResultingInstruction
     {
         public override bool IsInvariant => Operand.IsInvariant;
         public IRValue Result { get; set; }
         public Opcode Operation { get; }
-        public IRValue Operand { get; set; }
+        public IRValue Operand { get => operand; set => operand = value; }
         public Type ResultType
         {
             get
@@ -271,12 +305,12 @@ namespace kOS.Safe.Compilation.IR
         public override int GetHashCode()
             => Operation.GetHashCode();
     }
-    public class IRUnaryConsumer : IRInstruction, ISingleOperandInstruction
+    public class IRUnaryConsumer : SingleOperandInstruction
     {
         private readonly bool operationHasSideEffects;
         public override bool IsInvariant => !operationHasSideEffects && Operand.IsInvariant;
         public Opcode Operation { get; }
-        public IRValue Operand { get; set; }
+        public IRValue Operand { get => operand; set => operand = value; }
         public IRUnaryConsumer(Opcode opcode, IRValue operand, bool sideEffects = false) : base(opcode)
         {
             Operation = opcode;
@@ -299,11 +333,10 @@ namespace kOS.Safe.Compilation.IR
         public override int GetHashCode()
             => Operation.GetHashCode();
     }
-    public class IRPop : IRInstruction, ISingleOperandInstruction
+    public class IRPop : SingleOperandInstruction
     {
         public override bool IsInvariant => Value.IsInvariant;
-        public IRValue Value { get; set; }
-        IRValue ISingleOperandInstruction.Operand { get => Value; set => Value = value; }
+        public IRValue Value { get => operand; set => operand = value; }
         public IRPop(IRValue value, OpcodePop opcode) : base(opcode)
             => Value = value;
 
@@ -359,13 +392,12 @@ namespace kOS.Safe.Compilation.IR
         public override int GetHashCode()
             => Operation.GetHashCode();
     }
-    public class IRSuffixGet : IRInstruction, IResultingInstruction, ISingleOperandInstruction
+    public class IRSuffixGet : SingleOperandInstruction, IResultingInstruction
     {
         public override bool IsInvariant => Object.IsInvariant;
         public IRValue Result { get; set; }
-        public IRValue Object { get; set; }
+        public IRValue Object { get => operand; set => operand = value; }
         public string Suffix { get; set; }
-        IRValue ISingleOperandInstruction.Operand { get => Object; set => Object = value; }
         public Type ResultType => TypeInferencer.GetTypeForSuffix(Object.ValueType, Suffix);
         public IRSuffixGet(IRTemp result, IRValue obj, OpcodeGetMember opcodeGetMember) : base(opcodeGetMember)
         {
@@ -384,7 +416,7 @@ namespace kOS.Safe.Compilation.IR
         public override bool Equals(object obj)
             => obj is IRSuffixGet suffixGet &&
             !(suffixGet is IRSuffixGetMethod) &&
-            string.Equals(Suffix, suffixGet.Suffix, System.StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(Suffix, suffixGet.Suffix, StringComparison.OrdinalIgnoreCase) &&
             Object == suffixGet.Object;
         public override int GetHashCode()
             => (Object, Suffix).GetHashCode();
@@ -402,19 +434,19 @@ namespace kOS.Safe.Compilation.IR
             => string.Format("{{gmet \"{0}\"}}", Suffix);
         public override bool Equals(object obj)
             => obj is IRSuffixGetMethod suffixGet &&
-            string.Equals(Suffix, suffixGet.Suffix, System.StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(Suffix, suffixGet.Suffix, StringComparison.OrdinalIgnoreCase) &&
             Object == suffixGet.Object;
         public override int GetHashCode()
             => (Object, Suffix).GetHashCode();
     }
-    public class IRSuffixSet : IRInstruction, IMultipleOperandInstruction
+    public class IRSuffixSet : MultipleOperandInstruction
     {
         public override bool IsInvariant => false;
         public IRValue Object { get; set; }
         public IRValue Value { get; set; }
-        public IEnumerable<IRValue> Operands { get { yield return Object; yield return Value; } }
-        public int OperandCount => 2;
-        IRValue IMultipleOperandInstruction.this[int index]
+        public override IEnumerable<IRValue> Operands { get { yield return Object; yield return Value; } }
+        public override int OperandCount => 2;
+        protected override IRValue this[int index]
         {
             get => index == 0 ? Object : index == 1 ? Value : throw new ArgumentOutOfRangeException();
             set
@@ -446,24 +478,24 @@ namespace kOS.Safe.Compilation.IR
             => string.Format("{{smb \"{0}\"}}", Suffix);
         public override bool Equals(object obj)
             => obj is IRSuffixSet suffixSet &&
-                string.Equals(Suffix, suffixSet.Suffix, System.StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(Suffix, suffixSet.Suffix, StringComparison.OrdinalIgnoreCase) &&
                 Object.Equals(suffixSet.Object) &&
                 Value.Equals(suffixSet.Value);
         public override int GetHashCode()
             => (Object, Suffix).GetHashCode();
     }
-    public class IRIndexGet : IRInstruction, IResultingInstruction, IMultipleOperandInstruction
+    public class IRIndexGet : MultipleOperandInstruction, IResultingInstruction
     {
         public override bool IsInvariant => Object.IsInvariant && Index.IsInvariant;
         public IRValue Result { get; }
         public IRValue Object { get; set; }
         public IRValue Index { get; set; }
-        public IEnumerable<IRValue> Operands { get { yield return Object; yield return Index; } }
-        public int OperandCount => 2;
+        public override IEnumerable<IRValue> Operands { get { yield return Object; yield return Index; } }
+        public override int OperandCount => 2;
         public Type ResultType => TypeInferencer.GetTypeForIndex(Object.ValueType);
-        IRValue IMultipleOperandInstruction.this[int index]
+        protected override IRValue this[int index]
         {
-            get => index == 0 ? Object : index == 1 ? Index : throw new System.ArgumentOutOfRangeException();
+            get => index == 0 ? Object : index == 1 ? Index : throw new ArgumentOutOfRangeException();
             set
             {
                 if (index == 0)
@@ -471,7 +503,7 @@ namespace kOS.Safe.Compilation.IR
                 else if (index == 1)
                     Index = value;
                 else
-                    throw new System.ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException();
             }
         }
         public IRIndexGet(IRTemp result, IRValue obj, IRValue index, OpcodeGetIndex opcode) : base(opcode)
@@ -497,17 +529,17 @@ namespace kOS.Safe.Compilation.IR
         public override int GetHashCode()
             => Object.GetHashCode();
     }
-    public class IRIndexSet : IRInstruction, IMultipleOperandInstruction
+    public class IRIndexSet : MultipleOperandInstruction
     {
         public override bool IsInvariant => false;
         public IRValue Object { get; set; }
         public IRValue Index { get; set; }
         public IRValue Value { get; set; }
-        public IEnumerable<IRValue> Operands { get { yield return Object; yield return Index; yield return Value; } }
-        public int OperandCount => 3;
-        IRValue IMultipleOperandInstruction.this[int index]
+        public override IEnumerable<IRValue> Operands { get { yield return Object; yield return Index; yield return Value; } }
+        public override int OperandCount => 3;
+        protected override IRValue this[int index]
         {
-            get => index == 0 ? Object : index == 1 ? Index : index == 2 ? Value : throw new System.ArgumentOutOfRangeException();
+            get => index == 0 ? Object : index == 1 ? Index : index == 2 ? Value : throw new ArgumentOutOfRangeException();
             set
             {
                 if (index == 0)
@@ -517,7 +549,7 @@ namespace kOS.Safe.Compilation.IR
                 else if (index == 2)
                     Value = value;
                 else
-                    throw new System.ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException();
             }
         }
         public IRIndexSet(IRValue obj, IRValue index, IRValue value, OpcodeSetIndex opcode) : base(opcode)
@@ -568,11 +600,10 @@ namespace kOS.Safe.Compilation.IR
         public override int GetHashCode()
             => Target.GetHashCode();
     }
-    public class IRJumpStack : IRInstruction, ISingleOperandInstruction
+    public class IRJumpStack : SingleOperandInstruction
     {
         public override bool IsInvariant => Distance.IsInvariant;
-        public IRValue Distance { get; set; }
-        IRValue ISingleOperandInstruction.Operand { get => Distance; set => Distance = value; }
+        public IRValue Distance { get => operand; set => operand = value; }
         public List<BasicBlock> Targets { get; } = new List<BasicBlock>();
         public IRJumpStack(IRValue distance, IEnumerable<BasicBlock> targets, OpcodeJumpStack jumpStack) : base(jumpStack)
         {
@@ -592,11 +623,10 @@ namespace kOS.Safe.Compilation.IR
         public override int GetHashCode()
             => Targets.GetHashCode();
     }
-    public class IRBranch : IRInstruction, ISingleOperandInstruction
+    public class IRBranch : SingleOperandInstruction
     {
         public override bool IsInvariant => Condition.IsInvariant;
-        public IRValue Condition { get; set; }
-        IRValue ISingleOperandInstruction.Operand { get => Condition; set => Condition = value; }
+        public IRValue Condition { get => operand; set => operand = value; }
         public BasicBlock True { get; set; }
         public BasicBlock False { get; set; }
         public bool PreferFalse { get; set; } = false;
@@ -632,7 +662,7 @@ namespace kOS.Safe.Compilation.IR
         public override int GetHashCode()
             => True.GetHashCode() ^ False.GetHashCode();
     }
-    public class IRCall : IRInstruction, IResultingInstruction, IMultipleOperandInstruction
+    public class IRCall : MultipleOperandInstruction, IResultingInstruction
     {
         private bool isResultTypeInformed = false;
         private Type resultType = null;
@@ -648,8 +678,8 @@ namespace kOS.Safe.Compilation.IR
         public IRValue Result { get; set; }
         public string Function { get; }
         public List<IRValue> Arguments { get; } = new List<IRValue>();
-        public IEnumerable<IRValue> Operands => Enumerable.Reverse(Arguments);
-        public int OperandCount => Arguments.Count;
+        public override IEnumerable<IRValue> Operands => Enumerable.Reverse(Arguments);
+        public override int OperandCount => Arguments.Count;
         public Type ResultType
         {
             get => isResultTypeInformed ? resultType : GetDefaultReturnType();
@@ -659,7 +689,7 @@ namespace kOS.Safe.Compilation.IR
                 isResultTypeInformed = true;
             }
         }
-        IRValue IMultipleOperandInstruction.this[int index]
+        protected override IRValue this[int index]
         {
             get => Arguments[index];
             set => Arguments[index] = value;
@@ -727,16 +757,15 @@ namespace kOS.Safe.Compilation.IR
             => string.Format("{{call {0}({1})}}", Function.Trim('(', ')'), string.Join(",", Arguments.Select(a => a.ToString())));
         public override bool Equals(object obj)
             => obj is IRCall call &&
-                string.Equals(Function.Replace("()", ""), call.Function.Replace("()", ""), System.StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(Function.Replace("()", ""), call.Function.Replace("()", ""), StringComparison.OrdinalIgnoreCase) &&
                 Arguments.SequenceEqual(call.Arguments);
         public override int GetHashCode()
             => Function.ToLower().GetHashCode();
     }
-    public class IRReturn : IRInstruction, ISingleOperandInstruction
+    public class IRReturn : SingleOperandInstruction
     {
         public override bool IsInvariant => Value.IsInvariant;
-        public IRValue Value { get; set; }
-        IRValue ISingleOperandInstruction.Operand { get => Value; set => Value = value; }
+        public IRValue Value { get => operand; set => operand = value; }
         public short Depth { get; internal set; }
         public IRReturn(short depth, OpcodeReturn opcode) : base(opcode)
             => Depth = depth;
