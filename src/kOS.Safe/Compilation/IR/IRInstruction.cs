@@ -51,6 +51,11 @@ namespace kOS.Safe.Compilation.IR
 
         public abstract IEnumerable<IRValue> Operands { get; }
         public abstract int OperandCount { get; }
+        /// <summary>
+        /// Allows replacing operands from a common function.
+        /// The meaning of the index and ordering are irrelevant,
+        /// as long as it covers the range [0, <see cref="OperandCount"/>).
+        /// </summary>
         protected abstract IRValue this[int index] { get; set; }
 
         public void ForEachOperand(Action<IRValue> action)
@@ -84,6 +89,8 @@ namespace kOS.Safe.Compilation.IR
         {
             Target = target;
             Value = value;
+            if (target is SSAVariable ssaTarget)
+                ssaTarget.AssignedAt = this;
         }
         internal override IEnumerable<Opcode> EmitOpcode()
         {

@@ -13,6 +13,8 @@ namespace kOS.Safe.Compilation.IR
     {
         private static readonly Dictionary<IRCall, IEnumerable<SSAVariable>> postCallSSAVariables =
             new Dictionary<IRCall, IEnumerable<SSAVariable>>();
+        private static readonly Dictionary<SSAVariable, SSAVariable> postCallSSAVariableLinks =
+            new Dictionary<SSAVariable, SSAVariable>();
 
         /// <summary>
         /// Finalizes a program into single static assignment form.
@@ -55,6 +57,7 @@ namespace kOS.Safe.Compilation.IR
                         foreach (SSAVariable variable in function.ExternalWrites)
                         {
                             SSAVariable ssaVariable = variable.GetNewSSAVariable();
+                            postCallSSAVariableLinks.Add(variable, ssaVariable);
                             OverwriteVariable(variables, ssaVariable);
                             ssaVariables.Add(ssaVariable);
                         }
@@ -79,18 +82,51 @@ namespace kOS.Safe.Compilation.IR
                         }
                         break;
 
-                    // On encountering a trigger:
-                    //      Clear the cache of any variables that are written in that trigger or body.
-                    //      Blacklist any variables that are written in the trigger or body.
-                    case IRUnaryConsumer triggerInstruction:
-                        if (triggerInstruction.Operation is OpcodeAddTrigger)
+                    case IRUnaryConsumer unaryConsumer:
+                        // On encountering a trigger:
+                        //      Clear the cache of any variables that are written in that trigger or body.
+                        //      Blacklist any variables that are written in the trigger or body.
+                        if (unaryConsumer.Operation is OpcodeAddTrigger)
                         {
-                            string pointer = (string)((IRConstant)triggerInstruction.Operand).Value;
+                            string pointer = (string)((IRConstant)unaryConsumer.Operand).Value;
                             // Re-scope the stored variables from Global to the current scope.
                             IRCodePart.IRTrigger trigger = codePart.Triggers.FirstOrDefault(t => string.Equals(t.Identifier, pointer, StringComparison.OrdinalIgnoreCase));
                             if (trigger != null)
                                 IRCodePart.SetDefiningScope(trigger, block.Scope);
                             block.TriggerPropagationBlacklist.UnionWith(trigger.ExternalWrites);
+                        }
+                        // On encountering an unset operation:
+                        //      Remove the affected definition from the stored variables.
+                        // If the affected definition cannot be determined, clear all current variables
+                        if (unaryConsumer.Operation is OpcodeUnset)
+                        {
+                            if (!unaryConsumer.IsInvariant)
+                            {
+                                variables.Clear();
+                            }
+                            else
+                            {
+                                IRConstant unsetConst = unaryConsumer.Operand as IRConstant;
+                                if (unsetConst == null && unaryConsumer.Operand is IRTemp temp)
+                                    unsetConst = Optimization.Passes.ConstantFolding.AttemptReduction(temp.Parent) as IRConstant;
+                                if (unsetConst != null &&
+                                    (unsetConst.Value is Encapsulation.StringValue ||
+                                    unsetConst.Value is string))
+                                {
+                                    /*IRVariableBase unsetVar = block.Scope.GetVariableNamed(
+                                        (Encapsulation.StringValue)unsetConst.Value);
+                                    if (unsetVar != null)
+                                        variables.RemoveWhere(v => v.Parent.Equals(unsetVar));*/
+                                    variables.RemoveWhere(v =>
+                                        v.Name.Equals((Encapsulation.StringValue)unsetConst.Value,
+                                        StringComparison.OrdinalIgnoreCase));
+                                }
+                                else
+                                    // TODO: See if this can be optimized through the SCCP pass.
+                                    // Probably not worth it since unsets are rather rare,
+                                    // and unsets without a string const even more so.
+                                    variables.Clear();
+                            }
                         }
                         break;
                 }
@@ -131,29 +167,21 @@ namespace kOS.Safe.Compilation.IR
                     if (definition.Select(bv => bv.variable).Distinct().Skip(1).Any())
                     {
                         // Phi required
-                        Dictionary<BasicBlock, SSAVariable> phiDict;
-                        SSAVariable phiVar;
-                        if (block.Phis.TryGetValue(definition.Key, out (SSAVariable phiVar, Dictionary<BasicBlock, SSAVariable> values) result))
+                        PhiVariable phiVar = block.Phis.FirstOrDefault(v => v.Parent.Equals(definition.Key));
+                        if (phiVar == null)
                         {
-                            phiDict = result.values;
-                            phiVar = result.phiVar;
-                        }
-                        else
-                        {
-                            phiVar = definition.Key.GetNewSSAVariable();
-                            phiDict = new Dictionary<BasicBlock, SSAVariable>();
-                            block.Phis[definition.Key] = (phiVar, phiDict);
+                            phiVar = definition.Key.GetNewPhiVariable();
+                            block.Phis.Add(phiVar);
                         }
 
                         foreach ((BasicBlock block, SSAVariable variable) def in definition)
-                            phiDict[def.block] = def.variable;
+                            phiVar.PossibleValues[def.block] = def.variable;
 
-                        phiVar.IsInvariant = false;
                         variablesIn.Add(phiVar);
                     }
                     else
                     {
-                        block.Phis.Remove(definition.Key);
+                        block.Phis.RemoveWhere(v => v.Parent.Equals(definition.Key));
                         variablesIn.Add(definition.First().variable);
                     }
                 }
@@ -176,23 +204,6 @@ namespace kOS.Safe.Compilation.IR
             }
         }
 
-        private static Type GetFirstCommonBaseType(Type typeA, Type typeB)
-        {
-            if (typeA == null || typeB == null) return null;
-
-            Type current = typeA;
-            while (current != null)
-            {
-                if (current.IsAssignableFrom(typeB))
-                {
-                    return current;
-                }
-                current = current.BaseType;
-            }
-
-            throw new Exceptions.KOSYouShouldNeverSeeThisException($"Couldn't find a base class between {typeA} and {typeB}, when all kOS types should derive from {nameof(Encapsulation.Structure)}.");
-        }
-
         private static void ApplyUses(BasicBlock block, List<IRCodePart.IRTrigger> triggers)
         {
             List<IRInstruction> instructions = block.Instructions;
@@ -204,15 +215,6 @@ namespace kOS.Safe.Compilation.IR
 
             foreach (SSAVariable variable in block.IncomingVariableDefinitions)
                 liveDefinitions[variable.Parent] = variable;
-            foreach (var (phiVar, values) in block.Phis.Values)
-            {
-                Type proposedType = values.Values.First().ValueType;
-                // MUSTFIX: This doesn't work for circular references and only emits typeof(Structure) in those cases.
-                foreach (SSAVariable variable in values.Values)
-                    proposedType = GetFirstCommonBaseType(proposedType, variable.ValueType);
-
-                phiVar.ValueType = proposedType;
-            }
 
             for (int i = 0; i < instructions.Count; i++)
             {
@@ -233,8 +235,6 @@ namespace kOS.Safe.Compilation.IR
                     else if (inst is IRAssign assignment &&
                         assignment.Target is SSAVariable ssaVariable)
                     {
-                        ssaVariable.ValueType = assignment.Value.ValueType;
-
                         if (!triggerBlacklist.Contains(ssaVariable.Parent))
                             liveDefinitions[ssaVariable.Parent] = ssaVariable;
                         else

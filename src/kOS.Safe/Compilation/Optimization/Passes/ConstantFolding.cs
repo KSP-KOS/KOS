@@ -55,7 +55,6 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             (permanentBlock, deprecatedBlock) = Convert.ToBoolean(branchConstant.Value) ? (branch.True, branch.False) : (branch.False, branch.True);
                             block.Instructions[i] = new IRJump(permanentBlock, new OpcodeBranchJump() { SourceLine = branch.SourceLine, SourceColumn = branch.SourceColumn });
                             block.RemoveSuccessor(deprecatedBlock);
-                            // TODO: Resolve any phi values in the deprecated block and consider re-running folding on that block.
                         }
                         break;
                 }

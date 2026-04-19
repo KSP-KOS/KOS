@@ -93,8 +93,7 @@ namespace kOS.Safe.Compilation.IR
         /// <remarks>
         /// This data is populated during <see cref="SingleStaticAssignment.FinalizeSSA(IRCodePart)"/>.
         /// </remarks>
-        public Dictionary<IRVariable, (SSAVariable phiVar, Dictionary<BasicBlock, SSAVariable> values)> Phis { get; } =
-            new Dictionary<IRVariable, (SSAVariable phiVar, Dictionary<BasicBlock, SSAVariable> values)>();
+        public HashSet<PhiVariable> Phis { get; } = new HashSet<PhiVariable>();
         /// <summary>
         /// Gets the set of incoming SSA variables that this block
         /// receives, including the results of any phi functions.
