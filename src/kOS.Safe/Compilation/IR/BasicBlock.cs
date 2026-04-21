@@ -24,6 +24,13 @@ namespace kOS.Safe.Compilation.IR
         private readonly HashSet<IRVariableBase> variablesRead = new HashSet<IRVariableBase>();
 
         /// <summary>
+        /// Gets or sets a value indicating whether this block is executable (reachable).
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this block is executable; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsExecutable { get; set; }
+        /// <summary>
         /// Gets or sets the scope of this block. This describes the
         /// narrowest scope at the time of this block's execution.
         /// </summary>

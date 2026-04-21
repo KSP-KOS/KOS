@@ -165,7 +165,17 @@ namespace kOS.Safe.Compilation.IR
     public class PhiVariable : SSAVariable, IMultipleOperandInstruction
     {
         public Dictionary<BasicBlock, SSAVariable> PossibleValues { get; } = new Dictionary<BasicBlock, SSAVariable>();
-        public override bool IsInvariant { get => !PossibleValues.Skip(1).Any() && PossibleValues.Values.First().IsInvariant; set => throw new InvalidOperationException(); }
+        public override bool IsInvariant
+        {
+            get
+            {
+                IEnumerable<KeyValuePair<BasicBlock, SSAVariable>> reachableValues =
+                    PossibleValues.Where(kvp => kvp.Key.IsExecutable);
+                // Return true if there is exactly one reachable value and it is invariant.
+                return reachableValues.Any() && !reachableValues.Skip(1).Any() && reachableValues.First().Value.IsInvariant;
+            }
+            set => throw new InvalidOperationException();
+        }
 
         IEnumerable<IRValue> IMultipleOperandInstruction.Operands => PossibleValues.Values;
 
