@@ -48,9 +48,7 @@ namespace kOS.Safe.Compilation.IR
                 foreach (IRCall call in instruction.DepthFirst().Where(inst => inst is IRCall).Cast<IRCall>())
                 {
                     string functionIdentifier = block.Scope.GetFunctionNameFromVariable(call.Function);
-                    if (functionIdentifier == null)
-                        continue;
-                    IRCodePart.IRFunction function = codePart.Functions.FirstOrDefault(f => string.Equals(f.Identifier, functionIdentifier, StringComparison.OrdinalIgnoreCase));
+                    IRCodePart.IRFunction function = codePart.GetFunction(functionIdentifier);
                     if (function != null)
                     {
                         HashSet<SSAVariable> ssaVariables = new HashSet<SSAVariable>();
@@ -76,7 +74,7 @@ namespace kOS.Safe.Compilation.IR
                         {
                             string pointer = ((string)lockOrFunctionPointer.Value).Split('-').First();
                             // Re-scope the stored variables from Global to the current scope.
-                            IRCodePart.IRFunction function = codePart.Functions.FirstOrDefault(f => string.Equals(f.Identifier, pointer, StringComparison.OrdinalIgnoreCase));
+                            IRCodePart.IRFunction function = codePart.GetFunction(pointer);
                             if (function != null)
                                 IRCodePart.SetDefiningScope(function, block.Scope);
                         }
@@ -90,7 +88,7 @@ namespace kOS.Safe.Compilation.IR
                         {
                             string pointer = (string)((IRConstant)unaryConsumer.Operand).Value;
                             // Re-scope the stored variables from Global to the current scope.
-                            IRCodePart.IRTrigger trigger = codePart.Triggers.FirstOrDefault(t => string.Equals(t.Identifier, pointer, StringComparison.OrdinalIgnoreCase));
+                            IRCodePart.IRTrigger trigger = codePart.GetTrigger(pointer);
                             if (trigger != null)
                                 IRCodePart.SetDefiningScope(trigger, block.Scope);
                             block.TriggerPropagationBlacklist.UnionWith(trigger.ExternalWrites);

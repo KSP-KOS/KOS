@@ -106,16 +106,13 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                                 if (inst is IRCall call)
                                 {
                                     string functionIdentifier = block.Scope.GetFunctionNameFromVariable(call.Function);
-                                    if (functionIdentifier != null)
+                                    IRCodePart.IRFunction function = codePart.GetFunction(functionIdentifier);
+                                    if (function != null)
                                     {
-                                        IRCodePart.IRFunction function = codePart.Functions.FirstOrDefault(f => string.Equals(f.Identifier, functionIdentifier, StringComparison.OrdinalIgnoreCase));
-                                        if (function != null)
+                                        foreach (IRVariable externalVar in function.ExternalReads.Union(function.ExternalWrites))
                                         {
-                                            foreach (IRVariable externalVar in function.ExternalReads.Union(function.ExternalWrites))
-                                            {
-                                                if (externalVar is SSAVariable ssaVariable)
-                                                    GetOrCreate(variableUses, ssaVariable).Add(call);
-                                            }
+                                            if (externalVar is SSAVariable ssaVariable)
+                                                GetOrCreate(variableUses, ssaVariable).Add(call);
                                         }
                                     }
                                 }

@@ -78,6 +78,28 @@ namespace kOS.Safe.Compilation.IR
         }
 
         /// <summary>
+        /// Gets a function by string reference.
+        /// </summary>
+        /// <param name="identifier">The function identifier string.</param>
+        public IRFunction GetFunction(string identifier)
+        {
+            if (string.IsNullOrEmpty(identifier))
+                return null;
+            return Functions.FirstOrDefault(f => string.Equals(f.Identifier, identifier, StringComparison.OrdinalIgnoreCase));
+        }
+
+        /// <summary>
+        /// Gets a trigger by string reference.
+        /// </summary>
+        /// <param name="identifier">The trigger identifier string.</param>
+        public IRTrigger GetTrigger(string identifier)
+        {
+            if (string.IsNullOrEmpty(identifier))
+                return null;
+            return Triggers.FirstOrDefault(t => string.Equals(t.Identifier, identifier, StringComparison.OrdinalIgnoreCase));
+        }
+
+        /// <summary>
         /// Emits the code into Opcode representation, and back into
         /// its source objects.
         /// </summary>
