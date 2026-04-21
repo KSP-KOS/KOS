@@ -79,6 +79,8 @@ namespace kOS.Suffixed
         // Binary arithmetic operators in which both operands are TimeStamp:
         //
         public static TimeStamp operator +(TimeStamp a, TimeStamp b) { throw new KOSBinaryOperandTypeException(new OperandPair(a, b), "add", "to"); }
+
+        [Commutative(false)]    // TimeStamp does not implement negation.
         public static TimeSpan operator -(TimeStamp a, TimeStamp b) { return new TimeSpan(a.ToUnixStyleTime() - b.ToUnixStyleTime()); }
         public static TimeStamp operator *(TimeStamp a, TimeStamp b) { throw new KOSBinaryOperandTypeException(new OperandPair(a, b), "multiply", "by"); }
         public static TimeStamp operator /(TimeStamp a, TimeStamp b) { throw new KOSBinaryOperandTypeException(new OperandPair(a, b), "divide", "by"); }
@@ -92,6 +94,7 @@ namespace kOS.Suffixed
         public static TimeStamp operator *(TimeStamp a, double b) { throw new KOSBinaryOperandTypeException(new OperandPair(a, b), "multiply", "by"); }
         public static TimeStamp operator /(TimeStamp a, double b) { throw new KOSBinaryOperandTypeException(new OperandPair(a, b), "divide", "by"); }
         public static TimeStamp operator +(double a, TimeStamp b) { return new TimeStamp(a + b.ToUnixStyleTime()); }
+        [Commutative(false)]    // TimeStamp does not implement negation.
         public static TimeStamp operator -(double a, TimeStamp b) { return new TimeStamp(a - b.ToUnixStyleTime()); }
         public static TimeStamp operator *(double a, TimeStamp b) { throw new KOSBinaryOperandTypeException(new OperandPair(a, b), "multiply", "by"); }
         public static TimeStamp operator /(double a, TimeStamp b) { throw new KOSBinaryOperandTypeException(new OperandPair(a, b), "divide", "by"); }
@@ -100,6 +103,7 @@ namespace kOS.Suffixed
         public static TimeStamp operator *(TimeStamp a, ScalarValue b) { throw new KOSBinaryOperandTypeException(new OperandPair(a, b), "multiply", "by"); }
         public static TimeStamp operator /(TimeStamp a, ScalarValue b) { throw new KOSBinaryOperandTypeException(new OperandPair(a, b), "divide", "by"); ; }
         public static TimeStamp operator +(ScalarValue a, TimeStamp b) { return new TimeStamp(a + b.ToUnixStyleTime()); }
+        [Commutative(false)]    // TimeStamp does not implement negation.
         public static TimeStamp operator -(ScalarValue a, TimeStamp b) { return new TimeStamp(a - b.ToUnixStyleTime()); }
         public static TimeStamp operator *(ScalarValue a, TimeStamp b) { throw new KOSBinaryOperandTypeException(new OperandPair(a, b), "divide", "by"); }
         public static TimeStamp operator /(ScalarValue a, TimeStamp b) { throw new KOSBinaryOperandTypeException(new OperandPair(a, b), "divide", "by"); }
@@ -136,10 +140,12 @@ namespace kOS.Suffixed
         // place they've all been defined here:
         //
         public static TimeStamp operator +(TimeStamp a, TimeSpan b) { return new TimeStamp(a.ToUnixStyleTime() + b.ToUnixStyleTime()); }
+        [Commutative(false)]    // TODO: Remove this if -TimeSpan is implemented.
         public static TimeStamp operator -(TimeStamp a, TimeSpan b) { return new TimeStamp(a.ToUnixStyleTime() - b.ToUnixStyleTime()); }
         public static TimeStamp operator *(TimeStamp a, TimeSpan b) { throw new KOSBinaryOperandTypeException(new OperandPair(a, b), "multiply", "by"); }
         public static TimeStamp operator /(TimeStamp a, TimeSpan b) { throw new KOSBinaryOperandTypeException(new OperandPair(a, b), "divide", "by"); }
         public static TimeStamp operator +(TimeSpan a, TimeStamp b) { return new TimeStamp(a.ToUnixStyleTime() + b.ToUnixStyleTime()); }
+        [Commutative(false)]    // TimeStamp does not implement negation.
         public static TimeStamp operator -(TimeSpan a, TimeStamp b) { return new TimeStamp(a.ToUnixStyleTime() - b.ToUnixStyleTime()); }
         public static TimeStamp operator *(TimeSpan a, TimeStamp b) { throw new KOSBinaryOperandTypeException(new OperandPair(a, b), "multiply", "by"); }
         public static TimeStamp operator /(TimeSpan a, TimeStamp b) { throw new KOSBinaryOperandTypeException(new OperandPair(a, b), "divide", "by"); }

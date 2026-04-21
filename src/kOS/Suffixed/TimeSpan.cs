@@ -82,6 +82,7 @@ namespace kOS.Suffixed
         // Binary arithmetic operators where both operands are TimeSpans:
         //
         public static TimeSpan operator +(TimeSpan a, TimeSpan b) { return new TimeSpan(a.ToUnixStyleTime() + b.ToUnixStyleTime()); }
+        [Commutative(false)]    // TODO: Remove this if -TimeSpan is implemented.
         public static TimeSpan operator -(TimeSpan a, TimeSpan b) { return new TimeSpan(a.ToUnixStyleTime() - b.ToUnixStyleTime()); }
         public static TimeSpan operator *(TimeSpan a, TimeSpan b) { throw new KOSBinaryOperandTypeException(new OperandPair(a, b), "multiply", "by"); }
         public static TimeSpan operator /(TimeSpan a, TimeSpan b) { throw new KOSBinaryOperandTypeException(new OperandPair(a, b), "divide", "by"); }
@@ -95,6 +96,7 @@ namespace kOS.Suffixed
         public static TimeSpan operator *(TimeSpan a, double b) { return new TimeSpan(a.ToUnixStyleTime() * b); }
         public static TimeSpan operator /(TimeSpan a, double b) { return new TimeSpan(a.ToUnixStyleTime() / b); }
         public static TimeSpan operator +(double a, TimeSpan b) { return new TimeSpan(a + b.ToUnixStyleTime()); }
+        [Commutative(false)]    // TODO: Remove this if -TimeSpan is implemented.
         public static TimeSpan operator -(double a, TimeSpan b) { return new TimeSpan(a - b.ToUnixStyleTime()); }
         public static TimeSpan operator *(double a, TimeSpan b) { return new TimeSpan(a * b.ToUnixStyleTime()); }
         public static TimeSpan operator /(double a, TimeSpan b) { throw new KOSBinaryOperandTypeException(new OperandPair(a, b), "divide", "by"); }
@@ -103,6 +105,7 @@ namespace kOS.Suffixed
         public static TimeSpan operator *(TimeSpan a, ScalarValue b) { return new TimeSpan(a.ToUnixStyleTime() * b); }
         public static TimeSpan operator /(TimeSpan a, ScalarValue b) { return new TimeSpan(a.ToUnixStyleTime() / b); }
         public static TimeSpan operator +(ScalarValue b, TimeSpan a) { return new TimeSpan(b + a.ToUnixStyleTime()); }
+        [Commutative(false)]    // TODO: Remove this if -TimeSpan is implemented.
         public static TimeSpan operator -(ScalarValue b, TimeSpan a) { return new TimeSpan(b - a.ToUnixStyleTime()); }
         public static TimeSpan operator *(ScalarValue b, TimeSpan a) { return new TimeSpan(b * a.ToUnixStyleTime()); }
         public static TimeSpan operator /(ScalarValue b, TimeSpan a) { throw new KOSBinaryOperandTypeException(new OperandPair(a, b), "divide", "by"); }

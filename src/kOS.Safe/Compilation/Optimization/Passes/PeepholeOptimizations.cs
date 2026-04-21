@@ -66,7 +66,10 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                                     tempR != null &&
                                     tempR.Parent is IRBinaryOp opR &&
                                     opL.Operation is OpcodeMathMultiply &&
-                                    opR.Operation is OpcodeMathMultiply)
+                                    opR.Operation is OpcodeMathMultiply &&
+                                    binaryOp.IsCommutative &&
+                                    opL.IsCommutative &&
+                                    opR.IsCommutative)
                                 {
                                     if (opR.Left == opL.Left)
                                     {
@@ -75,20 +78,23 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                                     }
                                     if (opR.Left == opL.Right)
                                     {
-                                        opL.SwapOperands();
+                                        if (!opL.SwapOperands())
+                                            return;
                                         DistributeMultiplication(binaryOp);
                                         return;
                                     }
                                     if (opR.Right == opL.Left)
                                     {
-                                        opR.SwapOperands();
+                                        if (!opR.SwapOperands())
+                                            return;
                                         DistributeMultiplication(binaryOp);
                                         return;
                                     }
                                     if (opR.Right == opL.Right)
                                     {
-                                        opL.SwapOperands();
-                                        opR.SwapOperands();
+                                        if (!opL.SwapOperands() ||
+                                            !opR.SwapOperands())
+                                            return;
                                         DistributeMultiplication(binaryOp);
                                         return;
                                     }
@@ -105,9 +111,9 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                                 }
                                 if (tempL != null &&
                                     tempL.Parent is IRUnaryOp opL &&
-                                    opL.Operation is OpcodeMathNegate)
+                                    opL.Operation is OpcodeMathNegate &&
+                                    binaryOp.SwapOperands())
                                 {
-                                    binaryOp.SwapOperands();
                                     DistributeNegationB(binaryOp);
                                     return;
                                 }
@@ -180,9 +186,9 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             if (tempR != null &&
                                 tempR.Parent is IRBinaryOp opR &&
                                 opR.Operation is OpcodeMathPower &&
-                                opR.Left == binaryOp.Left)
+                                opR.Left == binaryOp.Left &&
+                                binaryOp.SwapOperands())
                             {
-                                binaryOp.SwapOperands();
                                 IncreasePower(binaryOp, 1);
                                 return;
                             }
@@ -204,9 +210,9 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                                 tempL.Parent is IRBinaryOp opL &&
                                 opL.Operation is OpcodeMathMultiply &&
                                 opL.Left == opL.Right &&
-                                opL.Left == binaryOp.Right)
+                                opL.Left == binaryOp.Right &&
+                                binaryOp.SwapOperands())
                             {
-                                binaryOp.SwapOperands();
                                 CreatePower(binaryOp);
                                 return;
                             }
@@ -379,29 +385,55 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         private static void DistributeNegationA(IRBinaryOp instruction)
         {
             // -A+B = B-A
-            IRTemp tempL = (IRTemp)instruction.Left;
+            if (!(instruction.Left is IRTemp tempL))
+                return;
+            if (!instruction.IsCommutative)
+                return;
+            BinaryOpcode originalOperation = instruction.Operation;
+            instruction.Operation = new OpcodeMathSubtract();
+            if (!instruction.IsCommutative)
+            {
+                instruction.Operation = originalOperation;
+                return;
+            }
             IRUnaryOp opL = (IRUnaryOp)tempL.Parent;
             instruction.Left = opL.Operand;
             instruction.SwapOperands();
-            instruction.Operation = new OpcodeMathSubtract();
         }
 
         private static void DistributeNegationB(IRBinaryOp instruction)
         {
             // A+-B = A-B
-            IRTemp tempR = (IRTemp)instruction.Right;
+            if (!(instruction.Right is IRTemp tempR))
+                return;
+            if (!instruction.IsCommutative)
+                return;
+            BinaryOpcode originalOperation = instruction.Operation;
+            instruction.Operation = new OpcodeMathSubtract();
+            if (!instruction.IsCommutative)
+            {
+                instruction.Operation = originalOperation;
+                return;
+            }
             IRUnaryOp opR = (IRUnaryOp)tempR.Parent;
             instruction.Right = opR.Operand;
-            instruction.Operation = new OpcodeMathSubtract();
         }
 
         private static void ReplaceNegateSubtract(IRBinaryOp instruction)
         {
             // A--B=A+B
+            if (!instruction.IsCommutative)
+                return;
+            BinaryOpcode originalOperation = instruction.Operation;
+            instruction.Operation = new OpcodeMathAdd();
+            if (!instruction.IsCommutative)
+            {
+                instruction.Operation = originalOperation;
+                return;
+            }
             IRTemp tempR = (IRTemp)instruction.Right;
             IRUnaryOp opR = (IRUnaryOp)tempR.Parent;
             instruction.Right = opR.Operand;
-            instruction.Operation = new OpcodeMathAdd();
         }
 
         private static void IncreasePower(IRBinaryOp instruction, int powerIncrease)
@@ -446,8 +478,9 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         private static void CreatePower(IRBinaryOp instruction)
         {
             // X*(X*X) = X^3
+            if (!(instruction.Right is IRTemp tempR))
+                return;
             instruction.Operation = new OpcodeMathPower();
-            IRTemp tempR = (IRTemp)instruction.Right;
             instruction.Right = new IRConstant(new Encapsulation.ScalarIntValue(3), tempR.Parent);
         }
 

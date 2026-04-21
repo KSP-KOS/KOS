@@ -29,6 +29,11 @@ namespace kOS.Safe.Compilation
         public virtual Type GetNotEqualResultType(Type leftType, Type rightType) => typeof(BooleanValue);
         public virtual Type GetEqualResultType(Type leftType, Type rightType) => typeof(BooleanValue);
 
+        public virtual bool IsAdditionCommutative(Type leftType, Type rightType) => true;
+        public virtual bool IsSubtractionCommutative(Type leftType, Type rightType) => true;
+        public virtual bool IsMultiplicationCommmutative(Type leftType, Type rightType) => true;
+        public virtual bool IsDivisionCommutative(Type leftType, Type rightType) => false;
+
         private static readonly CalculatorScalar calculatorScalar = new CalculatorScalar();
         private static readonly CalculatorString calculatorString = new CalculatorString();
         private static readonly CalculatorBool calculatorBool = new CalculatorBool();

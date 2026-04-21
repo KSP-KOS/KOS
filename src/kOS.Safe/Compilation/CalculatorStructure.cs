@@ -30,6 +30,8 @@ namespace kOS.Safe.Compilation
         }
         public override Type GetAddResultType(Type leftType, Type rightType)
             => GetTypeForOperation(leftType, rightType, "Add", "op_Addition", "+");
+        public override bool IsAdditionCommutative(Type leftType, Type rightType)
+            => GetCommutativityForOperation(leftType, rightType, "Add", "op_Addition", "+");
 
         public override object Subtract(OperandPair pair)
         {
@@ -51,6 +53,8 @@ namespace kOS.Safe.Compilation
         }
         public override Type GetSubtractResultType(Type leftType, Type rightType)
             => GetTypeForOperation(leftType, rightType, "Subtract", "op_Subtraction", "-");
+        public override bool IsSubtractionCommutative(Type leftType, Type rightType)
+            => GetCommutativityForOperation(leftType, rightType, "Subtract", "op_Subtraction", "-");
 
         public override object Multiply(OperandPair pair)
         {
@@ -72,6 +76,8 @@ namespace kOS.Safe.Compilation
         }
         public override Type GetMultiplyResultType(Type leftType, Type rightType)
             => GetTypeForOperation(leftType, rightType, "Multiply", "op_Multiply", "*");
+        public override bool IsMultiplicationCommmutative(Type leftType, Type rightType)
+            => GetCommutativityForOperation(leftType, rightType, "Multiply", "op_Multiply", "*");
 
         public override object Divide(OperandPair pair)
         {
@@ -93,6 +99,8 @@ namespace kOS.Safe.Compilation
         }
         public override Type GetDivideResultType(Type leftType, Type rightType)
             => GetTypeForOperation(leftType, rightType, "Divide", "op_Division", "/");
+        public override bool IsDivisionCommutative(Type leftType, Type rightType)
+            => GetCommutativityForOperation(leftType, rightType, "Divide", "op_Division", "/");
 
         public override object Power(OperandPair pair)
         {
@@ -219,7 +227,8 @@ namespace kOS.Safe.Compilation
         }
         public override Type GetNotEqualResultType(Type leftType, Type rightType)
         {
-            CheckTypesForNull(leftType, rightType, "NotEqual");
+            if (CheckTypesForNull(leftType, rightType))
+                return null;
             if (TryTypingExplicit(leftType, rightType, "op_Inequality", out Type result))
                 return result;
 
@@ -249,7 +258,8 @@ namespace kOS.Safe.Compilation
         }
         public override Type GetEqualResultType(Type leftType, Type rightType)
         {
-            CheckTypesForNull(leftType, rightType, "Equal");
+            if (CheckTypesForNull(leftType, rightType))
+                return null;
             if (TryTypingExplicit(leftType, rightType, "op_Equality", out Type result))
                 return result;
 
@@ -261,7 +271,8 @@ namespace kOS.Safe.Compilation
 
         private Type GetTypeForOperation(Type leftType, Type rightType, string opName, string methodName, string opAbbreviation)
         {
-            CheckTypesForNull(leftType, rightType, opName);
+            if (CheckTypesForNull(leftType, rightType))
+                return null;
             if (TryTypingExplicit(leftType, rightType, methodName, out Type result))
                 return result;
 
@@ -269,6 +280,19 @@ namespace kOS.Safe.Compilation
                 return GetTypeForOperation(newLeftType, newRightType, opName, methodName, opAbbreviation);
 
             return typeof(Structure);
+        }
+
+        private bool GetCommutativityForOperation(Type leftType, Type rightType, string opName, string methodName, string opAbbreviation)
+        {
+            if (CheckTypesForNull(leftType, rightType))
+                return false;
+            if (CheckCommutativityExplicit(leftType, rightType, methodName, out bool result))
+                return result;
+
+            if (TryTypingImplicit(leftType, rightType, out Type newLeftType, out Type newRightType))
+                return GetCommutativityForOperation(newLeftType, newRightType, opName, methodName, opAbbreviation);
+
+            return false;
         }
 
         private static string GetMessage(string op, OperandPair pair)
@@ -344,6 +368,56 @@ namespace kOS.Safe.Compilation
             return false;
         }
 
+        private bool CheckCommutativityExplicit(Type left, Type right, string methodName, out bool result)
+        {
+            MethodInfo method1 = left.GetMethod(methodName, FLAGS, null, new[] { left, right }, null);
+            CommutativeAttribute commutativeAttribute = method1?.GetCustomAttribute<CommutativeAttribute>();
+            if (method1 != null)
+            {
+                if (commutativeAttribute != null)
+                    result = commutativeAttribute.IsCommutative;
+                else
+                    result = DefaultCommutativity(methodName, right);
+                return true;
+            }
+            MethodInfo method2 = right.GetMethod(methodName, FLAGS, null, new[] { left, right }, null);
+            commutativeAttribute = method2?.GetCustomAttribute<CommutativeAttribute>();
+            if (method2 != null)
+            {
+                if (commutativeAttribute != null)
+                    result = commutativeAttribute.IsCommutative;
+                else
+                    result = DefaultCommutativity(methodName, right);
+                return true;
+            }
+            result = false;
+            return false;
+        }
+        private bool DefaultCommutativity(string methodName, Type _)
+        {
+            switch (methodName)
+            {
+                case "op_Addition":
+                case "op_Multiply":
+                    return true;
+                case "op_GreaterThan":
+                case "op_LessThan":
+                case "op_GreaterThanEqual":
+                case "op_LessThanEqual":
+                    return true;
+                case "op_Equality":
+                case "op_Inequality":
+                    return true;
+                case "op_Subtraction":
+                    return true;
+                    //return right.GetMethod("op_UnaryNegation", FLAGS, null, new[] { right }, null) != null;
+                case "op_Division":
+                case "op_ExclusiveOr":
+                default:
+                    return false;
+            }
+        }
+
         private void CheckPairForNull(OperandPair pair, string opName)
         {
             if (pair.Left == null || pair.Right == null)
@@ -351,10 +425,9 @@ namespace kOS.Safe.Compilation
                 throw new InvalidOperationException(GetMessage(opName, pair));
             }
         }
-        private void CheckTypesForNull(Type left, Type right, string opName)
+        private bool CheckTypesForNull(Type left, Type right)
         {
-            if (left == null || right == null)
-                throw new InvalidOperationException(GetMessage(opName, left, right));
+            return left == null || right == null;
         }
 
         private bool TryCoerceImplicit(OperandPair pair, out OperandPair resultPair)

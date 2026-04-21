@@ -355,16 +355,19 @@ namespace kOS.Safe.Encapsulation
             return new StringValue(value);
         }
 
+        [kOS.Safe.Compilation.Commutative(false)]   // String concatenation is not commutative.
         public static StringValue operator +(StringValue val1, StringValue val2)
         {
             return new StringValue(val1.ToString() + val2.ToString());
         }
 
+        [kOS.Safe.Compilation.Commutative(false)]   // String concatenation is not commutative.
         public static StringValue operator +(StringValue val1, Structure val2)
         {
             return new StringValue(val1.ToString() + val2.ToString());
         }
 
+        [kOS.Safe.Compilation.Commutative(false)]   // String concatenation is not commutative.
         public static StringValue operator +(Structure val1, StringValue val2)
         {
             return new StringValue(val1.ToString() + val2.ToString());

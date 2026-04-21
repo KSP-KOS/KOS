@@ -12,6 +12,8 @@ namespace kOS.Safe.Compilation
         }
         public override Type GetAddResultType(Type leftType, Type rightType)
             => typeof(StringValue);
+        public override bool IsAdditionCommutative(Type leftType, Type rightType)
+            => false;
 
         public override object Subtract(OperandPair pair)
         {
@@ -21,6 +23,8 @@ namespace kOS.Safe.Compilation
         {
             throw new KOSBinaryOperandTypeException(leftType, rightType, "subtract", "from");
         }
+        public override bool IsSubtractionCommutative(Type leftType, Type rightType)
+            => false;
 
         public override object Multiply(OperandPair pair)
         {
@@ -30,6 +34,8 @@ namespace kOS.Safe.Compilation
         {
             throw new KOSBinaryOperandTypeException(leftType, rightType, "multiply", "by");
         }
+        public override bool IsMultiplicationCommmutative(Type leftType, Type rightType)
+            => false;
 
         public override object Divide(OperandPair pair)
         {

@@ -127,18 +127,6 @@ namespace kOS.Safe.Compilation.IR
     }
     public class IRBinaryOp : MultipleOperandInstruction, IResultingInstruction
     {
-        private static readonly Type[] commutativeTypes =
-        {
-            typeof(OpcodeCompareEqual),
-            typeof(OpcodeCompareNE),
-            typeof(OpcodeCompareGT),
-            typeof(OpcodeCompareLT),
-            typeof(OpcodeCompareGTE),
-            typeof(OpcodeCompareLTE),
-            typeof(OpcodeMathAdd),
-            typeof(OpcodeMathMultiply)
-        };
-
         public override bool IsInvariant => Left.IsInvariant && Right.IsInvariant;
         public IRValue Result { get; set; }
         public BinaryOpcode Operation { get; set; }
@@ -194,7 +182,41 @@ namespace kOS.Safe.Compilation.IR
                     throw new ArgumentOutOfRangeException();
             }
         }
-        public bool IsCommutative => commutativeTypes.Contains(Operation.GetType());
+        public bool IsCommutative
+        {
+            get
+            {
+                Calculator calculator = Calculator.GetCalculator(Left.ValueType, Right.ValueType);
+                switch (Operation)
+                {
+                    case OpcodeMathAdd _:
+                        return calculator.IsAdditionCommutative(Left.ValueType, Right.ValueType);
+                    case OpcodeMathSubtract _:
+                        return calculator.IsSubtractionCommutative(Left.ValueType, Right.ValueType);
+                    case OpcodeMathMultiply _:
+                        return calculator.IsMultiplicationCommmutative(Left.ValueType, Right.ValueType);
+                    case OpcodeMathDivide _:
+                        return calculator.IsDivisionCommutative(Left.ValueType, Right.ValueType);
+                    case OpcodeMathPower _:
+                        return false;
+                    case OpcodeCompareEqual _:
+                    case OpcodeCompareNE _:
+                        return true;
+                    case OpcodeCompareGT _:
+                    case OpcodeCompareLT _:
+                    case OpcodeCompareGTE _:
+                    case OpcodeCompareLTE _:
+                        return true;
+                    default:
+#pragma warning disable CS0162 // Unreachable code detected
+#if DEBUG
+                        throw new NotImplementedException();
+#endif
+                        return false;
+#pragma warning restore CS0162 // Unreachable code detected
+                }
+            }
+        }
 
         public IRBinaryOp(IRTemp result, BinaryOpcode operation, IRValue left, IRValue right) : base(operation)
         {
@@ -203,11 +225,13 @@ namespace kOS.Safe.Compilation.IR
             Left = left;
             Right = right;
         }
-        public void SwapOperands()
+        public bool SwapOperands()
         {
             if (!IsCommutative)
-                return;
+                return false;
                 //throw new System.InvalidOperationException($"{this} is not commutative.");
+            if (Operation is OpcodeMathSubtract)
+                return false;
             (Right, Left) = (Left, Right);
             switch (Operation)
             {
@@ -224,6 +248,7 @@ namespace kOS.Safe.Compilation.IR
                     Operation = new OpcodeCompareGT();
                     break;
             }
+            return true;
         }
         internal override IEnumerable<Opcode> EmitOpcode()
         {
