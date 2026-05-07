@@ -14,54 +14,27 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             for (int i = 0; i < code.Count; i++)
             {
                 IRInstruction instruction = code[i];
-                switch (instruction)
+                foreach (IRInstruction inst in instruction.DepthFirst())
                 {
-                    case IRPop pop:
-                        if (AttemptReplacement(pop.Value) is IRConstant)
-                        {
-                            code.RemoveAt(i);
-                            i--;
-                        }
-                        continue;
-                    case IRAssign assign:
-                        assign.Value = AttemptReplacement(assign.Value);
-                        break;
-                    case IRSuffixSet suffixSet:
-                        suffixSet.Value = AttemptReplacement(suffixSet.Value);
-                        suffixSet.Object = AttemptReplacement(suffixSet.Object);
-                        break;
-                    case IRIndexSet indexSet:
-                        indexSet.Value = AttemptReplacement(indexSet.Value);
-                        indexSet.Object = AttemptReplacement(indexSet.Object);
-                        indexSet.Index = AttemptReplacement(indexSet.Index);
-                        break;
-                    case IRBranch branch:
-                        AttemptReplacement(branch.Condition);
-                        break;
+                    if (inst is IOperandInstructionBase operandInstruction)
+                    {
+                        operandInstruction.MutateEachOperand(AttemptReplacement);
+                    }
                 }
             }
         }
 
-        private static IRValue AttemptReplacement(IRValue input)
+        private static IInterimOperand AttemptReplacement(IInterimOperand operand)
         {
-            if (input is IRTemp temp)
-            {
-                if (temp.Parent is IRSuffixGet suffixGet)
-                {
-                    AttempReplaceSuffix(suffixGet);
-                }
-                else
-                {
-                    AttemptReplacement(temp.Parent);
-                }
-            }
-            return input;
+            if (operand is IRSuffixGet suffixGet)
+                return AttempReplaceSuffix(suffixGet);
+            return operand;
         }
-        private static IRValue AttempReplaceSuffix(IRSuffixGet suffixGet)
+        private static IInterimOperand AttempReplaceSuffix(IRSuffixGet suffixGet)
         {
-            if (suffixGet.Object is IRVariable objVariable)
+            if (suffixGet.Object is InterimVariableReference variableReference)
             {
-                if (objVariable.Name == "$ship")
+                if (variableReference.Name.Equals("$ship", StringComparison.OrdinalIgnoreCase))
                 {
                     switch (suffixGet.Suffix)
                     {
@@ -98,24 +71,23 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             break;
                         // All other suffixes don't have an alias, so just return the original IRTemp
                         default:
-                            return suffixGet.Result;
+                            return suffixGet;
                     }
                     // Instead of the IRTemp, which leads to resolving the suffix, return just the alias shortcut.
-                    suffixGet.Result = new IRVariable($"${suffixGet.Suffix}", null, suffixGet.SourceLine, suffixGet.SourceColumn);
-                    return suffixGet.Result;
+                    return new InterimVariableReference($"${suffixGet.Suffix}", suffixGet.SourceLine, suffixGet.SourceColumn);
                 }
-                if (objVariable.Name == "$constant")
+                if (variableReference.Name.Equals("$constant", StringComparison.OrdinalIgnoreCase))
                 {
                     return ReplaceConstantSuffix(suffixGet);
                 }
             }
-            else if (suffixGet.Object is IRTemp tempObj && tempObj.Parent is IRCall call && call.Function == "constant()" && call.Arguments.Count == 0)
+            else if (suffixGet.Object is IRCall call && call.Function.Equals("constant()", StringComparison.OrdinalIgnoreCase) && call.Arguments.Count == 0)
             {
                 return ReplaceConstantSuffix(suffixGet);
             }
-            return suffixGet.Result;
+            return suffixGet;
         }
-        private static IRConstant ReplaceConstantSuffix(IRSuffixGet suffixGet)
+        private static InterimConstantValue ReplaceConstantSuffix(IRSuffixGet suffixGet)
         {
             Optimizer.InterimCPU.PushArgumentStack(new Encapsulation.ConstantValue());
             try
@@ -126,72 +98,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             {
                 throw new Exceptions.KOSCompileException(suffixGet, e);
             }
-            IRConstant result = new IRConstant(Optimizer.InterimCPU.PopValueArgument(), suffixGet);
-            suffixGet.Result = result;
-            return result;
-        }
-        private static IRValue AttemptReplacement(IRInstruction instruction)
-        {
-            switch (instruction)
-            {
-                case IRUnaryOp unaryOp:
-                    return ReduceUnary(unaryOp);
-                case IRBinaryOp binaryOp:
-                    return ReduceBinary(binaryOp);
-                case IRSuffixGet suffixGet:
-                    return ReduceSuffixGet(suffixGet);
-                case IRIndexGet indexGet:
-                    return ReduceIndexGet(indexGet);
-                case IRCall call:
-                    return ReduceCall(call);
-                case IResultingInstruction resulting:
-                    return resulting.Result;
-            }
-            throw new ArgumentException($"{instruction.GetType()} is not supported.");
-        }
-        private static IRValue ReduceUnary(IRUnaryOp instruction)
-        {
-            if (instruction.Operand is IRTemp temp)
-                instruction.Operand = AttemptReplacement(temp);
-
-            return instruction.Result;
-        }
-        private static IRValue ReduceBinary(IRBinaryOp instruction)
-        {
-            if (instruction.Left is IRTemp tempL)
-                instruction.Left = AttemptReplacement(tempL);
-            if (instruction.Right is IRTemp tempR)
-                instruction.Right = AttemptReplacement(tempR);
-
-            return instruction.Result;
-        }
-
-        private static IRValue ReduceSuffixGet(IRSuffixGet instruction)
-        {
-            if (instruction.Object is IRTemp temp)
-                instruction.Object = AttemptReplacement(temp);
-
-            return instruction.Result;
-        }
-        private static IRValue ReduceIndexGet(IRIndexGet instruction)
-        {
-            if (instruction.Object is IRTemp tempObj)
-                instruction.Object = AttemptReplacement(tempObj);
-
-            if (instruction.Index is IRTemp tempIndex)
-                instruction.Index = AttemptReplacement(tempIndex);
-
-            return instruction.Result;
-        }
-        private static IRValue ReduceCall(IRCall instruction)
-        {
-            for (int i = instruction.Arguments.Count - 1; i >= 0; i--)
-            {
-                if (instruction.Arguments[i] is IRTemp temp)
-                    instruction.Arguments[i] = AttemptReplacement(temp);
-            }
-
-            return instruction.Result;
+            return new InterimConstantValue(Optimizer.InterimCPU.PopValueArgument(), suffixGet);
         }
     }
 }

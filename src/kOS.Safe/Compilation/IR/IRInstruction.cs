@@ -1,20 +1,23 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Compilation.IR
 {
     public abstract class IRInstruction
     {
+        public BasicBlock Block { get; }
         public short SourceLine { get; private set; }   // line number in the source code that this was compiled from.
         public short SourceColumn { get; private set; } // column number of the token nearest the cause of this Opcode.
 
         public abstract bool IsInvariant { get; }
-        internal abstract IEnumerable<Opcode> EmitOpcode();
-        protected IRInstruction(Opcode originalOpcode)
+        public abstract IEnumerable<Opcode> EmitOpcodes();
+        protected IRInstruction(Opcode originalOpcode, BasicBlock block)
         {
             SourceLine = originalOpcode.SourceLine;
             SourceColumn = originalOpcode.SourceColumn;
+            Block = block;
         }
         protected Opcode SetSourceLocation(Opcode opcode)
         {
@@ -33,38 +36,38 @@ namespace kOS.Safe.Compilation.IR
 
     public abstract class SingleOperandInstruction : IRInstruction, ISingleOperandInstruction
     {
-        protected IRValue operand;
+        protected IInterimOperand operand;
 
-        protected SingleOperandInstruction(Opcode originalOpcode) : base(originalOpcode) { }
+        protected SingleOperandInstruction(Opcode originalOpcode, BasicBlock block) : base(originalOpcode, block) { }
 
-        IRValue ISingleOperandInstruction.Operand { get => operand; set => operand = value; }
+        IInterimOperand ISingleOperandInstruction.Operand { get => operand; set => operand = value; }
 
-        public void ForEachOperand(Action<IRValue> action)
+        public void ForEachOperand(Action<IInterimOperand> action)
             => action(operand);
 
-        public void MutateEachOperand(Func<IRValue, IRValue> mutateFunc)
+        public void MutateEachOperand(Func<IInterimOperand, IInterimOperand> mutateFunc)
             => operand = mutateFunc(operand);
     }
     public abstract class MultipleOperandInstruction : IRInstruction, IMultipleOperandInstruction
     {
-        protected MultipleOperandInstruction(Opcode originalOpcode) : base(originalOpcode) { }
+        protected MultipleOperandInstruction(Opcode originalOpcode, BasicBlock block) : base(originalOpcode, block) { }
 
-        public abstract IEnumerable<IRValue> Operands { get; }
+        public abstract IEnumerable<IInterimOperand> Operands { get; }
         public abstract int OperandCount { get; }
         /// <summary>
         /// Allows replacing operands from a common function.
         /// The meaning of the index and ordering are irrelevant,
         /// as long as it covers the range [0, <see cref="OperandCount"/>).
         /// </summary>
-        protected abstract IRValue this[int index] { get; set; }
+        protected abstract IInterimOperand this[int index] { get; set; }
 
-        public void ForEachOperand(Action<IRValue> action)
+        public void ForEachOperand(Action<IInterimOperand> action)
         {
-            foreach (IRValue operand in Operands)
+            foreach (IInterimOperand operand in Operands)
                 action(operand);
         }
 
-        public void MutateEachOperand(Func<IRValue, IRValue> mutateFunc)
+        public void MutateEachOperand(Func<IInterimOperand, IInterimOperand> mutateFunc)
         {
             for (int i = 0; i < OperandCount; i++)
                 this[i] = mutateFunc(this[i]);
@@ -80,22 +83,20 @@ namespace kOS.Safe.Compilation.IR
             Global
         }
         public override bool IsInvariant => Value.IsInvariant;
-        public IRVariableBase Target { get; set; }
-        public IRValue Value { get => operand; set => operand = value; }
+        public SSASetDefinition Target { get; set; }
+        public IInterimOperand Value { get => operand; set => operand = value; }
         public StoreScope Scope { get; set; } = StoreScope.Ambivalent;
         public bool AssertExists { get; set; } = false;
 
-        public IRAssign(OpcodeIdentifierBase opcode, IRVariableBase target, IRValue value) : base(opcode)
+        public IRAssign(BasicBlock block, OpcodeIdentifierBase opcode, IInterimOperand value) : base(opcode, block)
         {
-            Target = target;
             Value = value;
-            if (target is SSAVariable ssaTarget)
-                ssaTarget.AssignedAt = this;
+            Target = new SSASetDefinition(opcode.Identifier, this);
         }
-        internal override IEnumerable<Opcode> EmitOpcode()
+        public override IEnumerable<Opcode> EmitOpcodes()
         {
             if (Value != null)
-                foreach (Opcode opcode in Value.EmitPush())
+                foreach (Opcode opcode in Value.EmitOpcodes())
                     yield return opcode;
             if (AssertExists)
             {
@@ -118,58 +119,53 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => string.Format("{{store {0} -> {1}}}", Value.ToString(), Target.ToString());
-        public override bool Equals(object obj)
-            => obj is IRAssign assignment &&
-                Target.Equals(assignment.Target) &&
-                Value.Equals(assignment.Value);
-        public override int GetHashCode()
-            => Target.GetHashCode();
     }
     public class IRBinaryOp : MultipleOperandInstruction, IResultingInstruction
     {
         public override bool IsInvariant => Left.IsInvariant && Right.IsInvariant;
-        public IRValue Result { get; set; }
         public BinaryOpcode Operation { get; set; }
-        public IRValue Left { get; set; }
-        public IRValue Right { get; set; }
-        public override IEnumerable<IRValue> Operands { get { yield return Left; yield return Right; } }
+        public IInterimOperand Left { get; set; }
+        public IInterimOperand Right { get; set; }
+        public override IEnumerable<IInterimOperand> Operands { get { yield return Left; yield return Right; } }
         public override int OperandCount => 2;
-        public Type ResultType
+        public Type Type
         {
             get
             {
-                Calculator calculator = Calculator.GetCalculator(Left.ValueType, Right.ValueType);
+                if (Left.Type == null || Right.Type == null)
+                    return null;
+                Calculator calculator = Calculator.GetCalculator(Left.Type, Right.Type);
                 switch (Operation)
                 {
                     case OpcodeMathAdd _:
-                        return calculator.GetAddResultType(Left.ValueType, Right.ValueType);
+                        return calculator.GetAddResultType(Left.Type, Right.Type);
                     case OpcodeMathSubtract _:
-                        return calculator.GetSubtractResultType(Left.ValueType, Right.ValueType);
+                        return calculator.GetSubtractResultType(Left.Type, Right.Type);
                     case OpcodeMathMultiply _:
-                        return calculator.GetMultiplyResultType(Left.ValueType, Right.ValueType);
+                        return calculator.GetMultiplyResultType(Left.Type, Right.Type);
                     case OpcodeMathDivide _:
-                        return calculator.GetDivideResultType(Left.ValueType, Right.ValueType);
+                        return calculator.GetDivideResultType(Left.Type, Right.Type);
                     case OpcodeMathPower _:
-                        return calculator.GetPowerResultType(Left.ValueType, Right.ValueType);
+                        return calculator.GetPowerResultType(Left.Type, Right.Type);
                     case OpcodeCompareEqual _:
-                        return calculator.GetEqualResultType(Left.ValueType, Right.ValueType);
+                        return calculator.GetEqualResultType(Left.Type, Right.Type);
                     case OpcodeCompareNE _:
-                        return calculator.GetNotEqualResultType(Left.ValueType, Right.ValueType);
+                        return calculator.GetNotEqualResultType(Left.Type, Right.Type);
                     case OpcodeCompareGT _:
-                        return calculator.GetGreaterThanResultType(Left.ValueType, Right.ValueType);
+                        return calculator.GetGreaterThanResultType(Left.Type, Right.Type);
                     case OpcodeCompareLT _:
-                        return calculator.GetLessThanResultType(Left.ValueType, Right.ValueType);
+                        return calculator.GetLessThanResultType(Left.Type, Right.Type);
                     case OpcodeCompareGTE _:
-                        return calculator.GetGreaterThanEqualResultType(Left.ValueType, Right.ValueType);
+                        return calculator.GetGreaterThanEqualResultType(Left.Type, Right.Type);
                     case OpcodeCompareLTE _:
-                        return calculator.GetLessThanEqualResultType(Left.ValueType, Right.ValueType);
+                        return calculator.GetLessThanEqualResultType(Left.Type, Right.Type);
                     default:
                         throw new NotImplementedException();
                 }
             }
         }
 
-        protected override IRValue this[int index]
+        protected override IInterimOperand this[int index]
         {
             get => index == 0 ? Left : index == 1 ? Right : throw new ArgumentOutOfRangeException();
             set
@@ -186,17 +182,19 @@ namespace kOS.Safe.Compilation.IR
         {
             get
             {
-                Calculator calculator = Calculator.GetCalculator(Left.ValueType, Right.ValueType);
+                if (Left.Type == null || Right.Type == null)
+                    return false;
+                Calculator calculator = Calculator.GetCalculator(Left.Type, Right.Type);
                 switch (Operation)
                 {
                     case OpcodeMathAdd _:
-                        return calculator.IsAdditionCommutative(Left.ValueType, Right.ValueType);
+                        return calculator.IsAdditionCommutative(Left.Type, Right.Type);
                     case OpcodeMathSubtract _:
-                        return calculator.IsSubtractionCommutative(Left.ValueType, Right.ValueType);
+                        return calculator.IsSubtractionCommutative(Left.Type, Right.Type);
                     case OpcodeMathMultiply _:
-                        return calculator.IsMultiplicationCommmutative(Left.ValueType, Right.ValueType);
+                        return calculator.IsMultiplicationCommmutative(Left.Type, Right.Type);
                     case OpcodeMathDivide _:
-                        return calculator.IsDivisionCommutative(Left.ValueType, Right.ValueType);
+                        return calculator.IsDivisionCommutative(Left.Type, Right.Type);
                     case OpcodeMathPower _:
                         return false;
                     case OpcodeCompareEqual _:
@@ -218,9 +216,8 @@ namespace kOS.Safe.Compilation.IR
             }
         }
 
-        public IRBinaryOp(IRTemp result, BinaryOpcode operation, IRValue left, IRValue right) : base(operation)
+        public IRBinaryOp(BasicBlock block, BinaryOpcode operation, IInterimOperand left, IInterimOperand right) : base(operation, block)
         {
-            Result = result;
             Operation = operation;
             Left = left;
             Right = right;
@@ -250,11 +247,11 @@ namespace kOS.Safe.Compilation.IR
             }
             return true;
         }
-        internal override IEnumerable<Opcode> EmitOpcode()
+        public override IEnumerable<Opcode> EmitOpcodes()
         {
-            foreach (Opcode opcode in Left.EmitPush())
+            foreach (Opcode opcode in Left.EmitOpcodes())
                 yield return opcode;
-            foreach (Opcode opcode in Right.EmitPush())
+            foreach (Opcode opcode in Right.EmitOpcodes())
                 yield return opcode;
             Operation.Label = string.Empty;
             yield return SetSourceLocation(Operation);
@@ -273,14 +270,29 @@ namespace kOS.Safe.Compilation.IR
         }
         public override int GetHashCode()
             => Operation.GetHashCode();
+
+        public InterimConstantValue Evaluate()
+        {
+            if (!IsInvariant)
+                throw new InvalidOperationException();
+            object left = (Left as IEvaluatableToConstant)?.Evaluate().Value;
+            object right = (Right as IEvaluatableToConstant)?.Evaluate().Value;
+            try
+            {
+                return new InterimConstantValue(Operation.ExecuteCalculation(left, right), this);
+            }
+            catch (KOSBinaryOperandTypeException binaryTypeException)
+            {
+                throw new KOSCompileException(this, binaryTypeException);
+            }
+        }
     }
     public class IRUnaryOp : SingleOperandInstruction, IResultingInstruction
     {
-        public override bool IsInvariant => Operand.IsInvariant;
-        public IRValue Result { get; set; }
+        public override bool IsInvariant => Operand.IsInvariant && !(Operation is OpcodeExists);
         public Opcode Operation { get; }
-        public IRValue Operand { get => operand; set => operand = value; }
-        public Type ResultType
+        public IInterimOperand Operand { get => operand; set => operand = value; }
+        public Type Type
         {
             get
             {
@@ -291,21 +303,20 @@ namespace kOS.Safe.Compilation.IR
                     case OpcodeLogicToBool _:
                         return typeof(Encapsulation.BooleanValue);
                     case OpcodeMathNegate _:
-                        return Operand.ValueType;
+                        return Operand.Type;
                     default:
                         throw new NotImplementedException();
                 }
             }
         }
-        public IRUnaryOp(IRTemp result, Opcode operation, IRValue operand) : base(operation)
+        public IRUnaryOp(BasicBlock block, Opcode operation, IInterimOperand operand) : base(operation, block)
         {
-            Result = result;
             Operation = operation;
             Operand = operand;
         }
-        internal override IEnumerable<Opcode> EmitOpcode()
+        public override IEnumerable<Opcode> EmitOpcodes()
         {
-            foreach (Opcode opcode in Operand.EmitPush())
+            foreach (Opcode opcode in Operand.EmitOpcodes())
                 yield return opcode;
             Operation.Label = string.Empty;
             yield return Operation;
@@ -317,82 +328,104 @@ namespace kOS.Safe.Compilation.IR
                 Operation.GetType() == unaryOp.Operation.GetType() &&
                 Operand.Equals(unaryOp.Operand);
         public override int GetHashCode()
-            => Operation.GetHashCode();
+            => (Operation, Operand).GetHashCode();
+
+        public InterimConstantValue Evaluate()
+        {
+            if (!IsInvariant)
+                throw new InvalidOperationException();
+            object input = (Operand as IEvaluatableToConstant)?.Evaluate().Value;
+            try
+            {
+                switch (Operation)
+                {
+                    case OpcodeMathNegate _:
+                        return new InterimConstantValue(OpcodeMathNegate.StaticOperation(input), this);
+                    case OpcodeLogicNot _:
+                        return new InterimConstantValue(OpcodeLogicNot.StaticOperation(input), this);
+                    case OpcodeLogicToBool _:
+                        return new InterimConstantValue(OpcodeLogicToBool.StaticOperation(input), this);
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+            catch (KOSUnaryOperandTypeException unaryTypeException)
+            {
+                throw new KOSCompileException(this, unaryTypeException);
+            }
+        }
     }
     public class IRNoStackInstruction : IRInstruction
     {
         public override bool IsInvariant => false;
         public Opcode Operation { get; }
-        public IRNoStackInstruction(Opcode opcode) : base(opcode)
+        public IRNoStackInstruction(BasicBlock block, Opcode opcode) : base(opcode, block)
             => Operation = opcode;
-        internal override IEnumerable<Opcode> EmitOpcode()
+        public override IEnumerable<Opcode> EmitOpcodes()
         {
             Operation.Label = string.Empty;
             yield return Operation;
         }
         public override string ToString()
             => Operation.ToString();
-        public override bool Equals(object obj)
-            => obj is IRNoStackInstruction instruction && Operation.GetType() == instruction.Operation.GetType();
-        public override int GetHashCode()
-            => Operation.GetHashCode();
     }
     public class IRUnaryConsumer : SingleOperandInstruction
     {
         private readonly bool operationHasSideEffects;
         public override bool IsInvariant => !operationHasSideEffects && Operand.IsInvariant;
         public Opcode Operation { get; }
-        public IRValue Operand { get => operand; set => operand = value; }
-        public IRUnaryConsumer(Opcode opcode, IRValue operand, bool sideEffects = false) : base(opcode)
+        public IInterimOperand Operand { get => operand; set => operand = value; }
+        public IRUnaryConsumer(BasicBlock block, Opcode opcode, IInterimOperand operand, bool sideEffects = false) : base(opcode, block)
         {
             Operation = opcode;
             Operand = operand;
             operationHasSideEffects = sideEffects;
         }
-        internal override IEnumerable<Opcode> EmitOpcode()
+        public override IEnumerable<Opcode> EmitOpcodes()
         {
-            foreach (Opcode opcode in Operand.EmitPush())
+            foreach (Opcode opcode in Operand.EmitOpcodes())
                 yield return opcode;
             Operation.Label = string.Empty;
             yield return Operation;
         }
         public override string ToString()
             => Operation.ToString();
-        public override bool Equals(object obj)
-            => obj is IRUnaryConsumer unaryConsumer &&
-                Operation.GetType() == unaryConsumer.Operation.GetType() &&
-                Operand.Equals(unaryConsumer.Operand);
-        public override int GetHashCode()
-            => Operation.GetHashCode();
+    }
+    public class IRUnset : IRUnaryConsumer
+    {
+        public override bool IsInvariant => Target != null;
+        public SSASetDefinition Target { get; set; }
+        public bool IsExecutable => Block.IsExecutable;
+        public IRUnset(BasicBlock block, OpcodeUnset opcode, IInterimOperand operand) : base(block, opcode, operand, false)
+        {
+            if (operand.IsInvariant)
+            {
+                string name = (string)(operand as IEvaluatableToConstant).Evaluate().Value;
+                Target = new SSASetDefinition(name, this);
+            }
+        }
     }
     public class IRPop : SingleOperandInstruction
     {
         public override bool IsInvariant => Value.IsInvariant;
-        public IRValue Value { get => operand; set => operand = value; }
-        public IRPop(IRValue value, OpcodePop opcode) : base(opcode)
+        public IInterimOperand Value { get => operand; set => operand = value; }
+        public IRPop(BasicBlock block, IInterimOperand value, OpcodePop opcode) : base(opcode, block)
             => Value = value;
 
-        internal override IEnumerable<Opcode> EmitOpcode()
+        public override IEnumerable<Opcode> EmitOpcodes()
         {
-            if (Value is IRConstant || (Value is IRVariable && !(Value is IRTemp)))
-                yield break;
-            foreach (Opcode opcode in Value.EmitPush())
+            foreach (Opcode opcode in Value.EmitOpcodes())
                 yield return opcode;
             yield return SetSourceLocation(new OpcodePop());
         }
         public override string ToString()
             => $"{{pop {Value}}}";
-        public override bool Equals(object obj)
-            => obj is IRPop pop && Value.Equals(pop.Value);
-        public override int GetHashCode()
-            => Value.GetHashCode();
     }
     public class IRNonVarPush : IRInstruction, IResultingInstruction
     {
         public override bool IsInvariant => false;
         public Opcode Operation { get; }
-        public IRValue Result { get; }
-        public Type ResultType
+        public Type Type
         {
             get
             {
@@ -406,79 +439,90 @@ namespace kOS.Safe.Compilation.IR
             }
         }
 
-        public IRNonVarPush(IRValue result, Opcode opcode) : base(opcode)
+        public IRNonVarPush(BasicBlock block, Opcode opcode) : base(opcode, block)
         {
             Operation = opcode;
-            Result = result;
         }
-        internal override IEnumerable<Opcode> EmitOpcode()
+        public override IEnumerable<Opcode> EmitOpcodes()
         {
             Operation.Label = string.Empty;
             yield return Operation;
         }
         public override string ToString()
             => Operation.ToString();
-        public override bool Equals(object obj)
-            => obj is IRNonVarPush instruction &&
-            Operation.GetType() == instruction.Operation.GetType();
-        public override int GetHashCode()
-            => Operation.GetHashCode();
+
+        public InterimConstantValue Evaluate()
+            => throw new InvalidOperationException();
     }
     public class IRSuffixGet : SingleOperandInstruction, IResultingInstruction
     {
-        public override bool IsInvariant => Object.IsInvariant;
-        public IRValue Result { get; set; }
-        public IRValue Object { get => operand; set => operand = value; }
+        // TODO: Consider implementing this.
+        public override bool IsInvariant => false && Object.IsInvariant;
+        public IInterimOperand Object { get => operand; set => operand = value; }
         public string Suffix { get; set; }
-        public Type ResultType => TypeInferencer.GetTypeForSuffix(Object.ValueType, Suffix);
-        public IRSuffixGet(IRTemp result, IRValue obj, OpcodeGetMember opcodeGetMember) : base(opcodeGetMember)
+        public Type Type => TypeInferencer.GetTypeForSuffix(Object.Type, Suffix);
+        public IRSuffixGet(BasicBlock block, IInterimOperand obj, OpcodeGetMember opcodeGetMember) : base(opcodeGetMember, block)
         {
-            Result = result;
             Object = obj;
             Suffix = opcodeGetMember.Identifier;
         }
-        internal override IEnumerable<Opcode> EmitOpcode()
+        public override IEnumerable<Opcode> EmitOpcodes()
         {
-            foreach (Opcode opcode in Object.EmitPush())
+            foreach (Opcode opcode in Object.EmitOpcodes())
                 yield return opcode;
             yield return SetSourceLocation(new OpcodeGetMember(Suffix));
         }
         public override string ToString()
             => string.Format("{{gmb \"{0}\"}}", Suffix);
         public override bool Equals(object obj)
-            => obj is IRSuffixGet suffixGet &&
+            => obj == this ||
+            (IsInvariant &&
+            obj is IRSuffixGet suffixGet &&
+            suffixGet.IsInvariant &&
             !(suffixGet is IRSuffixGetMethod) &&
             string.Equals(Suffix, suffixGet.Suffix, StringComparison.OrdinalIgnoreCase) &&
-            Object == suffixGet.Object;
+            Object == suffixGet.Object);
         public override int GetHashCode()
             => (Object, Suffix).GetHashCode();
+
+        public InterimConstantValue Evaluate()
+        {
+            if (!IsInvariant)
+                throw new InvalidOperationException();
+            throw new NotImplementedException();
+            // MUSTFIX:
+#pragma warning disable CS0162 // Unreachable code detected
+            Encapsulation.Structure obj = (Encapsulation.Structure)(Object as IEvaluatableToConstant).Evaluate()?.Value;
+#pragma warning restore CS0162 // Unreachable code detected
+            object result = obj.GetSuffix(Suffix);
+            return new InterimConstantValue(result, this);
+        }
     }
     public class IRSuffixGetMethod : IRSuffixGet
     {
-        public IRSuffixGetMethod(IRTemp result, IRValue obj, OpcodeGetMethod opcode) : base(result, obj, opcode) { }
-        internal override IEnumerable<Opcode> EmitOpcode()
+        public IRSuffixGetMethod(BasicBlock block, IInterimOperand obj, OpcodeGetMethod opcode) : base(block, obj, opcode) { }
+        public override IEnumerable<Opcode> EmitOpcodes()
         {
-            foreach (Opcode opcode in Object.EmitPush())
+            foreach (Opcode opcode in Object.EmitOpcodes())
                 yield return opcode;
             yield return SetSourceLocation(new OpcodeGetMethod(Suffix));
         }
         public override string ToString()
             => string.Format("{{gmet \"{0}\"}}", Suffix);
         public override bool Equals(object obj)
-            => obj is IRSuffixGetMethod suffixGet &&
-            string.Equals(Suffix, suffixGet.Suffix, StringComparison.OrdinalIgnoreCase) &&
-            Object == suffixGet.Object;
+            => obj is IRSuffixGetMethod &&
+            base.Equals(obj);
         public override int GetHashCode()
-            => (Object, Suffix).GetHashCode();
+            => base.GetHashCode();
     }
     public class IRSuffixSet : MultipleOperandInstruction
     {
         public override bool IsInvariant => false;
-        public IRValue Object { get; set; }
-        public IRValue Value { get; set; }
-        public override IEnumerable<IRValue> Operands { get { yield return Object; yield return Value; } }
+        public IInterimOperand Object { get; set; }
+        public IInterimOperand Value { get; set; }
+        public override IEnumerable<IInterimOperand> Operands { get { yield return Object; yield return Value; } }
         public override int OperandCount => 2;
-        protected override IRValue this[int index]
+        protected override IInterimOperand this[int index]
         {
             get => index == 0 ? Object : index == 1 ? Value : throw new ArgumentOutOfRangeException();
             set
@@ -492,40 +536,43 @@ namespace kOS.Safe.Compilation.IR
             }
         }
         public string Suffix { get; }
-        public IRSuffixSet(IRValue obj, IRValue value, OpcodeSetMember opcodeSetMember) : base(opcodeSetMember)
+        public IRSuffixSet(BasicBlock block, IInterimOperand obj, IInterimOperand value, OpcodeSetMember opcodeSetMember) : base(opcodeSetMember, block)
         {
             Object = obj;
             Value = value;
             Suffix = opcodeSetMember.Identifier;
         }
-        internal override IEnumerable<Opcode> EmitOpcode()
+        public override IEnumerable<Opcode> EmitOpcodes()
         {
-            foreach (Opcode opcode in Object.EmitPush())
+            foreach (Opcode opcode in Object.EmitOpcodes())
                 yield return opcode;
-            foreach (Opcode opcode in Value.EmitPush())
+            foreach (Opcode opcode in Value.EmitOpcodes())
                 yield return opcode;
             yield return SetSourceLocation(new OpcodeSetMember(Suffix));
         }
         public override string ToString()
             => string.Format("{{smb \"{0}\"}}", Suffix);
         public override bool Equals(object obj)
-            => obj is IRSuffixSet suffixSet &&
+            => obj == this ||
+                (IsInvariant &&
+                obj is IRSuffixSet suffixSet &&
+                suffixSet.IsInvariant &&
                 string.Equals(Suffix, suffixSet.Suffix, StringComparison.OrdinalIgnoreCase) &&
                 Object.Equals(suffixSet.Object) &&
-                Value.Equals(suffixSet.Value);
+                Value.Equals(suffixSet.Value));
         public override int GetHashCode()
-            => (Object, Suffix).GetHashCode();
+            => (Object, Suffix, Value).GetHashCode();
     }
     public class IRIndexGet : MultipleOperandInstruction, IResultingInstruction
     {
-        public override bool IsInvariant => Object.IsInvariant && Index.IsInvariant;
-        public IRValue Result { get; }
-        public IRValue Object { get; set; }
-        public IRValue Index { get; set; }
-        public override IEnumerable<IRValue> Operands { get { yield return Object; yield return Index; } }
+        // TODO: Consider implementing this.
+        public override bool IsInvariant => false && Object.IsInvariant && Index.IsInvariant;
+        public IInterimOperand Object { get; set; }
+        public IInterimOperand Index { get; set; }
+        public override IEnumerable<IInterimOperand> Operands { get { yield return Object; yield return Index; } }
         public override int OperandCount => 2;
-        public Type ResultType => TypeInferencer.GetTypeForIndex(Object.ValueType);
-        protected override IRValue this[int index]
+        public Type Type => TypeInferencer.GetTypeForIndex(Object.Type);
+        protected override IInterimOperand this[int index]
         {
             get => index == 0 ? Object : index == 1 ? Index : throw new ArgumentOutOfRangeException();
             set
@@ -538,38 +585,49 @@ namespace kOS.Safe.Compilation.IR
                     throw new ArgumentOutOfRangeException();
             }
         }
-        public IRIndexGet(IRTemp result, IRValue obj, IRValue index, OpcodeGetIndex opcode) : base(opcode)
+        public IRIndexGet(BasicBlock block, IInterimOperand obj, IInterimOperand index, OpcodeGetIndex opcode) : base(opcode, block)
         {
-            Result = result;
             Object = obj;
             Index = index;
         }
-        internal override IEnumerable<Opcode> EmitOpcode()
+        public override IEnumerable<Opcode> EmitOpcodes()
         {
-            foreach (Opcode opcode in Object.EmitPush())
+            foreach (Opcode opcode in Object.EmitOpcodes())
                 yield return opcode;
-            foreach (Opcode opcode in Index.EmitPush())
+            foreach (Opcode opcode in Index.EmitOpcodes())
                 yield return opcode;
             yield return SetSourceLocation(new OpcodeGetIndex());
         }
         public override string ToString()
             => "{gidx}";
         public override bool Equals(object obj)
-            => obj is IRIndexGet indexGet &&
+            => obj == this ||
+            (IsInvariant &&
+            obj is IRIndexGet indexGet &&
+            indexGet.IsInvariant &&
             Object.Equals(indexGet.Object) &&
-            Index.Equals(indexGet.Index);
+            Index.Equals(indexGet.Index));
         public override int GetHashCode()
-            => Object.GetHashCode();
+            => (Object, Index).GetHashCode();
+
+        public InterimConstantValue Evaluate()
+        {
+            if (!IsInvariant)
+                throw new InvalidOperationException();
+            // MUSTFIX:
+            throw new NotImplementedException();
+            //((Encapsulation.IIndexable)Object).GetIndex();
+        }
     }
     public class IRIndexSet : MultipleOperandInstruction
     {
         public override bool IsInvariant => false;
-        public IRValue Object { get; set; }
-        public IRValue Index { get; set; }
-        public IRValue Value { get; set; }
-        public override IEnumerable<IRValue> Operands { get { yield return Object; yield return Index; yield return Value; } }
+        public IInterimOperand Object { get; set; }
+        public IInterimOperand Index { get; set; }
+        public IInterimOperand Value { get; set; }
+        public override IEnumerable<IInterimOperand> Operands { get { yield return Object; yield return Index; yield return Value; } }
         public override int OperandCount => 3;
-        protected override IRValue this[int index]
+        protected override IInterimOperand this[int index]
         {
             get => index == 0 ? Object : index == 1 ? Index : index == 2 ? Value : throw new ArgumentOutOfRangeException();
             set
@@ -584,29 +642,32 @@ namespace kOS.Safe.Compilation.IR
                     throw new ArgumentOutOfRangeException();
             }
         }
-        public IRIndexSet(IRValue obj, IRValue index, IRValue value, OpcodeSetIndex opcode) : base(opcode)
+        public IRIndexSet(BasicBlock block, IInterimOperand obj, IInterimOperand index, IInterimOperand value, OpcodeSetIndex opcode) : base(opcode, block)
         {
             Object = obj;
             Index = index;
             Value = value;
         }
-        internal override IEnumerable<Opcode> EmitOpcode()
+        public override IEnumerable<Opcode> EmitOpcodes()
         {
-            foreach (Opcode opcode in Object.EmitPush())
+            foreach (Opcode opcode in Object.EmitOpcodes())
                 yield return opcode;
-            foreach (Opcode opcode in Index.EmitPush())
+            foreach (Opcode opcode in Index.EmitOpcodes())
                 yield return opcode;
-            foreach (Opcode opcode in Value.EmitPush())
+            foreach (Opcode opcode in Value.EmitOpcodes())
                 yield return opcode;
             yield return SetSourceLocation(new OpcodeSetIndex());
         }
         public override string ToString()
             => "{sidx}";
         public override bool Equals(object obj)
-            => obj is IRIndexSet indexGet &&
+            => obj == this ||
+            (IsInvariant && 
+            obj is IRIndexSet indexGet &&
+            indexGet.IsInvariant &&
             Object.Equals(indexGet.Object) &&
             Index.Equals(indexGet.Index) &&
-            Value.Equals(indexGet.Value);
+            Value.Equals(indexGet.Value));
         public override int GetHashCode()
             => Object.GetHashCode();
     }
@@ -614,13 +675,13 @@ namespace kOS.Safe.Compilation.IR
     {
         public override bool IsInvariant => true;
         public BasicBlock Target { get; set; }
-        public IRJump(BasicBlock target, OpcodeBranchJump opcode) : base(opcode)
+        public IRJump(BasicBlock block, BasicBlock target, OpcodeBranchJump opcode) : base(opcode, block)
         {
             Target = target;
         }
-        public IRJump(BasicBlock target, short sourceLine, short sourceColumn)
-            : this(target, new OpcodeBranchJump() { SourceLine = sourceLine, SourceColumn = sourceColumn }) { }
-        internal override IEnumerable<Opcode> EmitOpcode()
+        public IRJump(BasicBlock block, BasicBlock target, short sourceLine, short sourceColumn)
+            : this(block, target, new OpcodeBranchJump() { SourceLine = sourceLine, SourceColumn = sourceColumn }) { }
+        public override IEnumerable<Opcode> EmitOpcodes()
         {
             yield return SetSourceLocation(new OpcodeBranchJump() { DestinationLabel = Target.Label });
         }
@@ -635,16 +696,16 @@ namespace kOS.Safe.Compilation.IR
     public class IRJumpStack : SingleOperandInstruction
     {
         public override bool IsInvariant => Distance.IsInvariant;
-        public IRValue Distance { get => operand; set => operand = value; }
+        public IInterimOperand Distance { get => operand; set => operand = value; }
         public List<BasicBlock> Targets { get; } = new List<BasicBlock>();
-        public IRJumpStack(IRValue distance, IEnumerable<BasicBlock> targets, OpcodeJumpStack jumpStack) : base(jumpStack)
+        public IRJumpStack(BasicBlock block, IInterimOperand distance, IEnumerable<BasicBlock> targets, OpcodeJumpStack jumpStack) : base(jumpStack, block)
         {
             Distance = distance;
             Targets.AddRange(targets);
         }
-        internal override IEnumerable<Opcode> EmitOpcode()
+        public override IEnumerable<Opcode> EmitOpcodes()
         {
-            foreach (Opcode opcode in Distance.EmitPush())
+            foreach (Opcode opcode in Distance.EmitOpcodes())
                 yield return opcode;
             yield return SetSourceLocation(new OpcodeJumpStack());
         }
@@ -658,20 +719,20 @@ namespace kOS.Safe.Compilation.IR
     public class IRBranch : SingleOperandInstruction
     {
         public override bool IsInvariant => Condition.IsInvariant;
-        public IRValue Condition { get => operand; set => operand = value; }
+        public IInterimOperand Condition { get => operand; set => operand = value; }
         public BasicBlock True { get; set; }
         public BasicBlock False { get; set; }
         public bool PreferFalse { get; set; } = false;
-        public IRBranch(IRValue condition, BasicBlock onTrue, BasicBlock onFalse, BranchOpcode opcodeBranch) : base(opcodeBranch)
+        public IRBranch(BasicBlock block, IInterimOperand condition, BasicBlock onTrue, BasicBlock onFalse, BranchOpcode opcodeBranch) : base(opcodeBranch, block)
         {
             Condition = condition;
             True = onTrue;
             False = onFalse;
             PreferFalse = opcodeBranch is OpcodeBranchIfFalse;
         }
-        internal override IEnumerable<Opcode> EmitOpcode()
+        public override IEnumerable<Opcode> EmitOpcodes()
         {
-            foreach (Opcode opcode in Condition.EmitPush())
+            foreach (Opcode opcode in Condition.EmitOpcodes())
                 yield return opcode;
             if (PreferFalse)
             {
@@ -700,19 +761,17 @@ namespace kOS.Safe.Compilation.IR
         private Type resultType = null;
         private bool? isFunctionInvariant = null;
 
-        protected static readonly Function.FunctionManager functionManager = new Function.FunctionManager(null);
         public bool IsFunctionInvariant
         {
             get => isFunctionInvariant ?? IsCallInvariant(Function);
             set => isFunctionInvariant = value;
         }
         public override bool IsInvariant => IsFunctionInvariant && Arguments.All(a => a.IsInvariant);
-        public IRValue Result { get; set; }
         public string Function { get; }
-        public List<IRValue> Arguments { get; } = new List<IRValue>();
-        public override IEnumerable<IRValue> Operands => Enumerable.Reverse(Arguments);
+        public List<IInterimOperand> Arguments { get; } = new List<IInterimOperand>();
+        public override IEnumerable<IInterimOperand> Operands => Enumerable.Reverse(Arguments);
         public override int OperandCount => Arguments.Count;
-        public Type ResultType
+        public Type Type
         {
             get => isResultTypeInformed ? resultType : GetDefaultReturnType();
             set
@@ -721,67 +780,64 @@ namespace kOS.Safe.Compilation.IR
                 isResultTypeInformed = true;
             }
         }
-        protected override IRValue this[int index]
+        protected override IInterimOperand this[int index]
         {
             get => Arguments[index];
             set => Arguments[index] = value;
         }
-        public IRValue IndirectMethod { get; internal set; }
+        public IInterimOperand IndirectMethod { get; internal set; }
         public bool Direct { get; }
         public bool EmitArgMarker { get; set; }
-        private IRCall(IRTemp target, OpcodeCall opcode, bool emitArgMarker) : base(opcode)
+        private IRCall(BasicBlock block, OpcodeCall opcode, bool emitArgMarker) : base(opcode, block)
         {
-            Result = target;
             Function = (string)opcode.Destination;
             Direct = opcode.Direct;
             EmitArgMarker = emitArgMarker;
         }
         private bool IsCallInvariant(string functionName)
         {
+            // TODO: Consider that some suffix methods may actually be known at compile time.
             if (!Direct)
                 return false;
-            if (functionManager.Exists(functionName))
-            {
-                return functionManager.IsFunctionInvariant(functionName);
-            }
+            if (Optimization.Optimizer.FunctionManager.Exists(functionName))
+                return Optimization.Optimizer.FunctionManager.IsFunctionInvariant(functionName);
             return false;
 
         }
         private Type GetDefaultReturnType()
         {
-            if (functionManager.Exists(Function))
-                return functionManager.FunctionReturnType(Function);
-            if (IndirectMethod is IRTemp tempSuffixCall &&
-                tempSuffixCall.Parent is IRSuffixGetMethod suffixGetMethod)
-                return suffixGetMethod.ResultType;
+            if (Optimization.Optimizer.FunctionManager.Exists(Function))
+                return Optimization.Optimizer.FunctionManager.FunctionReturnType(Function);
+            if (!Direct && IndirectMethod is IRSuffixGetMethod suffixGetMethod)
+                return suffixGetMethod.Type;
             return typeof(Encapsulation.Structure);
         }
-        internal override IEnumerable<Opcode> EmitOpcode()
+        public override IEnumerable<Opcode> EmitOpcodes()
         {
             if (EmitArgMarker)
             {
                 if (IndirectMethod != null)
-                    foreach (Opcode opcode in IndirectMethod.EmitPush())
+                    foreach (Opcode opcode in IndirectMethod.EmitOpcodes())
                         yield return opcode;
                 yield return new OpcodePush(new Execution.KOSArgMarkerType());
             }
-            foreach (IRValue argument in Arguments)
+            foreach (IInterimOperand argument in Arguments)
             {
-                foreach (Opcode opcode in argument.EmitPush())
+                foreach (Opcode opcode in argument.EmitOpcodes())
                     yield return opcode;
             }
             yield return SetSourceLocation(new OpcodeCall(Function));
         }
 
-        public IRCall(IRTemp target, OpcodeCall opcode, bool emitArgMarker, IRValue argument) : this(target, opcode, emitArgMarker)
+        public IRCall(BasicBlock block, OpcodeCall opcode, bool emitArgMarker, IInterimOperand argument) : this(block, opcode, emitArgMarker)
         {
             Arguments.Add(argument);
         }
-        public IRCall(IRTemp target, OpcodeCall opcode, bool emitArgMarker, IEnumerable<IRValue> arguments) : this(target, opcode, emitArgMarker)
+        public IRCall(BasicBlock block, OpcodeCall opcode, bool emitArgMarker, IEnumerable<IInterimOperand> arguments) : this(block, opcode, emitArgMarker)
         {
             Arguments.AddRange(arguments);
         }
-        public IRCall(IRTemp target, OpcodeCall opcode, bool emitArgMarker, params IRValue[] arguments) : this(target, opcode, emitArgMarker)
+        public IRCall(BasicBlock block, OpcodeCall opcode, bool emitArgMarker, params IInterimOperand[] arguments) : this(block, opcode, emitArgMarker)
         {
             Arguments.AddRange(arguments);
         }
@@ -793,30 +849,48 @@ namespace kOS.Safe.Compilation.IR
                 Arguments.SequenceEqual(call.Arguments);
         public override int GetHashCode()
             => Function.ToLower().GetHashCode();
+
+        public InterimConstantValue Evaluate()
+        {
+            if (!IsInvariant)
+                throw new InvalidOperationException();
+
+            string functionName = Function.Replace("()", "");
+            Optimization.InterimCPU interimCPU = Optimization.Optimizer.InterimCPU;
+            interimCPU.Boot();  // Clear the stack out of caution.
+            interimCPU.PushArgumentStack(new Execution.KOSArgMarkerType());
+            foreach (IInterimOperand arg in Arguments)
+            {
+                object argValue = (arg as IEvaluatableToConstant)?.Evaluate().Value
+                    ?? throw new ArgumentNullException(arg.ToString());
+                interimCPU.PushArgumentStack(argValue);
+            }
+            Optimization.Optimizer.FunctionManager.CallFunction(functionName);
+            return new InterimConstantValue(interimCPU.PopValueArgument(), this);
+        }
     }
     public class IRReturn : SingleOperandInstruction
     {
         public override bool IsInvariant => Value.IsInvariant;
-        public IRValue Value { get => operand; set => operand = value; }
+        public IInterimOperand Value { get => operand; set => operand = value; }
         public short Depth { get; internal set; }
-        public IRReturn(short depth, OpcodeReturn opcode) : base(opcode)
+        public IRReturn(BasicBlock block, short depth, OpcodeReturn opcode) : base(opcode, block)
             => Depth = depth;
-        internal override IEnumerable<Opcode> EmitOpcode()
+        public override IEnumerable<Opcode> EmitOpcodes()
         {
             if (Value != null)
-                foreach (Opcode opcode in Value.EmitPush())
+                foreach (Opcode opcode in Value.EmitOpcodes())
                     yield return opcode;
             else
                 yield return SetSourceLocation(new OpcodePush(null));
             yield return SetSourceLocation(new OpcodeReturn(Depth));
         }
         public override string ToString()
-            => string.Format("{return {0} deep}", Depth);
+            => string.Format("{{return {0} deep}}", Depth);
         public override bool Equals(object obj)
             => obj is IRReturn ret &&
-                Depth == ret.Depth &&
                 Value.Equals(ret.Value);
         public override int GetHashCode()
-            => base.GetHashCode();
+            => Value.GetHashCode();
     }
 }

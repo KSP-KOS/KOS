@@ -17,12 +17,11 @@ namespace kOS.Safe.Compilation.IR
         private BasicBlock dominator;
         private readonly HashSet<BasicBlock> dominates = new HashSet<BasicBlock>();
         private readonly List<IRParameter> parameters = new List<IRParameter>();
-        private readonly Stack<IRValue> exitStackState = new Stack<IRValue>();  // Note that this is reversed from the real stack. Just now we don't reverse it four times.
+        private readonly Stack<IInterimOperand> exitStackState = new Stack<IInterimOperand>();  // Note that this is reversed from the real stack. Just now we don't reverse it four times.
         private readonly string nonSequentialLabel = null;
         private IRScope scope;
-        private readonly HashSet<SSAVariable> variablesWritten = new HashSet<SSAVariable>();
-        private readonly HashSet<IRVariableBase> variablesRead = new HashSet<IRVariableBase>();
 
+        public IRCodePart CodePart { get; }
         /// <summary>
         /// Gets or sets a value indicating whether this block is executable (reachable).
         /// </summary>
@@ -81,18 +80,6 @@ namespace kOS.Safe.Compilation.IR
         /// </remarks>
         public IReadOnlyCollection<BasicBlock> Predecessors => predecessors;
         /// <summary>
-        /// Gets the collection of variables that are written in this
-        /// block in SSA form. This list only returns the last SSA
-        /// instance for a given variable name.
-        /// </summary>
-        public HashSet<SSAVariable> VariablesWritten => variablesWritten;
-        /// <summary>
-        /// Gets the collection of variables that are read in this block.
-        /// This is not in SSA form and includes global and bound
-        /// variables.
-        /// </summary>
-        public IReadOnlyCollection<IRVariableBase> VariablesRead => variablesRead;
-        /// <summary>
         /// Gets the collection of phi functions that define variables
         /// that may have one of several different values upon entering
         /// this block.
@@ -100,7 +87,8 @@ namespace kOS.Safe.Compilation.IR
         /// <remarks>
         /// This data is populated during <see cref="SingleStaticAssignment.FinalizeSSA(IRCodePart)"/>.
         /// </remarks>
-        public HashSet<PhiVariable> Phis { get; } = new HashSet<PhiVariable>();
+        public Dictionary<(string Name, IRScope Scope), PhiNode> Phis { get; } =
+            new Dictionary<(string Name, IRScope Scope), PhiNode>();
         /// <summary>
         /// Gets the set of incoming SSA variables that this block
         /// receives, including the results of any phi functions.
@@ -108,7 +96,7 @@ namespace kOS.Safe.Compilation.IR
         /// <remarks>
         /// This data is populated during <see cref="SingleStaticAssignment.FinalizeSSA(IRCodePart)"/>.
         /// </remarks>
-        public HashSet<SSAVariable> IncomingVariableDefinitions { get; internal set; }
+        public Dictionary<(string, IRScope), SSADefinition> IncomingVariableDefinitions { get; internal set; }
         /// <summary>
         /// Gets the set of variables that are blacklisted against
         /// caching or propagation due to their presence in active
@@ -117,7 +105,7 @@ namespace kOS.Safe.Compilation.IR
         /// <remarks>
         /// This data is populated during <see cref="SingleStaticAssignment.FinalizeSSA(IRCodePart)"/>.
         /// </remarks>
-        public HashSet<IRVariable> TriggerPropagationBlacklist { get; } = new HashSet<IRVariable>();
+        public HashSet<(string, IRScope)> TriggerPropagationBlacklist { get; } = new HashSet<(string, IRScope)>();
         /// <summary>
         /// Gets the instruction label with which to start the block.
         /// The special prefix "@BB#" will be overwritten during linking.
@@ -168,8 +156,9 @@ namespace kOS.Safe.Compilation.IR
         /// <param name="startIndex">The starting index in the original sequence of <see cref="Opcode"/>s.</param>
         /// <param name="endIndex">The ending index in the original sequence of <see cref="Opcode"/>s.</param>
         /// <param name="nonSequentialLabel">A non sequential label, if present.</param>
-        public BasicBlock(int startIndex, int endIndex, string nonSequentialLabel = null)
+        public BasicBlock(IRCodePart codePart, int startIndex, int endIndex, string nonSequentialLabel = null)
         {
+            CodePart = codePart;
             StartIndex = startIndex;
             EndIndex = endIndex;
             ID = nextID++;
@@ -302,42 +291,6 @@ namespace kOS.Safe.Compilation.IR
         {
             parameters.Add(parameter);
         }
-
-        public void StoreLocalVariable(SSAVariable variable)
-        {
-            SingleStaticAssignment.OverwriteVariable(variablesWritten, variable);
-            Scope.StoreLocalVariable(variable.Parent);
-        }
-        public void StoreGlobalVariable(SSAVariable variable)
-        {
-            SingleStaticAssignment.OverwriteVariable(variablesWritten, variable);
-            Scope.StoreGlobalVariable(variable.Parent);
-        }
-        public void StoreVariable(SSAVariable variable)
-        {
-            SingleStaticAssignment.OverwriteVariable(variablesWritten, variable);
-            Scope.StoreVariable(variable.Parent);
-        }
-        public bool TryStoreVariable(SSAVariable variable)
-        {
-            bool result = Scope.TryStoreVariable(variable.Parent);
-            if (result)
-                SingleStaticAssignment.OverwriteVariable(variablesWritten, variable);
-            return result;
-        }
-        
-        public IRVariableBase PushVariable(string name, Opcode opcode)
-        {
-            IRVariableBase result = Scope.GetVariableNamed(name);
-            if (result == null)
-            {
-                IRScope globalScope = Scope.GetGlobalScope();
-                result = new IRVariable(name, globalScope, opcode);
-                Scope.StoreGlobalVariable(result);
-            }
-            variablesRead.Add(result);
-            return result;
-        }
         /// <summary>
         /// Alias for <see cref="IRScope.GetScopeForVariableNamed(string)"/>
         /// using this block's <see cref="Scope"/>.
@@ -357,7 +310,7 @@ namespace kOS.Safe.Compilation.IR
         /// <remarks>
         /// Use extreme caution when manipulating the stack state.
         /// </remarks>
-        public void SetStackState(Stack<IRValue> stack)
+        public void SetStackState(Stack<IInterimOperand> stack)
         {
             while (stack.Count > 0)
                 exitStackState.Push(stack.Pop());
@@ -380,7 +333,7 @@ namespace kOS.Safe.Compilation.IR
             bool first = true;
             foreach (IRInstruction instruction in Instructions.Take(Instructions.Count - 1))
             {
-                foreach (Opcode opcode in instruction.EmitOpcode())
+                foreach (Opcode opcode in instruction.EmitOpcodes())
                 {
                     if (first)
                     {
@@ -390,9 +343,9 @@ namespace kOS.Safe.Compilation.IR
                     yield return opcode;
                 }
             }
-            foreach (IRValue stackValue in exitStackState)
+            foreach (IInterimOperand stackValue in exitStackState)
             {
-                foreach (Opcode opcode in stackValue.EmitPush())
+                foreach (Opcode opcode in stackValue.EmitOpcodes())
                 {
                     if (first)
                     {
@@ -404,7 +357,7 @@ namespace kOS.Safe.Compilation.IR
             }
             if (Instructions.Any())
             {
-                foreach (Opcode opcode in Instructions.Last().EmitOpcode())
+                foreach (Opcode opcode in Instructions.Last().EmitOpcodes())
                 {
                     if (first)
                     {

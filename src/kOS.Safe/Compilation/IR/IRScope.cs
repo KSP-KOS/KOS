@@ -9,12 +9,10 @@ namespace kOS.Safe.Compilation.IR
     /// </summary>
     public class IRScope
     {
-        private readonly Dictionary<string, IRVariableBase> variables =
-            new Dictionary<string, IRVariableBase>(StringComparer.OrdinalIgnoreCase);
         private IRScope parent;
         private readonly HashSet<IRScope> childScopes = new HashSet<IRScope>();
         private readonly HashSet<BasicBlock> blocks = new HashSet<BasicBlock>();
-        private readonly Dictionary<string, string> functionRefs = new Dictionary<string, string>();
+        private readonly HashSet<string> variables = new HashSet<string>();
 
         private int nextChildIndex = 0;
         private int index;
@@ -57,18 +55,7 @@ namespace kOS.Safe.Compilation.IR
         /// <summary>
         /// Gets the collection of variables associated with this scope.
         /// </summary>
-        public IReadOnlyCollection<IRVariableBase> Variables => variables.Values;
-        /// <summary>
-        /// Gets the collection of variable names associated with this
-        /// scope.
-        /// </summary>
-        public IReadOnlyCollection<string> VariableNames => variables.Keys;
-        /// <summary>
-        /// Gets the collection of variables written to within this scope.
-        /// This differs from <see cref="Variables"/> in that it can
-        /// contain multiple SSA variables of the same base name.
-        /// </summary>
-        public HashSet<IRVariableBase> VariablesWritten { get; } = new HashSet<IRVariableBase>();
+        public IReadOnlyCollection<string> Variables => variables;
         /// <summary>
         /// Gets a value indicating whether this instance represents the
         /// global scope.
@@ -81,84 +68,43 @@ namespace kOS.Safe.Compilation.IR
         /// simultaneously. The global scope implicitly contains every
         /// variable name.
         /// </remarks>
-        public bool IsGlobalScope { get; internal set; } = false;
+        public bool IsGlobalScope => ParentScope == null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IRScope"/> class.
         /// </summary>
         /// <param name="parent">The parent scope.</param>
-        public IRScope(IRScope parent)
+        /// <param name="headerBlock">The first block in this scope.</param>
+        public IRScope(IRScope parent, BasicBlock headerBlock)
         {
             ParentScope = parent;
+            HeaderBlock = headerBlock;
         }
 
-        public void StoreLocalVariable(IRVariableBase variable)
+        public void StoreLocalVariable(string variableName)
         {
-            variables[variable.Name] = variable;
+            variables.Add(variableName);
         }
-        public void StoreGlobalVariable(IRVariableBase variable)
+        public void StoreGlobalVariable(string variableName)
         {
             if (!IsGlobalScope)
-                ParentScope.StoreGlobalVariable(variable);
+                ParentScope.StoreGlobalVariable(variableName);
             else
-                StoreLocalVariable(variable);
-        }
-        public void StoreVariable(IRVariableBase variable)
-        {
-            if (!TryStoreVariable(variable))
-                StoreGlobalVariable(variable);
-        }
-        public bool TryStoreVariable(IRVariableBase variable)
-        {
-            if (variables.ContainsKey(variable.Name))
-            {
-                StoreLocalVariable(variable);
-                return true;
-            }
-            return ParentScope?.TryStoreVariable(variable) ?? false;
-        }
-        public void UnsetVariable(string variable)
-        {
-            if (variables.ContainsKey(variable))
-                variables.Remove(variable);
-            else
-                ParentScope?.UnsetVariable(variable);
-        }
-
-        public void EnrollFunction(string variable, string functionRef)
-        {
-            functionRefs[variable] = functionRef.Split('-').First();
-        }
-        public string GetFunctionNameFromVariable(string variable)
-        {
-            if (GetScopeForVariableNamed(variable).functionRefs.TryGetValue(variable, out var functionRef))
-                return functionRef;
-            return null;
-        }
-
-        public IRVariableBase GetVariableNamed(string name, bool includeParent = true)
-        {
-            if (variables.ContainsKey(name))
-                return variables[name];
-            return includeParent ? ParentScope?.GetVariableNamed(name, includeParent) : null;
+                StoreLocalVariable(variableName);
         }
 
         public bool IsVariableInScope(string name, bool includeParent = true)
         {
-            if (variables.ContainsKey(name))
+            if (variables.Contains(name))
                 return true;
             return includeParent && (ParentScope?.IsVariableInScope(name, includeParent) ?? false);
-        }
-        public bool IsVariableInScope(IRVariableBase variable)
-        {
-            return variable.Scope.IsEqualOrEncompassedBy(this);
         }
 
         public IRScope GetScopeForVariableNamed(string name)
         {
             if (IsGlobalScope)
                 return this;
-            if (variables.ContainsKey(name))
+            if (variables.Contains(name))
                 return this;
             return ParentScope.GetScopeForVariableNamed(name);
         }
@@ -167,8 +113,6 @@ namespace kOS.Safe.Compilation.IR
         {
             variables.Remove(name);
         }
-        public void ClearVariable(IRVariableBase variable)
-            => ClearVariable(variable.Name);
 
         public bool IsEqualOrEncompassedBy(IRScope scope)
             => this == scope || IsEncompassedBy(scope);
@@ -178,7 +122,7 @@ namespace kOS.Safe.Compilation.IR
                 return true;
             if (scope.childScopes.Contains(this))
                 return true;
-            return ParentScope?.IsEncompassedBy(scope) ?? false;
+            return IsGlobalScope || ParentScope.IsEncompassedBy(scope);
         }
 
         public IRScope GetGlobalScope()
@@ -200,7 +144,7 @@ namespace kOS.Safe.Compilation.IR
             => $"IRScope: {IndexString()}";
         public string IndexString()
         {
-            if (IsGlobalScope || ParentScope == null)
+            if (IsGlobalScope)
                 return "Global";
             if (ParentScope.IsGlobalScope)
                 return $"{index}";

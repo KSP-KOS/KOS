@@ -1,0 +1,493 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace kOS.Safe.Compilation.IR
+{
+    public interface IInterimVariableReference : IInterimOperand
+    {
+        string Name { get; }
+    }
+    public readonly struct InterimVariableReference : IInterimVariableReference
+    {
+        public short SourceLine { get; }
+        public short SourceColumn { get; }
+        public string Name { get; }
+        public bool IsInvariant => false;
+
+        public Type Type => typeof(Encapsulation.Structure);
+
+        public InterimVariableReference(string name, Opcode opcode) :
+            this(name, opcode.SourceLine, opcode.SourceColumn) { }
+        public InterimVariableReference(string name, short sourceLine, short sourceColumn)
+        {
+            Name = name;
+            SourceLine = sourceLine;
+            SourceColumn = sourceColumn;
+        }
+
+        public IEnumerable<Opcode> EmitOpcodes()
+        {
+            yield return new OpcodePush(Name)
+            {
+                SourceLine = SourceLine,
+                SourceColumn = SourceColumn
+            };
+        }
+
+        public override string ToString()
+            => $"{Name}";
+        public override bool Equals(object obj)
+            => obj is InterimVariableReference variable &&
+            string.Equals(Name, variable.Name, StringComparison.OrdinalIgnoreCase);
+        public override int GetHashCode()
+            => Name.ToLower().GetHashCode();
+    }
+
+    public readonly struct InterimVariableReference<T> : IInterimVariableReference, IEvaluatableToConstant where T : SSADefinition
+    {
+        public short SourceLine { get; }
+        public short SourceColumn { get; }
+        public T Reference { get; }
+        public string Name => Reference.Name;
+        public bool IsInvariant => Reference.IsInvariant;
+        public Type Type => Reference.Type;
+
+        public InterimVariableReference(T reference, short sourceLine, short sourceColumn)
+        {
+            Reference = reference;
+            SourceLine = sourceLine;
+            SourceColumn = sourceColumn;
+        }
+        public InterimVariableReference(T reference, InterimVariableReference oldRef) :
+            this(reference, oldRef.SourceLine, oldRef.SourceColumn) { }
+
+        public IEnumerable<Opcode> EmitOpcodes()
+        {
+            yield return new OpcodePush(Name)
+            {
+                SourceLine = SourceLine,
+                SourceColumn = SourceColumn
+            };
+        }
+
+        public InterimConstantValue Evaluate()
+        {
+            if (!IsInvariant)
+                throw new InvalidOperationException();
+            return Reference.Evaluate();
+        }
+
+        public override string ToString()
+            => $"{Name}";
+        public override bool Equals(object obj)
+            => obj is InterimVariableReference<T> variable &&
+            Reference.Equals(variable.Reference);
+        public override int GetHashCode()
+            => Reference.GetHashCode();
+    }
+
+    internal static class SSAIndexIssuer
+    {
+        private static readonly Dictionary<string, uint> indices = new Dictionary<string, uint>();
+        public static uint GetIndex(string name)
+        {
+            if (indices.ContainsKey(name))
+                return ++indices[name];
+            indices[name] = 0;
+            return 0;
+        }
+    }
+
+    public abstract class SSADefinition
+    {
+        protected readonly uint ssaIndex;
+        protected Dictionary<IRUnset, SSADefinition> potentialUnsetSites;
+        protected readonly Dictionary<SSASetDefinition, SSAPotentialDefinition> potentialClobberDefinitions =
+            new Dictionary<SSASetDefinition, SSAPotentialDefinition>();
+
+        public enum SetState
+        {
+            Set = 1,
+            PotentiallyUnset = 0,
+            Unset = -1
+        }
+
+        public string Name { get; }
+        public abstract bool IsInvariant { get; }
+        public abstract Type Type { get; }
+        public virtual SetState State { get; }
+        public IRInstruction AssignedAt { get; }
+        protected SSADefinition(string name)
+        {
+            Name = name;
+            ssaIndex = SSAIndexIssuer.GetIndex(name);
+        }
+        protected SSADefinition(string name, IRInstruction assignedAt) : this(name)
+        {
+            AssignedAt = assignedAt;
+        }
+        protected SSADefinition(string name, SetState state, IRInstruction assignedAt) : this(name, assignedAt)
+        {
+            State = state;
+        }
+
+        public abstract SSADefinition PotentiallyUnset(IRUnset potentiallyUnsetAt);
+        public abstract InterimConstantValue Evaluate();
+
+        public SSADefinition PotentiallyOverwrite(SSASetDefinition newDefinition)
+        {
+            if (State == SetState.Unset)
+                return this;
+            if (newDefinition.State == SetState.Unset)
+                throw new ArgumentException($"{nameof(newDefinition)} must not be definitively unset.");
+            if (newDefinition.Equals(this))
+                return this;
+            if (potentialClobberDefinitions.TryGetValue(newDefinition, out SSAPotentialDefinition result))
+                return result;
+            result = new SSAPotentialDefinition(this, newDefinition);
+            potentialClobberDefinitions[newDefinition] = result;
+            return result;
+        }
+
+        protected static string SetState_ToString(SetState state)
+        {
+            switch (state)
+            {
+                default:
+                case SetState.Set:
+                    return "#";
+                case SetState.PotentiallyUnset:
+                    return "?";
+                case SetState.Unset:
+                    return "⊥";
+            }
+        }
+        public override string ToString()
+            => $"{Name} {SetState_ToString(State)}{ssaIndex}";
+        /*public override bool Equals(object obj)
+            => obj == this;
+        public override int GetHashCode()
+            => (ssaIndex, Name).GetHashCode();*/
+    }
+
+    public class SSASetDefinition : SSADefinition
+    {
+        private static readonly Dictionary<(string, IRCall), SSASetDefinition> postCallDefinitions =
+            new Dictionary<(string, IRCall), SSASetDefinition>();
+
+        public IRAssign DefinedAt { get; }
+        public override bool IsInvariant => State != SetState.PotentiallyUnset && DefinedAt.IsInvariant && AssignedAt.IsInvariant;
+        public override Type Type { get; }
+
+        public SSASetDefinition(string name, IRAssign assignedAt) : base(name, SetState.Set, assignedAt)
+        {
+            DefinedAt = assignedAt;
+            potentialUnsetSites = new Dictionary<IRUnset, SSADefinition>();
+            Type = DefinedAt.Value.Type;
+        }
+        public SSASetDefinition(string name, IRUnset unsetAt) : base(name, SetState.Unset, unsetAt)
+        {
+            Type = null;
+        }
+        private SSASetDefinition(string name, IRCall assignedIn) : base(name, SetState.Set, assignedIn)
+        {
+            Type = typeof(Encapsulation.Structure);
+        }
+        public static SSASetDefinition FromCallSite(string name, IRCall assignedIn)
+        {
+            if (postCallDefinitions.TryGetValue((name, assignedIn), out SSASetDefinition result))
+                return result;
+            result = new SSASetDefinition(name, assignedIn);
+            postCallDefinitions[(name, assignedIn)] = result;
+            return result;
+        }
+        private SSASetDefinition(SSASetDefinition definition, IRUnset potentiallyUnsetAt) :
+            base(definition.Name, SetState.PotentiallyUnset, potentiallyUnsetAt)
+        {
+            DefinedAt = definition.DefinedAt;
+            potentialUnsetSites = definition.potentialUnsetSites;
+        }
+        public override SSADefinition PotentiallyUnset(IRUnset potentiallyUnsetAt)
+        {
+            if (State == SetState.Unset)
+                return this;
+
+            if (potentialUnsetSites.TryGetValue(potentiallyUnsetAt, out SSADefinition result))
+                return result;
+
+            result = new SSASetDefinition(this, potentiallyUnsetAt);
+            potentialUnsetSites[potentiallyUnsetAt] = result;
+            return result;
+        }
+        public override InterimConstantValue Evaluate()
+            => (DefinedAt.Value as IEvaluatableToConstant).Evaluate();
+    }
+    public class SSAPotentialDefinition : SSADefinition, IMultipleOperandInstruction
+    {
+        private static readonly Dictionary<(IRUnset, SSASetDefinition), SSAPotentialDefinition> potentialSets =
+            new Dictionary<(IRUnset, SSASetDefinition), SSAPotentialDefinition>();
+
+        public SSADefinition Preceding { get; private set; }
+        public SSADefinition Succeeding { get; private set; }
+        public IRUnset Conditional { get; }
+        public override Type Type => State == SetState.Set ?
+            PhiNode<SSADefinition>.GetFirstCommonBaseType(Preceding.Type, Succeeding.Type) : null;
+        public override bool IsInvariant => Conditional?.IsInvariant ?? false;
+
+        public IEnumerable<IInterimOperand> Operands
+        {
+            get
+            {
+                short sourceLine = Conditional?.SourceLine ?? -1;
+                short sourceColumn = Conditional?.SourceColumn ?? -1;
+                yield return new InterimVariableReference<SSADefinition>(Preceding, sourceLine, sourceColumn);
+                yield return new InterimVariableReference<SSADefinition>(Succeeding, sourceLine, sourceColumn);
+            }
+        }
+        public int OperandCount => 2;
+
+        internal SSAPotentialDefinition(SSADefinition preceding, SSASetDefinition succeeding) :
+            base(preceding.Name, (SetState)Math.Min((int)preceding.State, (int)succeeding.State), succeeding.AssignedAt)
+        {
+            if (!preceding.Name.Equals(succeeding.Name, StringComparison.OrdinalIgnoreCase))
+                throw new ArgumentException("Preceding and suceeding definitions must share a name.");
+            if (succeeding.State != SetState.Set)
+                throw new ArgumentException("The succeeding definition must be definitively set.");
+            Preceding = preceding;
+            Succeeding = succeeding;
+            potentialUnsetSites = new Dictionary<IRUnset, SSADefinition>();
+            Conditional = preceding.AssignedAt as IRUnset;
+        }
+        private SSAPotentialDefinition(SSAPotentialDefinition definition, IRUnset potentiallyUnsetAt) :
+            base(definition.Name, SetState.PotentiallyUnset, potentiallyUnsetAt)
+        {
+            Preceding = definition.Preceding;
+            Succeeding = definition.Succeeding;
+            potentialUnsetSites = definition.potentialUnsetSites;
+            Conditional = definition.Conditional;
+        }
+        private SSAPotentialDefinition(SSASetDefinition potentialDefinition, IRUnset condition) :
+            base(potentialDefinition.Name, SetState.PotentiallyUnset, potentialDefinition.AssignedAt)
+        {
+            Preceding = null;
+            Succeeding = potentialDefinition;
+            potentialUnsetSites = new Dictionary<IRUnset, SSADefinition>();
+            Conditional = condition;
+        }
+        public static SSAPotentialDefinition PotentiallySet(SSASetDefinition potentialDefinition, IRUnset condition)
+        {
+            if (potentialSets.TryGetValue((condition, potentialDefinition), out var potentialSet))
+                return potentialSet;
+            SSAPotentialDefinition result = new SSAPotentialDefinition(potentialDefinition, condition);
+            potentialSets[(condition, potentialDefinition)] = result;
+            return result;
+        }
+
+        public override SSADefinition PotentiallyUnset(IRUnset potentiallyUnsetAt)
+        {
+            if (State == SetState.Unset)
+                return this;
+
+            if (potentialUnsetSites.TryGetValue(potentiallyUnsetAt, out SSADefinition result))
+                return result;
+
+            result = new SSAPotentialDefinition(this, potentiallyUnsetAt);
+            potentialUnsetSites[potentiallyUnsetAt] = result;
+            return result;
+        }
+
+        public void ForEachOperand(Action<IInterimOperand> action)
+        {
+            action(new InterimVariableReference<SSADefinition>(Preceding, 0, 0));
+            action(new InterimVariableReference<SSADefinition>(Succeeding, 0, 0));
+        }
+        public void MutateEachOperand(Func<IInterimOperand, IInterimOperand> mutateFunc)
+        {
+            Preceding = Mutate(mutateFunc, Preceding);
+            Succeeding = Mutate(mutateFunc, Succeeding);
+        }
+        private static SSADefinition Mutate(Func<IInterimOperand, IInterimOperand> func, SSADefinition definition)
+        {
+            IInterimOperand result = func(new InterimVariableReference<SSADefinition>(definition, 0, 0));
+            return ((InterimVariableReference<SSADefinition>)result).Reference;
+        }
+        public override InterimConstantValue Evaluate()
+        {
+            if (!IsInvariant)
+                throw new InvalidOperationException();
+            if (Conditional.IsExecutable)
+                return Succeeding.Evaluate();
+            else
+                return Preceding.Evaluate();
+        }
+    }
+    public class PhiVariable : SSADefinition
+    {
+        private readonly SetState internalSetState = SetState.Set;
+
+        public PhiNode<SSADefinition> Node { get; }
+        public override SetState State
+        {
+            get
+            {
+                IEnumerable<SSADefinition> possibleValues = Node.PossibleValues.Values;
+                if (possibleValues.Any(v => v.State < SetState.Set))
+                {
+                    if (possibleValues.All(v => v.State == SetState.Unset))
+                        return SetState.Unset;
+                    else
+                        return SetState.PotentiallyUnset;
+                }
+                return internalSetState;
+            }
+        }
+        public override bool IsInvariant => Node.IsInvariant;
+        public override Type Type => Node.Type;
+
+        public PhiVariable(string name, PhiNode<SSADefinition> node) : base(name)
+        {
+            Node = node;
+        }
+
+        public PhiVariable(PhiVariable phiVariable, IRUnset potentiallyUnsetAt) : base(phiVariable.Name, potentiallyUnsetAt)
+        {
+            Node = phiVariable.Node;
+            internalSetState = SetState.PotentiallyUnset;
+        }
+
+        public override SSADefinition PotentiallyUnset(IRUnset potentiallyUnsetAt)
+        {
+            if (potentialUnsetSites.TryGetValue(potentiallyUnsetAt, out SSADefinition result))
+                return result;
+
+            result = new PhiVariable(this, potentiallyUnsetAt);
+            potentialUnsetSites[potentiallyUnsetAt] = result;
+            return result;
+        }
+
+        public override InterimConstantValue Evaluate()
+            => Node.Evaluate();
+
+        public override string ToString()
+            => $"{Name} #{ssaIndex}";
+        public override bool Equals(object obj)
+            => obj == this;
+        public override int GetHashCode()
+            => (ssaIndex, Name).GetHashCode();
+    }
+    public class PhiNode : PhiNode<SSADefinition>
+    {
+        protected override bool ObjIsInvariant(SSADefinition obj)
+            => obj.IsInvariant;
+        protected override Type ObjType(SSADefinition obj)
+            => obj.Type;
+        public PhiVariable Result { get; }
+
+        public PhiNode(string name)
+        {
+            Result = new PhiVariable(name, this);
+        }
+        protected override IEnumerable<IInterimOperand> Operands =>
+            PossibleValues.Select(kvp =>
+                {
+                    SSASetDefinition ssaDef = kvp.Value as SSASetDefinition;
+                    short sourceLine = ssaDef?.DefinedAt.SourceLine ?? -1;
+                    short sourceColumn = ssaDef?.DefinedAt.SourceColumn ?? -1;
+                    return new InterimVariableReference<SSADefinition>(kvp.Value, sourceLine, sourceColumn) as IInterimOperand;
+                });
+
+        protected override InterimConstantValue EvaluateObj(SSADefinition obj)
+            => obj.Evaluate();
+
+        protected override void ForEachOperand(Action<IInterimOperand> action)
+        {
+            foreach (SSADefinition variable in PossibleValues.Values)
+                action(new InterimVariableReference<SSADefinition>(variable, -1, -1));
+        }
+
+        protected override void MutateEachOperand(Func<IInterimOperand, IInterimOperand> mutateFunc)
+        {
+            foreach (BasicBlock block in PossibleValues.Keys)
+                PossibleValues[block] = ((InterimVariableReference<SSADefinition>)mutateFunc(new InterimVariableReference<SSADefinition>(PossibleValues[block], -1, -1))).Reference;
+        }
+
+    }
+    public abstract class PhiNode<T> : IMultipleOperandInstruction
+    {
+        public bool IsInvariant
+        {
+            get
+            {
+                IEnumerable<KeyValuePair<BasicBlock, T>> reachableValues =
+                    PossibleValues.Where(kvp => kvp.Key.IsExecutable);
+                if (!reachableValues.Any())
+                    return true;
+                // Return true if there is exactly one reachable value and it is invariant.
+                return reachableValues.Any() && !reachableValues.Skip(1).Any() && ObjIsInvariant(reachableValues.First().Value);
+            }
+        }
+        protected abstract bool ObjIsInvariant(T obj);
+        public Type Type
+        {
+            get
+            {
+                IEnumerable<T> reachableValues =
+                    PossibleValues.Where(kvp => kvp.Key.IsExecutable).Select(kvp => kvp.Value);
+                if (!reachableValues.Any())
+                    return null;
+                Type proposedType = ObjType(reachableValues.FirstOrDefault());
+                foreach (T variable in reachableValues.Skip(1))
+                    proposedType = GetFirstCommonBaseType(proposedType, ObjType(variable));
+
+                return proposedType;
+            }
+        }
+        protected abstract Type ObjType(T obj);
+        public Dictionary<BasicBlock, T> PossibleValues { get; } = new Dictionary<BasicBlock, T>();
+
+        IEnumerable<IInterimOperand> IMultipleOperandInstruction.Operands => Operands;
+
+        protected abstract IEnumerable<IInterimOperand> Operands { get; }
+
+        int IMultipleOperandInstruction.OperandCount => PossibleValues.Count;
+
+        public virtual InterimConstantValue Evaluate()
+        {
+            if (!IsInvariant)
+                throw new InvalidOperationException();
+            T variable = PossibleValues.First(kvp => kvp.Key.IsExecutable).Value;
+            return EvaluateObj(variable);
+        }
+        protected abstract InterimConstantValue EvaluateObj(T obj);
+
+        public static Type GetFirstCommonBaseType(Type typeA, Type typeB)
+        {
+            if (typeA == null || typeB == null) return null;
+
+            Type current = typeA;
+            while (current != null)
+            {
+                if (current.IsAssignableFrom(typeB))
+                {
+                    return current;
+                }
+                current = current.BaseType;
+            }
+
+#if DEBUG
+            throw new Exceptions.KOSYouShouldNeverSeeThisException($"Couldn't find a base class between {typeA} and {typeB}, when all kOS types should derive from {nameof(Encapsulation.Structure)}.");
+#else
+            return typeof(Encapsulation.Structure);
+#endif
+        }
+
+        void IOperandInstructionBase.ForEachOperand(Action<IInterimOperand> action)
+            => ForEachOperand(action);
+        protected abstract void ForEachOperand(Action<IInterimOperand> action);
+
+        void IOperandInstructionBase.MutateEachOperand(Func<IInterimOperand, IInterimOperand> mutateFunc)
+            => MutateEachOperand(mutateFunc);
+        protected abstract void MutateEachOperand(Func<IInterimOperand, IInterimOperand> mutateFunc);
+    }
+}

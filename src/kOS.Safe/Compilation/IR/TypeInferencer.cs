@@ -83,7 +83,8 @@ namespace kOS.Safe.Compilation.IR
                     return suffixType;
                 if (typeof(Lexicon).IsAssignableFrom(structureType))
                     return typeof(Structure);
-                throw new Exceptions.KOSSuffixUseException("get", suffix, structureType.ToString());
+                //throw new Exceptions.KOSSuffixUseException("get", suffix, structureType.ToString());
+                return typeof(Structure);
             }
 
             // Processing won't work for an abstract type. They should already be added in the constructor.
@@ -181,7 +182,8 @@ namespace kOS.Safe.Compilation.IR
         public static Type GetTypeForIndex(Type type)
         {
             if (!typeof(IIndexable).IsAssignableFrom(type))
-                throw new InvalidOperationException($"Tried to get the index from a non-indexable type {type}");
+                //throw new InvalidOperationException($"Tried to get the index from a non-indexable type {type}");
+                return typeof(Structure);
 
             if (indexTypes.TryGetValue(type, out Type indexType))
             {

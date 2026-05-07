@@ -13,7 +13,6 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 
         public void ApplyPass(List<BasicBlock> blocks)
         {
-            Queue<BasicBlock> worklist = new Queue<BasicBlock>(blocks);
             IEnumerator<BasicBlock> enumerator = blocks.GetEnumerator();
             while (enumerator.MoveNext())
             {
@@ -25,159 +24,112 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             for (int i = 0; i < block.Instructions.Count; i++)
             {
                 IRInstruction instruction = block.Instructions[i];
-                switch (instruction)
+                if (instruction is IRPop pop)
                 {
-                    case IRPop pop:
-                        if (AttemptReductionToConstant(pop.Value) is IRConstant)
-                        {
-                            block.Instructions.RemoveAt(i);
-                            i--;
-                        }
+                    if (pop.IsInvariant)
+                    {
+                        block.Instructions.RemoveAt(i);
+                        i--;
                         continue;
-                    case IRAssign assign:
-                        assign.Value = AttemptReductionToConstant(assign.Value);
-                        break;
-                    case IRSuffixSet suffixSet:
-                        suffixSet.Value = AttemptReductionToConstant(suffixSet.Value);
-                        suffixSet.Object = AttemptReductionToConstant(suffixSet.Object);
-                        break;
-                    case IRIndexSet indexSet:
-                        indexSet.Value = AttemptReductionToConstant(indexSet.Value);
-                        indexSet.Object = AttemptReductionToConstant(indexSet.Object);
-                        indexSet.Index = AttemptReductionToConstant(indexSet.Index);
-                        break;
-                    case IRBranch branch:
-                        if (branch.True == branch.False)
-                            block.Instructions[i] = new IRJump(branch.True, branch.SourceLine, branch.SourceColumn);
-                        else if (AttemptReductionToConstant(branch.Condition) is IRConstant branchConstant)
+                    }
+                }
+                else if (instruction is IRBranch branch)
+                {
+                    if (branch.True == branch.False)
+                    {
+                        block.Instructions[i] = new IRJump(block, branch.True, branch.SourceLine, branch.SourceColumn);
+                        continue;
+                    }
+                    if (branch.IsInvariant)
+                    {
+                        BasicBlock permanentBlock, deprecatedBlock;
+                        InterimConstantValue branchConstant = (branch.Condition as IEvaluatableToConstant).Evaluate();
+                        if (branchConstant != null)
                         {
-                            BasicBlock permanentBlock, deprecatedBlock;
                             (permanentBlock, deprecatedBlock) = Convert.ToBoolean(branchConstant.Value) ? (branch.True, branch.False) : (branch.False, branch.True);
-                            block.Instructions[i] = new IRJump(permanentBlock, new OpcodeBranchJump() { SourceLine = branch.SourceLine, SourceColumn = branch.SourceColumn });
+                            block.Instructions[i] = new IRJump(block, permanentBlock, new OpcodeBranchJump() { SourceLine = branch.SourceLine, SourceColumn = branch.SourceColumn });
                             block.RemoveSuccessor(deprecatedBlock);
                         }
-                        break;
+                    }
+                }
+                foreach (IRInstruction inst in instruction.DepthFirst())
+                {
+                    if (inst is IOperandInstructionBase operandInstruction)
+                    {
+                        operandInstruction.MutateEachOperand(AttemptReductionToConstant);
+                    }
                 }
             }
         }
-        private static IRValue AttemptReductionToConstant(IRValue input)
+        private static IInterimOperand AttemptReductionToConstant(IInterimOperand input)
         {
-            if (input is IRConstant constant)
-                return constant;
-            if (!(input is IRTemp temp))
-                return input;
-            return AttemptReduction(temp.Parent);
+            if (input is IResultingInstruction instruction)
+                return AttemptReduction(instruction);
+            return input;
         }
-        public static IRValue AttemptReduction(IRInstruction instruction)
+
+        public static IInterimOperand AttemptReduction(IResultingInstruction instruction)
         {
+            // Only fold into an IRConstant when it is a primitive that can be stored in ksm.
+            if (!typeof(Encapsulation.PrimitiveStructure).IsAssignableFrom(instruction.Type))
+                return instruction;
+
             switch (instruction)
             {
                 case IRUnaryOp unaryOp:
                     return ReduceUnary(unaryOp);
                 case IRBinaryOp binaryOp:
                     return ReduceBinary(binaryOp);
-                case IRSuffixGet suffixGet:
-                    return ReduceSuffixGet(suffixGet);
-                case IRIndexGet indexGet:
-                    return ReduceIndexGet(indexGet);
                 case IRCall call:
                     return ReduceCall(call);
-                case IResultingInstruction resulting:
-                    return resulting.Result;
+                default:
+                    return instruction;
             }
-            throw new ArgumentException($"{instruction.GetType()} is not supported for constant folding.");
         }
-        private static IRValue ReduceUnary(IRUnaryOp instruction)
+        private static IInterimOperand ReduceUnary(IRUnaryOp instruction)
         {
-            if (instruction.Operand is IRTemp temp)
-                instruction.Operand = AttemptReduction(temp.Parent);
+            if (instruction.IsInvariant)
+                return instruction.Evaluate();
+            return instruction;
+        }
+        private static IInterimOperand ReduceBinary(IRBinaryOp instruction)
+        {
+            if (instruction.IsInvariant)
+                return instruction.Evaluate();
 
-            if (instruction.Operand is IRConstant constant)
-            {
-                object input = constant.Value;
-                IRValue result;
-                try
-                {
-                    switch (instruction.Operation)
-                    {
-                        case OpcodeMathNegate _:
-                            result = new IRConstant(OpcodeMathNegate.StaticOperation(input), instruction);
-                            break;
-                        case OpcodeLogicNot _:
-                            result = new IRConstant(OpcodeLogicNot.StaticOperation(input), instruction);
-                            break;
-                        case OpcodeLogicToBool _:
-                            result = new IRConstant(OpcodeLogicToBool.StaticOperation(input), instruction);
-                            break;
-                        default:
-                            result = instruction.Result;
-                            break;
-                    }
-                    instruction.Result = result;
-                }
-                catch (KOSUnaryOperandTypeException unaryTypeException)
-                {
-                    throw new KOSCompileException(instruction, unaryTypeException);
-                }
-            }
-            return instruction.Result;
-        }
-        private static IRValue ReduceBinary(IRBinaryOp instruction)
-        {
-            if (instruction.Left is IRTemp tempL)
-            {
-                instruction.Left = AttemptReduction(tempL.Parent);
-            }
-            if (instruction.Right is IRTemp tempR)
-            {
-                instruction.Right = AttemptReduction(tempR.Parent);
-            }
             // Put constants to the right, if there are any
-            if (instruction.IsCommutative && instruction.Left is IRConstant && !(instruction.Right is IRConstant))
+            if (instruction.IsCommutative && instruction.Left is InterimConstantValue && !(instruction.Right is InterimConstantValue))
             {
                 instruction.SwapOperands();
             }
             // If this is false, neither are constants after the last step, unless this isn't commutative, in which case this cleverness doesn't matter.
-            if (instruction.Right is IRConstant constantR)
+            if (instruction.Right is InterimConstantValue constantR)
             {
                 // If this is true, both are constants
-                if (instruction.Left is IRConstant constantL)
+                if (instruction.Left is InterimConstantValue)
                 {
-                    object left = constantL.Value;
-                    object right = constantR.Value;
-                    try
-                    {
-                        IRConstant result = new IRConstant(instruction.Operation.ExecuteCalculation(left, right), instruction);
-                        instruction.Result = result;
-                    }
-                    catch (KOSBinaryOperandTypeException binaryTypeException)
-                    {
-                        throw new KOSCompileException(instruction, binaryTypeException);
-                    }
-                    return instruction.Result;
+                    return instruction.Evaluate();
                 }
                 else if (instruction.IsCommutative)
                 {
                     // The right is constant and the left is not...
                     // But what if left.Parent is commutative with this operation and has a constant?
-                    if (instruction.Left is IRTemp temp &&
-                        temp.Parent is IRBinaryOp leftOp &&
+                    if (instruction.Left is IRBinaryOp leftOp &&
                         leftOp.Operation.GetType() == instruction.Operation.GetType() &&
-                        leftOp.Right is IRConstant constantL1)
+                        leftOp.Right is InterimConstantValue constantL1)
                     {
                         object right = constantR.Value;
                         object left = constantL1.Value;
                         try
                         {
-                            IRConstant result = new IRConstant(instruction.Operation.ExecuteCalculation(left, right), instruction);
-                            instruction.Result = result;
+                            InterimConstantValue result = new InterimConstantValue(instruction.Operation.ExecuteCalculation(left, right), instruction);
                             leftOp.Right = result;
                         }
                         catch (KOSBinaryOperandTypeException binaryTypeException)
                         {
                             throw new KOSCompileException(instruction, binaryTypeException);
                         }
-                        return leftOp.Result;
+                        return leftOp;
                     }
                 }
                 // Shortcuts for math operations where both sides don't need to be constant
@@ -187,7 +139,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         // X * 0 = 0
                         if (Encapsulation.ScalarIntValue.Zero.Equals(constantR.Value))
                             return constantR;
-                        if (ReduceDivMult(instruction, constantR, out IRValue newResult))
+                        if (ReduceDivMult(instruction, constantR, out IInterimOperand newResult))
                             return newResult;
                         break;
                     case OpcodeMathDivide _:
@@ -205,7 +157,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     case OpcodeMathPower _:
                         // X^0 = 1
                         if (Encapsulation.ScalarIntValue.Zero.Equals(constantR.Value))
-                            return new IRConstant(Encapsulation.ScalarIntValue.One, instruction);
+                            return new InterimConstantValue(Encapsulation.ScalarIntValue.One, instruction);
                         // X^1 = X
                         if (Encapsulation.ScalarIntValue.One.Equals(constantR.Value))
                             return instruction.Left;
@@ -223,7 +175,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         // So this is an acceptable assumption that improves performance and eliminates an error.
                         // TODO: Add an "EXIT" (EOP) command to the language because this will break the
                         // PRINT(1/0) shortcut to cause a program to terminate.
-                        if (instruction.Left is IRConstant constantL &&
+                        if (instruction.Left is InterimConstantValue constantL &&
                             Encapsulation.ScalarIntValue.Zero.Equals(constantL.Value))
                             return constantL;
                         // X / X = 1
@@ -231,13 +183,13 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         // But that would otherwise throw a "Tried to push infinite on to the stack" error
                         // So this is an acceptable assumption that improves performance and eliminates an error.
                         if (instruction.Left == instruction.Right)
-                            return new IRConstant(Encapsulation.ScalarIntValue.One, instruction);
+                            return new InterimConstantValue(Encapsulation.ScalarIntValue.One, instruction);
                         break;
                 }
             }
-            return instruction.Result;
+            return instruction;
         }
-        private static bool ReduceDivMult(IRBinaryOp instruction, IRConstant secondOperand, out IRValue newResult)
+        private static bool ReduceDivMult(IRBinaryOp instruction, InterimConstantValue secondOperand, out IInterimOperand newResult)
         {
             // X */ 1 = X
             if (Encapsulation.ScalarIntValue.One.Equals(secondOperand.Value))
@@ -248,91 +200,27 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             // X */ -1 = -X
             if (secondOperand.Value.Equals(-Encapsulation.ScalarIntValue.One))
             {
-                IRTemp tempResult = instruction.Result as IRTemp;
-                tempResult.Parent = new IRUnaryOp(
-                    tempResult,
+                newResult = new IRUnaryOp(
+                    instruction.Block,
                     new OpcodeMathNegate()
                     {
                         SourceColumn = instruction.SourceColumn,
                         SourceLine = instruction.SourceLine
                     },
                     instruction.Left);
-                newResult = tempResult;
                 return true;
             }
             newResult = null;
             return false;
         }
 
-        private static IRValue ReduceSuffixGet(IRSuffixGet instruction)
-        {
-            if (instruction.Object is IRTemp temp)
-            {
-                instruction.Object = AttemptReduction(temp.Parent);
-            }
-            return instruction.Result;
-        }
-        private static IRValue ReduceIndexGet(IRIndexGet instruction)
-        {
-            if (instruction.Object is IRTemp tempObj)
-            {
-                instruction.Object = AttemptReduction(tempObj.Parent);
-            }
-            if (instruction.Index is IRTemp tempIndex)
-            {
-                instruction.Index = AttemptReduction(tempIndex.Parent);
-            }
-            return instruction.Result;
-        }
-        private static IRValue ReduceCall(IRCall instruction)
+        private static IInterimOperand ReduceCall(IRCall instruction)
         {
             // TODO: Add reduction for specific functions. E.g. mod(X, 1) = 0, round/ceiling/floor, Ln/Log10, min/max
-            for (int i = instruction.Arguments.Count - 1; i >= 0; i--)
-            {
-                if (instruction.Arguments[i] is IRTemp temp)
-                    instruction.Arguments[i] = AttemptReduction(temp.Parent);
-            }
-            string functionName = instruction.Function.Replace("()", "");
-            if (Optimizer.FunctionManager.Exists(functionName) && instruction.Arguments.All(arg => arg is IRConstant))
-            {
-                try
-                {
-                    switch (functionName)
-                    {
-                        case "abs":
-                        case "mod":
-                        case "floor":
-                        case "ceiling":
-                        case "round":
-                        case "sqrt":
-                        case "ln":
-                        case "log10":
-                        case "min":
-                        case "max":
-                        case "sin":
-                        case "cos":
-                        case "tan":
-                        case "arcsin":
-                        case "arccos":
-                        case "arctan":
-                        case "arctan2":
-                        case "anglediff":
-                            InterimCPU interimCPU = Optimizer.InterimCPU;
-                            interimCPU.Boot();  // Clear the stack out of caution.
-                            interimCPU.PushArgumentStack(new Execution.KOSArgMarkerType());
-                            foreach (IRValue arg in instruction.Arguments)
-                                interimCPU.PushArgumentStack(((IRConstant)arg).Value);
-                            Optimizer.FunctionManager.CallFunction(functionName);
-                            instruction.Result = new IRConstant(interimCPU.PopValueArgument(), instruction);
-                            return instruction.Result;
-                    }
-                }
-                catch (KOSException e)
-                {
-                    throw new KOSCompileException(instruction, e);
-                }
-            }
-            return instruction.Result;
+            if (instruction.IsInvariant)
+                return instruction.Evaluate();
+
+            return instruction;
         }
     }
 }

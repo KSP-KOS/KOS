@@ -11,13 +11,13 @@ namespace kOS.Safe.Compilation.IR
         /// <summary>
         /// Applies an action for each operand.
         /// </summary>
-        void ForEachOperand(Action<IRValue> action);
+        void ForEachOperand(Action<IInterimOperand> action);
 
         /// <summary>
         /// Mutates each operand by replacing it with the result of <paramref name="mutateFunc"/> applied to that operand.
         /// </summary>
         /// <param name="mutateFunc">The mutation function.</param>
-        void MutateEachOperand(Func<IRValue, IRValue> mutateFunc);
+        void MutateEachOperand(Func<IInterimOperand, IInterimOperand> mutateFunc);
     }
 
     /// <summary>
@@ -28,7 +28,7 @@ namespace kOS.Safe.Compilation.IR
         /// <summary>
         /// Gets or sets the operand for this instruction.
         /// </summary>
-        IRValue Operand { get; set; }
+        IInterimOperand Operand { get; set; }
     }
     /// <summary>
     /// Represents instructions which operate on multiple operands.
@@ -38,7 +38,7 @@ namespace kOS.Safe.Compilation.IR
         /// <summary>
         /// Gets the collection of operands for the instruction.
         /// </summary>
-        IEnumerable<IRValue> Operands { get; }
+        IEnumerable<IInterimOperand> Operands { get; }
         /// <summary>
         /// Gets the number of operands for this instruction.
         /// </summary>

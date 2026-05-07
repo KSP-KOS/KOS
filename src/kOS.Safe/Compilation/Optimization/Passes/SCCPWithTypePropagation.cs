@@ -25,7 +25,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         {
             IRCodePart codePart = Optimizer.Code;
 
-            Dictionary<SSAVariable, HashSet<IOperandInstructionBase>> ssaUses =
+            Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> ssaUses =
                 MapUsesAndPropagateTypes(codePart);
 
             if (Optimizer.OptimizationLevel > OptimizationLevel.None)
@@ -44,12 +44,12 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         /// A dictionary of instructions (or phi variables) that make use
         /// of SSA variables (indirectly or directly).
         /// </returns>
-        private static Dictionary<SSAVariable, HashSet<IOperandInstructionBase>> MapUsesAndPropagateTypes(IRCodePart codePart)
+        private static Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> MapUsesAndPropagateTypes(IRCodePart codePart)
         {
-            Dictionary<SSAVariable, HashSet<IOperandInstructionBase>> variableUses =
-                new Dictionary<SSAVariable, HashSet<IOperandInstructionBase>>();
+            Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> variableUses =
+                new Dictionary<SSADefinition, HashSet<IOperandInstructionBase>>();
             HashSet<BasicBlock> visitedBlocks = new HashSet<BasicBlock>();
-            Dictionary<SSAVariable, bool> invariance = new Dictionary<SSAVariable, bool>();
+            Dictionary<SSADefinition, (Type, bool)> typeAndInvarianceCache = new Dictionary<SSADefinition, (Type, bool)>();
 
             // Apply the algorithm starting from each entry block.
             foreach (BasicBlock root in codePart.RootBlocks)
@@ -75,12 +75,12 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             continue;
 
                         // Process Phis first, as if they are instructions.
-                        foreach (PhiVariable phi in block.Phis)
+                        foreach (PhiNode phi in block.Phis.Values)
                         {
-                            foreach (SSAVariable variable in phi.PossibleValues.Values)
+                            foreach (SSADefinition variable in phi.PossibleValues.Values)
                                 GetOrCreate(variableUses, variable).Add(phi);
 
-                            VisitInstruction(phi, blockQueue, invariance);
+                            VisitInstruction(phi, blockQueue, typeAndInvarianceCache);
                         }
 
                         // Process instructions.
@@ -90,7 +90,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             {
                                 inst.ForEachOperand(op =>
                                 {
-                                    if (op is SSAVariable ssaVariable)
+                                    if (op is SSADefinition ssaVariable)
                                     {
                                         // Add this instruction to the list of uses for each operand.
                                         GetOrCreate(variableUses, ssaVariable).Add(inst);
@@ -105,14 +105,26 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                                 // Calls get to be special to address their external read needs.
                                 if (inst is IRCall call)
                                 {
-                                    string functionIdentifier = block.Scope.GetFunctionNameFromVariable(call.Function);
-                                    IRCodePart.IRFunction function = codePart.GetFunction(functionIdentifier);
+                                    IRCodePart.IRFunction function = codePart.GetFunction(call);
                                     if (function != null)
                                     {
-                                        foreach (IRVariable externalVar in function.ExternalReads.Union(function.ExternalWrites))
+                                        Dictionary<(string Name, IRScope Scope), SSADefinition> variables = SingleStaticAssignment.ReachableVariables[call];
+
+                                        foreach (string variableName in function.ExternalReads.Union(
+                                            function.ExternalWrites))
                                         {
-                                            if (externalVar is SSAVariable ssaVariable)
-                                                GetOrCreate(variableUses, ssaVariable).Add(call);
+                                            IRScope scope = block.Scope;
+                                            while (scope != null)
+                                            {
+                                                if (variables.TryGetValue((variableName, scope), out SSADefinition definition) &&
+                                                    definition.State != SSADefinition.SetState.Unset)
+                                                {
+                                                    GetOrCreate(variableUses, definition).Add(call);
+                                                    if (definition.State == SSADefinition.SetState.Set)
+                                                        break;
+                                                }
+                                                scope = scope.ParentScope;
+                                            }
                                         }
                                     }
                                 }
@@ -120,7 +132,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                                 // inadvertently changing the return value).
                                 // The else if the next if statement.
                                 if (inst != instruction || !(instruction is IOperandInstructionBase))
-                                    VisitInstruction(inst, blockQueue, invariance);
+                                    VisitInstruction(inst, blockQueue, typeAndInvarianceCache);
                             }
 
 
@@ -128,13 +140,14 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             {
                                 operandInstruction.ForEachOperand(op =>
                                 {
-                                    if (op is SSAVariable ssaVariable)
+                                    // TODO: Come back to this...
+                                    if (op is InterimVariableReference<SSADefinition> ssaRef &&
+                                        ssaRef.Reference is SSASetDefinition ssaVariable)
                                         GetOrCreate(variableUses, ssaVariable).Add(operandInstruction);
                                 });
-                                if (VisitInstruction(operandInstruction, blockQueue, invariance) &&
+                                if (VisitInstruction(operandInstruction, blockQueue, typeAndInvarianceCache) &&
                                     operandInstruction is IRAssign assignment &&
-                                    assignment.Target is SSAVariable ssaTarget &&
-                                    variableUses.TryGetValue(ssaTarget, out HashSet<IOperandInstructionBase> uses))
+                                    variableUses.TryGetValue(assignment.Target, out HashSet<IOperandInstructionBase> uses))
                                     foreach (IOperandInstructionBase use in uses)
                                         instructionQueue.Enqueue(use);
                             }
@@ -152,11 +165,10 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     while (instructionQueue.Count > 0)
                     {
                         IOperandInstructionBase instruction = instructionQueue.Dequeue();
-                        if (VisitInstruction(instruction, blockQueue, invariance))
+                        if (VisitInstruction(instruction, blockQueue, typeAndInvarianceCache))
                         {
-                            if (instruction is IRAssign assignment &&
-                                assignment.Target is SSAVariable ssaVariable)
-                                foreach (IOperandInstructionBase use in GetOrCreate(variableUses, ssaVariable))
+                            if (instruction is IRAssign assignment)
+                                foreach (IOperandInstructionBase use in GetOrCreate(variableUses, assignment.Target))
                                     instructionQueue.Enqueue(use);
                             else if (instruction is PhiVariable phi)
                                 foreach (IOperandInstructionBase use in GetOrCreate(variableUses, phi))
@@ -176,64 +188,43 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         /// <returns><c>true</c> if the instruction needs to propagate changes.</returns>
         private static bool VisitInstruction(IOperandInstructionBase instruction,
             Queue<BasicBlock> blockQueue,
-            Dictionary<SSAVariable, bool> invariance)
+            Dictionary<SSADefinition, (Type, bool)> typeAndInvarianceCache)
         {
             if (instruction is IRAssign assignment)
             {
-                bool result = assignment.Target.ValueType != assignment.Value.ValueType;
-                assignment.Target.ValueType = assignment.Value.ValueType;
-                if (assignment.Target is SSAVariable ssaVariable)
+                SSASetDefinition ssaVariable = assignment.Target;
+                if (typeAndInvarianceCache.TryGetValue(ssaVariable, out (Type storedType, bool storedInvariance) cached))
                 {
-                    if (invariance.TryGetValue(ssaVariable, out bool storedInvariance))
-                    {
-                        invariance[ssaVariable] &= ssaVariable.IsInvariant;
-                        result |= storedInvariance != invariance[ssaVariable];
-                    }
-                    else
-                    {
-                        invariance[ssaVariable] = ssaVariable.IsInvariant;
-                        result = true;
-                    }
-                }
-
-                return result;
-            }
-            else if (instruction is PhiVariable phi)
-            {
-                Type pastType = phi.ValueType;
-                phi.RefreshType();
-
-                bool result = pastType != phi.ValueType;
-
-                if (invariance.TryGetValue(phi, out bool storedInvariance))
-                {
-                    invariance[phi] &= storedInvariance;
-                    result |= storedInvariance != invariance[phi];
+                    typeAndInvarianceCache[ssaVariable] = (ssaVariable.Type, cached.storedInvariance &= ssaVariable.IsInvariant);
+                    return cached != typeAndInvarianceCache[ssaVariable];
                 }
                 else
                 {
-                    invariance[phi] = phi.IsInvariant;
-                    result = true;
+                    typeAndInvarianceCache[ssaVariable] = (ssaVariable.Type, ssaVariable.IsInvariant);
+                    return true;
                 }
-                return result;
+            }
+            else if (instruction is PhiVariable phi)
+            {
+                if (typeAndInvarianceCache.TryGetValue(phi, out (Type storedType, bool storedInvariance) cached))
+                {
+                    typeAndInvarianceCache[phi] = (phi.Type, cached.storedInvariance &= phi.IsInvariant);
+                    return cached != typeAndInvarianceCache[phi];
+                }
+                else
+                {
+                    typeAndInvarianceCache[phi] = (phi.Type, phi.IsInvariant);
+                    return true;
+                }
             }
             else if (instruction is IRBranch branch)
             {
                 if (branch.IsInvariant)
                 {
-                    IRConstant constantCondition = branch.Condition as IRConstant;
-                    if (constantCondition == null && branch.Condition is IRTemp temp)
-                        constantCondition = ConstantFolding.AttemptReduction(temp.Parent) as IRConstant;
+                    InterimConstantValue constantCondition = (branch.Condition as IEvaluatableToConstant).Evaluate();
+                    bool result = Convert.ToBoolean(constantCondition.Value);
 
-                    if (constantCondition != null && constantCondition.Value is BooleanValue boolean)
-                    {
-                        blockQueue.Enqueue(boolean ? branch.True : branch.False);
-                    }
-                    else
-                    {
-                        blockQueue.Enqueue(branch.True);
-                        blockQueue.Enqueue(branch.False);
-                    }
+                    blockQueue.Enqueue(result ? branch.True : branch.False);
                 }
                 else
                 {
@@ -255,27 +246,31 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         /// <summary>
         /// Propagates any constant SSA variables to their uses.
         /// </summary>
-        private static void PropagateConstants(Dictionary<SSAVariable, HashSet<IOperandInstructionBase>> ssaUses)
+        private static void PropagateConstants(Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> ssaUses)
         {
             // TODO: Keep track of which uses are replaced and if there are no more uses, remove the assignment.
             // But watch for functions that external read that variable and make sure to retain the assignment before then.
-            List<SSAVariable> constantVariables = ssaUses.Keys.Where(v => v.IsInvariant).ToList();
+            // TODO: Look at branch instructions that employ eq and propagate that constant.
+            List<SSADefinition> constantVariables = ssaUses.Keys.Where(
+                v => v.State == SSADefinition.SetState.Set &&
+                v.IsInvariant &&
+                typeof(PrimitiveStructure).IsAssignableFrom(v.Type))
+                .ToList();
             
-
 #if DEBUG   // Sort to make debugging variable iterations easier.
-            constantVariables.Sort(Comparer<SSAVariable>.Create((a, b) => string.Compare(a.ToString(), b.ToString())));
+            constantVariables.Sort(Comparer<SSADefinition>.Create((a, b) => string.Compare(a.ToString(), b.ToString())));
 #endif
-            Queue<SSAVariable> queue = new Queue<SSAVariable>(constantVariables);
-            Dictionary<SSAVariable, IRConstant> replacements = new Dictionary<SSAVariable, IRConstant>();
+            Queue<SSADefinition> queue = new Queue<SSADefinition>(constantVariables);
+            Dictionary<SSADefinition, InterimConstantValue> replacements = new Dictionary<SSADefinition, InterimConstantValue>();
 
             while (queue.Count > 0)
             {
-                SSAVariable variable = queue.Dequeue();
+                SSADefinition variable = queue.Dequeue();
                 if (queue.Any(v =>
                 {
                     if (variable is PhiVariable phi && !replacements.ContainsKey(phi))
                         return true;
-                    if (ssaUses[v].Contains(variable.AssignedAt))
+                    if (variable is SSASetDefinition setDef && ssaUses[v].Contains(setDef.DefinedAt))
                         return true;
                     return false;
                 }))
@@ -284,18 +279,12 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     continue;
                 }
 
-                IRConstant replacement;
-                if (!(variable is PhiVariable))
-                {
-                    if (variable.AssignedAt.Value is IRConstant constant)
-                        replacement = constant;
-                    else
-                        replacement = ConstantFolding.AttemptReduction(((IRTemp)variable.AssignedAt.Value).Parent) as IRConstant;
-                }
-                else
-                {
+
+                InterimConstantValue replacement;
+                if (variable is PhiVariable)
                     replacement = replacements[variable];
-                }
+                else
+                    replacement = variable.Evaluate();
 
                 if (replacement != null)
                 {
@@ -307,7 +296,6 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                                 replacements[phi] = replacement;
                             continue;
                         }
-                        // TODO: Make this propagate True
                         if (instruction is IRUnaryOp unaryOp &&
                             unaryOp.Operation is OpcodeExists)
                             continue;
@@ -315,16 +303,6 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     }
                 }
             }
-        }
-
-        private static void Propagation(BasicBlock block)
-        {
-            //ssaVariable.ValueType = assignment.Value.ValueType;
-
-            //if (postCallSSAVariableLinks.TryGetValue(ssaVariable, out SSAVariable postCallLink))
-                // MUSTFIX: This does not guarantee that this happens before ssaVariable is accessed!
-                // Particularly in the case of recursive or bouncing functions.
-                //postCallLink.ValueType = ssaVariable.ValueType;
         }
     }
 }

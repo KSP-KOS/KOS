@@ -11,6 +11,10 @@ namespace kOS.Safe.Compilation.IR
     /// </summary>
     public class IRCodePart
     {
+        private readonly Dictionary<string, string> functionRefs = new Dictionary<string, string>();
+        private readonly Dictionary<string, (IRScope Scope, bool IsGlobal)> closureScopes =
+            new Dictionary<string, (IRScope, bool)>();
+
         /// <summary>
         /// Gets or sets the mainline code, in BasicBlock format.
         /// </summary>
@@ -48,31 +52,31 @@ namespace kOS.Safe.Compilation.IR
                 throw new ArgumentException($"{nameof(codePart)} has function code and is structured unexpectedly.");
             
             IRBuilder builder = new IRBuilder();
-            MainCode = builder.Lower(codePart.MainCode);
-            Functions = userFunctions.Select(f => new IRFunction(builder, f)).ToList();
-            Triggers = triggers.Select(t => new IRTrigger(builder, t)).ToList();
+            MainCode = builder.Lower(codePart.MainCode, this);
+
+            Functions = new List<IRFunction>();
+            Queue<UserFunction> functionsToLower = new Queue<UserFunction>(userFunctions.Where(f => closureScopes.ContainsKey(f.Identifier)));
+            HashSet<UserFunction> completedFunctions = new HashSet<UserFunction>();
+            while (functionsToLower.Count > 0)
+            {
+                UserFunction function = functionsToLower.Dequeue();
+                Functions.Add(new IRFunction(builder, function, this));
+                completedFunctions.Add(function);
+                foreach (UserFunction func in userFunctions.Where(
+                    f => closureScopes.ContainsKey(f.Identifier) &&
+                    !completedFunctions.Contains(f) &&
+                    !functionsToLower.Contains(f)))
+                    functionsToLower.Enqueue(func);
+            }
+            Triggers = triggers.Select(t => new IRTrigger(builder, t, this)).ToList();
+            foreach (UserFunction func in userFunctions.Except(completedFunctions))
+                Functions.Add(new IRFunction(builder, func, this));
 
             Blocks.AddRange(MainCode);
             if (MainCode.Count > 0)
                 RootBlocks.Add(MainCode[0]);
-            foreach (IRTrigger trigger in Triggers)
-            {
-                Blocks.AddRange(trigger.Code);
-                if (trigger.Code.Count > 0)
-                    RootBlocks.Add(trigger.Code[0]);
-            }
-            foreach (IRFunction function in Functions)
-            {
-                Blocks.AddRange(function.InitializationCode);
-                if (function.InitializationCode.Count > 0)
-                    RootBlocks.Add(function.InitializationCode[0]);
-                foreach (IRFunction.IRFunctionFragment fragment in function.Fragments)
-                {
-                    Blocks.AddRange(fragment.FunctionCode);
-                    if (fragment.FunctionCode.Count > 0)
-                        RootBlocks.Add(fragment.FunctionCode[0]);
-                }
-            }
+            RootBlocks.AddRange(Triggers.Select(t => t.RootBlock));
+            RootBlocks.AddRange(Functions.SelectMany(f => f.RootBlocks));
 
             SingleStaticAssignment.FinalizeSSA(this);
         }
@@ -99,6 +103,37 @@ namespace kOS.Safe.Compilation.IR
             return Triggers.FirstOrDefault(t => string.Equals(t.Identifier, identifier, StringComparison.OrdinalIgnoreCase));
         }
 
+        public static void FlattenCallTree(IClosureVariableUser funcOrTrigger)
+        {
+            funcOrTrigger.FunctionCalls.UnionWith(GetFunctionsCalled(funcOrTrigger));
+            funcOrTrigger.TriggersCreated.UnionWith(GetTriggersCreated(funcOrTrigger));
+            funcOrTrigger.ExternalWrites.UnionWith(funcOrTrigger.FunctionCalls.SelectMany(f => f.ExternalWrites));
+            funcOrTrigger.ExternalUnsets.UnionWith(funcOrTrigger.FunctionCalls.SelectMany(f => f.ExternalUnsets));
+        }
+        public void FlattenCallTrees()
+        {
+            foreach (IRFunction function in Functions)
+                FlattenCallTree(function);
+            foreach (IRTrigger trigger in Triggers)
+                FlattenCallTree(trigger);
+        }
+        private static HashSet<IRFunction> GetFunctionsCalled(IClosureVariableUser funcOrTrigger)
+        {
+            HashSet<IRFunction> result = new HashSet<IRFunction>();
+            GetFunctionsCalled_Recursive(funcOrTrigger, result);
+            return result;
+        }
+        private static void GetFunctionsCalled_Recursive(IClosureVariableUser funcOrTrigger, HashSet<IRFunction> result)
+        {
+            foreach (IRFunction func in funcOrTrigger.FunctionCalls)
+            {
+                if (result.Add(func))
+                    GetFunctionsCalled_Recursive(func, result);
+            }
+        }
+        public static HashSet<IRTrigger> GetTriggersCreated(IClosureVariableUser funcOrTrigger)
+            => new HashSet<IRTrigger>(GetFunctionsCalled(funcOrTrigger).SelectMany(f => f.TriggersCreated));
+
         /// <summary>
         /// Emits the code into Opcode representation, and back into
         /// its source objects.
@@ -118,6 +153,36 @@ namespace kOS.Safe.Compilation.IR
             codePart.MainCode = emitter.Emit(MainCode);
         }
 
+        public void EnrollClosure(string pointer, IRScope closureScope, bool isGlobal = false)
+        {
+            closureScopes[pointer] = (closureScope, isGlobal);
+        }
+        public void EnrollFunction(string variable, string functionRef, IRScope closureScope, bool isGlobal)
+        {
+            string functionID = functionRef.Split('-').First();
+            functionRefs[variable] = functionID;
+            if (Functions == null)
+            {
+                EnrollClosure(functionID, closureScope, isGlobal);
+            }
+            else
+            {
+                IRFunction function = GetFunction(functionID);
+                if (function == null)
+                    EnrollClosure(functionID, closureScope, isGlobal);
+                else
+                    function.IsGlobal = isGlobal;
+            }
+        }
+        public IRFunction GetFunction(IRCall call)
+        {
+            if (!functionRefs.TryGetValue(call.Function, out string functionName))
+                return null;
+            if (functionName == null)
+                return null;
+            return GetFunction(functionName);
+        }
+
         /// <summary>
         /// This class represents a trigger definition.
         /// </summary>
@@ -133,41 +198,29 @@ namespace kOS.Safe.Compilation.IR
             /// Gets or sets the code for this trigger, in BasicBlock representation.
             /// </summary>
             public List<BasicBlock> Code { get; set; }
+            public HashSet<string> ExternalReads { get; set; } = new HashSet<string>();
+            public HashSet<string> ExternalWrites { get; } = new HashSet<string>();
+            public HashSet<(string, IRUnset)> ExternalUnsets { get; } = new HashSet<(string, IRUnset)>();
+            public HashSet<IRTrigger> TriggersCreated { get; } = new HashSet<IRTrigger>();
+            public HashSet<IRFunction> FunctionCalls { get; } = new HashSet<IRFunction>();
+            public IRScope ClosureScope { get; }
 
-            /// <summary>
-            /// Gets the collection of external variables that are read
-            /// within the trigger.
-            /// </summary>
-            public HashSet<IRVariable> ExternalReads { get; } = new HashSet<IRVariable>();
-            /// <summary>
-            /// Gets the collection of external variables that are written
-            /// to within the trigger.
-            /// </summary>
-            public HashSet<SSAVariable> ExternalWrites { get; } = new HashSet<SSAVariable>();
+            public BasicBlock RootBlock { get; }
 
             /// <summary>
             /// Initializes a new instance of the <see cref="IRTrigger"/> class.
             /// </summary>
             /// <param name="builder">The IRBuilder object in use.</param>
             /// <param name="trigger">The trigger object to convert.</param>
-            public IRTrigger(IRBuilder builder, Trigger trigger)
+            public IRTrigger(IRBuilder builder, Trigger trigger, IRCodePart codePart)
             {
                 this.trigger = trigger;
                 Identifier = trigger.Code.FirstOrDefault()?.Label ?? "";
-                Code = builder.Lower(trigger.Code);
+                ClosureScope = codePart.closureScopes[Identifier].Scope;
+                Code = builder.Lower(trigger.Code, codePart, ClosureScope);
                 if (Code.Count > 0)
                 {
-                    ExternalReads.UnionWith(Code[0].Scope.GetGlobalScope().Variables.Cast<IRVariable>());
-                    foreach (BasicBlock block in Code)
-                    {
-                        ExternalWrites.UnionWith(block.VariablesWritten.Where(v => v.Scope.IsGlobalScope));
-                        /*foreach (IRInstruction instruction in block.Instructions)
-                        {
-                            if (instruction is IRAssign assignment &&
-                                assignment.Target.Scope.IsGlobalScope)
-                                writes.Add(assignment.Target);
-                        }*/
-                    }
+                    RootBlock = Code[0];
                 }
             }
             /// <summary>
@@ -185,7 +238,7 @@ namespace kOS.Safe.Compilation.IR
         /// <summary>
         /// This class represents a user-defined function.
         /// </summary>
-        /// <seealso cref="kOS.Safe.Compilation.IR.IRCodePart.IClosureVariableUser" />
+        /// <seealso cref="IClosureVariableUser" />
         public class IRFunction : IClosureVariableUser
         {
             private readonly UserFunction function;
@@ -197,6 +250,14 @@ namespace kOS.Safe.Compilation.IR
             /// </summary>
             public string Identifier => function.Identifier;
             /// <summary>
+            /// Gets or sets a value indicating whether this instance
+            /// is stored at the global scope.
+            /// </summary>
+            /// <value>
+            ///   <c>true</c> if this instance is global; otherwise, <c>false</c>.
+            /// </value>
+            public bool IsGlobal { get; internal set; } = false;
+            /// <summary>
             /// Gets or sets the initialization code, in BasicBlock format.
             /// </summary>
             public List<BasicBlock> InitializationCode { get; set; }
@@ -204,48 +265,45 @@ namespace kOS.Safe.Compilation.IR
             /// Gets the collection of function fragments.
             /// </summary>
             public IReadOnlyCollection<IRFunctionFragment> Fragments => fragments.Values;
+            public HashSet<string> ExternalReads { get; set; } = new HashSet<string>();
+            public HashSet<string> ExternalWrites { get; } = new HashSet<string>();
+            public HashSet<(string, IRUnset)> ExternalUnsets { get; } = new HashSet<(string, IRUnset)>();
+            public HashSet<IRTrigger> TriggersCreated { get; } = new HashSet<IRTrigger>();
+            public HashSet<IRFunction> FunctionCalls { get; } = new HashSet<IRFunction>();
+            public IRScope ClosureScope { get; }
             /// <summary>
-            /// Gets the collection of external variables that are read
-            /// within the function.
+            /// Gets a value indicating whether this instance may be recursive.
             /// </summary>
-            public HashSet<IRVariable> ExternalReads { get; } = new HashSet<IRVariable>();
-            /// <summary>
-            /// Gets the collection of external variables that are written
-            /// to within the function.
-            /// </summary>
-            public HashSet<SSAVariable> ExternalWrites { get; } = new HashSet<SSAVariable>();
+            /// <value>
+            ///   <c>true</c> if this instance may be recursive; otherwise, <c>false</c>.
+            /// </value>
+            public bool IsRecursive => FunctionCalls.Contains(this);
+
+            public List<BasicBlock> RootBlocks { get; } = new List<BasicBlock>();
 
             /// <summary>
             /// Initializes a new instance of the <see cref="IRFunction"/> class.
             /// </summary>
             /// <param name="builder">The IRBuilder object in use.</param>
             /// <param name="function">The user function object to convert.</param>
-            public IRFunction(IRBuilder builder, UserFunction function)
+            public IRFunction(IRBuilder builder, UserFunction function, IRCodePart codePart)
             {
                 this.function = function;
-                InitializationCode = builder.Lower(function.InitializationCode);
+                (ClosureScope, IsGlobal) = codePart.closureScopes[Identifier];
+                InitializationCode = builder.Lower(function.InitializationCode, codePart, ClosureScope);
                 userFunctionFragments = function.PeekNewCodeFragments().ToList();
                 foreach (UserFunctionCodeFragment fragment in userFunctionFragments)
                 {
-                    fragments.Add(fragment, new IRFunctionFragment(builder, fragment));
+                    fragments.Add(fragment, new IRFunctionFragment(builder, fragment, codePart, ClosureScope));
                 }
                 userFunctionFragments.Reverse();
 
+                if (function.InitializationCode.Count > 0)
+                    RootBlocks.Add(InitializationCode[0]);
                 foreach (IRFunctionFragment fragment in Fragments)
                 {
-                    if (fragment.FunctionCode.Count == 0)
-                        continue;
-                    ExternalReads.UnionWith(fragment.FunctionCode[0].Scope.GetGlobalScope().Variables.Cast<IRVariable>());
-                    foreach (BasicBlock block in fragment.FunctionCode)
-                    {
-                        ExternalWrites.UnionWith(block.VariablesWritten.Where(v => v.Scope.IsGlobalScope));
-                        /*foreach (IRInstruction instruction in block.Instructions)
-                        {
-                            if (instruction is IRAssign assignment &&
-                                assignment.Target.Scope.IsGlobalScope)
-                                writes.Add(assignment.Target);
-                        }*/
-                    }
+                    if (fragment.FunctionCode.Count > 0)
+                        RootBlocks.Add(fragment.FunctionCode[0]);
                 }
             }
 
@@ -279,10 +337,10 @@ namespace kOS.Safe.Compilation.IR
                 /// </summary>
                 /// <param name="builder">The IRBuilder object in use.</param>
                 /// <param name="codeFragment">The function code fragment to convert.</param>
-                public IRFunctionFragment(IRBuilder builder, UserFunctionCodeFragment codeFragment)
+                public IRFunctionFragment(IRBuilder builder, UserFunctionCodeFragment codeFragment, IRCodePart codePart, IRScope ClosureScope)
                 {
                     fragment = codeFragment;
-                    FunctionCode = builder.Lower(codeFragment.Code);
+                    FunctionCode = builder.Lower(codeFragment.Code, codePart, ClosureScope);
                 }
                 /// <summary>
                 /// Emits the code into Opcode representation back into the
@@ -298,33 +356,6 @@ namespace kOS.Safe.Compilation.IR
         }
 
         /// <summary>
-        /// Sets the scope in which a function or trigger is defined.
-        /// </summary>
-        /// <param name="function">The function or trigger to target.</param>
-        /// <param name="scope">The scope to set as parent.</param>
-        public static void SetDefiningScope(IClosureVariableUser function, IRScope scope)
-        {
-            HashSet<SSAVariable> tempWrites = new HashSet<SSAVariable>(function.ExternalWrites);
-            foreach (SSAVariable variable in tempWrites)
-            {
-                if (scope.IsVariableInScope(variable.Name))
-                {
-                    variable.RedefineScope(scope.GetVariableNamed(variable.Name).Scope);
-                }
-            }
-
-            HashSet<IRVariable> tempReads = new HashSet<IRVariable>(function.ExternalReads);
-            foreach (IRVariable variable in tempReads)
-            {
-                if (scope.IsVariableInScope(variable.Name))
-                {
-                    function.ExternalReads.Remove(variable);
-                    function.ExternalReads.Add((IRVariable)scope.GetVariableNamed(variable.Name));
-                }
-            }
-        }
-
-        /// <summary>
         /// Represents a user of a closure and its contained variables.
         /// </summary>
         public interface IClosureVariableUser
@@ -333,12 +364,28 @@ namespace kOS.Safe.Compilation.IR
             /// Gets the collection of external variables that are read
             /// within the closure.
             /// </summary>
-            HashSet<IRVariable> ExternalReads { get; }
+            HashSet<string> ExternalReads { get; set; }
             /// <summary>
-            /// Gets the collection of external variables that are written
-            /// to within the closure.
+            /// Gets the collection of external variables that may be written
+            /// to by this instance.
             /// </summary>
-            HashSet<SSAVariable> ExternalWrites { get; }
+            HashSet<string> ExternalWrites { get; }
+            /// <summary>
+            /// Gets the collection of external variables that may be unset by this instance.
+            /// </summary>
+            HashSet<(string, IRUnset)> ExternalUnsets { get; }
+            /// <summary>
+            /// Gets the collection of triggers that could be created from this instance.
+            /// </summary>
+            HashSet<IRTrigger> TriggersCreated { get; }
+            /// <summary>
+            /// Gets the functions called from within this instance's body.
+            /// </summary>
+            HashSet<IRFunction> FunctionCalls { get; }
+            /// <summary>
+            /// Gets the scope of the closure this instance uses.
+            /// </summary>
+            IRScope ClosureScope { get; }
         }
     }
 }
