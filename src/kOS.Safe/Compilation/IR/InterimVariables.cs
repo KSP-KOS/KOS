@@ -7,6 +7,8 @@ namespace kOS.Safe.Compilation.IR
     public interface IInterimVariableReference : IInterimOperand
     {
         string Name { get; }
+        short SourceLine { get; }
+        short SourceColumn { get; }
     }
     public readonly struct InterimVariableReference : IInterimVariableReference
     {
@@ -19,6 +21,8 @@ namespace kOS.Safe.Compilation.IR
 
         public InterimVariableReference(string name, Opcode opcode) :
             this(name, opcode.SourceLine, opcode.SourceColumn) { }
+        public InterimVariableReference(string name, IRInstruction instruction) :
+            this(name, instruction.SourceLine, instruction.SourceColumn) { }
         public InterimVariableReference(string name, short sourceLine, short sourceColumn)
         {
             Name = name;
@@ -44,23 +48,23 @@ namespace kOS.Safe.Compilation.IR
             => Name.ToLower().GetHashCode();
     }
 
-    public readonly struct InterimVariableReference<T> : IInterimVariableReference, IEvaluatableToConstant where T : SSADefinition
+    public readonly struct InterimResolvedReference : IInterimVariableReference, IEvaluatableToConstant
     {
         public short SourceLine { get; }
         public short SourceColumn { get; }
-        public T Reference { get; }
+        public SSADefinition Reference { get; }
         public string Name => Reference.Name;
         public bool IsInvariant => Reference.IsInvariant;
         public Type Type => Reference.Type;
 
-        public InterimVariableReference(T reference, short sourceLine, short sourceColumn)
+        public InterimResolvedReference(SSADefinition reference, IRInstruction instruction) :
+            this(reference, instruction.SourceLine, instruction.SourceColumn) { }
+        public InterimResolvedReference(SSADefinition reference, short sourceLine, short sourceColumn)
         {
             Reference = reference;
             SourceLine = sourceLine;
             SourceColumn = sourceColumn;
         }
-        public InterimVariableReference(T reference, InterimVariableReference oldRef) :
-            this(reference, oldRef.SourceLine, oldRef.SourceColumn) { }
 
         public IEnumerable<Opcode> EmitOpcodes()
         {
@@ -81,10 +85,78 @@ namespace kOS.Safe.Compilation.IR
         public override string ToString()
             => $"{Name}";
         public override bool Equals(object obj)
-            => obj is InterimVariableReference<T> variable &&
+            => obj is InterimResolvedReference variable &&
             Reference.Equals(variable.Reference);
         public override int GetHashCode()
             => Reference.GetHashCode();
+    }
+
+    public class InterimUnresolvedReference : IInterimVariableReference
+    {
+        private readonly List<SSADefinition> references;
+
+        public short SourceLine { get; }
+        public short SourceColumn { get; }
+        public IReadOnlyCollection<SSADefinition> References => references;
+        public string Name { get; }
+        public bool IsInvariant => false;
+        public Type Type
+        {
+            get
+            {
+                Type proposedType = References.First().Type;
+                foreach (SSADefinition variable in References.Skip(1))
+                    proposedType = PhiNode.GetFirstCommonBaseType(proposedType, variable.Type);
+
+                return proposedType;
+            }
+        }
+
+        private InterimUnresolvedReference(string name, short sourceLine, short sourceColumn)
+        {
+            Name = name;
+            SourceLine = sourceLine;
+            SourceColumn = sourceColumn;
+        }
+        public InterimUnresolvedReference(SSADefinition reference, short sourceLine, short sourceColumn) :
+            this(reference.Name, sourceLine, sourceColumn)
+        {
+            references = new List<SSADefinition>
+            {
+                reference
+            };
+        }
+        public InterimUnresolvedReference(IEnumerable<SSADefinition> references, short sourceLine, short sourceColumn) :
+            this(references.First().Name, sourceLine, sourceColumn)
+        {
+            this.references = new List<SSADefinition>();
+            foreach (SSADefinition reference in references)
+                AddReference(reference);
+        }
+
+        public void AddReference(SSADefinition reference)
+        {
+            if (!string.Equals(reference.Name, Name, StringComparison.OrdinalIgnoreCase))
+                throw new ArgumentException($"Names must match: {reference.Name} vs. {Name}");
+            references.Add(reference);
+        }
+
+        public IEnumerable<Opcode> EmitOpcodes()
+        {
+            yield return new OpcodePush(Name)
+            {
+                SourceLine = SourceLine,
+                SourceColumn = SourceColumn
+            };
+        }
+
+        public override string ToString()
+            => $"{Name}";
+        public override bool Equals(object obj)
+            => obj is InterimUnresolvedReference unresolvedRef &&
+            unresolvedRef.references.SequenceEqual(references);
+        public override int GetHashCode()
+            => References.GetHashCode();
     }
 
     internal static class SSAIndexIssuer
@@ -241,8 +313,8 @@ namespace kOS.Safe.Compilation.IR
             {
                 short sourceLine = Conditional?.SourceLine ?? -1;
                 short sourceColumn = Conditional?.SourceColumn ?? -1;
-                yield return new InterimVariableReference<SSADefinition>(Preceding, sourceLine, sourceColumn);
-                yield return new InterimVariableReference<SSADefinition>(Succeeding, sourceLine, sourceColumn);
+                yield return new InterimResolvedReference(Preceding, sourceLine, sourceColumn);
+                yield return new InterimResolvedReference(Succeeding, sourceLine, sourceColumn);
             }
         }
         public int OperandCount => 2;
@@ -299,8 +371,8 @@ namespace kOS.Safe.Compilation.IR
 
         public void ForEachOperand(Action<IInterimOperand> action)
         {
-            action(new InterimVariableReference<SSADefinition>(Preceding, 0, 0));
-            action(new InterimVariableReference<SSADefinition>(Succeeding, 0, 0));
+            action(new InterimResolvedReference(Preceding, 0, 0));
+            action(new InterimResolvedReference(Succeeding, 0, 0));
         }
         public void MutateEachOperand(Func<IInterimOperand, IInterimOperand> mutateFunc)
         {
@@ -309,8 +381,8 @@ namespace kOS.Safe.Compilation.IR
         }
         private static SSADefinition Mutate(Func<IInterimOperand, IInterimOperand> func, SSADefinition definition)
         {
-            IInterimOperand result = func(new InterimVariableReference<SSADefinition>(definition, 0, 0));
-            return ((InterimVariableReference<SSADefinition>)result).Reference;
+            IInterimOperand result = func(new InterimResolvedReference(definition, 0, 0));
+            return ((InterimResolvedReference)result).Reference;
         }
         public override InterimConstantValue Evaluate()
         {
@@ -394,7 +466,7 @@ namespace kOS.Safe.Compilation.IR
                     SSASetDefinition ssaDef = kvp.Value as SSASetDefinition;
                     short sourceLine = ssaDef?.DefinedAt.SourceLine ?? -1;
                     short sourceColumn = ssaDef?.DefinedAt.SourceColumn ?? -1;
-                    return new InterimVariableReference<SSADefinition>(kvp.Value, sourceLine, sourceColumn) as IInterimOperand;
+                    return new InterimResolvedReference(kvp.Value, sourceLine, sourceColumn) as IInterimOperand;
                 });
 
         protected override InterimConstantValue EvaluateObj(SSADefinition obj)
@@ -403,13 +475,13 @@ namespace kOS.Safe.Compilation.IR
         protected override void ForEachOperand(Action<IInterimOperand> action)
         {
             foreach (SSADefinition variable in PossibleValues.Values)
-                action(new InterimVariableReference<SSADefinition>(variable, -1, -1));
+                action(new InterimResolvedReference(variable, -1, -1));
         }
 
         protected override void MutateEachOperand(Func<IInterimOperand, IInterimOperand> mutateFunc)
         {
             foreach (BasicBlock block in PossibleValues.Keys)
-                PossibleValues[block] = ((InterimVariableReference<SSADefinition>)mutateFunc(new InterimVariableReference<SSADefinition>(PossibleValues[block], -1, -1))).Reference;
+                PossibleValues[block] = ((InterimResolvedReference)mutateFunc(new InterimResolvedReference(PossibleValues[block], -1, -1))).Reference;
         }
 
     }

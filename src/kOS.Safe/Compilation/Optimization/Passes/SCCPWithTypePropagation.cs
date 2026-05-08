@@ -108,23 +108,10 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                                     IRCodePart.IRFunction function = codePart.GetFunction(call);
                                     if (function != null)
                                     {
-                                        Dictionary<(string Name, IRScope Scope), SSADefinition> variables = SingleStaticAssignment.ReachableVariables[call];
-
-                                        foreach (string variableName in function.ExternalReads.Union(
-                                            function.ExternalWrites))
+                                        HashSet<IInterimVariableReference> variables = SingleStaticAssignment.ReachableVariables[call];
+                                        foreach (SSADefinition variable in variables.SelectMany(GetSSADefinitionsFromReferences))
                                         {
-                                            IRScope scope = block.Scope;
-                                            while (scope != null)
-                                            {
-                                                if (variables.TryGetValue((variableName, scope), out SSADefinition definition) &&
-                                                    definition.State != SSADefinition.SetState.Unset)
-                                                {
-                                                    GetOrCreate(variableUses, definition).Add(call);
-                                                    if (definition.State == SSADefinition.SetState.Set)
-                                                        break;
-                                                }
-                                                scope = scope.ParentScope;
-                                            }
+                                            GetOrCreate(variableUses, variable).Add(call);
                                         }
                                     }
                                 }
@@ -140,10 +127,13 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             {
                                 operandInstruction.ForEachOperand(op =>
                                 {
-                                    // TODO: Come back to this...
-                                    if (op is InterimVariableReference<SSADefinition> ssaRef &&
-                                        ssaRef.Reference is SSASetDefinition ssaVariable)
-                                        GetOrCreate(variableUses, ssaVariable).Add(operandInstruction);
+                                    if (op is InterimResolvedReference ssaRef)
+                                        GetOrCreate(variableUses, ssaRef.Reference).Add(operandInstruction);
+                                    if (op is InterimUnresolvedReference unresolvedRef)
+                                    {
+                                        foreach (SSADefinition ssaDef in GetSSADefinitionsFromReferences(unresolvedRef))
+                                            GetOrCreate(variableUses, ssaDef).Add(operandInstruction);
+                                    }
                                 });
                                 if (VisitInstruction(operandInstruction, blockQueue, typeAndInvarianceCache) &&
                                     operandInstruction is IRAssign assignment &&
@@ -179,6 +169,19 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             }
 
             return variableUses;
+        }
+
+        private static IEnumerable<SSADefinition> GetSSADefinitionsFromReferences(IInterimVariableReference reference)
+        {
+            switch (reference)
+            {
+                case InterimResolvedReference resolvedReference:
+                    return Enumerable.Repeat(resolvedReference.Reference, 1);
+                case InterimUnresolvedReference unresolvedReference:
+                    return unresolvedReference.References;
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         /// <summary>

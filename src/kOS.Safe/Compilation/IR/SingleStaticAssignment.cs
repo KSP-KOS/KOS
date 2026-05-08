@@ -12,11 +12,8 @@ namespace kOS.Safe.Compilation.IR
     /// </summary>
     public static class SingleStaticAssignment
     {
-        private static readonly Dictionary<IRInstruction, Dictionary<(string Name, IRScope Scope), SSADefinition>> reachableVariables =
-            new Dictionary<IRInstruction, Dictionary<(string Name, IRScope Scope), SSADefinition>>();
-
-        public static IReadOnlyDictionary<IRInstruction, Dictionary<(string Name, IRScope Scope), SSADefinition>>
-            ReachableVariables => reachableVariables;
+        public static Dictionary<IRInstruction, HashSet<IInterimVariableReference>> ReachableVariables { get; } =
+            new Dictionary<IRInstruction, HashSet<IInterimVariableReference>>();
 
         /// <summary>
         /// Finalizes a program into single static assignment form.
@@ -77,13 +74,26 @@ namespace kOS.Safe.Compilation.IR
                 BuildPhis(codePart.MainCode[0], codePart, null);
 
             // Then apply the SSA definitions to all the variable push operations.
-            foreach (IRFunction function in codePart.Functions)
+            // Functions are done iteratively to propagate the ExternalReads property
+            // up the call chain correctly.
+            foreach (IRFunction function in codePart.Functions.OrderBy(f => f.FunctionCalls.Count))
+                functionQueue.Enqueue(function);
+            while (functionQueue.Count > 0)
             {
+                IRFunction function = functionQueue.Dequeue();
+                HashSet<IInterimVariableReference> externalReads = new HashSet<IInterimVariableReference>(function.ExternalReads);
                 foreach (BasicBlock block in function.InitializationCode)
                     ApplyUses(block, codePart, function);
                 foreach (IRFunction.IRFunctionFragment fragment in function.Fragments)
                     foreach (BasicBlock block in fragment.FunctionCode)
                         ApplyUses(block, codePart, function);
+
+                if (callers.ContainsKey(function) &&
+                    !externalReads.SetEquals(function.ExternalReads))
+                {
+                    foreach (IRFunction caller in callers[function])
+                        functionQueue.Enqueue(caller);
+                }
             }
             foreach (IRTrigger trigger in codePart.Triggers)
             {
@@ -109,7 +119,7 @@ namespace kOS.Safe.Compilation.IR
 
                 foreach (IRCall call in instruction.DepthFirst().Where(inst => inst is IRCall).Cast<IRCall>())
                 {
-                    ProcessCall(call, codePart, variables, block.TriggerPropagationBlacklist, funcOrTrigger);
+                    ProcessCall(call, codePart, variables, block.TriggerPropagationBlacklist, block.TriggerUnsetBlacklist, funcOrTrigger);
                     IRFunction function = codePart.GetFunction(call);
                     if (function != null)
                         funcOrTrigger?.FunctionCalls.Add(codePart.GetFunction(call));
@@ -119,7 +129,7 @@ namespace kOS.Safe.Compilation.IR
                 switch (instruction)
                 {
                     case IRAssign assignment:
-                        if (ProcessAssignment(assignment, codePart, variables, block.TriggerPropagationBlacklist))
+                        if (ProcessAssignment(assignment, codePart, variables, block.TriggerPropagationBlacklist, block.TriggerUnsetBlacklist))
                             funcOrTrigger?.ExternalWrites.Add(assignment.Target.Name);
                         break;
                     case IRUnset unset:
@@ -132,9 +142,13 @@ namespace kOS.Safe.Compilation.IR
                         {
                             string pointer = (string)((InterimConstantValue)unaryConsumer.Operand).Value;
                             IRTrigger trigger = codePart.GetTrigger(pointer);
-                            ProcessTrigger(trigger, variables, block.TriggerPropagationBlacklist);
+                            ProcessTrigger(trigger, variables, block.TriggerPropagationBlacklist, block.TriggerUnsetBlacklist);
                             funcOrTrigger?.TriggersCreated.Add(trigger);
                         }
+                        break;
+                    case IRReturn ret:
+                        if (funcOrTrigger is IRFunction function)
+                            function.Returns.PossibleValues[block] = ret.Value;
                         break;
                 }
             }
@@ -142,19 +156,25 @@ namespace kOS.Safe.Compilation.IR
             return variables;
         }
 
-        private static bool ProcessAssignment(IRAssign assignment, IRCodePart codePart, Dictionary<(string, IRScope), SSADefinition> variables, HashSet<(string, IRScope)> blacklist)
+        private static bool ProcessAssignment(IRAssign assignment, IRCodePart codePart, Dictionary<(string, IRScope), SSADefinition> variables, HashSet<(string, IRScope)> readBlacklist, Dictionary<(string, IRScope), IRUnset> writeBlacklist)
         {
             IRScope startingScope = assignment.Block.Scope;
             SSASetDefinition definition = assignment.Target;
             switch (assignment.Scope)
             {
                 case IRAssign.StoreScope.Local:
-                    variables[(definition.Name, startingScope)] = definition;
+                    if (writeBlacklist.TryGetValue((definition.Name, startingScope), out IRUnset unset))
+                        variables[(definition.Name, startingScope)] = definition.PotentiallyUnset(unset);
+                    else
+                        variables[(definition.Name, startingScope)] = definition;
                     // IRFunction.IsGlobal initiates as false, so there's no need to |= false.
                     break;
                 case IRAssign.StoreScope.Global:
-                    variables[(definition.Name, startingScope.GetGlobalScope())] = definition;
-                    SetFunctionToGlobal(assignment, codePart, variables, blacklist);
+                    if (writeBlacklist.TryGetValue((definition.Name, startingScope), out IRUnset globalUnset))
+                        variables[(definition.Name, startingScope)] = SSAPotentialDefinition.PotentiallySet(definition, globalUnset);
+                    else
+                        variables[(definition.Name, startingScope.GetGlobalScope())] = definition;
+                    SetFunctionToGlobal(assignment, codePart, variables, readBlacklist, writeBlacklist);
                     break;
                 default:
                     if (ApplyDefinitionToName(definition, startingScope, variables))
@@ -162,7 +182,7 @@ namespace kOS.Safe.Compilation.IR
                         // This isn't necessarily true in the case of nested function definitions.
                         // But true function definitions are definitively set as local or global.
                         // This only applies to a nested lock, which deserves to lose out on optimizations.
-                        SetFunctionToGlobal(assignment, codePart, variables, blacklist);
+                        SetFunctionToGlobal(assignment, codePart, variables, readBlacklist, writeBlacklist);
                         return true;
                     }
                     break;
@@ -224,7 +244,7 @@ namespace kOS.Safe.Compilation.IR
             return false;
         }
         private static void SetFunctionToGlobal(IRAssign assignment, IRCodePart codePart, Dictionary<(string VariableName, IRScope Scope),
-            SSADefinition> variables, HashSet<(string, IRScope)> blacklist)
+            SSADefinition> variables, HashSet<(string, IRScope)> readBlacklist, Dictionary<(string, IRScope), IRUnset> writeBlacklist)
         {
             if (codePart == null ||
                 !(assignment.Value is IRRelocateLater funcOrTrigger))
@@ -236,7 +256,7 @@ namespace kOS.Safe.Compilation.IR
 
             // A global function could be added to a trigger in external code.
             // Treat it as a trigger body itself.
-            ProcessTrigger(function, variables, blacklist);
+            ProcessTrigger(function, variables, readBlacklist, writeBlacklist);
         }
 
         private static void ProcessUnset(IRUnset unset, Dictionary<(string Name, IRScope), SSADefinition> variables, HashSet<(string, IRUnset)> recordTo)
@@ -312,18 +332,20 @@ namespace kOS.Safe.Compilation.IR
             return closureVariableAffected;
         }
 
-        private static void ProcessTrigger(IClosureVariableUser trigger, Dictionary<(string, IRScope), SSADefinition> variables, HashSet<(string, IRScope)> blacklist)
+        private static void ProcessTrigger(IClosureVariableUser trigger, Dictionary<(string, IRScope), SSADefinition> variables, HashSet<(string, IRScope)> readBlacklist, Dictionary<(string, IRScope), IRUnset> writeBlacklist)
         {
             foreach ((string varName, IRUnset unset) in trigger.ExternalUnsets)
             {
                 IRScope scope = trigger.ClosureScope;
                 while (scope != null)
                 {
+                    writeBlacklist[(varName, scope)] = unset;
                     if (variables.TryGetValue((varName, scope), out SSADefinition ssaDef) &&
                         ssaDef.State != SSADefinition.SetState.Unset)
                     {
                         variables[(varName, scope)] = ssaDef.PotentiallyUnset(unset);
                     }
+                    scope = scope.ParentScope;
                 }
             }
             foreach (string varName in trigger.ExternalWrites)
@@ -331,22 +353,18 @@ namespace kOS.Safe.Compilation.IR
                 IRScope scope = trigger.ClosureScope;
                 while (scope != null)
                 {
-                    if (variables.TryGetValue((varName, scope), out SSADefinition ssaDef) &&
-                        ssaDef.State != SSADefinition.SetState.Unset)
-                    {
-                        blacklist.Add((varName, scope));
-                    }
+                    readBlacklist.Add((varName, scope));
                     scope = scope.ParentScope;
                 }
             }
         }
 
-        private static void ProcessCall(IRCall call, IRCodePart codePart, Dictionary<(string, IRScope), SSADefinition> variables, HashSet<(string, IRScope)> blacklist, IClosureVariableUser callingClosure)
+        private static void ProcessCall(IRCall call, IRCodePart codePart, Dictionary<(string, IRScope), SSADefinition> variables, HashSet<(string, IRScope)> readBlacklist, Dictionary<(string, IRScope), IRUnset> writeBlacklist, IClosureVariableUser callingClosure)
         {
             IRFunction function = codePart.GetFunction(call);
             if (function != null)
             {
-                HandleFunction(call, function, variables, blacklist, callingClosure);
+                HandleFunction(call, function, variables, readBlacklist, writeBlacklist, callingClosure);
             }
             else if (!call.Direct && !(call.IndirectMethod is IRSuffixGetMethod))
             {
@@ -357,11 +375,11 @@ namespace kOS.Safe.Compilation.IR
                 // function in this code part.
                 foreach (IRFunction func in codePart.Functions)
                 {
-                    HandleFunction(call, func, variables, blacklist, callingClosure);
+                    HandleFunction(call, func, variables, readBlacklist, writeBlacklist, callingClosure);
                 }
             }
         }
-        static void HandleFunction(IRCall call, IRFunction function, Dictionary<(string, IRScope), SSADefinition> variables, HashSet<(string, IRScope)> blacklist, IClosureVariableUser callingClosure)
+        static void HandleFunction(IRCall call, IRFunction function, Dictionary<(string, IRScope), SSADefinition> variables, HashSet<(string, IRScope)> readBlacklist, Dictionary<(string, IRScope), IRUnset> writeBlacklist, IClosureVariableUser callingClosure)
         {
             HashSet<string> externalWrites = callingClosure?.ExternalWrites;
             HashSet<(string, IRUnset)> externalUnsets = callingClosure?.ExternalUnsets;
@@ -417,7 +435,7 @@ namespace kOS.Safe.Compilation.IR
             // This is handled as normal for a trigger.
             foreach (IRTrigger trigger in function.TriggersCreated)
             {
-                ProcessTrigger(trigger, variables, blacklist);
+                ProcessTrigger(trigger, variables, readBlacklist, writeBlacklist);
             }
         }
 
@@ -433,6 +451,7 @@ namespace kOS.Safe.Compilation.IR
                 BasicBlock block = worklist.Dequeue();
 
                 HashSet<(string, IRScope)> blacklist = block.TriggerPropagationBlacklist;
+                Dictionary<(string, IRScope), IRUnset> writeBlacklist = block.TriggerUnsetBlacklist;
                 List<(BasicBlock Block, IRScope Scope, SSADefinition Variable)> varsIn = new List<(BasicBlock, IRScope, SSADefinition)>();
 
                 // Make the blacklist the union of all incoming blacklists
@@ -440,6 +459,8 @@ namespace kOS.Safe.Compilation.IR
                 foreach (BasicBlock predecessor in block.Predecessors)
                 {
                     blacklist.UnionWith(predecessor.TriggerPropagationBlacklist);
+                    foreach (KeyValuePair<(string, IRScope), IRUnset> item in writeBlacklist)
+                        writeBlacklist[item.Key] = item.Value;
                     if (variablesOut.TryGetValue(predecessor, out Dictionary<(string Name, IRScope Scope), SSADefinition> predVarsOut))
                     {
                         foreach (KeyValuePair<(string Name, IRScope Scope), SSADefinition> variable in predVarsOut
@@ -515,8 +536,13 @@ namespace kOS.Safe.Compilation.IR
 
             // Start with the union of all incoming trigger blacklists.
             HashSet<(string, IRScope)> triggerBlacklist = new HashSet<(string, IRScope)>();
+            Dictionary<(string, IRScope), IRUnset> triggerWriteBlacklist = new Dictionary<(string, IRScope), IRUnset>();
             foreach (BasicBlock predecessor in block.Predecessors)
+            {
                 triggerBlacklist.UnionWith(predecessor.TriggerPropagationBlacklist);
+                foreach (KeyValuePair<(string, IRScope), IRUnset> item in predecessor.TriggerUnsetBlacklist)
+                    triggerWriteBlacklist[item.Key] = item.Value;
+            }
 
             // Create a local function for SSA replacement for this specific block.
             IInterimOperand ScopedSSAReplacement(IInterimOperand op)
@@ -529,16 +555,11 @@ namespace kOS.Safe.Compilation.IR
                 {
                     if (inst is IRCall call)
                     {
-                        ProcessCall(call, codePart, liveDefinitions, triggerBlacklist, null);
+                        ProcessCall(call, codePart, liveDefinitions, triggerBlacklist, triggerWriteBlacklist, null);
                         IRFunction function = codePart.GetFunction(call);
                         if (function != null)
                         {
-                            Dictionary<(string, IRScope), SSADefinition> reachableVariables =
-                                new Dictionary<(string, IRScope), SSADefinition>();
-                            foreach ((string, IRScope) slot in liveDefinitions.Keys
-                                .Where(k => function.ExternalReads.Contains(k.Name)))
-                                reachableVariables.Add(slot, liveDefinitions[slot]);
-                            SingleStaticAssignment.reachableVariables[call] = reachableVariables;
+                            ReachableVariables[call] = DetermineCallReaches(call, function, funcOrTrigger, liveDefinitions, triggerBlacklist);
                         }
                     }
                     if (inst is IOperandInstructionBase operandInstruction)
@@ -549,7 +570,7 @@ namespace kOS.Safe.Compilation.IR
                 switch (instruction)
                 {
                     case IRAssign assignment:
-                        ProcessAssignment(assignment, null, liveDefinitions, triggerBlacklist);
+                        ProcessAssignment(assignment, null, liveDefinitions, triggerBlacklist, triggerWriteBlacklist);
                         break;
                     case IRUnset unset:
                         ProcessUnset(unset, liveDefinitions, null);
@@ -559,7 +580,7 @@ namespace kOS.Safe.Compilation.IR
                         {
                             string pointer = (string)((InterimConstantValue)irTrigger.Operand).Value;
                             IRTrigger trigger = codePart.GetTrigger(pointer);
-                            ProcessTrigger(trigger, liveDefinitions, triggerBlacklist);
+                            ProcessTrigger(trigger, liveDefinitions, triggerBlacklist, triggerWriteBlacklist);
                         }
                         break;
                 }
@@ -571,23 +592,13 @@ namespace kOS.Safe.Compilation.IR
             {
                 if (operand is InterimVariableReference variableRef)
                 {
-                    string name = variableRef.Name;
-                    // Don't apply to the global scope since SSA cannot be
-                    // guaranteed for global variables.
-                    while (!scope.IsGlobalScope)
-                    {
-                        if (liveDefinitions.TryGetValue((name, scope), out SSADefinition value) &&
-                            value.State != SSADefinition.SetState.Unset)
-                        {
-                            if (triggerBlacklist.Contains((name, scope)))
-                            {
-                                return variableRef;
-                            }
-                            return new InterimVariableReference<SSADefinition>(value, variableRef);
-                        }
-                        scope = scope.ParentScope;
-                    }
-                    funcOrTrigger?.ExternalReads.Add(name);
+                    IInterimVariableReference result = AttemptResolveReference(
+                        variableRef, scope,
+                        liveDefinitions, triggerBlacklist, out bool exceededClosure);
+
+                    if (exceededClosure)
+                        funcOrTrigger?.ExternalReads.Add(result);
+                    return result;
                 }
                 else if (operand is IRUnaryOp existOp && existOp.Operation is OpcodeExists)
                 {
@@ -608,11 +619,69 @@ namespace kOS.Safe.Compilation.IR
                                 return new InterimConstantValue(Encapsulation.BooleanValue.True, existOp);
                             scope = scope.ParentScope;
                         }
-                        funcOrTrigger?.ExternalReads.Add(name);
+                        funcOrTrigger?.ExternalReads.Add(new InterimVariableReference(name, existOp));
                     }
                 }
                 return operand;
             }
+        }
+
+        private static IInterimVariableReference AttemptResolveReference(IInterimVariableReference variableRef, IRScope startingScope, Dictionary<(string, IRScope), SSADefinition> liveDefinitions, HashSet<(string, IRScope)> triggerBlacklist, out bool exceededClosure)
+        {
+            exceededClosure = false;
+            string name = variableRef.Name;
+            bool blacklisted = false;
+            IRScope scope = startingScope;
+            InterimUnresolvedReference unresolvedReference = null;
+            // Don't apply to the global scope since SSA cannot be
+            // guaranteed for global variables.
+            while (!scope.IsGlobalScope)
+            {
+                if (liveDefinitions.TryGetValue((name, scope), out SSADefinition value) &&
+                    value.State != SSADefinition.SetState.Unset)
+                {
+                    if (triggerBlacklist.Contains((name, scope)))
+                    {
+                        blacklisted = true;
+                        unresolvedReference = null;
+                    }
+
+                    if (unresolvedReference != null)
+                    {
+                        unresolvedReference.AddReference(value);
+                        if (value.State == SSADefinition.SetState.Set)
+                            return unresolvedReference;
+                    }
+                    else if (value.State == SSADefinition.SetState.Set)
+                    {
+                        if (blacklisted)
+                            return variableRef;
+                        return new InterimResolvedReference(value, variableRef.SourceLine, variableRef.SourceColumn);
+                    }
+                    else if (!blacklisted)
+                        unresolvedReference = new InterimUnresolvedReference(value, variableRef.SourceLine, variableRef.SourceColumn);
+                }
+                scope = scope.ParentScope;
+            }
+            exceededClosure = true;
+            return variableRef;
+        }
+
+        private static HashSet<IInterimVariableReference> DetermineCallReaches(IRCall call, IRFunction function, IClosureVariableUser funcOrTrigger, Dictionary<(string, IRScope), SSADefinition> liveDefinitions, HashSet<(string, IRScope)> triggerBlacklist)
+        {
+            HashSet<IInterimVariableReference> reachableVariables = new HashSet<IInterimVariableReference>();
+
+            foreach (string name in function.ExternalReads.Select(v => v.Name).Union(function.ExternalWrites))
+            {
+                IInterimVariableReference result = AttemptResolveReference(
+                    new InterimVariableReference(name, call), function.ClosureScope,
+                    liveDefinitions, triggerBlacklist, out bool exceededClosure);
+                if (exceededClosure)
+                    funcOrTrigger?.ExternalReads.Add(result);
+                if (!(result is InterimVariableReference))
+                    reachableVariables.Add(result);
+            }
+            return reachableVariables;
         }
     }
 }

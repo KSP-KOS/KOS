@@ -3,7 +3,8 @@
 global a is 5.
 global _false is false.
 
-local b is 2.
+local b is 1.
+set b to 2.
 local c is 4.
 local d is 7.
 local h is false.
@@ -13,7 +14,7 @@ print("test").  // The assignments should happen after this line.
 print(b+c).     // 6
 print(h).       // False
 
-global function func {
+local function func {
     print(b+c). // 6
     print(b+d). // 9
     print(b+a). // 7

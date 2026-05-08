@@ -107,6 +107,15 @@ namespace kOS.Safe.Compilation.IR
         /// </remarks>
         public HashSet<(string, IRScope)> TriggerPropagationBlacklist { get; } = new HashSet<(string, IRScope)>();
         /// <summary>
+        /// Gets the set of variables that are blacklisted against
+        /// setting definitive values due to their being unset in active
+        /// triggers.
+        /// </summary>
+        /// <remarks>
+        /// This data is populated during <see cref="SingleStaticAssignment.FinalizeSSA(IRCodePart)"/>.
+        /// </remarks>
+        public Dictionary<(string, IRScope), IRUnset> TriggerUnsetBlacklist { get; } = new Dictionary<(string, IRScope), IRUnset>();
+        /// <summary>
         /// Gets the instruction label with which to start the block.
         /// The special prefix "@BB#" will be overwritten during linking.
         /// </summary>
