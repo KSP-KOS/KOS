@@ -35,7 +35,7 @@ namespace kOS.Safe.Compilation.IR
         public override string ToString()
             => Value.ToString();
 
-        public InterimConstantValue Evaluate()
+        InterimConstantValue IEvaluatableToConstant.Evaluate()
             => this;
     }
 
