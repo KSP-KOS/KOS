@@ -42,6 +42,11 @@ namespace kOS.AddOns.RemoteTech
             if (!(RemoteTechHook.IsAvailable()))
                 return -1; // default to no connection if RT itself isn't available.
             double delay = RemoteTechHook.Instance.GetSignalDelayToSatellite(vessel1.id, vessel2.id);
+            if (Double.IsPositiveInfinity(delay) || delay < 0)
+            {
+                delay = Math.Max(RemoteTechHook.Instance.GetShortestSignalDelay(vessel1.id),
+                                RemoteTechHook.Instance.GetShortestSignalDelay(vessel2.id));
+            }
             return Double.IsPositiveInfinity(delay) ? -1 : delay;
         }
 
