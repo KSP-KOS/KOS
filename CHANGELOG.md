@@ -18,6 +18,7 @@
 - Fixed `GetSignalDelayToSatellite` for RemoteTech (thanks @KerbalOne) [commit](https://github.com/KSP-KOS/KOS/commit/b76759f24ba43e7cb2d82437c2251caf7d3a582f)
 - Changed `NoDelegate` so that it can actually be called rather than throwing an exception (thanks @AntonKuzin) [commit](https://github.com/KSP-KOS/KOS/commit/e8f375121f8947b583fa9b7cd04a68d436aa7e0b)
 - Fixed a few benign but annoying errors on game load
+- Removed Infernal Robotics addon because it hasn't worked in several years.  A separate addon mod will be created later: https://github.com/ksp-kos/kos-ir
 
 ## 1.5.1.0 - 2025-02-06
 
