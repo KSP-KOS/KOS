@@ -17,6 +17,7 @@
 - Fixed many documentation issues (thanks @sisve) [commit1](https://github.com/KSP-KOS/KOS/commit/727d345679fe992077fa5604c27b43c34a80fbe7) [commit2](https://github.com/KSP-KOS/KOS/commit/afabb19e860adc67ad63f939a3d624e9344ad7b8) [commit3](https://github.com/KSP-KOS/KOS/commit/110b209ad89225bf447caa079334c434df0e9746)
 - Fixed `GetSignalDelayToSatellite` for RemoteTech (thanks @KerbalOne) [commit](https://github.com/KSP-KOS/KOS/commit/b76759f24ba43e7cb2d82437c2251caf7d3a582f)
 - Changed `NoDelegate` so that it can actually be called rather than throwing an exception (thanks @AntonKuzin) [commit](https://github.com/KSP-KOS/KOS/commit/e8f375121f8947b583fa9b7cd04a68d436aa7e0b)
+- Fixed a few benign but annoying errors on game load
 
 ## 1.5.1.0 - 2025-02-06
 

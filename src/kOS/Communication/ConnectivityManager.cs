@@ -1,4 +1,4 @@
-﻿using kOS.Module;
+using kOS.Module;
 using kOS.Safe.Utilities;
 using System;
 using System.Collections.Generic;
@@ -30,7 +30,7 @@ namespace kOS.Communication
         {
             get
             {
-                if (myinstance == null)
+                if (myinstance == null && HighLogic.LoadedScene != GameScenes.LOADING)
                 {
                     RefreshInstance();
                 }
