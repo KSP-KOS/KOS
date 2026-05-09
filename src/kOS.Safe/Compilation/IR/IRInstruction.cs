@@ -757,29 +757,12 @@ namespace kOS.Safe.Compilation.IR
     }
     public class IRCall : MultipleOperandInstruction, IResultingInstruction
     {
-        private bool isResultTypeInformed = false;
-        private Type resultType = null;
-        private bool? isFunctionInvariant = null;
-
-        public bool IsFunctionInvariant
-        {
-            get => isFunctionInvariant ?? IsCallInvariant(Function);
-            set => isFunctionInvariant = value;
-        }
-        public override bool IsInvariant => IsFunctionInvariant && Arguments.All(a => a.IsInvariant);
+        public override bool IsInvariant => IsCallInvariant() && Arguments.All(a => a.IsInvariant);
         public string Function { get; }
         public List<IInterimOperand> Arguments { get; } = new List<IInterimOperand>();
         public override IEnumerable<IInterimOperand> Operands => Enumerable.Reverse(Arguments);
         public override int OperandCount => Arguments.Count;
-        public Type Type
-        {
-            get => isResultTypeInformed ? resultType : GetDefaultReturnType();
-            set
-            {
-                resultType = value;
-                isResultTypeInformed = true;
-            }
-        }
+        public Type Type => GetDefaultReturnType();
         protected override IInterimOperand this[int index]
         {
             get => Arguments[index];
@@ -794,20 +777,22 @@ namespace kOS.Safe.Compilation.IR
             Direct = opcode.Direct;
             EmitArgMarker = emitArgMarker;
         }
-        private bool IsCallInvariant(string functionName)
+        private bool IsCallInvariant()
         {
             // TODO: Consider that some suffix methods may actually be known at compile time.
             if (!Direct)
                 return false;
-            if (Optimization.Optimizer.FunctionManager.Exists(functionName))
-                return Optimization.Optimizer.FunctionManager.IsFunctionInvariant(functionName);
+            if (Optimization.Optimizer.FunctionManager.Exists(Function.Replace("()", "")))
+                return Optimization.Optimizer.FunctionManager.IsFunctionInvariant(Function.Replace("()", ""));
             return false;
-
         }
         private Type GetDefaultReturnType()
         {
-            if (Optimization.Optimizer.FunctionManager.Exists(Function))
-                return Optimization.Optimizer.FunctionManager.FunctionReturnType(Function);
+            IRCodePart.IRFunction function = Block.CodePart.GetFunction(this);
+            if (function != null)
+                return function.Returns.Type;
+            if (Optimization.Optimizer.FunctionManager.Exists(Function.Replace("()", "")))
+                return Optimization.Optimizer.FunctionManager.FunctionReturnType(Function.Replace("()", ""));
             if (!Direct && IndirectMethod is IRSuffixGetMethod suffixGetMethod)
                 return suffixGetMethod.Type;
             return typeof(Encapsulation.Structure);

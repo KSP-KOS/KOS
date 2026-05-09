@@ -216,7 +216,6 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 
         private static IInterimOperand ReduceCall(IRCall instruction)
         {
-            // TODO: Add reduction for specific functions. E.g. mod(X, 1) = 0, round/ceiling/floor, Ln/Log10, min/max
             if (instruction.IsInvariant)
                 return instruction.Evaluate();
 
