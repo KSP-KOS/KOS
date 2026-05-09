@@ -53,9 +53,16 @@ namespace kOS.Safe.Compilation.IR
         /// </summary>
         public BasicBlock FooterBlock { get; set; }
         /// <summary>
-        /// Gets the collection of variables associated with this scope.
+        /// Gets the collection of variable names associated with this scope.
         /// </summary>
         public IReadOnlyCollection<string> Variables => variables;
+        /// <summary>
+        /// Gets the set of assignments that are made (or possibly made) to this scope.
+        /// </summary>
+        /// <remarks>
+        /// These are populated in <see cref="SingleStaticAssignment"/>.
+        /// </remarks>
+        public HashSet<IRAssign> Assignments { get; } = new HashSet<IRAssign>();
         /// <summary>
         /// Gets a value indicating whether this instance represents the
         /// global scope.

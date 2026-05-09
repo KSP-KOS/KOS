@@ -167,6 +167,7 @@ namespace kOS.Safe.Compilation.IR
                         variables[(definition.Name, startingScope)] = definition.PotentiallyUnset(unset);
                     else
                         variables[(definition.Name, startingScope)] = definition;
+                    startingScope.Assignments.Add(assignment);
                     // IRFunction.IsGlobal initiates as false, so there's no need to |= false.
                     break;
                 case IRAssign.StoreScope.Global:
@@ -174,6 +175,7 @@ namespace kOS.Safe.Compilation.IR
                         variables[(definition.Name, startingScope)] = SSAPotentialDefinition.PotentiallySet(definition, globalUnset);
                     else
                         variables[(definition.Name, startingScope.GetGlobalScope())] = definition;
+                    startingScope.GetGlobalScope().Assignments.Add(assignment);
                     SetFunctionToGlobal(assignment, codePart, variables, readBlacklist, writeBlacklist);
                     break;
                 default:
@@ -208,6 +210,7 @@ namespace kOS.Safe.Compilation.IR
                             variables[(name, scope)] = SSAPotentialDefinition.PotentiallySet(definition, (IRUnset)lastPotential.AssignedAt);
                         else
                             variables[(name, scope)] = definition;
+                        scope.Assignments.Add(definition.DefinedAt);
                         // Since the SSA algorithm for a function won't know
                         // of any slots filled between the function's top and the
                         // global scope, this is where propagation to the higher
@@ -227,6 +230,7 @@ namespace kOS.Safe.Compilation.IR
                         variables[(name, scope)] = slotValue.PotentiallyOverwrite(definition);
                     else
                         variables[(name, scope)] = definition.PotentiallyUnset((IRUnset)slotValue.AssignedAt);
+                    scope.Assignments.Add(definition.DefinedAt);
                     potential = true;
                     lastPotential = slotValue;
                 }
@@ -237,6 +241,7 @@ namespace kOS.Safe.Compilation.IR
                         variables[(name, scope)] = slotValue.PotentiallyOverwrite(definition);
                     else
                         variables[(name, scope)] = definition;
+                    scope.Assignments.Add(definition.DefinedAt);
                     break;
                 }
                 scope = scope.ParentScope;

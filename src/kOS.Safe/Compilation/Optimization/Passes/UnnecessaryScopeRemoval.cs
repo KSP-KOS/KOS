@@ -21,7 +21,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 
             foreach (IRScope scope in scopes)
             {
-                if (scope.Variables.Any())
+                if (scope.Assignments.Any(a => a.Block.IsExecutable))
                     continue;
 
                 if (scope.IsGlobalScope)
