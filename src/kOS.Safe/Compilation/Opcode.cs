@@ -1058,9 +1058,10 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
+            object value = cpu.PopValueArgument();
             try
             {
-                bool condition = Convert.ToBoolean(cpu.PopValueArgument());
+                bool condition = Convert.ToBoolean(value);
                 DeltaInstructionPointer = !condition ? Distance : 1;
             }
             catch
@@ -1085,9 +1086,10 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
+            object value = cpu.PopValueArgument();
             try
             {
-                bool condition = Convert.ToBoolean(cpu.PopValueArgument());
+                bool condition = Convert.ToBoolean(value);
                 DeltaInstructionPointer = condition ? Distance : 1;
             }
             catch
