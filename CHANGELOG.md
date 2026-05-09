@@ -22,6 +22,7 @@
 - Fixed a few benign but annoying errors on game load [commit 1](https://github.com/KSP-KOS/KOS/commit/019950401b93de951a0aedfa5e696d07a56200e9) [commit 2](https://github.com/KSP-KOS/KOS/commit/adb4dee40df86c19ff0f8623e3201ce134de741e)
 - Removed Infernal Robotics addon because it hasn't worked in several years.  A separate addon mod will be created later: https://github.com/ksp-kos/kos-ir
 - Fixed quaternion constructor ordering when loading from a dump (thanks @DBooots) [pr](https://github.com/KSP-KOS/KOS/pull/3165)
+- Fixed setting `ship:control:mainthrottle` without any other controls not being detected as an input
 
 ## 1.5.1.0 - 2025-02-06
 

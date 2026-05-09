@@ -10,6 +10,7 @@ using kOS.Utilities;
 using Math = System.Math;
 using kOS.Communication;
 using kOS.Control;
+using Smooth.Delegates;
 
 namespace kOS.Suffixed
 {
@@ -271,13 +272,15 @@ namespace kOS.Suffixed
             wheelSteerTrim = default(float);
             wheelThrottle = default(float);
             wheelThrottleTrim = default(float);
+            mainThrottle = default(float);
         }
 
         private BooleanValue IsNeutral()
         {
             return (yaw == yawTrim && pitch == pitchTrim && roll == rollTrim &&
                 fore == 0 && starboard == 0 && top == 0 &&
-                wheelSteer == wheelSteerTrim && wheelThrottle == wheelSteerTrim);
+                mainThrottle == 0 &&
+                wheelSteer == wheelSteerTrim && wheelThrottle == wheelThrottleTrim);
         }
 
         private void OnFlyByWire(FlightCtrlState st)
