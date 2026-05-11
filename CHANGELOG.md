@@ -9,6 +9,7 @@
 - Add `ACTUATION` suffix to steeringmanager (thanks @DBooots) [pr](https://github.com/KSP-KOS/KOS/pull/3162)
 - `VESSEL:ELEMENTS` now considers ModuleGrappleNode (i.e. the Klaw) to separate elements
 - `PART:CONTROLFROM` can now be called on a part that has ModuleGrappleNode
+- Add support for custom axis control
 
 ### Performance Improvements
 

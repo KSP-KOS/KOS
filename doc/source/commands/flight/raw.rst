@@ -158,8 +158,27 @@ These "Raw" controls allow you the direct control of flight parameters while the
       - :ref:`Boolean <boolean>`
       - Releases Control
 
+    * - `CUSTOMAXISCOUNT <SHIP CONTROL CUSTOMAXISCOUNT>`
+      - Get-only
+      - Number of custom axes available from the ship's controls
 
+    * - `CUSTOMAXIS <SHIP CONTROL CUSTOMAXIS>`
+      - Get-only
+      - param: the index of the custom axis, from 0 to `CUSTOMAXISCOUNT-1`.
+      - :ref:`scalar <scalar>` [-1,1]
+      - Returns: the value of the custom axis
 
+    * - `SETCUSTOMAXIS <SHIP CONTROL SETCUSTOMAXIS>`
+      - Set-only
+      - param: the index of the custom axis, from 0 to `CUSTOMAXISCOUNT-1`.
+      - param: the value to set the custom axis to
+      - :ref:`scalar <scalar>` [-1,1]
+      - Sets the value of the custom axis.  After a custom axis has been set, the pilot's custom axes values will be ignored until `NEUTRALIZECUSTOMAXES` is set to true.
+
+    * - `NEUTRALIZECUSTOMAXES`
+      - Set-only
+      - :ref:`Boolean <boolean>`
+      - Setting this to true causes all custom axes to be set to zero. Setting it to false has no effect.
 
 .. _SHIP CONTROL MAINTHROTTLE:
 .. object:: SHIP:CONTROL:MAINTHROTTLE
