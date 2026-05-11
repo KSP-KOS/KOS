@@ -3,9 +3,6 @@
     <TargetFramework>net48</TargetFramework>
     <OutputType>Library</OutputType>
   </PropertyGroup>
-  <PropertyGroup>
-    <GenerateKSPAssemblyAttribute>true</GenerateKSPAssemblyAttribute>
-  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">
       <Project>{590FFDA8-7B44-4BC3-A12A-5FFE2BB7D8FD}</Project>
@@ -13,9 +10,19 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="$(RepoRootPath)\$(BinariesOutputRelativePath)\ICSharpCode.SharpZipLib.dll" />
+    <ModReference Include="SharpZipLib">
+      <DLLPath>GameData/kOS/Plugins/ICSharpCode.SharpZipLib.dll</DLLPath>
+    </ModReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="KSPBuildTools" Version="0.0.4" />
+    <KSPVersionFile Include="kOS.version">
+      <Destination>$(KSPBT_ModRoot)/kOS.Version</Destination>
+      <KSP_Version>1.12.5</KSP_Version>
+      <KSP_Version_Min>1.12.3</KSP_Version_Min>
+      <KSP_Version_Max>1.12.99</KSP_Version_Max>
+    </KSPVersionFile>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="KSPBuildTools" Version="1.1.1" />
   </ItemGroup>
 </Project>
