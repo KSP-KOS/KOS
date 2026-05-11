@@ -15,9 +15,9 @@
     <Compile Remove="$(PkgKSPBuildTools)/build/include/Log.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ModReference Include="SharpZipLib">
-      <DLLPath>GameData/kOS/Plugins/ICSharpCode.SharpZipLib.dll</DLLPath>
-    </ModReference>
+    <Reference Include="$(KSPBT_ModRoot)\$(KSPBT_ModPluginFolder)\ICSharpCode.SharpZipLib.dll">
+      <Private>false</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="KSPBuildTools" Version="1.1.1" GeneratePathProperty="True" />

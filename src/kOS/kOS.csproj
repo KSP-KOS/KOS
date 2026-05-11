@@ -10,9 +10,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ModReference Include="SharpZipLib">
-      <DLLPath>GameData/kOS/Plugins/ICSharpCode.SharpZipLib.dll</DLLPath>
-    </ModReference>
+    <Reference Include="$(KSPBT_ModRoot)\$(KSPBT_ModPluginFolder)\ICSharpCode.SharpZipLib.dll">
+      <Private>false</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <KSPVersionFile Include=".">
