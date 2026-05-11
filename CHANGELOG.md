@@ -8,6 +8,7 @@
 - Add `ALLHIDDENFIELDS`, `ALLHIDDENFIELDNAMES`, `HASHIDDENFIELD` and `GETHIDDENFIELD` to access fields of partmodules that are not visible in the UI (thanks @AntonKuzin) [commit](https://github.com/KSP-KOS/KOS/commit/c047c3210bf74fc529c7eb1703ad8110e6bc4abc)
 - Add `ACTUATION` suffix to steeringmanager (thanks @DBooots) [pr](https://github.com/KSP-KOS/KOS/pull/3162)
 - `VESSEL:ELEMENTS` now considers ModuleGrappleNode (i.e. the Klaw) to separate elements
+- `PART:CONTROLFROM` can now be called on a part that has ModuleGrappleNode
 
 ### Performance Improvements
 

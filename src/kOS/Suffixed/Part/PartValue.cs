@@ -290,8 +290,10 @@ namespace kOS.Suffixed.Part
         private void ControlFrom()
         {
             ThrowIfNotCPUVessel();
+
             var dockingModule = Part.Modules.OfType<ModuleDockingNode>().FirstOrDefault();
             var commandModule = Part.Modules.OfType<ModuleCommand>().FirstOrDefault();
+            var grappleModule = Part.Modules.OfType<ModuleGrappleNode>().FirstOrDefault();
 
             if (commandModule != null)
             {
@@ -300,6 +302,10 @@ namespace kOS.Suffixed.Part
             else if (dockingModule != null)
             {
                 dockingModule.MakeReferenceTransform();
+            }
+            else if (grappleModule != null)
+            {
+                grappleModule.MakeReferenceTransform();
             }
             else
             {
