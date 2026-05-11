@@ -23,6 +23,7 @@
 - Removed Infernal Robotics addon because it hasn't worked in several years.  A separate addon mod will be created later: https://github.com/ksp-kos/kos-ir
 - Fixed quaternion constructor ordering when loading from a dump (thanks @DBooots) [pr](https://github.com/KSP-KOS/KOS/pull/3165)
 - Fixed setting `ship:control:mainthrottle` without any other controls not being detected as an input
+- Global `ANGULARVELOCITY` value is now a proper Vector type
 
 ## 1.5.1.0 - 2025-02-06
 
