@@ -13,7 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		CHANGELOG.md = CHANGELOG.md
 		CONTRIBUTING.md = CONTRIBUTING.md
-		Resources\GameData\kOS\kOS.version.versiontemplate = Resources\GameData\kOS\kOS.version.versiontemplate
 		LICENSE.md = LICENSE.md
 		README.md = README.md
 		RELEASECHECKLIST.md = RELEASECHECKLIST.md

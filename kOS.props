@@ -2,7 +2,7 @@
 <Project>
   <PropertyGroup>
     <Company></Company>
-    <KSPBT_ModRoot>$(MSBuildThisFileDirecotry)\Resources\GameData\kOS</KSPBT_ModRoot>
+    <KSPBT_ModRoot>$(MSBuildThisFileDirectory)\Resources\GameData\kOS</KSPBT_ModRoot>
     <KSPBT_ModPluginFolder>Plugins</KSPBT_ModPluginFolder>
     <Version>$(KSPBT_ModVersion)</Version>
   </PropertyGroup>

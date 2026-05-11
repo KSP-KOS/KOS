@@ -15,11 +15,10 @@
     </ModReference>
   </ItemGroup>
   <ItemGroup>
-    <KSPVersionFile Include="kOS.version">
-      <Destination>$(KSPBT_ModRoot)/kOS.Version</Destination>
-      <KSP_Version>1.12.5</KSP_Version>
-      <KSP_Version_Min>1.12.3</KSP_Version_Min>
-      <KSP_Version_Max>1.12.99</KSP_Version_Max>
+    <KSPVersionFile Include=".">
+      <Destination>$(KSPBT_ModRoot)/kOS.version</Destination>
+      <URL>https://github.com/KSP-KOS/KOS/releases/latest/download/kOS.version</URL>
+      <Download>https://github.com/KSP-KOS/KOS/releases/latest</Download>
     </KSPVersionFile>
   </ItemGroup>
   <ItemGroup>
