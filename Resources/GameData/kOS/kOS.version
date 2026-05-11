@@ -1,6 +1,6 @@
 {
   "NAME": "kOS",
-  "URL": "https://raw.githubusercontent.com/KSP-KOS/KOS/master/Resources/GameData/kOS/kOS.version",
+  "URL": "https://github.com/KSP-KOS/KOS/releases/latest/download/kOS.version",
   "DOWNLOAD": "https://github.com/KSP-KOS/KOS/releases",
   "CHANGE_LOG_URL": "https://raw.githubusercontent.com/KSP-KOS/KOS/master/CHANGELOG.md",
   "GITHUB": {
