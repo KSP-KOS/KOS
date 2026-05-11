@@ -7,6 +7,7 @@
 - Add `JUMPSTACK` kRISC instruction to support jump tables for switch case (thanks @CoderCatGG) [commit](https://github.com/KSP-KOS/KOS/commit/3089ecc2f6bf15ee3a6d3a8722ce1efc7e8415c4)
 - Add `ALLHIDDENFIELDS`, `ALLHIDDENFIELDNAMES`, `HASHIDDENFIELD` and `GETHIDDENFIELD` to access fields of partmodules that are not visible in the UI (thanks @AntonKuzin) [commit](https://github.com/KSP-KOS/KOS/commit/c047c3210bf74fc529c7eb1703ad8110e6bc4abc)
 - Add `ACTUATION` suffix to steeringmanager (thanks @DBooots) [pr](https://github.com/KSP-KOS/KOS/pull/3162)
+- `VESSEL:ELEMENTS` now considers ModuleGrappleNode (i.e. the Klaw) to separate elements
 
 ### Performance Improvements
 
