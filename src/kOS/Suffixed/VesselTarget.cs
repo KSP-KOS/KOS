@@ -550,7 +550,7 @@ namespace kOS.Suffixed
 
         public override int GetHashCode()
         {
-            return Vessel.rootPart.flightID.GetHashCode();
+            return Vessel.id.GetHashCode();
         }
 
         public static bool operator ==(VesselTarget left, VesselTarget right)
