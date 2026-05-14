@@ -1,6 +1,6 @@
 # kOS Mod Changelog
 
-## 1.6.0 - 2026-05-11
+## Unreleased
 
 ### New Features
 
