@@ -67,6 +67,23 @@ namespace kOS.Suffixed
             return ListValue.CreateList(elements.Values.ToList());
         }
 
+        private static DockedVesselInfo GetDockedVesselInfo(global::Part part)
+        {
+            for (int moduleIndex = 0; moduleIndex < part.Modules.Count; moduleIndex++)
+            {
+                var module = part.Modules[moduleIndex];
+                if (module is ModuleDockingNode dockingNode)
+                {
+                    return dockingNode.vesselInfo;
+                }
+                else if (module is ModuleGrappleNode grappleNode)
+                {
+                    return grappleNode.vesselInfo;
+                }
+            }
+            return null;
+        }
+
         private static void WorkQueue(Queue<ElementPair> queue, Dictionary<uint, ElementValue> elements, SharedObjects shared)
         {
             var visitedFlightIds = new HashSet<uint>();
@@ -76,35 +93,21 @@ namespace kOS.Suffixed
                 ElementPair pair = queue.Dequeue();
                 if (AlreadyVisited(pair.Part, visitedFlightIds)) continue;
 
-                for (int moduleIndex = 0; moduleIndex < pair.Part.Modules.Count; moduleIndex++)
+                DockedVesselInfo info = GetDockedVesselInfo(pair.Part);
+                ElementValue element;
+
+                if (info == null)
                 {
-                    var module = pair.Part.Modules[moduleIndex];
-
-                    ElementValue element;
-                    DockedVesselInfo info = null;
-
-                    if (module is ModuleDockingNode dockingNode)
-                    {
-                        info = dockingNode.vesselInfo;
-                    }
-                    else if (module is ModuleGrappleNode grappleNode)
-                    {
-                        info = grappleNode.vesselInfo;
-                    }
-
-                    if (info == null)
-                    {
-                        element = pair.Element;
-                    }
-                    else if (!elements.TryGetValue(info.rootPartUId, out element))
-                    {
-                        element = new ElementValue(info, shared);
-                        elements.Add(info.rootPartUId, element);
-                    }
-
-                    element.AddPart(pair.Part);
-                    EnqueueChildren(queue, element, pair.Part);
+                    element = pair.Element;
                 }
+                else if (!elements.TryGetValue(info.rootPartUId, out element))
+                {
+                    element = new ElementValue(info, shared);
+                    elements.Add(info.rootPartUId, element);
+                }
+
+                element.AddPart(pair.Part);
+                EnqueueChildren(queue, element, pair.Part);
             }
         }
 
