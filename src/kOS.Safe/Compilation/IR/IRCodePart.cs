@@ -81,6 +81,40 @@ namespace kOS.Safe.Compilation.IR
             SingleStaticAssignment.FinalizeSSA(this);
         }
 
+#if DEBUG
+        public IRCodePart(List<Opcode> mainCode, List<UserFunction> userFunctions, List<Trigger> triggers)
+        {
+            IRBuilder builder = new IRBuilder();
+            MainCode = builder.Lower(mainCode, this);
+
+            Functions = new List<IRFunction>();
+            Queue<UserFunction> functionsToLower = new Queue<UserFunction>(userFunctions.Where(f => closureScopes.ContainsKey(f.Identifier)));
+            HashSet<UserFunction> completedFunctions = new HashSet<UserFunction>();
+            while (functionsToLower.Count > 0)
+            {
+                UserFunction function = functionsToLower.Dequeue();
+                Functions.Add(new IRFunction(builder, function, this));
+                completedFunctions.Add(function);
+                foreach (UserFunction func in userFunctions.Where(
+                    f => closureScopes.ContainsKey(f.Identifier) &&
+                    !completedFunctions.Contains(f) &&
+                    !functionsToLower.Contains(f)))
+                    functionsToLower.Enqueue(func);
+            }
+            Triggers = triggers.Select(t => new IRTrigger(builder, t, this)).ToList();
+            foreach (UserFunction func in userFunctions.Except(completedFunctions))
+                Functions.Add(new IRFunction(builder, func, this));
+
+            Blocks.AddRange(MainCode);
+            if (MainCode.Count > 0)
+                RootBlocks.Add(MainCode[0]);
+            RootBlocks.AddRange(Triggers.Select(t => t.RootBlock));
+            RootBlocks.AddRange(Functions.SelectMany(f => f.RootBlocks));
+
+            SingleStaticAssignment.FinalizeSSA(this);
+        }
+#endif
+
         /// <summary>
         /// Gets a function by string reference.
         /// </summary>

@@ -73,21 +73,20 @@ namespace kOS.Safe.Test.Compilation
         [Test]
         public void TestInstructionInferencing()
         {
-            IRConstant a = new IRConstant(ScalarIntValue.One, 0, 0);
-            IRConstant b = new IRConstant(ScalarIntValue.Two, 0, 0);
-            IRTemp result = new IRTemp(0);
-            IRBinaryOp add = new IRBinaryOp(result, new OpcodeMathAdd(), a, b);
+            InterimConstantValue a = new InterimConstantValue(ScalarIntValue.One, 0, 0);
+            InterimConstantValue b = new InterimConstantValue(ScalarIntValue.Two, 0, 0);
+            IRBinaryOp add = new IRBinaryOp(null, new OpcodeMathAdd(), a, b);
 
-            Assert.AreEqual(add.ResultType, typeof(ScalarValue));
+            Assert.AreEqual(add.Type, typeof(ScalarValue));
 
-            IRCall call = new IRCall(result, new OpcodeCall("sin"), true, b);
-            Assert.IsTrue(typeof(ScalarValue).IsAssignableFrom(call.ResultType));
+            IRCall call = new IRCall(null, new OpcodeCall("sin"), true, b);
+            Assert.IsTrue(typeof(ScalarValue).IsAssignableFrom(call.Type));
 
-            IRCall print = new IRCall(result, new OpcodeCall("print"), true, a);
-            Assert.AreEqual(print.ResultType, null);
+            IRCall print = new IRCall(null, new OpcodeCall("print"), true, a);
+            Assert.AreEqual(print.Type, null);
 
-            IRCall userCall = new IRCall(result, new OpcodeCall("$test*"), true, a, b);
-            Assert.AreEqual(userCall.ResultType, typeof(Encapsulation.Structure));
+            IRCall userCall = new IRCall(null, new OpcodeCall("$test*"), true, a, b);
+            Assert.AreEqual(userCall.Type, typeof(Encapsulation.Structure));
         }
     }
 }

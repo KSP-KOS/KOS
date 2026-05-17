@@ -35,10 +35,10 @@ namespace kOS.Safe.Test.Execution
 
     public abstract class BaseIntegrationTest
     {
-        private ICpu cpu;
-        private SafeSharedObjects shared;
         private Screen screen;
-        private string baseDir;
+        protected ICpu cpu;
+        protected SafeSharedObjects shared;
+        protected string baseDir;
         protected virtual OptimizationLevel OptimizationLevel => OptimizationLevel.None;
 
         private string FindKerboscriptTests()

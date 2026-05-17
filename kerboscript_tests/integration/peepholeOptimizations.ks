@@ -1,7 +1,7 @@
-parameter a is TRUE.
-parameter c is 3.
-parameter x is 2.
-parameter z is 5.
+local a is TRUE.
+local c is 3.
+local x is 2.
+local z is 5.
 
 print("test":typename()).
 // v() is unavailable in unit testing.
