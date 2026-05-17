@@ -607,7 +607,7 @@ namespace kOS.Safe.Compilation.IR
                 }
                 else if (operand is IRUnaryOp existOp && existOp.Operation is OpcodeExists)
                 {
-                    if (existOp.Operand.IsInvariant)
+                    if (existOp.Operand.IsInvariant || existOp.Operand is IInterimVariableReference)
                     {
                         string name;
                         if (existOp.Operand is IInterimVariableReference reference)
@@ -617,7 +617,7 @@ namespace kOS.Safe.Compilation.IR
                         else
                             return operand;
 
-                        while (scope != null)
+                        while (!scope.IsGlobalScope)
                         {
                             if (liveDefinitions.TryGetValue((name, scope), out SSADefinition value) &&
                                 value.State == SSADefinition.SetState.Set)
