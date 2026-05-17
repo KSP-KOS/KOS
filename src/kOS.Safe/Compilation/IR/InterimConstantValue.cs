@@ -28,8 +28,17 @@ namespace kOS.Safe.Compilation.IR
                 SourceColumn = sourceColumn
             };
         }
+        public bool Equals(InterimConstantValue other)
+            => Value.Equals(other.Value);
+        public bool Equals(IInterimOperand other)
+            => (other is InterimConstantValue constant && Equals(constant)) ||
+            (other is IEvaluatableToConstant evaluatableToConstant &&
+            evaluatableToConstant.IsInvariant &&
+            Equals(evaluatableToConstant.Evaluate()));
         public override bool Equals(object obj)
-            => obj is InterimConstantValue constant && Value.Equals(constant.Value) || Value.Equals(obj);
+            => (obj is InterimConstantValue constant &&
+            Equals(constant)) ||
+            Value.Equals(obj);
         public override int GetHashCode()
             => Value.GetHashCode();
         public override string ToString()
@@ -79,5 +88,7 @@ namespace kOS.Safe.Compilation.IR
         public Type Type => null;//typeof(Encapsulation.Structure);
         public bool IsInvariant => false;
         public IEnumerable<Opcode> EmitOpcodes() => System.Linq.Enumerable.Empty<Opcode>();
+        public bool Equals(IInterimOperand other)
+            => other == this;
     }
 }

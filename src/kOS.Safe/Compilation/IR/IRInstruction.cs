@@ -258,6 +258,20 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => Operation.ToString();
+        public bool Equals(IInterimOperand other)
+        {
+            if (other is IRBinaryOp binaryOp &&
+                Operation.GetType() == binaryOp.Operation.GetType())
+            {
+                return (Left.Equals(binaryOp.Left) && Right.Equals(binaryOp.Right)) ||
+                    (IsCommutative && Left.Equals(binaryOp.Right) && Right.Equals(binaryOp.Left));
+            }
+            if (IsInvariant &&
+                other is IEvaluatableToConstant evaluatableToConstant &&
+                evaluatableToConstant.IsInvariant)
+                return Evaluate().Equals(evaluatableToConstant.Evaluate());
+            return false;
+        }
         public override bool Equals(object obj)
         {
             if (obj is IRBinaryOp binaryOp &&
@@ -266,6 +280,10 @@ namespace kOS.Safe.Compilation.IR
                 return (Left.Equals(binaryOp.Left) && Right.Equals(binaryOp.Right)) ||
                     (IsCommutative && Left.Equals(binaryOp.Right) && Right.Equals(binaryOp.Left));
             }
+            if (IsInvariant &&
+                obj is IEvaluatableToConstant evaluatableToConstant &&
+                evaluatableToConstant.IsInvariant)
+                return Evaluate().Equals(evaluatableToConstant.Evaluate());
             return false;
         }
         public override int GetHashCode()
@@ -323,6 +341,14 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => Operation.ToString();
+        public bool Equals(IInterimOperand other)
+            => (other is IRUnaryOp unaryOp &&
+                Operation.GetType() == unaryOp.Operation.GetType() &&
+                Operand.Equals(unaryOp.Operand)) ||
+                (IsInvariant &&
+                other is IEvaluatableToConstant evaluatableToConstant &&
+                evaluatableToConstant.IsInvariant &&
+                Evaluate().Equals(evaluatableToConstant.Evaluate()));
         public override bool Equals(object obj)
             => obj is IRUnaryOp unaryOp &&
                 Operation.GetType() == unaryOp.Operation.GetType() &&
@@ -450,7 +476,8 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => Operation.ToString();
-
+        public bool Equals(IInterimOperand other)
+            => other == this;
         public InterimConstantValue Evaluate()
             => throw new InvalidOperationException();
     }
@@ -474,6 +501,14 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => string.Format("{{gmb \"{0}\"}}", Suffix);
+        public bool Equals(IInterimOperand other)
+            => other == this ||
+            (IsInvariant &&
+            other is IRSuffixGet suffixGet &&
+            suffixGet.IsInvariant &&
+            !(suffixGet is IRSuffixGetMethod) &&
+            string.Equals(Suffix, suffixGet.Suffix, StringComparison.OrdinalIgnoreCase) &&
+            Object == suffixGet.Object);
         public override bool Equals(object obj)
             => obj == this ||
             (IsInvariant &&
@@ -600,6 +635,13 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => "{gidx}";
+        public bool Equals(IInterimOperand other)
+            => other == this ||
+            (IsInvariant &&
+            other is IRIndexGet indexGet &&
+            indexGet.IsInvariant &&
+            Object.Equals(indexGet.Object) &&
+            Index.Equals(indexGet.Index));
         public override bool Equals(object obj)
             => obj == this ||
             (IsInvariant &&
@@ -828,6 +870,14 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => string.Format("{{call {0}({1})}}", Function.Trim('(', ')'), string.Join(",", Arguments.Select(a => a.ToString())));
+        public bool Equals(IInterimOperand other)
+            => (other is IRCall call &&
+                string.Equals(Function.Replace("()", ""), call.Function.Replace("()", ""), StringComparison.OrdinalIgnoreCase) &&
+                Arguments.SequenceEqual(call.Arguments)) ||
+                (IsInvariant &&
+                other is IEvaluatableToConstant evaluatableToConstant &&
+                evaluatableToConstant.IsInvariant &&
+                Evaluate().Equals(evaluatableToConstant.Evaluate()));
         public override bool Equals(object obj)
             => obj is IRCall call &&
                 string.Equals(Function.Replace("()", ""), call.Function.Replace("()", ""), StringComparison.OrdinalIgnoreCase) &&

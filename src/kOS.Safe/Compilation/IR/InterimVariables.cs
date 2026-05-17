@@ -48,8 +48,12 @@ namespace kOS.Safe.Compilation.IR
         // Users are likely to not expect that to occur, and certainly
         // should not count on it occurring, so it should be a valid
         // assumption to make.
+        public bool Equals(IInterimOperand other)
+            => other is IInterimVariableReference variableRef &&
+            string.Equals(Name, variableRef.Name, StringComparison.OrdinalIgnoreCase) &&
+            SourceLine == variableRef.SourceLine;
         public override bool Equals(object obj)
-            => obj is InterimVariableReference variable &&
+            => obj is IInterimVariableReference variable &&
             string.Equals(Name, variable.Name, StringComparison.OrdinalIgnoreCase) &&
             SourceLine == variable.SourceLine;
         public override int GetHashCode()
@@ -92,6 +96,13 @@ namespace kOS.Safe.Compilation.IR
 
         public override string ToString()
             => Reference.ToString();
+        public bool Equals(IInterimOperand other)
+            => (other is InterimResolvedReference variable &&
+            Reference.Equals(variable.Reference)) ||
+            (IsInvariant &&
+            other is IEvaluatableToConstant evaluatableToConstant &&
+            evaluatableToConstant.IsInvariant &&
+            Evaluate().Equals(evaluatableToConstant.Evaluate()));
         public override bool Equals(object obj)
             => obj is InterimResolvedReference variable &&
             Reference.Equals(variable.Reference);
@@ -160,9 +171,12 @@ namespace kOS.Safe.Compilation.IR
 
         public override string ToString()
             => $"{Name} #?";
+        public bool Equals(IInterimOperand other)
+            => other is InterimUnresolvedReference unresolvedRef &&
+            references.SequenceEqual(unresolvedRef.references);
         public override bool Equals(object obj)
             => obj is InterimUnresolvedReference unresolvedRef &&
-            unresolvedRef.references.SequenceEqual(references);
+            references.SequenceEqual(unresolvedRef.references);
         public override int GetHashCode()
             => References.GetHashCode();
     }

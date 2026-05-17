@@ -25,5 +25,11 @@ namespace kOS.Safe.Compilation.IR
         /// </summary>
         /// <returns>One or more <see cref="Opcode"/> instances.</returns>
         IEnumerable<Opcode> EmitOpcodes();
+
+        /// <summary>
+        /// Tests equality between operands.
+        /// </summary>
+        /// <returns><c>true</c> if the operands are equal, otherwise <c>false</c>.</returns>
+        bool Equals(IInterimOperand other);
     }
 }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using kOS.Safe.Compilation.IR;
 using kOS.Safe.Exceptions;
 
@@ -182,7 +181,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         // Technically not true when X = 0
                         // But that would otherwise throw a "Tried to push infinite on to the stack" error
                         // So this is an acceptable assumption that improves performance and eliminates an error.
-                        if (instruction.Left == instruction.Right)
+                        if (instruction.Left.Equals(instruction.Right))
                             return new InterimConstantValue(Encapsulation.ScalarIntValue.One, instruction);
                         break;
                 }

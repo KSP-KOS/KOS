@@ -74,13 +74,9 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     return potentialResult;
             }
 
-            return operand;
-        }
 
-        private static void InstructionPeepholeFilter(IRInstruction instruction)
-        {
             // Algebraic simplifications
-            if (instruction is IRBinaryOp binaryOp)
+            if (operand is IRBinaryOp binaryOp)
             {
                 switch (binaryOp.Operation)
                 {
@@ -96,33 +92,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                                     opL.IsCommutative &&
                                     opR.IsCommutative)
                                 {
-                                    if (opR.Left == opL.Left)
-                                    {
-                                        DistributeMultiplication(binaryOp);
-                                        return;
-                                    }
-                                    if (opR.Left == opL.Right)
-                                    {
-                                        if (!opL.SwapOperands())
-                                            return;
-                                        DistributeMultiplication(binaryOp);
-                                        return;
-                                    }
-                                    if (opR.Right == opL.Left)
-                                    {
-                                        if (!opR.SwapOperands())
-                                            return;
-                                        DistributeMultiplication(binaryOp);
-                                        return;
-                                    }
-                                    if (opR.Right == opL.Right)
-                                    {
-                                        if (!opL.SwapOperands() ||
-                                            !opR.SwapOperands())
-                                            return;
-                                        DistributeMultiplication(binaryOp);
-                                        return;
-                                    }
+                                    return DistributeMultiplication(binaryOp, opL, opR);
                                 }
                             }
                             // -B+A = A+-B = A-B
@@ -130,15 +100,13 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                                 if (binaryOp.Right is IRUnaryOp opR &&
                                     opR.Operation is OpcodeMathNegate)
                                 {
-                                    DistributeNegationB(binaryOp);
-                                    return;
+                                    return DistributeNegationB(binaryOp);
                                 }
                                 if (binaryOp.Left is IRUnaryOp opL &&
                                     opL.Operation is OpcodeMathNegate &&
                                     binaryOp.SwapOperands())
                                 {
-                                    DistributeNegationB(binaryOp);
-                                    return;
+                                    return DistributeNegationB(binaryOp);
                                 }
                             }
                             // -A+B = B-A
@@ -146,20 +114,31 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                                 if (binaryOp.Left is IRUnaryOp opL &&
                                     opL.Operation is OpcodeMathNegate)
                                 {
-                                    DistributeNegationA(binaryOp);
-                                    return;
+                                    return DistributeNegationA(binaryOp);
                                 }
                             }
                         }
                         break;
                     case OpcodeMathSubtract _:
+                        // A*B - A*C = A*(B-C)
+                        {
+                            if (binaryOp.Left is IRBinaryOp opL &&
+                                binaryOp.Right is IRBinaryOp opR &&
+                                opL.Operation is OpcodeMathMultiply &&
+                                opR.Operation is OpcodeMathMultiply &&
+                                binaryOp.IsCommutative &&
+                                opL.IsCommutative &&
+                                opR.IsCommutative)
+                            {
+                                return DistributeMultiplication(binaryOp, opL, opR);
+                            }
+                        }
                         // A--B=A+B
                         {
                             if (binaryOp.Right is IRUnaryOp unaryOp &&
                                 unaryOp.Operation is OpcodeMathNegate)
                             {
-                                ReplaceNegateSubtract(binaryOp);
-                                return;
+                                return ReplaceNegateSubtract(binaryOp);
                             }
                         }
                         break;
@@ -167,15 +146,14 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         // TODO: Handle distributivity
                         if (binaryOp.Right is InterimConstantValue constantR &&
                             Encapsulation.ScalarIntValue.Zero.Equals(constantR.Value))
-                            throw new Exceptions.KOSCompileException(instruction, new DivideByZeroException());
+                            throw new Exceptions.KOSCompileException(binaryOp, new DivideByZeroException());
                         // X^N/X=X^(N-1)
                         {
                             if (binaryOp.Left is IRBinaryOp opL &&
                                 opL.Operation is OpcodeMathPower &&
-                                opL.Left == binaryOp.Right)
+                                opL.Left.Equals(binaryOp.Right))
                             {
-                                IncreasePower(binaryOp, -1);
-                                return;
+                                return IncreasePower(binaryOp, -1);
                             }
                         }
                         // X^N/X^M=X^(N-M)
@@ -184,10 +162,9 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                                 opL.Operation is OpcodeMathPower &&
                                 binaryOp.Right is IRBinaryOp opR &&
                                 opR.Operation is OpcodeMathPower &&
-                                opL.Left == opR.Left)
+                                opL.Left.Equals(opR.Left))
                             {
-                                DividePowers(binaryOp);
-                                return;
+                                return DividePowers(binaryOp);
                             }
                         }
                         break;
@@ -196,18 +173,16 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         {
                             if (binaryOp.Left is IRBinaryOp opL &&
                                 opL.Operation is OpcodeMathPower &&
-                                opL.Left == binaryOp.Right)
+                                opL.Left.Equals(binaryOp.Right))
                             {
-                                IncreasePower(binaryOp, 1);
-                                return;
+                                return IncreasePower(binaryOp, 1);
                             }
                             if (binaryOp.Right is IRBinaryOp opR &&
                                 opR.Operation is OpcodeMathPower &&
-                                opR.Left == binaryOp.Left &&
+                                opR.Left.Equals(binaryOp.Left) &&
                                 binaryOp.SwapOperands())
                             {
-                                IncreasePower(binaryOp, 1);
-                                return;
+                                return IncreasePower(binaryOp, 1);
                             }
                         }
                         // X*X*...*X=N^X
@@ -216,20 +191,18 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         {
                             if (binaryOp.Right is IRBinaryOp opR &&
                                 opR.Operation is OpcodeMathMultiply &&
-                                opR.Left == opR.Right &&
-                                opR.Left == binaryOp.Left)
+                                opR.Left.Equals(opR.Right) &&
+                                opR.Left.Equals(binaryOp.Left))
                             {
-                                CreatePower(binaryOp);
-                                return;
+                                return CreatePower(binaryOp);
                             }
                             if (binaryOp.Left is IRBinaryOp opL &&
                                 opL.Operation is OpcodeMathMultiply &&
-                                opL.Left == opL.Right &&
-                                opL.Left == binaryOp.Right &&
+                                opL.Left.Equals(opL.Right) &&
+                                opL.Left.Equals(binaryOp.Right) &&
                                 binaryOp.SwapOperands())
                             {
-                                CreatePower(binaryOp);
-                                return;
+                                return CreatePower(binaryOp);
                             }
                         }
                         // X^N*X^M=X^(N+M)
@@ -238,16 +211,20 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                                 opL.Operation is OpcodeMathPower &&
                                 binaryOp.Right is IRBinaryOp opR &&
                                 opR.Operation is OpcodeMathPower &&
-                                opL.Left == opR.Left)
+                                opL.Left.Equals(opR.Left))
                             {
-                                CombinePowers(binaryOp);
-                                return;
+                                return CombinePowers(binaryOp);
                             }
                         }
                         break;
                 }
             }
 
+            return operand;
+        }
+
+        private static void InstructionPeepholeFilter(IRInstruction instruction)
+        {
             // Branch logical simplification (e.g. !X branch = X branch!)
             if (instruction is IRBranch branch &&
                 branch.Condition is IRUnaryOp negateBranch &&
@@ -349,71 +326,103 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             (branch.True, branch.False) = (branch.False, branch.True);
         }
 
-        private static void DistributeMultiplication(IRBinaryOp instruction)
+        private static IInterimOperand DistributeMultiplication(IRBinaryOp binaryOp, IRBinaryOp opL, IRBinaryOp opR)
+        {
+            if (opR.Left.Equals(opL.Left))
+            {
+                return DistributeMultiplication(binaryOp);
+            }
+            if (opR.Left.Equals(opL.Right))
+            {
+                if (!opL.SwapOperands())
+                    return binaryOp;
+                return DistributeMultiplication(binaryOp);
+            }
+            if (opR.Right.Equals(opL.Left))
+            {
+                if (!opR.SwapOperands())
+                    return binaryOp;
+                return DistributeMultiplication(binaryOp);
+            }
+            if (opR.Right.Equals(opL.Right))
+            {
+                if (!opL.SwapOperands() ||
+                    !opR.SwapOperands())
+                    return binaryOp;
+                return DistributeMultiplication(binaryOp);
+            }
+            return binaryOp;
+        }
+
+        private static IInterimOperand DistributeMultiplication(IRBinaryOp instruction)
         {
             // A*B + A*C = A*(B+C)
             IRBinaryOp opL = (IRBinaryOp)instruction.Left;
             IRBinaryOp opR = (IRBinaryOp)instruction.Right;
             // Restructure to create the parentheses
-            opR.Operation = new OpcodeMathAdd();
+            opR.Operation = instruction.Operation;
             opR.Left = opL.Right;
             // Restructure the multiplication term.
             instruction.Left = opL.Left;
             instruction.Operation = new OpcodeMathMultiply();
+            return instruction;
         }
 
-        private static void DistributeNegationA(IRBinaryOp instruction)
+        private static IInterimOperand DistributeNegationA(IRBinaryOp instruction)
         {
             // -A+B = B-A
             if (!(instruction.Left is IRUnaryOp opL))
-                return;
+                return instruction;
             if (!instruction.IsCommutative)
-                return;
+                return instruction;
             BinaryOpcode originalOperation = instruction.Operation;
             instruction.Operation = new OpcodeMathSubtract();
             if (!instruction.IsCommutative)
             {
                 instruction.Operation = originalOperation;
-                return;
+                return instruction;
             }
             instruction.Left = opL.Operand;
             instruction.SwapOperands();
+            return instruction;
         }
 
-        private static void DistributeNegationB(IRBinaryOp instruction)
+        private static IInterimOperand DistributeNegationB(IRBinaryOp instruction)
         {
             // A+-B = A-B
             if (!(instruction.Right is IRUnaryOp opR))
-                return;
+                return instruction;
             if (!instruction.IsCommutative)
-                return;
+                return instruction;
             BinaryOpcode originalOperation = instruction.Operation;
             instruction.Operation = new OpcodeMathSubtract();
             if (!instruction.IsCommutative)
             {
                 instruction.Operation = originalOperation;
-                return;
+                return instruction;
             }
             instruction.Right = opR.Operand;
+            return instruction;
         }
 
-        private static void ReplaceNegateSubtract(IRBinaryOp instruction)
+        private static IInterimOperand ReplaceNegateSubtract(IRBinaryOp instruction)
         {
             // A--B=A+B
             if (!instruction.IsCommutative)
-                return;
+                return instruction;
             BinaryOpcode originalOperation = instruction.Operation;
             instruction.Operation = new OpcodeMathAdd();
             if (!instruction.IsCommutative)
             {
                 instruction.Operation = originalOperation;
-                return;
+                return instruction;
             }
             IRUnaryOp opR = (IRUnaryOp)instruction.Right;
             instruction.Right = opR.Operand;
+            return instruction;
         }
 
-        private static void IncreasePower(IRBinaryOp instruction, int powerIncrease)
+        private static IInterimOperand IncreasePower(IRBinaryOp instruction, int powerIncrease)
         {
             // X^N*X=X^(N+1)
             // X^N/X=X^(N-1)
@@ -443,26 +452,34 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 
             // Special case for when N == 2 afterwards
             // then revert back to X * X
-            if (instruction.Right is InterimConstantValue constantR &&
-                Encapsulation.ScalarIntValue.Two.Equals(constantR.Value))
+            if (instruction.Right is InterimConstantValue constantR)
             {
-                instruction.Right = instruction.Left;
-                instruction.Operation = new OpcodeMathMultiply();
+                if (Encapsulation.ScalarIntValue.Two.Equals(constantR.Value))
+                {
+                    instruction.Right = instruction.Left;
+                    instruction.Operation = new OpcodeMathMultiply();
+                }
+                else if (Encapsulation.ScalarIntValue.One.Equals(constantR.Value))
+                    return instruction.Left;
+                else if (Encapsulation.ScalarIntValue.Zero.Equals(constantR.Value))
+                    return new InterimConstantValue(Encapsulation.ScalarIntValue.One, instruction);
             }
+            return instruction;
         }
 
-        private static void CreatePower(IRBinaryOp instruction)
+        private static IInterimOperand CreatePower(IRBinaryOp instruction)
         {
             // X*(X*X) = X^3
             instruction.Operation = new OpcodeMathPower();
             instruction.Right = new InterimConstantValue(new Encapsulation.ScalarIntValue(3), (IRInstruction)instruction.Right);
+            return instruction;
         }
 
-        private static void CombinePowers(IRBinaryOp instruction)
+        private static IInterimOperand CombinePowers(IRBinaryOp instruction)
             => CombinePowers(instruction, new OpcodeMathAdd());
-        private static void DividePowers(IRBinaryOp instruction)
+        private static IInterimOperand DividePowers(IRBinaryOp instruction)
             => CombinePowers(instruction, new OpcodeMathSubtract());
-        private static void CombinePowers(IRBinaryOp instruction, BinaryOpcode newOperation)
+        private static IInterimOperand CombinePowers(IRBinaryOp instruction, BinaryOpcode newOperation)
         {
             // X^N*X^M=X^(N+M)
             // Assumes |N + M| < 2^31 - 1 (for integer scalars) or 2^53 (for double scalars)
@@ -488,12 +505,19 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 
             // Special case for when N == 2 afterwards
             // then revert back to X * X
-            if (instruction.Right is InterimConstantValue constantR &&
-                Encapsulation.ScalarIntValue.Two.Equals(constantR.Value))
+            if (instruction.Right is InterimConstantValue constantR)
             {
-                instruction.Right = instruction.Left;
-                instruction.Operation = new OpcodeMathMultiply();
+                if (Encapsulation.ScalarIntValue.Two.Equals(constantR.Value))
+                {
+                    instruction.Right = instruction.Left;
+                    instruction.Operation = new OpcodeMathMultiply();
+                }
+                else if (Encapsulation.ScalarIntValue.One.Equals(constantR.Value))
+                    return instruction.Left;
+                else if (Encapsulation.ScalarIntValue.Zero.Equals(constantR.Value))
+                    return new InterimConstantValue(Encapsulation.ScalarIntValue.One, instruction);
             }
+            return instruction;
         }
     }
 }
