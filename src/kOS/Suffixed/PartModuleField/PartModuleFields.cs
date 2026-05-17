@@ -23,6 +23,9 @@ namespace kOS.Suffixed.PartModuleField
     {
         protected readonly PartModule partModule;
         protected readonly SharedObjects shared;
+        private readonly FieldsLexicon fieldsLexicon;
+        private readonly EventsLexicon eventsLexicon;
+        private readonly ActionsLexicon actionsLexicon;
 
         /// <summary>
         /// Create a kOS-user variable wrapper around a KSP PartModule attached to a part.
@@ -33,6 +36,9 @@ namespace kOS.Suffixed.PartModuleField
         {
             this.partModule = partModule;
             this.shared = shared;
+            fieldsLexicon = new FieldsLexicon(this, partModule);
+            eventsLexicon = new EventsLexicon(this, partModule);
+            actionsLexicon = new ActionsLexicon(this, partModule);
 
             // Overriding Structure.InitializeSuffixes() doesn't work because the base constructor calls it
             // prior to calling this constructor, and so partModule isn't set yet:
@@ -80,7 +86,7 @@ namespace kOS.Suffixed.PartModuleField
         ///    alter the value to an acceptable replacement which is why it passes by ref</param>
         /// <param name="except">An exception you can choose to throw if you want, or null if the value is legal.</param>
         /// <returns>Is it legal?</returns>
-        private bool IsLegalValue(BaseField field, ref Structure newVal, out KOSException except)
+        private static bool IsLegalValue(PartModule partModule, BaseField field, ref Structure newVal, out KOSException except)
         {
             except = null;
             bool isLegal = true;
@@ -191,7 +197,7 @@ namespace kOS.Suffixed.PartModuleField
                 if ( partModule.Fields.TryGetFieldUIControl(field.name, out control))
                 {
                     returnValue.Add(new StringValue(string.Format(formatter,
-                                                  control.controlEnabled ? "settable" : "get-only",
+                                                  control.controlEnabled && !(control is UI_Label) ? "settable" : "get-only",
                                                   GetFieldName(field).ToLower(),
                                                   Utilities.Utils.KOSType(field.FieldInfo.FieldType))));
                 }
@@ -463,14 +469,18 @@ namespace kOS.Suffixed.PartModuleField
             AddSuffix("ALLHIDDENFIELDNAMES", new Suffix<ListValue>(() => AllFieldNames(field => FieldIsVisible(field, false))));
             AddSuffix("HASHIDDENFIELD", new OneArgsSuffix<BooleanValue, StringValue>(HasHiddenField));
             AddSuffix("GETHIDDENFIELD", new OneArgsSuffix<Structure, StringValue>(argument => GetKSPFieldValue(argument, field => FieldIsVisible(field, false))));
+            
+            AddSuffix("FIELDS", new Suffix<FieldsLexicon>(() => fieldsLexicon));
+            AddSuffix("EVENTS", new Suffix<EventsLexicon>(() => eventsLexicon));
+            AddSuffix("ACTIONS", new Suffix<ActionsLexicon>(() => actionsLexicon));
         }
 
-        private bool FieldIsVisible(BaseField field, bool isVisible = true)
+        public static bool FieldIsVisible(BaseField field, bool isVisible = true)
         {
             return (field != null) && (HighLogic.LoadedSceneIsEditor ? field.guiActiveEditor == isVisible : field.guiActive == isVisible);
         }
 
-        private bool EventIsVisible(BaseEvent evt)
+        public static bool EventIsVisible(BaseEvent evt)
         {
             return (evt != null) && (
                 (HighLogic.LoadedSceneIsEditor ? evt.guiActiveEditor : evt.guiActive) &&
@@ -512,8 +522,13 @@ namespace kOS.Suffixed.PartModuleField
             if (!FieldIsVisible(field))
                 throw new KOSLookupFailException("FIELD", suffixName, this, true);
 
+            SetFieldProper(partModule, field, newValue);
+        }
+
+        public static void SetFieldProper(PartModule partModule, BaseField field, Structure newValue)
+        {
             KOSException except;
-            if (IsLegalValue(field, ref newValue, out except))
+            if (IsLegalValue(partModule, field, ref newValue, out except))
             {
                 object convertedValue = Convert.ChangeType(newValue, field.FieldInfo.FieldType);
                 field.SetValue(convertedValue, partModule);
@@ -537,12 +552,18 @@ namespace kOS.Suffixed.PartModuleField
         /// <param name="suffixName"></param>
         private void CallKSPEvent(StringValue suffixName)
         {
-            ThrowIfNotCPUVessel();
             BaseEvent evt = GetEvent(suffixName);
             if (evt == null)
                 throw new KOSLookupFailException("EVENT", suffixName, this);
+            
+            CallKSPEventProper(evt, suffixName);
+        }
+
+        public void CallKSPEventProper(BaseEvent evt, string eventName)
+        {
+            ThrowIfNotCPUVessel();
             if (!EventIsVisible(evt))
-                throw new KOSLookupFailException("EVENT", suffixName, this, true);
+                throw new KOSLookupFailException("EVENT", eventName, this, true); 
 
             if (RemoteTechHook.IsAvailable())
             {
@@ -565,10 +586,15 @@ namespace kOS.Suffixed.PartModuleField
         /// <param name="param">true = activate, false = de-activate</param>
         private void CallKSPAction(StringValue suffixName, BooleanValue param)
         {
-            ThrowIfNotCPUVessel();
             BaseAction act = GetAction(suffixName);
             if (act == null)
                 throw new KOSLookupFailException("ACTION", suffixName, this);
+            CallKSPActionProper(act, param);
+        }
+
+        public void CallKSPActionProper(BaseAction act, BooleanValue param)
+        {
+            ThrowIfNotCPUVessel();
             string careerReason;
             if (!Career.CanDoActions(out careerReason))
                 throw new KOSLowTechException("use :DOACTION", careerReason);

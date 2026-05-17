@@ -26,6 +26,7 @@ namespace kOS.Suffixed.Part
         public Structure ParentValue { get { return (Structure)Parent ?? StringValue.None; } }
         public Structure DecouplerValue { get { return (Structure)Decoupler ?? StringValue.None; } }
         public int DecoupledIn { get { return (Decoupler != null) ? Decoupler.Part.inverseStage : -1; } }
+        private ModuleLexicon modulesLexicon;
 
         /// <summary>
         /// Do not call! VesselTarget.ConstructPart uses this, would use `friend VesselTarget` if this was C++!
@@ -38,6 +39,8 @@ namespace kOS.Suffixed.Part
             Decoupler = decoupler;
             RegisterInitializer(PartInitializeSuffixes);
             Children  = new ListValue();
+
+            modulesLexicon = new ModuleLexicon(this, shared);
         }
 
         private void PartInitializeSuffixes()
@@ -61,7 +64,8 @@ namespace kOS.Suffixed.Part
             AddSuffix("HASMODULE", new OneArgsSuffix<BooleanValue, StringValue>(HasModule));
             AddSuffix("GETMODULE", new OneArgsSuffix<PartModuleFields, StringValue>(GetModule));
             AddSuffix("GETMODULEBYINDEX", new OneArgsSuffix<PartModuleFields, ScalarValue>(GetModuleIndex));
-            AddSuffix(new[] { "MODULES", "ALLMODULES" }, new Suffix<ListValue>(GetAllModules, "A List of all the modules' names on this part"));
+            AddSuffix("ALLMODULES", new Suffix<ListValue>(GetAllModules, "A List of all the modules' names on this part"));
+            AddSuffix("MODULES", new Suffix<ModuleLexicon>(() => modulesLexicon));
             AddSuffix("PARENT", new Suffix<Structure>(() => ParentValue, "The parent part of this part"));
             AddSuffix(new[] { "DECOUPLER", "SEPARATOR" }, new Suffix<Structure>(() => DecouplerValue, "The part that will decouple/separate this part when activated"));
             AddSuffix(new[] { "DECOUPLEDIN", "SEPARATEDIN" }, new Suffix<ScalarValue>(() => DecoupledIn));
