@@ -88,6 +88,7 @@ namespace kOS.Safe.Compilation
         TESTARGBOTTOM  = 0x61,
         TESTCANCELLED  = 0x62,
         JUMPSTACK      = 0x63,
+        ASSERTRANGE    = 0x64,
 
         // Augmented bogus placeholder versions of the normal
         // opcodes: These only exist in the program temporarily
@@ -944,6 +945,64 @@ namespace kOS.Safe.Compilation
                 throw new KOSException(string.Format("Can't set indexed elements on an object of type {0}", list.GetType()));
             }
             indexable.SetIndex(index, value);
+        }
+    }
+
+    /// <summary>
+    /// <para>
+    /// Asserts that the top value of the stack is a value ranging between MinValue and MaxValue
+    /// </para>
+    /// <para></para>
+    /// <para>assertrange min max</para>
+    /// <para>... val -- ... val</para>
+    /// </summary>
+    public class OpcodeAssertRange : Opcode
+    {
+        protected override string Name { get { return "assertrange"; } }
+        public override ByteCode Code { get { return ByteCode.ASSERTRANGE; } }
+
+        [MLField(0, false)]
+        public double? MinValue { get; set; }
+        [MLField(1, false)]
+        public double? MaxValue { get; set; }
+
+        protected OpcodeAssertRange()
+        {
+        }
+
+        public OpcodeAssertRange(double min, double max)
+        {
+            MinValue = min;
+            MaxValue = max;
+        }
+
+        public override void PopulateFromMLFields(List<object> fields)
+        {
+            if (fields == null || fields.Count < 2)
+                throw new Exception(String.Format("Saved field in ML file for OpcodeAssertRange seems to be missing.  Version mismatch?"));
+            MinValue = !(fields[0] is PseudoNull) ? Convert.ToDouble(fields[0]) : (double?)null;
+            MaxValue = !(fields[1] is PseudoNull) ? Convert.ToDouble(fields[1]) : (double?)null;
+        }
+
+        public override void Execute(ICpu cpu)
+        {
+            object value = cpu.PeekRawArgument(0, out bool ok);
+            if (!ok)
+                throw new KOSException("Failed to assert range: failed to load stack argument");
+
+            if (value is not ScalarValue scalar)
+                throw new KOSException("Failed to assert range: cannot assert range for non scalar");
+            
+            double actual = scalar.GetDoubleValue();
+
+            if ((MinValue.HasValue && actual < MinValue.Value) ||
+                (MaxValue.HasValue && actual > MaxValue.Value))
+            {
+                throw new KOSException(
+                    $"assertrange failed: value {value} not in range " +
+                    $"[{MinValue?.ToString() ?? "-infinity"}, {MaxValue?.ToString() ?? "infinity"}]"
+                );
+            }
         }
     }
 
