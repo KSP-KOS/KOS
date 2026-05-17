@@ -41,11 +41,19 @@ namespace kOS.Safe.Compilation.IR
 
         public override string ToString()
             => $"{Name}";
+
+        // Assumes that variable reference on the same line are intended
+        // to be the same variable. This is only not true if a trigger
+        // modifies a variable between opcodes of the same line.
+        // Users are likely to not expect that to occur, and certainly
+        // should not count on it occurring, so it should be a valid
+        // assumption to make.
         public override bool Equals(object obj)
             => obj is InterimVariableReference variable &&
-            string.Equals(Name, variable.Name, StringComparison.OrdinalIgnoreCase);
+            string.Equals(Name, variable.Name, StringComparison.OrdinalIgnoreCase) &&
+            SourceLine == variable.SourceLine;
         public override int GetHashCode()
-            => Name.ToLower().GetHashCode();
+            => (Name.ToLower(), SourceLine).GetHashCode();
     }
 
     public readonly struct InterimResolvedReference : IInterimVariableReference, IEvaluatableToConstant
@@ -83,7 +91,7 @@ namespace kOS.Safe.Compilation.IR
         }
 
         public override string ToString()
-            => $"{Name}";
+            => Reference.ToString();
         public override bool Equals(object obj)
             => obj is InterimResolvedReference variable &&
             Reference.Equals(variable.Reference);
@@ -151,7 +159,7 @@ namespace kOS.Safe.Compilation.IR
         }
 
         public override string ToString()
-            => $"{Name}";
+            => $"{Name} #?";
         public override bool Equals(object obj)
             => obj is InterimUnresolvedReference unresolvedRef &&
             unresolvedRef.references.SequenceEqual(references);
@@ -159,7 +167,7 @@ namespace kOS.Safe.Compilation.IR
             => References.GetHashCode();
     }
 
-    internal static class SSAIndexIssuer
+    public static class SSAIndexIssuer
     {
         private static readonly Dictionary<string, uint> indices = new Dictionary<string, uint>();
         public static uint GetIndex(string name)
