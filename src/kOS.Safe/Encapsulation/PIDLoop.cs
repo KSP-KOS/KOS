@@ -62,8 +62,7 @@ namespace kOS.Safe.Encapsulation
 
         public static PIDLoop DeepCopy(PIDLoop source)
         {
-            PIDLoop newLoop = new PIDLoop
-            {
+            PIDLoop newLoop = new PIDLoop {
                 LastSampleTime = source.LastSampleTime,
                 Kp = source.Kp,
                 Ki = source.Ki,
@@ -74,12 +73,15 @@ namespace kOS.Safe.Encapsulation
                 Output = source.Output,
                 MinOutput = source.MinOutput,
                 MaxOutput = source.MaxOutput,
+                AntiWindupMode = source.AntiWindupMode,
+                KBackCalc = source.KBackCalc,
                 ErrorSum = source.ErrorSum,
                 PTerm = source.PTerm,
                 ITerm = source.ITerm,
                 DTerm = source.DTerm,
                 ExtraUnwind = source.ExtraUnwind,
                 ChangeRate = source.ChangeRate,
+                lastIError = source.lastIError,
                 unWinding = source.unWinding
             };
             return newLoop;
@@ -105,6 +107,10 @@ namespace kOS.Safe.Encapsulation
 
         public double MaxOutput { get; set; }
 
+        public string AntiWindupMode { get; set; }
+
+        public double KBackCalc { get; set; }
+
         public double Epsilon { get; set; }
 
         public double ErrorSum { get; set; }
@@ -119,6 +125,7 @@ namespace kOS.Safe.Encapsulation
 
         public double ChangeRate { get; set; }
 
+        private double lastIError;
         private bool unWinding;
 
         public PIDLoop()
@@ -138,6 +145,8 @@ namespace kOS.Safe.Encapsulation
             Output = 0;
             MaxOutput = maxoutput;
             MinOutput = minoutput;
+            AntiWindupMode = "DEFAULT";
+            KBackCalc = 1;
             Epsilon = nullzone;
             ErrorSum = 0;
             PTerm = 0;
@@ -159,6 +168,8 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("OUTPUT", new Suffix<ScalarValue>(() => Output));
             AddSuffix("MAXOUTPUT", new SetSuffix<ScalarValue>(() => MaxOutput, value => MaxOutput = value));
             AddSuffix("MINOUTPUT", new SetSuffix<ScalarValue>(() => MinOutput, value => MinOutput = value));
+            AddSuffix("ANTIWINDUPMODE", new SetSuffix<StringValue>(() => AntiWindupMode, value => AntiWindupMode = value));
+            AddSuffix("KBACKCALC", new SetSuffix<ScalarValue>(() => KBackCalc, value => KBackCalc = value));
             AddSuffix(new string[] { "IGNOREERROR", "EPSILON" }, new SetSuffix<ScalarValue>(() => Epsilon, value => Epsilon = value));
             AddSuffix("ERRORSUM", new Suffix<ScalarValue>(() => ErrorSum));
             AddSuffix("PTERM", new Suffix<ScalarValue>(() => PTerm));
@@ -185,6 +196,8 @@ namespace kOS.Safe.Encapsulation
 
         public ScalarValue Update(ScalarValue sampleTime, ScalarValue input)
         {
+            if (LastSampleTime == sampleTime) return Output;
+
             double error = Setpoint - input;
             if (error > -Epsilon && error < Epsilon)
             {
@@ -192,72 +205,115 @@ namespace kOS.Safe.Encapsulation
                 // because the error is within the epsilon:
                 error = 0;
                 input = Setpoint;
-                Input = input;
-                Error = error;
             }
-            double pTerm = error * Kp;
-            double iTerm = 0;
-            double dTerm = 0;
+
+            PTerm = error * Kp;
+
             if (LastSampleTime < sampleTime)
             {
                 double dt = sampleTime - LastSampleTime;
+
+                ChangeRate = (error - Error) / dt;
+                DTerm = ChangeRate * Kd;
+
                 if (Ki != 0)
                 {
-                    if (ExtraUnwind)
-                    {
-                        if (Math.Sign(error) != Math.Sign(ErrorSum))
-                        {
-                            if (!unWinding)
-                            {
-                                Ki *= 2;
-                                unWinding = true;
-                            }
-                        }
-                        else if (unWinding)
-                        {
-                            Ki /= 2;
-                            unWinding = false;
-                        }
-                    }
-                    iTerm = ITerm + error * dt * Ki;
+                    ExtraUnwindIfEnabled(error);
+                    ITerm += lastIError * dt;
                 }
-                ChangeRate = (input - Input) / dt;
-                if (Kd != 0)
+                else
                 {
-                    dTerm = -ChangeRate * Kd;
+                    ITerm = 0;
                 }
             }
-            else
-            {
-                dTerm = DTerm;
-                iTerm = ITerm;
-            }
-            Output = pTerm + iTerm + dTerm;
-            if (Output > MaxOutput)
-            {
-                Output = MaxOutput;
-                if (Ki != 0 && LastSampleTime < sampleTime)
-                {
-                    iTerm = Output - Math.Min(pTerm + dTerm, MaxOutput);
-                }
-            }
-            if (Output < MinOutput)
-            {
-                Output = MinOutput;
-                if (Ki != 0 && LastSampleTime < sampleTime)
-                {
-                    iTerm = Output - Math.Max(pTerm + dTerm, MinOutput);
-                }
-            }
+            
+            lastIError = AntiWindup(error * Ki);
             LastSampleTime = sampleTime;
             Input = input;
             Error = error;
-            PTerm = pTerm;
-            ITerm = iTerm;
-            DTerm = dTerm;
-            if (Ki != 0) ErrorSum = iTerm / Ki;
+            if (Ki != 0) ErrorSum = ITerm / Ki;
             else ErrorSum = 0;
+
+            // Limit output according to MinOutput and MaxOutput
+            Output = Math.Min(MaxOutput, Math.Max(MinOutput, PTerm + ITerm + DTerm));
             return Output;
+        }
+
+        private void ExtraUnwindIfEnabled(double error)
+        {
+            if (ExtraUnwind)
+            {
+                if (Math.Sign(error) != Math.Sign(ErrorSum))
+                {
+                    if (!unWinding)
+                    {
+                        Ki *= 2;
+                        unWinding = true;
+                    }
+                }
+                else if (unWinding)
+                {
+                    Ki /= 2;
+                    unWinding = false;
+                }
+            }
+        }
+
+        private double AntiWindup(double iError)
+        {
+            double preSatOutput = PTerm + ITerm + DTerm;
+
+            switch (AntiWindupMode.ToUpper())
+            {
+                case "NONE":
+                    return iError;
+                case "CLAMPING":
+                    return ClampingAntiWindup(preSatOutput, iError);
+                case "BACK-CALC":
+                    return BackCalculationAntiWindup(preSatOutput, iError);
+                default:
+                    return DefaultAntiWindup(preSatOutput, iError);
+            }
+        }
+
+        private double ClampingAntiWindup(double preSatOutput, double preIntError)
+        {
+            double preSatSign = 0;
+            if (preSatOutput > MaxOutput)
+            {
+                preSatSign = 1;
+            } 
+            else if (preSatOutput < MinOutput)
+            {
+                preSatSign = -1;
+            }
+
+            if (preSatSign != 0 && Math.Sign(preSatSign) == Math.Sign(preIntError))
+            {
+                preIntError = 0;
+            }
+
+            return preIntError;
+        }
+
+        private double BackCalculationAntiWindup(double preSatOutput, double preIntError)
+        { 
+            double postSatOutput = Math.Min(MaxOutput, Math.Max(MinOutput, preSatOutput));
+            return (postSatOutput - preSatOutput) * KBackCalc + preIntError;
+        }
+
+        private double DefaultAntiWindup(double preSatOutput, double preIntError)
+        { 
+            if (preSatOutput > MaxOutput)
+            {
+                ITerm = MaxOutput - Math.Min(PTerm + DTerm, MaxOutput);
+            }
+            if (preSatOutput < MinOutput)
+            {
+                ITerm = MinOutput - Math.Max(PTerm + DTerm, MinOutput);
+            }
+
+            return preIntError;
         }
 
         public void ResetI()
@@ -301,12 +357,14 @@ namespace kOS.Safe.Encapsulation
             result.Add("Setpoint", Setpoint);
             result.Add("MaxOutput", MaxOutput);
             result.Add("MinOutput", MinOutput);
+            result.Add("AntiWindupMode", AntiWindupMode);
+            result.Add("KBackCalc", KBackCalc);
             result.Add("ExtraUnwind", ExtraUnwind);
 
             return result;
-    }
+        }
 
-    public override void LoadDump(Dump dump)
+        public override void LoadDump(Dump dump)
         {
             Kp = Convert.ToDouble(dump["Kp"]);
             Ki = Convert.ToDouble(dump["Ki"]);
@@ -314,6 +372,8 @@ namespace kOS.Safe.Encapsulation
             Setpoint = Convert.ToDouble(dump["Setpoint"]);
             MinOutput = Convert.ToDouble(dump["MinOutput"]);
             MaxOutput = Convert.ToDouble(dump["MaxOutput"]);
+            AntiWindupMode = Convert.ToString(dump["AntiWindupMode"]);
+            KBackCalc = Convert.ToDouble(dump["KBackCalc"]);
             ExtraUnwind = Convert.ToBoolean(dump["ExtraUnwind"]);
         }
     }
