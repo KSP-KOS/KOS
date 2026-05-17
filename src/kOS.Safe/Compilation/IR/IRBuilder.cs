@@ -315,6 +315,15 @@ namespace kOS.Safe.Compilation.IR
                 case OpcodePop pop:
                     currentBlock.Add(new IRPop(currentBlock, PopStack(), pop));
                     break;
+                case OpcodeDup _:
+                    stack.Push(stack.Peek());
+                    break;
+                case OpcodeSwap _:
+                    IInterimOperand first = stack.Pop();
+                    IInterimOperand second = stack.Pop();
+                    stack.Push(first);
+                    stack.Push(second);
+                    break;
                 default:
                     throw new NotImplementedException($"The Opcode of type {opcode.GetType()} is not implemented.");
             }
