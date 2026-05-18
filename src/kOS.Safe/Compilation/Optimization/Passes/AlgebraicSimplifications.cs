@@ -127,7 +127,6 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     }
                     break;
                 case OpcodeMathDivide _:
-                    // TODO: Handle distributivity
                     if (binaryOp.Right is InterimConstantValue constantR &&
                         Encapsulation.ScalarIntValue.Zero.Equals(constantR.Value))
                         throw new Exceptions.KOSCompileException(binaryOp, new DivideByZeroException());
@@ -151,9 +150,24 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             return DividePowers(binaryOp);
                         }
                     }
+                    // X/X^N = X^(1-N)
+                    {
+                        if (binaryOp.Right is IRBinaryOp opR &&
+                            opR.Operation is OpcodeMathPower &&
+                            opR.Left.Equals(binaryOp.Left))
+                        {
+                            // Cheat by change X to X^1 and reusing the same code.
+                            binaryOp.Left = new IRBinaryOp(
+                                binaryOp.Block,
+                                new OpcodeMathPower(),
+                                binaryOp.Left,
+                                new InterimConstantValue(Encapsulation.ScalarIntValue.One, binaryOp));
+                            return DividePowers(binaryOp);
+                        }
+                    }
                     break;
                 case OpcodeMathMultiply _:
-                    // X^N*X=X^(N+1)
+                    // X^N*X=X*X^N=X^(N+1)
                     {
                         if (binaryOp.Left is IRBinaryOp opL &&
                             opL.Operation is OpcodeMathPower &&
