@@ -113,29 +113,35 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     // opcode argument. Return the unchanged instruction.
                     return instruction;
                 }
-                else if (instruction.IsCommutative)
+
+                // Reorder/reflow operations if it helps to fold constants
+                if (instruction.Right is IRBinaryOp rightOp &&
+                    OperationsHaveEqualPriority(instruction.Operation, rightOp.Operation))
                 {
-                    // The left is constant and the right is not...
-                    // But what if the right is commutative with this operation and has a constant?
-                    if (instruction.Right is IRBinaryOp rightOp &&
-                        rightOp.IsCommutative &&
-                        OperationsHaveEqualPriority(rightOp.Operation, instruction.Operation) &&
-                        rightOp.Left is InterimConstantValue constantR1)
+                    // L _ (L1 _ R1)
+                    // C _ (A _ B) = (C _ A) _ B    (doesn't require commutativity)
+                    if (rightOp.Left is InterimConstantValue constantRL)
                     {
-                        object left = constantR1.Value;
-                        object right = constantL.Value;
-                        try
+                        InterimConstantValue result = ExecuteOperation(instruction, constantL, constantRL);
+                        if (result != null)
                         {
-                            InterimConstantValue result = new InterimConstantValue(instruction.Operation.ExecuteCalculation(left, right), instruction);
                             rightOp.Left = result;
+                            instruction = rightOp;
                         }
-                        catch (KOSBinaryOperandTypeException binaryTypeException)
+                    }
+                    // C _ (A _ B) = A _ (C _ B) = (C _ B) _ A  (requires commutativity between A and C)
+                    else if (instruction.IsCommutative &&
+                        rightOp.Right is InterimConstantValue constantRR)
+                    {
+                        InterimConstantValue result = ExecuteOperation(rightOp, constantL, constantRR);
+                        if (result != null)
                         {
-                            throw new KOSCompileException(instruction, binaryTypeException);
+                            instruction.Right = instruction.Left;
+                            instruction.Left = result;
                         }
-                        return rightOp;
                     }
                 }
+
                 // Shortcuts for math operations where both sides don't need to be constant
                 switch (instruction.Operation)
                 {
@@ -168,6 +174,23 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             }
             else if (instruction.Right is InterimConstantValue constantR)
             {
+                // Reorder/reflow operations if it helps to fold constants
+                if (instruction.Left is IRBinaryOp leftOp &&
+                    OperationsHaveEqualPriority(instruction.Operation, leftOp.Operation))
+                {
+                    // (L1 _ R1) _ R
+                    // (A _ B) _ C = A _ (B _ C)    (doesn't require commutativity)
+                    if (leftOp.Right is InterimConstantValue constantLR)
+                    {
+                        InterimConstantValue result = ExecuteOperation(instruction, constantLR, constantR);
+                        if (result != null)
+                        {
+                            leftOp.Right = result;
+                            instruction = leftOp;
+                        }
+                    }
+                }
+
                 switch (instruction.Operation)
                 {
                     case OpcodeMathDivide _:
@@ -217,6 +240,24 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             if (op2 == typeof(OpcodeMathMultiply) && op1 == typeof(OpcodeMathDivide))
                 return true;
             return false;
+        }
+
+        private static InterimConstantValue ExecuteOperation(IRBinaryOp operation, InterimConstantValue left, InterimConstantValue right)
+        {
+            object leftValue = left.Value;
+            object rightValue = right.Value;
+            try
+            {
+                return new InterimConstantValue(operation.Operation.ExecuteCalculation(leftValue, rightValue), operation);
+            }
+            catch (KOSBinaryOperandTypeException binaryTypeException)
+            {
+#if DEBUG
+                throw new KOSCompileException(operation, binaryTypeException);
+#else
+                return null;
+#endif
+            }
         }
 
         private static bool ReduceDivMult(IRBinaryOp instruction, InterimConstantValue constantOperand, out IInterimOperand newResult)
