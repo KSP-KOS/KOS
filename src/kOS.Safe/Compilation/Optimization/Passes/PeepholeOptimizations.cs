@@ -4,21 +4,25 @@ using kOS.Safe.Compilation.IR;
 
 namespace kOS.Safe.Compilation.Optimization.Passes
 {
-    public class PeepholeOptimizations : IOptimizationPass<IRInstruction>
+    public class PeepholeOptimizations : IOptimizationPass<IRInstruction>, ILinkedOptimizationPass
     {
+        public Optimizer Optimizer { get; set; }
         public OptimizationLevel OptimizationLevel => OptimizationLevel.Minimal;
 
         public short SortIndex => 1050;
 
         public void ApplyPass(List<IRInstruction> code)
         {
+            IInterimOperand OperandPeepholeFilter_Internal(IInterimOperand operand)
+                => OperandPeepholeFilter(operand, Optimizer.AllowClobberBuiltins);
+
             for (int i = 0; i < code.Count; i++)
             {
                 IRInstruction instruction = code[i];
                 foreach (IRInstruction nestedInstruction in instruction.DepthFirst())
                 {
                     if (nestedInstruction is IOperandInstructionBase operandInstruction)
-                        operandInstruction.MutateEachOperand(OperandPeepholeFilter);
+                        operandInstruction.MutateEachOperand(OperandPeepholeFilter_Internal);
 
                     InstructionPeepholeFilter(nestedInstruction);
                 }
@@ -33,25 +37,27 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             }
         }
 
-        private static IInterimOperand OperandPeepholeFilter(IInterimOperand operand)
+        private static IInterimOperand OperandPeepholeFilter(IInterimOperand operand, bool allowClobberBuiltins)
         {
-            // Replace parameterless suffix method calls with get member
-            // TODO: Skip this if clobber built-ins is active.
-            if (operand is IRCall suffixCall &&
-                !suffixCall.Direct &&
-                suffixCall.Arguments.Count == 0 &&
-                suffixCall.IndirectMethod is IRSuffixGetMethod)
+            // These calls may not be what is expected if clobbering is permitted.
+            if (!allowClobberBuiltins)
             {
-                return ReplaceParameterlessSuffix(suffixCall);
-            }
+                // Replace parameterless suffix method calls with get member
+                if (operand is IRCall suffixCall &&
+                    !suffixCall.Direct &&
+                    suffixCall.Arguments.Count == 0 &&
+                    suffixCall.IndirectMethod is IRSuffixGetMethod)
+                {
+                    return ReplaceParameterlessSuffix(suffixCall);
+                }
 
-            // Replace calls to VectorDotProduct with multiplication
-            // TODO: Skip this if clobber built-ins is active.
-            if (operand is IRCall vDotCall &&
-                (vDotCall.Function == "vdot" || vDotCall.Function == "vectordotproduct") &&
-                vDotCall.Arguments.Count == 2)
-            {
-                return ReplaceVectorDotProduct(vDotCall);
+                // Replace calls to VectorDotProduct with multiplication
+                if (operand is IRCall vDotCall &&
+                    (vDotCall.Function == "vdot" || vDotCall.Function == "vectordotproduct") &&
+                    vDotCall.Arguments.Count == 2)
+                {
+                    return ReplaceVectorDotProduct(vDotCall);
+                }
             }
 
             // Replace lex indexing using string constant with suffixing where possible

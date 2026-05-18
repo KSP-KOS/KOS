@@ -29,6 +29,10 @@ namespace kOS.Safe.Compilation.Optimization
         /// </summary>
         public OptimizationLevel OptimizationLevel { get; }
         /// <summary>
+        /// Gets a value indicating whether built-in names may be clobbered.
+        /// </summary>
+        public bool AllowClobberBuiltins { get; }
+        /// <summary>
         /// Gets the collection of Basic Blocks being operated upon.
         /// </summary>
         public List<BasicBlock> Blocks { get; private set; }
@@ -58,9 +62,11 @@ namespace kOS.Safe.Compilation.Optimization
         /// Initializes a new instance of the <see cref="Optimizer"/> class.
         /// </summary>
         /// <param name="optimizationLevel">The optimization level to be applied.</param>
-        public Optimizer(OptimizationLevel optimizationLevel)
+        public Optimizer(CompilerOptions options)
         {
-            OptimizationLevel = optimizationLevel;
+            OptimizationLevel = options.OptimizationLevel;
+            AllowClobberBuiltins = options.AllowClobberBuiltins;
+
             foreach (Type type in availablePassTypes)
             {
 #if DEBUG
@@ -108,9 +114,6 @@ namespace kOS.Safe.Compilation.Optimization
                 SafeHouse.Logger.Log($"Applying optimization pass: {pass.GetType()}.");
                 switch (pass)
                 {
-                    case ILinkedOptimizationPass linkedPass:
-                        linkedPass.ApplyPass();
-                        break;
                     case IHolisticOptimizationPass codePartpass:
                         codePartpass.ApplyPass(Code);
                         break;

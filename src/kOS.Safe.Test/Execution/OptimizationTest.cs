@@ -29,10 +29,17 @@ namespace kOS.Safe.Test.Execution
 
             return compiled;
         }
-        public List<Safe.Compilation.Opcode> GetOpcodesAfterOptimization(List<Safe.Compilation.Opcode> code, OptimizationLevel optimizationLevel = OptimizationLevel.Minimal)
+        public List<Safe.Compilation.Opcode> GetOpcodesAfterOptimization(List<Safe.Compilation.Opcode> code,
+            OptimizationLevel optimizationLevel = OptimizationLevel.Minimal,
+            bool allowClobberBuiltins = true)
         {
+            CompilerOptions options = new CompilerOptions()
+            {
+                AllowClobberBuiltins = allowClobberBuiltins,
+                OptimizationLevel = optimizationLevel
+            };
             IRCodePart codePart = new IRCodePart(code, new List<Safe.Compilation.KS.UserFunction>(), new List<Safe.Compilation.KS.Trigger>());
-            var optimizer = new Safe.Compilation.Optimization.Optimizer(optimizationLevel);
+            var optimizer = new Safe.Compilation.Optimization.Optimizer(options);
             optimizer.Optimize(codePart);
             CodePart result = new CodePart();
             codePart.EmitCode(result);
@@ -327,7 +334,8 @@ namespace kOS.Safe.Test.Execution
                     new OpcodeCall("<indirect>"),
                     new OpcodePop(),
                     new OpcodePopScope()
-                }
+                },
+                allowClobberBuiltins: false
             );
             // The first one should be replaced
             Assert.IsInstanceOf<OpcodeGetMember>(result[1]);
@@ -360,7 +368,8 @@ namespace kOS.Safe.Test.Execution
                     new OpcodeCall("vectordotproduct"),
                     new OpcodePop(),
                     new OpcodePopScope()
-                }
+                },
+                allowClobberBuiltins: false
             );
             
             Assert.IsInstanceOf<OpcodeMathMultiply>(result[2]);

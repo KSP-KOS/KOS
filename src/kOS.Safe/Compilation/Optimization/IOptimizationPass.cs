@@ -46,9 +46,5 @@ namespace kOS.Safe.Compilation.Optimization
         /// optimization pass.
         /// </summary>
         Optimizer Optimizer { set; }
-        /// <summary>
-        /// Executes the optimization pass.
-        /// </summary>
-        void ApplyPass();
     }
 }

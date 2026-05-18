@@ -6,7 +6,7 @@ using kOS.Safe.Encapsulation;
 
 namespace kOS.Safe.Compilation.Optimization.Passes
 {
-    public class SCCPWithTypePropagation : ILinkedOptimizationPass
+    public class SCCPWithTypePropagation : IHolisticOptimizationPass, ILinkedOptimizationPass
     {
         /// <summary>
         /// Gets the optimization level associated with this pass.
@@ -21,10 +21,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 
         public Optimizer Optimizer { private get; set; }
 
-        public void ApplyPass()
+        public void ApplyPass(IRCodePart codePart)
         {
-            IRCodePart codePart = Optimizer.Code;
-
             Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> ssaUses =
                 MapUsesAndPropagateTypes(codePart);
 

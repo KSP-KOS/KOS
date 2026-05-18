@@ -5,8 +5,9 @@ using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Compilation.Optimization.Passes
 {
-    public class ConstantFolding : IOptimizationPass<BasicBlock>
+    public class ConstantFolding : IOptimizationPass<BasicBlock>, ILinkedOptimizationPass
     {
+        public Optimizer Optimizer { get; set; }
         public OptimizationLevel OptimizationLevel => OptimizationLevel.Minimal;
         public short SortIndex => 30;
 
@@ -15,11 +16,14 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             IEnumerator<BasicBlock> enumerator = blocks.GetEnumerator();
             while (enumerator.MoveNext())
             {
-                ApplyPass(enumerator.Current);
+                ApplyPass(enumerator.Current, Optimizer.AllowClobberBuiltins);
             }
         }
-        private static void ApplyPass(BasicBlock block)
+        private static void ApplyPass(BasicBlock block, bool allowClobberBuiltins)
         {
+            IInterimOperand AttemptReduction_Internal(IInterimOperand operand)
+                => AttemptReduction(operand, allowClobberBuiltins);
+
             for (int i = 0; i < block.Instructions.Count; i++)
             {
                 IRInstruction instruction = block.Instructions[i];
@@ -55,39 +59,43 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 {
                     if (inst is IOperandInstructionBase operandInstruction)
                     {
-                        operandInstruction.MutateEachOperand(AttemptReduction);
+                        operandInstruction.MutateEachOperand(AttemptReduction_Internal);
                     }
                 }
             }
         }
 
-        public static IInterimOperand AttemptReduction(IInterimOperand input)
+        public static IInterimOperand AttemptReduction(IInterimOperand input, bool allowClobberBuiltins)
         {
-            // Only fold into an IRConstant when it is a primitive that can be stored in ksm.
-            if (input is IEvaluatableToConstant evaluatableToConstant &&
-                evaluatableToConstant.IsInvariant &&
-                typeof(Encapsulation.PrimitiveStructure).IsAssignableFrom(input.Type))
-                return evaluatableToConstant.Evaluate();
+            // Skip calls if builtins may be clobbered because they may not be what is expected.
+            if (!(allowClobberBuiltins && input is IRCall))
+            {
+                // Only fold into an IRConstant when it is a primitive that can be stored in ksm.
+                if (input is IEvaluatableToConstant evaluatableToConstant &&
+                    evaluatableToConstant.IsInvariant &&
+                    typeof(Encapsulation.PrimitiveStructure).IsAssignableFrom(input.Type))
+                    return evaluatableToConstant.Evaluate();
+            }
 
-            return Simplify(input);
+            return Simplify(input, allowClobberBuiltins);
         }
 
-        private static IInterimOperand Simplify(IInterimOperand input)
+        private static IInterimOperand Simplify(IInterimOperand input, bool allowClobberBuiltins)
         {
             switch (input)
             {
                 case IRUnaryOp unaryOp:
                     return AlgebraicSimplifications.AttemptUnarySimplification(unaryOp);
                 case IRBinaryOp binaryOp:
-                    return AttemptBinarySimplification(binaryOp);
+                    return AttemptBinarySimplification(binaryOp, allowClobberBuiltins);
                 default:
                     return input;
             }
         }
 
-        private static IInterimOperand AttemptBinarySimplification(IRBinaryOp instruction)
+        private static IInterimOperand AttemptBinarySimplification(IRBinaryOp instruction, bool allowClobberBuiltins)
         {
-            instruction = AlgebraicSimplifications.AttemptAlgebraicSimplification(instruction);
+            instruction = AlgebraicSimplifications.AttemptAlgebraicSimplification(instruction, allowClobberBuiltins);
 
             // Put constants to the left, if there are any
             if (instruction.IsCommutative && instruction.Right is InterimConstantValue && !(instruction.Left is InterimConstantValue))

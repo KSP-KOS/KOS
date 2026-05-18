@@ -69,11 +69,10 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         case "obt":
                         case "status":
                             break;
-                        // All other suffixes don't have an alias, so just return the original IRTemp
+                        // All other suffixes don't have an alias, so just return the original 
                         default:
                             return suffixGet;
                     }
-                    // Instead of the IRTemp, which leads to resolving the suffix, return just the alias shortcut.
                     return new InterimVariableReference($"${suffixGet.Suffix}", suffixGet.SourceLine, suffixGet.SourceColumn);
                 }
                 if (variableReference.Name.Equals("$constant", StringComparison.OrdinalIgnoreCase))

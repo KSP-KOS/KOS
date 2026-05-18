@@ -38,7 +38,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         }
 
 
-        public static IRBinaryOp AttemptAlgebraicSimplification(IRBinaryOp binaryOp)
+        public static IRBinaryOp AttemptAlgebraicSimplification(IRBinaryOp binaryOp, bool allowClobberBuiltins)
         {
             switch (binaryOp.Operation)
             {
@@ -136,7 +136,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             opL.Operation is OpcodeMathPower &&
                             opL.Left.Equals(binaryOp.Right))
                         {
-                            return IncreasePower(binaryOp, -1);
+                            return IncreasePower(binaryOp, -1, allowClobberBuiltins);
                         }
                     }
                     // X^N/X^M=X^(N-M)
@@ -147,7 +147,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             opR.Operation is OpcodeMathPower &&
                             opL.Left.Equals(opR.Left))
                         {
-                            return DividePowers(binaryOp);
+                            return DividePowers(binaryOp, allowClobberBuiltins);
                         }
                     }
                     // X/X^N = X^(1-N)
@@ -162,7 +162,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                                 new OpcodeMathPower(),
                                 binaryOp.Left,
                                 new InterimConstantValue(Encapsulation.ScalarIntValue.One, binaryOp));
-                            return DividePowers(binaryOp);
+                            return DividePowers(binaryOp, allowClobberBuiltins);
                         }
                     }
                     break;
@@ -173,14 +173,14 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             opL.Operation is OpcodeMathPower &&
                             opL.Left.Equals(binaryOp.Right))
                         {
-                            return IncreasePower(binaryOp, 1);
+                            return IncreasePower(binaryOp, 1, allowClobberBuiltins);
                         }
                         if (binaryOp.Right is IRBinaryOp opR &&
                             opR.Operation is OpcodeMathPower &&
                             opR.Left.Equals(binaryOp.Left) &&
                             binaryOp.SwapOperands())
                         {
-                            return IncreasePower(binaryOp, 1);
+                            return IncreasePower(binaryOp, 1, allowClobberBuiltins);
                         }
                     }
                     // X*X*...*X=N^X
@@ -215,7 +215,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             opR.Operation is OpcodeMathPower &&
                             opL.Left.Equals(opR.Left))
                         {
-                            return CombinePowers(binaryOp);
+                            return CombinePowers(binaryOp, allowClobberBuiltins);
                         }
                     }
                     break;
@@ -332,7 +332,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             return instruction;
         }
 
-        private static IRBinaryOp IncreasePower(IRBinaryOp instruction, int powerIncrease)
+        private static IRBinaryOp IncreasePower(IRBinaryOp instruction, int powerIncrease, bool allowClobberBuiltins)
         {
             // X^N*X=X^(N+1)
             // X^N/X=X^(N-1)
@@ -358,7 +358,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             opL.OverwriteSourceLocation(divLine, divColumn);
 
             // Attempt constant folding afterwards
-            instruction.Right = ConstantFolding.AttemptReduction(opL);
+            instruction.Right = ConstantFolding.AttemptReduction(opL, allowClobberBuiltins);
 
             // Special case for when N == 2 afterwards
             // then revert back to X * X
@@ -377,13 +377,13 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             return instruction;
         }
 
-        private static IRBinaryOp DividePowers(IRBinaryOp instruction)
-            => CombinePowers(instruction, new OpcodeMathSubtract());
+        private static IRBinaryOp DividePowers(IRBinaryOp instruction, bool allowClobberBuiltins)
+            => CombinePowers(instruction, new OpcodeMathSubtract(), allowClobberBuiltins);
 
-        private static IRBinaryOp CombinePowers(IRBinaryOp instruction)
-            => CombinePowers(instruction, new OpcodeMathAdd());
+        private static IRBinaryOp CombinePowers(IRBinaryOp instruction, bool allowClobberBuiltins)
+            => CombinePowers(instruction, new OpcodeMathAdd(), allowClobberBuiltins);
 
-        private static IRBinaryOp CombinePowers(IRBinaryOp instruction, BinaryOpcode newOperation)
+        private static IRBinaryOp CombinePowers(IRBinaryOp instruction, BinaryOpcode newOperation, bool allowClobberBuiltins)
         {
             // X^N*X^M=X^(N+M)
             // Assumes |N + M| < 2^31 - 1 (for integer scalars) or 2^53 (for double scalars)
@@ -405,7 +405,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             opR.OverwriteSourceLocation(divLine, divColumn);
 
             // Attempt constant folding afterwards
-            instruction.Right = ConstantFolding.AttemptReduction(opR);
+            instruction.Right = ConstantFolding.AttemptReduction(opR, allowClobberBuiltins);
 
             // Special case for when N == 2 afterwards
             // then revert back to X * X
