@@ -408,234 +408,9 @@ namespace kOS.Safe.Test.Execution
             Assert.That((result[1] as OpcodeGetMember)?.Identifier is string index &&
                 index.Equals("test", StringComparison.OrdinalIgnoreCase));
         }
-
-        [Test]
-        public void TestMultiplicationDistribution()
-        {
-            // A*B + A*C = A*(B+C)
-            Safe.Compilation.Optimization.Optimizer.PassesToSkip.Add(typeof(Safe.Compilation.Optimization.Passes.ConstantFolding));
-            List<Safe.Compilation.Opcode> result = GetOpcodesAfterOptimization(
-                new List<Safe.Compilation.Opcode>()
-                {
-                    new OpcodePushScope(1, 0),
-                    new OpcodePush(Encapsulation.ScalarIntValue.Two),
-                    new OpcodeStoreLocal("$a"),
-                    new OpcodePush(Encapsulation.ScalarIntValue.One),
-                    new OpcodeStoreLocal("$b"),
-                    new OpcodePush(new Encapsulation.ScalarIntValue(3)),
-                    new OpcodeStoreLocal("$c"),
-                    new OpcodePush("$a"),
-                    new OpcodePush("$b"),
-                    new OpcodeMathMultiply(),
-                    new OpcodePush("$a"),
-                    new OpcodePush("$c"),
-                    new OpcodeMathMultiply(),
-                    new OpcodeMathAdd(),
-                    new OpcodePop(),
-                    new OpcodePush("$a"),
-                    new OpcodePush("$b"),
-                    new OpcodeMathMultiply(),
-                    new OpcodePush("$a"),
-                    new OpcodePush("$c"),
-                    new OpcodeMathMultiply(),
-                    new OpcodeMathSubtract(),
-                    new OpcodePop(),
-                    new OpcodePopScope()
-                }
-            );
-            Safe.Compilation.Optimization.Optimizer.PassesToSkip.Clear();
-            Assert.IsInstanceOf<OpcodeMathAdd>(result[10]);
-            Assert.IsInstanceOf<OpcodeMathMultiply>(result[11]);
-            Assert.IsInstanceOf<OpcodeMathSubtract>(result[16]);
-            Assert.IsInstanceOf<OpcodeMathMultiply>(result[17]);
-        }
-
-        [Test]
-        public void TestAdditionSubtraction()
-        {
-            // -B+A = A+-B = A-B
-            // -A+B = B-A
-            // A--B=A+B
-            Safe.Compilation.Optimization.Optimizer.PassesToSkip.Add(typeof(Safe.Compilation.Optimization.Passes.ConstantFolding));
-            List<Safe.Compilation.Opcode> result = GetOpcodesAfterOptimization(
-                new List<Safe.Compilation.Opcode>()
-                {
-                    new OpcodePushScope(1, 0),
-                    new OpcodePush(Encapsulation.ScalarIntValue.Two),
-                    new OpcodeStoreLocal("$a"),
-                    new OpcodePush(Encapsulation.ScalarIntValue.One),
-                    new OpcodeStoreLocal("$b"),
-                    new OpcodePush("$b"),
-                    new OpcodeMathNegate(),
-                    new OpcodePush("$a"),
-                    new OpcodeMathAdd(),
-                    new OpcodePop(),
-                    new OpcodePush("$a"),
-                    new OpcodePush("$b"),
-                    new OpcodeMathNegate(),
-                    new OpcodeMathAdd(),
-                    new OpcodePop(),
-                    new OpcodePush("$a"),
-                    new OpcodeMathNegate(),
-                    new OpcodePush("$b"),
-                    new OpcodeMathAdd(),
-                    new OpcodePop(),
-                    new OpcodePush("$a"),
-                    new OpcodePush("$b"),
-                    new OpcodeMathNegate(),
-                    new OpcodeMathSubtract(),
-                    new OpcodePopScope()
-                }
-            );
-            Safe.Compilation.Optimization.Optimizer.PassesToSkip.Clear();
-            Assert.IsInstanceOf<OpcodeMathSubtract>(result[7]);
-            Assert.IsInstanceOf<OpcodeMathSubtract>(result[11]);
-            Assert.IsInstanceOf<OpcodeMathSubtract>(result[15]);
-        }
-
-        [Test]
-        public void TestDivisionSubtraction()
-        {
-            // X^N/X=X^(N-1)
-            // X^N/X^M=X^(N-M)
-            Safe.Compilation.Optimization.Optimizer.PassesToSkip.Add(typeof(Safe.Compilation.Optimization.Passes.ConstantFolding));
-            List<Safe.Compilation.Opcode> result = GetOpcodesAfterOptimization(
-                new List<Safe.Compilation.Opcode>()
-                {
-                    new OpcodePushScope(1, 0),
-                    new OpcodePush(Encapsulation.ScalarIntValue.Two),
-                    new OpcodeStoreLocal("$a"),
-                    new OpcodePush(new Encapsulation.ScalarDoubleValue(2.5)),
-                    new OpcodeStoreLocal("$b"),
-                    new OpcodePush(new Encapsulation.ScalarDoubleValue(3)),
-                    new OpcodeStoreLocal("$c"),
-                    new OpcodePush("$a"),
-                    new OpcodePush("$b"),
-                    new OpcodeMathPower(),
-                    new OpcodePush("$a"),
-                    new OpcodeMathDivide(),
-                    new OpcodePop(),
-                    new OpcodePush("$a"),
-                    new OpcodePush("$b"),
-                    new OpcodeMathPower(),
-                    new OpcodePush("$a"),
-                    new OpcodePush("$c"),
-                    new OpcodeMathPower(),
-                    new OpcodeMathDivide(),
-                    new OpcodePop(),
-                    new OpcodePopScope()
-                }
-            );
-            Safe.Compilation.Optimization.Optimizer.PassesToSkip.Clear();
-            Assert.IsInstanceOf<OpcodePush>(result[8]);
-            Assert.AreEqual((result[8] as OpcodePush)?.Argument, new Encapsulation.ScalarDoubleValue(1.5));
-            Assert.IsInstanceOf<OpcodePush>(result[12]);
-            Assert.AreEqual((result[12] as OpcodePush)?.Argument, new Encapsulation.ScalarDoubleValue(-0.5));
-        }
-
-        [Test]
-        public void TestPowerAddition()
-        {
-            // X^N*X=X^(N+1)
-            // X^N*X^M=X^(N+M)
-            Safe.Compilation.Optimization.Optimizer.PassesToSkip.Add(typeof(Safe.Compilation.Optimization.Passes.ConstantFolding));
-            List<Safe.Compilation.Opcode> result = GetOpcodesAfterOptimization(
-                new List<Safe.Compilation.Opcode>()
-                {
-                    new OpcodePushScope(1, 0),
-                    new OpcodePush(Encapsulation.ScalarIntValue.Two),
-                    new OpcodeStoreLocal("$a"),
-                    new OpcodePush(new Encapsulation.ScalarDoubleValue(2.5)),
-                    new OpcodeStoreLocal("$b"),
-                    new OpcodePush(new Encapsulation.ScalarDoubleValue(3)),
-                    new OpcodeStoreLocal("$c"),
-                    new OpcodePush("$a"),
-                    new OpcodePush("$b"),
-                    new OpcodeMathPower(),
-                    new OpcodePush("$a"),
-                    new OpcodeMathMultiply(),
-                    new OpcodePop(),
-                    new OpcodePush("$a"),
-                    new OpcodePush("$b"),
-                    new OpcodeMathPower(),
-                    new OpcodePush("$a"),
-                    new OpcodePush("$c"),
-                    new OpcodeMathPower(),
-                    new OpcodeMathMultiply(),
-                    new OpcodePop(),
-                    new OpcodePopScope()
-                }
-            );
-            Safe.Compilation.Optimization.Optimizer.PassesToSkip.Clear();
-            Assert.IsInstanceOf<OpcodePush>(result[8]);
-            Assert.AreEqual((result[8] as OpcodePush)?.Argument, new Encapsulation.ScalarDoubleValue(3.5));
-            Assert.IsInstanceOf<OpcodePush>(result[12]);
-            Assert.AreEqual((result[12] as OpcodePush)?.Argument, new Encapsulation.ScalarDoubleValue(5.5));
-        }
-
-        [Test]
-        public void TestPowerCreation()
-        {
-            // X*X*X = X^3
-            Safe.Compilation.Optimization.Optimizer.PassesToSkip.Add(typeof(Safe.Compilation.Optimization.Passes.ConstantFolding));
-            List<Safe.Compilation.Opcode> result = GetOpcodesAfterOptimization(
-                new List<Safe.Compilation.Opcode>()
-                {
-                    new OpcodePushScope(1, 0),
-                    new OpcodePush(Encapsulation.ScalarIntValue.Two),
-                    new OpcodeStoreLocal("$a"),
-                    new OpcodePush("$a"),
-                    new OpcodePush("$a"),
-                    new OpcodePush("$a"),
-                    new OpcodeMathMultiply(),
-                    new OpcodeMathMultiply(),
-                    new OpcodePop(),
-                    new OpcodePush("$a"),
-                    new OpcodePush(Encapsulation.ScalarIntValue.Two),
-                    new OpcodeMathPower(),
-                    new OpcodePush("$a"),
-                    new OpcodeMathDivide(),
-                    new OpcodePop(),
-                    new OpcodePush("$a"),
-                    new OpcodePush(new Encapsulation.ScalarIntValue(3)),
-                    new OpcodeMathPower(),
-                    new OpcodePush("$a"),
-                    new OpcodeMathDivide(),
-                    new OpcodePop(),
-                    new OpcodePush("$a"),
-                    new OpcodePush(Encapsulation.ScalarIntValue.Two),
-                    new OpcodeMathPower(),
-                    new OpcodePush("$a"),
-                    new OpcodePush(Encapsulation.ScalarIntValue.Two),
-                    new OpcodeMathPower(),
-                    new OpcodeMathDivide(),
-                    new OpcodePop(),
-                    new OpcodePush("$a"),
-                    new OpcodePush(Encapsulation.ScalarIntValue.Two),
-                    new OpcodeMathPower(),
-                    new OpcodePush("$a"),
-                    new OpcodeMathDivide(),
-                    new OpcodePush("$a"),
-                    new OpcodeMathDivide(),
-                    new OpcodePop(),
-                    new OpcodePopScope()
-                }
-            );
-            Safe.Compilation.Optimization.Optimizer.PassesToSkip.Clear();
-            Assert.IsInstanceOf<OpcodePush>(result[4]);
-            Assert.AreEqual((result[4] as OpcodePush)?.Argument, new Encapsulation.ScalarIntValue(3));
-            Assert.IsInstanceOf<OpcodeMathPower>(result[5]);
-            Assert.IsInstanceOf<OpcodePush>(result[7]);
-            Assert.IsInstanceOf<OpcodePop>(result[8]);
-            Assert.IsInstanceOf<OpcodeMathMultiply>(result[11]);
-            Assert.IsInstanceOf<OpcodePush>(result[13]);
-            Assert.AreEqual((result[13] as OpcodePush)?.Argument, Encapsulation.ScalarIntValue.One);
-            Assert.IsInstanceOf<OpcodePush>(result[15]);
-            Assert.AreEqual((result[15] as OpcodePush)?.Argument, Encapsulation.ScalarIntValue.One);
-        }
         #endregion
 
-        #region Constant Propagation
+        #region Constant Propagation, Folding, and Algebraic Simplifications
         [Test]
         public void TestConstantPropagation()
         {
@@ -692,9 +467,351 @@ namespace kOS.Safe.Test.Execution
                 }
             );
             Assert.IsInstanceOf<OpcodePush>(result[7]);
-            Assert.AreEqual((result[7] as OpcodePush)?.Argument, new Encapsulation.ScalarIntValue(3));
+            Assert.AreEqual(new Encapsulation.ScalarIntValue(3), (result[7] as OpcodePush)?.Argument);
             Assert.IsInstanceOf<OpcodeMathAdd>(result[11]);
             Assert.IsInstanceOf<OpcodeMathAdd>(result[15]);
+        }
+
+        [Test]
+        public void TestConstantPropagationCommutivity()
+        {
+            List<Safe.Compilation.Opcode> result = GetOpcodesAfterOptimization(
+                new List<Safe.Compilation.Opcode>()
+                {
+                    new OpcodePushScope(1, 0),
+                    new OpcodePush(new Safe.Execution.KOSArgMarkerType()),
+                    new OpcodeCall("random"),
+                    new OpcodeStoreLocal("$a"),
+                    // Block 1
+                    new OpcodePush(Encapsulation.ScalarIntValue.One),
+                    new OpcodePush("$a"),
+                    new OpcodeMathAdd(),
+                    new OpcodePush(Encapsulation.ScalarIntValue.Two),
+                    new OpcodeMathAdd(),
+                    new OpcodeStoreLocal("$result"),
+                    // Block 2
+                    new OpcodePush(Encapsulation.ScalarIntValue.One),
+                    new OpcodePush("$a"),
+                    new OpcodeMathAdd(),
+                    new OpcodePush(Encapsulation.ScalarIntValue.Two),
+                    new OpcodeMathSubtract(),
+                    new OpcodeStoreLocal("$result"),
+                    // Block 3
+                    new OpcodePush(Encapsulation.ScalarIntValue.One),
+                    new OpcodePush("$a"),
+                    new OpcodeMathSubtract(),
+                    new OpcodeStoreLocal("$result"),
+                    // Block 4
+                    new OpcodePush("$a"),
+                    new OpcodePush(Encapsulation.ScalarIntValue.One),
+                    new OpcodeMathSubtract(),
+                    new OpcodeStoreLocal("$result"),
+                    // Block 5
+                    new OpcodePush(Encapsulation.ScalarIntValue.One),
+                    new OpcodePush("$a"),
+                    new OpcodeMathSubtract(),
+                    new OpcodePush(Encapsulation.ScalarIntValue.Two),
+                    new OpcodeMathAdd(),
+                    new OpcodeStoreLocal("$result"),
+                    new OpcodePopScope()
+                }
+            );
+            // Block 1
+            Assert.AreEqual(new Encapsulation.ScalarIntValue(3), (result[4] as OpcodePush)?.Argument);
+            Assert.AreEqual("$a", (result[5] as OpcodePush)?.Argument);
+            // Block 2
+            Assert.AreEqual(new Encapsulation.ScalarIntValue(-1), (result[8] as OpcodePush)?.Argument);
+            Assert.IsInstanceOf<OpcodeMathAdd>(result[10]);
+            //Block 3
+            Assert.AreEqual(Encapsulation.ScalarIntValue.One, (result[12] as OpcodePush)?.Argument);
+            Assert.AreEqual("$a", (result[13] as OpcodePush)?.Argument);
+            Assert.IsInstanceOf<OpcodeMathSubtract>(result[14]);
+            //Block 4
+            Assert.AreEqual(new Encapsulation.ScalarIntValue(-1), (result[16] as OpcodePush)?.Argument);
+            Assert.AreEqual("$a", (result[17] as OpcodePush)?.Argument);
+            Assert.IsInstanceOf<OpcodeMathAdd>(result[18]);
+            //Block 5
+            Assert.AreEqual(new Encapsulation.ScalarIntValue(3), (result[20] as OpcodePush)?.Argument);
+            Assert.AreEqual("$a", (result[21] as OpcodePush)?.Argument);
+            Assert.IsInstanceOf<OpcodeMathSubtract>(result[22]);
+        }
+
+        [Test]
+        public void TestMultiplicationDistribution()
+        {
+            // A*B + A*C = A*(B+C)
+            // A/B + C/B = (A+C)/B
+            // A/B - C/B = (A-C)/B
+            List<Safe.Compilation.Opcode> result = GetOpcodesAfterOptimization(
+                new List<Safe.Compilation.Opcode>()
+                {
+                    new OpcodePushScope(1, 0),
+                    new OpcodePush(new Safe.Execution.KOSArgMarkerType()),
+                    new OpcodeCall("random"),
+                    new OpcodeStoreLocal("$a"),
+                    new OpcodePush(new Safe.Execution.KOSArgMarkerType()),
+                    new OpcodeCall("random"),
+                    new OpcodeStoreLocal("$b"),
+                    new OpcodePush(new Safe.Execution.KOSArgMarkerType()),
+                    new OpcodeCall("random"),
+                    new OpcodeStoreLocal("$c"),
+                    // Block 1
+                    new OpcodePush("$a"),
+                    new OpcodePush("$b"),
+                    new OpcodeMathMultiply(),
+                    new OpcodePush("$a"),
+                    new OpcodePush("$c"),
+                    new OpcodeMathMultiply(),
+                    new OpcodeMathAdd(),
+                    new OpcodePop(),
+                    // Block 2
+                    new OpcodePush("$a"),
+                    new OpcodePush("$b"),
+                    new OpcodeMathMultiply(),
+                    new OpcodePush("$a"),
+                    new OpcodePush("$c"),
+                    new OpcodeMathMultiply(),
+                    new OpcodeMathSubtract(),
+                    new OpcodePop(),
+                    // Block 3
+                    new OpcodePush("$b"),
+                    new OpcodePush("$a"),
+                    new OpcodeMathDivide(),
+                    new OpcodePush("$c"),
+                    new OpcodePush("$a"),
+                    new OpcodeMathDivide(),
+                    new OpcodeMathAdd(),
+                    new OpcodePop(),
+                    // Block 4
+                    new OpcodePush("$b"),
+                    new OpcodePush("$a"),
+                    new OpcodeMathDivide(),
+                    new OpcodePush("$c"),
+                    new OpcodePush("$a"),
+                    new OpcodeMathDivide(),
+                    new OpcodeMathSubtract(),
+                    new OpcodePop(),
+                    new OpcodePopScope()
+                }
+            );
+            // Block 1
+            Assert.IsInstanceOf<OpcodePush>(result[10]);
+            Assert.AreEqual("$a", (result[10] as OpcodePush)?.Argument);
+            Assert.IsInstanceOf<OpcodePush>(result[11]);
+            Assert.AreEqual("$b", (result[11] as OpcodePush)?.Argument);
+            Assert.IsInstanceOf<OpcodePush>(result[12]);
+            Assert.AreEqual("$c", (result[12] as OpcodePush)?.Argument);
+            Assert.IsInstanceOf<OpcodeMathAdd>(result[13]);
+            Assert.IsInstanceOf<OpcodeMathMultiply>(result[14]);
+            // Block 2
+            Assert.IsInstanceOf<OpcodePush>(result[16]);
+            Assert.AreEqual("$a", (result[16] as OpcodePush)?.Argument);
+            Assert.IsInstanceOf<OpcodePush>(result[17]);
+            Assert.AreEqual("$b", (result[17] as OpcodePush)?.Argument);
+            Assert.IsInstanceOf<OpcodePush>(result[18]);
+            Assert.AreEqual("$c", (result[18] as OpcodePush)?.Argument);
+            Assert.IsInstanceOf<OpcodeMathSubtract>(result[19]);
+            Assert.IsInstanceOf<OpcodeMathMultiply>(result[20]);
+            // Block 3
+            Assert.IsInstanceOf<OpcodePush>(result[22]);
+            Assert.AreEqual("$b", (result[22] as OpcodePush)?.Argument);
+            Assert.IsInstanceOf<OpcodePush>(result[23]);
+            Assert.AreEqual("$c", (result[23] as OpcodePush)?.Argument);
+            Assert.IsInstanceOf<OpcodePush>(result[25]);
+            Assert.AreEqual("$a", (result[25] as OpcodePush)?.Argument);
+            Assert.IsInstanceOf<OpcodeMathAdd>(result[24]);
+            Assert.IsInstanceOf<OpcodeMathDivide>(result[26]);
+            // Block 4
+            Assert.IsInstanceOf<OpcodePush>(result[28]);
+            Assert.AreEqual("$b", (result[28] as OpcodePush)?.Argument);
+            Assert.IsInstanceOf<OpcodePush>(result[29]);
+            Assert.AreEqual("$c", (result[29] as OpcodePush)?.Argument);
+            Assert.IsInstanceOf<OpcodePush>(result[31]);
+            Assert.AreEqual("$a", (result[31] as OpcodePush)?.Argument);
+            Assert.IsInstanceOf<OpcodeMathSubtract>(result[30]);
+            Assert.IsInstanceOf<OpcodeMathDivide>(result[32]);
+        }
+
+        [Test]
+        public void TestAdditionSubtraction()
+        {
+            // -B+A = A+-B = A-B
+            // -A+B = B-A
+            // A--B=A+B
+            List<Safe.Compilation.Opcode> result = GetOpcodesAfterOptimization(
+                new List<Safe.Compilation.Opcode>()
+                {
+                    new OpcodePushScope(1, 0),
+                    new OpcodePush(new Safe.Execution.KOSArgMarkerType()),
+                    new OpcodeCall("random"),
+                    new OpcodeStoreLocal("$a"),
+                    new OpcodePush(new Safe.Execution.KOSArgMarkerType()),
+                    new OpcodeCall("random"),
+                    new OpcodeStoreLocal("$b"),
+                    new OpcodePush("$b"),
+                    new OpcodeMathNegate(),
+                    new OpcodePush("$a"),
+                    new OpcodeMathAdd(),
+                    new OpcodePop(),
+                    new OpcodePush("$a"),
+                    new OpcodePush("$b"),
+                    new OpcodeMathNegate(),
+                    new OpcodeMathAdd(),
+                    new OpcodePop(),
+                    new OpcodePush("$a"),
+                    new OpcodeMathNegate(),
+                    new OpcodePush("$b"),
+                    new OpcodeMathAdd(),
+                    new OpcodePop(),
+                    new OpcodePush("$a"),
+                    new OpcodePush("$b"),
+                    new OpcodeMathNegate(),
+                    new OpcodeMathSubtract(),
+                    new OpcodePopScope()
+                }
+            );
+            Assert.IsInstanceOf<OpcodeMathSubtract>(result[9]);
+            Assert.IsInstanceOf<OpcodeMathSubtract>(result[13]);
+            Assert.IsInstanceOf<OpcodeMathSubtract>(result[17]);
+        }
+
+        [Test]
+        public void TestDivisionSubtraction()
+        {
+            // X^N/X=X^(N-1)
+            // X^N/X^M=X^(N-M)
+            List<Safe.Compilation.Opcode> result = GetOpcodesAfterOptimization(
+                new List<Safe.Compilation.Opcode>()
+                {
+                    new OpcodePushScope(1, 0),
+                    new OpcodePush(new Safe.Execution.KOSArgMarkerType()),
+                    new OpcodeCall("random"),
+                    new OpcodeStoreLocal("$a"),
+                    new OpcodePush(new Encapsulation.ScalarDoubleValue(2.5)),
+                    new OpcodeStoreLocal("$b"),
+                    new OpcodePush(new Encapsulation.ScalarDoubleValue(3)),
+                    new OpcodeStoreLocal("$c"),
+                    new OpcodePush("$a"),
+                    new OpcodePush("$b"),
+                    new OpcodeMathPower(),
+                    new OpcodePush("$a"),
+                    new OpcodeMathDivide(),
+                    new OpcodePop(),
+                    new OpcodePush("$a"),
+                    new OpcodePush("$b"),
+                    new OpcodeMathPower(),
+                    new OpcodePush("$a"),
+                    new OpcodePush("$c"),
+                    new OpcodeMathPower(),
+                    new OpcodeMathDivide(),
+                    new OpcodePop(),
+                    new OpcodePopScope()
+                }
+            );
+            Assert.IsInstanceOf<OpcodePush>(result[9]);
+            Assert.AreEqual(new Encapsulation.ScalarDoubleValue(1.5), (result[9] as OpcodePush)?.Argument);
+            Assert.IsInstanceOf<OpcodePush>(result[13]);
+            Assert.AreEqual(new Encapsulation.ScalarDoubleValue(-0.5), (result[13] as OpcodePush)?.Argument);
+        }
+
+        [Test]
+        public void TestPowerAddition()
+        {
+            // X^N*X=X^(N+1)
+            // X^N*X^M=X^(N+M)
+            List<Safe.Compilation.Opcode> result = GetOpcodesAfterOptimization(
+                new List<Safe.Compilation.Opcode>()
+                {
+                    new OpcodePushScope(1, 0),
+                    new OpcodePush(new Safe.Execution.KOSArgMarkerType()),
+                    new OpcodeCall("random"),
+                    new OpcodeStoreLocal("$a"),
+                    new OpcodePush(new Encapsulation.ScalarDoubleValue(2.5)),
+                    new OpcodeStoreLocal("$b"),
+                    new OpcodePush(new Encapsulation.ScalarDoubleValue(3)),
+                    new OpcodeStoreLocal("$c"),
+                    new OpcodePush("$a"),
+                    new OpcodePush("$b"),
+                    new OpcodeMathPower(),
+                    new OpcodePush("$a"),
+                    new OpcodeMathMultiply(),
+                    new OpcodePop(),
+                    new OpcodePush("$a"),
+                    new OpcodePush("$b"),
+                    new OpcodeMathPower(),
+                    new OpcodePush("$a"),
+                    new OpcodePush("$c"),
+                    new OpcodeMathPower(),
+                    new OpcodeMathMultiply(),
+                    new OpcodePop(),
+                    new OpcodePopScope()
+                }
+            );
+            Assert.IsInstanceOf<OpcodePush>(result[9]);
+            Assert.AreEqual(new Encapsulation.ScalarDoubleValue(3.5), (result[9] as OpcodePush)?.Argument);
+            Assert.IsInstanceOf<OpcodePush>(result[13]);
+            Assert.AreEqual(new Encapsulation.ScalarDoubleValue(5.5), (result[13] as OpcodePush)?.Argument);
+        }
+
+        [Test]
+        public void TestPowerCreation()
+        {
+            // X*X*X = X^3
+            List<Safe.Compilation.Opcode> result = GetOpcodesAfterOptimization(
+                new List<Safe.Compilation.Opcode>()
+                {
+                    new OpcodePushScope(1, 0),
+                    new OpcodePush(new Safe.Execution.KOSArgMarkerType()),
+                    new OpcodeCall("random"),
+                    new OpcodeStoreLocal("$a"),
+                    new OpcodePush("$a"),
+                    new OpcodePush("$a"),
+                    new OpcodePush("$a"),
+                    new OpcodeMathMultiply(),
+                    new OpcodeMathMultiply(),
+                    new OpcodePop(),
+                    new OpcodePush("$a"),
+                    new OpcodePush(Encapsulation.ScalarIntValue.Two),
+                    new OpcodeMathPower(),
+                    new OpcodePush("$a"),
+                    new OpcodeMathDivide(),
+                    new OpcodePop(),
+                    new OpcodePush("$a"),
+                    new OpcodePush(new Encapsulation.ScalarIntValue(3)),
+                    new OpcodeMathPower(),
+                    new OpcodePush("$a"),
+                    new OpcodeMathDivide(),
+                    new OpcodePop(),
+                    new OpcodePush("$a"),
+                    new OpcodePush(Encapsulation.ScalarIntValue.Two),
+                    new OpcodeMathPower(),
+                    new OpcodePush("$a"),
+                    new OpcodePush(Encapsulation.ScalarIntValue.Two),
+                    new OpcodeMathPower(),
+                    new OpcodeMathDivide(),
+                    new OpcodePop(),
+                    // TODO: It should reduce this to Encapsulation.One
+                    new OpcodePush("$a"),
+                    new OpcodePush(Encapsulation.ScalarIntValue.Two),
+                    new OpcodeMathPower(),
+                    new OpcodePush("$a"),
+                    new OpcodeMathDivide(),
+                    new OpcodePush("$a"),
+                    new OpcodeMathDivide(),
+                    new OpcodePop(),
+                    new OpcodePopScope()
+                }
+            );
+            Assert.IsInstanceOf<OpcodePush>(result[5]);
+            Assert.AreEqual(new Encapsulation.ScalarIntValue(3), (result[5] as OpcodePush)?.Argument);
+            Assert.IsInstanceOf<OpcodeMathPower>(result[6]);
+            Assert.IsInstanceOf<OpcodePush>(result[8]);
+            Assert.IsInstanceOf<OpcodePop>(result[9]);
+            Assert.IsInstanceOf<OpcodeMathMultiply>(result[12]);
+            Assert.IsInstanceOf<OpcodePush>(result[14]);
+            Assert.AreEqual(Encapsulation.ScalarIntValue.One, (result[14] as OpcodePush)?.Argument);
+            Assert.IsInstanceOf<OpcodePush>(result[16]);
+            Assert.AreEqual(Encapsulation.ScalarIntValue.One, (result[16] as OpcodePush)?.Argument);
         }
         #endregion
     }

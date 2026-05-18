@@ -228,7 +228,10 @@ namespace kOS.Safe.Compilation.IR
                 return false;
                 //throw new System.InvalidOperationException($"{this} is not commutative.");
             if (Operation is OpcodeMathSubtract)
-                return false;
+            {
+                Right = new IRUnaryOp(Block, new OpcodeMathNegate(), Right);
+                Operation = new OpcodeMathAdd();
+            }
             (Right, Left) = (Left, Right);
             switch (Operation)
             {

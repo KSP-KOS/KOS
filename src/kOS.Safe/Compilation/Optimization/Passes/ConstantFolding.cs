@@ -55,103 +55,125 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 {
                     if (inst is IOperandInstructionBase operandInstruction)
                     {
-                        operandInstruction.MutateEachOperand(AttemptReductionToConstant);
+                        operandInstruction.MutateEachOperand(AttemptReduction);
                     }
                 }
             }
         }
-        private static IInterimOperand AttemptReductionToConstant(IInterimOperand input)
-        {
-            if (input is IResultingInstruction instruction)
-                return AttemptReduction(instruction);
-            return input;
-        }
 
-        public static IInterimOperand AttemptReduction(IResultingInstruction instruction)
+        public static IInterimOperand AttemptReduction(IInterimOperand input)
         {
             // Only fold into an IRConstant when it is a primitive that can be stored in ksm.
-            if (!typeof(Encapsulation.PrimitiveStructure).IsAssignableFrom(instruction.Type))
-                return instruction;
+            if (input is IEvaluatableToConstant evaluatableToConstant &&
+                evaluatableToConstant.IsInvariant &&
+                typeof(Encapsulation.PrimitiveStructure).IsAssignableFrom(input.Type))
+                return evaluatableToConstant.Evaluate();
 
-            switch (instruction)
+            return Simplify(input);
+        }
+
+        private static IInterimOperand Simplify(IInterimOperand input)
+        {
+            switch (input)
             {
                 case IRUnaryOp unaryOp:
-                    return ReduceUnary(unaryOp);
+                    return AlgebraicSimplifications.AttemptUnarySimplification(unaryOp);
                 case IRBinaryOp binaryOp:
-                    return ReduceBinary(binaryOp);
-                case IRCall call:
-                    return ReduceCall(call);
+                    return AttemptBinarySimplification(binaryOp);
                 default:
-                    return instruction;
+                    return input;
             }
         }
-        private static IInterimOperand ReduceUnary(IRUnaryOp instruction)
-        {
-            if (instruction.IsInvariant)
-                return instruction.Evaluate();
-            return instruction;
-        }
-        private static IInterimOperand ReduceBinary(IRBinaryOp instruction)
-        {
-            if (instruction.IsInvariant)
-                return instruction.Evaluate();
 
-            // Put constants to the right, if there are any
-            if (instruction.IsCommutative && instruction.Left is InterimConstantValue && !(instruction.Right is InterimConstantValue))
+        private static IInterimOperand AttemptBinarySimplification(IRBinaryOp instruction)
+        {
+            instruction = AlgebraicSimplifications.AttemptAlgebraicSimplification(instruction);
+
+            // Put constants to the left, if there are any
+            if (instruction.IsCommutative && instruction.Right is InterimConstantValue && !(instruction.Left is InterimConstantValue))
             {
-                instruction.SwapOperands();
+                BinaryOpcode originalOperation = instruction.Operation;
+                bool swapped = instruction.SwapOperands();
+                // The value on the left is now a negation operation
+                // wrapping a constant. Simplify that,
+                if (swapped && originalOperation is OpcodeMathSubtract &&
+                    instruction.Left is IRUnaryOp negateOp)
+                {
+                    instruction.Left = negateOp.Evaluate();
+                }
             }
             // If this is false, neither are constants after the last step, unless this isn't commutative, in which case this cleverness doesn't matter.
-            if (instruction.Right is InterimConstantValue constantR)
+            if (instruction.Left is InterimConstantValue constantL)
             {
                 // If this is true, both are constants
-                if (instruction.Left is InterimConstantValue)
+                if (instruction.Right is InterimConstantValue)
                 {
-                    return instruction.Evaluate();
+                    // Both may be constants, but if AttemptReduction()
+                    // didn't evaluate this, the return type is not a valid
+                    // opcode argument. Return the unchanged instruction.
+                    return instruction;
                 }
                 else if (instruction.IsCommutative)
                 {
-                    // The right is constant and the left is not...
-                    // But what if left.Parent is commutative with this operation and has a constant?
-                    if (instruction.Left is IRBinaryOp leftOp &&
-                        leftOp.Operation.GetType() == instruction.Operation.GetType() &&
-                        leftOp.Right is InterimConstantValue constantL1)
+                    // The left is constant and the right is not...
+                    // But what if the right is commutative with this operation and has a constant?
+                    if (instruction.Right is IRBinaryOp rightOp &&
+                        rightOp.IsCommutative &&
+                        OperationsHaveEqualPriority(rightOp.Operation, instruction.Operation) &&
+                        rightOp.Left is InterimConstantValue constantR1)
                     {
-                        object right = constantR.Value;
-                        object left = constantL1.Value;
+                        object left = constantR1.Value;
+                        object right = constantL.Value;
                         try
                         {
                             InterimConstantValue result = new InterimConstantValue(instruction.Operation.ExecuteCalculation(left, right), instruction);
-                            leftOp.Right = result;
+                            rightOp.Left = result;
                         }
                         catch (KOSBinaryOperandTypeException binaryTypeException)
                         {
                             throw new KOSCompileException(instruction, binaryTypeException);
                         }
-                        return leftOp;
+                        return rightOp;
                     }
                 }
                 // Shortcuts for math operations where both sides don't need to be constant
                 switch (instruction.Operation)
                 {
                     case OpcodeMathMultiply _:
-                        // X * 0 = 0
-                        if (Encapsulation.ScalarIntValue.Zero.Equals(constantR.Value))
-                            return constantR;
-                        if (ReduceDivMult(instruction, constantR, out IInterimOperand newResult))
+                        // 0 * X = 0
+                        if (Encapsulation.ScalarIntValue.Zero.Equals(constantL.Value))
+                            return constantL;
+                        if (ReduceDivMult(instruction, constantL, out IInterimOperand newResult))
                             return newResult;
                         break;
                     case OpcodeMathDivide _:
-                        if (Encapsulation.ScalarIntValue.Zero.Equals(constantR.Value))
-                            throw new KOSCompileException(instruction, new DivideByZeroException());
-                        if (ReduceDivMult(instruction, constantR, out newResult))
+                        // 0 / X = 0
+                        // Technically not true when X = 0
+                        // But that would otherwise throw a "Tried to push infinite on to the stack" error
+                        // So this is an acceptable assumption that improves performance and eliminates an error.
+                        // TODO: Add an "EXIT" (EOP) command to the language because this will break the
+                        // PRINT(1/0) shortcut to cause a program to terminate.
+                        if (Encapsulation.ScalarIntValue.Zero.Equals(constantL.Value))
+                            return constantL;
+                        if (ReduceDivMult(instruction, constantL, out newResult))
                             return newResult;
                         break;
                     case OpcodeMathAdd _:
                     case OpcodeMathSubtract _:
-                        // X +- 0 = X
+                        // 0 +- X = X
+                        if (Encapsulation.ScalarIntValue.Zero.Equals(constantL.Value))
+                            return instruction.Right;
+                        break;
+                }
+            }
+            else if (instruction.Right is InterimConstantValue constantR)
+            {
+                switch (instruction.Operation)
+                {
+                    case OpcodeMathDivide _:
+                        // X / 0 = Error
                         if (Encapsulation.ScalarIntValue.Zero.Equals(constantR.Value))
-                            return instruction.Left;
+                            throw new KOSCompileException(instruction, new DivideByZeroException());
                         break;
                     case OpcodeMathPower _:
                         // X^0 = 1
@@ -163,20 +185,11 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         break;
                 }
             }
-            else
+            else    // Neither operand is constant
             {
                 switch (instruction.Operation)
                 {
                     case OpcodeMathDivide _:
-                        // 0 / X = 0
-                        // Technically not true when X = 0
-                        // But that would otherwise throw a "Tried to push infinite on to the stack" error
-                        // So this is an acceptable assumption that improves performance and eliminates an error.
-                        // TODO: Add an "EXIT" (EOP) command to the language because this will break the
-                        // PRINT(1/0) shortcut to cause a program to terminate.
-                        if (instruction.Left is InterimConstantValue constantL &&
-                            Encapsulation.ScalarIntValue.Zero.Equals(constantL.Value))
-                            return constantL;
                         // X / X = 1
                         // Technically not true when X = 0
                         // But that would otherwise throw a "Tried to push infinite on to the stack" error
@@ -188,16 +201,34 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             }
             return instruction;
         }
-        private static bool ReduceDivMult(IRBinaryOp instruction, InterimConstantValue secondOperand, out IInterimOperand newResult)
+
+        private static bool OperationsHaveEqualPriority(BinaryOpcode operation1, BinaryOpcode operation2)
         {
-            // X */ 1 = X
-            if (Encapsulation.ScalarIntValue.One.Equals(secondOperand.Value))
+            Type op1 = operation1.GetType();
+            Type op2 = operation2.GetType();
+            if (op1 == op2)
+                return true;
+            if (op1 == typeof(OpcodeMathAdd) && op2 == typeof(OpcodeMathSubtract))
+                return true;
+            if (op2 == typeof(OpcodeMathAdd) && op1 == typeof(OpcodeMathSubtract))
+                return true;
+            if (op1 == typeof(OpcodeMathMultiply) && op2 == typeof(OpcodeMathDivide))
+                return true;
+            if (op2 == typeof(OpcodeMathMultiply) && op1 == typeof(OpcodeMathDivide))
+                return true;
+            return false;
+        }
+
+        private static bool ReduceDivMult(IRBinaryOp instruction, InterimConstantValue constantOperand, out IInterimOperand newResult)
+        {
+            // 1 */ X = X
+            if (Encapsulation.ScalarIntValue.One.Equals(constantOperand.Value))
             {
-                newResult = instruction.Left;
+                newResult = instruction.Right;
                 return true;
             }
-            // X */ -1 = -X
-            if (secondOperand.Value.Equals(-Encapsulation.ScalarIntValue.One))
+            // -1 */ X = -X
+            if (constantOperand.Value.Equals(-Encapsulation.ScalarIntValue.One))
             {
                 newResult = new IRUnaryOp(
                     instruction.Block,
@@ -206,19 +237,11 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         SourceColumn = instruction.SourceColumn,
                         SourceLine = instruction.SourceLine
                     },
-                    instruction.Left);
+                    instruction.Right);
                 return true;
             }
             newResult = null;
             return false;
-        }
-
-        private static IInterimOperand ReduceCall(IRCall instruction)
-        {
-            if (instruction.IsInvariant)
-                return instruction.Evaluate();
-
-            return instruction;
         }
     }
 }

@@ -30,6 +30,12 @@ namespace kOS.Safe.Compilation
         public virtual Type GetEqualResultType(Type leftType, Type rightType) => typeof(BooleanValue);
 
         public virtual bool IsAdditionCommutative(Type leftType, Type rightType) => true;
+        /// <summary>
+        /// Determines whether subtraction is commutative with negation/addition.
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if subtraction is commutative with negation/addition; otherwise, <c>false</c>.
+        /// </returns>
         public virtual bool IsSubtractionCommutative(Type leftType, Type rightType) => true;
         public virtual bool IsMultiplicationCommmutative(Type leftType, Type rightType) => true;
         public virtual bool IsDivisionCommutative(Type leftType, Type rightType) => false;
