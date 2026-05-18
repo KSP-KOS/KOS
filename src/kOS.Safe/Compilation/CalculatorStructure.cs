@@ -53,7 +53,7 @@ namespace kOS.Safe.Compilation
         }
         public override Type GetSubtractResultType(Type leftType, Type rightType)
             => GetTypeForOperation(leftType, rightType, "Subtract", "op_Subtraction", "-");
-        public override bool IsSubtractionCommutative(Type leftType, Type rightType)
+        public override bool IsSubtractionCommutativeWithNegation(Type leftType, Type rightType)
             => GetCommutativityForOperation(leftType, rightType, "Subtract", "op_Subtraction", "-");
 
         public override object Multiply(OperandPair pair)

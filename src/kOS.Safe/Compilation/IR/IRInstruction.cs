@@ -190,7 +190,7 @@ namespace kOS.Safe.Compilation.IR
                     case OpcodeMathAdd _:
                         return calculator.IsAdditionCommutative(Left.Type, Right.Type);
                     case OpcodeMathSubtract _:
-                        return calculator.IsSubtractionCommutative(Left.Type, Right.Type);
+                        return calculator.IsSubtractionCommutativeWithNegation(Left.Type, Right.Type);
                     case OpcodeMathMultiply _:
                         return calculator.IsMultiplicationCommmutative(Left.Type, Right.Type);
                     case OpcodeMathDivide _:
@@ -226,11 +226,16 @@ namespace kOS.Safe.Compilation.IR
         {
             if (!IsCommutative)
                 return false;
-                //throw new System.InvalidOperationException($"{this} is not commutative.");
             if (Operation is OpcodeMathSubtract)
             {
                 Right = new IRUnaryOp(Block, new OpcodeMathNegate(), Right);
                 Operation = new OpcodeMathAdd();
+            }
+            else if (Operation is OpcodeMathAdd &&
+                Left is IRUnaryOp negation)
+            {
+                Left = negation.Operand;
+                Operation = new OpcodeMathSubtract();
             }
             (Right, Left) = (Left, Right);
             switch (Operation)

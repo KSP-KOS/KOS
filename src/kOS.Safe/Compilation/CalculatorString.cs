@@ -23,7 +23,7 @@ namespace kOS.Safe.Compilation
         {
             throw new KOSBinaryOperandTypeException(leftType, rightType, "subtract", "from");
         }
-        public override bool IsSubtractionCommutative(Type leftType, Type rightType)
+        public override bool IsSubtractionCommutativeWithNegation(Type leftType, Type rightType)
             => false;
 
         public override object Multiply(OperandPair pair)

@@ -36,7 +36,7 @@ namespace kOS.Safe.Compilation
         /// <returns>
         ///   <c>true</c> if subtraction is commutative with negation/addition; otherwise, <c>false</c>.
         /// </returns>
-        public virtual bool IsSubtractionCommutative(Type leftType, Type rightType) => true;
+        public virtual bool IsSubtractionCommutativeWithNegation(Type leftType, Type rightType) => true;
         public virtual bool IsMultiplicationCommmutative(Type leftType, Type rightType) => true;
         public virtual bool IsDivisionCommutative(Type leftType, Type rightType) => false;
 
