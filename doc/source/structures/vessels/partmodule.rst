@@ -29,9 +29,15 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
         * - :attr:`ALLFIELDS`
           - :struct:`List` of strings
           - Accessible fields
+        * - :attr:`ALLHIDDENFIELDS`
+          - :struct:`List` of strings
+          - Fields not normally accessible via GUI
         * - :attr:`ALLFIELDNAMES`
           - :struct:`List` of strings
           - Accessible fields (name only)
+        * - :attr:`ALLHIDDENFIELDNAMES`
+          - :struct:`List` of strings
+          - Fields not normally accessible via GUI (name only)
         * - :attr:`ALLEVENTS`
           - :struct:`List` of strings
           - Triggerable events
@@ -47,6 +53,9 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
         * - :meth:`GETFIELD(name)`
           -
           - Get value of a field by name
+        * - :meth:`GETHIDDENFIELD(name)`
+          -
+          - Get value of a hidden field by name
         * - :meth:`SETFIELD(name,value)`
           -
           - Set value of a field by name
@@ -59,6 +68,9 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
         * - :meth:`HASFIELD(name)`
           - :struct:`Boolean`
           - Check if field exists
+        * - :meth:`HASHIDDENFIELD(name)`
+          - :struct:`Boolean`
+          - Check if a hidden field exists
         * - :meth:`HASEVENT(name)`
           - :struct:`Boolean`
           - Check if event exists
@@ -90,12 +102,26 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
 
     Get a list of all the names of KSPFields on this PartModule that the kos script is CURRENTLY allowed to get or set with :GETFIELD or :SETFIELD. Note the Security access comments below. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.
 
+.. attribute:: PartModule:ALLHIDDENFIELDS
+
+    :access: Get only
+    :test: :struct:`List` of strings
+
+    Get a list of all the names of KSPFields on this PartModule that are not normally displayed in the GUI. The returned field names should be used with :GETHIDDENFIELD and cannot be used with :SETFIELD. Note the Security access comments below. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.
+
 .. attribute:: PartModule:ALLFIELDNAMES
 
      :access: Get only
      :test: :struct:`List` of strings
      
      Similar to :ALLFIELDS except that it returns the string without the formatting to make it easier to use in a script. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.
+
+.. attribute:: PartModule:ALLHIDDENFIELDNAMES
+
+     :access: Get only
+     :test: :struct:`List` of strings
+     
+     Similar to :ALLHIDDENFIELDS except that it returns the string without the formatting to make it easier to use in a script. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.
      
 .. attribute:: PartModule:ALLEVENTS
 
@@ -131,6 +157,13 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
     :return: varies
 
     Get the value of one of the fields that this PartModule has placed onto the right-click menu for the part. Note the Security comments below.
+
+.. method:: PartModule:GETHIDDENFIELD(name)
+
+    :parameter name: (:struct:`String`) Name of the field
+    :return: varies
+
+    Get the value of one of the hidden(internal) PartModule fields that aren't normally displayed in the right-click menu for the part. Note the Security comments below.
 
 .. method:: PartModule:SETFIELD(name,value)
 
@@ -177,6 +210,13 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
 
     Return true if the given field name is currently available for use with :GETFIELD or :SETFIELD on this PartModule, false otherwise.
 
+.. method:: PartModule:HASHIDDENFIELD(name)
+
+    :parameter name: (:struct:`String`) Name of the field
+    :return: :struct:`Boolean`
+
+    Return true if the given hidden(internal) field is present in the PartModule, false otherwise.
+
 .. method:: PartModule:HASEVENT(name)
 
     :parameter name: (:struct:`String`) Name of the event
@@ -197,19 +237,20 @@ Notes
 -----
 
 In all the above cases where there is a name being passed in to :GETFIELD, :SETFIELD, :DOEVENT, or :DOACTION, the name is meant to be the name that is seen by you, the user, in the GUI screen, and NOT necessarily the actual name of the variable that the programmer of that PartModule chose to call the value behind the scenes. This is so that you can view the GUI right-click menu to see what to call things in your script.
+When it comes to the hidden fields, they can be inspected using the :ALLHIDDENFIELDS method, or by looking into the source code. Generally, manipulating the hidden fields is recommended for experienced users only.
 
 .. note::
 
     **Security and Respecting other Mod Authors**
 
-    There are often a lot more fields and events and actions that a partmodule can do than are usable via kOS. In designing kOS, the kOS developers have deliberately chosen NOT to expose any "hidden" fields of a partmodule that are not normally shown to the user, without the express permission of a mod's author to do so.
+    It was decided that providing the kOS users with a read-only access to the part module's hidden fields would allow to create even better scripts and wouldn't do any harm. Obviously, manipulating the module's internal state would result in all kind of troubles, so this is forbidden.
 
 The access rules that kOS uses are as follows:
 
 KSPFields
 ~~~~~~~~~
 
-Is this a value that the user can normally see on the right-click context menu for a part? If so, then let kOS scripts GET the value.  Is this a value that the user can normally manipulate via "tweakable" adjustments on the right-click context menu for a part, AND, is that tweakable a CURRENTLY enabled one? If so, then let KOS scripts SET the value, BUT they must set it to one of the values that the GUI would normally allow, according to the following rules.
+Is this a value that the user can normally see on the right-click context menu for a part? If so, then let kOS scripts GET the value using the :GETFIELD method. Is this a value that represents the part's internal state and not normally displayed in the GUI? Then the :GETHIDDENFIELD method should be used. Is this a value that the user can normally manipulate via "tweakable" adjustments on the right-click context menu for a part, AND, is that tweakable a CURRENTLY enabled one? If so, then let KOS scripts SET the value, BUT they must set it to one of the values that the GUI would normally allow, according to the following rules.
 
 - If the KSPField is boolean:
     - The value must be true, false, or 0 or 1.

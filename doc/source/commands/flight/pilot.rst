@@ -127,6 +127,16 @@ what kOS is doing.
       - :ref:`Boolean <boolean>`
       - Are the pilot's controls zeroed, including trim?
 
+    * - `PILOTCUSTOMAXISCOUNT`
+      - Get-only
+      - Number of custom axes available from the pilot's controls
+
+    * - `PILOTCUSTOMAXIS`
+      - Get-only
+      - :ref:`scalar <scalar>` [-1,1]
+      - Param: the index of the custom axis, from 0 to `PILOTCUSTOMAXISCOUNT-1`.
+      - Returns: the value of the custom axis
+
 
 .. _SHIP CONTROL PILOTMAINTHROTTLE:
 .. object:: SHIP:CONTROL:PILOTMAINTHROTTLE

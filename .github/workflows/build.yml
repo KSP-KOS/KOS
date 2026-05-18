@@ -6,15 +6,22 @@ on:
     paths:
       - '**/*.cs'
       - '**/*.csproj'
+      - '**/*.props'
   pull_request:
     paths:
       - '**/*.cs'
       - '**/*.csproj'
+      - '**/*.props'
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - edited
   workflow_dispatch:
   workflow_call:
 
 jobs:
   build:
-    uses: KSPModdingLibs/KSPBuildTools/.github/workflows/build.yml@main
+    uses: KSPModdingLibs/KSPBuildTools/.github/workflows/build.yml@1.1.1
     with:
       artifacts: Resources/GameData LICENSE* README* CHANGELOG*

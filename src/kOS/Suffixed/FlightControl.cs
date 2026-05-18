@@ -10,6 +10,8 @@ using kOS.Utilities;
 using Math = System.Math;
 using kOS.Communication;
 using kOS.Control;
+using Smooth.Delegates;
+using UnityEngine;
 
 namespace kOS.Suffixed
 {
@@ -32,6 +34,9 @@ namespace kOS.Suffixed
         private float wheelThrottle;
         private float wheelThrottleTrim;
         private float mainThrottle;
+        private readonly float[] customAxes;
+        private bool customAxesActive;
+
         private bool bound;
         private readonly List<string> floatSuffixes;
         private readonly List<string> vectorSuffixes;
@@ -40,6 +45,7 @@ namespace kOS.Suffixed
         {
             bound = false;
             Vessel = vessel;
+            customAxes = new float[vessel.ctrlState.custom_axes.Length];
 
             floatSuffixes = new List<string> { "YAW", "PITCH", "ROLL", "STARBOARD", "TOP", "FORE", "MAINTHROTTLE", "PILOTMAINTHROTTLE", "WHEELTHROTTLE", "WHEELSTEER" };
             vectorSuffixes = new List<string> { "ROTATION", "TRANSLATION" };
@@ -114,6 +120,9 @@ namespace kOS.Suffixed
                     FlightInputHandler.state.mainThrottle = value;
                 }
             }, 0, 1));
+
+            AddSuffix("PILOTCUSTOMAXISCOUNT", new Suffix<ScalarIntValue>(() => new ScalarIntValue(Vessel == FlightGlobals.ActiveVessel ? FlightInputHandler.state.custom_axes.Length : 0)));
+            AddSuffix("PILOTCUSTOMAXIS", new OneArgsSuffix<ScalarValue, ScalarIntValue>((index) => Vessel == FlightGlobals.ActiveVessel ? FlightInputHandler.state.custom_axes[index.GetIntValue()] : 0f));
         }
 
         private float ReadPilot(ref float flightInputValue)
@@ -142,17 +151,27 @@ namespace kOS.Suffixed
             AddSuffix(new[] { "FORE" }, new ClampSetSuffix<ScalarValue>(() => fore, value => fore = value, -1, 1));
             AddSuffix(new[] { "STARBOARD" }, new ClampSetSuffix<ScalarValue>(() => starboard, value => starboard = value, -1, 1));
             AddSuffix(new[] { "TOP" }, new ClampSetSuffix<ScalarValue>(() => top, value => top = value, -1, 1));
-            AddSuffix(new[] { "TRANSLATION" }, new SetSuffix<Vector>(() => new Vector(starboard, top, fore) , SetTranslation));
+            AddSuffix(new[] { "TRANSLATION" }, new SetSuffix<Vector>(() => new Vector(starboard, top, fore), SetTranslation));
 
             //ROVER
             AddSuffix(new[] { "WHEELSTEER" }, new ClampSetSuffix<ScalarValue>(() => wheelSteer, value => wheelSteer = value, -1, 1));
             AddSuffix(new[] { "WHEELSTEERTRIM" }, new ClampSetSuffix<ScalarValue>(() => wheelSteerTrim, value => wheelSteerTrim = value, -1, 1));
-            
+
 
             //THROTTLE
             AddSuffix(new[] { "MAINTHROTTLE" }, new ClampSetSuffix<ScalarValue>(() => mainThrottle, value => mainThrottle = value, 0, 1));
             AddSuffix(new[] { "WHEELTHROTTLE" }, new ClampSetSuffix<ScalarValue>(() => wheelThrottle, value => wheelThrottle = value, -1, 1));
             AddSuffix(new[] { "WHEELTHROTTLETRIM" }, new ClampSetSuffix<ScalarValue>(() => wheelThrottleTrim, value => wheelThrottleTrim = value, -1, 1));
+
+            //CUSTOM AXES
+            AddSuffix("CUSTOMAXISCOUNT", new Suffix<ScalarIntValue>(() => new ScalarIntValue(customAxes.Length)));
+            AddSuffix("CUSTOMAXIS", new OneArgsSuffix<ScalarValue, ScalarIntValue>((index) => customAxes[index.GetIntValue()]));
+            AddSuffix("SETCUSTOMAXIS", new TwoArgsSuffix<ScalarIntValue, ScalarValue>((index, value) =>
+                {
+                    customAxesActive = true;
+                    customAxes[index.GetIntValue()] = Mathf.Clamp(value, -1.0f, 1.0f);
+                }));
+            AddSuffix("NEUTRALIZECUSTOMAXES", new OneArgsSuffix<BooleanValue>(v => NeutralizeCustomAxes(v)));
 
             //OTHER
             AddSuffix(new[] { "BOUND" }, new SetSuffix<BooleanValue>(() => bound, value => bound = value));
@@ -271,13 +290,27 @@ namespace kOS.Suffixed
             wheelSteerTrim = default(float);
             wheelThrottle = default(float);
             wheelThrottleTrim = default(float);
+            mainThrottle = default(float);
+        }
+
+        private void NeutralizeCustomAxes(BooleanValue v)
+        {
+            customAxesActive = v;
+            if (!customAxesActive)
+            {
+                for (int i = 0; i < customAxes.Length; i++)
+                {
+                    customAxes[i] = 0f;
+                }
+            }
         }
 
         private BooleanValue IsNeutral()
         {
             return (yaw == yawTrim && pitch == pitchTrim && roll == rollTrim &&
                 fore == 0 && starboard == 0 && top == 0 &&
-                wheelSteer == wheelSteerTrim && wheelThrottle == wheelSteerTrim);
+                mainThrottle == 0 &&
+                wheelSteer == wheelSteerTrim && wheelThrottle == wheelThrottleTrim);
         }
 
         private void OnFlyByWire(FlightCtrlState st)
@@ -305,6 +338,13 @@ namespace kOS.Suffixed
             if(Math.Abs(wheelSteerTrim) > SETTING_EPILSON) st.wheelSteerTrim = wheelSteerTrim;
             if(Math.Abs(wheelThrottleTrim) > SETTING_EPILSON) st.wheelThrottleTrim = wheelThrottleTrim;
 
+            if (customAxesActive)
+            {
+                for (int i = 0; i < customAxes.Length; i++)
+                {
+                    st.custom_axes[i] = customAxes[i];
+                }
+            }
         }
 
         bool IFlightControlParameter.Enabled

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
   <PropertyGroup>
-    <BinariesOutputRelativePath>Resources\GameData\kOS\Plugins</BinariesOutputRelativePath>
+    <Company></Company>
+    <KSPBT_ModRoot>$(MSBuildThisFileDirectory)\Resources\GameData\kOS</KSPBT_ModRoot>
+    <KSPBT_ModPluginFolder>Plugins</KSPBT_ModPluginFolder>
+    <Version>$(KSPBT_ModVersion)</Version>
   </PropertyGroup>
 </Project>
