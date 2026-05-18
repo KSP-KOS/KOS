@@ -383,7 +383,7 @@ namespace kOS.Module
             UI_FloatRange slider = new UI_FloatRange
             {
                 minValue = baseDiskSpace,
-                maxValue = baseDiskSpace * 8,
+                maxValue = baseDiskSpace * 16,
                 stepIncrement = baseDiskSpace / 8f,
                 scene = UI_Scene.Editor
             };
