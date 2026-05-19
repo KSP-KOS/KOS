@@ -198,6 +198,19 @@ namespace kOS.Safe.Test
             {
             }
         }
+
+        public bool DeprecatedWarnings
+        {
+            get
+            {
+                return true;
+            }
+
+            set
+            {
+            }
+        }
+        
         public DateTime TimeStamp
         {
             get

@@ -23,7 +23,7 @@ namespace kOS.Suffixed.PartModuleField
             AddSuffix("LENGTH", new Suffix<ScalarIntValue>(() => part.Part.Modules.Count));
         }
         
-        private static string TrimModuleName(string moduleName) => Regex.Replace(moduleName, "^Module", "");
+        public static string TrimModuleName(string moduleName) => Regex.Replace(moduleName, "^Module", "");
 
         private ListValue GetKeys()
         {

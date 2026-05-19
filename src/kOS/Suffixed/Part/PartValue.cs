@@ -61,10 +61,38 @@ namespace kOS.Suffixed.Part
             AddSuffix("RESOURCES", new Suffix<ListValue>(() => GatherResources(Part)));
             AddSuffix("TARGETABLE", new Suffix<BooleanValue>(() => Part.Modules.OfType<ITargetable>().Any()));
             AddSuffix("SHIP", new Suffix<VesselTarget>(() => VesselTarget.CreateOrGetExisting(Part.vessel, Shared)));
-            AddSuffix("HASMODULE", new OneArgsSuffix<BooleanValue, StringValue>(HasModule));
-            AddSuffix("GETMODULE", new OneArgsSuffix<PartModuleFields, StringValue>(GetModule));
-            AddSuffix("GETMODULEBYINDEX", new OneArgsSuffix<PartModuleFields, ScalarValue>(GetModuleIndex));
-            AddSuffix("ALLMODULES", new Suffix<ListValue>(GetAllModules, "A List of all the modules' names on this part"));
+            
+            VersionInfo oldModuleSystemDeprecationVersion = new VersionInfo(1, 6, 3, 0);
+            AddSuffix("HASMODULE", new OneArgsSuffix<BooleanValue, StringValue>(str =>
+            {
+                DeprecationHandler.DeprecatedUsage(Shared, ":HASMODULE", ":MODULES:HASKEY",
+                    oldModuleSystemDeprecationVersion);
+                return HasModule(str);
+            }));
+            AddSuffix("GETMODULE", new OneArgsSuffix<PartModuleFields, StringValue>(str =>
+            {
+                string newUsage = ":MODULES:" + str;
+                string trimmedName = ModuleLexicon.TrimModuleName(str);
+                if (trimmedName != str)
+                    newUsage += " or :MODULES:" + trimmedName;
+
+                DeprecationHandler.DeprecatedUsage(Shared, ":GETMODULE(\"" + str + "\")", newUsage,
+                    oldModuleSystemDeprecationVersion);
+                return GetModule(str);
+            }));
+            AddSuffix("GETMODULEBYINDEX", new OneArgsSuffix<PartModuleFields, ScalarValue>(scalar =>
+            {
+                DeprecationHandler.DeprecatedUsage(Shared, ":GETMODULEBYINDEX(index)", ":MODULES[index]",
+                    oldModuleSystemDeprecationVersion);
+                return GetModuleIndex(scalar);
+            }));
+            AddSuffix("ALLMODULES", new Suffix<ListValue>(() =>
+            {
+                DeprecationHandler.DeprecatedUsage(Shared, ":ALLMODULES", ":MODULES:KEYS",
+                    oldModuleSystemDeprecationVersion);
+                return GetAllModules();
+            }, "A List of all the modules' names on this part"));
+            
             AddSuffix("MODULES", new Suffix<ModuleLexicon>(() => modulesLexicon));
             AddSuffix("PARENT", new Suffix<Structure>(() => ParentValue, "The parent part of this part"));
             AddSuffix(new[] { "DECOUPLER", "SEPARATOR" }, new Suffix<Structure>(() => DecouplerValue, "The part that will decouple/separate this part when activated"));
