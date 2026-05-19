@@ -839,8 +839,6 @@ namespace kOS.Safe.Compilation.IR
         private Type GetDefaultReturnType()
         {
             IRCodePart.IRFunction function = Block.CodePart.GetFunction(this);
-            if (function != null)
-                return function.Returns.Type;
             if (Optimization.Optimizer.FunctionManager.Exists(Function.Replace("()", "")))
                 return Optimization.Optimizer.FunctionManager.FunctionReturnType(Function.Replace("()", ""));
             if (!Direct && IndirectMethod is IRSuffixGetMethod suffixGetMethod)

@@ -146,10 +146,6 @@ namespace kOS.Safe.Compilation.IR
                             funcOrTrigger?.TriggersCreated.Add(trigger);
                         }
                         break;
-                    case IRReturn ret:
-                        if (funcOrTrigger is IRFunction function)
-                            function.Returns.PossibleValues[block] = ret.Value;
-                        break;
                 }
             }
 
