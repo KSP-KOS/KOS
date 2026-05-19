@@ -7,7 +7,7 @@ using kOS.Suffixed.Part;
 namespace kOS.Suffixed.PartModuleField
 {
     [kOS.Safe.Utilities.KOSNomenclature("ModuleLexicon")]
-    public class ModuleLexicon : Structure
+    public class ModuleLexicon : Structure, IIndexable
     {
         private readonly PartValue part;
         private readonly SharedObjects shared;
@@ -30,10 +30,7 @@ namespace kOS.Suffixed.PartModuleField
             var list = new ListValue();
             foreach (PartModule module in part.Part.Modules)
             {
-                string trimmedName = TrimModuleName(module.moduleName);
                 list.Add(new StringValue(module.moduleName));
-                if (trimmedName != module.moduleName)
-                    list.Add(new StringValue(trimmedName));
             }
             return list;
         }
@@ -54,33 +51,46 @@ namespace kOS.Suffixed.PartModuleField
         public override string ToString()
         {
             string str = "ModuleLexicon, containing keys:";
+            int i = 0;
             foreach (PartModule module in part.Part.Modules)
             {
-                str += "\n" + Regex.Replace(module.moduleName, "^Module", "[Module]");
+                str += "\n[" + i++ + "] " + module.moduleName;
+                string trimmedName = TrimModuleName(module.moduleName);
+                if (trimmedName != module.moduleName)
+                    str += " / " + trimmedName;
             }
             return str;
-        } 
+        }
 
-        public override ISuffixResult GetSuffix(string suffixName, bool failOkay = false)
+        private PartModuleFields GetModule(string moduleName)
         {
             // For convenience its possible to access a module without "Module" at the start of its name
             // Here we need to make sure module named "Anything" cant be hidden by module "ModuleAnything"
             PartModule matchedModule = null;
             foreach (PartModule module in part.Part.Modules)
             {
-                if (string.Equals(module.moduleName, suffixName, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(module.moduleName, moduleName, StringComparison.OrdinalIgnoreCase))
                 {
                     matchedModule = module;
                     break;
                 }
-                if (string.Equals(TrimModuleName(module.moduleName), suffixName, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(TrimModuleName(module.moduleName), moduleName, StringComparison.OrdinalIgnoreCase))
                 {
                     matchedModule = module;
                 }
             }
 
-            if (matchedModule != null)
-                return new SuffixResult(PartModuleFieldsFactory.Construct(matchedModule, shared));
+            if (matchedModule == null)
+                return null;
+            return PartModuleFieldsFactory.Construct(matchedModule, shared);
+        }
+
+        public override ISuffixResult GetSuffix(string suffixName, bool failOkay = false)
+        {
+            PartModuleFields module = GetModule(suffixName);
+
+            if (module != null)
+                return new SuffixResult(module);
             
             var baseResult = base.GetSuffix(suffixName, true);
             if (baseResult != null) return baseResult;
@@ -94,5 +104,34 @@ namespace kOS.Suffixed.PartModuleField
             if (failOkay) return false;
             throw new Exception("Cannot set suffixes on ModuleLexicon.");
         }
+
+        public Structure GetIndex(Structure index)
+        {
+            if (index is StringValue str)
+            {
+                PartModuleFields module = GetModule(str);
+                if (module != null)
+                    return module;
+            }
+            else if (index is ScalarValue scalar)
+            {
+                int intIndex = (int)scalar;
+                if (intIndex >= 0 && intIndex < part.Part.Modules.Count)
+                {
+                    return PartModuleFieldsFactory.Construct(part.Part.Modules[intIndex], shared);
+                }
+                throw new Exception("Index out of range for " + ToString());
+            }
+            throw new Exception("No key \"" + index + "\" found on " + ToString());
+        }
+
+        public void SetIndex(Structure index, Structure value)
+        {
+            throw new Exception("Cannot set indexes on ModuleLexicon.");
+        }
+
+        public Structure GetIndex(int index) => GetIndex((Structure)new ScalarIntValue(index));
+
+        public void SetIndex(int index, Structure value) => SetIndex(null, null);
     }
 }

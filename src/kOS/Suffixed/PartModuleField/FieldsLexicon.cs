@@ -4,7 +4,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Suffixed.PartModuleField
 {
-    [kOS.Safe.Utilities.KOSNomenclature("FieldsLexicon", KOSToCSharp = false)]
+    [kOS.Safe.Utilities.KOSNomenclature("FieldsLexicon")]
     public class FieldsLexicon : Structure
     {
         private readonly PartModule partModule;
