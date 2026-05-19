@@ -4,9 +4,11 @@
     <OutputType>Library</OutputType>
   </PropertyGroup>
   <PropertyGroup>
-    <ReferenceUnityAssemblies>false</ReferenceUnityAssemblies>
-    <ReferenceKSPAssemblies>false</ReferenceKSPAssemblies>
-    <BinariesOutputRelativePath>Resources/UnitTests</BinariesOutputRelativePath>
+    <KSPBT_ReferenceUnityAssemblies>false</KSPBT_ReferenceUnityAssemblies>
+    <KSPBT_ReferenceGameAssemblies>false</KSPBT_ReferenceGameAssemblies>
+    <KSPBT_CopyDLLsToPluginFolder>false</KSPBT_CopyDLLsToPluginFolder>
+    <KSPBT_GenerateAssemblyAttribute>false</KSPBT_GenerateAssemblyAttribute>
+    <KSPBT_GenerateDependencyAttributes>false</KSPBT_GenerateDependencyAttributes>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />
@@ -22,6 +24,6 @@
   <ItemGroup>
     <PackageReference Include="NSubstitute" Version="1.8.1.0" />
     <PackageReference Include="NUnit" Version="2.7.1" />
-    <PackageReference Include="KSPBuildTools" Version="0.0.4" GeneratePathProperty="True" />
+    <PackageReference Include="KSPBuildTools" Version="1.1.1" GeneratePathProperty="True" />
   </ItemGroup>
 </Project>

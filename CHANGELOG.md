@@ -6,10 +6,15 @@
 
 - Add `JUMPSTACK` kRISC instruction to support jump tables for switch case (thanks @CoderCatGG) [commit](https://github.com/KSP-KOS/KOS/commit/3089ecc2f6bf15ee3a6d3a8722ce1efc7e8415c4)
 - Add `ALLHIDDENFIELDS`, `ALLHIDDENFIELDNAMES`, `HASHIDDENFIELD` and `GETHIDDENFIELD` to access fields of partmodules that are not visible in the UI (thanks @AntonKuzin) [commit](https://github.com/KSP-KOS/KOS/commit/c047c3210bf74fc529c7eb1703ad8110e6bc4abc)
+- Add `ACTUATION` suffix to steeringmanager (thanks @DBooots) [pr](https://github.com/KSP-KOS/KOS/pull/3162)
+- `VESSEL:ELEMENTS` now considers ModuleGrappleNode (i.e. the Klaw) to separate elements
+- `PART:CONTROLFROM` can now be called on a part that has ModuleGrappleNode
+- Add support for custom axis control
 
 ### Performance Improvements
 
 - Accessing the non-scalar suffixes of a widget `Style` no longer creates new objects - they are shared for each call.  This may be a breaking change if your script was relying on getting a distinct object each time.
+- Remove redundant opcode from `until` loops (thanks @DBooots) [pr](https://github.com/KSP-KOS/KOS/pull/3164)
 
 ### Bug Fixes
 
@@ -17,6 +22,11 @@
 - Fixed many documentation issues (thanks @sisve) [commit1](https://github.com/KSP-KOS/KOS/commit/727d345679fe992077fa5604c27b43c34a80fbe7) [commit2](https://github.com/KSP-KOS/KOS/commit/afabb19e860adc67ad63f939a3d624e9344ad7b8) [commit3](https://github.com/KSP-KOS/KOS/commit/110b209ad89225bf447caa079334c434df0e9746)
 - Fixed `GetSignalDelayToSatellite` for RemoteTech (thanks @KerbalOne) [commit](https://github.com/KSP-KOS/KOS/commit/b76759f24ba43e7cb2d82437c2251caf7d3a582f)
 - Changed `NoDelegate` so that it can actually be called rather than throwing an exception (thanks @AntonKuzin) [commit](https://github.com/KSP-KOS/KOS/commit/e8f375121f8947b583fa9b7cd04a68d436aa7e0b)
+- Fixed a few benign but annoying errors on game load [commit 1](https://github.com/KSP-KOS/KOS/commit/019950401b93de951a0aedfa5e696d07a56200e9) [commit 2](https://github.com/KSP-KOS/KOS/commit/adb4dee40df86c19ff0f8623e3201ce134de741e)
+- Removed Infernal Robotics addon because it hasn't worked in several years.  A separate addon mod will be created later: https://github.com/ksp-kos/kos-ir
+- Fixed quaternion constructor ordering when loading from a dump (thanks @DBooots) [pr](https://github.com/KSP-KOS/KOS/pull/3165)
+- Fixed setting `ship:control:mainthrottle` without any other controls not being detected as an input
+- Global `ANGULARVELOCITY` value is now a proper Vector type
 
 ## 1.5.1.0 - 2025-02-06
 

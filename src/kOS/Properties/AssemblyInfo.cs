@@ -13,3 +13,4 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("324da3fe-391b-421d-93b7-29499dcf9ef3")]
 
+[assembly: KSPAssemblyDependency("kOS.Safe", 0, 0)]

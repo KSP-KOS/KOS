@@ -4,8 +4,10 @@
     <OutputType>Library</OutputType>
   </PropertyGroup>
   <PropertyGroup>
-    <ReferenceUnityAssemblies>false</ReferenceUnityAssemblies>
-    <ReferenceKSPAssemblies>false</ReferenceKSPAssemblies>
+    <KSPBT_ReferenceUnityAssemblies>false</KSPBT_ReferenceUnityAssemblies>
+    <KSPBT_ReferenceGameAssemblies>false</KSPBT_ReferenceGameAssemblies>
+    <KSPBT_GenerateAssemblyAttribute>false</KSPBT_GenerateAssemblyAttribute>
+    <KSPBT_GenerateDependencyAttributes>false</KSPBT_GenerateDependencyAttributes>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />
@@ -13,11 +15,11 @@
     <Compile Remove="$(PkgKSPBuildTools)/build/include/Log.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="$(RepoRootPath)\$(BinariesOutputRelativePath)\ICSharpCode.SharpZipLib.dll">
-      <Private>False</Private>
+    <Reference Include="$(KSPBT_ModRoot)\$(KSPBT_ModPluginFolder)\ICSharpCode.SharpZipLib.dll">
+      <Private>false</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="KSPBuildTools" Version="0.0.4" GeneratePathProperty="True" />
+    <PackageReference Include="KSPBuildTools" Version="1.1.1" GeneratePathProperty="True" />
   </ItemGroup>
 </Project>

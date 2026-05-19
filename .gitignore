@@ -35,6 +35,7 @@ packages/
 [Rr]esources/GameData/kOS/Plugins/
 [Rr]esources/*.dll
 [Rr]esources/GameData/*.dll
+Resources/GameData/kOS/kOS.version
 [Rr]esources/UnitTests/*.dll
 [Rr]esources/UnitTests/*.pdb
 !Resources/GameData/kOS/ICSharpCode.SharpZipLib.dll

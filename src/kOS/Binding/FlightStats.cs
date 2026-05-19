@@ -20,7 +20,7 @@ namespace kOS.Binding
         public override void AddTo(SharedObjects shared)
         {
             shared.BindingMgr.AddGetter("ALT", () => new VesselAlt(shared));
-            shared.BindingMgr.AddGetter("ANGULARVELOCITY", () => shared.Vessel.transform.InverseTransformDirection(shared.Vessel.GetComponent<Rigidbody>().angularVelocity));
+            shared.BindingMgr.AddGetter("ANGULARVELOCITY", () => new Vector(shared.Vessel.transform.InverseTransformDirection(shared.Vessel.GetComponent<Rigidbody>().angularVelocity)));
             shared.BindingMgr.AddGetter("ENCOUNTER", () => VesselUtils.TryGetEncounter(shared.Vessel,shared));
             shared.BindingMgr.AddGetter("ETA", () => new OrbitEta(shared.Vessel.orbit, shared));  // shortcut for SHIP:ORBIT:ETA
             shared.BindingMgr.AddGetter("MISSIONTIME", () => shared.Vessel.missionTime);

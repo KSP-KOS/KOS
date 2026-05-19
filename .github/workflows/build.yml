@@ -22,6 +22,6 @@ on:
 
 jobs:
   build:
-    uses: KSPModdingLibs/KSPBuildTools/.github/workflows/build.yml@0.0.4
+    uses: KSPModdingLibs/KSPBuildTools/.github/workflows/build.yml@1.1.1
     with:
       artifacts: Resources/GameData LICENSE* README* CHANGELOG*

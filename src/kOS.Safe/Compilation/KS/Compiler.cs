@@ -2398,8 +2398,7 @@ namespace kOS.Safe.Compilation.KS
             string conditionLabel = GetNextLabel(false);
             PushBreakList(braceNestLevel);
             VisitNode(node.Nodes[1]);
-            AddOpcode(new OpcodeLogicNot());
-            Opcode branch = AddOpcode(new OpcodeBranchIfFalse());
+            Opcode branch = AddOpcode(new OpcodeBranchIfTrue());
             AddToBreakList(branch);
             VisitNode(node.Nodes[2]);
             Opcode jump = AddOpcode(new OpcodeBranchJump());

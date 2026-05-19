@@ -368,9 +368,9 @@ namespace kOS.Control
             AddSuffix("ROLLTORQUEFACTOR", new SetSuffix<ScalarValue>(() => RollTorqueFactor, value => RollTorqueFactor = value));
             AddSuffix("AVERAGEDURATION", new Suffix<ScalarValue>(() => AverageDuration.Mean));
             AddSuffix("ROLLCONTROLANGLERANGE", new SetSuffix<ScalarValue>(() => RollControlAngleRange, value => RollControlAngleRange = value));
+            AddSuffix("ACTUATION", new Suffix<Vector>(() => new Vector(accPitch, accRoll, accYaw)));
 #if DEBUG
             AddSuffix("MOI", new Suffix<Vector>(() => new Vector(momentOfInertia)));
-            AddSuffix("ACTUATION", new Suffix<Vector>(() => new Vector(accPitch, accRoll, accYaw)));
             AddSuffix("CONTROLTORQUE", new Suffix<Vector>(() => new Vector(controlTorque)));
             AddSuffix("MEASUREDTORQUE", new Suffix<Vector>(() => new Vector(measuredTorque)));
             AddSuffix("RAWTORQUE", new Suffix<Vector>(GetRawTorque));

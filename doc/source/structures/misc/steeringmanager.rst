@@ -49,6 +49,7 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     :attr:`PITCHTORQUEFACTOR`            :struct:`Scalar`          Multiplicative adjustment to pitch torque (calculated)
     :attr:`YAWTORQUEFACTOR`              :struct:`Scalar`          Multiplicative adjustment to yaw torque (calculated)
     :attr:`ROLLTORQUEFACTOR`             :struct:`Scalar`          Multiplicative adjustment to roll torque (calculated)
+    :attr:`ACTUATION`                    :struct:`Vector`          The current actuation being applied to the vessel by the steering manager, expressed as a vector of three values representing the pitch, roll, and yaw components of the actuation.
     ==================================== ========================= =============
 
 .. warning::

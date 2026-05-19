@@ -9,7 +9,9 @@ on:
 
 jobs:
   create-release:
-    uses: KSPModdingLibs/KSPBuildTools/.github/workflows/create-release.yml@0.0.4
+    uses: KSPModdingLibs/KSPBuildTools/.github/workflows/create-release.yml@release-version-property
     with:
       version-string: ${{ inputs.version-string }}
+      version-template-extension:
+      version-file: Resources/GameData/kOS/kOS.version
       artifacts: Resources/GameData LICENSE* README* CHANGELOG*

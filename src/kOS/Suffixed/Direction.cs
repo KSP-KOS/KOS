@@ -264,10 +264,10 @@ namespace kOS.Suffixed
         public override void LoadDump(Dump dump)
         {
             Rotation = new Quaternion(
-                (float)Convert.ToDouble(dump[DumpQuaternionW]),
                 (float)Convert.ToDouble(dump[DumpQuaternionX]),
                 (float)Convert.ToDouble(dump[DumpQuaternionY]),
-                (float)Convert.ToDouble(dump[DumpQuaternionZ])
+                (float)Convert.ToDouble(dump[DumpQuaternionZ]),
+                (float)Convert.ToDouble(dump[DumpQuaternionW])
                 );
         }
     }
