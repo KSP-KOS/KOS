@@ -64,7 +64,10 @@ namespace kOS.Suffixed.PartModuleField
         {
             var returnValue = new StringBuilder();
             returnValue.AppendLine(GetModuleName() + ", containing:");
-            returnValue.AppendLine(AllThings().ToString());
+            foreach (Structure thingString in AllThings())
+            {
+                returnValue.AppendLine(thingString.ToString());
+            }
 
             return returnValue.ToString();
         }
