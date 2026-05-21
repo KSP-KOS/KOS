@@ -824,7 +824,7 @@ namespace kOS.Module
                 }
                 UpdateRP1TechLevel(true);
                 // This part is now just rounding from INT, this counters any issue with DiskSpace or BaseDiskSpace being incorrect or "Out of range"
-                if (diskSpace != Mathf.RoundToInt(diskSpaceUI)) //Tested in-game, no issues found
+                if (diskSpace != Convert.ToInt32(Mathf.RoundToInt(diskSpaceUI))) //Tested in-game, no issues found
                 {
                     diskSpace = Mathf.RoundToInt(diskSpaceUI); ///Tested as well
                     UpdateCostAndMass();
