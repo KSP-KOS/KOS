@@ -102,7 +102,7 @@ namespace kOS.Module
         public float baseModuleMass = 0F;  // this is the base mass added to a part for including the kOSProcessor, default to 0.
 
         [KSPField(isPersistant = false, guiName = "kOS Disk Space", guiActive = false, guiActiveEditor = true, groupName = PAWGroup, groupDisplayName = PAWGroup), UI_FloatRange(scene = UI_Scene.Editor)]
-        public float diskSpaceUI = 2048f; //needed for the slider, Could convert from String back into float or int. but works better and feels natural to have as a float to begin with --> raised to 2048 to mimich Apollo
+        public float diskSpaceUI = 1024f; //needed for the slider, Could convert from String back into float or int. but works better and feels natural to have as a float to begin with --> raised to 2048 to mimich Apollo
 
         [KSPField(isPersistant = true, guiName = "CPU/Disk Upgrade Cost", guiActive = false, guiActiveEditor = true, groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public float additionalCost = 0F;
@@ -111,7 +111,7 @@ namespace kOS.Module
         public float additionalMassGui = 0F;
 
         [KSPField(isPersistant = true, guiActive = false, guiActiveEditor = false)]
-        public float diskSpaceCostFactor = 0.0524140625F; //implies approx 100funds for 4096bytes of diskSpace. SliderNote: would recommend a small increase to: 0.0484140625F
+        public float diskSpaceCostFactor = 0.0644140625F; //implies approx 100funds for 4096bytes of diskSpace. SliderNote: would recommend a small increase to: 0.0484140625F
 
         [KSPField(isPersistant = true, guiActive = false, guiActiveEditor = false)]
         public float diskSpaceMassFactor = 0.0000000048829F;  //implies approx 0.020kg for 4096bytes of diskSpace
