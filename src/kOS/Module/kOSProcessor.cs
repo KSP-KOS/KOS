@@ -383,7 +383,7 @@ namespace kOS.Module
             UI_FloatRange slider = new UI_FloatRange
             {
                 minValue = baseDiskSpace,
-                maxValue = baseDiskSpace * 16,
+                maxValue = baseDiskSpace * 8, //Set i Little higher based on what nasa flew with read only ROM space (4kb is rough and read only doesnt exist in KOS)
                 stepIncrement = baseDiskSpace / 8f,
                 scene = UI_Scene.Editor
             };
