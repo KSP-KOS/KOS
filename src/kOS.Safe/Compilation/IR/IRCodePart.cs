@@ -236,9 +236,9 @@ namespace kOS.Safe.Compilation.IR
             /// Gets or sets the code for this trigger, in BasicBlock representation.
             /// </summary>
             public List<BasicBlock> Code { get; set; }
-            public HashSet<IInterimVariableReference> ExternalReads { get; set; } = new HashSet<IInterimVariableReference>();
+            public HashSet<string> ExternalReads { get; set; } = new HashSet<string>();
             public HashSet<string> ExternalWrites { get; } = new HashSet<string>();
-            public HashSet<(string, IRUnset)> ExternalUnsets { get; } = new HashSet<(string, IRUnset)>();
+            public HashSet<(string Name, IRUnset Instruction)> ExternalUnsets { get; } = new HashSet<(string, IRUnset)>();
             public HashSet<IRTrigger> TriggersCreated { get; } = new HashSet<IRTrigger>();
             public HashSet<IRFunction> FunctionCalls { get; } = new HashSet<IRFunction>();
             public IRScope ClosureScope { get; }
@@ -303,9 +303,9 @@ namespace kOS.Safe.Compilation.IR
             /// Gets the collection of function fragments.
             /// </summary>
             public IReadOnlyCollection<IRFunctionFragment> Fragments => fragments.Values;
-            public HashSet<IInterimVariableReference> ExternalReads { get; set; } = new HashSet<IInterimVariableReference>();
+            public HashSet<string> ExternalReads { get; set; } = new HashSet<string>();
             public HashSet<string> ExternalWrites { get; } = new HashSet<string>();
-            public HashSet<(string, IRUnset)> ExternalUnsets { get; } = new HashSet<(string, IRUnset)>();
+            public HashSet<(string Name, IRUnset Instruction)> ExternalUnsets { get; } = new HashSet<(string, IRUnset)>();
             public HashSet<IRTrigger> TriggersCreated { get; } = new HashSet<IRTrigger>();
             public HashSet<IRFunction> FunctionCalls { get; } = new HashSet<IRFunction>();
             public IRScope ClosureScope { get; }
@@ -402,7 +402,7 @@ namespace kOS.Safe.Compilation.IR
             /// Gets the collection of external variables that are read
             /// within the closure.
             /// </summary>
-            HashSet<IInterimVariableReference> ExternalReads { get; set; }
+            HashSet<string> ExternalReads { get; set; }
             /// <summary>
             /// Gets the collection of external variables that may be written
             /// to by this instance.
@@ -411,7 +411,7 @@ namespace kOS.Safe.Compilation.IR
             /// <summary>
             /// Gets the collection of external variables that may be unset by this instance.
             /// </summary>
-            HashSet<(string, IRUnset)> ExternalUnsets { get; }
+            HashSet<(string Name, IRUnset Instruction)> ExternalUnsets { get; }
             /// <summary>
             /// Gets the collection of triggers that could be created from this instance.
             /// </summary>

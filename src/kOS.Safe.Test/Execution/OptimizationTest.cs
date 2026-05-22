@@ -463,22 +463,22 @@ namespace kOS.Safe.Test.Execution
                     new OpcodePush("$b"),
                     new OpcodePush("$c"),
                     new OpcodeMathAdd(),
-                    new OpcodeStoreLocal("$d"),
+                    new OpcodeStoreGlobal("$d"),
                     new OpcodePush("$a"),
                     new OpcodePush("$b"),
                     new OpcodeMathAdd(),
-                    new OpcodeStoreLocal("$e"),
+                    new OpcodeStoreGlobal("$e"),
                     new OpcodePush("$b"),
                     new OpcodePush("$g"),
                     new OpcodeMathAdd(),
-                    new OpcodeStoreLocal("$f"),
+                    new OpcodeStoreGlobal("$f"),
                     new OpcodePopScope()
                 }
             );
-            Assert.IsInstanceOf<OpcodePush>(result[7]);
-            Assert.AreEqual(new Encapsulation.ScalarIntValue(3), (result[7] as OpcodePush)?.Argument);
-            Assert.IsInstanceOf<OpcodeMathAdd>(result[11]);
-            Assert.IsInstanceOf<OpcodeMathAdd>(result[15]);
+            Assert.IsInstanceOf<OpcodePush>(result[2]);
+            Assert.AreEqual(new Encapsulation.ScalarIntValue(3), (result[2] as OpcodePush)?.Argument);
+            Assert.IsInstanceOf<OpcodeMathAdd>(result[6]);
+            Assert.IsInstanceOf<OpcodeMathAdd>(result[10]);
         }
 
         [Test]
@@ -497,31 +497,31 @@ namespace kOS.Safe.Test.Execution
                     new OpcodeMathAdd(),
                     new OpcodePush(Encapsulation.ScalarIntValue.Two),
                     new OpcodeMathAdd(),
-                    new OpcodeStoreLocal("$result"),
+                    new OpcodeStoreGlobal("$result"),
                     // Block 2
                     new OpcodePush(Encapsulation.ScalarIntValue.One),
                     new OpcodePush("$a"),
                     new OpcodeMathAdd(),
                     new OpcodePush(Encapsulation.ScalarIntValue.Two),
                     new OpcodeMathSubtract(),
-                    new OpcodeStoreLocal("$result"),
+                    new OpcodeStoreExist("$result"),
                     // Block 3
                     new OpcodePush(Encapsulation.ScalarIntValue.One),
                     new OpcodePush("$a"),
                     new OpcodeMathSubtract(),
-                    new OpcodeStoreLocal("$result"),
+                    new OpcodeStoreExist("$result"),
                     // Block 4
                     new OpcodePush("$a"),
                     new OpcodePush(Encapsulation.ScalarIntValue.One),
                     new OpcodeMathSubtract(),
-                    new OpcodeStoreLocal("$result"),
+                    new OpcodeStoreExist("$result"),
                     // Block 5
                     new OpcodePush(Encapsulation.ScalarIntValue.One),
                     new OpcodePush("$a"),
                     new OpcodeMathSubtract(),
                     new OpcodePush(Encapsulation.ScalarIntValue.Two),
                     new OpcodeMathAdd(),
-                    new OpcodeStoreLocal("$result"),
+                    new OpcodeStoreExist("$result"),
                     new OpcodePopScope()
                 }
             );
@@ -717,10 +717,10 @@ namespace kOS.Safe.Test.Execution
                     new OpcodePopScope()
                 }
             );
+            Assert.IsInstanceOf<OpcodePush>(result[5]);
+            Assert.AreEqual(new Encapsulation.ScalarDoubleValue(1.5), (result[5] as OpcodePush)?.Argument);
             Assert.IsInstanceOf<OpcodePush>(result[9]);
-            Assert.AreEqual(new Encapsulation.ScalarDoubleValue(1.5), (result[9] as OpcodePush)?.Argument);
-            Assert.IsInstanceOf<OpcodePush>(result[13]);
-            Assert.AreEqual(new Encapsulation.ScalarDoubleValue(-0.5), (result[13] as OpcodePush)?.Argument);
+            Assert.AreEqual(new Encapsulation.ScalarDoubleValue(-0.5), (result[9] as OpcodePush)?.Argument);
         }
 
         [Test]
@@ -756,10 +756,10 @@ namespace kOS.Safe.Test.Execution
                     new OpcodePopScope()
                 }
             );
+            Assert.IsInstanceOf<OpcodePush>(result[5]);
+            Assert.AreEqual(new Encapsulation.ScalarDoubleValue(3.5), (result[5] as OpcodePush)?.Argument);
             Assert.IsInstanceOf<OpcodePush>(result[9]);
-            Assert.AreEqual(new Encapsulation.ScalarDoubleValue(3.5), (result[9] as OpcodePush)?.Argument);
-            Assert.IsInstanceOf<OpcodePush>(result[13]);
-            Assert.AreEqual(new Encapsulation.ScalarDoubleValue(5.5), (result[13] as OpcodePush)?.Argument);
+            Assert.AreEqual(new Encapsulation.ScalarDoubleValue(5.5), (result[9] as OpcodePush)?.Argument);
         }
 
         [Test]

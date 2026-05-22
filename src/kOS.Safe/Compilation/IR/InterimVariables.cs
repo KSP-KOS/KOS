@@ -193,7 +193,7 @@ namespace kOS.Safe.Compilation.IR
         }
     }
 
-    public abstract class SSADefinition
+    public abstract class SSADefinition : IEquatable<SSADefinition>
     {
         protected readonly uint ssaIndex;
         protected Dictionary<IRUnset, SSADefinition> potentialUnsetSites;
@@ -212,6 +212,9 @@ namespace kOS.Safe.Compilation.IR
         public abstract Type Type { get; }
         public virtual SetState State { get; }
         public IRInstruction AssignedAt { get; }
+        public HashSet<SSADefinition> ReplacedBy { get; } = new HashSet<SSADefinition>();
+        public HashSet<SSADefinition> Replaces { get; } = new HashSet<SSADefinition>();
+
         protected SSADefinition(string name)
         {
             Name = name;
@@ -226,10 +229,10 @@ namespace kOS.Safe.Compilation.IR
             State = state;
         }
 
-        public abstract SSADefinition PotentiallyUnset(IRUnset potentiallyUnsetAt);
+        public abstract SSADefinition PotentiallyUnset(IRUnset potentiallyUnsetAt, bool writeReplaceChain);
         public abstract InterimConstantValue Evaluate();
 
-        public SSADefinition PotentiallyOverwrite(SSASetDefinition newDefinition)
+        public SSADefinition PotentiallyOverwrite(SSASetDefinition newDefinition, bool writeReplaceChain)
         {
             if (State == SetState.Unset)
                 return this;
@@ -237,10 +240,16 @@ namespace kOS.Safe.Compilation.IR
                 throw new ArgumentException($"{nameof(newDefinition)} must not be definitively unset.");
             if (newDefinition.Equals(this))
                 return this;
-            if (potentialClobberDefinitions.TryGetValue(newDefinition, out SSAPotentialDefinition result))
-                return result;
-            result = new SSAPotentialDefinition(this, newDefinition);
-            potentialClobberDefinitions[newDefinition] = result;
+            if (!potentialClobberDefinitions.TryGetValue(newDefinition, out SSAPotentialDefinition result))
+            {
+                result = new SSAPotentialDefinition(this, newDefinition);
+                potentialClobberDefinitions[newDefinition] = result;
+            }
+            if (writeReplaceChain)
+            {
+                newDefinition.Replaces.Add(this);
+                ReplacedBy.Add(newDefinition);
+            }
             return result;
         }
 
@@ -259,10 +268,20 @@ namespace kOS.Safe.Compilation.IR
         }
         public override string ToString()
             => $"{Name} {SetState_ToString(State)}{ssaIndex}";
-        /*public override bool Equals(object obj)
-            => obj == this;
+        public abstract bool ValuesEqual(SSADefinition other);
+        public bool Equals(SSADefinition other)
+        {
+            if (State != other.State)
+                return false;
+            if (!string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase))
+                return false;
+            return ValuesEqual(other);
+        }
+
+        public override bool Equals(object obj)
+            => obj is SSADefinition ssaDef && Equals(ssaDef);
         public override int GetHashCode()
-            => (ssaIndex, Name).GetHashCode();*/
+            => Name.ToLower().GetHashCode();
     }
 
     public class SSASetDefinition : SSADefinition
@@ -271,7 +290,7 @@ namespace kOS.Safe.Compilation.IR
             new Dictionary<(string, IRCall), SSASetDefinition>();
 
         public IRAssign DefinedAt { get; }
-        public override bool IsInvariant => State != SetState.PotentiallyUnset && DefinedAt.IsInvariant && AssignedAt.IsInvariant;
+        public override bool IsInvariant => State != SetState.PotentiallyUnset && AssignedAt.IsInvariant;
         public override Type Type { get; }
 
         public SSASetDefinition(string name, IRAssign assignedAt) : base(name, SetState.Set, assignedAt)
@@ -302,20 +321,36 @@ namespace kOS.Safe.Compilation.IR
             DefinedAt = definition.DefinedAt;
             potentialUnsetSites = definition.potentialUnsetSites;
         }
-        public override SSADefinition PotentiallyUnset(IRUnset potentiallyUnsetAt)
+        public override SSADefinition PotentiallyUnset(IRUnset potentiallyUnsetAt, bool writeReplaceChain)
         {
             if (State == SetState.Unset)
                 return this;
 
-            if (potentialUnsetSites.TryGetValue(potentiallyUnsetAt, out SSADefinition result))
-                return result;
-
-            result = new SSASetDefinition(this, potentiallyUnsetAt);
-            potentialUnsetSites[potentiallyUnsetAt] = result;
+            if (!potentialUnsetSites.TryGetValue(potentiallyUnsetAt, out SSADefinition result))
+            {
+                result = new SSASetDefinition(this, potentiallyUnsetAt);
+                potentialUnsetSites[potentiallyUnsetAt] = result;
+            }
+            if (writeReplaceChain)
+            {
+                result.Replaces.Add(this);
+                ReplacedBy.Add(result);
+            }
             return result;
         }
         public override InterimConstantValue Evaluate()
             => (DefinedAt.Value as IEvaluatableToConstant).Evaluate();
+        
+        public override bool ValuesEqual(SSADefinition other)
+        {
+            if (other is SSASetDefinition setDefinition)
+            {
+                if (setDefinition.DefinedAt == null)
+                    return false;
+                return DefinedAt?.Value.Equals(setDefinition.DefinedAt.Value) ?? false;
+            }
+            return other.Equals(this);
+        }
     }
     public class SSAPotentialDefinition : SSADefinition, IMultipleOperandInstruction
     {
@@ -327,7 +362,8 @@ namespace kOS.Safe.Compilation.IR
         public IRUnset Conditional { get; }
         public override Type Type => State == SetState.Set ?
             PhiNode<SSADefinition>.GetFirstCommonBaseType(Preceding.Type, Succeeding.Type) : null;
-        public override bool IsInvariant => Conditional?.IsInvariant ?? false;
+        public override bool IsInvariant => (Conditional?.IsInvariant ?? false) &&
+            (Conditional.IsExecutable ? Succeeding.IsInvariant : Preceding.IsInvariant);
 
         public IEnumerable<IInterimOperand> Operands
         {
@@ -369,25 +405,36 @@ namespace kOS.Safe.Compilation.IR
             potentialUnsetSites = new Dictionary<IRUnset, SSADefinition>();
             Conditional = condition;
         }
-        public static SSAPotentialDefinition PotentiallySet(SSASetDefinition potentialDefinition, IRUnset condition)
+        public static SSAPotentialDefinition PotentiallySet(SSASetDefinition potentialDefinition, IRUnset condition, bool writeReplaceChain)
         {
-            if (potentialSets.TryGetValue((condition, potentialDefinition), out var potentialSet))
-                return potentialSet;
-            SSAPotentialDefinition result = new SSAPotentialDefinition(potentialDefinition, condition);
-            potentialSets[(condition, potentialDefinition)] = result;
+            if (!potentialSets.TryGetValue((condition, potentialDefinition), out SSAPotentialDefinition result))
+            {
+                result = new SSAPotentialDefinition(potentialDefinition, condition);
+                potentialSets[(condition, potentialDefinition)] = result;
+            }
+            if (writeReplaceChain)
+            {
+                result.Replaces.Add(potentialDefinition);
+                potentialDefinition.ReplacedBy.Add(result);
+            }
             return result;
         }
 
-        public override SSADefinition PotentiallyUnset(IRUnset potentiallyUnsetAt)
+        public override SSADefinition PotentiallyUnset(IRUnset potentiallyUnsetAt, bool writeReplaceChain)
         {
             if (State == SetState.Unset)
                 return this;
 
-            if (potentialUnsetSites.TryGetValue(potentiallyUnsetAt, out SSADefinition result))
-                return result;
-
-            result = new SSAPotentialDefinition(this, potentiallyUnsetAt);
-            potentialUnsetSites[potentiallyUnsetAt] = result;
+            if (!potentialUnsetSites.TryGetValue(potentiallyUnsetAt, out SSADefinition result))
+            {
+                result = new SSAPotentialDefinition(this, potentiallyUnsetAt);
+                potentialUnsetSites[potentiallyUnsetAt] = result;
+            }
+            if (writeReplaceChain)
+            {
+                result.Replaces.Add(this);
+                ReplacedBy.Add(result);
+            }
             return result;
         }
 
@@ -414,6 +461,21 @@ namespace kOS.Safe.Compilation.IR
                 return Succeeding.Evaluate();
             else
                 return Preceding.Evaluate();
+        }
+
+        public override bool ValuesEqual(SSADefinition other)
+        {
+            if (IsInvariant)
+            {
+                if (Conditional.IsExecutable)
+                    return Succeeding.Equals(other);
+                else
+                    return Preceding.Equals(other);
+            }
+            return other is SSAPotentialDefinition potentialDefinition &&
+                potentialDefinition.Conditional == Conditional &&
+                potentialDefinition.Succeeding.Equals(Succeeding) &&
+                potentialDefinition.Preceding.Equals(Preceding);
         }
     }
     public class PhiVariable : SSADefinition
@@ -450,25 +512,46 @@ namespace kOS.Safe.Compilation.IR
             internalSetState = SetState.PotentiallyUnset;
         }
 
-        public override SSADefinition PotentiallyUnset(IRUnset potentiallyUnsetAt)
+        public override SSADefinition PotentiallyUnset(IRUnset potentiallyUnsetAt, bool writeReplaceChain)
         {
-            if (potentialUnsetSites.TryGetValue(potentiallyUnsetAt, out SSADefinition result))
-                return result;
-
-            result = new PhiVariable(this, potentiallyUnsetAt);
-            potentialUnsetSites[potentiallyUnsetAt] = result;
+            if (!potentialUnsetSites.TryGetValue(potentiallyUnsetAt, out SSADefinition result))
+            {
+                result = new PhiVariable(this, potentiallyUnsetAt);
+                potentialUnsetSites[potentiallyUnsetAt] = result;
+            }
+            if (writeReplaceChain)
+            {
+                result.Replaces.Add(this);
+                ReplacedBy.Add(result);
+            }
             return result;
         }
 
         public override InterimConstantValue Evaluate()
             => Node.Evaluate();
+        
+        public override bool ValuesEqual(SSADefinition other)
+        {
+            if (IsInvariant)
+            {
+                return Node.PossibleValues.FirstOrDefault(kvp => kvp.Key.IsExecutable).Value?.Equals(other) ?? false;
+            }
+            if (other is PhiVariable otherPhi)
+            {
+                Dictionary<BasicBlock, SSADefinition> possibleValues = Node.PossibleValues;
+                Dictionary<BasicBlock, SSADefinition> otherPossibleValues = otherPhi.Node.PossibleValues;
+                return possibleValues.Count == otherPossibleValues.Count &&
+                    possibleValues.Keys.All(
+                        key =>
+                        otherPossibleValues.ContainsKey(key) &&
+                        (otherPossibleValues[key] == possibleValues[key] ||
+                        otherPossibleValues[key].Equals(possibleValues[key])));
+            }
+            return false;
+        }
 
         public override string ToString()
             => $"{Name} #{ssaIndex}";
-        public override bool Equals(object obj)
-            => obj == this;
-        public override int GetHashCode()
-            => (ssaIndex, Name).GetHashCode();
     }
     public class PhiNode : PhiNode<SSADefinition>
     {

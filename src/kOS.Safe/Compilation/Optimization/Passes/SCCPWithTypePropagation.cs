@@ -26,8 +26,13 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> ssaUses =
                 MapUsesAndPropagateTypes(codePart);
 
-            if (Optimizer.OptimizationLevel > OptimizationLevel.None)
-                PropagateConstants(ssaUses);
+            if (Optimizer.OptimizationLevel == OptimizationLevel.None)
+                return;
+
+            HashSet<SSADefinition> usedDefinitions = PropagateConstants(ssaUses);
+
+            foreach (BasicBlock block in codePart.Blocks)
+                RemoveRedundantAssignments(block, usedDefinitions);
         }
 
         /// <summary>
@@ -88,16 +93,20 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             {
                                 inst.ForEachOperand(op =>
                                 {
-                                    if (op is SSADefinition ssaVariable)
+                                    if (op is IInterimVariableReference reference &&
+                                        !(op is InterimVariableReference))
                                     {
-                                        // Add this instruction to the list of uses for each operand.
-                                        GetOrCreate(variableUses, ssaVariable).Add(inst);
+                                        foreach (SSADefinition variable in GetSSADefinitionsFromReferences(reference))
+                                        {
+                                            // Add this instruction to the list of uses for each operand.
+                                            GetOrCreate(variableUses, variable).Add(inst);
 
-                                        // Also add the base instruction,
-                                        // which is the more important reference
-                                        // since anything else is a temp result.
-                                        if (instruction is IOperandInstructionBase opInst)
-                                            variableUses[ssaVariable].Add(opInst);
+                                            // Also add the base instruction,
+                                            // which is the more important reference
+                                            // since anything else is a temp result.
+                                            if (instruction is IOperandInstructionBase opInst)
+                                                GetOrCreate(variableUses, variable).Add(opInst);
+                                        }
                                     }
                                 });
                                 // Calls get to be special to address their external read needs.
@@ -247,11 +256,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         /// <summary>
         /// Propagates any constant SSA variables to their uses.
         /// </summary>
-        private static void PropagateConstants(Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> ssaUses)
+        private static HashSet<SSADefinition> PropagateConstants(Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> ssaUses)
         {
-            // TODO: Keep track of which uses are replaced and if there are no more uses, remove the assignment.
-            // But watch for functions that external read that variable and make sure to retain the assignment before then.
-            // TODO: Look at branch instructions that employ eq and propagate that constant.
             List<SSADefinition> constantVariables = ssaUses.Keys.Where(
                 v => v.State == SSADefinition.SetState.Set &&
                 v.IsInvariant &&
@@ -260,50 +266,150 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             
 #if DEBUG   // Sort to make debugging variable iterations easier.
             constantVariables.Sort(Comparer<SSADefinition>.Create((a, b) => string.Compare(a.ToString(), b.ToString())));
+            List<SSADefinition> usedVariables = ssaUses.Keys.ToList();
+            usedVariables.Sort(Comparer<SSADefinition>.Create((a, b) => string.Compare(a.ToString(), b.ToString())));
 #endif
-            Queue<SSADefinition> queue = new Queue<SSADefinition>(constantVariables);
+            HashSet<SSADefinition> requiredDefinitions = new HashSet<SSADefinition>(constantVariables.Where(def =>
+                ssaUses[def].Any(use =>
+                {
+                    if (use is IRCall call)
+                    {
+                        var function = call.Block.CodePart.GetFunction(call);
+                        if (function == null)
+                            return false;
+                        if (function.ExternalReads.Any(var => var.Equals(def.Name, StringComparison.OrdinalIgnoreCase)))
+                            return true;
+                        if (function.ExternalWrites.Any(var => var.Equals(def.Name, StringComparison.OrdinalIgnoreCase)))
+                            return true;
+                        if (function.ExternalUnsets.Any(unset => unset.Name.Equals(def.Name, StringComparison.OrdinalIgnoreCase)))
+                            return true;
+                    }
+                    return false;
+                })));
+
             Dictionary<SSADefinition, InterimConstantValue> replacements = new Dictionary<SSADefinition, InterimConstantValue>();
 
-            while (queue.Count > 0)
+            foreach (SSADefinition ssaDef in constantVariables)
             {
-                SSADefinition variable = queue.Dequeue();
-                if (queue.Any(v =>
-                {
-                    if (variable is PhiVariable phi && !replacements.ContainsKey(phi))
-                        return true;
-                    if (variable is SSASetDefinition setDef && ssaUses[v].Contains(setDef.DefinedAt))
-                        return true;
-                    return false;
-                }))
-                {
-                    queue.Enqueue(variable);
-                    continue;
-                }
+                replacements[ssaDef] = ssaDef.Evaluate();
+            }
 
-
-                InterimConstantValue replacement;
-                if (variable is PhiVariable)
-                    replacement = replacements[variable];
-                else
-                    replacement = variable.Evaluate();
-
-                if (replacement != null)
+            foreach (SSADefinition constantDef in constantVariables)
+            {
+                IInterimOperand Propagate(IInterimOperand operand)
+                    => PropagateConstant(operand, constantDef, replacements[constantDef]);
+                foreach (IOperandInstructionBase instruction in ssaUses[constantDef])
                 {
-                    foreach (IOperandInstructionBase instruction in ssaUses[variable])
-                    {
-                        if (instruction is PhiVariable phi)
-                        {
-                            if (constantVariables.Contains(phi))
-                                replacements[phi] = replacement;
-                            continue;
-                        }
-                        if (instruction is IRUnaryOp unaryOp &&
-                            unaryOp.Operation is OpcodeExists)
-                            continue;
-                        instruction.MutateEachOperand(op => op.Equals(variable) ? replacement : op);
-                    }
+                    if (instruction is IRUnaryOp unaryOp &&
+                        unaryOp.Operation is OpcodeExists)
+                        continue;
+                    if (instruction is IRUnset)
+                        continue;
+                    instruction.MutateEachOperand(Propagate);
                 }
             }
+
+            requiredDefinitions.UnionWith(ssaUses.Keys.Except(constantVariables));
+
+            return requiredDefinitions;
+        }
+
+        private static void RemoveRedundantAssignments(BasicBlock block, HashSet<SSADefinition> usedVariables)
+        {
+            for (int i = 0; i < block.Instructions.Count; i++)
+            {
+                if (block.Instructions[i] is IRAssign assignment &&
+                    AssignmentMayBeEliminated(assignment, usedVariables))
+                {
+                    RemoveAssignment(assignment);
+                    i--;
+                }
+            }
+        }
+
+        private static bool AssignmentMayBeEliminated(IRAssign assignment, HashSet<SSADefinition> usedVariables)
+        {
+            // RelocateLater may not be eliminated since that is how functions are stored.
+            if (assignment.Value is IRRelocateLater)
+                return false;
+            // Global assignments cannot be eliminated.
+            if (assignment.Block.Scope.GetGlobalScope().Assignments.Contains(assignment))
+                return false;
+            if (DefinitionIsProtected(assignment.Target, usedVariables))
+                return false;
+            return true;
+        }
+        private static bool DefinitionIsProtected(SSADefinition definition, HashSet<SSADefinition> usedVariables)
+        {
+            // Must not remove definitions that are used.
+            if (usedVariables.Contains(definition))
+                return true;
+            // Must not remove assignments that are later unset, if those unsets cannot also be removed.
+            // Unsets can only be removed if they may unset anything besides this one.
+            if (definition.ReplacedBy.Any(ssaDef => ssaDef.State == SSADefinition.SetState.Unset && ssaDef.Replaces.Count > 1))
+                return true;
+            // Must not remove assignments whose lifespan is not invariant.
+            if (definition.ReplacedBy.Any(ssaDef => ssaDef.State == SSADefinition.SetState.PotentiallyUnset))
+                return true;
+            // Must not remove assignments that feed into a phi if there are multiple possible incoming values.
+            foreach (PhiVariable phi in definition.ReplacedBy.Where(ssaDef => ssaDef is PhiVariable).Cast<PhiVariable>())
+            {
+                // Ignore restrictions on phis if this definition's block is not executable.
+                if (!phi.Node.PossibleValues.First(kvp => kvp.Value == definition).Key.IsExecutable)
+                    continue;
+                // If the phi variable is protected, its incoming definitions must be too.
+                if (DefinitionIsProtected(phi, usedVariables))
+                    return true;
+                // If the phi has multiple possible incoming values (from executable blocks),
+                // they must all be preserved.
+                if (!phi.Node.PossibleValues.Where(kvp => kvp.Key.IsExecutable).All(kvp => kvp.Value.Equals(definition)))
+                    return true;
+            }
+            // If none of the above apply, it is safe to delete this definition.
+            return false;
+        }
+
+        private static void RemoveAssignment(IRAssign assignment)
+        {
+            // Remove this assignment instruction
+            assignment.Block.Instructions.Remove(assignment);
+
+            // Remove this assignment from all scopes.
+            IRScope scope = assignment.Block.Scope;
+            while (scope != null)
+            {
+                scope.Assignments.Remove(assignment);
+                scope = scope.ParentScope;
+            }
+
+            SSASetDefinition definition = assignment.Target;
+            // Remove subsequent unsets
+            // We've already assured no inadvertent side effects of this in DefinitionIsProtected()
+            foreach (IRUnset unset in definition.ReplacedBy.
+                Where(ssaDef => ssaDef.State == SSADefinition.SetState.Unset).
+                Select(ssaDef => ssaDef.AssignedAt).Cast<IRUnset>())
+            {
+                unset.Block.Instructions.Remove(unset);
+            }
+
+            // Convert subsequent assignments to be declarative
+            foreach (IRAssign nextAssign in definition.ReplacedBy.
+                Where(ssaDef => ssaDef.State == SSADefinition.SetState.Set).
+                Cast<SSASetDefinition>().Select(ssaDef => ssaDef.DefinedAt))
+            {
+                nextAssign.Scope = IRAssign.StoreScope.Local;
+                nextAssign.AssertExists = false;
+            }
+        }
+
+        private static IInterimOperand PropagateConstant(IInterimOperand operand, SSADefinition definition, InterimConstantValue constant)
+        {
+            if (operand is InterimResolvedReference resolvedReference &&
+                resolvedReference.Reference.Equals((object)definition))
+            {
+                return constant;
+            }
+            return operand;
         }
     }
 }
