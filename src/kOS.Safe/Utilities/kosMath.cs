@@ -147,5 +147,27 @@ namespace kOS.Safe.Utilities
                 randomizers.Add(key, new Random());
             return randomizers[key].NextDouble();
         }
+
+        /// <summary>
+        /// Get the number of decimal digits in a number.  i.e. if input = 33333, return a 5.
+        /// </summary>
+        /// <param name="val"></param>
+        /// <returns></returns>
+        public static int DecimalDigitsIn(int val)
+        {
+            int absVal = val < 0 ? -val : val;
+            // Believe it or not, a basic hardcoded if-else chain is actually the fastest performance
+            // when you know the numbers aren't allowed to be large (have to fit in int32):
+            if (absVal < 10) return 1;
+            if (absVal < 100) return 2;
+            if (absVal < 1000) return 3;
+            if (absVal < 10000) return 4;
+            if (absVal < 100000) return 5;
+            if (absVal < 1000000) return 6;
+            if (absVal < 10000000) return 7;
+            if (absVal < 100000000) return 8;
+            if (absVal < 1000000000) return 9;
+            return 10;
+        }
     }
 }

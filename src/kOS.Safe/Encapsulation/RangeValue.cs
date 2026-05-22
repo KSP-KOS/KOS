@@ -85,6 +85,20 @@ namespace kOS.Safe
         {
             return "RANGE(" + InnerEnumerable.Start + ", " + InnerEnumerable.Stop + ", " + InnerEnumerable.Step + ")";
         }
+
+        public override string ToStringIndented(int level)
+        {
+            // By default, an Enumerable's ToStringIndented() would print out a header line, but here it's
+            // not needed, so override it to just print the content line only:
+            return ToStringItems(level);
+        }
+        public override string ToStringItems(int level)
+        {
+            // Indent level is being ignored because this is single-line and
+            // never contains other things, despite being implemented as
+            // a EnumerableValue which needs a ToStringItems().
+            return ToString();
+        }
     }
 
     public class Range : IEnumerable<ScalarValue>

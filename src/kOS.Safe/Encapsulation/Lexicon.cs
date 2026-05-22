@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using kOS.Safe.Utilities;
 using kOS.Safe.Function;
 
@@ -297,9 +298,49 @@ namespace kOS.Safe.Encapsulation
             internalDictionary[FromPrimitiveWithAssert(index)] = value;
         }
 
+        public override string ToStringIndented(int level)
+        {
+            // eraseme - I NOTICED I REPEATED THIS EXACT SNIP OF CODE CUT-N-PASTED A FEW TIMES
+            // eraseme - IN DIFFERENT PLACES.  THIS IS PROBABLY A CANDIDATE FOR MAKING INTO ONE
+            // eraseme - COMMON UTILITY METHOD (THE PART THAT PRINTS THIS HEADER WHEN A ToStringIndented()
+            // eraseme - WANTS TO).
+            if (level >= TerminalFormatter.MAX_INDENT_LEVEL)
+                return "<<TOSTRING REFUSES TO RECURSE DEEPER THAN NESTING LEVEL " + level + ">>";
+
+            StringBuilder sb = new StringBuilder();
+            string pad = string.Empty.PadRight(level * TerminalFormatter.INDENT_SPACES, ' ');
+
+            int cnt = this.Count();
+            if (cnt == 0)
+                sb.Append(string.Format("{0} (empty)", KOSName));
+            else if (cnt == 1)
+                sb.Append(string.Format("{0} of 1 item:", KOSName));
+            else
+                sb.Append(string.Format("{0} of {1} items:", KOSName, cnt));
+
+            sb.Append(string.Format("\n{0}", ToStringItems(level + 1)));
+            return sb.ToString();
+        }
+
+        public string ToStringItems(int level)
+        {
+            StringBuilder sb = new StringBuilder();
+            string pad = string.Empty.PadRight(level * TerminalFormatter.INDENT_SPACES, ' ');
+            foreach (Structure key in internalDictionary.Keys)
+            {
+                Structure val = internalDictionary[key];
+                sb.Append(string.Format("{0}[{1}] = {2}\n",
+                    pad,
+                    key.ToString(),
+                    val.ToStringIndented(level)
+                    ));
+            }
+            return sb.ToString();
+        }
+
         public override string ToString()
         {
-            return new SafeSerializationMgr(null).ToString(this);
+            return ToStringIndented(0);
         }
 
         // Try to call the normal SetSuffix that all structures do, but if that fails,

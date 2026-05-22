@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Serialization;
@@ -67,7 +68,30 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("COPY",     new NoArgsSuffix<UniqueSetValue<T>>         (() => new UniqueSetValue<T>(this)));
             AddSuffix("ADD",      new OneArgsSuffix<T>                      (toAdd => Collection.Add(toAdd)));
             AddSuffix("REMOVE",   new OneArgsSuffix<BooleanValue, T>        (toRemove => Collection.Remove(toRemove)));
-       }
+        }
+
+        public override string ToStringItems(int level)
+        {
+            StringBuilder sb = new StringBuilder();
+            string pad = string.Empty.PadRight(level * TerminalFormatter.INDENT_SPACES, ' ');
+            var asArray = InnerEnumerable.ToArray();
+            foreach (object item in asArray)
+            {
+                Structure asStructure = item as Structure;
+                if (asStructure != null)
+                {
+                    sb.Append(string.Format("{0}{1}\n",
+                        pad,
+                        asStructure.ToStringIndented(level)
+                        ));
+                }
+                else // Hypothetically this case should not happen, but if we screwed up somewhere so it does, at least you can see something.
+                {
+                    sb.Append(item.ToString());
+                }
+            }
+            return sb.ToString();
+        }
     }
 
     [kOS.Safe.Utilities.KOSNomenclature("UniqueSet", KOSToCSharp = false)] // one-way because the generic templated UniqueSetValue<T> is the canonical one.
