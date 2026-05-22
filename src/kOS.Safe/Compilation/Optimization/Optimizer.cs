@@ -14,10 +14,8 @@ namespace kOS.Safe.Compilation.Optimization
     [AssemblyWalk(InterfaceType = typeof(IOptimizationPass), StaticRegisterMethod = "RegisterMethod")]
     public class Optimizer
     {
-#if DEBUG
         public static HashSet<Type> PassesToSkip { get; } = new HashSet<Type>();
-        public static HashSet<Type> OnlyThesePasses { get; set; } = null;
-#endif
+
         internal static InterimCPU InterimCPU { get; } = new InterimCPU();
         private static readonly SafeSharedObjects shared = new SafeSharedObjects() { Cpu = InterimCPU };
         private readonly SortedSet<IOptimizationPass> optimizationPasses = new SortedSet<IOptimizationPass>(
@@ -69,18 +67,12 @@ namespace kOS.Safe.Compilation.Optimization
 
             foreach (Type type in availablePassTypes)
             {
-#if DEBUG
                 if (type != typeof(Passes.SCCPWithTypePropagation))
                 {
-                    if (OnlyThesePasses != null)
-                    {
-                        if (!OnlyThesePasses.Contains(type))
-                            continue;
-                    }
-                    else if (PassesToSkip.Contains(type))
+                    if (PassesToSkip.Contains(type))
                         continue;
                 }
-#endif
+
                 IOptimizationPass pass = (IOptimizationPass)Activator.CreateInstance(type);
                 optimizationPasses.Add(pass);
                 if (pass is ILinkedOptimizationPass linkedPass)

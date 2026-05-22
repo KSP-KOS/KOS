@@ -81,7 +81,12 @@ namespace kOS.Safe.Compilation.IR
             SingleStaticAssignment.FinalizeSSA(this);
         }
 
-#if DEBUG
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IRCodePart"/> class for DEBUG purposes.
+        /// </summary>
+        /// <remarks>
+        /// This constructor is only intended for unit testing.
+        /// </remarks>
         public IRCodePart(List<Opcode> mainCode, List<UserFunction> userFunctions, List<Trigger> triggers)
         {
             IRBuilder builder = new IRBuilder();
@@ -113,7 +118,6 @@ namespace kOS.Safe.Compilation.IR
 
             SingleStaticAssignment.FinalizeSSA(this);
         }
-#endif
 
         /// <summary>
         /// Gets a function by string reference.
