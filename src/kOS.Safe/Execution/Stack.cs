@@ -233,6 +233,42 @@ namespace kOS.Safe.Execution
         }
 
         /// <summary>
+        /// Pokes a value into the argument stack.
+        /// Slightly "cheats" and breaks out of the 'stack' model by allowing you to replace the contents of
+        /// somewhere on the stack that is underneath the topmost thing.  You can only replace, but not pop
+        /// values this way.  It a boolean for whether or not your poke attempt went out of bounds of the stack.
+        /// </summary>
+        /// <param name="digDepth">How far underneath the top to look.  Zero means poke at the top,
+        /// 1 means replace the item just under the top, 2 means replace the item just under that, and
+        /// so on.</param>
+        /// <param name="item">The object to write to that depth</param>
+        /// <returns>Returns true if your poke was within the bounds of the stack, or false if you tried
+        /// to poke too far and went past the top or bottom of the stack.</returns>
+        public bool PokeCheckArgument(int digDepth, object item)
+        {
+            ThrowIfInvalid(item);
+
+            if (digDepth < 0)
+            {
+                return false;
+            }
+
+            int index = argumentCount - digDepth - 1; // 0 means top
+            if (index < 0)
+            {
+                return false;
+            }
+
+            object prev = argumentStack[index];
+            AdjustTriggerCountIfNeeded(prev, -1);
+
+            argumentStack[index] = ProcessItem(item);
+            AdjustTriggerCountIfNeeded(item, +1);
+
+            return true;
+        }
+
+        /// <summary>
         /// Peeks at a value in the scope stack.
         /// Slightly "cheats" and breaks out of the 'stack' model by allowing you to view the contents of
         /// somewhere on the stack that is underneath the topmost thing.  You can only peek, but not pop

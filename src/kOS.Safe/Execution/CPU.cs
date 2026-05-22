@@ -914,8 +914,7 @@ namespace kOS.Safe.Execution
 
         /// <summary>
         /// Try to make a new local variable at the localmost scoping level and
-        /// give it a starting value.  It errors out of there is already one there
-        /// by the same name.<br/>
+        /// give it a starting value.<br/>
         /// <br/>
         /// This does NOT scan up the scoping stack like SetValue() does.
         /// It operates at the local level only.<br/>
@@ -1140,6 +1139,17 @@ namespace kOS.Safe.Execution
             object returnValue;
             checkOkay = stack.PeekCheckArgument(digDepth, out returnValue);
             return returnValue;
+        }
+
+        /// <summary>
+        /// Poke a value into the argument stack without evaluating it to get the variable's value.
+        /// </summary>
+        /// <param name="digDepth">Poke the element this far down the stack (0 means top, 1 means just under the top, etc)</param>
+        /// <param name="item">The object to write to that depth</param>
+        /// <param name="checkOkay">Tells you whether or not the stack was exhausted.  If it's false, then the poke went too deep.</param>
+        public void PokeArgumentStack(int digDepth, object item, out bool checkOkay)
+        {
+            checkOkay = stack.PokeCheckArgument(digDepth, item);
         }
 
         /// <summary>

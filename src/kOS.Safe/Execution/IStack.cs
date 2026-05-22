@@ -9,6 +9,7 @@ namespace kOS.Safe.Execution
         object PopArgument();
         object PeekArgument(int digDepth);
         bool PeekCheckArgument(int digDepth, out object item);
+        bool PokeCheckArgument(int digDepth, object item);
         object PeekScope(int digDepth);
         bool PeekCheckScope(int digDepth, out object item);
         void PushScope(object item);

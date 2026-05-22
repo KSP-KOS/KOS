@@ -88,6 +88,13 @@ namespace kOS.Safe.Compilation
         TESTARGBOTTOM  = 0x61,
         TESTCANCELLED  = 0x62,
         JUMPSTACK      = 0x63,
+        CREATEPTR      = 0x64,
+        GETPTR         = 0x65,
+        SETPTR         = 0x66,
+        ALLOCATE       = 0x67,
+        FREE           = 0x68,
+        INSTPTR        = 0x69,
+        STACKPTR       = 0x6A,
 
         // Augmented bogus placeholder versions of the normal
         // opcodes: These only exist in the program temporarily
@@ -525,7 +532,6 @@ namespace kOS.Safe.Compilation
 
     #region General
 
-
     /// <summary>
     /// Consumes the topmost value of the stack, storing it into
     /// a variable named by the Identifier MLField of this opcode.<br/>
@@ -714,7 +720,7 @@ namespace kOS.Safe.Compilation
             }
             else
             {
-                throw new KOSObsoletionException("0.17","UNSET ALL", "<not supported anymore now that we have nested scoping>", "");
+                throw new KOSObsoletionException("0.17", "UNSET ALL", "<not supported anymore now that we have nested scoping>", "");
             }
         }
     }
@@ -2293,12 +2299,12 @@ namespace kOS.Safe.Compilation
         protected override string Name { get { return "eval"; } }
         public override ByteCode Code { get { return ByteCode.EVAL; } }
         private bool barewordOkay;
-        
+
         public OpcodeEval()
         {
             barewordOkay = false;
         }
-        
+
         /// <summary>
         /// Eval top thing on the stack and replace it with its dereferenced
         /// value.  If you want to allow bare words like filenames then set argument bareOkay to true
@@ -2317,6 +2323,89 @@ namespace kOS.Safe.Compilation
     }
 
     /// <summary>
+    /// <para>
+    /// Pushes N nulls onto the stack to use for storage using OpcodePoke
+    /// </para>
+    /// <para></para>
+    /// <para>allocate n</para>
+    /// <para>... -- ... null * N</para>
+    /// </summary>
+    public class OpcodeAllocate : Opcode
+    {
+        protected override string Name { get { return "allocate"; } }
+        public override ByteCode Code { get { return ByteCode.ALLOCATE; } }
+
+        [MLField(0, false)]
+        public Int32 Count { get; set; }
+
+        public OpcodeAllocate(int count)
+        {
+            Count = count;
+        }
+
+        protected OpcodeAllocate()
+        {
+        }
+
+        public override void PopulateFromMLFields(List<object> fields)
+        {
+            if (fields == null || fields.Count < 1)
+                throw new Exception("Saved field in ML file for OpcodeAllocate seems to be missing.  Version mismatch?");
+            Count = (Int32)(fields[0]);
+        }
+
+        public override void Execute(ICpu cpu)
+        {
+            object nul = new PseudoNull(); // no modification possible on Null so no possibility of shared state modification
+            for (int i = 0; i < Count; i++)
+            {
+                cpu.PushArgumentStack(nul);
+            }
+        }
+    }
+
+    /// <summary>
+    /// <para>
+    /// Pops N entries from the stack, quickly freeing the space that ALLOCATE has created
+    /// </para>
+    /// <para></para>
+    /// <para>free n</para>
+    /// <para>... null * N -- .. </para>
+    /// </summary>
+    public class OpcodeFree : Opcode
+    {
+        protected override string Name { get { return "free"; } }
+        public override ByteCode Code { get { return ByteCode.FREE; } }
+
+        [MLField(0, false)]
+        public Int32 Count { get; set; }
+
+        public OpcodeFree(int count)
+        {
+            Count = count;
+        }
+
+        protected OpcodeFree()
+        {
+        }
+
+        public override void PopulateFromMLFields(List<object> fields)
+        {
+            if (fields == null || fields.Count < 1)
+                throw new Exception("Saved field in ML file for OpcodeFree seems to be missing.  Version mismatch?");
+            Count = (Int32)(fields[0]);
+        }
+
+        public override void Execute(ICpu cpu)
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                cpu.PopArgumentStack();
+            }
+        }
+    }
+
+    /// <summary>
     /// Pushes a new variable namespace scope (for example, when a "{" is encountered
     /// in a block-scoping language like C++ or Java or C#.)
     /// From now on any local variables created will be made in this new
@@ -2324,10 +2413,10 @@ namespace kOS.Safe.Compilation
     /// </summary>
     public class OpcodePushScope : Opcode
     {
-        [MLField(1,true)]
-        public Int16 ScopeId {get;set;}
-        [MLField(2,true)]
-        public Int16 ParentScopeId {get;set;}
+        [MLField(1, true)]
+        public Int16 ScopeId { get; set; }
+        [MLField(2, true)]
+        public Int16 ParentScopeId { get; set; }
 
         /// <summary>
         /// Push a scope frame that knows the id of its lexical parent scope.
@@ -2352,25 +2441,25 @@ namespace kOS.Safe.Compilation
         public override void PopulateFromMLFields(List<object> fields)
         {
             // Expect fields in the same order as the [MLField] properties of this class:
-            if (fields == null || fields.Count<2)
+            if (fields == null || fields.Count < 2)
                 throw new Exception("Saved field in ML file for OpcodePushScope seems to be missing.  Version mismatch?");
-            ScopeId = (Int16)( fields[0] );
-            ParentScopeId = (Int16)( fields[1] );
+            ScopeId = (Int16)(fields[0]);
+            ParentScopeId = (Int16)(fields[1]);
         }
 
         protected override string Name { get { return "pushscope"; } }
         public override ByteCode Code { get { return ByteCode.PUSHSCOPE; } }
-        
+
         public override void Execute(ICpu cpu)
         {
-            cpu.PushNewScope(ScopeId,ParentScopeId);
+            cpu.PushNewScope(ScopeId, ParentScopeId);
         }
 
         public override string ToString()
         {
             return String.Format("{0} {1} {2}", Name, ScopeId, ParentScopeId);
         }
-        
+
     }
 
     /// <summary>
@@ -2385,17 +2474,17 @@ namespace kOS.Safe.Compilation
     /// </summary>
     public class OpcodePopScope : Opcode
     {
-        [MLField(1,true)]
-        public Int16 NumLevels {get;set;} // Are we really going to have recursion more than 32767 levels?  Int16 is fine.
+        [MLField(1, true)]
+        public Int16 NumLevels { get; set; } // Are we really going to have recursion more than 32767 levels?  Int16 is fine.
 
         protected override string Name { get { return "popscope"; } }
         public override ByteCode Code { get { return ByteCode.POPSCOPE; } }
-        
+
         public OpcodePopScope(int numLevels)
         {
             NumLevels = (Int16)numLevels;
         }
-        
+
         public OpcodePopScope()
         {
             NumLevels = 1;
@@ -2404,7 +2493,7 @@ namespace kOS.Safe.Compilation
         public override void PopulateFromMLFields(List<object> fields)
         {
             // Expect fields in the same order as the [MLField] properties of this class:
-            if (fields == null || fields.Count<1)
+            if (fields == null || fields.Count < 1)
                 throw new Exception("Saved field in ML file for OpcodePopScope seems to be missing.  Version mismatch?");
             NumLevels = (Int16)(fields[0]); // should throw error if it's not an int.
         }
@@ -2413,7 +2502,7 @@ namespace kOS.Safe.Compilation
         {
             DoPopScope(cpu, NumLevels);
         }
-        
+
         /// <summary>
         /// Do the actual work of the Execute() method.  This was pulled out
         /// to a separate static method so that others can call it without needing
@@ -2432,7 +2521,59 @@ namespace kOS.Safe.Compilation
         {
             return Name + " " + NumLevels;
         }
-        
+
+    }
+
+    /// <summary>
+    /// <para>
+    /// Pushes the value of the stack pointer onto the stack.
+    /// The stack pointer points to value where the next push will go to.
+    /// As result of this, the returned value will point to itself (absolute)
+    /// </para>
+    /// <para></para>
+    /// <para>stackptr</para>
+    /// <para>... -- ... ptr</para>
+    /// </summary>
+    public class OpcodeStackPointer : Opcode
+    {
+        protected override string Name { get { return "stackptr"; } }
+        public override ByteCode Code { get { return ByteCode.STACKPTR; } }
+
+        public OpcodeStackPointer()
+        {
+        }
+
+        public override void Execute(ICpu cpu)
+        {
+            int ptr = cpu.GetArgumentStackSize();
+            cpu.PushArgumentStack(ptr);
+        }
+    }
+
+    /// <summary>
+    /// <para>
+    /// Pushes the value of the instruction pointer onto the stack.
+    /// The instruction pointer points to the current instruction to.
+    /// As result of this, the returned value will point to this instruction (absolute)
+    /// </para>
+    /// <para></para>
+    /// <para>instptr</para>
+    /// <para>... -- ... ptr</para>
+    /// </summary>
+    public class OpcodeInstructionPointer : Opcode
+    {
+        protected override string Name { get { return "instptr"; } }
+        public override ByteCode Code { get { return ByteCode.INSTPTR; } }
+
+        public OpcodeInstructionPointer()
+        {
+        }
+
+        public override void Execute(ICpu cpu)
+        {
+            int ptr = cpu.InstructionPointer;
+            cpu.PushArgumentStack(ptr);
+        }
     }
 
     /// <summary>
@@ -2445,9 +2586,9 @@ namespace kOS.Safe.Compilation
     /// </summary>
     public class OpcodePushDelegate : Opcode
     {
-        [MLField(1,false)]
+        [MLField(1, false)]
         private int EntryPoint { get; set; }
-        [MLField(2,false)]
+        [MLField(2, false)]
         private bool WithClosure { get; set; }
 
         protected override string Name { get { return "pushdelegate"; } }
@@ -2467,7 +2608,7 @@ namespace kOS.Safe.Compilation
         public override void PopulateFromMLFields(List<object> fields)
         {
             // Expect fields in the same order as the [MLField] properties of this class:
-            if (fields == null || fields.Count<2)
+            if (fields == null || fields.Count < 2)
                 throw new Exception("Saved field in ML file for OpcodePushDelegate seems to be missing.  Version mismatch?");
             EntryPoint = Convert.ToInt32(fields[0]);
             WithClosure = Convert.ToBoolean(fields[1]);
@@ -2518,6 +2659,211 @@ namespace kOS.Safe.Compilation
         }
     }
     
+    #endregion
+
+    #region Pointers
+
+    /// <summary>
+    /// <para>
+    /// Consumes N elements from the stack and returns a PointerValue
+    /// </para>
+    /// <para></para>
+    /// <para>createptr n</para>
+    /// <para>... seg1 seg2 -- ... ptr</para>
+    /// </summary>
+    public class OpcodeCreatePointer : Opcode
+    {
+        [MLField(0, false)]
+        private Int32 Count { get; set; }
+
+        protected override string Name { get { return "createptr"; } }
+        public override ByteCode Code { get { return ByteCode.CREATEPTR; } }
+
+        protected OpcodeCreatePointer() {  }
+
+        public OpcodeCreatePointer(int count)
+        {
+            Count = count;
+        }
+
+        public override void PopulateFromMLFields(List<object> fields)
+        {
+            if (fields == null || fields.Count < 1)
+                throw new Exception("Saved field in ML file for OpcodeCreatePointer seems to be missing.  Version mismatch?");
+            Count = (Int32)(fields[0]);
+            if (Count < 1)
+                throw new Exception("CREATEPTR requires at least one segment.");
+        }
+
+        public override void Execute(ICpu cpu)
+        {
+            if (cpu.GetArgumentStackSize() < Count)
+                throw new KOSException($"CREATEPTR {Count} requires {Count} stack values but only {cpu.GetArgumentStackSize()} present.");
+            
+            List<Structure> segments = new List<Structure>(Count);
+
+            for (int i = 0; i < Count; i++)
+            {
+                segments.Add(cpu.PopStructureEncapsulatedArgument());
+            }
+
+            segments.Reverse();
+
+            // validate
+            if (!(segments[0] is ScalarIntValue) &&
+                !(segments[0] is StringValue str && str.StartsWith("$")))
+            {
+                throw new KOSException("Invalid pointer root: must be int (stack index) or variable name ('$' prefixed string).");
+            }
+
+            cpu.PushArgumentStack(new PointerValue(segments));
+        }
+    }
+
+    /// <summary>
+    /// <para>
+    /// Pops a PointerValue from the stack and pushes its resolution
+    /// </para>
+    /// <para></para>
+    /// <para>getptr</para>
+    /// <para>... ptr -- ... value</para>
+    /// </summary>
+    public class OpcodeGetPointer : Opcode
+    {
+        protected override string Name { get { return "getptr"; } }
+        public override ByteCode Code { get { return ByteCode.GETPTR; } }
+
+        public OpcodeGetPointer() {  }
+
+        public override void Execute(ICpu cpu)
+        {
+            Structure ptrStruct = cpu.PopStructureEncapsulatedArgument();
+            if (!(ptrStruct is PointerValue ptr))
+                throw new KOSException("GETPTR expects a PointerValue on the stack.");
+
+            // validate
+            if (ptr.Segments.Count < 1)
+                throw new KOSException("GETPTR: PointerValue must have at least one segment.");
+
+            // Resolve first segment
+            Structure current;
+            Structure firstSeg = ptr.Segments[0];
+            if (firstSeg is ScalarIntValue idx)
+            {
+                int absIndex = idx.GetIntValue();
+                if (absIndex < 0 || absIndex >= cpu.GetArgumentStackSize())
+                    throw new KOSException($"GETPTR: stack index {absIndex} out of range.");
+                current = Structure.FromPrimitiveWithAssert(cpu.PeekRawArgument(cpu.GetArgumentStackSize() - 1 - absIndex, out bool ok));
+                if (!ok)
+                    throw new KOSException("GETPTR: stack indexing failed");
+            }
+            else if (firstSeg is StringValue varName && varName.StartsWith("$"))
+            {
+                current = Structure.FromPrimitiveWithAssert(cpu.GetValue(varName.ToString()));
+            }
+            else
+            {
+                throw new KOSException("GETPTR: first segment must be a stack index or variable name.");
+            }
+
+            // Traverse remaining segments
+            for (int i = 1; i < ptr.Segments.Count; i++)
+            {
+                Structure seg = ptr.Segments[i];
+
+                if (!(current is IIndexable indexable))
+                    throw new KOSException($"GETPTR: segment {i} encountered non-indexable value.");
+                
+                current = indexable.GetIndex(seg);
+            }
+
+            cpu.PushArgumentStack(current);
+        }
+    }
+
+    /// <summary>
+    /// <para>
+    /// Pops a Value and a PointerValue from the stack and writes the value into the pointer's resolution
+    /// </para>
+    /// <para></para>
+    /// <para>setptr</para>
+    /// <para>... ptr value -- ...</para>
+    /// </summary>
+    public class OpcodeSetPointer : Opcode
+    {
+        protected override string Name { get { return "setptr"; } }
+        public override ByteCode Code { get { return ByteCode.SETPTR; } }
+
+        public OpcodeSetPointer() {  }
+
+        public override void Execute(ICpu cpu)
+        {
+            Structure value = cpu.PopStructureEncapsulatedArgument();
+            Structure ptrStruct = cpu.PopStructureEncapsulatedArgument();
+            if (!(ptrStruct is PointerValue ptr))
+                throw new KOSException("SETPTR expects a PointerValue on the stack.");
+
+            // validate
+            if (ptr.Segments.Count < 1)
+                throw new KOSException("SETPTR: PointerValue must have at least one segment.");
+
+            // Resolve first segment
+            Structure current;
+            Structure firstSeg = ptr.Segments[0];
+            if (firstSeg is ScalarIntValue idx)
+            {
+                int absIndex = idx.GetIntValue();
+                if (absIndex < 0 || absIndex >= cpu.GetArgumentStackSize())
+                    throw new KOSException($"SETPTR: stack index {absIndex} out of range.");
+                
+                int depth = cpu.GetArgumentStackSize() - 1 - absIndex;
+
+                if (ptr.Segments.Count == 1)
+                {
+                    cpu.PokeArgumentStack(depth, value, out bool ok);
+                    if (!ok)
+                        throw new KOSException("SETPTR: stack indexing failed");
+                    return;
+                }
+
+                current = Structure.FromPrimitiveWithAssert(cpu.PeekRawArgument(depth, out bool ok));
+                if (!ok)
+                    throw new KOSException("SETPTR: stack indexing failed");
+            }
+            else if (firstSeg is StringValue varName && varName.StartsWith("$"))
+            {
+                if (ptr.Segments.Count == 1)
+                {
+                    cpu.SetValueExists(varName.ToString(), value);
+                    return;
+                }
+                current = Structure.FromPrimitiveWithAssert(cpu.GetValue(varName.ToString()));
+            }
+            else
+            {
+                throw new KOSException("SETPTR: first segment must be a stack index or variable name.");
+            }
+
+            // Traverse remaining segments
+            for (int i = 1; i < ptr.Segments.Count - 1; i++)
+            {
+                Structure seg = ptr.Segments[i];
+
+                if (!(current is IIndexable indexable))
+                    throw new KOSException($"SETPTR: segment {i} encountered non-indexable value.");
+                
+                current = indexable.GetIndex(seg);
+            }
+
+            // set last segment
+            Structure lastSeg = ptr.Segments[^1];
+            if (!(current is IIndexable lastIndexable))
+                throw new KOSException("SETPTR: final target is not indexable.");
+
+            lastIndexable.SetIndex(lastSeg, value);
+        }
+    }
+
     #endregion
 
     #region Wait / Trigger
