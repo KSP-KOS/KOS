@@ -40,11 +40,11 @@ namespace kOS.Safe.Test.Compilation
             // Tests that the bare minimum works
             Type structureType = typeof(Encapsulation.Structure);
             Type result = TypeInferencer.GetTypeForSuffix(structureType, "TOSTRING");
-            Assert.AreEqual(result, typeof(StringValue));
+            Assert.AreEqual(typeof(StringValue), result);
 
             Type integerType = typeof(ScalarIntValue);
             result = TypeInferencer.GetTypeForSuffix(integerType, "istype");
-            Assert.AreEqual(result, typeof(BooleanValue));
+            Assert.AreEqual(typeof(BooleanValue), result);
         }
 
         [Test]
@@ -53,21 +53,21 @@ namespace kOS.Safe.Test.Compilation
             // Test that lists and enumerables work
             Type listType = typeof(ListValue);
             Type result = TypeInferencer.GetTypeForSuffix(listType, "ITERATOR");
-            Assert.AreEqual(result, typeof(Enumerator));
+            Assert.AreEqual(typeof(Enumerator), result);
 
             result = TypeInferencer.GetTypeForSuffix(listType, "COPY");
-            Assert.AreEqual(result, typeof(ListValue));
+            Assert.AreEqual(typeof(ListValue), result);
 
             result = TypeInferencer.GetTypeForIndex(listType);
-            Assert.AreEqual(result, typeof(Encapsulation.Structure));
+            Assert.AreEqual(typeof(Encapsulation.Structure), result);
 
             result = TypeInferencer.GetTypeForSuffix(listType, "CLEAR");
-            Assert.AreEqual(result, null);
+            Assert.AreEqual(null, result);
 
             // Test an abstract generic type
             listType = typeof(EnumerableValue<Encapsulation.Structure, System.Collections.Generic.IEnumerable<Encapsulation.Structure>>);
             result = TypeInferencer.GetTypeForSuffix(listType, "ITERATOR");
-            Assert.AreEqual(result, typeof(Enumerator));
+            Assert.AreEqual(typeof(Enumerator), result);
         }
 
         [Test]
@@ -77,16 +77,16 @@ namespace kOS.Safe.Test.Compilation
             InterimConstantValue b = new InterimConstantValue(ScalarIntValue.Two, 0, 0);
             IRBinaryOp add = new IRBinaryOp(null, new OpcodeMathAdd(), a, b);
 
-            Assert.AreEqual(add.Type, typeof(ScalarValue));
+            Assert.AreEqual(typeof(ScalarValue), add.Type);
 
             IRCall call = new IRCall(null, new OpcodeCall("sin"), true, b);
             Assert.IsTrue(typeof(ScalarValue).IsAssignableFrom(call.Type));
 
             IRCall print = new IRCall(null, new OpcodeCall("print"), true, a);
-            Assert.AreEqual(print.Type, null);
+            Assert.AreEqual(null, print.Type);
 
             IRCall userCall = new IRCall(null, new OpcodeCall("$test*"), true, a, b);
-            Assert.AreEqual(userCall.Type, typeof(Encapsulation.Structure));
+            Assert.AreEqual(typeof(Encapsulation.Structure), userCall.Type);
         }
     }
 }
