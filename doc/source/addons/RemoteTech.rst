@@ -72,7 +72,7 @@ Antennas
 It is possible to activate/deactivate RT antennas, as well as set their targets using kOS::
 
   SET P TO SHIP:PARTSNAMED("mediumDishAntenna")[0].
-  SET M to p:GETMODULE("ModuleRTAntenna").
+  SET M to p:MODULES:ModuleRTAntenna.
   M:DOEVENT("activate").
   M:SETFIELD("target", "Mission Control").
   M:SETFIELD("target", mun).

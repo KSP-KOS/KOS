@@ -66,21 +66,9 @@ These are the generic properties every PART has. You can obtain a list of values
         * - :attr:`SHIP`
           - :struct:`Vessel`
           - the vessel that contains this part
-        * - :meth:`GETMODULE(name)`
-          - :struct:`PartModule`
-          - Get one of the :struct:`PartModules <PartModule>` by name
-        * - :meth:`GETMODULEBYINDEX(index)`
-          - :struct:`PartModule`
-          - Get one of the :struct:`PartModules <PartModule>` by index
         * - :attr:`MODULES`
-          - :struct:`List`
-          - Names (:struct:`String`) of all :struct:`PartModules <PartModule>`
-        * - :attr:`ALLMODULES`
-          - :struct:`List`
-          - Same as :attr:`MODULES`
-        * - :meth:`HASMODULE(name)`
-          - :struct:`Boolean`
-          - True if the part has the named module in it, false if not.
+          - :struct:`ModuleLexicon`
+          - Special :struct:`ModuleLexicon` structure for getting modules.
         * - :attr:`PARENT`
           - :struct:`Part`
           - Adjacent :struct:`Part` on this :struct:`Vessel`.
@@ -319,53 +307,53 @@ These are the generic properties every PART has. You can obtain a list of values
 
     the vessel that contains this part.
 
-.. method:: Part:GETMODULE(name)
+.. attribute:: Part:MODULES
 
-    :parameter name: (:struct:`String`) Name of the part module
-    :returns: :struct:`PartModule`
+    :access: Get only
+    :type: :struct:`ModuleLexicon`
 
-    Get one of the :struct:`PartModules <PartModule>` attached to this part, given the name of the module. (See :attr:`Part:MODULES` for a list of all the names available).
+    .. structure:: ModuleLexicon
 
-.. method:: Part:GETMODULEBYINDEX(index)
+        .. list-table:: Members
+            :header-rows: 1
+            :widths: 1 1 4
 
-    :parameter index: (:struct:`Scalar`) Index number of the part module
-    :returns: :struct:`PartModule`
+            * - Suffix
+              - Type
+              - Description
 
-    Get one of the :struct:`PartModules <PartModule>` attached to this part,
-    given the index number of the module. You can use :attr:`Part:MODULES` for a
-    list of names of all modules on the part. The indexes are not guaranteed to
-    always be in the same order. It is recommended to iterate over the indexes
-    with a loop and verify the module name::
 
-        local moduleNames is part:modules.
+            * - :attr:`PART`
+              - :struct:`Part`
+              - The part this ModuleLexicon gets modules from
+            * - :attr:`KEYS`
+              - :struct:`List` of strings
+              - List of module names
+            * - :meth:`HASKEY(key)`
+              - :struct:`Boolean`
+              - Does the part have a module with this name
+            * - :attr:`LENGTH`
+              - :struct:`Scalar`
+              - Number of modules on a part
+
+    Structure for getting :struct:`PartModules <PartModule>` from a part with a name or an index. To get a module by its name use the suffix syntax with the module name(the leading "Module" string in the name is optional). Example::
+
+        print part:modules.
+        ModuleLexicon, containing keys:
+        [0] ModuleCommand
+        [1] ModuleReactionWheel
+        set command to part:modules:command.
+        set reactionwheel to part:modules[1].
+
+    The indexes are not guaranteed to always be in the same order. It is recommended to iterate over the indexes with a loop and verify the module name::
+
+        local moduleNames is part:modules:keys.
         for idx in range(0, moduleNames:length) {
             if moduleNames[idx] = "test module" {
                 local pm is part:getmodulebyindex(idx).
                 DoSomething(pm).
             }
         }
-
-
-.. attribute:: Part:MODULES
-
-    :access: Get only
-    :type: :struct:`List` of strings
-
-    list of the names of :struct:`PartModules <PartModule>` enabled for this part.
-
-.. attribute:: Part:ALLMODULES
-
-    Same as :attr:`Part:MODULES`
-
-.. method:: Part:HASMODULE(name)
-
-    :parameter name: (:struct:`String`) The name of the module to check for
-    :returns: :struct:`Boolean`
-
-    Checks to see if this part contains the :struct:`PartModule` with the name
-    given.  If it does, this returns true, else it returns false.  (If 
-    ``HASMODULE(name)`` returns false, then this means an attempt to use
-    ``GETMODULE(name)`` would fail with an error.)
 
 .. attribute:: Part:PARENT
 

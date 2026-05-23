@@ -9,7 +9,7 @@ Some of the science-related tasks are normally not available to kOS scripts. It 
 example possible to deploy a science experiment::
 
     SET P TO SHIP:PARTSNAMED("GooExperiment")[1].
-    SET M TO P:GETMODULE("ModuleScienceExperiment").
+    SET M TO P:MODULES:ModuleScienceExperiment.
     M:DOEVENT("observe mystery goo").
 
 However, this results in a dialog being shown to the user. Only from that dialog it is possible
@@ -18,7 +18,7 @@ to reset the experiment or transmit the experiment results back to Kerbin.
 to perform all science-related tasks without any manual intervention::
 
     SET P TO SHIP:PARTSNAMED("GooExperiment")[0].
-    SET M TO P:GETMODULE("ModuleScienceExperiment").
+    SET M TO P:MODULES:ModuleScienceExperiment.
     M:DEPLOY.
     WAIT UNTIL M:HASDATA.
     M:TRANSMIT.

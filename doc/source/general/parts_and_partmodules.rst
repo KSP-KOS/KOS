@@ -86,7 +86,7 @@ Examples::
 
     // Change the altitude at which all the drogue chutes will deploy:
     FOR somechute IN somevessel:PARTSNAMED("parachuteDrogue") {
-      somechute:GETMODULE("ModuleParachute"):SETFIELD("DEPLOYALTITUDE", 1500).
+      somechute:MODULES:ModuleParachute:SETFIELD("DEPLOYALTITUDE", 1500).
     }.
 
 Pattern matching
@@ -217,14 +217,14 @@ B: **Use the :MODULES suffix of Part:** If you have a handle on any part in kOS,
       LOG P:MODULES TO MODLIST.
     }.
 
-Do that, and the file MODLIST should now contain a verbose dump of all the module names of all the parts on your ship. You can get any of the modules now by using Part:GETMODULE("module name").
+Do that, and the file MODLIST should now contain a verbose dump of all the module names of all the parts on your ship. You can get any of the modules now by using Part:MODULES:ModuleName.
 
 What are the names of the stuff that a PartModule can do?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 These three suffixes tell you everything a part module can do::
 
-    SET MOD TO P:GETMODULE("some name here").
+    SET MOD TO P:MODULE:SomeModuleName.
     LOG ("These are all the things that I can currently USE GETFIELD AND SETFIELD ON IN " + MOD:NAME + ":") TO NAMELIST.
     LOG MOD:ALLFIELDS TO NAMELIST.
     LOG ("These are all the things that I can currently USE DOEVENT ON IN " +  MOD:NAME + ":") TO NAMELIST.
