@@ -1,13 +1,18 @@
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: [create-release]
-    types: [completed]
+    inputs:
+      version-string:
+        type: string
+        required: true
+  workflow_call:
+    inputs:
+      version-string:
+        type: string
+        required: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v6
 
@@ -22,7 +27,7 @@ jobs:
         run: |
           cd doc
           make clean
-          make html
+          make html SPHINXOPTS='-D version=${{ inputs.version-string }} -D release=${{ inputs.version-string }}'
 
       - uses: actions/upload-pages-artifact@v5
         with:

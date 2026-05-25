@@ -15,3 +15,9 @@ jobs:
       version-template-extension:
       version-file: Resources/GameData/kOS/kOS.version
       artifacts: Resources/GameData LICENSE* README* CHANGELOG*
+
+  deploy-docs:
+    needs: create-release
+    uses: ./.github/workflows/deploy-docs.yml
+    with:
+      version-string: ${{ inputs.version-string }}
