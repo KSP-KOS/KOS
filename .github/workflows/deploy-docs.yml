@@ -1,0 +1,44 @@
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: [create-release]
+    types: [completed]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: install dependencies
+        id: deps
+        run: |
+          pip install sphinx
+          pip install sphinx_rtd_theme
+
+      - name: build docs
+        id: build
+        run: |
+          cd doc
+          make clean
+          make html
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: doc/gh-pages
+
+
+  deploy:
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5.0.0
