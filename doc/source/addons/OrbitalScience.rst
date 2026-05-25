@@ -13,7 +13,7 @@ Most of the time Orbital Science experiments should work exactly like stock ones
 they inherit all suffixes from :ref:`ScienceExperimentModule <scienceexperimentmodule>`::
 
   SET P TO SHIP:PARTSTAGGED("")[0].
-  SET M TO P:GETMODULE("dmmodulescienceanimate").
+  SET M TO P:MODULES:dmmodulescienceanimate.
 
   PRINT M:RERUNNABLE.
   PRINT M:INOPERABLE.
@@ -26,7 +26,7 @@ deactivates them::
 
 
   SET P TO SHIP:PARTSTAGGED("collector")[0].
-  SET M TO P:GETMODULE("dmsolarcollector").
+  SET M TO P:MODULES:dmsolarcollector.
 
   M:TOGGLE.
 
@@ -34,7 +34,7 @@ deactivates them::
 lights on and off::
 
   SET P TO SHIP:PARTSTAGGED("bathymetry")[0].
-  SET M TO P:GETMODULE("dmbathymetry").
+  SET M TO P:MODULES:dmbathymetry.
 
   M:LIGHTSON.
   WAIT 3.

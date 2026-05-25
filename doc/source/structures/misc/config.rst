@@ -88,6 +88,10 @@ Configuration of kOS
           - :struct:`Boolean`
           - False
           - If true, kOS's controls do nothing.
+        * - :attr:`DEPRECATEDWARNINGS`
+          - :struct:`Boolean`
+          - True
+          - If true, warnings will be printed when using deprecated globals, suffixes or functions.
         * - :attr:`TELNET`
           - :struct:`Boolean`
           - False
@@ -272,6 +276,13 @@ Configuration of kOS
 
     While it does suppress steering, throttle, and translation, it cannot
     suppress action groups or staging.
+
+.. attribute:: Config:DEPRECATEDWARNINGS
+
+    :access: Get/Set
+    :type: :struct:`Boolean`
+
+    If true, warnings will be printed when using deprecated globals, suffixes or functions.
 
 .. attribute:: Config:TELNET
 
