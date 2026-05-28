@@ -111,7 +111,7 @@ namespace kOS.Module
         public float additionalMassGui = 0F;
 
         [KSPField(isPersistant = true, guiActive = false, guiActiveEditor = false)]
-        public float diskSpaceCostFactor = 0.0644140625F; //implies approx 100funds for 4096bytes of diskSpace. SliderNote: would recommend a small increase to: 0.0484140625F
+        public float diskSpaceCostFactor = 0.0984140625F; //implies approx 100funds for 4096bytes of diskSpace. SliderNote: would recommend a small increase to: 0.0484140625F
 
         [KSPField(isPersistant = true, guiActive = false, guiActiveEditor = false)]
         public float diskSpaceMassFactor = 0.0000000048829F;  //implies approx 0.020kg for 4096bytes of diskSpace
