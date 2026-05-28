@@ -3,7 +3,12 @@ namespace kOS.Safe.Compilation
 #pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     /*
+     * O0:
+     * -2000. Conversion to SSA (analysis pass)
+     * -1000. Type Propagation
+     *  
      * O1:
+     * -1000. SCCP with Type Propagation
      *  10. Suffix replacement:
      *          Replace CONSTANT: values with the constant
      *          Replace ship fields with their alias

@@ -17,7 +17,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         /// </remarks>
         public OptimizationLevel OptimizationLevel => OptimizationLevel.None;
 
-        public short SortIndex => short.MinValue;
+        public short SortIndex => -1000;
 
         public Optimizer Optimizer { private get; set; }
 

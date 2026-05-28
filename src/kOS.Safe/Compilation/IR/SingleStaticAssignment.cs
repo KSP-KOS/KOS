@@ -10,8 +10,13 @@ namespace kOS.Safe.Compilation.IR
     /// This utility class converts an IRCodePart into single static
     /// assignment form.
     /// </summary>
-    public static class SingleStaticAssignment
+    public class SingleStaticAssignment : IHolisticOptimizationPass
     {
+        public OptimizationLevel OptimizationLevel => OptimizationLevel.None;
+        public short SortIndex => -2000;
+
+        public void ApplyPass(IRCodePart codePart)
+            => FinalizeSSA(codePart);
 
         /// <summary>
         /// Finalizes a program into single static assignment form.
