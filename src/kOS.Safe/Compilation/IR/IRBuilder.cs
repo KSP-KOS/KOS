@@ -223,10 +223,12 @@ namespace kOS.Safe.Compilation.IR
                 case OpcodeEOP _:
                 case OpcodeNOP _:
                 case OpcodeBogus _:
-                case OpcodePushScope _:
-                case OpcodePopScope _:
                 case OpcodeArgBottom _:
                     currentBlock.Add(new IRNoStackInstruction(currentBlock, opcode));
+                    break;
+                case OpcodePushScope _:
+                case OpcodePopScope _:
+                    currentBlock.Add(new IRNoStackInstruction(currentBlock, opcode, true));
                     break;
                 case OpcodeTestArgBottom _:
                     instruction = new IRNonVarPush(currentBlock, opcode);

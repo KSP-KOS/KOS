@@ -399,10 +399,12 @@ namespace kOS.Safe.Compilation.IR
     }
     public class IRNoStackInstruction : IRInstruction
     {
-        public override bool IsInvariant => false;
+        public override bool IsInvariant { get; } = false;
         public Opcode Operation { get; }
         public IRNoStackInstruction(BasicBlock block, Opcode opcode) : base(opcode, block)
             => Operation = opcode;
+        public IRNoStackInstruction(BasicBlock block, Opcode opcode, bool isInvariant) : this(block, opcode)
+            => IsInvariant = isInvariant;
         public override IEnumerable<Opcode> EmitOpcodes()
         {
             Operation.Label = string.Empty;
@@ -853,6 +855,9 @@ namespace kOS.Safe.Compilation.IR
         private bool IsCallInvariant()
         {
             // TODO: Consider that some suffix methods may actually be known at compile time.
+            IRCodePart.IRFunction function = Block?.CodePart?.GetFunction(this);
+            if (function != null)
+                return function.IsInvariant;
             if (!Direct)
                 return false;
             if (Optimization.Optimizer.FunctionManager.Exists(Function.Replace("()", "")))
@@ -927,6 +932,10 @@ namespace kOS.Safe.Compilation.IR
         {
             if (!IsInvariant)
                 throw new InvalidOperationException();
+
+            IRCodePart.IRFunction function = Block?.CodePart?.GetFunction(this);
+            if (function != null)
+                return function.Returns.Evaluate();
 
             string functionName = Function.Replace("()", "");
             Optimization.InterimCPU interimCPU = Optimization.Optimizer.InterimCPU;

@@ -320,6 +320,68 @@ namespace kOS.Safe.Compilation.IR
             ///   <c>true</c> if this instance may be recursive; otherwise, <c>false</c>.
             /// </value>
             public bool IsRecursive => FunctionCalls.Contains(this);
+            /// <summary>
+            /// Gets the return value of this function.
+            /// </summary>
+            public PhiOperand Returns
+            {
+                get
+                {
+                    foreach (IRFunctionFragment fragment in Fragments)
+                    {
+                        foreach (BasicBlock block in fragment.FunctionCode)
+                        {
+                            if (block.Successors.Any())
+                            {
+                                returns.PossibleValues.Remove(block);
+                                continue;
+                            }
+                            if (!(block.Instructions[block.Instructions.Count - 1] is IRReturn ret))
+                                returns.PossibleValues[block] = null;
+                            else
+                                returns.PossibleValues[block] = ret.Value;
+                        }
+                    }
+                    return returns;
+                }
+            }
+            private readonly PhiOperand returns = new PhiOperand();
+            /// <summary>
+            /// Gets a value indicating whether this instance is invariant.
+            /// A user function that contains any calls to non-invariant functions is,
+            /// itself, not invariant. Any assignments or unsets to the enclosing scope or
+            /// setting any suffixes or indexes also makes a function non-invariant.
+            /// </summary>
+            /// <value>
+            ///   <c>true</c> if this instance is invariant; otherwise, <c>false</c>.
+            /// </value>
+            public bool IsInvariant
+                => Returns.IsInvariant &&
+                IsSelfInvariant() &&
+                FunctionCalls.Where(func => func != this).All(function => function.IsSelfInvariant());
+
+            private bool IsSelfInvariant()
+            {
+                if (ExternalWrites.Count > 0 || ExternalUnsets.Count > 0)
+                    return false;
+
+                return Fragments.All(fragment =>
+                    fragment.FunctionCode.Where(block => block.IsExecutable).All(block =>
+                        block.Instructions.All(instruction =>
+                        {
+                            switch (instruction)
+                            {
+                                case IRNoStackInstruction noStackInstruction:
+                                case IRSuffixSet _:
+                                case IRIndexSet _:
+                                    return instruction.IsInvariant;
+                                default:
+                                    return true;
+                            }
+                        })
+                    )
+                );
+            }
 
             public List<BasicBlock> RootBlocks { get; } = new List<BasicBlock>();
 

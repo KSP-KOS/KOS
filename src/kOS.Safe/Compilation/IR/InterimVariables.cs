@@ -618,6 +618,35 @@ namespace kOS.Safe.Compilation.IR
         }
 
     }
+    public class PhiOperand : PhiNode<IInterimOperand>, IEvaluatableToConstant
+    {
+        protected override bool ObjIsInvariant(IInterimOperand obj)
+            => obj == null || (obj.IsInvariant && obj is IEvaluatableToConstant);
+        protected override Type ObjType(IInterimOperand obj)
+            => obj.Type;
+        protected override IEnumerable<IInterimOperand> Operands => PossibleValues.Values;
+
+        public override InterimConstantValue Evaluate()
+        {
+            if (!PossibleValues.Any())
+                return null;
+            return base.Evaluate();
+        }
+
+        protected override InterimConstantValue EvaluateObj(IInterimOperand obj)
+            => (obj as IEvaluatableToConstant)?.Evaluate();
+
+        protected override void ForEachOperand(Action<IInterimOperand> action)
+        {
+            foreach (IInterimOperand operand in PossibleValues.Values)
+                action(operand);
+        }
+        protected override void MutateEachOperand(Func<IInterimOperand, IInterimOperand> mutateFunc)
+        {
+            foreach (BasicBlock block in PossibleValues.Keys)
+                PossibleValues[block] = mutateFunc(PossibleValues[block]);
+        }
+    }
     public abstract class PhiNode<T> : IMultipleOperandInstruction
     {
         public bool IsInvariant
