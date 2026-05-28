@@ -38,6 +38,12 @@ namespace kOS.Safe.Compilation.IR
         public List<BasicBlock> Blocks { get; } = new List<BasicBlock>();
 
         /// <summary>
+        /// Gets the reachable variables for a given call site.
+        /// </summary>
+        public Dictionary<IRInstruction, HashSet<IInterimVariableReference>> ReachableVariables { get; } =
+            new Dictionary<IRInstruction, HashSet<IInterimVariableReference>>();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="IRCodePart"/> class.
         /// </summary>
         /// <param name="codePart">The code part containing main code.</param>

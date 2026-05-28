@@ -196,7 +196,10 @@ namespace kOS.Safe.Compilation.IR
             CodePart = codePart;
             StartIndex = startIndex;
             EndIndex = endIndex;
-            ID = nextID++;
+            unchecked
+            {
+                ID = nextID++;
+            }
             this.nonSequentialLabel = nonSequentialLabel;
         }
 

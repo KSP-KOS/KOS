@@ -187,7 +187,10 @@ namespace kOS.Safe.Compilation.IR
         public static uint GetIndex(string name)
         {
             if (indices.ContainsKey(name))
-                return ++indices[name];
+                unchecked
+                {
+                    return ++indices[name];
+                }
             indices[name] = 0;
             return 0;
         }

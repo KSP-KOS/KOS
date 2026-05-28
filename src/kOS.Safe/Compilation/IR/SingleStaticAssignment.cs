@@ -12,8 +12,6 @@ namespace kOS.Safe.Compilation.IR
     /// </summary>
     public static class SingleStaticAssignment
     {
-        public static Dictionary<IRInstruction, HashSet<IInterimVariableReference>> ReachableVariables { get; } =
-            new Dictionary<IRInstruction, HashSet<IInterimVariableReference>>();
 
         /// <summary>
         /// Finalizes a program into single static assignment form.
@@ -597,7 +595,7 @@ namespace kOS.Safe.Compilation.IR
                         IRFunction function = codePart.GetFunction(call);
                         if (function != null)
                         {
-                            ReachableVariables[call] = DetermineCallReaches(call, function, funcOrTrigger, liveDefinitions, triggerBlacklist);
+                            codePart.ReachableVariables[call] = DetermineCallReaches(call, function, funcOrTrigger, liveDefinitions, triggerBlacklist);
                         }
                         ProcessCall(call, codePart, liveDefinitions, triggerBlacklist, triggerWriteBlacklist, null, true);
                     }

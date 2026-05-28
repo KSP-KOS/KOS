@@ -115,7 +115,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                                     IRCodePart.IRFunction function = codePart.GetFunction(call);
                                     if (function != null)
                                     {
-                                        HashSet<IInterimVariableReference> variables = SingleStaticAssignment.ReachableVariables[call];
+                                        HashSet<IInterimVariableReference> variables = codePart.ReachableVariables[call];
                                         foreach (SSADefinition variable in variables.SelectMany(GetSSADefinitionsFromReferences))
                                         {
                                             GetOrCreate(variableUses, variable).Add(call);
