@@ -939,5 +939,44 @@ namespace kOS.Safe.Test.Execution
                 Where(b => Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyBranch(b, null, out _)).Count());
         }
         #endregion
+
+        #region Loop Condition Reordering
+        [Test]
+        public void TestUntilLoopCondition()
+        {
+            optimizationLevel = OptimizationLevel.Balanced;
+            List<CodePart> _code = CompileCodePart("integration/branching/until.ks");
+            optimizationLevel = OptimizationLevel.Minimal;
+            List<Safe.Compilation.Opcode> opcodes = _code[0].MainCode;
+            Assert.AreEqual(opcodes[4].ToString(), opcodes[10].ToString());
+            Assert.IsInstanceOf(typeof(OpcodeBranchIfTrue), opcodes[5]);
+            Assert.IsInstanceOf(typeof(OpcodeBranchIfFalse), opcodes[11]);
+        }
+        [Test]
+        public void TestForLoopCondition()
+        {
+            optimizationLevel = OptimizationLevel.Balanced;
+            List<CodePart> _code = CompileCodePart("integration/branching/for.ks");
+            optimizationLevel = OptimizationLevel.Minimal;
+            List<Safe.Compilation.Opcode> opcodes = _code[0].MainCode;
+            Assert.AreEqual(opcodes[8].ToString(), opcodes[15].ToString());
+            Assert.AreEqual(opcodes[9].ToString(), opcodes[16].ToString());
+            Assert.IsInstanceOf(typeof(OpcodeBranchIfFalse), opcodes[10]);
+            Assert.IsInstanceOf(typeof(OpcodeBranchIfTrue), opcodes[17]);
+        }
+        [Test]
+        public void TestFromLoopCondition()
+        {
+            optimizationLevel = OptimizationLevel.Balanced;
+            List<CodePart> _code = CompileCodePart("integration/branching/from.ks");
+            optimizationLevel = OptimizationLevel.Minimal;
+            List<Safe.Compilation.Opcode> opcodes = _code[0].MainCode;
+            Assert.AreEqual(opcodes[7].ToString(), opcodes[19].ToString());
+            Assert.AreEqual(opcodes[8].ToString(), opcodes[20].ToString());
+            Assert.AreEqual(opcodes[9].ToString(), opcodes[21].ToString());
+            Assert.IsInstanceOf(typeof(OpcodeBranchIfTrue), opcodes[10]);
+            Assert.IsInstanceOf(typeof(OpcodeBranchIfFalse), opcodes[22]);
+        }
+        #endregion
     }
 }

@@ -106,7 +106,9 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         newOffshoots.Enqueue(child);
                     block = loopData.exit;
                 }
-                else if (IdentifyBranch(block, regionExits.Peek(), out BranchData branchData))
+                else if (IdentifyBranch(block, regionExits.Peek(), out BranchData branchData) &&
+                    !((branchData.ifBlock?.Dominator != null && branchData.ifBlock.Dominator != block) ||
+                    (branchData.elseBlock?.Dominator != null && branchData.elseBlock.Dominator != block)))
                 {
                     sequence.Add(ConstructMetaSequence(branchData.ifBlock, regionExits, out Queue<BasicBlock> childOffshoots));
                     foreach (BasicBlock child in childOffshoots)
@@ -197,6 +199,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         }
         private static bool BackEdgeDetection(BasicBlock successor, BasicBlock target)
         {
+            BasicBlock firstSuccessor = successor;
             if (successor.Dominator != target)
                 return false;
 
@@ -207,7 +210,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     return true;
             }
 
-            return successor.Successors.Contains(target);
+            return successor.Successors.Contains(target) || successor.Successors.Contains(firstSuccessor);
         }
         private static BasicBlock FindLocalMerge(BasicBlock ifBlock, BasicBlock regionExit)
         {
