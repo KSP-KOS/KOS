@@ -834,11 +834,11 @@ namespace kOS.Safe.Test.Execution
             List<CodePart> _code = CompileCodePart("integration/branching/until.ks");
             optimizationLevel = OptimizationLevel.Minimal;
             IRCodePart codePart = new IRCodePart(_code[0], new List<Safe.Compilation.KS.UserFunction>(), new List<Safe.Compilation.KS.Trigger>());
-            Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyLoop(BlockSequence(codePart.MainCode[1]), null, out Safe.Compilation.Optimization.Passes.BlockOrdering.Loop loopData);
+            Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyLoop(codePart.MainCode[1], null, out Safe.Compilation.Optimization.Passes.BlockOrdering.LoopData loopData);
             Assert.AreEqual(2, loopData.body?.ID);
             Assert.AreEqual(4, loopData.exit?.ID);
             Assert.AreEqual(1, codePart.MainCode.
-                Where(b => Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyLoop(BlockSequence(b), null, out _)).Count());
+                Where(b => Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyLoop(b, null, out _)).Count());
             var optimizer = new Safe.Compilation.Optimization.Optimizer(new CompilerOptions() { OptimizationLevel = optimizationLevel });
             optimizer.Optimize(codePart);
         }
@@ -850,11 +850,11 @@ namespace kOS.Safe.Test.Execution
             List<CodePart> _code = CompileCodePart("integration/branching/for.ks");
             optimizationLevel = OptimizationLevel.Minimal;
             IRCodePart codePart = new IRCodePart(_code[0], new List<Safe.Compilation.KS.UserFunction>(), new List<Safe.Compilation.KS.Trigger>());
-            Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyLoop(BlockSequence(codePart.MainCode[2]), null, out Safe.Compilation.Optimization.Passes.BlockOrdering.Loop loopData);
+            Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyLoop(codePart.MainCode[2], null, out Safe.Compilation.Optimization.Passes.BlockOrdering.LoopData loopData);
             Assert.AreEqual(3, loopData.body?.ID);
             Assert.AreEqual(6, loopData.exit?.ID);
             Assert.AreEqual(1, codePart.MainCode.
-                Where(b => Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyLoop(BlockSequence(b), null, out _)).Count());
+                Where(b => Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyLoop(b, null, out _)).Count());
         }
         [Test]
         public void TestFromLoopDetection()
@@ -864,11 +864,11 @@ namespace kOS.Safe.Test.Execution
             List<CodePart> _code = CompileCodePart("integration/branching/from.ks");
             optimizationLevel = OptimizationLevel.Minimal;
             IRCodePart codePart = new IRCodePart(_code[0], new List<Safe.Compilation.KS.UserFunction>(), new List<Safe.Compilation.KS.Trigger>());
-            Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyLoop(BlockSequence(codePart.MainCode[2]), null, out Safe.Compilation.Optimization.Passes.BlockOrdering.Loop loopData);
+            Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyLoop(codePart.MainCode[2], null, out Safe.Compilation.Optimization.Passes.BlockOrdering.LoopData loopData);
             Assert.AreEqual(3, loopData.body?.ID);
             Assert.AreEqual(5, loopData.exit?.ID);
             Assert.AreEqual(1, codePart.MainCode.
-                Where(b => Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyLoop(BlockSequence(b), null, out _)).Count());
+                Where(b => Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyLoop(b, null, out _)).Count());
         }
         [Test]
         public void TestIfDetection()
@@ -878,12 +878,12 @@ namespace kOS.Safe.Test.Execution
             List<CodePart> _code = CompileCodePart("integration/branching/if.ks");
             optimizationLevel = OptimizationLevel.Minimal;
             IRCodePart codePart = new IRCodePart(_code[0], new List<Safe.Compilation.KS.UserFunction>(), new List<Safe.Compilation.KS.Trigger>());
-            Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyBranch(BlockSequence(codePart.MainCode[0]), null, out Safe.Compilation.Optimization.Passes.BlockOrdering.IfElse branchData);
+            Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyBranch(codePart.MainCode[0], null, out Safe.Compilation.Optimization.Passes.BlockOrdering.BranchData branchData);
             Assert.AreEqual(1, branchData.ifBlock?.ID);
             Assert.IsNull(branchData.elseBlock);
             Assert.AreEqual(2, branchData.exit?.ID);
             Assert.AreEqual(1, codePart.MainCode.
-                Where(b => Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyBranch(BlockSequence(b), null, out _)).Count());
+                Where(b => Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyBranch(b, null, out _)).Count());
         }
         [Test]
         public void TestIfElseDetection()
@@ -893,12 +893,12 @@ namespace kOS.Safe.Test.Execution
             List<CodePart> _code = CompileCodePart("integration/branching/ifElse.ks");
             optimizationLevel = OptimizationLevel.Minimal;
             IRCodePart codePart = new IRCodePart(_code[0], new List<Safe.Compilation.KS.UserFunction>(), new List<Safe.Compilation.KS.Trigger>());
-            Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyBranch(BlockSequence(codePart.MainCode[0]), null, out Safe.Compilation.Optimization.Passes.BlockOrdering.IfElse branchData);
+            Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyBranch(codePart.MainCode[0], null, out Safe.Compilation.Optimization.Passes.BlockOrdering.BranchData branchData);
             Assert.AreEqual(1, branchData.ifBlock?.ID);
             Assert.AreEqual(3, branchData.elseBlock?.ID);
             Assert.AreEqual(4, branchData.exit?.ID);
             Assert.AreEqual(1, codePart.MainCode.
-                Where(b => Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyBranch(BlockSequence(b), null, out _)).Count());
+                Where(b => Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyBranch(b, null, out _)).Count());
         }
         [Test]
         public void TestIfElseIfDetection()
@@ -908,16 +908,16 @@ namespace kOS.Safe.Test.Execution
             List<CodePart> _code = CompileCodePart("integration/branching/ifElseIf.ks");
             optimizationLevel = OptimizationLevel.Minimal;
             IRCodePart codePart = new IRCodePart(_code[0], new List<Safe.Compilation.KS.UserFunction>(), new List<Safe.Compilation.KS.Trigger>());
-            Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyBranch(BlockSequence(codePart.MainCode[0]), null, out Safe.Compilation.Optimization.Passes.BlockOrdering.IfElse branchData);
+            Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyBranch(codePart.MainCode[0], null, out Safe.Compilation.Optimization.Passes.BlockOrdering.BranchData branchData);
             Assert.AreEqual(1, branchData.ifBlock?.ID);
             Assert.AreEqual(3, branchData.elseBlock?.ID);
-            Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyBranch(BlockSequence(branchData.elseBlock), null, out Safe.Compilation.Optimization.Passes.BlockOrdering.IfElse branchData2);
+            Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyBranch(branchData.elseBlock, null, out Safe.Compilation.Optimization.Passes.BlockOrdering.BranchData branchData2);
             Assert.AreEqual(4, branchData2.ifBlock?.ID);
             Assert.IsNull(branchData2.elseBlock);
             Assert.AreSame(branchData.exit, branchData2.exit);
             Assert.AreEqual(5, branchData.exit?.ID);
             Assert.AreEqual(2, codePart.MainCode.
-                Where(b => Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyBranch(BlockSequence(b), null, out _)).Count());
+                Where(b => Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyBranch(b, null, out _)).Count());
         }
         [Test]
         public void TestIfElseIfElseDetection()
@@ -927,19 +927,17 @@ namespace kOS.Safe.Test.Execution
             List<CodePart> _code = CompileCodePart("integration/branching/ifElseIfElse.ks");
             optimizationLevel = OptimizationLevel.Minimal;
             IRCodePart codePart = new IRCodePart(_code[0], new List<Safe.Compilation.KS.UserFunction>(), new List<Safe.Compilation.KS.Trigger>());
-            Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyBranch(BlockSequence(codePart.MainCode[0]), null, out Safe.Compilation.Optimization.Passes.BlockOrdering.IfElse branchData);
+            Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyBranch(codePart.MainCode[0], null, out Safe.Compilation.Optimization.Passes.BlockOrdering.BranchData branchData);
             Assert.AreEqual(1, branchData.ifBlock?.ID);
             Assert.AreEqual(3, branchData.elseBlock?.ID);
-            Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyBranch(BlockSequence(branchData.elseBlock), null, out Safe.Compilation.Optimization.Passes.BlockOrdering.IfElse branchData2);
+            Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyBranch(branchData.elseBlock, null, out Safe.Compilation.Optimization.Passes.BlockOrdering.BranchData branchData2);
             Assert.AreEqual(4, branchData2.ifBlock?.ID);
             Assert.AreEqual(6, branchData2.elseBlock?.ID);
             Assert.AreSame(branchData.exit, branchData2.exit);
             Assert.AreEqual(7, branchData.exit?.ID);
             Assert.AreEqual(2, codePart.MainCode.
-                Where(b => Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyBranch(BlockSequence(b), null, out _)).Count());
+                Where(b => Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyBranch(b, null, out _)).Count());
         }
-        private static Safe.Compilation.Optimization.Passes.BlockOrdering.BlockSequence BlockSequence(BasicBlock block)
-            => new Safe.Compilation.Optimization.Passes.BlockOrdering.BasicBlockSequence(block);
         #endregion
     }
 }

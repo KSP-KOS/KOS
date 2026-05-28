@@ -47,7 +47,6 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             IEnumerable<BasicBlock> GetEdges(BasicBlock block)
                 => block.Successors.Where(inclusionPredicate);
 
-            Queue<BasicBlockSequence> worklist = new Queue<BasicBlockSequence>();
             // If the root itself isn't executable, throw an exception because this will
             // probably break labels somewhere.
             if (!inclusionPredicate(root))
@@ -98,7 +97,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             newOffshoots = new Queue<BasicBlock>();
             while (block != null && block != regionExits.Peek())
             {
-                if (IdentifyLoop(sequence, regionExits.Peek(), out Loop loopData))
+                if (IdentifyLoop(block, regionExits.Peek(), out LoopData loopData))
                 {
                     regionExits.Push(loopData.exit);
                     sequence.Add(ConstructMetaSequence(loopData.body, regionExits, out Queue<BasicBlock> childOffshoots));
@@ -107,7 +106,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         newOffshoots.Enqueue(child);
                     block = loopData.exit;
                 }
-                else if (IdentifyBranch(sequence, regionExits.Peek(), out IfElse branchData))
+                else if (IdentifyBranch(block, regionExits.Peek(), out BranchData branchData))
                 {
                     sequence.Add(ConstructMetaSequence(branchData.ifBlock, regionExits, out Queue<BasicBlock> childOffshoots));
                     foreach (BasicBlock child in childOffshoots)
@@ -135,32 +134,31 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             return sequence;
         }
 
-        public static bool IdentifyLoop(BlockSequence headerBlock, BasicBlock regionExit, out Loop loopData)
+        public static bool IdentifyLoop(BasicBlock headerBlock, BasicBlock regionExit, out LoopData loopData)
         {
-            loopData = new Loop();
-            if (!IdentifyBranch(headerBlock, regionExit, out IfElse branchData))
+            loopData = new LoopData();
+            if (!IdentifyBranch(headerBlock, regionExit, out BranchData branchData))
                 return false;
 
             if (headerBlock.Successors.Count != 2)
                 return false;
 
-            loopData = new Loop(headerBlock.Last, branchData.ifBlock, branchData.exit ?? branchData.elseBlock);
+            loopData = new LoopData(headerBlock, branchData.ifBlock, branchData.exit ?? branchData.elseBlock);
             foreach (BasicBlock successor in headerBlock.Successors)
             {
-                if (BackEdgeDetection(successor, headerBlock.Last))
+                if (BackEdgeDetection(successor, headerBlock))
                     return true;
             }
-            loopData = new Loop();
+            loopData = new LoopData();
             return false;
         }
-        public static bool IdentifyBranch(BlockSequence branchingBlock, BasicBlock regionExit, out IfElse branchData)
+        public static bool IdentifyBranch(BasicBlock branchingBlock, BasicBlock regionExit, out BranchData branchData)
         {
-            branchData = new IfElse();
-            BasicBlock _branchingBlock = branchingBlock.Last;
+            branchData = new BranchData();
 
-            if (_branchingBlock.Instructions.Count == 0)
+            if (branchingBlock.Instructions.Count == 0)
                 return false;
-            if (!(_branchingBlock.Instructions[_branchingBlock.Instructions.Count - 1] is IRBranch branch))
+            if (!(branchingBlock.Instructions[branchingBlock.Instructions.Count - 1] is IRBranch branch))
                 return false;
 
             BasicBlock ifBlock, elseBlock, rejoinsAt;
@@ -175,7 +173,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 elseBlock = branch.False;
             }
 
-            rejoinsAt = FindLocalMerge(_branchingBlock, regionExit);
+            rejoinsAt = FindLocalMerge(branchingBlock, regionExit);
             //rejoinsAt = _branchingBlock.PostDominator;
             //if (rejoinsAt == null || rejoinsAt is SyntheticReturnBlock)
                 //return false;
@@ -188,7 +186,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 elseBlock = null;
                 branch.PreferFalse = !branch.PreferFalse;
             }
-            branchData = new IfElse(_branchingBlock, ifBlock, elseBlock, rejoinsAt);
+            branchData = new BranchData(branchingBlock, ifBlock, elseBlock, rejoinsAt);
             return true;
         }
         private static BasicBlock GetSequenceEnd(BasicBlock block)
@@ -233,13 +231,13 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             return true;
         }
 
-        public readonly struct IfElse
+        public readonly struct BranchData
         {
             public readonly BasicBlock branch;
             public readonly BasicBlock ifBlock;
             public readonly BasicBlock elseBlock;
             public readonly BasicBlock exit;
-            public IfElse(BasicBlock branch, BasicBlock ifBlock, BasicBlock elseBlock, BasicBlock exit)
+            public BranchData(BasicBlock branch, BasicBlock ifBlock, BasicBlock elseBlock, BasicBlock exit)
             {
                 this.branch = branch;
                 this.ifBlock = ifBlock;
@@ -247,12 +245,12 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 this.exit = exit;
             }
         }
-        public readonly struct Loop
+        public readonly struct LoopData
         {
             public readonly BasicBlock header;
             public readonly BasicBlock body;
             public readonly BasicBlock exit;
-            public Loop(BasicBlock header, BasicBlock body, BasicBlock exit)
+            public LoopData(BasicBlock header, BasicBlock body, BasicBlock exit)
             {
                 this.header = header;
                 this.body = body;
