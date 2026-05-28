@@ -31,5 +31,11 @@ namespace kOS.Safe.Compilation.IR
         /// </summary>
         /// <returns><c>true</c> if the operands are equal, otherwise <c>false</c>.</returns>
         bool Equals(IInterimOperand other);
+
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <param name="block">The block within which this instance is being cloned.</param>
+        IInterimOperand Clone(BasicBlock block);
     }
 }

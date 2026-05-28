@@ -30,6 +30,9 @@ namespace kOS.Safe.Compilation.IR
             SourceColumn = sourceColumn;
         }
 
+        public IInterimOperand Clone(BasicBlock _)
+            => this;
+
         public IEnumerable<Opcode> EmitOpcodes()
         {
             yield return new OpcodePush(Name)
@@ -77,6 +80,9 @@ namespace kOS.Safe.Compilation.IR
             SourceLine = sourceLine;
             SourceColumn = sourceColumn;
         }
+
+        public IInterimOperand Clone(BasicBlock _)
+            => this;
 
         public IEnumerable<Opcode> EmitOpcodes()
         {
@@ -159,6 +165,9 @@ namespace kOS.Safe.Compilation.IR
                 throw new ArgumentException($"Names must match: {reference.Name} vs. {Name}");
             references.Add(reference);
         }
+
+        public IInterimOperand Clone(BasicBlock _)
+            => new InterimUnresolvedReference(References, SourceLine, SourceColumn);
 
         public IEnumerable<Opcode> EmitOpcodes()
         {

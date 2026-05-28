@@ -46,6 +46,9 @@ namespace kOS.Safe.Compilation.IR
 
         InterimConstantValue IEvaluatableToConstant.Evaluate()
             => this;
+
+        IInterimOperand IInterimOperand.Clone(BasicBlock _)
+            => this;
     }
 
     public class IRRelocateLater : InterimConstantValue
@@ -90,5 +93,8 @@ namespace kOS.Safe.Compilation.IR
         public IEnumerable<Opcode> EmitOpcodes() => System.Linq.Enumerable.Empty<Opcode>();
         public bool Equals(IInterimOperand other)
             => other == this;
+        // This shouldn't need to be implemented... Shouldn't.
+        public IInterimOperand Clone(BasicBlock _)
+            => throw new NotImplementedException();
     }
 }
