@@ -538,14 +538,17 @@ namespace kOS.Safe.Compilation.IR
             }
             if (other is PhiVariable otherPhi)
             {
-                Dictionary<BasicBlock, SSADefinition> possibleValues = Node.PossibleValues;
+                IEnumerable<BasicBlock> possibleValues = Node.PossibleValues.Keys;
                 Dictionary<BasicBlock, SSADefinition> otherPossibleValues = otherPhi.Node.PossibleValues;
-                return possibleValues.Count == otherPossibleValues.Count &&
-                    possibleValues.Keys.All(
+                possibleValues = possibleValues.Where(key => key.IsExecutable);
+                if (possibleValues.Count() != otherPossibleValues.Where(kvp => kvp.Key.IsExecutable).Count())
+                    return false;
+                
+                return possibleValues.All(
                         key =>
                         otherPossibleValues.ContainsKey(key) &&
-                        (otherPossibleValues[key] == possibleValues[key] ||
-                        otherPossibleValues[key].Equals(possibleValues[key])));
+                        (otherPossibleValues[key] == Node.PossibleValues[key] ||
+                        otherPossibleValues[key].Equals(Node.PossibleValues[key])));
             }
             return false;
         }
@@ -553,6 +556,19 @@ namespace kOS.Safe.Compilation.IR
         public override string ToString()
             => $"{Name} #{ssaIndex}";
     }
+
+    public class SSAReferenceEqualityComparer : IEqualityComparer<SSADefinition>
+    {
+        public static SSAReferenceEqualityComparer Instance =
+            new SSAReferenceEqualityComparer();
+
+        public bool Equals(SSADefinition x, SSADefinition y)
+            => x == y;
+
+        public int GetHashCode(SSADefinition obj)
+            => obj.GetHashCode();
+    }
+
     public class PhiNode : PhiNode<SSADefinition>
     {
         protected override bool ObjIsInvariant(SSADefinition obj)

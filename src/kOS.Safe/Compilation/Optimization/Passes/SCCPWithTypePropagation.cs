@@ -50,7 +50,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         private static Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> MapUsesAndPropagateTypes(IRCodePart codePart)
         {
             Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> variableUses =
-                new Dictionary<SSADefinition, HashSet<IOperandInstructionBase>>();
+                new Dictionary<SSADefinition, HashSet<IOperandInstructionBase>>(SSAReferenceEqualityComparer.Instance);
             HashSet<BasicBlock> visitedBlocks = new HashSet<BasicBlock>();
             Dictionary<SSADefinition, (Type, bool)> typeAndInvarianceCache = new Dictionary<SSADefinition, (Type, bool)>();
 
@@ -156,6 +156,11 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             blockQueue.Enqueue(block.Successors.First());
 
                         block.IsExecutable = true;
+
+                        // With the block marked executable, all the phis based on it may have changed.
+                        // Iterate through them and add those uses to the queue.
+                        foreach (IOperandInstructionBase use in variableUses.Where(kvp => kvp.Key is PhiVariable p && p.Node.PossibleValues.ContainsKey(block)).SelectMany(kvp => kvp.Value))
+                            instructionQueue.Enqueue(use);
                     }
 
                     // Loop over any instructions (or phis) that need updating.
