@@ -242,11 +242,9 @@ namespace kOS.Safe.Compilation.IR
             successor.predecessors.Remove(this);
 
             // Recompute the Dominance tree(s)
-            successor.Dominator = null;
             EstablishDominance();
 
             // Recompute the Post-Dominance tree(s)
-            PostDominator = null;
             successor.EstablishPostDominance();
         }
 
@@ -286,7 +284,11 @@ namespace kOS.Safe.Compilation.IR
             // Map block to index
             Dictionary<BasicBlock, int> index = new Dictionary<BasicBlock, int>();
             for (int i = 0; i < reversePostOrder.Count; i++)
+            {
                 index[reversePostOrder[i]] = i;
+                // Initialize dominators to null.
+                setDominator(reversePostOrder[i], null);
+            }
 
             // Initialize
             reversePostOrder.Remove(root);
@@ -298,13 +300,13 @@ namespace kOS.Safe.Compilation.IR
                 foreach (BasicBlock block in reversePostOrder)
                 {
                     // Pick first predecessor with defined dominator
-                    BasicBlock newIdom = getPrecedents(block).Where(p => p != block).FirstOrDefault
+                    BasicBlock newIdom = getPrecedents(block).Where(p => p != block).Where(index.ContainsKey).FirstOrDefault
                         (p => p == root || getDominator(p) != null);
 
                     if (newIdom == null)
                         continue;
 
-                    foreach (BasicBlock predecessor in getPrecedents(block))
+                    foreach (BasicBlock predecessor in getPrecedents(block).Where(index.ContainsKey))
                     {
                         if (predecessor == newIdom)
                             continue;
