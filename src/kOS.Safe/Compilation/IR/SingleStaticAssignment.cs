@@ -455,6 +455,16 @@ namespace kOS.Safe.Compilation.IR
             }
         }
 
+        private class PhiComparer : IEqualityComparer<(IRScope, SSADefinition)>
+        {
+            public static PhiComparer Instance = new PhiComparer();
+            public bool Equals((IRScope, SSADefinition) x, (IRScope, SSADefinition) y)
+                => x.Item1.Equals(y.Item1) && SSAReferenceEqualityComparer.Instance.Equals(x.Item2, y.Item2);
+
+            public int GetHashCode((IRScope, SSADefinition) obj)
+                => (obj.Item1.GetHashCode(), SSAReferenceEqualityComparer.Instance.GetHashCode(obj.Item2)).GetHashCode();
+        }
+
         private static void BuildPhis(BasicBlock root, IRCodePart codePart, IClosureVariableUser funcOrTrigger)
         {
             Dictionary<BasicBlock, Dictionary<(string Name, IRScope Scope), SSADefinition>> variablesOut =
@@ -492,7 +502,7 @@ namespace kOS.Safe.Compilation.IR
                 foreach (IGrouping<(string Name, IRScope Scope), (BasicBlock Block, IRScope Scope, SSADefinition Variable)> definitionSet in
                     varsIn.GroupBy(v => (v.Variable.Name, v.Scope)))
                 {
-                    if (definitionSet.Select(def => (def.Scope, def.Variable)).Distinct().Skip(1).Any())
+                    if (definitionSet.Select(def => (def.Scope, def.Variable)).Distinct(PhiComparer.Instance).Skip(1).Any())
                     {
                         // Phi required
                         if (!block.Phis.TryGetValue(definitionSet.Key, out PhiNode phiVar))
@@ -540,7 +550,7 @@ namespace kOS.Safe.Compilation.IR
                 {
                     Dictionary<(string, IRScope), SSADefinition> oldDefinition = variablesOut[block];
                     if (oldDefinition.Count == varsOut.Count &&
-                        varsOut.All(kvp => oldDefinition.ContainsKey(kvp.Key) && oldDefinition[kvp.Key].Equals((object)kvp.Value)))
+                        varsOut.All(kvp => oldDefinition.ContainsKey(kvp.Key) && SSAReferenceEqualityComparer.Instance.Equals(oldDefinition[kvp.Key], kvp.Value)))
                         continue;
                 }
 

@@ -305,6 +305,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     => PropagateConstant(operand, constantDef, replacements[constantDef]);
                 foreach (IOperandInstructionBase instruction in ssaUses[constantDef])
                 {
+                    if (instruction is PhiNode)
+                        continue;
                     if (instruction is IRUnaryOp unaryOp &&
                         unaryOp.Operation is OpcodeExists)
                         continue;
@@ -410,7 +412,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         private static IInterimOperand PropagateConstant(IInterimOperand operand, SSADefinition definition, InterimConstantValue constant)
         {
             if (operand is InterimResolvedReference resolvedReference &&
-                resolvedReference.Reference.Equals((object)definition))
+                resolvedReference.Reference.Equals(definition))
             {
                 return constant;
             }

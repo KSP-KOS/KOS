@@ -212,8 +212,8 @@ namespace kOS.Safe.Compilation.IR
         public abstract Type Type { get; }
         public virtual SetState State { get; }
         public IRInstruction AssignedAt { get; }
-        public HashSet<SSADefinition> ReplacedBy { get; } = new HashSet<SSADefinition>();
-        public HashSet<SSADefinition> Replaces { get; } = new HashSet<SSADefinition>();
+        public HashSet<SSADefinition> ReplacedBy { get; } = new HashSet<SSADefinition>(SSAReferenceEqualityComparer.Instance);
+        public HashSet<SSADefinition> Replaces { get; } = new HashSet<SSADefinition>(SSAReferenceEqualityComparer.Instance);
 
         protected SSADefinition(string name)
         {
