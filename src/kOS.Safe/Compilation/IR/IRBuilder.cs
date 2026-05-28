@@ -101,6 +101,19 @@ namespace kOS.Safe.Compilation.IR
             BasicBlock rootBlock = GetBlockFromStartIndex(blocks, 0);
             rootBlock.EstablishDominance();
 
+            List<BasicBlock> exitBlocks = blocks.Where(b => !b.Successors.Any()).ToList();
+            if (exitBlocks.Count == 1)
+            {
+                exitBlocks[0].EstablishPostDominance();
+            }
+            else
+            {
+                BasicBlock unifiedReturn = new SyntheticReturnBlock(codePart);
+                foreach (BasicBlock exitBlock in exitBlocks)
+                    exitBlock.AddSuccessor(unifiedReturn);
+                unifiedReturn.EstablishPostDominance();
+            }
+
             AssignScopes(rootBlock, globalScope, scopePushes, scopePops);
         }
 

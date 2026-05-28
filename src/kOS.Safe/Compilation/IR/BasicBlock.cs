@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe.Compilation.Optimization;
@@ -16,10 +17,15 @@ namespace kOS.Safe.Compilation.IR
         private readonly HashSet<BasicBlock> successors = new HashSet<BasicBlock>();
         private BasicBlock dominator;
         private readonly HashSet<BasicBlock> dominates = new HashSet<BasicBlock>();
+        private BasicBlock postDominator;
+        private readonly HashSet<BasicBlock> postDominates = new HashSet<BasicBlock>();
         private readonly List<IRParameter> parameters = new List<IRParameter>();
         private readonly Stack<IInterimOperand> exitStackState = new Stack<IInterimOperand>();  // Note that this is reversed from the real stack. Just now we don't reverse it four times.
         private readonly string nonSequentialLabel = null;
         private IRScope scope;
+
+        public static void ResetNextID()
+            => nextID = 0;
 
         public IRCodePart CodePart { get; }
         /// <summary>
@@ -145,6 +151,26 @@ namespace kOS.Safe.Compilation.IR
         /// </summary>
         public IReadOnlyCollection<BasicBlock> Dominates => dominates;
         /// <summary>
+        /// Gets the BasicBlock that post-dominates this block. That is,
+        /// the earliest successor that is guaranteed to be
+        /// executed after this block.
+        /// </summary>
+        public BasicBlock PostDominator
+        {
+            get => postDominator;
+            private set
+            {
+                postDominator?.postDominates.Remove(this);
+                postDominator = value;
+                postDominator?.postDominates.Add(this);
+            }
+        }
+        /// <summary>
+        /// Gets the collection of BasicBlocks for which this block is
+        /// the Post-Dominator.
+        /// </summary>
+        public IReadOnlyCollection<BasicBlock> PostDominates => postDominates;
+        /// <summary>
         /// Gets or sets the Extended Basic Block of which this block
         /// is a member.
         /// </summary>
@@ -204,90 +230,122 @@ namespace kOS.Safe.Compilation.IR
         /// Removes a successor block.
         /// </summary>
         /// <param name="successor">The successor block to remove.</param>
-        /// <exception cref="System.ArgumentException">Cannot remove <paramref name="successor"/> as it is not a successor.</exception>
+        /// <exception cref="ArgumentException">Cannot remove <paramref name="successor"/> as it is not a successor.</exception>
         public void RemoveSuccessor(BasicBlock successor)
         {
+            // Break the appropriate links
             if (!successors.Remove(successor))
-                throw new System.ArgumentException($"Cannot remove {successor} as it is not a successor.");
+                throw new ArgumentException($"Cannot remove {successor} as it is not a successor.");
             successor.predecessors.Remove(this);
-            if (successor.predecessors.Count == 0)
-                successor.Dominator = null;
-            else
-                successor.Dominator.EstablishDominance();
+
+            // Recompute the Dominance tree(s)
+            successor.Dominator = null;
+            EstablishDominance();
+
+            // Recompute the Post-Dominance tree(s)
+            PostDominator = null;
+            successor.EstablishPostDominance();
         }
 
+        private static IEnumerable<BasicBlock> GetSuccessors(BasicBlock block)
+            => block.successors;
+        private static BasicBlock GetDominator(BasicBlock block)
+            => block.Dominator;
+        private static void SetDominator(BasicBlock block, BasicBlock dominator)
+            => block.Dominator = dominator;
+
         /// <summary>
-        /// Establishes the dominance tree. This must be called on the
-        /// root block, or the root of the branch that needs
-        /// re-establishment.
+        /// Establishes the dominance tree.
         /// </summary>
         public void EstablishDominance()
+            => EstablishDominanceCore(this, GetPredecessors, GetSuccessors, GetDominator, SetDominator);
+
+        private static IEnumerable<BasicBlock> GetPredecessors(BasicBlock block)
+            => block.predecessors;
+        private static BasicBlock GetPostDominator(BasicBlock block)
+            => block.PostDominator;
+        private static void SetPostDominator(BasicBlock block, BasicBlock postDominator)
+            => block.PostDominator = postDominator;
+
+        /// <summary>
+        /// Establishes the post-dominance tree.
+        public void EstablishPostDominance()
+            => EstablishDominanceCore(this, GetSuccessors, GetPredecessors, GetPostDominator, SetPostDominator);
+
+        private static void EstablishDominanceCore(BasicBlock root, Func<BasicBlock, IEnumerable<BasicBlock>> getPrecedents, Func<BasicBlock, IEnumerable<BasicBlock>> getSubsequents, Func<BasicBlock, BasicBlock> getDominator, Action<BasicBlock, BasicBlock> setDominator)
         {
+            while (getDominator(root) != null)
+                root = getDominator(root);
+
             // Compute reverse postorder
-            var postorder = new List<BasicBlock>();
-            var visited = new HashSet<BasicBlock>();
-            DepthFirstSearch(this, visited, postorder);
-            
-            postorder.Reverse();
+            List<BasicBlock> reversePostOrder = GetReversePostOrder(root, getSubsequents);
 
             // Map block to index
             Dictionary<BasicBlock, int> index = new Dictionary<BasicBlock, int>();
-            for (int i = 0; i < postorder.Count; i++)
-                index[postorder[i]] = i;
+            for (int i = 0; i < reversePostOrder.Count; i++)
+                index[reversePostOrder[i]] = i;
 
             // Initialize
-            postorder.Remove(this);
+            reversePostOrder.Remove(root);
             bool changed = true;
             while (changed)
             {
                 changed = false;
 
-                foreach (BasicBlock block in postorder)
+                foreach (BasicBlock block in reversePostOrder)
                 {
                     // Pick first predecessor with defined dominator
-                    BasicBlock newIdom = block.predecessors.Where(p => p != block).FirstOrDefault
-                        (p => p == this || p.Dominator != null);
+                    BasicBlock newIdom = getPrecedents(block).Where(p => p != block).FirstOrDefault
+                        (p => p == root || getDominator(p) != null);
 
                     if (newIdom == null)
                         continue;
 
-                    foreach (BasicBlock predecessor in block.predecessors)
+                    foreach (BasicBlock predecessor in getPrecedents(block))
                     {
                         if (predecessor == newIdom)
                             continue;
 
-                        if (predecessor.Dominator != null)
-                            newIdom = Intersect(predecessor, newIdom, index);
+                        if (getDominator(predecessor) != null)
+                            newIdom = Intersect(predecessor, newIdom, index, getDominator);
                     }
 
-                    if (block.Dominator != newIdom)
+                    if (getDominator(block) != newIdom)
                     {
-                        block.Dominator = newIdom;
+                        setDominator(block, newIdom);
                         changed = true;
                     }
                 }
             }
         }
-        private static BasicBlock Intersect(BasicBlock b1, BasicBlock b2, Dictionary<BasicBlock, int> index)
+        private static BasicBlock Intersect(BasicBlock b1, BasicBlock b2, Dictionary<BasicBlock, int> index, Func<BasicBlock, BasicBlock> getDominator)
         {
             while (b1 != b2)
             {
                 while (index[b1] > index[b2])
-                    b1 = b1.Dominator;
+                    b1 = getDominator(b1);
 
                 while (index[b2] > index[b1])
-                    b2 = b2.Dominator;
+                    b2 = getDominator(b2);
             }
 
             return b1;
         }
-        private static void DepthFirstSearch(BasicBlock block, HashSet<BasicBlock> visited, List<BasicBlock> postorder)
+        public static List<BasicBlock> GetReversePostOrder(BasicBlock root, Func<BasicBlock, IEnumerable<BasicBlock>> getEdges)
+        {
+            List<BasicBlock> result = new List<BasicBlock>();
+            HashSet<BasicBlock> visited = new HashSet<BasicBlock>();
+            DepthFirstSearch(root, visited, result, getEdges);
+            result.Reverse();
+            return result;
+        }
+        private static void DepthFirstSearch(BasicBlock block, HashSet<BasicBlock> visited, List<BasicBlock> postorder, Func<BasicBlock, IEnumerable<BasicBlock>> getEdges)
         {
             if (!visited.Add(block))
                 return;
 
-            foreach (BasicBlock successor in block.successors)
-                DepthFirstSearch(successor, visited, postorder);
+            foreach (BasicBlock successor in getEdges(block))
+                DepthFirstSearch(successor, visited, postorder, getEdges);
 
             postorder.Add(block);
         }
@@ -378,6 +436,13 @@ namespace kOS.Safe.Compilation.IR
             }
             if (addedFallthrough)
                 Instructions.Remove(FallthroughJump);
+        }
+    }
+
+    public sealed class SyntheticReturnBlock : BasicBlock
+    {
+        public SyntheticReturnBlock(IRCodePart codePart) : base(codePart, -1, -1, "syntheticReturn")
+        {
         }
     }
 }
