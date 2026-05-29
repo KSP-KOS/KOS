@@ -7,6 +7,7 @@ namespace kOS.Safe.Compilation.IR
     /// </summary>
     public interface IResultingInstruction : IEvaluatableToConstant, IInterimOperand
     {
+        ushort OpcodeCount { get; }
     }
 
     public interface IEvaluatableToConstant

@@ -978,5 +978,37 @@ namespace kOS.Safe.Test.Execution
             Assert.IsInstanceOf(typeof(OpcodeBranchIfFalse), opcodes[22]);
         }
         #endregion
+
+        [Test]
+        public void TestCommonExpressionElimination()
+        {
+            // Test that common expressions are eliminated
+            optimizationLevel = OptimizationLevel.Balanced;
+            RunScript("integration/commonExpressionElimination.ks");
+            RunSingleStep();
+            AssertOutput(
+                "1.72624326996796",
+                "1.72624326996796",
+                "1.72624326996796",
+                "1.72624326996796",
+                "1.54356862955893",
+                "1.54356862955893",
+                "1.54356862955893",
+                "Outside",
+                "1.54356862955893"
+            );
+
+            optimizationLevel = OptimizationLevel.None;
+            List<CodePart> codePart = CompileCodePart("integration/commonExpressionElimination.ks");
+            List<Safe.Compilation.Opcode> result = GetOpcodesAfterOptimization(codePart[0].MainCode, OptimizationLevel.Balanced, false);
+            optimizationLevel = OptimizationLevel.Minimal;
+
+            Assert.IsInstanceOf<OpcodeStoreLocal>(result[18]);
+            Assert.IsInstanceOf<OpcodePush>(result[25]);
+            Assert.IsInstanceOf<OpcodeCall>(result[26]);
+            Assert.IsInstanceOf<OpcodePush>(result[63]);
+            Assert.IsInstanceOf<OpcodePush>(result[64]);
+            Assert.IsInstanceOf<OpcodeMathAdd>(result[65]);
+        }
     }
 }

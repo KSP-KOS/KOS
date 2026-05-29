@@ -23,13 +23,14 @@ namespace kOS.Safe.Compilation
      *          Branch logical simplification (e.g. !X branch = X branch!)
      *          Algebraic simplification (e.g. A*B+A*C = A*(B+C), A+-B=A-B, A--B=A+B, -A+B=B-A, X*X*...*X=N^X)
      *  32000. Remove unnecessary scope pushes/pops
-     *  32767. Block ordering to minimize unconditional jumps.
+     *  32767. Block ordering to minimize unconditional jumps. Also removes blocks that are not executable.
      *  
      * O2:
      * -10000. Loop condition reorganization
      *  1000. Common expression elimination
      *          Particularly: Any expression of 3 opcodes used more than twice,
      *          or any expression of >3 opcodes used more than once
+     *  
      *  2100. Code motion - moving expressions outside loops if they do not depend on loop variables
      *  2150. Carry's - moving the N-1 D lookup of >1D lists outside the innermost loop
      *  Loop jamming? (Combining adjacent loops into one)

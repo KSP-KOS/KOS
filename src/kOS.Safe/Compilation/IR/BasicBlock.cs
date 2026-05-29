@@ -248,7 +248,7 @@ namespace kOS.Safe.Compilation.IR
             successor.EstablishPostDominance();
         }
 
-        private static IEnumerable<BasicBlock> GetSuccessors(BasicBlock block)
+        public static IEnumerable<BasicBlock> GetSuccessors(BasicBlock block)
             => block.successors;
         private static BasicBlock GetDominator(BasicBlock block)
             => block.Dominator;
@@ -261,7 +261,7 @@ namespace kOS.Safe.Compilation.IR
         public void EstablishDominance()
             => EstablishDominanceCore(this, GetPredecessors, GetSuccessors, GetDominator, SetDominator);
 
-        private static IEnumerable<BasicBlock> GetPredecessors(BasicBlock block)
+        public static IEnumerable<BasicBlock> GetPredecessors(BasicBlock block)
             => block.predecessors;
         private static BasicBlock GetPostDominator(BasicBlock block)
             => block.PostDominator;

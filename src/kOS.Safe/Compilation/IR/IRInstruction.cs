@@ -164,6 +164,22 @@ namespace kOS.Safe.Compilation.IR
                 }
             }
         }
+        public ushort OpcodeCount
+        {
+            get
+            {
+                ushort result = 1;
+                if (Left is IResultingInstruction left)
+                    result += left.OpcodeCount;
+                else
+                    result += 1;
+                if (Right is IResultingInstruction right)
+                    result += right.OpcodeCount;
+                else
+                    result += 1;
+                return result;
+            }
+        }
 
         protected override IInterimOperand this[int index]
         {
@@ -340,6 +356,19 @@ namespace kOS.Safe.Compilation.IR
                 }
             }
         }
+        public ushort OpcodeCount
+        {
+            get
+            {
+                ushort result = 1;
+                if (Operand is IResultingInstruction resulting)
+                    result += resulting.OpcodeCount;
+                else
+                    result += 1;
+                return result;
+            }
+        }
+
         public IRUnaryOp(BasicBlock block, Opcode operation, IInterimOperand operand) : base(operation, block)
         {
             Operation = operation;
@@ -482,6 +511,7 @@ namespace kOS.Safe.Compilation.IR
                 }
             }
         }
+        public ushort OpcodeCount => 1;
 
         public IRNonVarPush(BasicBlock block, Opcode opcode) : base(opcode, block)
         {
@@ -508,6 +538,18 @@ namespace kOS.Safe.Compilation.IR
         public IInterimOperand Object { get => operand; set => operand = value; }
         public string Suffix { get; set; }
         public Type Type => TypeInferencer.GetTypeForSuffix(Object.Type, Suffix);
+        public ushort OpcodeCount
+        {
+            get
+            {
+                ushort result = 1;
+                if (Object is IResultingInstruction obj)
+                    result += obj.OpcodeCount;
+                else
+                    result += 1;
+                return result;
+            }
+        }
         public IRSuffixGet(BasicBlock block, IInterimOperand obj, OpcodeGetMember opcodeGetMember) : base(opcodeGetMember, block)
         {
             Object = obj;
@@ -628,6 +670,22 @@ namespace kOS.Safe.Compilation.IR
         public override IEnumerable<IInterimOperand> Operands { get { yield return Object; yield return Index; } }
         public override int OperandCount => 2;
         public Type Type => TypeInferencer.GetTypeForIndex(Object.Type);
+        public ushort OpcodeCount
+        {
+            get
+            {
+                ushort result = 1;
+                if (Object is IResultingInstruction obj)
+                    result += obj.OpcodeCount;
+                else
+                    result += 1;
+                if (Index is IResultingInstruction index)
+                    result += index.OpcodeCount;
+                else
+                    result += 1;
+                return result;
+            }
+        }
         protected override IInterimOperand this[int index]
         {
             get => index == 0 ? Object : index == 1 ? Index : throw new ArgumentOutOfRangeException();
@@ -838,6 +896,22 @@ namespace kOS.Safe.Compilation.IR
         public override IEnumerable<IInterimOperand> Operands => Enumerable.Reverse(Arguments);
         public override int OperandCount => Arguments.Count;
         public Type Type => GetDefaultReturnType();
+        public ushort OpcodeCount
+        {
+            get
+            {
+                ushort result = 2;
+                if (IndirectMethod is IResultingInstruction method)
+                    result += method.OpcodeCount;
+                else
+                    result += 1;
+                foreach (IInterimOperand argument in Arguments)
+                    if (argument is IResultingInstruction arg)
+                        result += arg.OpcodeCount;
+                    else result += 1;
+                return result;
+            }
+        }
         protected override IInterimOperand this[int index]
         {
             get => Arguments[index];
@@ -852,7 +926,7 @@ namespace kOS.Safe.Compilation.IR
             Direct = opcode.Direct;
             EmitArgMarker = emitArgMarker;
         }
-        private bool IsCallInvariant()
+        public bool IsCallInvariant()
         {
             // TODO: Consider that some suffix methods may actually be known at compile time.
             IRCodePart.IRFunction function = Block?.CodePart?.GetFunction(this);
