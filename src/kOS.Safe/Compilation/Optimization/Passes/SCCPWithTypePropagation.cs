@@ -251,11 +251,19 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             return false;
         }
 
-        private static TValue GetOrCreate<TKey, TValue>(Dictionary<TKey, TValue> dictionary, TKey key) where TValue : new()
+        private static HashSet<IOperandInstructionBase> GetOrCreate(Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> dictionary, SSADefinition key)
         {
-            if (!dictionary.TryGetValue(key, out TValue value))
-                value = dictionary[key] = new TValue();
+            if (!dictionary.TryGetValue(key, out HashSet<IOperandInstructionBase> value))
+                value = dictionary[key] = new HashSet<IOperandInstructionBase>(ReferenceEqualityComparer.Instance);
             return value;
+        }
+        private class ReferenceEqualityComparer : IEqualityComparer<IOperandInstructionBase>
+        {
+            public static ReferenceEqualityComparer Instance = new ReferenceEqualityComparer();
+            public bool Equals(IOperandInstructionBase x, IOperandInstructionBase y)
+                => x == y;
+            public int GetHashCode(IOperandInstructionBase obj)
+                => obj.GetHashCode();
         }
 
         /// <summary>

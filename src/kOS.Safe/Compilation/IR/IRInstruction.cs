@@ -300,7 +300,7 @@ namespace kOS.Safe.Compilation.IR
             return false;
         }
         public override int GetHashCode()
-            => Operation.GetHashCode();
+            => Operation.GetType().GetHashCode();
 
         public InterimConstantValue Evaluate()
         {
@@ -370,7 +370,7 @@ namespace kOS.Safe.Compilation.IR
                 Operation.GetType() == unaryOp.Operation.GetType() &&
                 Operand.Equals(unaryOp.Operand);
         public override int GetHashCode()
-            => (Operation, Operand).GetHashCode();
+            => (Operation.GetType(), Operand).GetHashCode();
 
         public InterimConstantValue Evaluate()
         {
