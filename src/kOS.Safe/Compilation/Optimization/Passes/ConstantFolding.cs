@@ -228,6 +228,11 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         if (instruction.Left.Equals(instruction.Right))
                             return new InterimConstantValue(Encapsulation.ScalarIntValue.One, instruction);
                         break;
+                    case OpcodeMathSubtract _:
+                        // X - X = 0
+                        if (instruction.Left.Equals(instruction.Right))
+                            return new InterimConstantValue(Encapsulation.ScalarIntValue.Zero, instruction);
+                        break;
                 }
             }
             return instruction;
