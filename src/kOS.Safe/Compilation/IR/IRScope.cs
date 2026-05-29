@@ -129,7 +129,7 @@ namespace kOS.Safe.Compilation.IR
                 return true;
             if (scope.childScopes.Contains(this))
                 return true;
-            return IsGlobalScope || ParentScope.IsEncompassedBy(scope);
+            return !IsGlobalScope && ParentScope.IsEncompassedBy(scope);
         }
 
         public IRScope GetGlobalScope()
