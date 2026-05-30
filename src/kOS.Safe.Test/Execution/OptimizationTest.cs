@@ -12,7 +12,8 @@ namespace kOS.Safe.Test.Execution
     public class OptimizationTest : BaseIntegrationTest
     {
         protected override OptimizationLevel OptimizationLevel => optimizationLevel;
-        protected OptimizationLevel optimizationLevel = OptimizationLevel.Minimal;
+        protected OptimizationLevel optimizationLevel = OptimizationLevel.Balanced;
+        protected OptimizationLevel resetOptimizationLevel = OptimizationLevel.Balanced;
 
         protected List<CodePart> CompileCodePart(string fileName)
         {
@@ -47,13 +48,26 @@ namespace kOS.Safe.Test.Execution
             return result.MainCode;
         }
 
+        protected void EnsureAtLeastLevel(OptimizationLevel level)
+        {
+            if (optimizationLevel < level)
+                optimizationLevel = level;
+        }
+
+        [SetUp]
+        public void ResetOptimizationBases()
+        {
+            BasicBlock.ResetNextID();
+            optimizationLevel = resetOptimizationLevel;
+            Safe.Compilation.Optimization.Optimizer.PassesToSkip.Clear();
+        }
+
         #region Holistic Tests
         [Test]
         public void TestSSA()
         {
             optimizationLevel = OptimizationLevel.None;
             List<CodePart> _code = CompileCodePart("integration/blank.ks");
-            optimizationLevel = OptimizationLevel.Minimal;
             IRCodePart codePart = new IRCodePart(_code[0], new List<Safe.Compilation.KS.UserFunction>(), new List<Safe.Compilation.KS.Trigger>());
             BasicBlock block = codePart.MainCode[0];
             List<IRInstruction> instructions = new List<IRInstruction>
@@ -832,14 +846,14 @@ namespace kOS.Safe.Test.Execution
             BasicBlock.ResetNextID();
             optimizationLevel = OptimizationLevel.None;
             List<CodePart> _code = CompileCodePart("integration/branching/until.ks");
-            optimizationLevel = OptimizationLevel.Minimal;
+            ResetOptimizationBases();
             IRCodePart codePart = new IRCodePart(_code[0], new List<Safe.Compilation.KS.UserFunction>(), new List<Safe.Compilation.KS.Trigger>());
             Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyLoop(codePart.MainCode[1], null, out Safe.Compilation.Optimization.Passes.BlockOrdering.LoopData loopData);
             Assert.AreEqual(2, loopData.body?.ID);
             Assert.AreEqual(4, loopData.exit?.ID);
             Assert.AreEqual(1, codePart.MainCode.
                 Where(b => Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyLoop(b, null, out _)).Count());
-            var optimizer = new Safe.Compilation.Optimization.Optimizer(new CompilerOptions() { OptimizationLevel = optimizationLevel });
+            var optimizer = new Safe.Compilation.Optimization.Optimizer(new CompilerOptions() { OptimizationLevel = OptimizationLevel });
             optimizer.Optimize(codePart);
         }
         [Test]
@@ -848,7 +862,6 @@ namespace kOS.Safe.Test.Execution
             BasicBlock.ResetNextID();
             optimizationLevel = OptimizationLevel.None;
             List<CodePart> _code = CompileCodePart("integration/branching/for.ks");
-            optimizationLevel = OptimizationLevel.Minimal;
             IRCodePart codePart = new IRCodePart(_code[0], new List<Safe.Compilation.KS.UserFunction>(), new List<Safe.Compilation.KS.Trigger>());
             Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyLoop(codePart.MainCode[2], null, out Safe.Compilation.Optimization.Passes.BlockOrdering.LoopData loopData);
             Assert.AreEqual(3, loopData.body?.ID);
@@ -862,7 +875,6 @@ namespace kOS.Safe.Test.Execution
             BasicBlock.ResetNextID();
             optimizationLevel = OptimizationLevel.None;
             List<CodePart> _code = CompileCodePart("integration/branching/from.ks");
-            optimizationLevel = OptimizationLevel.Minimal;
             IRCodePart codePart = new IRCodePart(_code[0], new List<Safe.Compilation.KS.UserFunction>(), new List<Safe.Compilation.KS.Trigger>());
             Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyLoop(codePart.MainCode[2], null, out Safe.Compilation.Optimization.Passes.BlockOrdering.LoopData loopData);
             Assert.AreEqual(3, loopData.body?.ID);
@@ -876,7 +888,6 @@ namespace kOS.Safe.Test.Execution
             BasicBlock.ResetNextID();
             optimizationLevel = OptimizationLevel.None;
             List<CodePart> _code = CompileCodePart("integration/branching/if.ks");
-            optimizationLevel = OptimizationLevel.Minimal;
             IRCodePart codePart = new IRCodePart(_code[0], new List<Safe.Compilation.KS.UserFunction>(), new List<Safe.Compilation.KS.Trigger>());
             Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyBranch(codePart.MainCode[0], null, out Safe.Compilation.Optimization.Passes.BlockOrdering.BranchData branchData);
             Assert.AreEqual(1, branchData.ifBlock?.ID);
@@ -891,7 +902,6 @@ namespace kOS.Safe.Test.Execution
             BasicBlock.ResetNextID();
             optimizationLevel = OptimizationLevel.None;
             List<CodePart> _code = CompileCodePart("integration/branching/ifElse.ks");
-            optimizationLevel = OptimizationLevel.Minimal;
             IRCodePart codePart = new IRCodePart(_code[0], new List<Safe.Compilation.KS.UserFunction>(), new List<Safe.Compilation.KS.Trigger>());
             Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyBranch(codePart.MainCode[0], null, out Safe.Compilation.Optimization.Passes.BlockOrdering.BranchData branchData);
             Assert.AreEqual(1, branchData.ifBlock?.ID);
@@ -906,7 +916,6 @@ namespace kOS.Safe.Test.Execution
             BasicBlock.ResetNextID();
             optimizationLevel = OptimizationLevel.None;
             List<CodePart> _code = CompileCodePart("integration/branching/ifElseIf.ks");
-            optimizationLevel = OptimizationLevel.Minimal;
             IRCodePart codePart = new IRCodePart(_code[0], new List<Safe.Compilation.KS.UserFunction>(), new List<Safe.Compilation.KS.Trigger>());
             Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyBranch(codePart.MainCode[0], null, out Safe.Compilation.Optimization.Passes.BlockOrdering.BranchData branchData);
             Assert.AreEqual(1, branchData.ifBlock?.ID);
@@ -925,7 +934,6 @@ namespace kOS.Safe.Test.Execution
             BasicBlock.ResetNextID();
             optimizationLevel = OptimizationLevel.None;
             List<CodePart> _code = CompileCodePart("integration/branching/ifElseIfElse.ks");
-            optimizationLevel = OptimizationLevel.Minimal;
             IRCodePart codePart = new IRCodePart(_code[0], new List<Safe.Compilation.KS.UserFunction>(), new List<Safe.Compilation.KS.Trigger>());
             Safe.Compilation.Optimization.Passes.BlockOrdering.IdentifyBranch(codePart.MainCode[0], null, out Safe.Compilation.Optimization.Passes.BlockOrdering.BranchData branchData);
             Assert.AreEqual(1, branchData.ifBlock?.ID);
@@ -944,9 +952,8 @@ namespace kOS.Safe.Test.Execution
         [Test]
         public void TestUntilLoopCondition()
         {
-            optimizationLevel = OptimizationLevel.Balanced;
+            EnsureAtLeastLevel(OptimizationLevel.Balanced);
             List<CodePart> _code = CompileCodePart("integration/branching/until.ks");
-            optimizationLevel = OptimizationLevel.Minimal;
             List<Safe.Compilation.Opcode> opcodes = _code[0].MainCode;
             Assert.AreEqual(opcodes[4].ToString(), opcodes[10].ToString());
             Assert.IsInstanceOf(typeof(OpcodeBranchIfTrue), opcodes[5]);
@@ -955,9 +962,8 @@ namespace kOS.Safe.Test.Execution
         [Test]
         public void TestForLoopCondition()
         {
-            optimizationLevel = OptimizationLevel.Balanced;
+            EnsureAtLeastLevel(OptimizationLevel.Balanced);
             List<CodePart> _code = CompileCodePart("integration/branching/for.ks");
-            optimizationLevel = OptimizationLevel.Minimal;
             List<Safe.Compilation.Opcode> opcodes = _code[0].MainCode;
             Assert.AreEqual(opcodes[8].ToString(), opcodes[15].ToString());
             Assert.AreEqual(opcodes[9].ToString(), opcodes[16].ToString());
@@ -967,9 +973,10 @@ namespace kOS.Safe.Test.Execution
         [Test]
         public void TestFromLoopCondition()
         {
-            optimizationLevel = OptimizationLevel.Balanced;
+            EnsureAtLeastLevel(OptimizationLevel.Balanced);
+            Safe.Compilation.Optimization.Optimizer.PassesToSkip.Add(typeof(Safe.Compilation.Optimization.Passes.ConstantFolding));
+            Safe.Compilation.Optimization.Optimizer.PassesToSkip.Add(typeof(Safe.Compilation.Optimization.Passes.SCCPWithTypePropagation));
             List<CodePart> _code = CompileCodePart("integration/branching/from.ks");
-            optimizationLevel = OptimizationLevel.Minimal;
             List<Safe.Compilation.Opcode> opcodes = _code[0].MainCode;
             Assert.AreEqual(opcodes[7].ToString(), opcodes[19].ToString());
             Assert.AreEqual(opcodes[8].ToString(), opcodes[20].ToString());
@@ -983,7 +990,7 @@ namespace kOS.Safe.Test.Execution
         public void TestCommonExpressionElimination()
         {
             // Test that common expressions are eliminated
-            optimizationLevel = OptimizationLevel.Balanced;
+            EnsureAtLeastLevel(OptimizationLevel.Balanced);
             RunScript("integration/commonExpressionElimination.ks");
             RunSingleStep();
             AssertOutput(
@@ -1001,7 +1008,6 @@ namespace kOS.Safe.Test.Execution
             optimizationLevel = OptimizationLevel.None;
             List<CodePart> codePart = CompileCodePart("integration/commonExpressionElimination.ks");
             List<Safe.Compilation.Opcode> result = GetOpcodesAfterOptimization(codePart[0].MainCode, OptimizationLevel.Balanced, false);
-            optimizationLevel = OptimizationLevel.Minimal;
 
             Assert.IsInstanceOf<OpcodeStoreLocal>(result[18]);
             Assert.IsInstanceOf<OpcodePush>(result[25]);

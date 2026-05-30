@@ -25,7 +25,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         {
             codePart.VariableUses = MapUsesAndPropagateTypes(codePart);
 
-            if (Optimizer.OptimizationLevel == OptimizationLevel.None)
+            if (Optimizer.OptimizationLevel == OptimizationLevel.None ||
+                Optimizer.PassesToSkip.Contains(typeof(SCCPWithTypePropagation)))
                 return;
 
             HashSet<SSADefinition> usedDefinitions = PropagateConstants(codePart.VariableUses);

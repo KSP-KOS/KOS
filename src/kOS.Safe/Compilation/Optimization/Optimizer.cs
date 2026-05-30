@@ -103,6 +103,13 @@ namespace kOS.Safe.Compilation.Optimization
                 if (pass.OptimizationLevel > OptimizationLevel)
                     continue;
 
+                if (PassesToSkip.Contains(pass.GetType()))
+                {
+                    if (!(pass is Passes.SCCPWithTypePropagation ||
+                        pass is SingleStaticAssignment))
+                        continue;
+                }
+
                 SafeHouse.Logger.Log($"Applying optimization pass: {pass.GetType()}.");
                 switch (pass)
                 {
