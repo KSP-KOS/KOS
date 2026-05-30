@@ -58,6 +58,12 @@ namespace kOS.Safe.Compilation.IR
 
         public void MutateEachOperand(Func<IInterimOperand, IInterimOperand> mutateFunc)
             => operand = mutateFunc(operand);
+
+        public bool AnyOperand(Func<IInterimOperand, bool> predicate)
+            => predicate(operand);
+
+        public bool AllOperands(Func<IInterimOperand, bool> predicate)
+            => predicate(operand);
     }
     public abstract class MultipleOperandInstruction : IRInstruction, IMultipleOperandInstruction
     {
@@ -82,6 +88,22 @@ namespace kOS.Safe.Compilation.IR
         {
             for (int i = 0; i < OperandCount; i++)
                 this[i] = mutateFunc(this[i]);
+        }
+
+        public bool AnyOperand(Func<IInterimOperand, bool> predicate)
+        {
+            for (int i = 0; i < OperandCount; i++)
+                if (predicate(this[i]))
+                    return true;
+            return false;
+        }
+
+        public bool AllOperands(Func<IInterimOperand, bool> predicate)
+        {
+            for (int i = 0; i < OperandCount; i++)
+                if (!predicate(this[i]))
+                    return false;
+            return true;
         }
     }
 

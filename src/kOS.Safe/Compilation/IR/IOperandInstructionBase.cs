@@ -18,6 +18,20 @@ namespace kOS.Safe.Compilation.IR
         /// </summary>
         /// <param name="mutateFunc">The mutation function.</param>
         void MutateEachOperand(Func<IInterimOperand, IInterimOperand> mutateFunc);
+
+        /// <summary>
+        /// Checks if any operand meets the supplied predicate.
+        /// </summary>
+        /// <param name="predicate">The predicate.</param>
+        /// <returns><c>true</c> if any operand matches the predicate, otherwise <c>false</c>.</returns>
+        bool AnyOperand(Func<IInterimOperand, bool> predicate);
+
+        /// <summary>
+        /// Checks if all operands meet the supplied predicate.
+        /// </summary>
+        /// <param name="predicate">The predicate.</param>
+        /// <returns><c>true</c> if all operands match the predicate, otherwise <c>false</c>.</returns>
+        bool AllOperands(Func<IInterimOperand, bool> predicate);
     }
 
     /// <summary>

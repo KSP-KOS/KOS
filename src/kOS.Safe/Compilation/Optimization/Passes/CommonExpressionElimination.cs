@@ -196,6 +196,18 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 if (Value is IOperandInstructionBase operandInstruction)
                     operandInstruction.MutateEachOperand(mutateFunc);
             }
+            public bool AnyOperand(Func<IInterimOperand, bool> predicate)
+            {
+                if (Value is IOperandInstructionBase operandInstruction)
+                    return operandInstruction.AnyOperand(predicate);
+                return false;
+            }
+            public bool AllOperands(Func<IInterimOperand, bool> predicate)
+            {
+                if (Value is IOperandInstructionBase operandInstruction)
+                    return operandInstruction.AllOperands(predicate);
+                return false;
+            }
 
             public override string ToString()
                 => Definition.ToString();

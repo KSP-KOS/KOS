@@ -466,19 +466,25 @@ namespace kOS.Safe.Compilation.IR
 
         public void ForEachOperand(Action<IInterimOperand> action)
         {
-            action(new InterimResolvedReference(Preceding, 0, 0));
-            action(new InterimResolvedReference(Succeeding, 0, 0));
+            action(new InterimResolvedReference(Preceding, -1, -1));
+            action(new InterimResolvedReference(Succeeding, -1, -1));
         }
         public void MutateEachOperand(Func<IInterimOperand, IInterimOperand> mutateFunc)
         {
             Preceding = Mutate(mutateFunc, Preceding);
             Succeeding = Mutate(mutateFunc, Succeeding);
         }
+        public bool AnyOperand(Func<IInterimOperand, bool> predicate)
+            => EvaluatePredicate(predicate, Preceding) || EvaluatePredicate(predicate, Succeeding);
+        public bool AllOperands(Func<IInterimOperand, bool> predicate)
+            => EvaluatePredicate(predicate, Preceding) && EvaluatePredicate(predicate, Succeeding);
         private static SSADefinition Mutate(Func<IInterimOperand, IInterimOperand> func, SSADefinition definition)
         {
-            IInterimOperand result = func(new InterimResolvedReference(definition, 0, 0));
+            IInterimOperand result = func(new InterimResolvedReference(definition, -1, -1));
             return ((InterimResolvedReference)result).Reference;
         }
+        private static bool EvaluatePredicate(Func<IInterimOperand, bool> predicate, SSADefinition definition)
+            => predicate(new InterimResolvedReference(definition, -1, -1));
         public override InterimConstantValue Evaluate()
         {
             if (!IsInvariant)
@@ -607,17 +613,13 @@ namespace kOS.Safe.Compilation.IR
         protected override InterimConstantValue EvaluateObj(SSADefinition obj)
             => obj.Evaluate();
 
-        protected override void ForEachOperand(Action<IInterimOperand> action)
-        {
-            foreach (SSADefinition variable in PossibleValues.Values)
-                action(new InterimResolvedReference(variable, -1, -1));
-        }
-
         protected override void MutateEachOperand(Func<IInterimOperand, IInterimOperand> mutateFunc)
         {
             foreach (BasicBlock block in PossibleValues.Keys)
                 PossibleValues[block] = ((InterimResolvedReference)mutateFunc(new InterimResolvedReference(PossibleValues[block], -1, -1))).Reference;
         }
+        protected override IInterimOperand ValueAsOperand(SSADefinition item)
+            => new InterimResolvedReference(item, -1, -1);
 
     }
     public class PhiOperand : PhiNode<IInterimOperand>, IEvaluatableToConstant
@@ -638,16 +640,13 @@ namespace kOS.Safe.Compilation.IR
         protected override InterimConstantValue EvaluateObj(IInterimOperand obj)
             => (obj as IEvaluatableToConstant)?.Evaluate();
 
-        protected override void ForEachOperand(Action<IInterimOperand> action)
-        {
-            foreach (IInterimOperand operand in PossibleValues.Values)
-                action(operand);
-        }
         protected override void MutateEachOperand(Func<IInterimOperand, IInterimOperand> mutateFunc)
         {
             foreach (BasicBlock block in PossibleValues.Keys)
                 PossibleValues[block] = mutateFunc(PossibleValues[block]);
         }
+        protected override IInterimOperand ValueAsOperand(IInterimOperand item)
+            => item;
     }
     public abstract class PhiNode<T> : IMultipleOperandInstruction
     {
@@ -719,11 +718,17 @@ namespace kOS.Safe.Compilation.IR
         }
 
         void IOperandInstructionBase.ForEachOperand(Action<IInterimOperand> action)
-            => ForEachOperand(action);
-        protected abstract void ForEachOperand(Action<IInterimOperand> action);
-
+        {
+            foreach (T item in PossibleValues.Values)
+                action(ValueAsOperand(item));
+        }
         void IOperandInstructionBase.MutateEachOperand(Func<IInterimOperand, IInterimOperand> mutateFunc)
             => MutateEachOperand(mutateFunc);
         protected abstract void MutateEachOperand(Func<IInterimOperand, IInterimOperand> mutateFunc);
+        bool IOperandInstructionBase.AnyOperand(Func<IInterimOperand, bool> predicate)
+            => PossibleValues.Values.Select(ValueAsOperand).Any(predicate);
+        bool IOperandInstructionBase.AllOperands(Func<IInterimOperand, bool> predicate)
+            => PossibleValues.Values.Select(ValueAsOperand).All(predicate);
+        protected abstract IInterimOperand ValueAsOperand(T item);
     }
 }
