@@ -225,6 +225,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 
         private static IRBinaryOp DistributeMultiplication(IRBinaryOp binaryOp, IRBinaryOp opL, IRBinaryOp opR)
         {
+            // Rearrange equation to a standard form, then call
+            // the method to do the actual distribution.
             if (opR.Left.Equals(opL.Left))
             {
                 return DistributeMultiplication(binaryOp);
@@ -248,6 +250,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     return binaryOp;
                 return DistributeMultiplication(binaryOp);
             }
+            // Fallthrough to return the original operand without changes.
             return binaryOp;
         }
 
