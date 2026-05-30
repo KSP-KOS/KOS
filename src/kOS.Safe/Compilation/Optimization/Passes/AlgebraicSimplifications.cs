@@ -369,10 +369,6 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     instruction.Right = instruction.Left;
                     instruction.Operation = new OpcodeMathMultiply();
                 }
-                /*else if (Encapsulation.ScalarIntValue.One.Equals(constantR.Value))
-                    return instruction.Left;
-                else if (Encapsulation.ScalarIntValue.Zero.Equals(constantR.Value))
-                    return new InterimConstantValue(Encapsulation.ScalarIntValue.One, instruction);*/
             }
             return instruction;
         }
@@ -416,10 +412,6 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     instruction.Right = instruction.Left;
                     instruction.Operation = new OpcodeMathMultiply();
                 }
-                /*else if (Encapsulation.ScalarIntValue.One.Equals(constantR.Value))
-                    return instruction.Left;
-                else if (Encapsulation.ScalarIntValue.Zero.Equals(constantR.Value))
-                    return new InterimConstantValue(Encapsulation.ScalarIntValue.One, instruction);*/
             }
             return instruction;
         }

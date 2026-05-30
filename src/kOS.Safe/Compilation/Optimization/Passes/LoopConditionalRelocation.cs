@@ -24,7 +24,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         private static void ApplyPass(BasicBlock root)
         {
             IEnumerable<BasicBlock> GetEdges(BasicBlock block)
-                => block.Successors.Where(BlockOrdering.InitialPredicate);
+                => block.Successors.Where(BlockOrdering.AllBlocksPredicate);
 
             List<BasicBlock> reversePostOrder = BasicBlock.GetReversePostOrder(root, GetEdges);
             Stack<BasicBlock> regionExits = new Stack<BasicBlock>();

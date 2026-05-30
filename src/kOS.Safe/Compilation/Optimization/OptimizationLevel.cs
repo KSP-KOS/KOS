@@ -27,7 +27,7 @@ namespace kOS.Safe.Compilation
      *  
      * O2:
      * -10000. Loop condition reorganization
-     *  1000. Common expression elimination
+     *  32100. Common expression elimination
      *          Particularly: Any expression of 3 opcodes used more than twice,
      *          or any expression of >3 opcodes used more than once
      *  

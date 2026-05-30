@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using kOS.Safe.Compilation.IR;
 
 namespace kOS.Safe.Compilation.Optimization.Passes
@@ -8,8 +7,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
     public class CommonExpressionElimination : IHolisticOptimizationPass
     {
         public OptimizationLevel OptimizationLevel => OptimizationLevel.Balanced;
-
-        public short SortIndex => 1000;
+        public short SortIndex => 32100;
 
         public void ApplyPass(IRCodePart codePart)
         {
@@ -24,7 +22,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             {
                 IdentifyExpressions(block, expressions);
             }
-            foreach (var expressionData in expressions.OrderBy(kvp => kvp.Value.sortIndex))
+            foreach (KeyValuePair<(IResultingInstruction Expression, IRScope), ExpressionData> expressionData in expressions)
             {
                 IResultingInstruction expression = expressionData.Key.Expression;
                 ExpressionData data = expressionData.Value;
@@ -59,7 +57,9 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 });
                 foreach (IOperandInstructionBase use in data.uses)
                 {
-                    use.MutateEachOperand(op => new InterimResolvedReference(storedExpression.Definition, (IRInstruction)use));
+                    use.MutateEachOperand(op =>
+                        op.Equals(expression) ?
+                            new InterimResolvedReference(storedExpression.Definition, (IRInstruction)use) : op);
                 }
             }
         }
@@ -67,7 +67,6 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         {
             foreach (IRInstruction instruction in block.Instructions)
             {
-                ushort sortIndex = 0;
                 foreach (IRInstruction subexpression in instruction.DepthFirst())
                 {
                     bool breaking = false;
@@ -80,7 +79,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             if (expressions.TryGetValue((resultingInstruction, block.Scope), out ExpressionData data))
                                 data.uses.Add((IOperandInstructionBase)subexpression);
                             else
-                                expressions[(resultingInstruction, block.Scope)] = new ExpressionData((IOperandInstructionBase)subexpression, sortIndex++);
+                                expressions[(resultingInstruction, block.Scope)] = new ExpressionData((IOperandInstructionBase)subexpression);
                         }
                     }
 
@@ -96,19 +95,16 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             public static readonly ExpressionComparer Instance = new ExpressionComparer();
             public bool Equals((IResultingInstruction Expression, IRScope Scope) x, (IResultingInstruction Expression, IRScope Scope) y)
                 => x.Expression.Equals(y.Expression) && y.Scope.IsEqualOrEncompassedBy(x.Scope);
-
             public int GetHashCode((IResultingInstruction Expression, IRScope Scope) obj)
                 => obj.Expression.GetHashCode();
         }
         private readonly struct ExpressionData
         {
             public readonly IOperandInstructionBase origin;
-            public readonly ushort sortIndex;
             public readonly List<IOperandInstructionBase> uses;
-            public ExpressionData(IOperandInstructionBase origin, ushort sortIndex)
+            public ExpressionData(IOperandInstructionBase origin)
             {
                 this.origin = origin;
-                this.sortIndex = sortIndex;
                 uses = new List<IOperandInstructionBase>();
             }
         }
@@ -142,9 +138,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             public IEnumerable<Opcode> EmitOpcodes()
             {
                 foreach (Opcode opcode in Value.EmitOpcodes())
-                {
                     yield return opcode;
-                }
                 yield return new OpcodeDup();
                 yield return new OpcodeStoreLocal(Identifier);
             }

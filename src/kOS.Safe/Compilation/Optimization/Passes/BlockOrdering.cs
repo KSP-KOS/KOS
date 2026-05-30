@@ -8,29 +8,27 @@ namespace kOS.Safe.Compilation.Optimization.Passes
     public class BlockOrdering : IHolisticOptimizationPass, ILinkedOptimizationPass
     {
         public OptimizationLevel OptimizationLevel => OptimizationLevel.None;
-
         public short SortIndex => short.MaxValue;
-
         public Optimizer Optimizer { get; set; }
 
-        public static bool InitialPredicate(BasicBlock _)
+        public static bool AllBlocksPredicate(BasicBlock _)
             => true;
-        public static bool IsExecutablePredicate(BasicBlock block)
+        public static bool ExecutableBlocksPredicate(BasicBlock block)
             => block.IsExecutable;
 
         // Optimally arrange blocks, while eliminating non-executable blocks.
         public void ApplyPass(IRCodePart codePart)
         {
             if (Optimizer.OptimizationLevel >= OptimizationLevel.Minimal)
-                ApplyOrdering(codePart, IsExecutablePredicate);
+                ApplyOrdering(codePart, ExecutableBlocksPredicate);
             else
-                ApplyOrdering(codePart, InitialPredicate);
+                ApplyOrdering(codePart, AllBlocksPredicate);
         }
             
 
         // Optimally arrange blocks assuming that all are executable
         public static void ApplyInitialOrdering(IRCodePart codePart)
-            => ApplyOrdering(codePart, InitialPredicate);
+            => ApplyOrdering(codePart, AllBlocksPredicate);
 
         private static void ApplyOrdering(IRCodePart codePart, Func<BasicBlock, bool> inclusionPredicate)
         {
@@ -79,9 +77,9 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     int branchIdx = instructions.Count - 1;
                     if (branchIdx >= 0 && instructions[branchIdx] is IRBranch branch)
                     {
-                        if (!branch.True.IsExecutable)
+                        if (!inclusionPredicate(branch.True))
                             instructions[branchIdx] = new IRJump(branch.Block, branch.False, branch.SourceLine, branch.SourceColumn);
-                        else if (!branch.False.IsExecutable)
+                        else if (!inclusionPredicate(branch.False))
                             instructions[branchIdx] = new IRJump(branch.Block, branch.True, branch.SourceLine, branch.SourceColumn);
                     }
                 }
@@ -176,9 +174,6 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             }
 
             rejoinsAt = FindLocalMerge(branchingBlock, regionExit);
-            //rejoinsAt = _branchingBlock.PostDominator;
-            //if (rejoinsAt == null || rejoinsAt is SyntheticReturnBlock)
-                //return false;
 
             if (elseBlock == rejoinsAt || GetSequenceEnd(elseBlock) == rejoinsAt)
                 elseBlock = null;
