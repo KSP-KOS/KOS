@@ -21,18 +21,16 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             ApplyPass(codePart.MainCode[0]);
         }
 
+        private static IEnumerable<BasicBlock> GetEdges(BasicBlock block)
+            => block.Successors.Where(BlockOrdering.AllBlocksPredicate);
+
         private static void ApplyPass(BasicBlock root)
         {
-            IEnumerable<BasicBlock> GetEdges(BasicBlock block)
-                => block.Successors.Where(BlockOrdering.AllBlocksPredicate);
-
             List<BasicBlock> reversePostOrder = BasicBlock.GetReversePostOrder(root, GetEdges);
             Stack<BasicBlock> regionExits = new Stack<BasicBlock>();
             regionExits.Push(reversePostOrder[reversePostOrder.Count - 1]);
 
-            List<BlockOrdering.LoopData> loopData = new List<BlockOrdering.LoopData>();
-
-            FindLoops(root, regionExits, loopData);
+            List<BlockOrdering.LoopData> loopData = FindLoops(root, regionExits);
 
             foreach (BlockOrdering.LoopData loop in loopData)
             {
@@ -57,6 +55,12 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             block.RemoveSuccessor(header);
         }
 
+        public static List<BlockOrdering.LoopData> FindLoops(BasicBlock root, Stack<BasicBlock> regionExits)
+        {
+            List<BlockOrdering.LoopData> loopData = new List<BlockOrdering.LoopData>();
+            FindLoops(root, regionExits, loopData);
+            return loopData;
+        }
         private static void FindLoops(BasicBlock root, Stack<BasicBlock> regionExits, List<BlockOrdering.LoopData> loops)
         {
             BasicBlock block = root;
@@ -70,7 +74,10 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     regionExits.Pop();
                     block = loopData.exit;
                 }
-                else if (BlockOrdering.IdentifyBranch(block, regionExits.Peek(), out BlockOrdering.BranchData branchData))
+                else if (BlockOrdering.IdentifyBranch(block, regionExits.Peek(), out BlockOrdering.BranchData branchData) &&
+                     //These checks are for edge cases of loop-like structures that are neither loops themselves or branches.
+                    !((branchData.ifBlock?.Dominator != null && branchData.ifBlock.Dominator != block) ||
+                    (branchData.elseBlock?.Dominator != null && branchData.elseBlock.Dominator != block)))
                 {
                     FindLoops(branchData.ifBlock, regionExits, loops);
                     if (branchData.exit == null && branchData.elseBlock != null)
