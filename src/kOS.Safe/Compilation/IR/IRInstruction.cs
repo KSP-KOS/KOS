@@ -284,7 +284,37 @@ namespace kOS.Safe.Compilation.IR
         }
 
         public IInterimOperand Clone(BasicBlock block)
-            => new IRBinaryOp(block, (BinaryOpcode)SetSourceLocation(Operation), Left.Clone(block), Right.Clone(block));
+            => new IRBinaryOp(block, (BinaryOpcode)SetSourceLocation(CloneOperation()), Left.Clone(block), Right.Clone(block));
+        private BinaryOpcode CloneOperation()
+        {
+            switch (Operation)
+            {
+                case OpcodeMathAdd _:
+                    return new OpcodeMathAdd();
+                case OpcodeMathSubtract _:
+                    return new OpcodeMathSubtract();
+                case OpcodeMathMultiply _:
+                    return new OpcodeMathMultiply();
+                case OpcodeMathDivide _:
+                    return new OpcodeMathDivide();
+                case OpcodeMathPower _:
+                    return new OpcodeMathPower();
+                case OpcodeCompareEqual _:
+                    return new OpcodeCompareEqual();
+                case OpcodeCompareNE _:
+                    return new OpcodeCompareNE();
+                case OpcodeCompareGT _:
+                    return new OpcodeCompareGT();
+                case OpcodeCompareLT _:
+                    return new OpcodeCompareGT();
+                case OpcodeCompareGTE _:
+                    return new OpcodeCompareGTE();
+                case OpcodeCompareLTE _:
+                    return new OpcodeCompareLTE();
+                default:
+                    throw new NotImplementedException();
+            }
+        }
 
         public override IEnumerable<Opcode> EmitOpcodes()
         {
@@ -387,7 +417,23 @@ namespace kOS.Safe.Compilation.IR
         }
 
         public IInterimOperand Clone(BasicBlock block)
-            => new IRUnaryOp(block, Operation, Operand.Clone(block));
+            => new IRUnaryOp(block, SetSourceLocation(CloneOperation()), Operand.Clone(block));
+        private Opcode CloneOperation()
+        {
+            switch (Operation)
+            {
+                case OpcodeExists _:
+                    return new OpcodeExists();
+                case OpcodeLogicNot _:
+                    return new OpcodeLogicNot(); 
+                case OpcodeLogicToBool _:
+                    return new OpcodeLogicToBool();
+                case OpcodeMathNegate _:
+                    return new OpcodeMathNegate();
+                default:
+                    throw new NotImplementedException();
+            }
+        }
         public override IEnumerable<Opcode> EmitOpcodes()
         {
             foreach (Opcode opcode in Operand.EmitOpcodes())
@@ -529,7 +575,21 @@ namespace kOS.Safe.Compilation.IR
             Operation = opcode;
         }
         public IInterimOperand Clone(BasicBlock block)
-            => new IRNonVarPush(block, Operation);
+            => new IRNonVarPush(block, CloneOperation());
+        private Opcode CloneOperation()
+        {
+            switch (Operation)
+            {
+                case OpcodeTestArgBottom _:
+                    return new OpcodeTestArgBottom()
+                    {
+                        SourceLine = SourceLine,
+                        SourceColumn = SourceColumn
+                    };
+                default:
+                    throw new NotImplementedException();
+            }
+        }
         public override IEnumerable<Opcode> EmitOpcodes()
         {
             Operation.Label = string.Empty;
