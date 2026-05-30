@@ -280,7 +280,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             // If we've walked all the way out, there is no local merge
             return candidate == regionExit ? null : candidate;
         }
-        private static bool IsInsideRegion(BasicBlock candidate, BasicBlock regionExit)
+        public static bool IsInsideRegion(BasicBlock candidate, BasicBlock regionExit)
         {
             // Walk the post-dominator chain of regionExit upward.
             // If we encounter candidate, it is outside or on the boundary.
