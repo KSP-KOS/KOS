@@ -474,7 +474,7 @@ namespace kOS.Safe.Test.Execution
                     new OpcodeMathAdd(),
                     new OpcodeStoreGlobal("$f"),
                     new OpcodePopScope()
-                }
+                }, OptimizationLevel.Balanced
             );
             Assert.IsInstanceOf<OpcodePush>(result[2]);
             Assert.AreEqual(new Encapsulation.ScalarIntValue(3), (result[2] as OpcodePush)?.Argument);
@@ -716,7 +716,7 @@ namespace kOS.Safe.Test.Execution
                     new OpcodeMathDivide(),
                     new OpcodePop(),
                     new OpcodePopScope()
-                }
+                }, OptimizationLevel.Balanced
             );
             Assert.IsInstanceOf<OpcodePush>(result[5]);
             Assert.AreEqual(new Encapsulation.ScalarDoubleValue(1.5), (result[5] as OpcodePush)?.Argument);
@@ -755,7 +755,7 @@ namespace kOS.Safe.Test.Execution
                     new OpcodeMathMultiply(),
                     new OpcodePop(),
                     new OpcodePopScope()
-                }
+                }, OptimizationLevel.Balanced
             );
             Assert.IsInstanceOf<OpcodePush>(result[5]);
             Assert.AreEqual(new Encapsulation.ScalarDoubleValue(3.5), (result[5] as OpcodePush)?.Argument);

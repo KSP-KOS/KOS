@@ -30,8 +30,9 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 
             HashSet<SSADefinition> usedDefinitions = PropagateConstants(codePart.VariableUses);
 
-            foreach (BasicBlock block in codePart.Blocks)
-                RemoveRedundantAssignments(block, usedDefinitions);
+            if (Optimizer.OptimizationLevel >= OptimizationLevel.Balanced)
+                foreach (BasicBlock block in codePart.Blocks)
+                    RemoveRedundantAssignments(block, usedDefinitions);
         }
 
         /// <summary>
