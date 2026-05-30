@@ -23,13 +23,12 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 
         public void ApplyPass(IRCodePart codePart)
         {
-            Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> ssaUses =
-                MapUsesAndPropagateTypes(codePart);
+            codePart.VariableUses = MapUsesAndPropagateTypes(codePart);
 
             if (Optimizer.OptimizationLevel == OptimizationLevel.None)
                 return;
 
-            HashSet<SSADefinition> usedDefinitions = PropagateConstants(ssaUses);
+            HashSet<SSADefinition> usedDefinitions = PropagateConstants(codePart.VariableUses);
 
             foreach (BasicBlock block in codePart.Blocks)
                 RemoveRedundantAssignments(block, usedDefinitions);
@@ -50,7 +49,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         private static Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> MapUsesAndPropagateTypes(IRCodePart codePart)
         {
             Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> variableUses =
-                new Dictionary<SSADefinition, HashSet<IOperandInstructionBase>>(SSAReferenceEqualityComparer.Instance);
+                new Dictionary<SSADefinition, HashSet<IOperandInstructionBase>>(SSADefinition.ReferenceEqualityComparer);
             HashSet<BasicBlock> visitedBlocks = new HashSet<BasicBlock>();
             Dictionary<SSADefinition, (Type, bool)> typeAndInvarianceCache = new Dictionary<SSADefinition, (Type, bool)>();
 
@@ -298,7 +297,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             return true;
                     }
                     return false;
-                })));
+                })), SSADefinition.ReferenceEqualityComparer);
 
             Dictionary<SSADefinition, InterimConstantValue> replacements = new Dictionary<SSADefinition, InterimConstantValue>();
 

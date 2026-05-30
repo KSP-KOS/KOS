@@ -32,6 +32,17 @@ namespace kOS.Safe.Compilation.IR
             SourceLine = sourceLine;
             SourceColumn = sourceColumn;
         }
+        public static IEqualityComparer<IRInstruction> ReferenceEqualityComparer => InstructionReferenceEqualityComparer.Instance;
+
+        private class InstructionReferenceEqualityComparer : IEqualityComparer<IRInstruction>
+        {
+            public static InstructionReferenceEqualityComparer Instance { get; } =
+                new InstructionReferenceEqualityComparer();
+            public bool Equals(IRInstruction x, IRInstruction y)
+                => x == y;
+            public int GetHashCode(IRInstruction obj)
+                => obj.GetHashCode();
+        }
     }
 
     public abstract class SingleOperandInstruction : IRInstruction, ISingleOperandInstruction

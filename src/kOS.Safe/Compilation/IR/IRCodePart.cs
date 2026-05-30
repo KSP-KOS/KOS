@@ -40,8 +40,16 @@ namespace kOS.Safe.Compilation.IR
         /// <summary>
         /// Gets the reachable variables for a given call site.
         /// </summary>
+        /// <remarks>This is populated in <see cref="SingleStaticAssignment.ApplyUses"/></remarks>
         public Dictionary<IRInstruction, HashSet<IInterimVariableReference>> ReachableVariables { get; } =
-            new Dictionary<IRInstruction, HashSet<IInterimVariableReference>>();
+            new Dictionary<IRInstruction, HashSet<IInterimVariableReference>>(IRInstruction.ReferenceEqualityComparer);
+
+        /// <summary>
+        /// Gets or sets the variable uses.
+        /// </summary>
+        /// <remarks>The set accessor is used to populate this in <see cref="Optimization.Passes.SCCPWithTypePropagation.ApplyPass"/></remarks>
+        public Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> VariableUses { get; set; } =
+            new Dictionary<SSADefinition, HashSet<IOperandInstructionBase>>(SSADefinition.ReferenceEqualityComparer);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IRCodePart"/> class.

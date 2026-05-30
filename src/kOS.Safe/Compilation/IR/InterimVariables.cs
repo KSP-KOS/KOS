@@ -219,6 +219,8 @@ namespace kOS.Safe.Compilation.IR
             Unset = -1
         }
 
+        public static IEqualityComparer<SSADefinition> ReferenceEqualityComparer => SSAReferenceEqualityComparer.Instance;
+
         public string Name { get; }
         public abstract bool IsInvariant { get; }
         public abstract Type Type { get; }
@@ -294,6 +296,16 @@ namespace kOS.Safe.Compilation.IR
             => obj is SSADefinition ssaDef && Equals(ssaDef);
         public override int GetHashCode()
             => Name.ToLower().GetHashCode();
+
+        private class SSAReferenceEqualityComparer : IEqualityComparer<SSADefinition>
+        {
+            public static SSAReferenceEqualityComparer Instance { get; } =
+                new SSAReferenceEqualityComparer();
+            public bool Equals(SSADefinition x, SSADefinition y)
+                => x == y;
+            public int GetHashCode(SSADefinition obj)
+                => obj.GetHashCode();
+        }
     }
 
     public class SSASetDefinition : SSADefinition
@@ -567,18 +579,6 @@ namespace kOS.Safe.Compilation.IR
 
         public override string ToString()
             => $"{Name} #{ssaIndex}";
-    }
-
-    public class SSAReferenceEqualityComparer : IEqualityComparer<SSADefinition>
-    {
-        public static SSAReferenceEqualityComparer Instance =
-            new SSAReferenceEqualityComparer();
-
-        public bool Equals(SSADefinition x, SSADefinition y)
-            => x == y;
-
-        public int GetHashCode(SSADefinition obj)
-            => obj.GetHashCode();
     }
 
     public class PhiNode : PhiNode<SSADefinition>

@@ -126,7 +126,6 @@ namespace kOS.Safe.Compilation.IR
                     IRFunction function = codePart.GetFunction(call);
                     if (function != null)
                         funcOrTrigger?.FunctionCalls.Add(codePart.GetFunction(call));
-
                 }
 
                 switch (instruction)
@@ -462,10 +461,10 @@ namespace kOS.Safe.Compilation.IR
         {
             public static PhiComparer Instance = new PhiComparer();
             public bool Equals((IRScope, SSADefinition) x, (IRScope, SSADefinition) y)
-                => x.Item1.Equals(y.Item1) && SSAReferenceEqualityComparer.Instance.Equals(x.Item2, y.Item2);
+                => x.Item1.Equals(y.Item1) && SSADefinition.ReferenceEqualityComparer.Equals(x.Item2, y.Item2);
 
             public int GetHashCode((IRScope, SSADefinition) obj)
-                => (obj.Item1.GetHashCode(), SSAReferenceEqualityComparer.Instance.GetHashCode(obj.Item2)).GetHashCode();
+                => (obj.Item1.GetHashCode(), SSADefinition.ReferenceEqualityComparer.GetHashCode(obj.Item2)).GetHashCode();
         }
 
         private static void BuildPhis(BasicBlock root, IRCodePart codePart, IClosureVariableUser funcOrTrigger)
@@ -553,7 +552,7 @@ namespace kOS.Safe.Compilation.IR
                 {
                     Dictionary<(string, IRScope), SSADefinition> oldDefinition = variablesOut[block];
                     if (oldDefinition.Count == varsOut.Count &&
-                        varsOut.All(kvp => oldDefinition.ContainsKey(kvp.Key) && SSAReferenceEqualityComparer.Instance.Equals(oldDefinition[kvp.Key], kvp.Value)))
+                        varsOut.All(kvp => oldDefinition.ContainsKey(kvp.Key) && SSADefinition.ReferenceEqualityComparer.Equals(oldDefinition[kvp.Key], kvp.Value)))
                         continue;
                 }
 
