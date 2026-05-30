@@ -53,7 +53,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> variableUses =
                 new Dictionary<SSADefinition, HashSet<IOperandInstructionBase>>(SSADefinition.ReferenceEqualityComparer);
             HashSet<BasicBlock> visitedBlocks = new HashSet<BasicBlock>();
-            Dictionary<SSADefinition, (Type, bool)> typeAndInvarianceCache = new Dictionary<SSADefinition, (Type, bool)>();
+            Dictionary<SSADefinition, (Type, bool)> typeAndInvarianceCache = new Dictionary<SSADefinition, (Type, bool)>(SSADefinition.ReferenceEqualityComparer);
 
             // Apply the algorithm starting from each entry block.
             foreach (BasicBlock root in codePart.RootBlocks)
@@ -173,8 +173,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             if (instruction is IRAssign assignment)
                                 foreach (IOperandInstructionBase use in GetOrCreate(variableUses, assignment.Target))
                                     instructionQueue.Enqueue(use);
-                            else if (instruction is PhiVariable phi)
-                                foreach (IOperandInstructionBase use in GetOrCreate(variableUses, phi))
+                            else if (instruction is PhiNode phi)
+                                foreach (IOperandInstructionBase use in GetOrCreate(variableUses, phi.Result))
                                     instructionQueue.Enqueue(use);
                         }
                     }
@@ -211,7 +211,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 SSASetDefinition ssaVariable = assignment.Target;
                 if (typeAndInvarianceCache.TryGetValue(ssaVariable, out (Type storedType, bool storedInvariance) cached))
                 {
-                    typeAndInvarianceCache[ssaVariable] = (ssaVariable.Type, cached.storedInvariance &= ssaVariable.IsInvariant);
+                    typeAndInvarianceCache[ssaVariable] = (ssaVariable.Type, cached.storedInvariance & ssaVariable.IsInvariant);
                     return cached != typeAndInvarianceCache[ssaVariable];
                 }
                 else
@@ -220,16 +220,16 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     return true;
                 }
             }
-            else if (instruction is PhiVariable phi)
+            else if (instruction is PhiNode phi)
             {
-                if (typeAndInvarianceCache.TryGetValue(phi, out (Type storedType, bool storedInvariance) cached))
+                if (typeAndInvarianceCache.TryGetValue(phi.Result, out (Type storedType, bool storedInvariance) cached))
                 {
-                    typeAndInvarianceCache[phi] = (phi.Type, cached.storedInvariance &= phi.IsInvariant);
-                    return cached != typeAndInvarianceCache[phi];
+                    typeAndInvarianceCache[phi.Result] = (phi.Type, cached.storedInvariance & phi.IsInvariant);
+                    return cached != typeAndInvarianceCache[phi.Result];
                 }
                 else
                 {
-                    typeAndInvarianceCache[phi] = (phi.Type, phi.IsInvariant);
+                    typeAndInvarianceCache[phi.Result] = (phi.Type, phi.IsInvariant);
                     return true;
                 }
             }
