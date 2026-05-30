@@ -3435,6 +3435,7 @@ namespace kOS.Safe.Compilation.KS
             AddOpcode(new OpcodePop()); // all functions now return a value even if we ignore it.  Not sure it matters in the case of shutdown() though.
         }
 
+        public const string iteratorSuffix = "-iterator";
         private void VisitForStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
@@ -3442,7 +3443,7 @@ namespace kOS.Safe.Compilation.KS
             bool remember = nowInALoop;
             nowInALoop = true;
 
-            string iteratorIdentifier = "$" + GetIdentifierText(node.Nodes[3]) + "-iterator";
+            string iteratorIdentifier = "$" + GetIdentifierText(node.Nodes[3]) + iteratorSuffix;
 
             // Add a scope level to hold the iterator variable.  This will live just "outside" the
             // brace scope of the function body.
