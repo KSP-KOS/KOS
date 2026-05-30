@@ -91,8 +91,6 @@ namespace kOS.Safe.Compilation.IR
                 RootBlocks.Add(MainCode[0]);
             RootBlocks.AddRange(Triggers.Select(t => t.RootBlock));
             RootBlocks.AddRange(Functions.SelectMany(f => f.RootBlocks));
-
-            SingleStaticAssignment.FinalizeSSA(this);
         }
 
         /// <summary>
