@@ -371,6 +371,8 @@ namespace kOS.Safe.Compilation.IR
             {
                 if (setDefinition.DefinedAt == null)
                     return false;
+                if (other == this)
+                    return true;
                 return DefinedAt?.Value.Equals(setDefinition.DefinedAt.Value) ?? false;
             }
             return other.Equals(this);

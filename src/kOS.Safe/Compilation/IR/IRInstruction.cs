@@ -1000,6 +1000,7 @@ namespace kOS.Safe.Compilation.IR
             => string.Format("{{call {0}({1})}}", Function.Trim('(', ')'), string.Join(",", Arguments.Select(a => a.ToString())));
         public bool Equals(IInterimOperand other)
             => (other is IRCall call &&
+                IsCallInvariant() &&    // If the call does something beyond arithmetic, this condition prevents optimizing it away.
                 string.Equals(Function.Replace("()", ""), call.Function.Replace("()", ""), StringComparison.OrdinalIgnoreCase) &&
                 Arguments.SequenceEqual(call.Arguments)) ||
                 (IsInvariant &&
