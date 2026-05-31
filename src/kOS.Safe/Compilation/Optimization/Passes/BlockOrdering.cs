@@ -94,6 +94,15 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             // Create a unified sequence of BasicBlocks.
             List<BasicBlock> results = metaSequences.SelectMany(s => s.Blocks).ToList();
 
+            for (int i = 0; i < results.Count - 1; i++)
+            {
+                BasicBlock block = results[i];
+                if (block.Instructions.Count > 0 &&
+                    block.Instructions[block.Instructions.Count - 1] is IRBranch branch &&
+                    branch.True == results[i + 1])
+                    branch.PreferFalse = true;
+            }
+
             // This block is to avoid leaving branch instructions to blocks
             // that aren't actually being emitted, since that will throw
             // an exeption during block labelling.
@@ -130,8 +139,14 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             while (block != null && block != regionExits.Peek())
             {
                 // Identify loops first because loop branches are subsets of branches.
-                if (IdentifyLoop(block, regionExits.Peek(), out LoopData loopData))
+                // If root == loopData.body it's because this was just called recursively
+                // below. This can be treated as not a loop since it is already identified
+                // as a loop body.
+                if (IdentifyLoop(block, regionExits.Peek(), out LoopData loopData) && root != loopData.body)
                 {
+                    // Add the header to the current sequence, if necessary.
+                    if (loopData.body != block)
+                        sequence.Add(block);
                     // Push the next region exit.
                     regionExits.Push(loopData.exit);
                     // Add the sequence from the loop's body.
@@ -144,15 +159,21 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     // Set the exit block as the next block for this sequence.
                     block = loopData.exit;
                 }
+                // If branchData.elseBlock == root, that's because this is the branch
+                // instruction at the end of a loop body.
                 else if (IdentifyBranch(block, regionExits.Peek(), out BranchData branchData) &&
-                    // These checks are for edge cases of loop structures that are neither loops or branches.
-                    !((branchData.ifBlock?.Dominator != null && branchData.ifBlock.Dominator != block) ||
-                    (branchData.elseBlock?.Dominator != null && branchData.elseBlock.Dominator != block)))
+                    branchData.elseBlock != root && branchData.ifBlock != root)
                 {
+                    // Add the branching block to the current sequence.
+                    // The root is already included.
+                    if (block != root)
+                        sequence.Add(block);
                     // Add the 'if/then' block to the sequence.
                     // The branch instruction will skip ahead to the exit, so this ordering
                     // allows the 'if/then' block to fall through to the exit.
+                    regionExits.Push(branchData.exit ?? regionExits.Peek());
                     sequence.Add(ConstructMetaSequence(branchData.ifBlock, regionExits, out Queue<BasicBlock> childOffshoots));
+                    regionExits.Pop();
                     // Enqueue any new offshoots.
                     foreach (BasicBlock child in childOffshoots)
                         newOffshoots.Enqueue(child);
@@ -172,43 +193,162 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         block = branchData.exit;
                     }
                 }
-                // This condition occurs only in branches/loops, or with a single successor.
-                else if (block.PostDominator?.Dominator == block)
-                {
-                    // Set that successor as the next block for this sequence.
-                    block = block.PostDominator;
-                }
                 else
-                    return sequence;
-                // Add the next block to the sequence.
-                if (block != null)
-                    sequence.Add(block);
+                {
+                    if (block != root)
+                        sequence.Add(block);
+                    // This condition occurs only in branches/loops, or with a single successor.
+                    if (block.PostDominator?.Dominator == block)
+                    {
+                        // Set that successor as the next block for this sequence.
+                        block = block.PostDominator;
+                    }
+                    else
+                        return sequence;
+                }
             }
             return sequence;
         }
 
-        public static bool IdentifyLoop(BasicBlock headerBlock, BasicBlock regionExit, out LoopData loopData)
+        public static bool IdentifyLoop(BasicBlock block, BasicBlock regionExit, out LoopData loopData)
         {
             loopData = new LoopData();
-            // This just checks that there is a branch instruction and classifies the two branches for the loop.
-            // It should really not call IdentifyBranch, but the code reuse was too tempting.
-            if (!IdentifyBranch(headerBlock, regionExit, out BranchData branchData))
-                return false;
-
-            if (headerBlock.Successors.Count != 2)
-                return false;
-
-            loopData = new LoopData(headerBlock, branchData.ifBlock, branchData.exit ?? branchData.elseBlock);
-            // At least one of the branches must return to the header
-            // block or the top of that branch to be a loop.
-            foreach (BasicBlock successor in headerBlock.Successors)
+            // --- Case 1: while/for loop ---
+            // The header block has a conditional branch. One successor
+            // is inside the loop (the body) and one is outside (the
+            // exit). The latch has a back edge to this header.
+            if (block.Successors.Count == 2 && HasBranchInstruction(block))
             {
-                if (BackEdgeDetection(successor, headerBlock))
-                    return true;
+                foreach (BasicBlock successor in block.Successors)
+                {
+                    // A successor is a latch if it (or the end of its linear chain)
+                    // has a back edge to 'block', meaning 'block' dominates it.
+                    BasicBlock latch = FindLatch(successor, block);
+                    if (latch != null)
+                    {
+                        // The other successor is the exit.
+                        BasicBlock bodyEntry = successor;
+                        BasicBlock exit = block.Successors.First(s => s != successor);
+
+                        // Sanity check: the exit should not be dominated by 'block'
+                        // (it must be reachable without going through the loop body).
+                        // Also verify exit is not inside the loop.
+                        if (IsBackEdge(exit, bodyEntry))
+                            continue; // both successors loop back — degenerate, skip
+
+                        loopData = new LoopData(
+                            header: block,
+                            branchBlock: block,
+                            body: bodyEntry,
+                            exit: exit);
+                        return true;
+                    }
+                }
             }
-            loopData = new LoopData();
+
+            // --- Case 2: do-while loop ---
+            // The block is entered unconditionally (no branch at the header).
+            // The branch is at the end of the body (the latch), and one of its
+            // successors is a back edge to 'block' (making 'block' the body entry).
+            //
+            // We detect this by checking whether 'block' is the target of any back edge
+            // from a block that 'block' dominates, and that back-edge block has a branch
+            // to an exit outside the loop.
+            if (block.Successors.Count == 1)
+            {
+                BasicBlock latch = FindDoWhileLatch(block, regionExit);
+                if (latch != null && latch.Successors.Count == 2 && HasBranchInstruction(latch))
+                {
+                    // One successor of the latch loops back; the other is the exit.
+                    BasicBlock exit = latch.Successors.FirstOrDefault(s => s != block);
+                    if (exit != null && (exit == regionExit || IsInsideRegion(exit, regionExit)))
+                    {
+                        // Do-while: no header (body is entered unconditionally),
+                        // branch is at the latch, body starts at 'block'.
+                        loopData = new LoopData(
+                            header: null,
+                            branchBlock: latch,
+                            body: block,
+                            exit: exit);
+                        return true;
+                    }
+                }
+            }
             return false;
         }
+
+        /// <summary>
+        /// Given a block that is a direct successor of the header, walks forward
+        /// through linear (single-successor) chains to find a block that has a
+        /// back edge to 'header'. Returns the latch block if found, null otherwise.
+        /// </summary>
+        private static BasicBlock FindLatch(BasicBlock block, BasicBlock header)
+        {
+            while (block != null)
+            {
+                // A back edge exists if 'header' dominates 'cursor' and
+                // 'cursor' has 'header' as a successor.
+                if (IsBackEdge(block, header) && block.Successors.Contains(header))
+                    return block;
+
+                // Follow the acyclical post-dominator chain to walk the loop
+                // body without going into inner loops or branch bodies.
+                if (block.PostDominator?.Dominator == block)
+                    block = block.PostDominator;
+                else
+                    break;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// For do-while detection: starting from the body entry block, walks the
+        /// dominator subtree to find a block that has a back edge pointing back to
+        /// 'bodyEntry' (i.e. a block dominated by bodyEntry that jumps back to it).
+        /// </summary>
+        private static BasicBlock FindDoWhileLatch(BasicBlock bodyEntry, BasicBlock regionExit)
+        {
+            // Walk all blocks dominated by bodyEntry (depth-first through dominates tree)
+            // and look for one that has a successor equal to bodyEntry.
+            Stack<BasicBlock> stack = new Stack<BasicBlock>(bodyEntry.Dominates);
+            while (stack.Count > 0)
+            {
+                BasicBlock candidate = stack.Pop();
+
+                // Don't cross out of the region.
+                if (!IsInsideRegion(candidate, regionExit))
+                    continue;
+
+                if (candidate.Successors.Contains(bodyEntry))
+                    return candidate;
+
+                foreach (BasicBlock dominated in candidate.Dominates)
+                    stack.Push(dominated);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Returns true if 'block' dominates 'target', meaning the edge
+        /// from the predecessor of 'target' back to something dominated by
+        /// 'block' constitutes a back edge.
+        /// More precisely: is 'target' in the dominator subtree of 'ancestor'?
+        /// </summary>
+        private static bool IsBackEdge(BasicBlock block, BasicBlock ancestor)
+        {
+            while (block != null)
+            {
+                if (block == ancestor)
+                    return true;
+                block = block.Dominator;
+            }
+            return false;
+        }
+
+        private static bool HasBranchInstruction(BasicBlock block)
+            => block.Instructions.Count > 0 &&
+            block.Instructions[block.Instructions.Count - 1] is IRBranch;
+
         public static bool IdentifyBranch(BasicBlock branchingBlock, BasicBlock regionExit, out BranchData branchData)
         {
             branchData = new BranchData();
@@ -257,21 +397,6 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 block = block.PostDominator;
             return block;
         }
-        private static bool BackEdgeDetection(BasicBlock successor, BasicBlock target)
-        {
-            BasicBlock firstSuccessor = successor;
-            if (successor.Dominator != target)
-                return false;
-
-            while (successor.Successors.Count == 1)
-            {
-                successor = successor.Successors.First();
-                if (successor == target)
-                    return true;
-            }
-
-            return successor.Successors.Contains(target) || successor.Successors.Contains(firstSuccessor);
-        }
         private static BasicBlock FindLocalMerge(BasicBlock ifBlock, BasicBlock regionExit)
         {
             BasicBlock candidate = ifBlock.PostDominator;
@@ -296,9 +421,25 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 
         public readonly struct BranchData
         {
+            /// <summary>
+            /// The branch's header block — the block where execution
+            /// branches upon exiting.
+            /// </summary>
             public readonly BasicBlock branch;
+            /// <summary>
+            /// The first block of the 'if' body (the block entered
+            /// when the branch condition occurs.
+            /// </summary>
             public readonly BasicBlock ifBlock;
+            /// <summary>
+            /// The first block of the 'else' body (the block entered
+            /// when the branch condition does not occur. Null when
+            /// this would be the exit block.
+            /// </summary>
             public readonly BasicBlock elseBlock;
+            /// <summary>
+            /// The block following the branch — where execution goes when the branch resolves.
+            /// </summary>
             public readonly BasicBlock exit;
             public BranchData(BasicBlock branch, BasicBlock ifBlock, BasicBlock elseBlock, BasicBlock exit)
             {
@@ -310,12 +451,37 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         }
         public readonly struct LoopData
         {
+            /// <summary>
+            /// The loop's header block — the block entered on each
+            /// iteration from outside and jumped back to by the
+            /// latch. Null for do-while style loops where the body is
+            /// entered unconditionally and the branch is at the end.
+            /// </summary>
             public readonly BasicBlock header;
+
+            /// <summary>
+            /// The block containing the conditional branch instruction
+            /// that either continues the loop or exits it. For while
+            /// loops this is the header; for do-while loops this is
+            /// the latch (last block of the body).
+            /// </summary>
+            public readonly BasicBlock branchBlock;
+
+            /// <summary>
+            /// The first block of the loop body (the block entered when
+            /// the loop entry condition is true / the loop continues).
+            /// </summary>
             public readonly BasicBlock body;
+
+            /// <summary>
+            /// The block following the loop — where execution goes when the loop exits.
+            /// </summary>
             public readonly BasicBlock exit;
-            public LoopData(BasicBlock header, BasicBlock body, BasicBlock exit)
+
+            public LoopData(BasicBlock header, BasicBlock branchBlock, BasicBlock body, BasicBlock exit)
             {
                 this.header = header;
+                this.branchBlock = branchBlock;
                 this.body = body;
                 this.exit = exit;
             }

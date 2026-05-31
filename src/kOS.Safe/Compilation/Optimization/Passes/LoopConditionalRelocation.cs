@@ -66,7 +66,11 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             BasicBlock block = root;
             while (block != null && block != regionExits.Peek())
             {
-                if (BlockOrdering.IdentifyLoop(block, regionExits.Peek(), out BlockOrdering.LoopData loopData))
+                // Identify loops first because loop branches are subsets of branches.
+                // If root == loopData.body it's because this was just called recursively
+                // below. This can be treated as not a loop since it is already identified
+                // as a loop body.
+                if (BlockOrdering.IdentifyLoop(block, regionExits.Peek(), out BlockOrdering.LoopData loopData) && root != loopData.body)
                 {
                     loops.Add(loopData);
                     regionExits.Push(loopData.exit);
@@ -74,10 +78,10 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     regionExits.Pop();
                     block = loopData.exit;
                 }
+                // If branchData.elseBlock == root, that's because this is the branch
+                // instruction at the end of a loop body.
                 else if (BlockOrdering.IdentifyBranch(block, regionExits.Peek(), out BlockOrdering.BranchData branchData) &&
-                     //These checks are for edge cases of loop-like structures that are neither loops themselves or branches.
-                    !((branchData.ifBlock?.Dominator != null && branchData.ifBlock.Dominator != block) ||
-                    (branchData.elseBlock?.Dominator != null && branchData.elseBlock.Dominator != block)))
+                    branchData.elseBlock != root && branchData.ifBlock != root)
                 {
                     FindLoops(branchData.ifBlock, regionExits, loops);
                     if (branchData.exit == null && branchData.elseBlock != null)

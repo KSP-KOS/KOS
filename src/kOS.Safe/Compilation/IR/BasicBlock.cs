@@ -196,9 +196,14 @@ namespace kOS.Safe.Compilation.IR
             CodePart = codePart;
             StartIndex = startIndex;
             EndIndex = endIndex;
-            unchecked
+            if (nonSequentialLabel == SyntheticReturnBlock.syntheticReturnLabel)
+                ID = uint.MaxValue;
+            else
             {
-                ID = nextID++;
+                unchecked
+                {
+                    ID = nextID++;
+                }
             }
             this.nonSequentialLabel = nonSequentialLabel;
         }
@@ -446,8 +451,11 @@ namespace kOS.Safe.Compilation.IR
 
     public sealed class SyntheticReturnBlock : BasicBlock
     {
-        public SyntheticReturnBlock(IRCodePart codePart) : base(codePart, -1, -1, "syntheticReturn")
+        public const string syntheticReturnLabel = "syntheticReturn";
+        public SyntheticReturnBlock(IRCodePart codePart) : base(codePart, -1, -1, syntheticReturnLabel)
         {
         }
+        public override string ToString()
+            => $"BasicBlock:SyntheticReturn";
     }
 }
