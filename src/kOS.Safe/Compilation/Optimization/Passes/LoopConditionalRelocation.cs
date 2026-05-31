@@ -70,12 +70,15 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 // If root == loopData.body it's because this was just called recursively
                 // below. This can be treated as not a loop since it is already identified
                 // as a loop body.
-                if (BlockOrdering.IdentifyLoop(block, regionExits.Peek(), out BlockOrdering.LoopData loopData) && root != loopData.body)
+                if (BlockOrdering.IdentifyLoop(block, regionExits.Peek(), out BlockOrdering.LoopData loopData))
                 {
                     loops.Add(loopData);
-                    regionExits.Push(loopData.exit);
-                    FindLoops(loopData.body, regionExits, loops);
-                    regionExits.Pop();
+                    if (root != loopData.body)
+                    {
+                        regionExits.Push(loopData.exit);
+                        FindLoops(loopData.body, regionExits, loops);
+                        regionExits.Pop();
+                    }
                     block = loopData.exit;
                 }
                 // If branchData.elseBlock == root, that's because this is the branch
@@ -83,7 +86,9 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 else if (BlockOrdering.IdentifyBranch(block, regionExits.Peek(), out BlockOrdering.BranchData branchData) &&
                     branchData.elseBlock != root && branchData.ifBlock != root)
                 {
+                    regionExits.Push(branchData.exit ?? regionExits.Peek());
                     FindLoops(branchData.ifBlock, regionExits, loops);
+                    regionExits.Pop();
                     if (branchData.exit == null && branchData.elseBlock != null)
                     {
                         block = branchData.elseBlock;
