@@ -1016,5 +1016,45 @@ namespace kOS.Safe.Test.Execution
             Assert.IsInstanceOf<OpcodePush>(result[64]);
             Assert.IsInstanceOf<OpcodeMathAdd>(result[65]);
         }
+
+        [Test]
+        public void TestLoopInvariantCodeMotion()
+        {
+            // Test that common expressions are eliminated
+            EnsureAtLeastLevel(OptimizationLevel.Balanced);
+            RunScript("integration/codeMotion.ks");
+            RunSingleStep();
+            AssertOutput(
+                "1.72624326996796",
+                "0",
+                "1",
+                "2",
+                "3",
+                "2.72624326996796",
+                "0",
+                "1",
+                "2",
+                "3",
+                "1.72624326996796"
+            );
+            BasicBlock.ResetNextID();
+            optimizationLevel = OptimizationLevel.None;
+            List<CodePart> codePart = CompileCodePart("integration/codeMotion.ks");
+            List<Safe.Compilation.Opcode> result = GetOpcodesAfterOptimization(codePart[0].MainCode, OptimizationLevel.Balanced, false);
+            Assert.IsInstanceOf<OpcodePush>(result[21]);
+            Assert.AreEqual("$a", ((OpcodePush)result[21]).Argument);
+            Assert.IsInstanceOf<OpcodePush>(result[22]);
+            Assert.AreEqual(Encapsulation.ScalarIntValue.Two, ((OpcodePush)result[22]).Argument);
+            Assert.IsInstanceOf<OpcodeMathAdd>(result[23]);
+            Assert.IsInstanceOf<OpcodeStoreExist>(result[24]);
+            Assert.AreEqual("$b", ((OpcodeStoreExist)result[24]).Identifier);
+            Assert.IsInstanceOf<OpcodePush>(result[52]);
+            Assert.AreEqual("$a", ((OpcodePush)result[52]).Argument);
+            Assert.IsInstanceOf<OpcodePush>(result[53]);
+            Assert.AreEqual(Encapsulation.ScalarIntValue.One, ((OpcodePush)result[53]).Argument);
+            Assert.IsInstanceOf<OpcodeMathAdd>(result[54]);
+            Assert.IsInstanceOf<OpcodeStoreExist>(result[55]);
+            Assert.AreEqual("$b", ((OpcodeStoreExist)result[55]).Identifier);
+        }
     }
 }

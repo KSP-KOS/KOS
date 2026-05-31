@@ -30,9 +30,8 @@ namespace kOS.Safe.Compilation
      *  32100. Common expression elimination
      *          Particularly: Any expression of 3 opcodes used more than twice,
      *          or any expression of >3 opcodes used more than once
+     *  21. Code motion - moving expressions outside loops if they do not depend on loop variables
      *  
-     *  2100. Code motion - moving expressions outside loops if they do not depend on loop variables
-     *  2150. Carry's - moving the N-1 D lookup of >1D lists outside the innermost loop
      *  Loop jamming? (Combining adjacent loops into one)
      *  Unswitching (moving conditional evaluation outside the loop) - low priority
      *  Linear function test replacement - low priority
@@ -43,7 +42,7 @@ namespace kOS.Safe.Compilation
      *  3500. Loop stack manipulation (delayed setting of either index or aggregator)
      *  
      * O4:
-     *  4000. Constant loop unrolling
+     *  4000. Constant length loop unrolling
      */
     public enum OptimizationLevel : int
     {

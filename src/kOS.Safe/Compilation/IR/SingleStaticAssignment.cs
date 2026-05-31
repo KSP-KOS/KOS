@@ -166,6 +166,7 @@ namespace kOS.Safe.Compilation.IR
                     else
                         ReplaceDefinition(variables, (definition.Name, startingScope), definition, writeReplaceChain);
                     startingScope.Assignments.Add(assignment);
+                    assignment.IsInert = true;
                     // IRFunction.IsGlobal initiates as false, so there's no need to |= false.
                     break;
                 case IRAssign.StoreScope.Global:
@@ -175,6 +176,7 @@ namespace kOS.Safe.Compilation.IR
                         ReplaceDefinition(variables, (definition.Name, startingScope.GetGlobalScope()), definition, writeReplaceChain);
                     startingScope.GetGlobalScope().Assignments.Add(assignment);
                     SetFunctionToGlobal(assignment, codePart, variables, readBlacklist, writeBlacklist, writeReplaceChain);
+                    assignment.IsInert = false;
                     break;
                 default:
                     if (ApplyDefinitionToName(definition, startingScope, variables, writeReplaceChain))
@@ -183,8 +185,11 @@ namespace kOS.Safe.Compilation.IR
                         // But true function definitions are definitively set as local or global.
                         // This only applies to a nested lock, which deserves to lose out on optimizations.
                         SetFunctionToGlobal(assignment, codePart, variables, readBlacklist, writeBlacklist, writeReplaceChain);
+                        assignment.IsInert = false;
                         return true;
                     }
+                    else
+                        assignment.IsInert = true;
                     break;
             }
             return false;

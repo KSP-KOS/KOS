@@ -447,6 +447,42 @@ namespace kOS.Safe.Compilation.IR
             if (addedFallthrough)
                 Instructions.Remove(FallthroughJump);
         }
+
+        public static BasicBlock InsertBlockBetween(BasicBlock precursor, BasicBlock successor, bool useHeaderScope = false)
+        {
+            if (!precursor.Successors.Contains(successor))
+                throw new InvalidOperationException("The successor block must be a successor of the precursor block.");
+            BasicBlock betweenBlock = new BasicBlock(precursor.CodePart, precursor.EndIndex, successor.StartIndex)
+            {
+                Scope = useHeaderScope ? precursor.Scope : successor.Scope,
+                ExtendedBlock = successor.ExtendedBlock,
+                IsExecutable = successor.IsExecutable
+            };
+            betweenBlock.TriggerPropagationBlacklist.UnionWith(successor.TriggerPropagationBlacklist);
+            foreach (var key in successor.TriggerUnsetBlacklist.Keys)
+                betweenBlock.TriggerUnsetBlacklist[key] = successor.TriggerUnsetBlacklist[key];
+            betweenBlock.IncomingVariableDefinitions = new Dictionary<(string, IRScope), SSADefinition>();
+            foreach (var key in successor.IncomingVariableDefinitions.Keys)
+                betweenBlock.IncomingVariableDefinitions[key] = successor.IncomingVariableDefinitions[key];
+            betweenBlock.FallthroughJump = new IRJump(betweenBlock, successor, -1, -1);
+            betweenBlock.AddSuccessor(successor);
+            precursor.AddSuccessor(betweenBlock);
+            precursor.RemoveSuccessor(successor);
+            if (precursor.FallthroughJump != null)
+                precursor.FallthroughJump = new IRJump(precursor,
+                    betweenBlock,
+                    precursor.FallthroughJump.SourceLine,
+                    precursor.FallthroughJump.SourceColumn);
+            if (precursor.Instructions.Count > 0 &&
+                precursor.Instructions[precursor.Instructions.Count - 1] is IRBranch branch)
+            {
+                if (branch.True == successor)
+                    branch.True = betweenBlock;
+                if (branch.False == successor)
+                    branch.False = betweenBlock;
+            }
+            return betweenBlock;
+        }
     }
 
     public sealed class SyntheticReturnBlock : BasicBlock
