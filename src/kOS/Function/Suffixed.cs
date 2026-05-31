@@ -15,7 +15,7 @@ using kOS.Safe;
 
 namespace kOS.Function
 {
-    [Function("node", ReturnType = typeof(Node), IsInvariant = false)]
+    [Function("node", ReturnType = typeof(Node), IsInvariant = false, IsInert = false)]
     public class FunctionNode : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -40,7 +40,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("v", ReturnType = typeof(Vector), IsInvariant = true)]
+    [Function("v", ReturnType = typeof(Vector), IsInvariant = true, IsInert = true)]
     public class FunctionVector : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -55,7 +55,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("r", ReturnType = typeof(Direction), IsInvariant = true)]
+    [Function("r", ReturnType = typeof(Direction), IsInvariant = true, IsInert = true)]
     public class FunctionRotation : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -70,7 +70,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("q", ReturnType = typeof(Direction), IsInvariant = true)]
+    [Function("q", ReturnType = typeof(Direction), IsInvariant = true, IsInert = true)]
     public class FunctionQuaternion : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -86,7 +86,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("createOrbit", ReturnType = typeof(OrbitInfo), IsInvariant = false)]
+    [Function("createOrbit", ReturnType = typeof(OrbitInfo), IsInvariant = false, IsInert = true)]
     public class FunctionCreateOrbit : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -131,7 +131,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("rotatefromto", ReturnType = typeof(Direction), IsInvariant = true)]
+    [Function("rotatefromto", ReturnType = typeof(Direction), IsInvariant = true, IsInert = true)]
     public class FunctionRotateFromTo : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -145,7 +145,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("lookdirup", ReturnType = typeof(Direction), IsInvariant = true)]
+    [Function("lookdirup", ReturnType = typeof(Direction), IsInvariant = true, IsInert = true)]
     public class FunctionLookDirUp : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -159,7 +159,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("angleaxis", ReturnType = typeof(Direction), IsInvariant = true)]
+    [Function("angleaxis", ReturnType = typeof(Direction), IsInvariant = true, IsInert = true)]
     public class FunctionAngleAxis : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -173,7 +173,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("latlng", ReturnType = typeof(GeoCoordinates), IsInvariant = false)]
+    [Function("latlng", ReturnType = typeof(GeoCoordinates), IsInvariant = true, IsInert = false)]
     public class FunctionLatLng : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -187,7 +187,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("vessel", ReturnType = typeof(VesselTarget), IsInvariant = false)]
+    [Function("vessel", ReturnType = typeof(VesselTarget), IsInvariant = false, IsInert = true)]
     public class FunctionVessel : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -199,7 +199,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("body", ReturnType = typeof(BodyTarget), IsInvariant = false)]
+    [Function("body", ReturnType = typeof(BodyTarget), IsInvariant = false, IsInert = true)]
     public class FunctionBody : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -211,7 +211,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("bodyexists", ReturnType = typeof(BooleanValue), IsInvariant = false)]
+    [Function("bodyexists", ReturnType = typeof(BooleanValue), IsInvariant = false, IsInert = true)]
     public class FunctionBodyExists : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -222,7 +222,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("bodyatmosphere", ReturnType = typeof(BodyAtmosphere), IsInvariant = false)]
+    [Function("bodyatmosphere", ReturnType = typeof(BodyAtmosphere), IsInvariant = false, IsInert = true)]
     public class FunctionBodyAtmosphere : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -237,7 +237,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("bounds", ReturnType = typeof(BoundsValue), IsInvariant = false)]
+    [Function("bounds", ReturnType = typeof(BoundsValue), IsInvariant = true, IsInert = true)]
     public class FunctionBounds : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -252,7 +252,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("heading", ReturnType = typeof(Direction), IsInvariant = false)]
+    [Function("heading", ReturnType = typeof(Direction), IsInvariant = false, IsInert = true)]
     public class FunctionHeading : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -274,7 +274,7 @@ namespace kOS.Function
         }
     }
     
-    [Function("slidenote", ReturnType = typeof(NoteValue), IsInvariant = true)]
+    [Function("slidenote", ReturnType = typeof(NoteValue), IsInvariant = true, IsInert = true)]
     public class FunctionSlideNote : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -304,7 +304,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("note", ReturnType = typeof(NoteValue), IsInvariant = true)]
+    [Function("note", ReturnType = typeof(NoteValue), IsInvariant = true, IsInert = true)]
     public class FunctionNote : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -333,7 +333,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("GetVoice", ReturnType = typeof(VoiceValue), IsInvariant = false)]
+    [Function("GetVoice", ReturnType = typeof(VoiceValue), IsInvariant = false, IsInert = true)]
     public class FunctionGetVoice : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -354,7 +354,7 @@ namespace kOS.Function
     }
 
 
-    [Function("StopAllVoices", ReturnType = null, IsInvariant = false)]
+    [Function("StopAllVoices", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class FunctionStopAllVoices : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -362,7 +362,7 @@ namespace kOS.Function
             shared.SoundMaker.StopAllVoices();
         }
     }
-    [Function("timestamp", "time", ReturnType = typeof(TimeStamp), IsInvariant = false)]
+    [Function("timestamp", "time", ReturnType = typeof(TimeStamp), IsInvariant = false, IsInert = true)]
     public class FunctionTimeStamp : FunctionBase
     {
         // Note: "TIME" is both a bound variable AND a built-in function now.
@@ -426,7 +426,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("timespan", ReturnType = typeof(Suffixed.TimeSpan), IsInvariant = true)]
+    [Function("timespan", ReturnType = typeof(Suffixed.TimeSpan), IsInvariant = true, IsInert = true)]
     public class FunctionTimeSpan : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -477,7 +477,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("hsv", ReturnType = typeof(HsvaColor), IsInvariant = true)]
+    [Function("hsv", ReturnType = typeof(HsvaColor), IsInvariant = true, IsInert = true)]
     public class FunctionHsv : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -490,7 +490,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("hsva", ReturnType = typeof(HsvaColor), IsInvariant = true)]
+    [Function("hsva", ReturnType = typeof(HsvaColor), IsInvariant = true, IsInert = true)]
     public class FunctionHsva : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -504,7 +504,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("rgb", ReturnType = typeof(RgbaColor), IsInvariant = true)]
+    [Function("rgb", ReturnType = typeof(RgbaColor), IsInvariant = true, IsInert = true)]
     public class FunctionRgb : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -517,7 +517,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("rgba", ReturnType = typeof(RgbaColor), IsInvariant = true)]
+    [Function("rgba", ReturnType = typeof(RgbaColor), IsInvariant = true, IsInert = true)]
     public class FunctionRgba : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -539,7 +539,7 @@ namespace kOS.Function
     // Note: vecdraw now counts the args and changes its behavior accordingly.
     // For backward compatibility, vecdrawargs has been aliased to vecdraw.
     //
-    [Function("vecdraw", "vecdrawargs", ReturnType = typeof(VectorRenderer), IsInvariant = false)]
+    [Function("vecdraw", "vecdrawargs", ReturnType = typeof(VectorRenderer), IsInvariant = true, IsInert = false)]
     public class FunctionVecDrawNull : FunctionBase
     {
         protected RgbaColor GetDefaultColor()
@@ -629,7 +629,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("clearvecdraws", ReturnType = null, IsInvariant = false)]
+    [Function("clearvecdraws", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class FunctionHideAllVecdraws : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -639,7 +639,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("clearguis", ReturnType = null, IsInvariant = false)]
+    [Function("clearguis", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class FunctionClearAllGuis : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -649,7 +649,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("gui", ReturnType = typeof(GUIWidgets), IsInvariant = false)]
+    [Function("gui", ReturnType = typeof(GUIWidgets), IsInvariant = true, IsInert = false)]
     public class FunctionWidgets : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -662,7 +662,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("positionat", ReturnType = typeof(Vector), IsInvariant = false)]
+    [Function("positionat", ReturnType = typeof(Vector), IsInvariant = false, IsInert = true)]
     public class FunctionPositionAt : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -675,7 +675,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("velocityat", ReturnType = typeof(Vector), IsInvariant = false)]
+    [Function("velocityat", ReturnType = typeof(Vector), IsInvariant = false, IsInert = true)]
     public class FunctionVelocityAt : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -688,7 +688,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("highlight", ReturnType = typeof(HighlightStructure), IsInvariant = false)]
+    [Function("highlight", ReturnType = typeof(HighlightStructure), IsInvariant = true, IsInert = false)]
     public class FunctionHightlight : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -701,7 +701,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("orbitat", ReturnType = typeof(OrbitInfo), IsInvariant = false)]
+    [Function("orbitat", ReturnType = typeof(OrbitInfo), IsInvariant = false, IsInert = true)]
     public class FunctionOrbitAt : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -714,7 +714,7 @@ namespace kOS.Function
         }
     }
     
-    [Function("career", ReturnType = typeof(Career), IsInvariant = false)]
+    [Function("career", ReturnType = typeof(Career), IsInvariant = false, IsInert = true)]
     public class FunctionCareer : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -724,7 +724,7 @@ namespace kOS.Function
         }
     }
     
-    [Function("allwaypoints", ReturnType = typeof(ListValue<WaypointValue>), IsInvariant = false)]
+    [Function("allwaypoints", ReturnType = typeof(ListValue<WaypointValue>), IsInvariant = false, IsInert = true)]
     public class FunctionAllWaypoints : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -758,7 +758,7 @@ namespace kOS.Function
         }
     }
     
-    [Function("waypoint", ReturnType = typeof(WaypointValue), IsInvariant = false)]
+    [Function("waypoint", ReturnType = typeof(WaypointValue), IsInvariant = false, IsInert = true)]
     public class FunctionWaypoint : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -805,7 +805,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("transferall", ReturnType = typeof(ResourceTransferValue), IsInvariant = false)]
+    [Function("transferall", ReturnType = typeof(ResourceTransferValue), IsInvariant = false, IsInert = false)]
     public class FunctionTransferAll : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -828,7 +828,7 @@ namespace kOS.Function
 
     }
 
-    [Function("transfer", ReturnType = typeof(ResourceTransferValue), IsInvariant = false)]
+    [Function("transfer", ReturnType = typeof(ResourceTransferValue), IsInvariant = false, IsInert = false)]
     public class FunctionTransfer : FunctionBase
     {
         public override void Execute(SharedObjects shared)

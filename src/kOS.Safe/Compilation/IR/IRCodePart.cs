@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe.Compilation.KS;
+using kOS.Safe.Compilation.Optimization;
 
 namespace kOS.Safe.Compilation.IR
 {
@@ -363,30 +364,30 @@ namespace kOS.Safe.Compilation.IR
             /// </value>
             public bool IsInvariant
                 => Returns.IsInvariant &&
-                IsSelfInvariant() &&
-                FunctionCalls.Where(func => func != this).All(function => function.IsSelfInvariant());
-
-            private bool IsSelfInvariant()
+                FunctionCalls.Where(f => f != this).All(function => function.Returns.IsInvariant);
+            public bool IsInert
+                => IsSelfInert &&
+                FunctionCalls.Where(f => f != this).All(function => function.IsSelfInert);
+            private bool IsSelfInert
             {
-                if (ExternalWrites.Count > 0 || ExternalUnsets.Count > 0)
-                    return false;
+                get
+                {
+                    if (ExternalWrites.Count > 0 || ExternalUnsets.Count > 0)
+                        return false;
 
-                return Fragments.All(fragment =>
-                    fragment.FunctionCode.Where(block => block.IsExecutable).All(block =>
-                        block.Instructions.All(instruction =>
-                        {
-                            switch (instruction)
+                    return Fragments.All(fragment =>
+                        fragment.FunctionCode.Where(block => block.IsExecutable).All(block =>
+                            block.Instructions.All(instruction =>
                             {
-                                case IRNoStackInstruction noStackInstruction:
-                                case IRSuffixSet _:
-                                case IRIndexSet _:
-                                    return instruction.IsInvariant;
-                                default:
-                                    return true;
-                            }
-                        })
-                    )
-                );
+                                foreach (IRInstruction operation in instruction.DepthFirst())
+                                    if (operation is IActionInstruction actionInstruction &&
+                                        !actionInstruction.IsInert)
+                                        return false;
+                                return true;
+                            })
+                        )
+                    );
+                }
             }
 
             public List<BasicBlock> RootBlocks { get; } = new List<BasicBlock>();

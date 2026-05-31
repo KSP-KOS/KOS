@@ -90,7 +90,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         // Break from the subexpression loop if a
                         // non-invariant call is encountered so as
                         // to not 'optimize' away a call that does something.
-                        if (operand is IRCall call && !call.IsCallInvariant())
+                        if (operand is IRCall call && !call.IsInvariant)
                             breaking = true;
                         else if (operand is IResultingInstruction resultingInstruction)
                         {

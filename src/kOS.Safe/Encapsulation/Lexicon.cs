@@ -14,7 +14,7 @@ namespace kOS.Safe.Encapsulation
     [kOS.Safe.Utilities.KOSNomenclature("Lex", CSharpToKOS = false)]
     public class Lexicon : SerializableStructure, IDictionary<Structure, Structure>, IIndexable
     {
-        [Function("lex", "lexicon", ReturnType = typeof(Lexicon), IsInvariant = true)]
+        [Function("lex", "lexicon", ReturnType = typeof(Lexicon), IsInvariant = true, IsInert = true)]
         public class FunctionLexicon : SafeFunctionBase
         {
             public override void Execute(SafeSharedObjects shared)

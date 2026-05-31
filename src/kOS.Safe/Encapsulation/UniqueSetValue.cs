@@ -73,7 +73,7 @@ namespace kOS.Safe.Encapsulation
     [kOS.Safe.Utilities.KOSNomenclature("UniqueSet", KOSToCSharp = false)] // one-way because the generic templated UniqueSetValue<T> is the canonical one.
     public class UniqueSetValue : UniqueSetValue<Structure>
     {
-        [Function("uniqueset", ReturnType = typeof(UniqueSetValue), IsInvariant = true)]
+        [Function("uniqueset", ReturnType = typeof(UniqueSetValue), IsInvariant = true, IsInert = true)]
         public class FunctionSet : SafeFunctionBase
         {
             public override void Execute(SafeSharedObjects shared)

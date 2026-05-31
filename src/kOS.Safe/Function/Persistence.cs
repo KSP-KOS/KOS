@@ -12,7 +12,7 @@ namespace kOS.Safe.Function
      * remove these function below as well any metions of delete/rename file/rename volume/copy from kRISC.tpg in the future.
      */
 
-    [Function("copy_deprecated", ReturnType = null, IsInvariant = false)]
+    [Function("copy_deprecated", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class FunctionCopyDeprecated : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -49,7 +49,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("rename_file_deprecated", ReturnType = null, IsInvariant = false)]
+    [Function("rename_file_deprecated", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class FunctionRenameFileDeprecated : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -76,7 +76,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("rename_volume_deprecated", ReturnType = null, IsInvariant = false)]
+    [Function("rename_volume_deprecated", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class FunctionRenameVolumeDeprecated : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -99,7 +99,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("delete_deprecated", ReturnType = null, IsInvariant = false)]
+    [Function("delete_deprecated", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class FunctionDeleteDeprecated : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -127,7 +127,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("scriptpath", ReturnType = typeof(PathValue), IsInvariant = false)]
+    [Function("scriptpath", ReturnType = typeof(PathValue), IsInvariant = false, IsInert = true)]
     public class FunctionScriptPath : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -141,7 +141,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("switch", ReturnType = null, IsInvariant = false)]
+    [Function("switch", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class FunctionSwitch : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -164,7 +164,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("cd", "chdir", ReturnType = null, IsInvariant = false)]
+    [Function("cd", "chdir", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class FunctionCd : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -198,7 +198,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("copypath", ReturnType = typeof(BooleanValue), IsInvariant = false)]
+    [Function("copypath", ReturnType = typeof(BooleanValue), IsInvariant = false, IsInert = false)]
     public class FunctionCopyPath : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -214,7 +214,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("movepath", ReturnType = typeof(BooleanValue), IsInvariant = false)]
+    [Function("movepath", ReturnType = typeof(BooleanValue), IsInvariant = false, IsInert = false)]
     public class FunctionMove : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -230,7 +230,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("deletepath", ReturnType = typeof(BooleanValue), IsInvariant = false)]
+    [Function("deletepath", ReturnType = typeof(BooleanValue), IsInvariant = false, IsInert = false)]
     public class FunctionDeletePath : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -245,7 +245,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("writejson", ReturnType = typeof(VolumeFile), IsInvariant = false)]
+    [Function("writejson", ReturnType = typeof(VolumeFile), IsInvariant = false, IsInert = false)]
     public class FunctionWriteJson : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -270,7 +270,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("readjson", ReturnType = typeof(Structure), IsInvariant = false)]
+    [Function("readjson", ReturnType = typeof(Structure), IsInvariant = false, IsInert = true)]
     public class FunctionReadJson : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -293,7 +293,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("exists", ReturnType = typeof(BooleanValue), IsInvariant = false)]
+    [Function("exists", ReturnType = typeof(BooleanValue), IsInvariant = false, IsInert = true)]
     public class FunctionExists : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -308,7 +308,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("open", ReturnType = typeof(Structure), IsInvariant = false)]
+    [Function("open", ReturnType = typeof(Structure), IsInvariant = false, IsInert = false)]
     public class FunctionOpen : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -328,7 +328,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("create", ReturnType = typeof(VolumeFile), IsInvariant = false)]
+    [Function("create", ReturnType = typeof(VolumeFile), IsInvariant = false, IsInert = false)]
     public class FunctionCreate : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -345,7 +345,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("createdir", ReturnType = typeof(VolumeDirectory), IsInvariant = false)]
+    [Function("createdir", ReturnType = typeof(VolumeDirectory), IsInvariant = false, IsInert = false)]
     public class FunctionCreateDirectory : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)

@@ -4,7 +4,7 @@ using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Function
 {
-    [Function("sin", ReturnType = typeof(ScalarDoubleValue), IsInvariant = true)]
+    [Function("sin", ReturnType = typeof(ScalarDoubleValue), IsInvariant = true, IsInert = true)]
     public class FunctionSin : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -17,7 +17,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("cos", ReturnType = typeof(ScalarDoubleValue), IsInvariant = true)]
+    [Function("cos", ReturnType = typeof(ScalarDoubleValue), IsInvariant = true, IsInert = true)]
     public class FunctionCos : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -30,7 +30,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("tan", ReturnType = typeof(ScalarDoubleValue), IsInvariant = true)]
+    [Function("tan", ReturnType = typeof(ScalarDoubleValue), IsInvariant = true, IsInert = true)]
     public class FunctionTan : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -43,7 +43,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("arcsin", ReturnType = typeof(ScalarDoubleValue), IsInvariant = true)]
+    [Function("arcsin", ReturnType = typeof(ScalarDoubleValue), IsInvariant = true, IsInert = true)]
     public class FunctionArcSin : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -55,7 +55,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("arccos", ReturnType = typeof(ScalarDoubleValue), IsInvariant = true)]
+    [Function("arccos", ReturnType = typeof(ScalarDoubleValue), IsInvariant = true, IsInert = true)]
     public class FunctionArcCos : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -67,7 +67,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("arctan", ReturnType = typeof(ScalarDoubleValue), IsInvariant = true)]
+    [Function("arctan", ReturnType = typeof(ScalarDoubleValue), IsInvariant = true, IsInert = true)]
     public class FunctionArcTan : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -79,7 +79,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("arctan2", ReturnType = typeof(ScalarDoubleValue), IsInvariant = true)]
+    [Function("arctan2", ReturnType = typeof(ScalarDoubleValue), IsInvariant = true, IsInert = true)]
     public class FunctionArcTan2 : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -92,7 +92,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("anglediff", ReturnType = typeof(ScalarDoubleValue), IsInvariant = true)]
+    [Function("anglediff", ReturnType = typeof(ScalarDoubleValue), IsInvariant = true, IsInert = true)]
     public class FunctionAngleDiff : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)

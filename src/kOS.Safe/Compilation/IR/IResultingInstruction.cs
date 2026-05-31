@@ -10,18 +10,8 @@ namespace kOS.Safe.Compilation.IR
         ushort OpcodeCount { get; }
     }
 
-    public interface IEvaluatableToConstant
+    public interface IEvaluatableToConstant : IInterimOperand
     {
-        /// <summary>
-        /// Gets a value indicating whether this instance is invariant.
-        /// That is, if the value of the operand can be known at
-        /// compile time.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is invariant; otherwise, <c>false</c>.
-        /// </value>
-        bool IsInvariant { get; }
-
         /// <summary>
         /// Evaluates the instruction to a constant value.
         /// </summary>

@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 namespace kOS.Function
 {
-    [Function("edit", ReturnType = null, IsInvariant = false)]
+    [Function("edit", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class FunctionEdit : FunctionBase
     {
         public override void Execute(SharedObjects shared)

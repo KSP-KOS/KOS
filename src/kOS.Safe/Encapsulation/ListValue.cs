@@ -150,7 +150,7 @@ namespace kOS.Safe.Encapsulation
     [kOS.Safe.Utilities.KOSNomenclature("List", KOSToCSharp = false)] // one-way because the generic templated ListValue<T> is the canonical one.  
     public class ListValue : ListValue<Structure>
     {
-        [Function("list", ReturnType = typeof(ListValue), IsInvariant = true)]
+        [Function("list", ReturnType = typeof(ListValue), IsInvariant = true, IsInert = true)]
         public class FunctionList : SafeFunctionBase
         {
             public override void Execute(SafeSharedObjects shared)

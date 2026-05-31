@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace kOS.AddOns.KerbalAlarmClock
 {
-    [Function("addAlarm", ReturnType = typeof(Structure), IsInvariant = false)]
+    [Function("addAlarm", ReturnType = typeof(KACAlarmWrapper), IsInvariant = false, IsInert = false)]
     public class FunctionAddAlarm : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -66,7 +66,7 @@ namespace kOS.AddOns.KerbalAlarmClock
         }
     }
 
-    [Function("listAlarms", ReturnType = typeof(ListValue<KACAlarmWrapper>), IsInvariant = false)]
+    [Function("listAlarms", ReturnType = typeof(ListValue<KACAlarmWrapper>), IsInvariant = false, IsInert = true)]
     public class FunctionListAlarms : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -100,7 +100,7 @@ namespace kOS.AddOns.KerbalAlarmClock
         }
     }
 
-    [Function("deleteAlarm", ReturnType = typeof(BooleanValue), IsInvariant = false)]
+    [Function("deleteAlarm", ReturnType = typeof(BooleanValue), IsInvariant = false, IsInert = false)]
     public class FunctionDeleteAlarm : FunctionBase
     {
         public override void Execute(SharedObjects shared)

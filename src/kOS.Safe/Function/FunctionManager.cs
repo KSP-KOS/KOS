@@ -13,6 +13,7 @@ namespace kOS.Safe.Function
         private readonly Dictionary<string, SafeFunctionBase> functions = new Dictionary<string, SafeFunctionBase>(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, Type> functionTypes = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
         private readonly HashSet<string> invariantFunctions = new HashSet<string>();
+        private readonly HashSet<string> inertFunctions = new HashSet<string>();
         private static readonly Dictionary<FunctionAttribute, Type> rawAttributes = new Dictionary<FunctionAttribute, Type>();
 
         public FunctionManager(SafeSharedObjects shared)
@@ -26,6 +27,7 @@ namespace kOS.Safe.Function
             functions.Clear();
             functionTypes.Clear();
             invariantFunctions.Clear();
+            inertFunctions.Clear();
 
             foreach (FunctionAttribute attr in rawAttributes.Keys)
             {
@@ -40,6 +42,8 @@ namespace kOS.Safe.Function
                         functionTypes.Add(functionName, attr.ReturnType);
                         if (attr.IsInvariant)
                             invariantFunctions.Add(functionName);
+                        if (attr.IsInert)
+                            inertFunctions.Add(functionName);
                     }
                 }
             }
@@ -82,6 +86,10 @@ namespace kOS.Safe.Function
         public bool IsFunctionInvariant(string functionName)
         {
             return invariantFunctions.Contains(functionName);
+        }
+        public bool IsFunctionInert(string functionName)
+        {
+            return inertFunctions.Contains(functionName);
         }
 
         public Type FunctionReturnType(string functionName)

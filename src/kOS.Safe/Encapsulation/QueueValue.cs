@@ -68,7 +68,7 @@ namespace kOS.Safe.Encapsulation
     [kOS.Safe.Utilities.KOSNomenclature("Queue", KOSToCSharp = false)] // one-way because the generic templated QueueValue<T> is the canonical one.  
     public class QueueValue : QueueValue<Structure>
     {
-        [Function("queue", ReturnType = typeof(QueueValue), IsInvariant = true)]
+        [Function("queue", ReturnType = typeof(QueueValue), IsInvariant = true, IsInert = true)]
         public class FunctionQueue : SafeFunctionBase
         {
             public override void Execute(SafeSharedObjects shared)

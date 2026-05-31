@@ -11,6 +11,14 @@ namespace kOS.Safe.Compilation.IR
         public short SourceLine { get; private set; }   // line number in the source code that this was compiled from.
         public short SourceColumn { get; private set; } // column number of the token nearest the cause of this Opcode.
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is invariant.
+        /// That is, if the effects and result of the operation can
+        /// be known at compile time.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is invariant; otherwise, <c>false</c>.
+        /// </value>
         public abstract bool IsInvariant { get; }
         public abstract IEnumerable<Opcode> EmitOpcodes();
         protected IRInstruction(Opcode originalOpcode, BasicBlock block)
@@ -107,7 +115,7 @@ namespace kOS.Safe.Compilation.IR
         }
     }
 
-    public class IRAssign : SingleOperandInstruction
+    public class IRAssign : SingleOperandInstruction, IActionInstruction
     {
         public enum StoreScope
         {
@@ -116,6 +124,7 @@ namespace kOS.Safe.Compilation.IR
             Global
         }
         public override bool IsInvariant => Value.IsInvariant;
+        public bool IsInert { get; set; }
         public SSASetDefinition Target { get; set; }
         public IInterimOperand Value { get => operand; set => operand = value; }
         public StoreScope Scope { get; set; } = StoreScope.Ambivalent;
@@ -505,14 +514,15 @@ namespace kOS.Safe.Compilation.IR
             }
         }
     }
-    public class IRNoStackInstruction : IRInstruction
+    public class IRNoStackInstruction : IRInstruction, IActionInstruction
     {
-        public override bool IsInvariant { get; } = false;
+        public override bool IsInvariant => true;
+        public bool IsInert { get; } = false;
         public Opcode Operation { get; }
         public IRNoStackInstruction(BasicBlock block, Opcode opcode) : base(opcode, block)
             => Operation = opcode;
-        public IRNoStackInstruction(BasicBlock block, Opcode opcode, bool isInvariant) : this(block, opcode)
-            => IsInvariant = isInvariant;
+        public IRNoStackInstruction(BasicBlock block, Opcode opcode, bool isInert) : this(block, opcode)
+            => IsInert = isInert;
         public override IEnumerable<Opcode> EmitOpcodes()
         {
             Operation.Label = string.Empty;
@@ -521,10 +531,11 @@ namespace kOS.Safe.Compilation.IR
         public override string ToString()
             => Operation.ToString();
     }
-    public class IRUnaryConsumer : SingleOperandInstruction
+    public class IRUnaryConsumer : SingleOperandInstruction, IActionInstruction
     {
         private readonly bool operationHasSideEffects;
-        public override bool IsInvariant => !operationHasSideEffects && Operand.IsInvariant;
+        public override bool IsInvariant => Operand.IsInvariant;
+        public bool IsInert => !operationHasSideEffects;
         public Opcode Operation { get; }
         public IInterimOperand Operand { get => operand; set => operand = value; }
         public IRUnaryConsumer(BasicBlock block, Opcode opcode, IInterimOperand operand, bool sideEffects = false) : base(opcode, block)
@@ -543,12 +554,12 @@ namespace kOS.Safe.Compilation.IR
         public override string ToString()
             => Operation.ToString();
     }
-    public class IRUnset : IRUnaryConsumer
+    public class IRUnset : IRUnaryConsumer, IActionInstruction
     {
         public override bool IsInvariant => Target != null;
         public SSASetDefinition Target { get; set; }
         public bool IsExecutable => Block.IsExecutable;
-        public IRUnset(BasicBlock block, OpcodeUnset opcode, IInterimOperand operand) : base(block, opcode, operand, false)
+        public IRUnset(BasicBlock block, OpcodeUnset opcode, IInterimOperand operand) : base(block, opcode, operand, true)
         {
             if (operand.IsInvariant)
             {
@@ -557,9 +568,10 @@ namespace kOS.Safe.Compilation.IR
             }
         }
     }
-    public class IRPop : SingleOperandInstruction
+    public class IRPop : SingleOperandInstruction, IActionInstruction
     {
         public override bool IsInvariant => Value.IsInvariant;
+        public bool IsInert => true;
         public IInterimOperand Value { get => operand; set => operand = value; }
         public IRPop(BasicBlock block, IInterimOperand value, OpcodePop opcode) : base(opcode, block)
             => Value = value;
@@ -689,8 +701,10 @@ namespace kOS.Safe.Compilation.IR
             return new InterimConstantValue(result, this);
         }
     }
-    public class IRSuffixGetMethod : IRSuffixGet
+    public class IRSuffixGetMethod : IRSuffixGet, IActionInstruction
     {
+        // TODO: Consider implementing this.
+        public bool IsInert => false;
         public IRSuffixGetMethod(BasicBlock block, IInterimOperand obj, OpcodeGetMethod opcode) : base(block, obj, opcode) { }
         public override IEnumerable<Opcode> EmitOpcodes()
         {
@@ -706,9 +720,10 @@ namespace kOS.Safe.Compilation.IR
         public override int GetHashCode()
             => base.GetHashCode();
     }
-    public class IRSuffixSet : MultipleOperandInstruction
+    public class IRSuffixSet : MultipleOperandInstruction, IActionInstruction
     {
-        public override bool IsInvariant => false;
+        public override bool IsInvariant => IsInert && Object.IsInvariant && Value.IsInvariant;
+        public bool IsInert => false;
         public IInterimOperand Object { get; set; }
         public IInterimOperand Value { get; set; }
         public override IEnumerable<IInterimOperand> Operands { get { yield return Object; yield return Value; } }
@@ -834,9 +849,10 @@ namespace kOS.Safe.Compilation.IR
             //((Encapsulation.IIndexable)Object).GetIndex();
         }
     }
-    public class IRIndexSet : MultipleOperandInstruction
+    public class IRIndexSet : MultipleOperandInstruction, IActionInstruction
     {
-        public override bool IsInvariant => false;
+        public override bool IsInvariant => IsInert && Object.IsInvariant && Index.IsInvariant && Value.IsInvariant;
+        public bool IsInert => false;
         public IInterimOperand Object { get; set; }
         public IInterimOperand Index { get; set; }
         public IInterimOperand Value { get; set; }
@@ -972,7 +988,7 @@ namespace kOS.Safe.Compilation.IR
             return new IRBranch(block, Condition.Clone(block), True, False, opcode);
         }
         public override string ToString()
-            => string.Format("{{br.? {0}/{1}}}", True.Label, False.Label);
+            => string.Format("{{br.?{2} {0}/{1}}}", True.Label, False.Label, PreferFalse ? "f" : "t");
         public override bool Equals(object obj)
             => obj is IRBranch branch &&
                 Condition.Equals(branch.Condition) &&
@@ -981,9 +997,9 @@ namespace kOS.Safe.Compilation.IR
         public override int GetHashCode()
             => True.GetHashCode() ^ False.GetHashCode();
     }
-    public class IRCall : MultipleOperandInstruction, IResultingInstruction
+    public class IRCall : MultipleOperandInstruction, IResultingInstruction, IActionInstruction
     {
-        public override bool IsInvariant => IsCallInvariant() && Arguments.All(a => a.IsInvariant);
+        public override bool IsInvariant => IsSelfInvariant && IsInert && Arguments.All(a => a.IsInvariant);
         public string Function { get; }
         public List<IInterimOperand> Arguments { get; } = new List<IInterimOperand>();
         public override IEnumerable<IInterimOperand> Operands => Enumerable.Reverse(Arguments);
@@ -1019,17 +1035,35 @@ namespace kOS.Safe.Compilation.IR
             Direct = opcode.Direct;
             EmitArgMarker = emitArgMarker;
         }
-        public bool IsCallInvariant()
+        private bool IsSelfInvariant
         {
-            // TODO: Consider that some suffix methods may actually be known at compile time.
-            IRCodePart.IRFunction function = Block?.CodePart?.GetFunction(this);
-            if (function != null)
-                return function.IsInvariant;
-            if (!Direct)
+            get
+            {
+                // TODO: Consider that some suffix methods may actually be known at compile time.
+                IRCodePart.IRFunction function = Block?.CodePart?.GetFunction(this);
+                if (function != null)
+                    return function.IsInvariant;
+                if (!Direct)
+                    return false;
+                if (Optimization.Optimizer.FunctionManager.Exists(Function.Replace("()", "")))
+                    return Optimization.Optimizer.FunctionManager.IsFunctionInvariant(Function.Replace("()", ""));
                 return false;
-            if (Optimization.Optimizer.FunctionManager.Exists(Function.Replace("()", "")))
-                return Optimization.Optimizer.FunctionManager.IsFunctionInvariant(Function.Replace("()", ""));
-            return false;
+            }
+        }
+        public bool IsInert
+        {
+            get
+            {
+                // TODO: Consider that some suffix methods may actually be inert.
+                IRCodePart.IRFunction function = Block?.CodePart?.GetFunction(this);
+                if (function != null)
+                    return function.IsInert;
+                if (!Direct)
+                    return false;
+                if (Optimization.Optimizer.FunctionManager.Exists(Function.Replace("()", "")))
+                    return Optimization.Optimizer.FunctionManager.IsFunctionInert(Function.Replace("()", ""));
+                return false;
+            }
         }
         private Type GetDefaultReturnType()
         {
@@ -1082,7 +1116,7 @@ namespace kOS.Safe.Compilation.IR
             => string.Format("{{call {0}({1})}}", Function.Trim('(', ')'), string.Join(",", Arguments.Select(a => a.ToString())));
         public bool Equals(IInterimOperand other)
             => (other is IRCall call &&
-                IsCallInvariant() &&    // If the call does something beyond arithmetic, this condition prevents optimizing it away.
+                IsInert &&  // If the call is not inert, the underlying state is affected, which makes any similar call non-equal.
                 string.Equals(Function.Replace("()", ""), call.Function.Replace("()", ""), StringComparison.OrdinalIgnoreCase) &&
                 Arguments.SequenceEqual(call.Arguments)) ||
                 (IsInvariant &&

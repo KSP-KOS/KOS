@@ -622,7 +622,7 @@ namespace kOS.Safe.Compilation.IR
             => new InterimResolvedReference(item, -1, -1);
 
     }
-    public class PhiOperand : PhiNode<IInterimOperand>, IEvaluatableToConstant
+    public class PhiOperand : PhiNode<IInterimOperand>
     {
         protected override bool ObjIsInvariant(IInterimOperand obj)
             => obj == null || (obj.IsInvariant && obj is IEvaluatableToConstant);

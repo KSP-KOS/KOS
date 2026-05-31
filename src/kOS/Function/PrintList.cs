@@ -16,7 +16,7 @@ using kOS.Safe;
 
 namespace kOS.Function
 {
-    [Function("printlist", ReturnType = null, IsInvariant = false)]
+    [Function("printlist", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class FunctionPrintList : FunctionBase
     {
         public override void Execute(SharedObjects shared)
