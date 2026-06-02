@@ -30,7 +30,7 @@ namespace kOS.Safe.Compilation
      *  32100. Common expression elimination
      *          Particularly: Any expression of 3 opcodes used more than twice,
      *          or any expression of >3 opcodes used more than once
-     *  21. Code motion - moving expressions outside loops if they do not depend on loop variables
+     *  2100. Code motion - moving expressions outside loops if they do not depend on loop variables
      *  
      *  Loop jamming? (Combining adjacent loops into one)
      *  Unswitching (moving conditional evaluation outside the loop) - low priority

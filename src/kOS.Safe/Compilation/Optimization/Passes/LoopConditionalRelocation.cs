@@ -58,10 +58,10 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         public static List<BlockOrdering.LoopData> FindLoops(BasicBlock root, Stack<BasicBlock> regionExits)
         {
             List<BlockOrdering.LoopData> loopData = new List<BlockOrdering.LoopData>();
-            FindLoops(root, regionExits, loopData);
+            FindLoops(root, regionExits, loopData, false);
             return loopData;
         }
-        private static void FindLoops(BasicBlock root, Stack<BasicBlock> regionExits, List<BlockOrdering.LoopData> loops)
+        private static void FindLoops(BasicBlock root, Stack<BasicBlock> regionExits, List<BlockOrdering.LoopData> loops, bool fromLoop)
         {
             BasicBlock block = root;
             while (block != null && block != regionExits.Peek())
@@ -72,11 +72,12 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 // as a loop body.
                 if (BlockOrdering.IdentifyLoop(block, regionExits.Peek(), out BlockOrdering.LoopData loopData))
                 {
-                    loops.Add(loopData);
+                    if (!fromLoop || root != loopData.body)
+                        loops.Add(loopData);
                     if (root != loopData.body)
                     {
                         regionExits.Push(loopData.exit);
-                        FindLoops(loopData.body, regionExits, loops);
+                        FindLoops(loopData.body, regionExits, loops, true);
                         regionExits.Pop();
                     }
                     block = loopData.exit;
@@ -87,7 +88,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     branchData.elseBlock != root && branchData.ifBlock != root)
                 {
                     regionExits.Push(branchData.exit ?? regionExits.Peek());
-                    FindLoops(branchData.ifBlock, regionExits, loops);
+                    FindLoops(branchData.ifBlock, regionExits, loops, false);
                     regionExits.Pop();
                     if (branchData.exit == null && branchData.elseBlock != null)
                     {
@@ -96,7 +97,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     else
                     {
                         if (branchData.elseBlock != null)
-                            FindLoops(branchData.elseBlock, regionExits, loops);
+                            FindLoops(branchData.elseBlock, regionExits, loops, false);
                         block = branchData.exit;
                     }
                 }

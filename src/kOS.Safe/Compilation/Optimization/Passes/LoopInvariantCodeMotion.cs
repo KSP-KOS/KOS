@@ -8,7 +8,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
     public class LoopInvariantCodeMotion : IHolisticOptimizationPass
     {
         public OptimizationLevel OptimizationLevel => OptimizationLevel.Balanced;
-        public short SortIndex => 21;
+        public short SortIndex => 2100;
 
         public void ApplyPass(IRCodePart codePart)
         {
@@ -51,7 +51,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             //      (Another pass can deal with restructuring conditionals)
             HashSet<SSADefinition> allowableReferences = new HashSet<SSADefinition>(loop.body.IncomingVariableDefinitions.Values);
             BasicBlock bodyEnd = loop.body;
-            while (bodyEnd.PostDominator?.Dominator == bodyEnd)
+            while (bodyEnd.PostDominator?.Dominator == bodyEnd && bodyEnd.PostDominator != loop.exit)
                 bodyEnd = bodyEnd.PostDominator;
             allowableReferences.RemoveWhere(ssaDef => ssaDef is PhiVariable phi && phi.Node.PossibleValues.ContainsKey(bodyEnd));
             bool IsOperandForbidden_(IInterimOperand operand)
@@ -61,6 +61,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 loop.body.Dominator?.PostDominator == loop.body ? loop.body.Dominator.Instructions :
                 new List<IRInstruction>();
             int insertionIndex = GetInsertionIndex(relocatedInstructions);
+            int originalCount = relocatedInstructions.Count;
 
             BasicBlock block = loop.body;
             while (BlockOrdering.IsInsideRegion(block, loop.exit))
@@ -110,7 +111,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 block = block.PostDominator;
             }
 
-            if (loop.body.Dominator?.PostDominator != loop.body)
+            if (loop.body.Dominator?.PostDominator != loop.body &&
+                originalCount != relocatedInstructions.Count)
             {
                 BasicBlock prefaceBlock = BasicBlock.InsertBlockBetween(loop.body.Dominator, loop.body);
                 prefaceBlock.Instructions.AddRange(relocatedInstructions);
@@ -136,7 +138,9 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         {
             int insertionIndex = instructionList.Count;
             while (insertionIndex > 0 &&
-                instructionList[insertionIndex - 1] is IRBranch)
+                (instructionList[insertionIndex - 1] is IRBranch ||
+                instructionList[insertionIndex - 1] is IRJump ||
+                instructionList[insertionIndex - 1] is IRJumpStack))
                 insertionIndex--;
             return insertionIndex;
         }

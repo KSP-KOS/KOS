@@ -481,6 +481,7 @@ namespace kOS.Safe.Compilation.IR
                 if (branch.False == successor)
                     branch.False = betweenBlock;
             }
+            betweenBlock.CodePart.Blocks.Add(betweenBlock);
             return betweenBlock;
         }
     }

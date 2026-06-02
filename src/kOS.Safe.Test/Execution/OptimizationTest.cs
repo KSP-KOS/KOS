@@ -1020,7 +1020,7 @@ namespace kOS.Safe.Test.Execution
         [Test]
         public void TestLoopInvariantCodeMotion()
         {
-            // Test that common expressions are eliminated
+            // Test that loop-invariant expressions are relocated
             EnsureAtLeastLevel(OptimizationLevel.Balanced);
             RunScript("integration/codeMotion.ks");
             RunSingleStep();
@@ -1042,16 +1042,16 @@ namespace kOS.Safe.Test.Execution
             List<CodePart> codePart = CompileCodePart("integration/codeMotion.ks");
             List<Safe.Compilation.Opcode> result = GetOpcodesAfterOptimization(codePart[0].MainCode, OptimizationLevel.Balanced, false);
             Assert.IsInstanceOf<OpcodePush>(result[21]);
-            Assert.AreEqual("$a", ((OpcodePush)result[21]).Argument);
+            Assert.AreEqual(Encapsulation.ScalarIntValue.Two, ((OpcodePush)result[21]).Argument);
             Assert.IsInstanceOf<OpcodePush>(result[22]);
-            Assert.AreEqual(Encapsulation.ScalarIntValue.Two, ((OpcodePush)result[22]).Argument);
+            Assert.AreEqual("$a", ((OpcodePush)result[22]).Argument);
             Assert.IsInstanceOf<OpcodeMathAdd>(result[23]);
             Assert.IsInstanceOf<OpcodeStoreExist>(result[24]);
             Assert.AreEqual("$b", ((OpcodeStoreExist)result[24]).Identifier);
             Assert.IsInstanceOf<OpcodePush>(result[52]);
-            Assert.AreEqual("$a", ((OpcodePush)result[52]).Argument);
+            Assert.AreEqual(Encapsulation.ScalarIntValue.One, ((OpcodePush)result[52]).Argument);
             Assert.IsInstanceOf<OpcodePush>(result[53]);
-            Assert.AreEqual(Encapsulation.ScalarIntValue.One, ((OpcodePush)result[53]).Argument);
+            Assert.AreEqual("$a", ((OpcodePush)result[53]).Argument);
             Assert.IsInstanceOf<OpcodeMathAdd>(result[54]);
             Assert.IsInstanceOf<OpcodeStoreExist>(result[55]);
             Assert.AreEqual("$b", ((OpcodeStoreExist)result[55]).Identifier);
