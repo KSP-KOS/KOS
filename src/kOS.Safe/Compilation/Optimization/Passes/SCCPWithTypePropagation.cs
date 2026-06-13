@@ -52,8 +52,11 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         {
             Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> variableUses =
                 new Dictionary<SSADefinition, HashSet<IOperandInstructionBase>>(SSADefinition.ReferenceEqualityComparer);
+            Dictionary<IStackTransferObject, HashSet<IOperandInstructionBase>> parameterUses =
+                new Dictionary<IStackTransferObject, HashSet<IOperandInstructionBase>>();
             HashSet<BasicBlock> visitedBlocks = new HashSet<BasicBlock>();
             Dictionary<SSADefinition, (Type, bool)> typeAndInvarianceCache = new Dictionary<SSADefinition, (Type, bool)>(SSADefinition.ReferenceEqualityComparer);
+            Dictionary<IStackTransferObject, Type> paramTypeCache = new Dictionary<IStackTransferObject, Type>();
 
             // Apply the algorithm starting from each entry block.
             foreach (BasicBlock root in codePart.RootBlocks)
@@ -84,7 +87,14 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             foreach (SSADefinition variable in phi.PossibleValues.Values)
                                 GetOrCreate(variableUses, variable).Add(phi);
 
-                            VisitInstruction(phi, blockQueue, typeAndInvarianceCache);
+                            VisitInstruction(phi, blockQueue, typeAndInvarianceCache, paramTypeCache);
+                        }
+                        foreach (StackTransferPhi phi in block.IncomingStackState.Where(item => item is StackTransferPhi).Cast<StackTransferPhi>())
+                        {
+                            foreach (IStackTransferObject pushStack in phi.PossibleValues.Values.Where(v => v != null))
+                                GetOrCreate(parameterUses, pushStack).Add(phi);
+
+                            VisitInstruction(phi, blockQueue, typeAndInvarianceCache, paramTypeCache);
                         }
 
                         // Process instructions.
@@ -109,6 +119,13 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                                                 GetOrCreate(variableUses, variable).Add(opInst);
                                         }
                                     }
+                                    else if (op is IRParameter parameter &&
+                                        parameter.StackTransferObject != null)
+                                    {
+                                        GetOrCreate(parameterUses, parameter.StackTransferObject).Add(inst);
+                                        if (instruction is IOperandInstructionBase opInst)
+                                            GetOrCreate(parameterUses, parameter.StackTransferObject).Add(opInst);
+                                    }
                                 });
                                 // Calls get to be special to address their external read needs.
                                 if (inst is IRCall call)
@@ -127,27 +144,22 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                                 // inadvertently changing the return value).
                                 // The else if the next if statement.
                                 if (inst != instruction || !(instruction is IOperandInstructionBase))
-                                    VisitInstruction(inst, blockQueue, typeAndInvarianceCache);
+                                    VisitInstruction(inst, blockQueue, typeAndInvarianceCache, paramTypeCache);
                             }
-
 
                             if (instruction is IOperandInstructionBase operandInstruction)
                             {
-                                operandInstruction.ForEachOperand(op =>
+                                if (VisitInstruction(operandInstruction, blockQueue, typeAndInvarianceCache, paramTypeCache))
                                 {
-                                    if (op is InterimResolvedReference ssaRef)
-                                        GetOrCreate(variableUses, ssaRef.Reference).Add(operandInstruction);
-                                    if (op is InterimUnresolvedReference unresolvedRef)
-                                    {
-                                        foreach (SSADefinition ssaDef in GetSSADefinitionsFromReferences(unresolvedRef))
-                                            GetOrCreate(variableUses, ssaDef).Add(operandInstruction);
-                                    }
-                                });
-                                if (VisitInstruction(operandInstruction, blockQueue, typeAndInvarianceCache) &&
-                                    operandInstruction is IRAssign assignment &&
-                                    variableUses.TryGetValue(assignment.Target, out HashSet<IOperandInstructionBase> uses))
-                                    foreach (IOperandInstructionBase use in uses)
-                                        instructionQueue.Enqueue(use);
+                                    if (operandInstruction is IRAssign assignment &&
+                                        variableUses.TryGetValue(assignment.Target, out HashSet<IOperandInstructionBase> uses))
+                                        foreach (IOperandInstructionBase use in uses)
+                                            instructionQueue.Enqueue(use);
+                                    if (operandInstruction is IRPushStack pushStack &&
+                                        parameterUses.TryGetValue(pushStack, out uses))
+                                        foreach (IOperandInstructionBase use in uses)
+                                            instructionQueue.Enqueue(use);
+                                }
                             }
                         }
 
@@ -162,19 +174,24 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         // Iterate through them and add those uses to the queue.
                         foreach (IOperandInstructionBase use in variableUses.Where(kvp => kvp.Key is PhiVariable p && p.Node.PossibleValues.ContainsKey(block)).SelectMany(kvp => kvp.Value))
                             instructionQueue.Enqueue(use);
+                        foreach (IOperandInstructionBase use in parameterUses.Where(kvp => kvp.Key is StackTransferPhi p && p.PossibleValues.ContainsKey(block)).SelectMany(kvp => kvp.Value))
+                            instructionQueue.Enqueue(use);
                     }
 
                     // Loop over any instructions (or phis) that need updating.
                     while (instructionQueue.Count > 0)
                     {
                         IOperandInstructionBase instruction = instructionQueue.Dequeue();
-                        if (VisitInstruction(instruction, blockQueue, typeAndInvarianceCache))
+                        if (VisitInstruction(instruction, blockQueue, typeAndInvarianceCache, paramTypeCache))
                         {
                             if (instruction is IRAssign assignment)
                                 foreach (IOperandInstructionBase use in GetOrCreate(variableUses, assignment.Target))
                                     instructionQueue.Enqueue(use);
                             else if (instruction is PhiNode phi)
                                 foreach (IOperandInstructionBase use in GetOrCreate(variableUses, phi.Result))
+                                    instructionQueue.Enqueue(use);
+                            else if (instruction is IStackTransferObject stackTransfer)
+                                foreach (IOperandInstructionBase use in GetOrCreate(parameterUses, stackTransfer))
                                     instructionQueue.Enqueue(use);
                         }
                     }
@@ -204,7 +221,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         /// <returns><c>true</c> if the instruction needs to propagate changes.</returns>
         private static bool VisitInstruction(IOperandInstructionBase instruction,
             Queue<BasicBlock> blockQueue,
-            Dictionary<SSADefinition, (Type, bool)> typeAndInvarianceCache)
+            Dictionary<SSADefinition, (Type, bool)> typeAndInvarianceCache,
+            Dictionary<IStackTransferObject, Type> paramTypeCache)
         {
             if (instruction is IRAssign assignment)
             {
@@ -248,11 +266,24 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     blockQueue.Enqueue(branch.False);
                 }
             }
+            else if (instruction is IStackTransferObject stackTransfer)
+            {
+                if (paramTypeCache.TryGetValue(stackTransfer, out Type storedType))
+                {
+                    paramTypeCache[stackTransfer] = stackTransfer.Type;
+                    return storedType != stackTransfer.Type;
+                }
+                else
+                {
+                    paramTypeCache[stackTransfer] = stackTransfer.Type;
+                    return true;
+                }
+            }
 
             return false;
         }
 
-        private static HashSet<IOperandInstructionBase> GetOrCreate(Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> dictionary, SSADefinition key)
+        private static HashSet<IOperandInstructionBase> GetOrCreate<T>(Dictionary<T, HashSet<IOperandInstructionBase>> dictionary, T key)
         {
             if (!dictionary.TryGetValue(key, out HashSet<IOperandInstructionBase> value))
                 value = dictionary[key] = new HashSet<IOperandInstructionBase>(ReferenceEqualityComparer.Instance);

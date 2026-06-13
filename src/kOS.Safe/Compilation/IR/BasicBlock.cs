@@ -20,7 +20,6 @@ namespace kOS.Safe.Compilation.IR
         private BasicBlock postDominator;
         private readonly HashSet<BasicBlock> postDominates = new HashSet<BasicBlock>();
         private readonly List<IRParameter> parameters = new List<IRParameter>();
-        private readonly Stack<IInterimOperand> exitStackState = new Stack<IInterimOperand>();  // Note that this is reversed from the real stack. Just now we don't reverse it four times.
         private readonly string nonSequentialLabel = null;
         private IRScope scope;
 
@@ -103,6 +102,13 @@ namespace kOS.Safe.Compilation.IR
         /// This data is populated during <see cref="SingleStaticAssignment.FinalizeSSA(IRCodePart)"/>.
         /// </remarks>
         public Dictionary<(string, IRScope), SSADefinition> IncomingVariableDefinitions { get; internal set; }
+        /// <summary>
+        /// Gets the state of the incoming stack.
+        /// </summary>
+        /// <remarks>
+        /// This data is populated during <see cref="SingleStaticAssignment.FinalizeSSA(IRCodePart)"/>.
+        /// </remarks>
+        public List<IStackTransferObject> IncomingStackState { get; } = new List<IStackTransferObject>();
         /// <summary>
         /// Gets the set of variables that are blacklisted against
         /// caching or propagation due to their presence in active
@@ -363,11 +369,13 @@ namespace kOS.Safe.Compilation.IR
         /// <summary>
         /// Adds a parameter to this block.
         /// </summary>
-        /// <param name="parameter">The parameter object to add.</param>
-        public void AddParameter(IRParameter parameter)
+        public IInterimOperand AddParameter()
         {
+            IRParameter parameter = new IRParameter(parameters.Count, this);
             parameters.Add(parameter);
+            return parameter;
         }
+
         /// <summary>
         /// Alias for <see cref="IRScope.GetScopeForVariableNamed(string)"/>
         /// using this block's <see cref="Scope"/>.
@@ -379,19 +387,6 @@ namespace kOS.Safe.Compilation.IR
         /// </returns>
         public IRScope GetScopeForVariableNamed(string name)
             => Scope.GetScopeForVariableNamed(name);
-
-        /// <summary>
-        /// Sets the state of the stack upon exiting this block.
-        /// </summary>
-        /// <param name="stack">The stack state to set.</param>
-        /// <remarks>
-        /// Use extreme caution when manipulating the stack state.
-        /// </remarks>
-        public void SetStackState(Stack<IInterimOperand> stack)
-        {
-            while (stack.Count > 0)
-                exitStackState.Push(stack.Pop());
-        }
 
         public override string ToString()
         {
@@ -408,33 +403,9 @@ namespace kOS.Safe.Compilation.IR
             if (addedFallthrough)
                 Instructions.Add(FallthroughJump);
             bool first = true;
-            foreach (IRInstruction instruction in Instructions.Take(Instructions.Count - 1))
+            foreach (IRInstruction instruction in Instructions)
             {
                 foreach (Opcode opcode in instruction.EmitOpcodes())
-                {
-                    if (first)
-                    {
-                        opcode.Label = Label;
-                        first = false;
-                    }
-                    yield return opcode;
-                }
-            }
-            foreach (IInterimOperand stackValue in exitStackState)
-            {
-                foreach (Opcode opcode in stackValue.EmitOpcodes())
-                {
-                    if (first)
-                    {
-                        opcode.Label = Label;
-                        first = false;
-                    }
-                    yield return opcode;
-                }
-            }
-            if (Instructions.Any())
-            {
-                foreach (Opcode opcode in Instructions.Last().EmitOpcodes())
                 {
                     if (first)
                     {

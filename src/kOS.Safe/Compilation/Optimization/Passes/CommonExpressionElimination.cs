@@ -92,6 +92,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         // to not 'optimize' away a call that does something.
                         if (operand is IRCall call && !call.IsInvariant)
                             breaking = true;
+                        else if (operand is IRParameter parameter && !parameter.IsResolvable)
+                            breaking = true;
                         else if (operand is IResultingInstruction resultingInstruction)
                         {
                             if (expressions.TryGetValue((resultingInstruction, block.Scope), out ExpressionData data))

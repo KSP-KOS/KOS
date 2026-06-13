@@ -11,6 +11,9 @@ namespace kOS.Safe.Compilation.IR
         /// <summary>
         /// Applies an action for each operand.
         /// </summary>
+        /// <remarks>
+        /// This should iterate in the order in which operands are pushed to the stack.
+        /// </remarks>
         void ForEachOperand(Action<IInterimOperand> action);
 
         /// <summary>
@@ -52,6 +55,10 @@ namespace kOS.Safe.Compilation.IR
         /// <summary>
         /// Gets the collection of operands for the instruction.
         /// </summary>
+        /// <remarks>
+        /// The order should be that in which the operands
+        /// are pushed to the stack.
+        /// </remarks>
         IEnumerable<IInterimOperand> Operands { get; }
         /// <summary>
         /// Gets the number of operands for this instruction.

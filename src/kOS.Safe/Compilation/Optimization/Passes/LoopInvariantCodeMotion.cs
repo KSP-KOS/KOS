@@ -129,6 +129,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     return true;
                 case InterimResolvedReference resolvedReference:
                     return !allowableReferences.Contains(resolvedReference.Reference);
+                case IRParameter parameter:
+                    return !parameter.IsResolvable;
                 default:
                     return false;
             }

@@ -10,18 +10,19 @@ namespace kOS.Safe.Compilation.IR
     /// This utility class converts an IRCodePart into single static
     /// assignment form.
     /// </summary>
-    public class SingleStaticAssignment : IHolisticOptimizationPass
+    public class SingleStaticAssignment : IHolisticOptimizationPass, ILinkedOptimizationPass
     {
         public OptimizationLevel OptimizationLevel => OptimizationLevel.None;
         public short SortIndex => -2000;
+        public Optimizer Optimizer { get; set; }
 
         public void ApplyPass(IRCodePart codePart)
-            => FinalizeSSA(codePart);
+            => FinalizeSSA(codePart, Optimizer.OptimizationLevel > OptimizationLevel.Aggressive);
 
         /// <summary>
         /// Finalizes a program into single static assignment form.
         /// </summary>
-        public static void FinalizeSSA(IRCodePart codePart)
+        public static void FinalizeSSA(IRCodePart codePart, bool stackAdoptsTypeHints)
         {
             Dictionary<IRFunction, HashSet<IRFunction>> funcCallTrees = new Dictionary<IRFunction, HashSet<IRFunction>>();
             Dictionary<IRFunction, HashSet<IRFunction>> callers = new Dictionary<IRFunction, HashSet<IRFunction>>();
@@ -34,7 +35,7 @@ namespace kOS.Safe.Compilation.IR
                 HashSet<IRFunction> functionCalls = new HashSet<IRFunction>(function.FunctionCalls);
                 
                 foreach (BasicBlock root in function.RootBlocks)
-                    BuildPhis(root, codePart, function);
+                    BuildPhis(root, codePart, function, stackAdoptsTypeHints);
 
                 FlattenCallTree(function);
 
@@ -68,13 +69,13 @@ namespace kOS.Safe.Compilation.IR
             // way that functions can call functions. A single pass is sufficient.
             foreach (IRTrigger trigger in codePart.Triggers)
             {
-                BuildPhis(trigger.RootBlock, codePart, trigger);
+                BuildPhis(trigger.RootBlock, codePart, trigger, stackAdoptsTypeHints);
                 FlattenCallTree(trigger);
             }
 
             // Now the main code can be SSA'd.
             if (codePart.MainCode.Count > 0)
-                BuildPhis(codePart.MainCode[0], codePart, null);
+                BuildPhis(codePart.MainCode[0], codePart, null, stackAdoptsTypeHints);
 
             // Then apply the SSA definitions to all the variable push operations.
             // Functions are done iteratively to propagate the ExternalReads property
@@ -472,10 +473,12 @@ namespace kOS.Safe.Compilation.IR
                 => (obj.Item1.GetHashCode(), SSADefinition.ReferenceEqualityComparer.GetHashCode(obj.Item2)).GetHashCode();
         }
 
-        private static void BuildPhis(BasicBlock root, IRCodePart codePart, IClosureVariableUser funcOrTrigger)
+        private static void BuildPhis(BasicBlock root, IRCodePart codePart, IClosureVariableUser funcOrTrigger, bool stackAdoptsTypeHints)
         {
             Dictionary<BasicBlock, Dictionary<(string Name, IRScope Scope), SSADefinition>> variablesOut =
                 new Dictionary<BasicBlock, Dictionary<(string, IRScope), SSADefinition>>();
+            Dictionary<BasicBlock, List<IStackTransferObject>> stackOut =
+                new Dictionary<BasicBlock, List<IStackTransferObject>>();
 
             Queue<BasicBlock> worklist = new Queue<BasicBlock>();
             worklist.Enqueue(root);
@@ -489,8 +492,11 @@ namespace kOS.Safe.Compilation.IR
 
                 // Make the blacklist the union of all incoming blacklists
                 // Collect all incoming variable definitions
+                int stackDepth = -1;
+                BasicBlock stackDepthSetBy = null;
                 foreach (BasicBlock predecessor in block.Predecessors)
                 {
+                    // Manage blacklist and incoming variables
                     blacklist.UnionWith(predecessor.TriggerPropagationBlacklist);
                     foreach (KeyValuePair<(string, IRScope), IRUnset> item in writeBlacklist)
                         writeBlacklist[item.Key] = item.Value;
@@ -500,51 +506,17 @@ namespace kOS.Safe.Compilation.IR
                             .Where(v => block.Scope.IsEqualOrEncompassedBy(v.Key.Scope)))
                             varsIn.Add((predecessor, variable.Key.Scope, variable.Value));
                     }
+
+                    // Manage incoming stack
+                    SetIncomingStackState(block, predecessor, stackOut, ref stackDepthSetBy, ref stackDepth, stackAdoptsTypeHints);
                 }
 
-                Dictionary<(string, IRScope), SSADefinition> variablesIn = new Dictionary<(string, IRScope), SSADefinition>();
-
+                List<IStackTransferObject> stackResult = PopulateParameters(block, stackOut, worklist);
+                
                 // Group variable definitions by their scope slot.
                 // If a scope slot has multiple distinct definitions, generate a phi.
-                foreach (IGrouping<(string Name, IRScope Scope), (BasicBlock Block, IRScope Scope, SSADefinition Variable)> definitionSet in
-                    varsIn.GroupBy(v => (v.Variable.Name, v.Scope)))
-                {
-                    if (definitionSet.Select(def => (def.Scope, def.Variable)).Distinct(PhiComparer.Instance).Skip(1).Any())
-                    {
-                        // Phi required
-                        if (!block.Phis.TryGetValue(definitionSet.Key, out PhiNode phiVar))
-                        {
-                            phiVar = new PhiNode(definitionSet.Key.Name);
-                            block.Phis.Add(definitionSet.Key, phiVar);
-                        }
-
-                        foreach ((BasicBlock incomingBlock, _, SSADefinition definition) in definitionSet)
-                        {
-                            phiVar.PossibleValues[incomingBlock] = definition;
-                            definition.ReplacedBy.Add(phiVar.Result);
-                            phiVar.Result.Replaces.Add(definition);
-                        }
-
-                        variablesIn.Add(definitionSet.Key, phiVar.Result);
-                    }
-                    else
-                    {
-                        if (block.Phis.ContainsKey(definitionSet.Key))
-                        {
-                            PhiNode phiVar = block.Phis[definitionSet.Key];
-                            foreach ((_, _, SSADefinition definition) in definitionSet)
-                            {
-                                definition.ReplacedBy.Remove(phiVar.Result);
-                                phiVar.Result.Replaces.Remove(definition);
-                            }
-                            block.Phis.Remove(definitionSet.Key);
-                        }
-                        variablesIn.Add(definitionSet.Key, definitionSet.First().Variable);
-                    }
-                }
-
                 // Store the resulting incoming variable definitions to the block.
-                block.IncomingVariableDefinitions = variablesIn;
+                block.IncomingVariableDefinitions = GeneratePhis(block, varsIn);
 
                 // Analyze the block with that set of incoming variable definitions
                 Dictionary<(string Name, IRScope Scope), SSADefinition> varsOut =
@@ -553,20 +525,275 @@ namespace kOS.Safe.Compilation.IR
                 // If this block was previously analyzed, and
                 // if the definitions all match, there's no need to queue
                 // this block's successors.
+                bool same = true;
                 if (variablesOut.ContainsKey(block))
                 {
                     Dictionary<(string, IRScope), SSADefinition> oldDefinition = variablesOut[block];
-                    if (oldDefinition.Count == varsOut.Count &&
-                        varsOut.All(kvp => oldDefinition.ContainsKey(kvp.Key) && SSADefinition.ReferenceEqualityComparer.Equals(oldDefinition[kvp.Key], kvp.Value)))
-                        continue;
+                    same &= oldDefinition.Count == varsOut.Count &&
+                        varsOut.All(kvp => oldDefinition.ContainsKey(kvp.Key) && SSADefinition.ReferenceEqualityComparer.Equals(oldDefinition[kvp.Key], kvp.Value));
                 }
+                else
+                    same = false;
+                if (stackOut.ContainsKey(block))
+                {
+                    List<IStackTransferObject> stackOut_ = stackOut[block];
+                    same &= stackOut_.SequenceEqual(stackResult);
+                }
+                else
+                    same = false;
+
+                if (same)
+                    continue;
 
                 // Cache this result for comparison in future passes.
                 variablesOut[block] = varsOut;
+                stackOut[block] = stackResult;
 
                 // Enqueue all successor blocks.
-                foreach (BasicBlock successor in block.Successors)
+                foreach (BasicBlock successor in block.Successors.Where(b => !worklist.Contains(b)))
                     worklist.Enqueue(successor);
+            }
+        }
+
+        private static void SetIncomingStackState(BasicBlock block, BasicBlock predecessor, Dictionary<BasicBlock, List<IStackTransferObject>> stackOut, ref BasicBlock stackDepthSetBy, ref int stackDepth, bool stackAdoptsTypeHints)
+        {
+            if (stackOut.TryGetValue(predecessor, out List<IStackTransferObject> predStackOut))
+            {
+                if (predecessor.Predecessors.Count == 1 &&
+                    predecessor.Predecessors.First().Instructions.Last() is IRBranch branch &&
+                    branch.Condition is IRNonVarPush testArgBottom &&
+                    testArgBottom.Operation is OpcodeTestArgBottom &&
+                    predecessor == branch.True)
+                {
+                    predStackOut = new List<IStackTransferObject>(predStackOut);
+                    predStackOut.RemoveAt(predStackOut.Count - 1);
+                }
+                // Verify that the stack depth is consistent
+                // If the stack depth was not set by a root block and if the incoming stack depth does not match the stack depth, that's a problem.
+                // If the list is nonzero in length and it doesn't match the incoming stack depth, that's a problem.
+                if (((stackDepthSetBy?.Predecessors.Count ?? 0) != 0 && stackDepth != predStackOut.Count) ||
+                    (block.IncomingStackState.Count != 0 && predStackOut.Count != block.IncomingStackState.Count))
+                    throw new Exceptions.KOSCompileException(new KS.Token(), "Stack depth is inconsistent - the CFG is not well-structured.");
+                stackDepth = predStackOut.Count;
+                if (predecessor.Predecessors.Count > 0)
+                    stackDepthSetBy = predecessor;
+                // Propagate the stack values.
+                for (int i = 0; i < stackDepth; i++)
+                {
+                    if (i >= block.IncomingStackState.Count)
+                        block.IncomingStackState.Add(predStackOut[i]);
+                    else if (block.IncomingStackState[i].Equals(predStackOut[i]))
+                        continue;
+                    else if (block.IncomingStackState[i] is StackTransferPhi phi)
+                    {
+                        phi.PossibleValues[predecessor] = predStackOut[i];
+                        predStackOut[i].AddController(phi);
+                    }
+                    else if (block.IncomingStackState[i] is IRPushStack pushStack)
+                    {
+                        StackTransferPhi newPhi = new StackTransferPhi()
+                        {
+                            AdoptTypeHints = stackAdoptsTypeHints
+                        };
+                        newPhi.PossibleValues[predecessor] = predStackOut[i];
+                        predStackOut[i].AddController(newPhi);
+                        BasicBlock otherPredecessor = pushStack.Block ??
+                            block.Predecessors.FirstOrDefault(b =>
+                                b != predecessor &&
+                                stackOut.ContainsKey(b) &&
+                                stackOut[b].Count > i &&
+                                stackOut[b][i].Equals(pushStack));
+                        newPhi.PossibleValues[otherPredecessor] = pushStack;
+                        pushStack.AddController(newPhi);
+                        block.IncomingStackState[i] = newPhi;
+                    }
+                }
+            }
+        }
+        private static List<IStackTransferObject> PopulateParameters(BasicBlock block, Dictionary<BasicBlock, List<IStackTransferObject>> stackOut, Queue<BasicBlock> worklist)
+        {
+            List<IStackTransferObject> stack = new List<IStackTransferObject>(block.IncomingStackState);
+            foreach (IRInstruction instruction in block.Instructions.DepthFirst())
+            {
+                if (instruction is IOperandInstructionBase operandInstruction)
+                    operandInstruction.ForEachOperand(op =>
+                    {
+                        if (op is IRParameter parameter)
+                        {
+                            if (stack.Count > 0)
+                            {
+                                parameter.StackTransferObject = stack[0];
+                                parameter.RequiredToBeResolvable.UnionWith(GetFollowingParameters(operandInstruction, parameter));
+                                // TODO: Add a sub-pass to swap binary operands to optimize the number of resolvable operands.
+                                stack.RemoveAt(0);
+                            }
+                            else
+                            {
+                                IRPushStack externalPush = IRPushStack.ExternalPush();
+                                HashSet<BasicBlock> addedTo = new HashSet<BasicBlock>();
+                                Queue<BasicBlock> addTo = new Queue<BasicBlock>();
+                                addTo.Enqueue(block);
+                                while (addTo.Count > 0)
+                                {
+                                    BasicBlock current = addTo.Dequeue();
+                                    if (addedTo.Add(current))
+                                    {
+                                        if (current != block && stackOut.ContainsKey(current))
+                                        {
+                                            stackOut[current].Add(externalPush);
+                                            foreach (BasicBlock successor in block.Successors.Where(b => !worklist.Contains(b)))
+                                                worklist.Enqueue(successor);
+                                        }
+                                        current.IncomingStackState.Add(externalPush);
+                                        foreach (BasicBlock predecessor in current.Predecessors)
+                                            addTo.Enqueue(predecessor);
+                                    }
+                                }
+                            }
+                        }
+                        else if (op is IRCall call)
+                        {
+                            while (stack.Count > 0)
+                            {
+                                IStackTransferObject stackValue = stack[0];
+                                stack.RemoveAt(0);
+
+                                if (IsOrContainsArgMarker(stackValue))
+                                {
+                                    if (stackValue is StackTransferPhi phi &&
+                                        phi.PossibleValues.Values.Any(v => !IsOrContainsArgMarker(v)))
+                                        throw new Exceptions.KOSCompileException(new KS.LineCol(call.SourceLine, call.SourceColumn),
+                                            "Cannot handle a variable number of arguments to a function");
+                                    foreach (IRPushStackArgMarker argMarker in GetArgMarkerPushes(stackValue))
+                                        argMarker.Call = call;
+                                    break;
+                                }
+
+                                IRParameter newParameter = new IRParameter(block.IncomingStackState.IndexOf(stackValue), block) { StackTransferObject = stackValue };
+                                call.Arguments.Insert(0, newParameter);
+                                newParameter.RequiredToBeResolvable.UnionWith(GetFollowingParameters(call, newParameter));
+                            }
+                        }
+                    });
+                if (instruction is IRPushStack pushStack)
+                    stack.Insert(0, pushStack);
+            }
+            return stack;
+        }
+        private static Dictionary<(string Name, IRScope Scope), SSADefinition> GeneratePhis(BasicBlock block, List<(BasicBlock Block, IRScope Scope, SSADefinition Variable)> varsIn)
+        {
+            Dictionary<(string, IRScope), SSADefinition> result = new Dictionary<(string, IRScope), SSADefinition>();
+            foreach (IGrouping<(string Name, IRScope Scope), (BasicBlock Block, IRScope Scope, SSADefinition Variable)> definitionSet in
+                    varsIn.GroupBy(v => (v.Variable.Name, v.Scope)))
+            {
+                if (definitionSet.Select(def => (def.Scope, def.Variable)).Distinct(PhiComparer.Instance).Skip(1).Any())
+                {
+                    // Phi required
+                    if (!block.Phis.TryGetValue(definitionSet.Key, out PhiNode phiVar))
+                    {
+                        phiVar = new PhiNode(definitionSet.Key.Name);
+                        block.Phis.Add(definitionSet.Key, phiVar);
+                    }
+
+                    foreach ((BasicBlock incomingBlock, _, SSADefinition definition) in definitionSet)
+                    {
+                        phiVar.PossibleValues[incomingBlock] = definition;
+                        definition.ReplacedBy.Add(phiVar.Result);
+                        phiVar.Result.Replaces.Add(definition);
+                    }
+
+                    result.Add(definitionSet.Key, phiVar.Result);
+                }
+                else
+                {
+                    if (block.Phis.ContainsKey(definitionSet.Key))
+                    {
+                        PhiNode phiVar = block.Phis[definitionSet.Key];
+                        foreach ((_, _, SSADefinition definition) in definitionSet)
+                        {
+                            definition.ReplacedBy.Remove(phiVar.Result);
+                            phiVar.Result.Replaces.Remove(definition);
+                        }
+                        block.Phis.Remove(definitionSet.Key);
+                    }
+                    result.Add(definitionSet.Key, definitionSet.First().Variable);
+                }
+            }
+            return result;
+        }
+        private static IEnumerable<IRParameter> GetFollowingParameters(IOperandInstructionBase operation, IRParameter parameter)
+        {
+            if (!(operation is IMultipleOperandInstruction))
+                return Enumerable.Empty<IRParameter>();
+            bool foundParameter = false;
+            List<IRParameter> result = new List<IRParameter>();
+            operation.ForEachOperand(op =>
+            {
+                if (op == parameter)
+                {
+                    foundParameter = true;
+                    return;
+                }
+                if (!foundParameter)
+                    return;
+                if (op is IRParameter laterParam)
+                    result.Add(laterParam);
+                else if (op is IOperandInstructionBase nestedOp)
+                    AddNestedParameters(result, operation);
+            });
+            return result;
+        }
+        private static void AddNestedParameters(List<IRParameter> list, IOperandInstructionBase operation)
+        {
+            operation.ForEachOperand(op =>
+            {
+                if (op is IRParameter nestedParameter)
+                    list.Add(nestedParameter);
+                else if (op is IOperandInstructionBase nestedOp)
+                    AddNestedParameters(list, nestedOp);
+            });
+        }
+        private static bool IsOrContainsArgMarker(IStackTransferObject stackObj, HashSet<StackTransferPhi> visited = null)
+        {
+            if (visited == null)
+                visited = new HashSet<StackTransferPhi>();
+            switch (stackObj)
+            {
+                case null:
+                    return false;
+                case IRPushStackArgMarker _:
+                    return true;
+                case IRPushStack _:
+                    return false;
+                case StackTransferPhi phi:
+                    if (!visited.Add(phi))
+                        return false;
+                    return phi.PossibleValues.Values.Any(v => IsOrContainsArgMarker(v, visited));
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+        private static IEnumerable<IRPushStackArgMarker> GetArgMarkerPushes(IStackTransferObject stackObj, HashSet<StackTransferPhi> visited = null)
+        {
+            if (visited == null)
+                visited = new HashSet<StackTransferPhi>();
+            switch (stackObj)
+            {
+                case null:
+                    yield break;
+                case IRPushStackArgMarker argMarker:
+                    yield return argMarker;
+                    yield break;
+                case IRPushStack _:
+                    yield break;
+                case StackTransferPhi phi:
+                    if (!visited.Add(phi))
+                        yield break;
+                    foreach (IRPushStackArgMarker phiArgMarker in phi.PossibleValues.Values.SelectMany(v => GetArgMarkerPushes(v, visited)))
+                        yield return phiArgMarker;
+                    yield break;
+                default:
+                    throw new NotImplementedException();
             }
         }
 

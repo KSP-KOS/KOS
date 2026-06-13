@@ -601,14 +601,6 @@ namespace kOS.Safe.Compilation.IR
         {
             Result = new PhiVariable(name, this);
         }
-        protected override IEnumerable<IInterimOperand> Operands =>
-            PossibleValues.Select(kvp =>
-                {
-                    SSASetDefinition ssaDef = kvp.Value as SSASetDefinition;
-                    short sourceLine = ssaDef?.DefinedAt.SourceLine ?? -1;
-                    short sourceColumn = ssaDef?.DefinedAt.SourceColumn ?? -1;
-                    return new InterimResolvedReference(kvp.Value, sourceLine, sourceColumn) as IInterimOperand;
-                });
 
         protected override InterimConstantValue EvaluateObj(SSADefinition obj)
             => obj.Evaluate();
@@ -616,10 +608,15 @@ namespace kOS.Safe.Compilation.IR
         protected override void MutateEachOperand(Func<IInterimOperand, IInterimOperand> mutateFunc)
         {
             foreach (BasicBlock block in PossibleValues.Keys)
-                PossibleValues[block] = ((InterimResolvedReference)mutateFunc(new InterimResolvedReference(PossibleValues[block], -1, -1))).Reference;
+                PossibleValues[block] = ((InterimResolvedReference)mutateFunc(ValueAsOperand(PossibleValues[block]))).Reference;
         }
         protected override IInterimOperand ValueAsOperand(SSADefinition item)
-            => new InterimResolvedReference(item, -1, -1);
+        {
+            SSASetDefinition ssaDef = item as SSASetDefinition;
+            short sourceLine = ssaDef?.DefinedAt.SourceLine ?? -1;
+            short sourceColumn = ssaDef?.DefinedAt.SourceColumn ?? -1;
+            return new InterimResolvedReference(item, sourceLine, sourceColumn);
+        }
 
     }
     public class PhiOperand : PhiNode<IInterimOperand>
@@ -628,7 +625,6 @@ namespace kOS.Safe.Compilation.IR
             => obj == null || (obj.IsInvariant && obj is IEvaluatableToConstant);
         protected override Type ObjType(IInterimOperand obj)
             => obj.Type;
-        protected override IEnumerable<IInterimOperand> Operands => PossibleValues.Values;
 
         public override InterimConstantValue Evaluate()
         {
@@ -648,22 +644,21 @@ namespace kOS.Safe.Compilation.IR
         protected override IInterimOperand ValueAsOperand(IInterimOperand item)
             => item;
     }
+    
     public abstract class PhiNode<T> : IMultipleOperandInstruction
     {
-        public bool IsInvariant
+        public virtual bool IsInvariant
         {
             get
             {
                 IEnumerable<KeyValuePair<BasicBlock, T>> reachableValues =
                     PossibleValues.Where(kvp => kvp.Key.IsExecutable);
-                if (!reachableValues.Any())
-                    return true;
                 // Return true if there is exactly one reachable value and it is invariant.
-                return reachableValues.Any() && !reachableValues.Skip(1).Any() && ObjIsInvariant(reachableValues.First().Value);
+                return reachableValues.Distinct().Count() == 1 && ObjIsInvariant(reachableValues.First().Value);
             }
         }
         protected abstract bool ObjIsInvariant(T obj);
-        public Type Type
+        public virtual Type Type
         {
             get
             {
@@ -683,7 +678,7 @@ namespace kOS.Safe.Compilation.IR
 
         IEnumerable<IInterimOperand> IMultipleOperandInstruction.Operands => Operands;
 
-        protected abstract IEnumerable<IInterimOperand> Operands { get; }
+        protected virtual IEnumerable<IInterimOperand> Operands => PossibleValues.Values.Select(ValueAsOperand);
 
         int IMultipleOperandInstruction.OperandCount => PossibleValues.Count;
 

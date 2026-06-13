@@ -79,13 +79,13 @@ namespace kOS.Safe.Test.Compilation
 
             Assert.AreEqual(typeof(ScalarValue), add.Type);
 
-            IRCall call = new IRCall(null, new OpcodeCall("sin"), true, b);
+            IRCall call = new IRCall(null, new OpcodeCall("sin"), b);
             Assert.IsTrue(typeof(ScalarValue).IsAssignableFrom(call.Type));
 
-            IRCall print = new IRCall(null, new OpcodeCall("print"), true, a);
+            IRCall print = new IRCall(null, new OpcodeCall("print"), a);
             Assert.AreEqual(null, print.Type);
 
-            IRCall userCall = new IRCall(null, new OpcodeCall("$test*"), true, a, b);
+            IRCall userCall = new IRCall(null, new OpcodeCall("$test*"), a, b);
             Assert.AreEqual(typeof(Encapsulation.Structure), userCall.Type);
         }
     }

@@ -23,8 +23,8 @@ namespace kOS.Safe.Compilation.IR
         public abstract IEnumerable<Opcode> EmitOpcodes();
         protected IRInstruction(Opcode originalOpcode, BasicBlock block)
         {
-            SourceLine = originalOpcode.SourceLine;
-            SourceColumn = originalOpcode.SourceColumn;
+            SourceLine = originalOpcode?.SourceLine ?? -1;
+            SourceColumn = originalOpcode?.SourceColumn ?? -1;
             Block = block;
         }
         protected Opcode SetSourceLocation(Opcode opcode)
@@ -81,8 +81,8 @@ namespace kOS.Safe.Compilation.IR
         public abstract int OperandCount { get; }
         /// <summary>
         /// Allows replacing operands from a common function.
-        /// The meaning of the index and ordering are irrelevant,
-        /// as long as it covers the range [0, <see cref="OperandCount"/>).
+        /// The ordering should be the same as the order in which
+        /// operands are pushed to the stack, beginning at 0.
         /// </summary>
         protected abstract IInterimOperand this[int index] { get; set; }
 
@@ -248,11 +248,13 @@ namespace kOS.Safe.Compilation.IR
                     case OpcodeMathAdd _:
                         return calculator.IsAdditionCommutative(Left.Type, Right.Type);
                     case OpcodeMathSubtract _:
-                        return calculator.IsSubtractionCommutativeWithNegation(Left.Type, Right.Type);
+                        return calculator.IsSubtractionCommutativeWithNegation(Left.Type, Right.Type) &&
+                            !(IRParameter.IsOrContainsParameter(Left) || IRParameter.IsOrContainsParameter(Right));
                     case OpcodeMathMultiply _:
                         return calculator.IsMultiplicationCommmutative(Left.Type, Right.Type);
                     case OpcodeMathDivide _:
-                        return calculator.IsDivisionCommutative(Left.Type, Right.Type);
+                        return calculator.IsDivisionCommutative(Left.Type, Right.Type) &&
+                            !(IRParameter.IsOrContainsParameter(Left) || IRParameter.IsOrContainsParameter(Right));
                     case OpcodeMathPower _:
                         return false;
                     case OpcodeCompareEqual _:
@@ -262,14 +264,13 @@ namespace kOS.Safe.Compilation.IR
                     case OpcodeCompareLT _:
                     case OpcodeCompareGTE _:
                     case OpcodeCompareLTE _:
-                        return true;
+                        return !(IRParameter.IsOrContainsParameter(Left) || IRParameter.IsOrContainsParameter(Right));
                     default:
-#pragma warning disable CS0162 // Unreachable code detected
 #if DEBUG
                         throw new NotImplementedException();
-#endif
+#else
                         return false;
-#pragma warning restore CS0162 // Unreachable code detected
+#endif
                 }
             }
         }
@@ -1002,7 +1003,7 @@ namespace kOS.Safe.Compilation.IR
         public override bool IsInvariant => IsSelfInvariant && IsInert && Arguments.All(a => a.IsInvariant);
         public string Function { get; }
         public List<IInterimOperand> Arguments { get; } = new List<IInterimOperand>();
-        public override IEnumerable<IInterimOperand> Operands => Enumerable.Reverse(Arguments);
+        public override IEnumerable<IInterimOperand> Operands => Arguments;
         public override int OperandCount => Arguments.Count;
         public Type Type => GetDefaultReturnType();
         public ushort OpcodeCount
@@ -1028,8 +1029,8 @@ namespace kOS.Safe.Compilation.IR
         }
         public IInterimOperand IndirectMethod { get; internal set; }
         public bool Direct { get; }
-        public bool EmitArgMarker { get; set; }
-        private IRCall(BasicBlock block, OpcodeCall opcode, bool emitArgMarker) : base(opcode, block)
+        public bool EmitArgMarker => Arguments.Where(arg => arg is IRParameter).Cast<IRParameter>().All(IRParameter.IsSetResolvable);
+        private IRCall(BasicBlock block, OpcodeCall opcode) : base(opcode, block)
         {
             Function = (string)opcode.Destination;
             Direct = opcode.Direct;
@@ -1100,15 +1101,15 @@ namespace kOS.Safe.Compilation.IR
             yield return SetSourceLocation(new OpcodeCall(Function));
         }
 
-        public IRCall(BasicBlock block, OpcodeCall opcode, bool emitArgMarker, IInterimOperand argument) : this(block, opcode, emitArgMarker)
+        public IRCall(BasicBlock block, OpcodeCall opcode, IInterimOperand argument) : this(block, opcode)
         {
             Arguments.Add(argument);
         }
-        public IRCall(BasicBlock block, OpcodeCall opcode, bool emitArgMarker, IEnumerable<IInterimOperand> arguments) : this(block, opcode, emitArgMarker)
+        public IRCall(BasicBlock block, OpcodeCall opcode, IEnumerable<IInterimOperand> arguments) : this(block, opcode)
         {
             Arguments.AddRange(arguments);
         }
-        public IRCall(BasicBlock block, OpcodeCall opcode, bool emitArgMarker, params IInterimOperand[] arguments) : this(block, opcode, emitArgMarker)
+        public IRCall(BasicBlock block, OpcodeCall opcode, params IInterimOperand[] arguments) : this(block, opcode)
         {
             Arguments.AddRange(arguments);
         }
@@ -1176,5 +1177,47 @@ namespace kOS.Safe.Compilation.IR
                 Value.Equals(ret.Value);
         public override int GetHashCode()
             => Value.GetHashCode();
+    }
+    public class IRPushStack : SingleOperandInstruction, IActionInstruction, IStackTransferObject
+    {
+        private readonly HashSet<StackTransferPhi> controllers = new HashSet<StackTransferPhi>();
+        private readonly HashSet<IRParameter> references = new HashSet<IRParameter>();
+        public IReadOnlyCollection<StackTransferPhi> Controllers => controllers;
+        public IReadOnlyCollection<IRParameter> References => references;
+        public IEnumerable<IStackTransferObject> StackTransferObjects => Enumerable.Repeat(this, 1);
+        public IInterimOperand Value { get => operand; set => operand = value; }
+        public Type Type => Value?.Type ?? typeof(Encapsulation.Structure);
+        public override bool IsInvariant => operand.IsInvariant;
+        public bool IsInert => false;
+        public bool IsResolvable => IRParameter.IsSetResolvable(this);
+        public virtual bool IsSelfResolvable => true;
+
+        public IRPushStack(BasicBlock block, IInterimOperand operand) : base((Opcode)null, block)
+        {
+            Value = operand;
+        }
+        public static IRPushStack ExternalPush()
+            => new IRPushStack(null, (IInterimOperand)null);
+
+        public void AddController(StackTransferPhi phi)
+            => controllers.Add(phi);
+        public void AddReference(IRParameter reference)
+            => references.Add(reference);
+        public void RemoveReference(IRParameter reference)
+            => references.Remove(reference);
+
+        public override IEnumerable<Opcode> EmitOpcodes()
+            => !IsResolvable ? Value.EmitOpcodes() : Enumerable.Empty<Opcode>();
+        public override string ToString()
+            => !IsResolvable ? $"{{ push {Value} }}" : "{ push nop }";
+    }
+
+    public class IRPushStackArgMarker : IRPushStack
+    {
+        public IRCall Call { get; set; }
+        public override bool IsSelfResolvable => Call?.EmitArgMarker ?? false;
+        public IRPushStackArgMarker(BasicBlock block, IInterimOperand operand) : base(block, operand)
+        {
+        }
     }
 }

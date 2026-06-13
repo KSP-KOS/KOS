@@ -144,10 +144,33 @@ namespace kOS.Safe.Compilation.IR
             {
                 if (i > currentBlock.EndIndex)
                 {
-                    currentBlock.SetStackState(stack);
+                    SetStackState(stack, currentBlock);
                     currentBlock = GetBlockFromStartIndex(blocks, i);
                 }
                 ParseInstruction(code[i], currentBlock, stack, labels, i, blocks, codePart);
+            }
+        }
+
+        private static void SetStackState(Stack<IInterimOperand> stack, BasicBlock block)
+        {
+            List<IRInstruction> instructions = block.Instructions;
+            int insertIndex = instructions.Count > 0 ? instructions.Count - 1 : 0;
+            while (insertIndex > 0 &&
+                (instructions[insertIndex - 1] is IRBranch ||
+                instructions[insertIndex - 1] is IRJump ||
+                instructions[insertIndex - 1] is IRJumpStack))
+                insertIndex--;
+
+            while (stack.Count > 0)
+            {
+                IInterimOperand stackValue = stack.Pop();
+                IRPushStack push;
+                if (stackValue is InterimConstantValue argMarker &&
+                    argMarker.Value is Execution.KOSArgMarkerType)
+                    push = new IRPushStackArgMarker(block, stackValue);
+                else
+                    push = new IRPushStack(block, stackValue);
+                instructions.Insert(insertIndex, push);
             }
         }
 
@@ -155,9 +178,7 @@ namespace kOS.Safe.Compilation.IR
         {
             if (stack.Count > 0)
                 return stack.Pop();
-            IRParameter parameter = new IRParameter();
-            block.AddParameter(parameter);
-            return parameter;
+            return block.AddParameter();
         }
 
         private void ParseInstruction(Opcode opcode, BasicBlock currentBlock, Stack<IInterimOperand> stack, Dictionary<string, int> labels, int index, List<BasicBlock> blocks, IRCodePart codePart)
@@ -278,7 +299,6 @@ namespace kOS.Safe.Compilation.IR
                     break;
                 case OpcodeCall call:
                     Stack<IInterimOperand> arguments = new Stack<IInterimOperand>();
-                    bool hasArgmarker = stack.Count > 0;   // Not even an argument marker on the stack - the dominator block must have it
                     while (stack.Count > 0)
                     {
                         IInterimOperand stackResult = PopStack();
@@ -286,7 +306,7 @@ namespace kOS.Safe.Compilation.IR
                             break;
                         arguments.Push(stackResult);
                     }
-                    instruction = new IRCall(currentBlock, call, hasArgmarker, arguments);
+                    instruction = new IRCall(currentBlock, call, arguments);
                     if (stack.Count > 0 && !((IRCall)instruction).Direct)
                     {
                         ((IRCall)instruction).IndirectMethod = PopStack();

@@ -74,23 +74,23 @@ namespace kOS.Safe.Test.Execution
             {
                 // Block 1: Local store will be SSA
                 new IRAssign(block, new OpcodeStoreLocal("a"), new InterimConstantValue(Encapsulation.ScalarIntValue.One, -1, -1)) {Scope = IRAssign.StoreScope.Local},
-                new IRPop(block, new IRCall(block, new OpcodeCall("print"), true, new InterimVariableReference("a", -1, -1)), new OpcodePop()),
+                new IRPop(block, new IRCall(block, new OpcodeCall("print"), new InterimVariableReference("a", -1, -1)), new OpcodePop()),
                 // Block 2 & 3: Store exist should be SSA and overwrite Block 1
                 new IRAssign(block, new OpcodeStoreExist("a"), new InterimConstantValue(Encapsulation.ScalarIntValue.Two, -1, -1)),
-                new IRPop(block, new IRCall(block, new OpcodeCall("print"), true, new InterimVariableReference("a", -1, -1)), new OpcodePop()),
+                new IRPop(block, new IRCall(block, new OpcodeCall("print"), new InterimVariableReference("a", -1, -1)), new OpcodePop()),
                 // Block 4: The variable "a" should now refer to a global, unresolved reference.
                 new IRUnset(block, new OpcodeUnset(), new InterimConstantValue("a", -1, -1)),
-                new IRPop(block, new IRCall(block, new OpcodeCall("print"), true, new InterimVariableReference("a", -1, -1)), new OpcodePop()),
+                new IRPop(block, new IRCall(block, new OpcodeCall("print"), new InterimVariableReference("a", -1, -1)), new OpcodePop()),
                 // Block 5: The variable "a" should now refer to a global reference, which will not be resolved.
                 new IRAssign(block, new OpcodeStore("a"), new InterimConstantValue(Encapsulation.ScalarIntValue.One, -1, -1)),
-                new IRPop(block, new IRCall(block, new OpcodeCall("print"), true, new InterimVariableReference("a", -1, -1)), new OpcodePop()),
+                new IRPop(block, new IRCall(block, new OpcodeCall("print"), new InterimVariableReference("a", -1, -1)), new OpcodePop()),
                 // Block 6: The variable "a" exists again at the local scope and should be resolved.
                 new IRAssign(block, new OpcodeStoreLocal("a"), new InterimConstantValue(Encapsulation.ScalarIntValue.One, -1, -1)) {Scope = IRAssign.StoreScope.Local},
-                new IRPop(block, new IRCall(block, new OpcodeCall("print"), true, new InterimVariableReference("a", -1, -1)), new OpcodePop())
+                new IRPop(block, new IRCall(block, new OpcodeCall("print"), new InterimVariableReference("a", -1, -1)), new OpcodePop())
 
             };
             block.Instructions.InsertRange(1, instructions);
-            SingleStaticAssignment.FinalizeSSA(codePart);
+            SingleStaticAssignment.FinalizeSSA(codePart, false);
             instructions = codePart.MainCode[0].Instructions;
 
             // Block 1
