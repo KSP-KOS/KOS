@@ -7,7 +7,7 @@ namespace kOS.Safe.Compilation.IR
 {
     public abstract class IRInstruction
     {
-        public BasicBlock Block { get; }
+        public BasicBlock Block { get; set; }
         public short SourceLine { get; private set; }   // line number in the source code that this was compiled from.
         public short SourceColumn { get; private set; } // column number of the token nearest the cause of this Opcode.
 
@@ -20,11 +20,18 @@ namespace kOS.Safe.Compilation.IR
         ///   <c>true</c> if this instance is invariant; otherwise, <c>false</c>.
         /// </value>
         public abstract bool IsInvariant { get; }
+        public abstract IRInstruction Clone(BasicBlock block);
         public abstract IEnumerable<Opcode> EmitOpcodes();
         protected IRInstruction(Opcode originalOpcode, BasicBlock block)
         {
             SourceLine = originalOpcode?.SourceLine ?? -1;
             SourceColumn = originalOpcode?.SourceColumn ?? -1;
+            Block = block;
+        }
+        protected IRInstruction(IRInstruction from, BasicBlock block)
+        {
+            SourceLine = from.SourceLine;
+            SourceColumn = from.SourceColumn;
             Block = block;
         }
         protected Opcode SetSourceLocation(Opcode opcode)
@@ -58,6 +65,7 @@ namespace kOS.Safe.Compilation.IR
         protected IInterimOperand operand;
 
         protected SingleOperandInstruction(Opcode originalOpcode, BasicBlock block) : base(originalOpcode, block) { }
+        protected SingleOperandInstruction(IRInstruction cloneFrom, BasicBlock block) : base(cloneFrom, block) { }
 
         IInterimOperand ISingleOperandInstruction.Operand { get => operand; set => operand = value; }
 
@@ -76,6 +84,7 @@ namespace kOS.Safe.Compilation.IR
     public abstract class MultipleOperandInstruction : IRInstruction, IMultipleOperandInstruction
     {
         protected MultipleOperandInstruction(Opcode originalOpcode, BasicBlock block) : base(originalOpcode, block) { }
+        protected MultipleOperandInstruction(IRInstruction cloneFrom, BasicBlock block) : base(cloneFrom, block) { }
 
         public abstract IEnumerable<IInterimOperand> Operands { get; }
         public abstract int OperandCount { get; }
@@ -135,6 +144,16 @@ namespace kOS.Safe.Compilation.IR
             Value = value;
             Target = new SSASetDefinition(opcode.Identifier, this);
         }
+        protected IRAssign(BasicBlock block, IRAssign cloneFrom) : base(cloneFrom, block)
+        {
+            Value = cloneFrom.Value.Clone(block);
+            Target = new SSASetDefinition(cloneFrom.Target.Name, this);
+            IsInert = cloneFrom.IsInert;
+            Scope = cloneFrom.Scope;
+            AssertExists = cloneFrom.AssertExists;
+        }
+        public override IRInstruction Clone(BasicBlock block)
+            => new IRAssign(block, this);
         public override IEnumerable<Opcode> EmitOpcodes()
         {
             if (Value != null)
@@ -281,6 +300,12 @@ namespace kOS.Safe.Compilation.IR
             Left = left;
             Right = right;
         }
+        protected IRBinaryOp(BasicBlock block, IRBinaryOp cloneFrom) : base(cloneFrom, block)
+        {
+            Operation = cloneFrom.CloneOperation();
+            Left = cloneFrom.Left.Clone(block);
+            Right = cloneFrom.Right.Clone(block);
+        }
         public bool SwapOperands()
         {
             if (!IsCommutative)
@@ -315,8 +340,10 @@ namespace kOS.Safe.Compilation.IR
             return true;
         }
 
-        public IInterimOperand Clone(BasicBlock block)
-            => new IRBinaryOp(block, (BinaryOpcode)SetSourceLocation(CloneOperation()), Left.Clone(block), Right.Clone(block));
+        public override IRInstruction Clone(BasicBlock block)
+            => new IRBinaryOp(block, this);
+        IInterimOperand IInterimOperand.Clone(BasicBlock block)
+            => new IRBinaryOp(block, this);
         private BinaryOpcode CloneOperation()
         {
             switch (Operation)
@@ -447,9 +474,16 @@ namespace kOS.Safe.Compilation.IR
             Operation = operation;
             Operand = operand;
         }
+        protected IRUnaryOp(BasicBlock block, IRUnaryOp cloneFrom) : base(cloneFrom, block)
+        {
+            Operation = cloneFrom.CloneOperation();
+            Operand = cloneFrom.Operand.Clone(block);
+        }
 
-        public IInterimOperand Clone(BasicBlock block)
-            => new IRUnaryOp(block, SetSourceLocation(CloneOperation()), Operand.Clone(block));
+        public override IRInstruction Clone(BasicBlock block)
+            => new IRUnaryOp(block, this);
+        IInterimOperand IInterimOperand.Clone(BasicBlock block)
+            => new IRUnaryOp(block, this);
         private Opcode CloneOperation()
         {
             switch (Operation)
@@ -524,6 +558,38 @@ namespace kOS.Safe.Compilation.IR
             => Operation = opcode;
         public IRNoStackInstruction(BasicBlock block, Opcode opcode, bool isInert) : this(block, opcode)
             => IsInert = isInert;
+        protected IRNoStackInstruction(BasicBlock block, IRNoStackInstruction cloneFrom) : base(cloneFrom, block)
+        {
+            IsInert = cloneFrom.IsInert;
+            switch (cloneFrom.Operation)
+            {
+                case OpcodeEOF _:
+                    Operation = new OpcodeEOF();
+                    break;
+                case OpcodeEOP _:
+                    Operation = new OpcodeEOP();
+                    break;
+                case OpcodeNOP _:
+                    Operation = new OpcodeNOP();
+                    break;
+                case OpcodeBogus _:
+                    Operation = new OpcodeBogus();
+                    break;
+                case OpcodeArgBottom _:
+                    Operation = new OpcodeArgBottom();
+                    break;
+                case OpcodePushScope pushScope:
+                    Operation = new OpcodePushScope(pushScope.ScopeId, pushScope.ParentScopeId);
+                    break;
+                case OpcodePopScope _:
+                    Operation = new OpcodePopScope();
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+        public override IRInstruction Clone(BasicBlock block)
+            => new IRNoStackInstruction(block, this);
         public override IEnumerable<Opcode> EmitOpcodes()
         {
             Operation.Label = string.Empty;
@@ -545,6 +611,27 @@ namespace kOS.Safe.Compilation.IR
             Operand = operand;
             operationHasSideEffects = sideEffects;
         }
+        protected IRUnaryConsumer(BasicBlock block, IRUnaryConsumer cloneFrom) : base(cloneFrom, block)
+        {
+            Operand = cloneFrom.Operand.Clone(block);
+            operationHasSideEffects = cloneFrom.operationHasSideEffects;
+            switch (cloneFrom.Operation)
+            {
+                case OpcodeAddTrigger addTrigger:
+                    Operation = new OpcodeAddTrigger(addTrigger.Unique, (Execution.InterruptPriority)addTrigger.Priority);
+                    break;
+                case OpcodeRemoveTrigger _:
+                    Operation = new OpcodeRemoveTrigger();
+                    break;
+                case OpcodeWait _:
+                    Operation = new OpcodeWait();
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+        public override IRInstruction Clone(BasicBlock block)
+            => new IRUnaryConsumer(block, this);
         public override IEnumerable<Opcode> EmitOpcodes()
         {
             foreach (Opcode opcode in Operand.EmitOpcodes())
@@ -576,7 +663,12 @@ namespace kOS.Safe.Compilation.IR
         public IInterimOperand Value { get => operand; set => operand = value; }
         public IRPop(BasicBlock block, IInterimOperand value, OpcodePop opcode) : base(opcode, block)
             => Value = value;
-
+        protected IRPop(BasicBlock block, IRPop cloneFrom) : base(cloneFrom, block)
+        {
+            Value = cloneFrom.Value.Clone(block);
+        }
+        public override IRInstruction Clone(BasicBlock block)
+            => new IRPop(block, this);
         public override IEnumerable<Opcode> EmitOpcodes()
         {
             foreach (Opcode opcode in Value.EmitOpcodes())
@@ -609,7 +701,20 @@ namespace kOS.Safe.Compilation.IR
         {
             Operation = opcode;
         }
-        public IInterimOperand Clone(BasicBlock block)
+        protected IRNonVarPush(BasicBlock block, IRNonVarPush cloneFrom) : base(cloneFrom, block)
+        {
+            switch (cloneFrom.Operation)
+            {
+                case OpcodeTestArgBottom _:
+                    Operation = new OpcodeTestArgBottom();
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+        public override IRInstruction Clone(BasicBlock block)
+            => new IRNonVarPush(block, this);
+        IInterimOperand IInterimOperand.Clone(BasicBlock block)
             => new IRNonVarPush(block, CloneOperation());
         private Opcode CloneOperation()
         {
@@ -661,8 +766,15 @@ namespace kOS.Safe.Compilation.IR
             Object = obj;
             Suffix = opcodeGetMember.Identifier;
         }
-        public IInterimOperand Clone(BasicBlock block)
-            => new IRSuffixGet(block, Object.Clone(block), new OpcodeGetMember(Suffix) { SourceLine = SourceLine, SourceColumn = SourceColumn });
+        protected IRSuffixGet(BasicBlock block, IRSuffixGet cloneFrom) : base(cloneFrom, block)
+        {
+            Object = cloneFrom.Object.Clone(block);
+            Suffix = cloneFrom.Suffix;
+        }
+        public override IRInstruction Clone(BasicBlock block)
+            => new IRSuffixGet(block, this);
+        IInterimOperand IInterimOperand.Clone(BasicBlock block)
+            => new IRSuffixGet(block, this);
         public override IEnumerable<Opcode> EmitOpcodes()
         {
             foreach (Opcode opcode in Object.EmitOpcodes())
@@ -707,6 +819,9 @@ namespace kOS.Safe.Compilation.IR
         // TODO: Consider implementing this.
         public bool IsInert => false;
         public IRSuffixGetMethod(BasicBlock block, IInterimOperand obj, OpcodeGetMethod opcode) : base(block, obj, opcode) { }
+        protected IRSuffixGetMethod(BasicBlock block, IRSuffixGet cloneFrom) : base(block, cloneFrom) { }
+        public override IRInstruction Clone(BasicBlock block)
+            => new IRSuffixGetMethod(block, this);
         public override IEnumerable<Opcode> EmitOpcodes()
         {
             foreach (Opcode opcode in Object.EmitOpcodes())
@@ -749,6 +864,14 @@ namespace kOS.Safe.Compilation.IR
             Value = value;
             Suffix = opcodeSetMember.Identifier;
         }
+        protected IRSuffixSet(BasicBlock block, IRSuffixSet cloneFrom) : base(cloneFrom, block)
+        {
+            Object = cloneFrom.Object.Clone(block);
+            Value = cloneFrom.Value.Clone(block);
+            Suffix = cloneFrom.Suffix;
+        }
+        public override IRInstruction Clone(BasicBlock block)
+            => new IRSuffixSet(block, this);
         public override IEnumerable<Opcode> EmitOpcodes()
         {
             foreach (Opcode opcode in Object.EmitOpcodes())
@@ -813,8 +936,15 @@ namespace kOS.Safe.Compilation.IR
             Object = obj;
             Index = index;
         }
-        public IInterimOperand Clone(BasicBlock block)
-            => new IRIndexGet(block, Object.Clone(block), Index.Clone(block), new OpcodeGetIndex() { SourceLine = SourceLine, SourceColumn = SourceColumn });
+        protected IRIndexGet(BasicBlock block, IRIndexGet cloneFrom) : base(cloneFrom, block)
+        {
+            Object = cloneFrom.Object.Clone(block);
+            Index = cloneFrom.Index.Clone(block);
+        }
+        public override IRInstruction Clone(BasicBlock block)
+            => new IRIndexGet(block, this);
+        IInterimOperand IInterimOperand.Clone(BasicBlock block)
+            => new IRIndexGet(block, this);
         public override IEnumerable<Opcode> EmitOpcodes()
         {
             foreach (Opcode opcode in Object.EmitOpcodes())
@@ -880,6 +1010,14 @@ namespace kOS.Safe.Compilation.IR
             Index = index;
             Value = value;
         }
+        protected IRIndexSet(BasicBlock block, IRIndexSet cloneFrom) : base(cloneFrom, block)
+        {
+            Object = cloneFrom.Object.Clone(block);
+            Index = cloneFrom.Index.Clone(block);
+            Value = cloneFrom.Value.Clone(block);
+        }
+        public override IRInstruction Clone(BasicBlock block)
+            => new IRIndexSet(block, this);
         public override IEnumerable<Opcode> EmitOpcodes()
         {
             foreach (Opcode opcode in Object.EmitOpcodes())
@@ -913,6 +1051,12 @@ namespace kOS.Safe.Compilation.IR
         }
         public IRJump(BasicBlock block, BasicBlock target, short sourceLine, short sourceColumn)
             : this(block, target, new OpcodeBranchJump() { SourceLine = sourceLine, SourceColumn = sourceColumn }) { }
+        protected IRJump(BasicBlock block, IRJump cloneFrom) : base(cloneFrom, block)
+        {
+            Target = cloneFrom.Target;
+        }
+        public override IRInstruction Clone(BasicBlock block)
+            => new IRJump(block, this);
         public override IEnumerable<Opcode> EmitOpcodes()
         {
             yield return SetSourceLocation(new OpcodeBranchJump() { DestinationLabel = Target.Label });
@@ -935,6 +1079,13 @@ namespace kOS.Safe.Compilation.IR
             Distance = distance;
             Targets.AddRange(targets);
         }
+        protected IRJumpStack(BasicBlock block, IRJumpStack cloneFrom) : base(cloneFrom, block)
+        {
+            Distance = cloneFrom.Distance.Clone(block);
+            Targets.AddRange(cloneFrom.Targets);
+        }
+        public override IRInstruction Clone(BasicBlock block)
+            => new IRJumpStack(block, this);
         public override IEnumerable<Opcode> EmitOpcodes()
         {
             foreach (Opcode opcode in Distance.EmitOpcodes())
@@ -962,6 +1113,15 @@ namespace kOS.Safe.Compilation.IR
             False = onFalse;
             PreferFalse = opcodeBranch is OpcodeBranchIfFalse;
         }
+        protected IRBranch(BasicBlock block, IRBranch cloneFrom) : base(cloneFrom, block)
+        {
+            Condition = cloneFrom.Condition.Clone(block);
+            True = cloneFrom.True;
+            False = cloneFrom.False;
+            PreferFalse = cloneFrom.PreferFalse;
+        }
+        public override IRInstruction Clone(BasicBlock block)
+            => new IRBranch(block, this);
         public override IEnumerable<Opcode> EmitOpcodes()
         {
             foreach (Opcode opcode in Condition.EmitOpcodes())
@@ -976,17 +1136,6 @@ namespace kOS.Safe.Compilation.IR
                 yield return SetSourceLocation(new OpcodeBranchIfTrue() { DestinationLabel = True.Label });
                 yield return SetSourceLocation(new OpcodeBranchJump() { DestinationLabel = False.Label });
             }
-        }
-        public IRBranch Clone(BasicBlock block)
-        {
-            BranchOpcode opcode;
-            if (PreferFalse)
-                opcode = new OpcodeBranchIfFalse();
-            else
-                opcode = new OpcodeBranchIfTrue();
-            opcode.SourceLine = SourceLine;
-            opcode.SourceColumn = SourceColumn;
-            return new IRBranch(block, Condition.Clone(block), True, False, opcode);
         }
         public override string ToString()
             => string.Format("{{br.?{2} {0}/{1}}}", True.Label, False.Label, PreferFalse ? "f" : "t");
@@ -1005,7 +1154,20 @@ namespace kOS.Safe.Compilation.IR
         public List<IInterimOperand> Arguments { get; } = new List<IInterimOperand>();
         public override IEnumerable<IInterimOperand> Operands => Arguments;
         public override int OperandCount => Arguments.Count;
-        public Type Type => GetDefaultReturnType();
+        public Type Type
+        {
+            get
+            {
+                IRCodePart.IRFunction function = Block?.CodePart?.GetFunction(this);
+                if (function != null)
+                    return function.Returns.Type;
+                if (Optimization.Optimizer.FunctionManager.Exists(Function.Replace("()", "")))
+                    return Optimization.Optimizer.FunctionManager.FunctionReturnType(Function.Replace("()", ""));
+                if (!Direct && IndirectMethod is IRSuffixGetMethod suffixGetMethod)
+                    return suffixGetMethod.Type;
+                return typeof(Encapsulation.Structure);
+            }
+        }
         public ushort OpcodeCount
         {
             get
@@ -1019,6 +1181,9 @@ namespace kOS.Safe.Compilation.IR
                     if (argument is IResultingInstruction arg)
                         result += arg.OpcodeCount;
                     else result += 1;
+                IRCodePart.IRFunction function = Block?.CodePart?.GetFunction(this);
+                if (function != null && !function.IsRecursive)
+                    result += (ushort)Optimization.Passes.FunctionInlining.CalculateFunctionLength(function);
                 return result;
             }
         }
@@ -1034,9 +1199,14 @@ namespace kOS.Safe.Compilation.IR
         {
             Function = (string)opcode.Destination;
             Direct = opcode.Direct;
-            EmitArgMarker = emitArgMarker;
         }
-        private bool IsSelfInvariant
+        protected IRCall(BasicBlock block, IRCall cloneFrom) : base(cloneFrom, block)
+        {
+            Function = cloneFrom.Function;
+            Direct = cloneFrom.Direct;
+            Arguments.AddRange(cloneFrom.Arguments.Select(arg => arg.Clone(block)));
+        }
+        protected bool IsSelfInvariant
         {
             get
             {
@@ -1066,24 +1236,10 @@ namespace kOS.Safe.Compilation.IR
                 return false;
             }
         }
-        private Type GetDefaultReturnType()
-        {
-            IRCodePart.IRFunction function = Block?.CodePart?.GetFunction(this);
-            if (function != null)
-                return function.Returns.Type;
-            if (Optimization.Optimizer.FunctionManager.Exists(Function.Replace("()", "")))
-                return Optimization.Optimizer.FunctionManager.FunctionReturnType(Function.Replace("()", ""));
-            if (!Direct && IndirectMethod is IRSuffixGetMethod suffixGetMethod)
-                return suffixGetMethod.Type;
-            return typeof(Encapsulation.Structure);
-        }
-        public IInterimOperand Clone(BasicBlock block)
-            => new IRCall(block, new OpcodeCall(Function)
-            {
-                Direct = Direct,
-                SourceLine = SourceLine,
-                SourceColumn = SourceColumn
-            }, EmitArgMarker, Arguments);
+        public override IRInstruction Clone(BasicBlock block)
+            => new IRCall(block, this);
+        IInterimOperand IInterimOperand.Clone(BasicBlock block)
+            => new IRCall(block, this);
         public override IEnumerable<Opcode> EmitOpcodes()
         {
             if (EmitArgMarker)
@@ -1113,21 +1269,28 @@ namespace kOS.Safe.Compilation.IR
         {
             Arguments.AddRange(arguments);
         }
+        protected IRCall(IRCall call) : base(new OpcodeCall(call.Function), call.Block)
+        {
+            Arguments = call.Arguments.ToList();
+            Function = call.Function;
+            Direct = true;
+        }
         public override string ToString()
             => string.Format("{{call {0}({1})}}", Function.Trim('(', ')'), string.Join(",", Arguments.Select(a => a.ToString())));
         public bool Equals(IInterimOperand other)
-            => (other is IRCall call &&
-                IsInert &&  // If the call is not inert, the underlying state is affected, which makes any similar call non-equal.
+            => other == this ||
+                (IsInert &&  // If the call is not inert, the underlying state is affected, which makes any similar call non-equal.
+                other is IRCall call &&
                 string.Equals(Function.Replace("()", ""), call.Function.Replace("()", ""), StringComparison.OrdinalIgnoreCase) &&
                 Arguments.SequenceEqual(call.Arguments)) ||
-                (IsInvariant &&
+                (IsInvariant && // If the call is invariant, it may be equal to a constant.
                 other is IEvaluatableToConstant evaluatableToConstant &&
                 evaluatableToConstant.IsInvariant &&
+            // TODO: What if this.Evaluate == null???
                 Evaluate().Equals(evaluatableToConstant.Evaluate()));
         public override bool Equals(object obj)
-            => obj is IRCall call &&
-                string.Equals(Function.Replace("()", ""), call.Function.Replace("()", ""), StringComparison.OrdinalIgnoreCase) &&
-                Arguments.SequenceEqual(call.Arguments);
+            => obj is IInterimOperand operand &&
+            Equals(operand);
         public override int GetHashCode()
             => Function.ToLower().GetHashCode();
 
@@ -1161,6 +1324,13 @@ namespace kOS.Safe.Compilation.IR
         public short Depth { get; internal set; }
         public IRReturn(BasicBlock block, short depth, OpcodeReturn opcode) : base(opcode, block)
             => Depth = depth;
+        protected IRReturn(BasicBlock block, IRReturn cloneFrom) : base(cloneFrom, block)
+        {
+            Depth = cloneFrom.Depth;
+            Value = cloneFrom.Value.Clone(block);
+        }
+        public override IRInstruction Clone(BasicBlock block)
+            => new IRReturn(block, this);
         public override IEnumerable<Opcode> EmitOpcodes()
         {
             if (Value != null)
@@ -1190,11 +1360,15 @@ namespace kOS.Safe.Compilation.IR
         public override bool IsInvariant => operand.IsInvariant;
         public bool IsInert => false;
         public bool IsResolvable => IRParameter.IsSetResolvable(this);
-        public virtual bool IsSelfResolvable => true;
+        public virtual bool IsSelfResolvable => Block != null;
 
         public IRPushStack(BasicBlock block, IInterimOperand operand) : base((Opcode)null, block)
         {
             Value = operand;
+        }
+        private IRPushStack(BasicBlock block, IRPushStack cloneFrom) : base(cloneFrom, block)
+        {
+            Value = cloneFrom.Value?.Clone(block);
         }
         public static IRPushStack ExternalPush()
             => new IRPushStack(null, (IInterimOperand)null);
@@ -1206,6 +1380,8 @@ namespace kOS.Safe.Compilation.IR
         public void RemoveReference(IRParameter reference)
             => references.Remove(reference);
 
+        public override IRInstruction Clone(BasicBlock block)
+            => new IRPushStack(block, this);
         public override IEnumerable<Opcode> EmitOpcodes()
             => !IsResolvable ? Value.EmitOpcodes() : Enumerable.Empty<Opcode>();
         public override string ToString()

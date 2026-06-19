@@ -31,7 +31,7 @@ namespace kOS.Safe.Compilation.IR
         }
 
         public IInterimOperand Clone(BasicBlock _)
-            => this;
+            => new InterimVariableReference(Name, SourceLine, SourceColumn);
 
         public IEnumerable<Opcode> EmitOpcodes()
         {
@@ -82,7 +82,7 @@ namespace kOS.Safe.Compilation.IR
         }
 
         public IInterimOperand Clone(BasicBlock _)
-            => this;
+            => new InterimVariableReference(Name, SourceLine, SourceColumn);
 
         public IEnumerable<Opcode> EmitOpcodes()
         {
@@ -167,7 +167,7 @@ namespace kOS.Safe.Compilation.IR
         }
 
         public IInterimOperand Clone(BasicBlock _)
-            => new InterimUnresolvedReference(References, SourceLine, SourceColumn);
+            => new InterimVariableReference(Name, SourceLine, SourceColumn);
 
         public IEnumerable<Opcode> EmitOpcodes()
         {

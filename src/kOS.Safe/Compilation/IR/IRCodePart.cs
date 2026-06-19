@@ -195,7 +195,7 @@ namespace kOS.Safe.Compilation.IR
             {
                 trigger.EmitCode(emitter);
             }
-            foreach (IRFunction function in Functions)
+            foreach (IRFunction function in Functions.Where(f => f.IsGlobal || f.CallSites.Count > 0))
             {
                 function.EmitCode(emitter);
             }
@@ -282,6 +282,8 @@ namespace kOS.Safe.Compilation.IR
                 trigger.Code.Clear();
                 trigger.Code.AddRange(emitter.Emit(Code));
             }
+            public override string ToString()
+                => $"IRTrigger: {Identifier}";
         }
 
         /// <summary>
@@ -355,16 +357,23 @@ namespace kOS.Safe.Compilation.IR
             private readonly PhiOperand returns = new PhiOperand();
             /// <summary>
             /// Gets a value indicating whether this instance is invariant.
-            /// A user function that contains any calls to non-invariant functions is,
-            /// itself, not invariant. Any assignments or unsets to the enclosing scope or
-            /// setting any suffixes or indexes also makes a function non-invariant.
+            /// A user function must also be inert to be considered invariant.
             /// </summary>
             /// <value>
             ///   <c>true</c> if this instance is invariant; otherwise, <c>false</c>.
             /// </value>
             public bool IsInvariant
                 => Returns.IsInvariant &&
-                FunctionCalls.Where(f => f != this).All(function => function.Returns.IsInvariant);
+                IsInert;
+            /// <summary>
+            /// Gets a value indicating whether this instance is inert.
+            /// A user function that contains any calls to non-inert functions is,
+            /// itself, not inert. Any assignments or unsets to the enclosing scope or
+            /// setting any suffixes or indexes also makes a function non-inert.
+            /// </summary>
+            /// <value>
+            ///   <c>true</c> if this instance is inert; otherwise, <c>false</c>.
+            /// </value>
             public bool IsInert
                 => IsSelfInert &&
                 FunctionCalls.Where(f => f != this).All(function => function.IsSelfInert);
@@ -389,6 +398,8 @@ namespace kOS.Safe.Compilation.IR
                     );
                 }
             }
+
+            public HashSet<IRCall> CallSites { get; } = new HashSet<IRCall>(IRInstruction.ReferenceEqualityComparer);
 
             public List<BasicBlock> RootBlocks { get; } = new List<BasicBlock>();
 
@@ -432,6 +443,9 @@ namespace kOS.Safe.Compilation.IR
                     fragments[fragment].EmitCode(emitter);
                 }
             }
+
+            public override string ToString()
+                => $"IRFunction: {Identifier}";
 
             /// <summary>
             /// This class represents a function fragment. See <seealso cref="UserFunctionCodeFragment"/>.

@@ -12,7 +12,6 @@ namespace kOS.Safe.Compilation.IR
         private IRScope parent;
         private readonly HashSet<IRScope> childScopes = new HashSet<IRScope>();
         private readonly HashSet<BasicBlock> blocks = new HashSet<BasicBlock>();
-        private readonly HashSet<string> variables = new HashSet<string>();
 
         private int nextChildIndex = 0;
         private int index;
@@ -55,7 +54,7 @@ namespace kOS.Safe.Compilation.IR
         /// <summary>
         /// Gets the collection of variable names associated with this scope.
         /// </summary>
-        public IReadOnlyCollection<string> Variables => variables;
+        public IEnumerable<string> Variables => Assignments.Select(a => a.Target.Name).Distinct(StringComparer.OrdinalIgnoreCase);
         /// <summary>
         /// Gets the set of assignments that are made (or possibly made) to this scope.
         /// </summary>
@@ -88,21 +87,9 @@ namespace kOS.Safe.Compilation.IR
             HeaderBlock = headerBlock;
         }
 
-        public void StoreLocalVariable(string variableName)
-        {
-            variables.Add(variableName);
-        }
-        public void StoreGlobalVariable(string variableName)
-        {
-            if (!IsGlobalScope)
-                ParentScope.StoreGlobalVariable(variableName);
-            else
-                StoreLocalVariable(variableName);
-        }
-
         public bool IsVariableInScope(string name, bool includeParent = true)
         {
-            if (variables.Contains(name))
+            if (Assignments.Any(a => string.Equals(a.Target.Name, name, StringComparison.OrdinalIgnoreCase)))
                 return true;
             return includeParent && (ParentScope?.IsVariableInScope(name, includeParent) ?? false);
         }
@@ -111,14 +98,9 @@ namespace kOS.Safe.Compilation.IR
         {
             if (IsGlobalScope)
                 return this;
-            if (variables.Contains(name))
+            if (Assignments.Any(a => string.Equals(a.Target.Name, name, StringComparison.OrdinalIgnoreCase)))
                 return this;
             return ParentScope.GetScopeForVariableNamed(name);
-        }
-
-        public void ClearVariable(string name)
-        {
-            variables.Remove(name);
         }
 
         public bool IsEqualOrEncompassedBy(IRScope scope)

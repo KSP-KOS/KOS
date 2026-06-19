@@ -31,7 +31,7 @@ namespace kOS.Safe.Compilation.IR
                 if (i >= result.Count - 2)
                     continue;
                 if (opcode is OpcodeBranchJump jump &&
-                    jump.DestinationLabel != null && jumpLabels[jump.DestinationLabel] == i + 1)
+                    jump.DestinationLabel != null && jumpLabels[jump.DestinationLabel] == i + 1 + labelIndex)
                 {
                     foreach (var key in jumpLabels.Keys.ToArray())
                         if (jumpLabels[key] >= i)

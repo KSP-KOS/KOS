@@ -1056,5 +1056,19 @@ namespace kOS.Safe.Test.Execution
             Assert.IsInstanceOf<OpcodeStoreExist>(result[55]);
             Assert.AreEqual("$b", ((OpcodeStoreExist)result[55]).Identifier);
         }
+
+        [Test]
+        public void TestFunctionInlining()
+        {
+            EnsureAtLeastLevel(OptimizationLevel.Aggressive);
+            RunScript("integration/func_args.ks");
+            RunSingleStep();
+            AssertOutput(
+                "0",
+                "1",
+                "2",
+                "3"
+            );
+        }
     }
 }

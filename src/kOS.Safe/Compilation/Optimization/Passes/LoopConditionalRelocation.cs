@@ -46,7 +46,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 block = block.PostDominator;
 
             IRBranch newBranch = (IRBranch)header.Instructions[header.Instructions.Count - 1];
-            newBranch = newBranch.Clone(block);
+            newBranch = (IRBranch)newBranch.Clone(block);
             newBranch.PreferFalse = !newBranch.PreferFalse;
 
             block.Instructions[block.Instructions.Count - 1] = newBranch;

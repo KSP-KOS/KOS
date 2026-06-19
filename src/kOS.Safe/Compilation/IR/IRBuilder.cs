@@ -359,29 +359,11 @@ namespace kOS.Safe.Compilation.IR
 
         private static void Store(IInterimOperand value, BasicBlock block, OpcodeIdentifierBase opcode, IRCodePart codePart, IRAssign.StoreScope storeScope = IRAssign.StoreScope.Ambivalent, bool assertExist = false)
         {
-            IInterimOperand stackValue = value;
-            IRAssign assignment = new IRAssign(block, opcode, stackValue) { Scope = storeScope, AssertExists = assertExist };
-            IRScope scope;
-            switch (storeScope)
-            {
-                case IRAssign.StoreScope.Local:
-                    scope = block.Scope;
-                    break;
-                case IRAssign.StoreScope.Global:
-                    scope = block.Scope.GetGlobalScope();
-                    break;
-                default:
-                    scope = block.Scope.GetScopeForVariableNamed(opcode.Identifier);
-                    break;
-            }
+            IRAssign assignment = new IRAssign(block, opcode, value) { Scope = storeScope, AssertExists = assertExist };
             block.Add(assignment);
 
-            scope.StoreLocalVariable(opcode.Identifier);
-
-            if (stackValue is IRRelocateLater lockOrFunctionPointer)
-            {
+            if (value is IRRelocateLater lockOrFunctionPointer)
                 codePart.EnrollFunction(opcode.Identifier, (string)lockOrFunctionPointer.Value, block.Scope, storeScope == IRAssign.StoreScope.Global);
-            }
         }
 
         private static bool IsPushingVariable(OpcodePush opcodePush)

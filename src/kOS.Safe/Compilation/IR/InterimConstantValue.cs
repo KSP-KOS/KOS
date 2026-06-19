@@ -95,7 +95,7 @@ namespace kOS.Safe.Compilation.IR
         public Type Type => StackTransferObject?.Type ?? typeof(Encapsulation.Structure);
         public bool IsInvariant =>
             (StackTransferObject?.IsResolvable ?? false) &&
-            (StackTransferObject.Value.IsInvariant);
+            (StackTransferObject.Value?.IsInvariant ?? false);
         public bool IsResolvable => IsSetResolvable(this);
         public IStackTransferObject StackTransferObject
         {
@@ -116,25 +116,15 @@ namespace kOS.Safe.Compilation.IR
         }
         public IEnumerable<Opcode> EmitOpcodes()
             => StackTransferObject?.IsResolvable ?? false ?
-            StackTransferObject.Value.EmitOpcodes() :
+            StackTransferObject.Value?.EmitOpcodes() :
             Enumerable.Empty<Opcode>();
         public bool Equals(IInterimOperand other)
             => other == this ||
             ((StackTransferObject?.IsResolvable ?? false) &&
             StackTransferObject.Value.Equals(other));
 
-        /// <remarks>
-        /// The block's IncomingStackState must be set before calling this.
-        /// The required to be resolved property must be populated afterwards.
-        /// </remarks>
         public IInterimOperand Clone(BasicBlock block)
-        {
-            IRParameter result = new IRParameter(index, block)
-            {
-                StackTransferObject = block.IncomingStackState[index]
-            };
-            return result;
-        }
+            => new IRParameter(index, block);
 
         public override string ToString()
             => $"Parameter #{index}, BasicBlock#{Block.ID}, Resolved: {StackTransferObject?.IsResolvable}";

@@ -126,7 +126,10 @@ namespace kOS.Safe.Compilation.IR
                     ProcessCall(call, codePart, variables, block.TriggerPropagationBlacklist, block.TriggerUnsetBlacklist, funcOrTrigger, false);
                     IRFunction function = codePart.GetFunction(call);
                     if (function != null)
+                    {
                         funcOrTrigger?.FunctionCalls.Add(codePart.GetFunction(call));
+                        function.CallSites.Add(call);
+                    }
                 }
 
                 switch (instruction)
@@ -473,6 +476,8 @@ namespace kOS.Safe.Compilation.IR
                 => (obj.Item1.GetHashCode(), SSADefinition.ReferenceEqualityComparer.GetHashCode(obj.Item2)).GetHashCode();
         }
 
+        public static void BuildPhis(BasicBlock root, bool stackAdoptsTypeHints)
+            => BuildPhis(root, root.CodePart, null, stackAdoptsTypeHints);
         private static void BuildPhis(BasicBlock root, IRCodePart codePart, IClosureVariableUser funcOrTrigger, bool stackAdoptsTypeHints)
         {
             Dictionary<BasicBlock, Dictionary<(string Name, IRScope Scope), SSADefinition>> variablesOut =
@@ -610,7 +615,9 @@ namespace kOS.Safe.Compilation.IR
                 }
             }
         }
-        private static List<IStackTransferObject> PopulateParameters(BasicBlock block, Dictionary<BasicBlock, List<IStackTransferObject>> stackOut, Queue<BasicBlock> worklist)
+        public static List<IStackTransferObject> GetOutgoingStack(BasicBlock block)
+            => PopulateParameters(block, null, null, false);
+        private static List<IStackTransferObject> PopulateParameters(BasicBlock block, Dictionary<BasicBlock, List<IStackTransferObject>> stackOut, Queue<BasicBlock> worklist, bool setValues = true)
         {
             List<IStackTransferObject> stack = new List<IStackTransferObject>(block.IncomingStackState);
             foreach (IRInstruction instruction in block.Instructions.DepthFirst())
@@ -620,14 +627,7 @@ namespace kOS.Safe.Compilation.IR
                     {
                         if (op is IRParameter parameter)
                         {
-                            if (stack.Count > 0)
-                            {
-                                parameter.StackTransferObject = stack[0];
-                                parameter.RequiredToBeResolvable.UnionWith(GetFollowingParameters(operandInstruction, parameter));
-                                // TODO: Add a sub-pass to swap binary operands to optimize the number of resolvable operands.
-                                stack.RemoveAt(0);
-                            }
-                            else
+                            if (stack.Count == 0)
                             {
                                 IRPushStack externalPush = IRPushStack.ExternalPush();
                                 HashSet<BasicBlock> addedTo = new HashSet<BasicBlock>();
@@ -649,7 +649,14 @@ namespace kOS.Safe.Compilation.IR
                                             addTo.Enqueue(predecessor);
                                     }
                                 }
+                                stack.Add(externalPush);
                             }
+                            if (setValues)
+                            {
+                                parameter.StackTransferObject = stack[0];
+                                parameter.RequiredToBeResolvable.UnionWith(GetFollowingParameters(operandInstruction, parameter));
+                            }
+                            stack.RemoveAt(0);
                         }
                         else if (op is IRCall call)
                         {
@@ -668,6 +675,9 @@ namespace kOS.Safe.Compilation.IR
                                         argMarker.Call = call;
                                     break;
                                 }
+
+                                if (!setValues)
+                                    continue;
 
                                 IRParameter newParameter = new IRParameter(block.IncomingStackState.IndexOf(stackValue), block) { StackTransferObject = stackValue };
                                 call.Arguments.Insert(0, newParameter);
@@ -797,6 +807,8 @@ namespace kOS.Safe.Compilation.IR
             }
         }
 
+        public static void ApplyUses(BasicBlock block)
+            => ApplyUses(block, block.CodePart, null);
         private static void ApplyUses(BasicBlock block, IRCodePart codePart, IClosureVariableUser funcOrTrigger)
         {
             List<IRInstruction> instructions = block.Instructions;

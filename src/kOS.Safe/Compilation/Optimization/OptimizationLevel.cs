@@ -38,7 +38,8 @@ namespace kOS.Safe.Compilation
      *  
      * O3:
      *  3100. Local function inlining
-     *  3200. Constant propagation to local functions
+     *  
+     *  3200. Constant propagation to local functions (also calls constant folding again on the affected blocks)
      *  3500. Loop stack manipulation (delayed setting of either index or aggregator)
      *  
      * O4:
