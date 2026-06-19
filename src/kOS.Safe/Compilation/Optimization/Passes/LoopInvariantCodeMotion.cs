@@ -30,6 +30,9 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             regionExits.Push(reversePostOrder[reversePostOrder.Count - 1]);
 
             List<BlockOrdering.LoopData> loopData = LoopConditionalRelocation.FindLoops(root, regionExits);
+            // Loops are found in reverse post-order, so the list is
+            // reversed to work from inside out for nested loops.
+            loopData.Reverse();
 
             foreach (BlockOrdering.LoopData loop in loopData)
             {
@@ -47,7 +50,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             //  - InterimResolvedReference operands if that variable definition
             //      does not come into the loop body, unless it comes from an
             //      assignment that is relocated.
-            //  - Anythign that happens inside a conditional.
+            //  - IRParameter operands that are not resolvable.
+            //  - Anything that happens inside a conditional.
             //      (Another pass can deal with restructuring conditionals)
             HashSet<SSADefinition> allowableReferences = new HashSet<SSADefinition>(loop.body.IncomingVariableDefinitions.Values);
             BasicBlock bodyEnd = loop.body;
