@@ -75,6 +75,13 @@ namespace kOS.Safe.Compilation.IR
         /// variable name.
         /// </remarks>
         public bool IsGlobalScope => ParentScope == null;
+        /// <summary>
+        /// Gets or sets a value indicating whether this scope must be protected from removal.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if the scope is protected; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsProtectedFromRemoval { get; set; } = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IRScope"/> class.

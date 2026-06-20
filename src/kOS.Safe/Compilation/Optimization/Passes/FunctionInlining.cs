@@ -61,7 +61,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         {
             foreach (IRCall call in function.CallSites.ToArray())
             {
-                if (!CanInlineFunction(function, call))
+                if (!CanInlineFunction(function, call, out bool protectScope))
                     continue;
                 BasicBlock callingBlock = call.Block;
                 List<IRInstruction> instructions = callingBlock.Instructions;
@@ -166,6 +166,9 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     callingBlock.Add(paramPush);
                 }
 
+                if (protectScope)
+                    functionRoot.Scope.IsProtectedFromRemoval = true;
+
                 BasicBlock.Stitch(callingBlock, successor, inlinedFunction);
                 
                 function.CallSites.Remove(call);
@@ -232,13 +235,33 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 return false;
             return true;
         }
-        public static bool CanInlineFunction(IRCodePart.IRFunction function, IRCall callSite)
+        public static bool CanInlineFunction(IRCodePart.IRFunction function, IRCall callSite, out bool protectScope)
         {
+            protectScope = false;
+
             // Without implementing more comprehensive movement of blocks,
             // ternary operator arguments won't be compatible with inlining.
             // This is absolutely doable, but would require a lot more work.
             if (!callSite.EmitArgMarker)
                 return false;
+
+            // Because scopes can bypass intervening scopes,
+            // We only need to protect the existing scope push
+            // if there are identically-name variables between
+            // the calling scope and the function scope.
+            IRScope scope = callSite.Block.Scope;
+            while (scope != null && scope != function.ClosureScope)
+            {
+                if (scope.Variables.Any(v =>
+                    function.ExternalReads.Contains(v) ||
+                    function.ExternalWrites.Contains(v) ||
+                    function.ExternalUnsets.Any(unset => unset.Name.Equals(v, StringComparison.OrdinalIgnoreCase))))
+                {
+                    protectScope = true;
+                    break;
+                }
+            }
+
             return true;
         }
     }

@@ -21,6 +21,9 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 
             foreach (IRScope scope in scopes)
             {
+                if (scope.IsProtectedFromRemoval)
+                    continue;
+
                 if (scope.Assignments.Any(a => a.Block.IsExecutable))
                     continue;
 
