@@ -61,7 +61,7 @@ namespace kOS.Safe.Compilation.IR
         /// <remarks>
         /// These are populated in <see cref="SingleStaticAssignment"/>.
         /// </remarks>
-        public HashSet<IRAssign> Assignments { get; } = new HashSet<IRAssign>();
+        public HashSet<IRAssign> Assignments { get; } = new HashSet<IRAssign>(IRInstruction.ReferenceEqualityComparer);
         /// <summary>
         /// Gets a value indicating whether this instance represents the
         /// global scope.

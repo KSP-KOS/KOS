@@ -315,21 +315,22 @@ namespace kOS.Safe.Compilation.IR
 
         public IRAssign DefinedAt { get; }
         public override bool IsInvariant => State != SetState.PotentiallyUnset && AssignedAt.IsInvariant;
-        public override Type Type { get; }
+        public override Type Type => AssignedType;
+        public Type AssignedType { get; set; }
 
         public SSASetDefinition(string name, IRAssign assignedAt) : base(name, SetState.Set, assignedAt)
         {
             DefinedAt = assignedAt;
             potentialUnsetSites = new Dictionary<IRUnset, SSADefinition>();
-            Type = DefinedAt.Value.Type;
+            AssignedType = DefinedAt.Value.Type;
         }
         public SSASetDefinition(string name, IRUnset unsetAt) : base(name, SetState.Unset, unsetAt)
         {
-            Type = null;
+            AssignedType = null;
         }
         private SSASetDefinition(string name, IRCall assignedIn) : base(name, SetState.Set, assignedIn)
         {
-            Type = typeof(Encapsulation.Structure);
+            AssignedType = typeof(Encapsulation.Structure);
         }
         public static SSASetDefinition FromCallSite(string name, IRCall assignedIn)
         {

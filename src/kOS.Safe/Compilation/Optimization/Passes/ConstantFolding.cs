@@ -19,7 +19,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 ApplyPass(enumerator.Current, Optimizer.AllowClobberBuiltins);
             }
         }
-        private static void ApplyPass(BasicBlock block, bool allowClobberBuiltins)
+        public static void ApplyPass(BasicBlock block, bool allowClobberBuiltins)
         {
             IInterimOperand AttemptReduction_Internal(IInterimOperand operand)
                 => AttemptReduction(operand, allowClobberBuiltins);

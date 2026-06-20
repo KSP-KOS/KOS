@@ -67,7 +67,10 @@ namespace kOS.Safe.Compilation.IR
             successorBlock.IncomingVariableDefinitions = new Dictionary<(string, IRScope), SSADefinition>();
             foreach (var key in IncomingVariableDefinitions.Keys)
                 successorBlock.IncomingVariableDefinitions[key] = IncomingVariableDefinitions[key];
-            FallthroughJump = new IRJump(this, successorBlock, Instructions[newStartIndex - 1].SourceLine, Instructions[newStartIndex - 1].SourceColumn);
+            FallthroughJump = new IRJump(this,
+                successorBlock,
+                Instructions[Math.Max(newStartIndex - 1, 0)].SourceLine,
+                Instructions[Math.Max(newStartIndex - 1, 0)].SourceColumn);
 
             foreach (BasicBlock successor in Successors)
                 successorBlock.AddSuccessor(successor);
@@ -119,6 +122,8 @@ namespace kOS.Safe.Compilation.IR
             }
             if (before.Successors.Contains(after))
                 before.RemoveSuccessor(after);
+
+            before.CodePart.Blocks.AddRange(pattern.Where(b => !before.CodePart.Blocks.Contains(b)));
         }
         public static IEnumerable<BasicBlock> ClonePattern(IEnumerable<BasicBlock> pattern, bool stackAdoptsTypeHints = false)
         {

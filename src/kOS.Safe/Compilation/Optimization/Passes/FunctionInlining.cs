@@ -57,7 +57,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             return length / function.Fragments.Count;
         }
 
-        private static void InlineFunction(IRCodePart.IRFunction function)
+        private void InlineFunction(IRCodePart.IRFunction function)
         {
             foreach (IRCall call in function.CallSites.ToArray())
             {
@@ -151,11 +151,12 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     successor.IncomingStackState.Insert(0, stackTransferPhi);
                 }
 
+                if (successor.Instructions[0].IsInvariant)
+                    successor.Instructions.RemoveAt(0);
+
                 BasicBlock functionRoot = inlinedFunction.First();
                 while (functionRoot.Dominator != null)
                     functionRoot = functionRoot.Dominator;
-
-                ReduceArgumentParameters(functionRoot, call.Arguments.Count, functionRoot.IncomingStackState.Count, call);
 
                 int instructionCount = callingBlock.Instructions.Count;
                 for (int i = call.Arguments.Count - 1; i >= 0; i--)
@@ -166,8 +167,25 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     callingBlock.Add(paramPush);
                 }
 
+                ReduceArgumentParameters(functionRoot, call.Arguments.Count, functionRoot.IncomingStackState.Count, call);
+
                 if (protectScope)
                     functionRoot.Scope.IsProtectedFromRemoval = true;
+
+                if (!Optimizer.PassesToSkip.Contains(typeof(SCCPWithTypePropagation)))
+                {
+                    Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> localVarUses =
+                        SCCPWithTypePropagation.MapUsesAndPropagateTypes(functionRoot);
+                    HashSet<SSADefinition> requiredLocalDefs =
+                        SCCPWithTypePropagation.PropagateConstants(localVarUses);
+                    foreach (BasicBlock block in inlinedFunction)
+                        SCCPWithTypePropagation.RemoveRedundantAssignments(block, requiredLocalDefs);
+                }
+                if (!Optimizer.PassesToSkip.Contains(typeof(ConstantFolding)))
+                {
+                    foreach (BasicBlock block in inlinedFunction)
+                        ConstantFolding.ApplyPass(block, Optimizer.AllowClobberBuiltins);
+                }
 
                 BasicBlock.Stitch(callingBlock, successor, inlinedFunction);
                 
@@ -181,17 +199,19 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 throw new Exceptions.KOSCompileException(new KS.LineCol(callSite.SourceLine, callSite.SourceColumn), "Function was called with too many arguments.");
 
             int argsRemaining = argsProvided;
-            while (maxPossibleArgs > 0)
+            while (maxPossibleArgs >= 0)
             {
                 for (int i = maxPossibleArgs - argsRemaining; i > 0; --i)
                     rootBlock.IncomingStackState.RemoveAt(argsRemaining);
 
                 foreach (IRAssign assignment in rootBlock.Instructions.Where(i => i is IRAssign).Cast<IRAssign>())
                 {
-                    if (assignment.Value is IRParameter)
+                    if (assignment.Value is IRParameter parameter &&
+                        maxPossibleArgs >= 0)
                     {
                         maxPossibleArgs--;
                         argsRemaining--;
+                        assignment.Target.AssignedType = parameter.Type;
                     }
                 }
 
@@ -214,7 +234,16 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         branch.True.IncomingStackState.RemoveAt(0);
                         rootBlock.Instructions[rootBlock.Instructions.Count - 1] =
                             new IRJump(rootBlock, branch.True, branch.SourceLine, branch.SourceColumn);
+
                         rootBlock.RemoveSuccessor(branch.False);
+
+                        foreach (StackTransferPhi stackPhi in branch.False.IncomingStackState.Where(s => s is StackTransferPhi).Cast<StackTransferPhi>())
+                        {
+                            if (stackPhi.PossibleValues.Keys.Count == 2 &&
+                                stackPhi.PossibleValues.ContainsKey(rootBlock) &&
+                                stackPhi.PossibleValues.ContainsKey(branch.True))
+                                stackPhi.PossibleValues.Remove(rootBlock);
+                        }
                     }
                     maxPossibleArgs--;
                 }

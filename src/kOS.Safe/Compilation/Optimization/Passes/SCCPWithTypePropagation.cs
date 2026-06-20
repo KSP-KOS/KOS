@@ -41,26 +41,45 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         /// type information to Phi variables as blocks become executable.
         /// </summary>
         /// <param name="codePart"></param>
-        /// <param name="executableBlocks">
-        /// The collection of blocks that are marked as executable.
+        /// <returns>
+        /// A dictionary of instructions (or phi variables) that make use
+        /// of SSA variables (indirectly or directly).
+        /// </returns>
+        public static Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> MapUsesAndPropagateTypes(IRCodePart codePart)
+        {
+            // Apply the algorithm starting from each entry block.
+            Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> variableUses =
+                new Dictionary<SSADefinition, HashSet<IOperandInstructionBase>>(SSADefinition.ReferenceEqualityComparer);
+            foreach (BasicBlock root in codePart.RootBlocks)
+                MapUsesAndPropagateTypes(root, variableUses);
+            return variableUses;
+        }
+        /// <summary>
+        /// Applies the sparse conditional side of SCCP, and propagates
+        /// type information to Phi variables as blocks become executable.
+        /// </summary>
+        /// <param name="fragmentRoot">
+        /// The root basic block from which to begin the algorithm.
         /// </param>
         /// <returns>
         /// A dictionary of instructions (or phi variables) that make use
         /// of SSA variables (indirectly or directly).
         /// </returns>
-        private static Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> MapUsesAndPropagateTypes(IRCodePart codePart)
+        public static Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> MapUsesAndPropagateTypes(BasicBlock fragmentRoot)
         {
             Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> variableUses =
                 new Dictionary<SSADefinition, HashSet<IOperandInstructionBase>>(SSADefinition.ReferenceEqualityComparer);
+            MapUsesAndPropagateTypes(fragmentRoot, variableUses);
+            return variableUses;
+        }
+        private static void MapUsesAndPropagateTypes(BasicBlock root, Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> variableUses)
+        {
             Dictionary<IStackTransferObject, HashSet<IOperandInstructionBase>> parameterUses =
                 new Dictionary<IStackTransferObject, HashSet<IOperandInstructionBase>>();
             HashSet<BasicBlock> visitedBlocks = new HashSet<BasicBlock>();
             Dictionary<SSADefinition, (Type, bool)> typeAndInvarianceCache = new Dictionary<SSADefinition, (Type, bool)>(SSADefinition.ReferenceEqualityComparer);
             Dictionary<IStackTransferObject, Type> paramTypeCache = new Dictionary<IStackTransferObject, Type>();
 
-            // Apply the algorithm starting from each entry block.
-            foreach (BasicBlock root in codePart.RootBlocks)
-            {
                 // The queue of blocks that are executable
                 Queue<BasicBlock> blockQueue = new Queue<BasicBlock>();
                 // Queues the entry block
@@ -69,136 +88,133 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 // The queue of instructions that need updating
                 Queue<IOperandInstructionBase> instructionQueue = new Queue<IOperandInstructionBase>();
 
-                while (blockQueue.Count > 0 || instructionQueue.Count > 0)
+            while (blockQueue.Count > 0 || instructionQueue.Count > 0)
+            {
+                // Visit every expression and phi in a block
+                // Queue that block's successors
+                while (blockQueue.Count > 0)
                 {
-                    // Visit every expression and phi in a block
-                    // Queue that block's successors
-                    while (blockQueue.Count > 0)
+                    BasicBlock block = blockQueue.Dequeue();
+                    // Disregard if this block has already been visited
+                    // any changes will be captured in the sparse pass below.
+                    if (!visitedBlocks.Add(block))
+                        continue;
+
+                    // Process Phis first, as if they are instructions.
+                    foreach (PhiNode phi in block.Phis.Values)
                     {
-                        BasicBlock block = blockQueue.Dequeue();
-                        // Disregard if this block has already been visited
-                        // any changes will be captured in the sparse pass below.
-                        if (!visitedBlocks.Add(block))
-                            continue;
+                        foreach (SSADefinition variable in phi.PossibleValues.Values)
+                            GetOrCreate(variableUses, variable).Add(phi);
 
-                        // Process Phis first, as if they are instructions.
-                        foreach (PhiNode phi in block.Phis.Values)
-                        {
-                            foreach (SSADefinition variable in phi.PossibleValues.Values)
-                                GetOrCreate(variableUses, variable).Add(phi);
+                        VisitInstruction(phi, blockQueue, typeAndInvarianceCache, paramTypeCache);
+                    }
+                    foreach (StackTransferPhi phi in block.IncomingStackState.Where(item => item is StackTransferPhi).Cast<StackTransferPhi>())
+                    {
+                        foreach (IStackTransferObject pushStack in phi.PossibleValues.Values.Where(v => v != null))
+                            GetOrCreate(parameterUses, pushStack).Add(phi);
 
-                            VisitInstruction(phi, blockQueue, typeAndInvarianceCache, paramTypeCache);
-                        }
-                        foreach (StackTransferPhi phi in block.IncomingStackState.Where(item => item is StackTransferPhi).Cast<StackTransferPhi>())
-                        {
-                            foreach (IStackTransferObject pushStack in phi.PossibleValues.Values.Where(v => v != null))
-                                GetOrCreate(parameterUses, pushStack).Add(phi);
-
-                            VisitInstruction(phi, blockQueue, typeAndInvarianceCache, paramTypeCache);
-                        }
-
-                        // Process instructions.
-                        foreach (IRInstruction instruction in block.Instructions)
-                        {
-                            foreach (IOperandInstructionBase inst in instruction.DepthFirst().Where(i => i is IOperandInstructionBase).Cast<IOperandInstructionBase>())
-                            {
-                                inst.ForEachOperand(op =>
-                                {
-                                    if (op is IInterimVariableReference reference &&
-                                        !(op is InterimVariableReference))
-                                    {
-                                        foreach (SSADefinition variable in GetSSADefinitionsFromReferences(reference))
-                                        {
-                                            // Add this instruction to the list of uses for each operand.
-                                            GetOrCreate(variableUses, variable).Add(inst);
-
-                                            // Also add the base instruction,
-                                            // which is the more important reference
-                                            // since anything else is a temp result.
-                                            if (instruction is IOperandInstructionBase opInst)
-                                                GetOrCreate(variableUses, variable).Add(opInst);
-                                        }
-                                    }
-                                    else if (op is IRParameter parameter &&
-                                        parameter.StackTransferObject != null)
-                                    {
-                                        GetOrCreate(parameterUses, parameter.StackTransferObject).Add(inst);
-                                        if (instruction is IOperandInstructionBase opInst)
-                                            GetOrCreate(parameterUses, parameter.StackTransferObject).Add(opInst);
-                                    }
-                                });
-                                // Calls get to be special to address their external read needs.
-                                if (inst is IRCall call)
-                                {
-                                    IRCodePart.IRFunction function = codePart.GetFunction(call);
-                                    if (function != null)
-                                    {
-                                        HashSet<IInterimVariableReference> variables = codePart.ReachableVariables[call];
-                                        foreach (SSADefinition variable in variables.SelectMany(GetSSADefinitionsFromReferences))
-                                        {
-                                            GetOrCreate(variableUses, variable).Add(call);
-                                        }
-                                    }
-                                }
-                                // Reduce duplication (and the risk of
-                                // inadvertently changing the return value).
-                                // The else if the next if statement.
-                                if (inst != instruction || !(instruction is IOperandInstructionBase))
-                                    VisitInstruction(inst, blockQueue, typeAndInvarianceCache, paramTypeCache);
-                            }
-
-                            if (instruction is IOperandInstructionBase operandInstruction)
-                            {
-                                if (VisitInstruction(operandInstruction, blockQueue, typeAndInvarianceCache, paramTypeCache))
-                                {
-                                    if (operandInstruction is IRAssign assignment &&
-                                        variableUses.TryGetValue(assignment.Target, out HashSet<IOperandInstructionBase> uses))
-                                        foreach (IOperandInstructionBase use in uses)
-                                            instructionQueue.Enqueue(use);
-                                    if (operandInstruction is IRPushStack pushStack &&
-                                        parameterUses.TryGetValue(pushStack, out uses))
-                                        foreach (IOperandInstructionBase use in uses)
-                                            instructionQueue.Enqueue(use);
-                                }
-                            }
-                        }
-
-                        // Multiple successors are covered in VisitInstruction()
-                        // where it covers IRBranch.
-                        if (block.Successors.Count == 1)
-                            blockQueue.Enqueue(block.Successors.First());
-
-                        block.IsExecutable = true;
-
-                        // With the block marked executable, all the phis based on it may have changed.
-                        // Iterate through them and add those uses to the queue.
-                        foreach (IOperandInstructionBase use in variableUses.Where(kvp => kvp.Key is PhiVariable p && p.Node.PossibleValues.ContainsKey(block)).SelectMany(kvp => kvp.Value))
-                            instructionQueue.Enqueue(use);
-                        foreach (IOperandInstructionBase use in parameterUses.Where(kvp => kvp.Key is StackTransferPhi p && p.PossibleValues.ContainsKey(block)).SelectMany(kvp => kvp.Value))
-                            instructionQueue.Enqueue(use);
+                        VisitInstruction(phi, blockQueue, typeAndInvarianceCache, paramTypeCache);
                     }
 
-                    // Loop over any instructions (or phis) that need updating.
-                    while (instructionQueue.Count > 0)
+                    // Process instructions.
+                    foreach (IRInstruction instruction in block.Instructions)
                     {
-                        IOperandInstructionBase instruction = instructionQueue.Dequeue();
-                        if (VisitInstruction(instruction, blockQueue, typeAndInvarianceCache, paramTypeCache))
+                        foreach (IOperandInstructionBase inst in instruction.DepthFirst().Where(i => i is IOperandInstructionBase).Cast<IOperandInstructionBase>())
                         {
-                            if (instruction is IRAssign assignment)
-                                foreach (IOperandInstructionBase use in GetOrCreate(variableUses, assignment.Target))
-                                    instructionQueue.Enqueue(use);
-                            else if (instruction is PhiNode phi)
-                                foreach (IOperandInstructionBase use in GetOrCreate(variableUses, phi.Result))
-                                    instructionQueue.Enqueue(use);
-                            else if (instruction is IStackTransferObject stackTransfer)
-                                foreach (IOperandInstructionBase use in GetOrCreate(parameterUses, stackTransfer))
-                                    instructionQueue.Enqueue(use);
+                            inst.ForEachOperand(op =>
+                            {
+                                if (op is IInterimVariableReference reference &&
+                                    !(op is InterimVariableReference))
+                                {
+                                    foreach (SSADefinition variable in GetSSADefinitionsFromReferences(reference))
+                                    {
+                                        // Add this instruction to the list of uses for each operand.
+                                        GetOrCreate(variableUses, variable).Add(inst);
+
+                                        // Also add the base instruction,
+                                        // which is the more important reference
+                                        // since anything else is a temp result.
+                                        if (instruction is IOperandInstructionBase opInst)
+                                            GetOrCreate(variableUses, variable).Add(opInst);
+                                    }
+                                }
+                                else if (op is IRParameter parameter &&
+                                    parameter.StackTransferObject != null)
+                                {
+                                    GetOrCreate(parameterUses, parameter.StackTransferObject).Add(inst);
+                                    if (instruction is IOperandInstructionBase opInst)
+                                        GetOrCreate(parameterUses, parameter.StackTransferObject).Add(opInst);
+                                }
+                            });
+                            // Calls get to be special to address their external read needs.
+                            if (inst is IRCall call)
+                            {
+                                IRCodePart.IRFunction function = block.CodePart.GetFunction(call);
+                                if (function != null)
+                                {
+                                    HashSet<IInterimVariableReference> variables = block.CodePart.ReachableVariables[call];
+                                    foreach (SSADefinition variable in variables.SelectMany(GetSSADefinitionsFromReferences))
+                                    {
+                                        GetOrCreate(variableUses, variable).Add(call);
+                                    }
+                                }
+                            }
+                            // Reduce duplication (and the risk of
+                            // inadvertently changing the return value).
+                            // The else if the next if statement.
+                            if (inst != instruction || !(instruction is IOperandInstructionBase))
+                                VisitInstruction(inst, blockQueue, typeAndInvarianceCache, paramTypeCache);
                         }
+
+                        if (instruction is IOperandInstructionBase operandInstruction)
+                        {
+                            if (VisitInstruction(operandInstruction, blockQueue, typeAndInvarianceCache, paramTypeCache))
+                            {
+                                if (operandInstruction is IRAssign assignment &&
+                                    variableUses.TryGetValue(assignment.Target, out HashSet<IOperandInstructionBase> uses))
+                                    foreach (IOperandInstructionBase use in uses)
+                                        instructionQueue.Enqueue(use);
+                                if (operandInstruction is IRPushStack pushStack &&
+                                    parameterUses.TryGetValue(pushStack, out uses))
+                                    foreach (IOperandInstructionBase use in uses)
+                                        instructionQueue.Enqueue(use);
+                            }
+                        }
+                    }
+
+                    // Multiple successors are covered in VisitInstruction()
+                    // where it covers IRBranch.
+                    if (block.Successors.Count == 1)
+                        blockQueue.Enqueue(block.Successors.First());
+
+                    block.IsExecutable = true;
+
+                    // With the block marked executable, all the phis based on it may have changed.
+                    // Iterate through them and add those uses to the queue.
+                    foreach (IOperandInstructionBase use in variableUses.Where(kvp => kvp.Key is PhiVariable p && p.Node.PossibleValues.ContainsKey(block)).SelectMany(kvp => kvp.Value))
+                        instructionQueue.Enqueue(use);
+                    foreach (IOperandInstructionBase use in parameterUses.Where(kvp => kvp.Key is StackTransferPhi p && p.PossibleValues.ContainsKey(block)).SelectMany(kvp => kvp.Value))
+                        instructionQueue.Enqueue(use);
+                }
+
+                // Loop over any instructions (or phis) that need updating.
+                while (instructionQueue.Count > 0)
+                {
+                    IOperandInstructionBase instruction = instructionQueue.Dequeue();
+                    if (VisitInstruction(instruction, blockQueue, typeAndInvarianceCache, paramTypeCache))
+                    {
+                        if (instruction is IRAssign assignment)
+                            foreach (IOperandInstructionBase use in GetOrCreate(variableUses, assignment.Target))
+                                instructionQueue.Enqueue(use);
+                        else if (instruction is PhiNode phi)
+                            foreach (IOperandInstructionBase use in GetOrCreate(variableUses, phi.Result))
+                                instructionQueue.Enqueue(use);
+                        else if (instruction is IStackTransferObject stackTransfer)
+                            foreach (IOperandInstructionBase use in GetOrCreate(parameterUses, stackTransfer))
+                                instructionQueue.Enqueue(use);
                     }
                 }
             }
-
-            return variableUses;
         }
 
         private static IEnumerable<SSADefinition> GetSSADefinitionsFromReferences(IInterimVariableReference reference)
@@ -301,7 +317,14 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         /// <summary>
         /// Propagates any constant SSA variables to their uses.
         /// </summary>
-        private static HashSet<SSADefinition> PropagateConstants(Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> ssaUses)
+        /// <param name="ssaUses">
+        /// The database of which SSA definitions are used as operands.
+        /// </param>
+        /// <returns>
+        /// A collection of the definitions that are required,
+        /// after having propagated constants.
+        /// </returns>
+        public static HashSet<SSADefinition> PropagateConstants(Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> ssaUses)
         {
             List<SSADefinition> constantVariables = ssaUses.Keys.Where(
                 v => v.State == SSADefinition.SetState.Set &&
@@ -361,7 +384,15 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             return requiredDefinitions;
         }
 
-        private static void RemoveRedundantAssignments(BasicBlock block, HashSet<SSADefinition> usedVariables)
+        /// <summary>
+        /// Removes any redundant assignments - where the assigned variable
+        /// is never read (after propagating constant definitions).
+        /// </summary>
+        /// <param name="block">The block to process.</param>
+        /// <param name="usedVariables">
+        /// The collection used variable definitions.
+        /// </param>
+        public static void RemoveRedundantAssignments(BasicBlock block, HashSet<SSADefinition> usedVariables)
         {
             for (int i = 0; i < block.Instructions.Count; i++)
             {
