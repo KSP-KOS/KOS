@@ -40,7 +40,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             int length = 0;
             foreach (IRCodePart.IRFunction.IRFunctionFragment fragment in function.Fragments)
             {
-                foreach (IRInstruction instruction in fragment.FunctionCode.SelectMany(b => b.Instructions))
+                foreach (IRInstruction instruction in fragment.Blocks.SelectMany(b => b.Instructions))
                 {
                     if (instruction is IOperandInstructionBase operandInstruction)
                         operandInstruction.ForEachOperand(op =>
@@ -100,7 +100,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 #endif
                 BasicBlock successor = callingBlock.Split(callIndex);
                 
-                IEnumerable<BasicBlock> inlinedFunction = BasicBlock.ClonePattern(function.Fragments.First().FunctionCode).ToList();
+                IEnumerable<BasicBlock> inlinedFunction = BasicBlock.ClonePattern(function.Fragments.First().Blocks).ToList();
                 
                 List<IRPushStack> operandPushes = new List<IRPushStack>();
                 foreach (IInterimOperand operand in necessaryStackState)

@@ -9,8 +9,9 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         public OptimizationLevel OptimizationLevel => OptimizationLevel.Minimal;
         public short SortIndex => 10;
 
-        public void ApplyPass(List<IRInstruction> code)
+        public void ApplyPass(IEnumerable<IRInstruction> codeList)
         {
+            List<IRInstruction> code = (List<IRInstruction>)codeList;
             for (int i = 0; i < code.Count; i++)
             {
                 IRInstruction instruction = code[i];

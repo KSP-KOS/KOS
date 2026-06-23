@@ -18,18 +18,18 @@ namespace kOS.Safe.Compilation.IR
         /// </summary>
         /// <param name="code">The code to lower.</param>
         /// <returns>A sequence of <see cref="BasicBlock"/> objects, representing the instructions.</returns>
-        public List<BasicBlock> Lower(List<Opcode> code, IRCodePart codePart, IRScope parentScope = null)
+        public List<BasicBlock> Lower(List<Opcode> code, ICodeComponent codeComponent, IRScope parentScope = null)
         {
             List<BasicBlock> blocks = new List<BasicBlock>();
             if (code.Count == 0)
                 return blocks;
             Dictionary<string, int> labels = ProgramBuilder.MapLabels(code);
-            CreateBlocks(code, codePart, labels, blocks, parentScope);
-            FillBlocks(code, labels, blocks, codePart);
+            CreateBlocks(code, codeComponent, labels, blocks, parentScope);
+            FillBlocks(code, labels, blocks, codeComponent);
             return blocks;
         }
 
-        private void CreateBlocks(List<Opcode> code, IRCodePart codePart, Dictionary<string, int> labels, List<BasicBlock> blocks, IRScope parentScope)
+        private void CreateBlocks(List<Opcode> code, ICodeComponent codeComponent, Dictionary<string, int> labels, List<BasicBlock> blocks, IRScope parentScope)
         {
             IRScope globalScope = parentScope ?? new IRScope(parentScope, null);
             SortedSet<int> leaders = new SortedSet<int>() { 0 };
@@ -73,7 +73,7 @@ namespace kOS.Safe.Compilation.IR
                 string label = code[startIndex].Label;
                 if (label.StartsWith("@"))
                     label = null;
-                BasicBlock block = new BasicBlock(codePart, startIndex, endIndex, label);
+                BasicBlock block = new BasicBlock(codeComponent, startIndex, endIndex, label);
 
                 blocks.Add(block);
             }
@@ -102,7 +102,7 @@ namespace kOS.Safe.Compilation.IR
             rootBlock.EstablishDominance();
 
             List<BasicBlock> exitBlocks = blocks.Where(b => !b.Successors.Any()).ToList();
-            BasicBlock unifiedReturn = new SyntheticReturnBlock(codePart) { Scope = globalScope };
+            BasicBlock unifiedReturn = new SyntheticReturnBlock(codeComponent.CodePart) { Scope = globalScope };
             foreach (BasicBlock exitBlock in exitBlocks)
                 exitBlock.AddSuccessor(unifiedReturn);
             unifiedReturn.EstablishPostDominance();
@@ -136,7 +136,7 @@ namespace kOS.Safe.Compilation.IR
             Visit(root);
         }
 
-        private void FillBlocks(List<Opcode> code, Dictionary<string, int> labels, List<BasicBlock> blocks, IRCodePart codePart)
+        private void FillBlocks(List<Opcode> code, Dictionary<string, int> labels, List<BasicBlock> blocks, ICodeComponent codeComponent)
         {
             Stack<IInterimOperand> stack = new Stack<IInterimOperand>();
             BasicBlock currentBlock = GetBlockFromStartIndex(blocks, 0);
@@ -147,7 +147,7 @@ namespace kOS.Safe.Compilation.IR
                     SetStackState(stack, currentBlock);
                     currentBlock = GetBlockFromStartIndex(blocks, i);
                 }
-                ParseInstruction(code[i], currentBlock, stack, labels, i, blocks, codePart);
+                ParseInstruction(code[i], currentBlock, stack, labels, i, blocks, codeComponent);
             }
         }
 
@@ -181,7 +181,7 @@ namespace kOS.Safe.Compilation.IR
             return block.AddParameter();
         }
 
-        private void ParseInstruction(Opcode opcode, BasicBlock currentBlock, Stack<IInterimOperand> stack, Dictionary<string, int> labels, int index, List<BasicBlock> blocks, IRCodePart codePart)
+        private void ParseInstruction(Opcode opcode, BasicBlock currentBlock, Stack<IInterimOperand> stack, Dictionary<string, int> labels, int index, List<BasicBlock> blocks, ICodeComponent codeComponent)
         {
             IInterimOperand PopStack()
                 =>PopFromStack(stack, currentBlock);
@@ -189,16 +189,16 @@ namespace kOS.Safe.Compilation.IR
             switch (opcode)
             {
                 case OpcodeStore store:
-                    Store(PopStack(), currentBlock, store, codePart);
+                    Store(PopStack(), currentBlock, store, codeComponent.CodePart);
                     break;
                 case OpcodeStoreExist storeExist:
-                    Store(PopStack(), currentBlock, storeExist, codePart, assertExist: true);
+                    Store(PopStack(), currentBlock, storeExist, codeComponent.CodePart, assertExist: true);
                     break;
                 case OpcodeStoreLocal storeLocal:
-                    Store(PopStack(), currentBlock, storeLocal, codePart, IRAssign.StoreScope.Local);
+                    Store(PopStack(), currentBlock, storeLocal, codeComponent.CodePart, IRAssign.StoreScope.Local);
                     break;
                 case OpcodeStoreGlobal storeGlobal:
-                    Store(PopStack(), currentBlock, storeGlobal, codePart, IRAssign.StoreScope.Global);
+                    Store(PopStack(), currentBlock, storeGlobal, codeComponent.CodePart, IRAssign.StoreScope.Global);
                     break;
                 case OpcodeExists exists:
                     IResultingInstruction instruction = new IRUnaryOp(currentBlock, exists, PopStack());
@@ -332,7 +332,7 @@ namespace kOS.Safe.Compilation.IR
                 case OpcodeAddTrigger _:
                     IInterimOperand pointer = PopStack();
                     currentBlock.Add(new IRUnaryConsumer(currentBlock, opcode, pointer, false));
-                    codePart.EnrollClosure((string)((InterimConstantValue)pointer).Value, currentBlock.Scope);
+                    codeComponent.CodePart.EnrollClosure((string)((InterimConstantValue)pointer).Value, currentBlock.Scope);
                     break;
                 case OpcodeRemoveTrigger _:
                     currentBlock.Add(new IRUnaryConsumer(currentBlock, opcode, PopStack(), false));

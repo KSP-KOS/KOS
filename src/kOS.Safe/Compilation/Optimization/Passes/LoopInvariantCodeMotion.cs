@@ -14,9 +14,9 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         {
             foreach (IRCodePart.IRFunction function in codePart.Functions)
                 foreach (IRCodePart.IRFunction.IRFunctionFragment fragment in function.Fragments)
-                    ApplyPass(fragment.FunctionCode[0]);
+                    ApplyPass(fragment.Blocks[0]);
             foreach (IRCodePart.IRTrigger trigger in codePart.Triggers)
-                ApplyPass(trigger.Code[0]);
+                ApplyPass(trigger.Blocks[0]);
             ApplyPass(codePart.MainCode[0]);
         }
 

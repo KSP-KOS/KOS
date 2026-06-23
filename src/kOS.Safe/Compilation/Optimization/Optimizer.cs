@@ -33,7 +33,7 @@ namespace kOS.Safe.Compilation.Optimization
         /// <summary>
         /// Gets the collection of Basic Blocks being operated upon.
         /// </summary>
-        public List<BasicBlock> Blocks { get; private set; }
+        public IEnumerable<BasicBlock> Blocks { get; private set; }
         /// <summary>
         /// Gets the collection of extended basic blocks being operated upon.
         /// </summary>
@@ -41,7 +41,7 @@ namespace kOS.Safe.Compilation.Optimization
         /// <summary>
         /// Gets the collection of root blocks.
         /// </summary>
-        public HashSet<BasicBlock> RootBlocks { get; private set; }
+        public IEnumerable<BasicBlock> RootBlocks { get; private set; }
         /// <summary>
         /// Gets the IRCodePart object being operated upon.
         /// </summary>
@@ -87,11 +87,11 @@ namespace kOS.Safe.Compilation.Optimization
         /// <summary>
         /// Applies the optimization passes to the specified code part.
         /// </summary>
-        public List<BasicBlock> Optimize(IRCodePart codePart)
+        public void Optimize(IRCodePart codePart)
         {
             Code = codePart;
             Blocks = codePart.Blocks;
-            RootBlocks = new HashSet<BasicBlock>(codePart.RootBlocks);
+            RootBlocks = codePart.RootBlocks;
 
             List<ExtendedBasicBlock> rootExtendedBlocks = new List<ExtendedBasicBlock>(
                 codePart.RootBlocks.Select(b => ExtendedBasicBlock.CreateExtendedBlockTree(b)));
@@ -126,12 +126,14 @@ namespace kOS.Safe.Compilation.Optimization
                         foreach (BasicBlock block in Blocks)
                             instructionPass.ApplyPass(block.Instructions);
                         break;
+                    case IOptimizationPass<ICodeComponent> codeComponentPass:
+                        codeComponentPass.ApplyPass(codePart.Components);
+                        break;
                     default:
                         SafeHouse.Logger.LogWarning($"{pass.GetType()}, implementing IOptimizingPass<T>, uses an unsupported generic parameter.");
                         break;
                 }
             }
-            return Blocks;
         }
     }
 }

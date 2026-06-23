@@ -12,7 +12,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 
         public short SortIndex => 32000;
 
-        public void ApplyPass(List<BasicBlock> code)
+        public void ApplyPass(IEnumerable<BasicBlock> code)
         {
             HashSet<IRScope> scopes = new HashSet<IRScope>();
             HashSet<IRScope> removedScopes = new HashSet<IRScope>();

@@ -10,7 +10,7 @@ namespace kOS.Safe.Compilation.IR
     /// This class is the interim representation of a program, including
     /// the functions, triggers, and mainline code defined therein.
     /// </summary>
-    public class IRCodePart
+    public class IRCodePart : ICodeComponent
     {
         private readonly Dictionary<string, string> functionRefs = new Dictionary<string, string>();
         private readonly Dictionary<string, (IRScope Scope, bool IsGlobal)> closureScopes =
@@ -32,11 +32,34 @@ namespace kOS.Safe.Compilation.IR
         /// Gets the collection of root blocks, across all mainline
         /// code, functions, and triggers.
         /// </summary>
-        public List<BasicBlock> RootBlocks { get; } = new List<BasicBlock>();
+        public IEnumerable<ICodeComponent> Components =>
+            new ICodeComponent[] { this }.
+            Union(Triggers).
+            Union(Functions.SelectMany(GetFunctionFragments));
+        public IEnumerable<BasicBlock> RootBlocks =>
+            new BasicBlock[] { RootBlock }.
+            Union(Triggers.Select(GetRootBlock)).
+            Union(Functions.SelectMany(GetFunctionFragments).Select(GetRootBlock));
+        private IEnumerable<IRFunction.IRFunctionFragment> GetFunctionFragments(IRFunction function)
+            => function.Fragments;
+        private BasicBlock GetRootBlock(ICodeComponent codeComponent)
+            => codeComponent.RootBlock;
         /// <summary>
         /// Gets the collection of blocks, across all program elements.
         /// </summary>
-        public List<BasicBlock> Blocks { get; } = new List<BasicBlock>();
+        public IEnumerable<BasicBlock> Blocks =>
+            MainCode.
+            Union(Triggers.SelectMany(GetBlocks)).
+            Union(Functions.SelectMany(GetFunctionFragments).SelectMany(GetBlocks));
+        private IEnumerable<BasicBlock> GetBlocks(ICodeComponent codeComponent)
+            => codeComponent.Blocks;
+        List<BasicBlock> ICodeComponent.Blocks
+        {
+            get => MainCode;
+            set => MainCode = value;
+        }
+        IRCodePart ICodeComponent.CodePart => this;
+        public BasicBlock RootBlock { get; set; }
 
         /// <summary>
         /// Gets the reachable variables for a given call site.
@@ -87,11 +110,8 @@ namespace kOS.Safe.Compilation.IR
             foreach (UserFunction func in userFunctions.Except(completedFunctions))
                 Functions.Add(new IRFunction(builder, func, this));
 
-            Blocks.AddRange(MainCode);
             if (MainCode.Count > 0)
-                RootBlocks.Add(MainCode[0]);
-            RootBlocks.AddRange(Triggers.Select(t => t.RootBlock));
-            RootBlocks.AddRange(Functions.SelectMany(f => f.RootBlocks));
+                RootBlock = MainCode[0];
         }
 
         /// <summary>
@@ -123,11 +143,8 @@ namespace kOS.Safe.Compilation.IR
             foreach (UserFunction func in userFunctions.Except(completedFunctions))
                 Functions.Add(new IRFunction(builder, func, this));
 
-            Blocks.AddRange(MainCode);
             if (MainCode.Count > 0)
-                RootBlocks.Add(MainCode[0]);
-            RootBlocks.AddRange(Triggers.Select(t => t.RootBlock));
-            RootBlocks.AddRange(Functions.SelectMany(f => f.RootBlocks));
+                RootBlock = MainCode[0];
         }
 
         /// <summary>
@@ -235,8 +252,9 @@ namespace kOS.Safe.Compilation.IR
         /// <summary>
         /// This class represents a trigger definition.
         /// </summary>
-        /// <seealso cref="kOS.Safe.Compilation.IR.IRCodePart.IClosureVariableUser" />
-        public class IRTrigger : IClosureVariableUser
+        /// <seealso cref="IClosureVariableUser" />
+        /// <seealso cref="ICodeComponent" />
+        public class IRTrigger : IClosureVariableUser, ICodeComponent
         {
             private readonly Trigger trigger;
             /// <summary>
@@ -246,7 +264,7 @@ namespace kOS.Safe.Compilation.IR
             /// <summary>
             /// Gets or sets the code for this trigger, in BasicBlock representation.
             /// </summary>
-            public List<BasicBlock> Code { get; set; }
+            public List<BasicBlock> Blocks { get; set; }
             public HashSet<string> ExternalReads { get; set; } = new HashSet<string>();
             public HashSet<string> ExternalWrites { get; } = new HashSet<string>();
             public HashSet<(string Name, IRUnset Instruction)> ExternalUnsets { get; } = new HashSet<(string, IRUnset)>();
@@ -254,7 +272,8 @@ namespace kOS.Safe.Compilation.IR
             public HashSet<IRFunction> FunctionCalls { get; } = new HashSet<IRFunction>();
             public IRScope ClosureScope { get; }
 
-            public BasicBlock RootBlock { get; }
+            public BasicBlock RootBlock { get; set; }
+            public IRCodePart CodePart { get; }
 
             /// <summary>
             /// Initializes a new instance of the <see cref="IRTrigger"/> class.
@@ -266,11 +285,12 @@ namespace kOS.Safe.Compilation.IR
                 this.trigger = trigger;
                 Identifier = trigger.Code.FirstOrDefault()?.Label ?? "";
                 ClosureScope = codePart.closureScopes[Identifier].Scope;
-                Code = builder.Lower(trigger.Code, codePart, ClosureScope);
-                if (Code.Count > 0)
+                Blocks = builder.Lower(trigger.Code, codePart, ClosureScope);
+                if (Blocks.Count > 0)
                 {
-                    RootBlock = Code[0];
+                    RootBlock = Blocks[0];
                 }
+                CodePart = codePart;
             }
             /// <summary>
             /// Emits the code into Opcode representation back into the
@@ -280,7 +300,7 @@ namespace kOS.Safe.Compilation.IR
             public void EmitCode(IREmitter emitter)
             {
                 trigger.Code.Clear();
-                trigger.Code.AddRange(emitter.Emit(Code));
+                trigger.Code.AddRange(emitter.Emit(Blocks));
             }
             public override string ToString()
                 => $"IRTrigger: {Identifier}";
@@ -296,6 +316,10 @@ namespace kOS.Safe.Compilation.IR
             private readonly List<UserFunctionCodeFragment> userFunctionFragments;
             private readonly Dictionary<UserFunctionCodeFragment, IRFunctionFragment> fragments = new Dictionary<UserFunctionCodeFragment, IRFunctionFragment>();
 
+            /// <summary>
+            /// Gets the code part to which this function belongs.
+            /// </summary>
+            public IRCodePart CodePart { get; }
             /// <summary>
             /// Gets the identifier string for this function.
             /// </summary>
@@ -338,7 +362,7 @@ namespace kOS.Safe.Compilation.IR
                 {
                     foreach (IRFunctionFragment fragment in Fragments)
                     {
-                        foreach (BasicBlock block in fragment.FunctionCode)
+                        foreach (BasicBlock block in fragment.Blocks)
                         {
                             if (block.Successors.Any())
                             {
@@ -385,7 +409,7 @@ namespace kOS.Safe.Compilation.IR
                         return false;
 
                     return Fragments.All(fragment =>
-                        fragment.FunctionCode.Where(block => block.IsExecutable).All(block =>
+                        fragment.Blocks.Where(block => block.IsExecutable).All(block =>
                             block.Instructions.All(instruction =>
                             {
                                 foreach (IRInstruction operation in instruction.DepthFirst())
@@ -410,6 +434,7 @@ namespace kOS.Safe.Compilation.IR
             /// <param name="function">The user function object to convert.</param>
             public IRFunction(IRBuilder builder, UserFunction function, IRCodePart codePart)
             {
+                CodePart = codePart;
                 this.function = function;
                 (ClosureScope, IsGlobal) = codePart.closureScopes[Identifier];
                 InitializationCode = builder.Lower(function.InitializationCode, codePart, ClosureScope);
@@ -424,8 +449,8 @@ namespace kOS.Safe.Compilation.IR
                     RootBlocks.Add(InitializationCode[0]);
                 foreach (IRFunctionFragment fragment in Fragments)
                 {
-                    if (fragment.FunctionCode.Count > 0)
-                        RootBlocks.Add(fragment.FunctionCode[0]);
+                    if (fragment.Blocks.Count > 0)
+                        RootBlocks.Add(fragment.Blocks[0]);
                 }
             }
 
@@ -450,13 +475,15 @@ namespace kOS.Safe.Compilation.IR
             /// <summary>
             /// This class represents a function fragment. See <seealso cref="UserFunctionCodeFragment"/>.
             /// </summary>
-            public class IRFunctionFragment
+            public class IRFunctionFragment : ICodeComponent
             {
                 private readonly UserFunctionCodeFragment fragment;
                 /// <summary>
                 /// Gets or sets the function code, in BasicBlock representation.
                 /// </summary>
-                public List<BasicBlock> FunctionCode { get; set; }
+                public List<BasicBlock> Blocks { get; set; }
+                public BasicBlock RootBlock { get; set; }
+                public IRCodePart CodePart { get; }
                 /// <summary>
                 /// Initializes a new instance of the <see cref="IRFunctionFragment"/> class.
                 /// </summary>
@@ -465,7 +492,9 @@ namespace kOS.Safe.Compilation.IR
                 public IRFunctionFragment(IRBuilder builder, UserFunctionCodeFragment codeFragment, IRCodePart codePart, IRScope ClosureScope)
                 {
                     fragment = codeFragment;
-                    FunctionCode = builder.Lower(codeFragment.Code, codePart, ClosureScope);
+                    Blocks = builder.Lower(codeFragment.Code, codePart, ClosureScope);
+                    RootBlock = Blocks.FirstOrDefault();
+                    CodePart = codePart;
                 }
                 /// <summary>
                 /// Emits the code into Opcode representation back into the
@@ -475,7 +504,7 @@ namespace kOS.Safe.Compilation.IR
                 public void EmitCode(IREmitter emitter)
                 {
                     fragment.Code.Clear();
-                    fragment.Code.AddRange(emitter.Emit(FunctionCode));
+                    fragment.Code.AddRange(emitter.Emit(Blocks));
                 }
             }
         }

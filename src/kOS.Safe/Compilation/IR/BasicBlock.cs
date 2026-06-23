@@ -27,6 +27,7 @@ namespace kOS.Safe.Compilation.IR
             => nextID = 0;
 
         public IRCodePart CodePart { get; }
+        public ICodeComponent CodeComponent { get; }
         /// <summary>
         /// Gets or sets a value indicating whether this block is executable (reachable).
         /// </summary>
@@ -197,9 +198,10 @@ namespace kOS.Safe.Compilation.IR
         /// <param name="startIndex">The starting index in the original sequence of <see cref="Opcode"/>s.</param>
         /// <param name="endIndex">The ending index in the original sequence of <see cref="Opcode"/>s.</param>
         /// <param name="nonSequentialLabel">A non sequential label, if present.</param>
-        public BasicBlock(IRCodePart codePart, int startIndex, int endIndex, string nonSequentialLabel = null)
+        public BasicBlock(ICodeComponent codeComponent, int startIndex, int endIndex, string nonSequentialLabel = null)
         {
-            CodePart = codePart;
+            CodeComponent = codeComponent;
+            CodePart = codeComponent.CodePart;
             StartIndex = startIndex;
             EndIndex = endIndex;
             if (nonSequentialLabel == SyntheticReturnBlock.syntheticReturnLabel)

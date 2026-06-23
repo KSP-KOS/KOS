@@ -11,7 +11,7 @@ namespace kOS.Safe.Compilation.IR
         {
             if (!precursor.Successors.Contains(successor))
                 throw new InvalidOperationException("The successor block must be a successor of the precursor block.");
-            BasicBlock betweenBlock = new BasicBlock(precursor.CodePart, precursor.EndIndex, successor.StartIndex)
+            BasicBlock betweenBlock = new BasicBlock(precursor.CodeComponent, precursor.EndIndex, successor.StartIndex)
             {
                 Scope = useHeaderScope ? precursor.Scope : successor.Scope,
                 ExtendedBlock = successor.ExtendedBlock,
@@ -43,7 +43,7 @@ namespace kOS.Safe.Compilation.IR
             betweenBlock.IncomingStackState.AddRange(SingleStaticAssignment.GetOutgoingStack(precursor));
             successor.IncomingStackState.Clear();
             successor.IncomingStackState.AddRange(SingleStaticAssignment.GetOutgoingStack(betweenBlock));
-            betweenBlock.CodePart.Blocks.Add(betweenBlock);
+            betweenBlock.CodeComponent.Blocks.Add(betweenBlock);
             return betweenBlock;
         }
         public BasicBlock Split(int newStartIndex)
@@ -51,7 +51,7 @@ namespace kOS.Safe.Compilation.IR
             if (newStartIndex < 0 ||
                 newStartIndex > Instructions.Count - 1)
                 throw new ArgumentException(nameof(newStartIndex));
-            BasicBlock successorBlock = new BasicBlock(CodePart, StartIndex, EndIndex)
+            BasicBlock successorBlock = new BasicBlock(CodeComponent, StartIndex, EndIndex)
             {
                 Scope = Scope,
                 ExtendedBlock = ExtendedBlock,
@@ -77,7 +77,7 @@ namespace kOS.Safe.Compilation.IR
             AddSuccessor(successorBlock);
             foreach (BasicBlock successor in Successors.Where(b => b != successorBlock).ToArray())
                 RemoveSuccessor(successor);
-            CodePart.Blocks.Add(successorBlock);
+            CodeComponent.Blocks.Add(successorBlock);
 
             for (int i = newStartIndex; i < Instructions.Count; i++)
             {
@@ -123,7 +123,7 @@ namespace kOS.Safe.Compilation.IR
             if (before.Successors.Contains(after))
                 before.RemoveSuccessor(after);
 
-            before.CodePart.Blocks.AddRange(pattern.Where(b => !before.CodePart.Blocks.Contains(b)));
+            before.CodeComponent.Blocks.AddRange(pattern.Where(b => !before.CodeComponent.Blocks.Contains(b)));
         }
         public static IEnumerable<BasicBlock> ClonePattern(IEnumerable<BasicBlock> pattern, bool stackAdoptsTypeHints = false)
         {
@@ -132,7 +132,7 @@ namespace kOS.Safe.Compilation.IR
 
             Dictionary<BasicBlock, BasicBlock> replacementBlocks = new Dictionary<BasicBlock, BasicBlock>();
             foreach (BasicBlock block in pattern)
-                replacementBlocks[block] = new BasicBlock(block.CodePart, block.StartIndex, block.EndIndex);
+                replacementBlocks[block] = new BasicBlock(block.CodeComponent, block.StartIndex, block.EndIndex);
             Dictionary<IRScope, IRScope> replacementScopes = new Dictionary<IRScope, IRScope>();
             foreach (BasicBlock block in replacementBlocks.Keys)
             {

@@ -5,7 +5,7 @@ using kOS.Safe.Compilation.IR;
 
 namespace kOS.Safe.Compilation.Optimization.Passes
 {
-    public class BlockOrdering : IHolisticOptimizationPass, ILinkedOptimizationPass
+    public class BlockOrdering : IOptimizationPass<ICodeComponent>, ILinkedOptimizationPass
     {
         public OptimizationLevel OptimizationLevel => OptimizationLevel.None;
         public short SortIndex => short.MaxValue;
@@ -20,33 +20,31 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 
         // Optimally arrange blocks, while eliminating non-executable blocks
         // (if the optimization level is Balanced or above).
-        public void ApplyPass(IRCodePart codePart)
+        public void ApplyPass(IEnumerable<ICodeComponent> codeComponents)
         {
+
             if (Optimizer.OptimizationLevel >= OptimizationLevel.Minimal)
-                ApplyOrdering(codePart, ExecutableBlocksPredicate);
+                foreach (ICodeComponent component in codeComponents)
+                    ApplyOrdering(component, ExecutableBlocksPredicate);
             else
-                ApplyOrdering(codePart, AllBlocksPredicate);
+                foreach (ICodeComponent component in codeComponents)
+                    ApplyOrdering(component, AllBlocksPredicate);
         }
             
 
         // Optimally arrange blocks assuming that all are executable.
         // This method is publicly available outside the optimization pipeline.
-        public static void ApplyInitialOrdering(IRCodePart codePart)
-            => ApplyOrdering(codePart, AllBlocksPredicate);
+        public static void ApplyInitialOrdering(ICodeComponent codeComponent)
+            => ApplyOrdering(codeComponent, AllBlocksPredicate);
 
         /// <summary>
         /// Applies the block ordering by overwriting the block list of each code part unit.
         /// </summary>
         /// <param name="codePart">The code part.</param>
         /// <param name="inclusionPredicate">The inclusion predicate (all or executable blocks).</param>
-        private static void ApplyOrdering(IRCodePart codePart, Func<BasicBlock, bool> inclusionPredicate)
+        private static void ApplyOrdering(ICodeComponent codeComponent, Func<BasicBlock, bool> inclusionPredicate)
         {
-            foreach (IRCodePart.IRFunction function in codePart.Functions)
-                foreach (IRCodePart.IRFunction.IRFunctionFragment fragment in function.Fragments)
-                    fragment.FunctionCode = ApplyOrdering(fragment.FunctionCode[0], inclusionPredicate);
-            foreach (IRCodePart.IRTrigger trigger in codePart.Triggers)
-                trigger.Code = ApplyOrdering(trigger.Code[0], inclusionPredicate);
-            codePart.MainCode = ApplyOrdering(codePart.MainCode[0], inclusionPredicate);
+            codeComponent.Blocks = ApplyOrdering(codeComponent.RootBlock, inclusionPredicate);
         }
 
         /// <summary>

@@ -222,7 +222,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             switch (reference)
             {
                 case InterimResolvedReference resolvedReference:
-                    return Enumerable.Repeat(resolvedReference.Reference, 1);
+                    return new SSADefinition[] { resolvedReference.Reference };
                 case InterimUnresolvedReference unresolvedReference:
                     return unresolvedReference.References;
                 default:

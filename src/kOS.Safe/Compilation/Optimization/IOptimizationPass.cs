@@ -29,7 +29,7 @@ namespace kOS.Safe.Compilation.Optimization
         /// Executes the optimization pass.
         /// </summary>
         /// <param name="code">The code representation to be optimized.</param>
-        void ApplyPass(List<T> code);
+        void ApplyPass(IEnumerable<T> code);
     }
     public interface IHolisticOptimizationPass : IOptimizationPass
     {

@@ -1354,7 +1354,7 @@ namespace kOS.Safe.Compilation.IR
         private readonly HashSet<IRParameter> references = new HashSet<IRParameter>();
         public IReadOnlyCollection<StackTransferPhi> Controllers => controllers;
         public IReadOnlyCollection<IRParameter> References => references;
-        public IEnumerable<IStackTransferObject> StackTransferObjects => Enumerable.Repeat(this, 1);
+        IEnumerable<IStackTransferObject> IStackTransferObject.StackTransferObjects => new IRPushStack[] { this };
         public IInterimOperand Value { get => operand; set => operand = value; }
         public Type Type => Value?.Type ?? typeof(Encapsulation.Structure);
         public override bool IsInvariant => operand.IsInvariant;

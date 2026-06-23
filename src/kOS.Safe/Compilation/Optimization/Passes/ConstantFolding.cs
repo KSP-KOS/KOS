@@ -11,13 +11,10 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         public OptimizationLevel OptimizationLevel => OptimizationLevel.Minimal;
         public short SortIndex => 30;
 
-        public void ApplyPass(List<BasicBlock> blocks)
+        public void ApplyPass(IEnumerable<BasicBlock> blocks)
         {
-            IEnumerator<BasicBlock> enumerator = blocks.GetEnumerator();
-            while (enumerator.MoveNext())
-            {
-                ApplyPass(enumerator.Current, Optimizer.AllowClobberBuiltins);
-            }
+            foreach (BasicBlock block in blocks)
+                ApplyPass(block, Optimizer.AllowClobberBuiltins);
         }
         public static void ApplyPass(BasicBlock block, bool allowClobberBuiltins)
         {

@@ -11,8 +11,9 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 
         public short SortIndex => 1050;
 
-        public void ApplyPass(List<IRInstruction> code)
+        public void ApplyPass(IEnumerable<IRInstruction> codeList)
         {
+            List<IRInstruction> code = (List<IRInstruction>)codeList;
             IInterimOperand OperandPeepholeFilter_Internal(IInterimOperand operand)
                 => OperandPeepholeFilter(operand, Optimizer.AllowClobberBuiltins);
 

@@ -12,7 +12,7 @@ namespace kOS.Safe.Compilation.IR
         public IReadOnlyCollection<StackTransferPhi> Controllers => controllers;
         public IReadOnlyCollection<IRParameter> References => references;
         public IEnumerable<IStackTransferObject> StackTransferObjects
-            => Enumerable.Repeat(this, 1).Concat(PossibleValues.Values);
+            => new StackTransferPhi[] { this }.Concat(PossibleValues.Values);
         protected override IEnumerable<IInterimOperand> Operands => GetAllInvolvedPushes().Select(p => p.Value);
 
         public override bool IsInvariant => IsResolvable && SingleValueIs(ObjIsInvariant, this, null);

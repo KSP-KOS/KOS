@@ -89,7 +89,7 @@ namespace kOS.Safe.Compilation.IR
                 foreach (BasicBlock block in function.InitializationCode)
                     ApplyUses(block, codePart, function);
                 foreach (IRFunction.IRFunctionFragment fragment in function.Fragments)
-                    foreach (BasicBlock block in fragment.FunctionCode)
+                    foreach (BasicBlock block in fragment.Blocks)
                         ApplyUses(block, codePart, function);
 
                 if (callers.ContainsKey(function) &&
@@ -101,7 +101,7 @@ namespace kOS.Safe.Compilation.IR
             }
             foreach (IRTrigger trigger in codePart.Triggers)
             {
-                foreach (BasicBlock block in trigger.Code)
+                foreach (BasicBlock block in trigger.Blocks)
                     ApplyUses(block, codePart, trigger);
             }
             foreach (BasicBlock block in codePart.MainCode)
