@@ -1070,5 +1070,34 @@ namespace kOS.Safe.Test.Execution
                 "3"
             );
         }
+
+        [Test]
+        public void TestFunctionConstantPropagation()
+        {
+            Safe.Compilation.Optimization.Optimizer.PassesToSkip.Add(typeof(Safe.Compilation.Optimization.Passes.FunctionInlining));
+            EnsureAtLeastLevel(OptimizationLevel.Aggressive);
+
+            RunScript("integration/constantPropagation.ks");
+            RunSingleStep();
+            AssertOutput(
+                "test",
+                "6",
+                "False",
+                "6",
+                "9",
+                "7",
+                "10",
+                "14",
+                "True",
+                "False",
+                "7",
+                "6",
+                "11",
+                "9",
+                "5",
+                "6",
+                "1"
+            );
+        }
     }
 }
