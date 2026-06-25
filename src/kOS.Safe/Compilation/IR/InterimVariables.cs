@@ -9,6 +9,7 @@ namespace kOS.Safe.Compilation.IR
         string Name { get; }
         short SourceLine { get; }
         short SourceColumn { get; }
+        IInterimVariableReference CloneReferenceTo(short sourceLine, short sourceColumn);
     }
     public readonly struct InterimVariableReference : IInterimVariableReference
     {
@@ -32,6 +33,8 @@ namespace kOS.Safe.Compilation.IR
 
         public IInterimOperand Clone(BasicBlock _)
             => new InterimVariableReference(Name, SourceLine, SourceColumn);
+        public IInterimVariableReference CloneReferenceTo(short sourceLine, short sourceColumn)
+            => new InterimVariableReference(Name, sourceLine, sourceColumn);
 
         public IEnumerable<Opcode> EmitOpcodes()
         {
@@ -83,6 +86,8 @@ namespace kOS.Safe.Compilation.IR
 
         public IInterimOperand Clone(BasicBlock _)
             => new InterimVariableReference(Name, SourceLine, SourceColumn);
+        public IInterimVariableReference CloneReferenceTo(short sourceLine, short sourceColumn)
+            => new InterimResolvedReference(Reference, sourceLine, sourceColumn);
 
         public IEnumerable<Opcode> EmitOpcodes()
         {
@@ -168,6 +173,8 @@ namespace kOS.Safe.Compilation.IR
 
         public IInterimOperand Clone(BasicBlock _)
             => new InterimVariableReference(Name, SourceLine, SourceColumn);
+        public IInterimVariableReference CloneReferenceTo(short sourceLine, short sourceColumn)
+            => new InterimUnresolvedReference(References, sourceLine, sourceColumn);
 
         public IEnumerable<Opcode> EmitOpcodes()
         {

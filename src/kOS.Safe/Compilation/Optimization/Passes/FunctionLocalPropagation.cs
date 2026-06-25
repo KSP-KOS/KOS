@@ -52,7 +52,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                                 {
                                     if (op is InterimVariableReference reference &&
                                     reference.Name.Equals(resolvedReference.Name, StringComparison.OrdinalIgnoreCase))
-                                        return resolvedReference;
+                                        return resolvedReference.CloneReferenceTo(reference.SourceLine, reference.SourceColumn);
                                     return op;
                                 });
                         }
