@@ -311,6 +311,9 @@ settings then alter the numbers you see here accordingly.)
 2.  Open a command shell window that either *IS* xterm, or emulates xterm.  For
     OSX, the default command shell should work fine.  For Linux, you should
     actually have the xterm program itself installed that you can use.
+    Some other terminal emulators also support parts of the xterm protocol,
+    so you may want to try setting the TERM environment variable to "xterm"
+    in your shell to hint kOS to use xterm protocols instead of the fallback.
 3.  At the shell prompt in that window, enter the command::
 
       telnet 127.0.0.1 5410
