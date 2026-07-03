@@ -243,6 +243,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             if (instruction is IRAssign assignment)
             {
                 SSASetDefinition ssaVariable = assignment.Target;
+                assignment.Target.AssignedType = assignment.Value.Type;
                 if (typeAndInvarianceCache.TryGetValue(ssaVariable, out (Type storedType, bool storedInvariance) cached))
                 {
                     typeAndInvarianceCache[ssaVariable] = (ssaVariable.Type, cached.storedInvariance & ssaVariable.IsInvariant);
@@ -473,10 +474,29 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             // Convert subsequent assignments to be declarative
             foreach (IRAssign nextAssign in definition.ReplacedBy.
                 Where(ssaDef => ssaDef.State == SSADefinition.SetState.Set).
-                Cast<SSASetDefinition>().Select(ssaDef => ssaDef.DefinedAt))
+                Select(ssaDef => GetSetDefinition(ssaDef).DefinedAt))
             {
                 nextAssign.Scope = IRAssign.StoreScope.Local;
                 nextAssign.AssertExists = false;
+            }
+        }
+
+        private static SSASetDefinition GetSetDefinition(SSADefinition definition)
+        {
+            switch (definition)
+            {
+                case SSASetDefinition setDefinition:
+                    return setDefinition;
+                case SSAPotentialDefinition potentialDefinition:
+                    if (potentialDefinition.Conditional.IsExecutable)
+                        throw new InvalidCastException();
+                    return GetSetDefinition(potentialDefinition.Preceding);
+                case PhiVariable phi:
+                    if (phi.Node.PossibleValues.Where(kvp => kvp.Key.IsExecutable).Select(kvp => kvp.Value).Distinct().Count() > 1)
+                        throw new InvalidCastException();
+                    return GetSetDefinition(phi.Node.PossibleValues.FirstOrDefault(kvp => kvp.Key.IsExecutable).Value);
+                default:
+                    throw new NotImplementedException();
             }
         }
 
