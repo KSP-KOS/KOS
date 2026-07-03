@@ -107,7 +107,11 @@ namespace kOS.Safe.Compilation.IR
             suffixDictionaries.Add(type, suffixes);
 
             // Create an instance that we can examine.
-            Structure instance = (Structure)Activator.CreateInstance(type, true);
+            Structure instance;
+            if (type.GetConstructor(Type.EmptyTypes) != null)
+                instance = (Structure)Activator.CreateInstance(type, true);
+            else    // Enumerator does not have a parameterless constructor.
+                instance = (Structure)Activator.CreateInstance(type, new object[] { null });
             // Call HasSuffix on the instance object to force the lazy initialization of suffixes to act.
             instance.HasSuffix(string.Empty);
 
