@@ -365,7 +365,7 @@ namespace kOS.Safe.Compilation.IR
                 case OpcodeCompareGT _:
                     return new OpcodeCompareGT();
                 case OpcodeCompareLT _:
-                    return new OpcodeCompareGT();
+                    return new OpcodeCompareLT();
                 case OpcodeCompareGTE _:
                     return new OpcodeCompareGTE();
                 case OpcodeCompareLTE _:
