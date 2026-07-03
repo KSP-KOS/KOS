@@ -476,9 +476,9 @@ namespace kOS.Safe.Compilation.IR
                 => (obj.Item1.GetHashCode(), SSADefinition.ReferenceEqualityComparer.GetHashCode(obj.Item2)).GetHashCode();
         }
 
-        public static void BuildPhis(BasicBlock root, bool stackAdoptsTypeHints)
-            => BuildPhis(root, root.CodePart, null, stackAdoptsTypeHints);
-        private static void BuildPhis(BasicBlock root, IRCodePart codePart, IClosureVariableUser funcOrTrigger, bool stackAdoptsTypeHints)
+        public static void BuildPhis(BasicBlock root, bool stackAdoptsTypeHints, Dictionary<(string, IRScope), SSADefinition> incomingVariables = null)
+            => BuildPhis(root, root.CodePart, null, stackAdoptsTypeHints, incomingVariables);
+        private static void BuildPhis(BasicBlock root, IRCodePart codePart, IClosureVariableUser funcOrTrigger, bool stackAdoptsTypeHints, Dictionary<(string, IRScope), SSADefinition> incomingVariables = null)
         {
             Dictionary<BasicBlock, Dictionary<(string Name, IRScope Scope), SSADefinition>> variablesOut =
                 new Dictionary<BasicBlock, Dictionary<(string, IRScope), SSADefinition>>();
@@ -499,21 +499,29 @@ namespace kOS.Safe.Compilation.IR
                 // Collect all incoming variable definitions
                 int stackDepth = -1;
                 BasicBlock stackDepthSetBy = null;
-                foreach (BasicBlock predecessor in block.Predecessors)
+                if (block.Predecessors.Count == 0 && incomingVariables != null)
                 {
-                    // Manage blacklist and incoming variables
-                    blacklist.UnionWith(predecessor.TriggerPropagationBlacklist);
-                    foreach (KeyValuePair<(string, IRScope), IRUnset> item in writeBlacklist)
-                        writeBlacklist[item.Key] = item.Value;
-                    if (variablesOut.TryGetValue(predecessor, out Dictionary<(string Name, IRScope Scope), SSADefinition> predVarsOut))
+                    foreach (KeyValuePair<(string Name, IRScope Scope), SSADefinition> variable in incomingVariables)
+                        varsIn.Add((null, variable.Key.Scope, variable.Value));
+                }
+                else
+                {
+                    foreach (BasicBlock predecessor in block.Predecessors)
                     {
-                        foreach (KeyValuePair<(string Name, IRScope Scope), SSADefinition> variable in predVarsOut
-                            .Where(v => block.Scope.IsEqualOrEncompassedBy(v.Key.Scope)))
-                            varsIn.Add((predecessor, variable.Key.Scope, variable.Value));
-                    }
+                        // Manage blacklist and incoming variables
+                        blacklist.UnionWith(predecessor.TriggerPropagationBlacklist);
+                        foreach (KeyValuePair<(string, IRScope), IRUnset> item in writeBlacklist)
+                            writeBlacklist[item.Key] = item.Value;
+                        if (variablesOut.TryGetValue(predecessor, out Dictionary<(string Name, IRScope Scope), SSADefinition> predVarsOut))
+                        {
+                            foreach (KeyValuePair<(string Name, IRScope Scope), SSADefinition> variable in predVarsOut
+                                .Where(v => block.Scope.IsEqualOrEncompassedBy(v.Key.Scope)))
+                                varsIn.Add((predecessor, variable.Key.Scope, variable.Value));
+                        }
 
-                    // Manage incoming stack
-                    SetIncomingStackState(block, predecessor, stackOut, ref stackDepthSetBy, ref stackDepth, stackAdoptsTypeHints);
+                        // Manage incoming stack
+                        SetIncomingStackState(block, predecessor, stackOut, ref stackDepthSetBy, ref stackDepth, stackAdoptsTypeHints);
+                    }
                 }
 
                 List<IStackTransferObject> stackResult = PopulateParameters(block, stackOut, worklist);
@@ -565,6 +573,7 @@ namespace kOS.Safe.Compilation.IR
             if (stackOut.TryGetValue(predecessor, out List<IStackTransferObject> predStackOut))
             {
                 if (predecessor.Predecessors.Count == 1 &&
+                    predecessor.Predecessors.First().Instructions.Any() &&
                     predecessor.Predecessors.First().Instructions.Last() is IRBranch branch &&
                     branch.Condition is IRNonVarPush testArgBottom &&
                     testArgBottom.Operation is OpcodeTestArgBottom &&

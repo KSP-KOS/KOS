@@ -31,7 +31,7 @@ namespace kOS.Safe.Compilation.IR
             SourceColumn = sourceColumn;
         }
 
-        public IInterimOperand Clone(BasicBlock _)
+        public IInterimOperand Clone(BasicBlock _, bool __ = false)
             => new InterimVariableReference(Name, SourceLine, SourceColumn);
         public IInterimVariableReference CloneReferenceTo(short sourceLine, short sourceColumn)
             => new InterimVariableReference(Name, sourceLine, sourceColumn);
@@ -84,8 +84,9 @@ namespace kOS.Safe.Compilation.IR
             SourceColumn = sourceColumn;
         }
 
-        public IInterimOperand Clone(BasicBlock _)
-            => new InterimVariableReference(Name, SourceLine, SourceColumn);
+        public IInterimOperand Clone(BasicBlock _, bool maintainSSAReferences = false)
+            => maintainSSAReferences ? CloneReferenceTo(SourceLine, SourceColumn) :
+            new InterimVariableReference(Name, SourceLine, SourceColumn);
         public IInterimVariableReference CloneReferenceTo(short sourceLine, short sourceColumn)
             => new InterimResolvedReference(Reference, sourceLine, sourceColumn);
 
@@ -171,8 +172,9 @@ namespace kOS.Safe.Compilation.IR
             references.Add(reference);
         }
 
-        public IInterimOperand Clone(BasicBlock _)
-            => new InterimVariableReference(Name, SourceLine, SourceColumn);
+        public IInterimOperand Clone(BasicBlock _, bool maintainSSAReferences = false)
+            => maintainSSAReferences ? CloneReferenceTo(SourceLine, SourceColumn) :
+            new InterimVariableReference(Name, SourceLine, SourceColumn);
         public IInterimVariableReference CloneReferenceTo(short sourceLine, short sourceColumn)
             => new InterimUnresolvedReference(References, sourceLine, sourceColumn);
 
@@ -397,7 +399,7 @@ namespace kOS.Safe.Compilation.IR
         public override Type Type => State == SetState.Set ?
             PhiNode<SSADefinition>.GetFirstCommonBaseType(Preceding.Type, Succeeding.Type) : null;
         public override bool IsInvariant => (Conditional?.IsInvariant ?? false) &&
-            (Conditional.IsExecutable ? Succeeding.IsInvariant : Preceding.IsInvariant);
+            !Conditional.IsExecutable && Preceding.IsInvariant;
 
         public IEnumerable<IInterimOperand> Operands
         {
@@ -497,21 +499,13 @@ namespace kOS.Safe.Compilation.IR
         {
             if (!IsInvariant)
                 throw new InvalidOperationException();
-            if (Conditional.IsExecutable)
-                return Succeeding.Evaluate();
-            else
-                return Preceding.Evaluate();
+            return Preceding.Evaluate();
         }
 
         public override bool ValuesEqual(SSADefinition other)
         {
-            if (IsInvariant)
-            {
-                if (Conditional.IsExecutable)
-                    return Succeeding.Equals(other);
-                else
-                    return Preceding.Equals(other);
-            }
+            if (!Conditional?.IsExecutable ?? false)
+                return Preceding.Equals(other);
             return other is SSAPotentialDefinition potentialDefinition &&
                 potentialDefinition.Conditional == Conditional &&
                 potentialDefinition.Succeeding.Equals(Succeeding) &&

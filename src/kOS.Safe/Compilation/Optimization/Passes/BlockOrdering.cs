@@ -483,6 +483,37 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 this.body = body;
                 this.exit = exit;
             }
+
+            public bool BodyContains(BasicBlock block)
+            {
+                BasicBlock current = block;
+                while (current.PostDominator != null && current.PostDominator != exit)
+                    current = current.PostDominator;
+                if (current.PostDominator != exit)
+                    return false;
+                current = block;
+                while (current.Dominator != null && current != body)
+                    current = current.Dominator;
+                if (current != body)
+                    return false;
+                return true;
+            }
+            public IEnumerable<BasicBlock> GetBody()
+            {
+                HashSet<BasicBlock> blocks = new HashSet<BasicBlock>();
+                Queue<BasicBlock> queue = new Queue<BasicBlock>();
+                queue.Enqueue(body);
+                while (queue.Count > 0)
+                {
+                    BasicBlock current = queue.Dequeue();
+                    if (blocks.Add(current) && BodyContains(current))
+                    {
+                        yield return current;
+                        foreach (BasicBlock successor in current.Successors)
+                            queue.Enqueue(successor);
+                    }
+                }
+            }
         }
 
         public abstract class BlockSequence

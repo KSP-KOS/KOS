@@ -106,14 +106,18 @@ namespace kOS.Safe.Compilation.IR
             before.AddSuccessor(patternRoot);
             if (before.FallthroughJump != null)
                 before.FallthroughJump.Target = patternRoot;
+            else if (before.Instructions.Last() is IRJump jump)
+                jump.Target = patternRoot;
             else
                 before.FallthroughJump = new IRJump(before, patternRoot, before.Instructions.Last().SourceLine, before.Instructions.Last().SourceColumn);
-
+            
             foreach (BasicBlock returnBlock in pattern.Where(b => b.PostDominator == null || b.PostDominator is SyntheticReturnBlock))
             {
                 returnBlock.AddSuccessor(after);
                 if (returnBlock.FallthroughJump != null)
                     returnBlock.FallthroughJump.Target = after;
+                else if (returnBlock.Instructions.Last() is IRJump jump)
+                    jump.Target = after;
                 else
                     returnBlock.FallthroughJump = new IRJump(returnBlock, after, returnBlock.Instructions.Last().SourceLine, returnBlock.Instructions.Last().SourceColumn);
                 
@@ -122,10 +126,15 @@ namespace kOS.Safe.Compilation.IR
             }
             if (before.Successors.Contains(after))
                 before.RemoveSuccessor(after);
+            else
+            {
+                before.EstablishDominance();
+                after.EstablishPostDominance();
+            }
 
             before.CodeComponent.Blocks.AddRange(pattern.Where(b => !before.CodeComponent.Blocks.Contains(b)));
         }
-        public static IEnumerable<BasicBlock> ClonePattern(IEnumerable<BasicBlock> pattern, bool stackAdoptsTypeHints = false)
+        public static IEnumerable<BasicBlock> ClonePattern(IEnumerable<BasicBlock> pattern, bool stackAdoptsTypeHints = false, Dictionary<(string, IRScope), SSADefinition> incomingVariables = null)
         {
             if (pattern == null || !pattern.Any())
                 return Enumerable.Empty<BasicBlock>();
@@ -158,7 +167,7 @@ namespace kOS.Safe.Compilation.IR
             BasicBlock root = replacementBlocks[pattern.First()];
             while (root.Dominator != null)
                 root = root.Dominator;
-            SingleStaticAssignment.BuildPhis(root, stackAdoptsTypeHints);
+            SingleStaticAssignment.BuildPhis(root, stackAdoptsTypeHints, incomingVariables);
             foreach (BasicBlock block in replacementBlocks.Values)
                 SingleStaticAssignment.ApplyUses(block);
 
@@ -219,7 +228,7 @@ namespace kOS.Safe.Compilation.IR
 
             foreach (IRInstruction instruction in original.Instructions)
             {
-                IRInstruction newInstruction = instruction.Clone(block);
+                IRInstruction newInstruction = instruction.Clone(block, false);
                 block.Instructions.Add(newInstruction);
                 if (instruction is IRAssign ||
                     instruction is IRUnset)

@@ -102,7 +102,7 @@ namespace kOS.Safe.Compilation.IR
         /// <remarks>
         /// This data is populated during <see cref="SingleStaticAssignment.FinalizeSSA(IRCodePart)"/>.
         /// </remarks>
-        public Dictionary<(string, IRScope), SSADefinition> IncomingVariableDefinitions { get; internal set; }
+        public Dictionary<(string Name, IRScope Scope), SSADefinition> IncomingVariableDefinitions { get; internal set; }
         /// <summary>
         /// Gets the state of the incoming stack.
         /// </summary>
@@ -222,6 +222,29 @@ namespace kOS.Safe.Compilation.IR
         /// <param name="instruction">The instruction to add.</param>
         public void Add(IRInstruction instruction)
             => Instructions.Add(instruction);
+
+        public int GetOpcodeCount()
+        {
+            int length = 0;
+            foreach (IRInstruction instruction in Instructions)
+            {
+                if (instruction is IOperandInstructionBase operandInstruction)
+                    operandInstruction.ForEachOperand(op =>
+                    {
+                        if (op is IResultingInstruction resultingInstruction)
+                            length += resultingInstruction.OpcodeCount;
+                        else
+                            length += 1;
+
+                    });
+                length += 1;
+            }
+            if (FallthroughJump != null)
+                length += 1;
+            return length;
+        }
+        public static int GetOpcodeCount(IEnumerable<BasicBlock> blocks)
+            => blocks.Sum(b => b.GetOpcodeCount());
 
         /// <summary>
         /// Adds a successor block.

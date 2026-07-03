@@ -49,6 +49,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             (permanentBlock, deprecatedBlock) = Convert.ToBoolean(branchConstant.Value) ? (branch.True, branch.False) : (branch.False, branch.True);
                             block.Instructions[i] = new IRJump(block, permanentBlock, new OpcodeBranchJump() { SourceLine = branch.SourceLine, SourceColumn = branch.SourceColumn });
                             block.RemoveSuccessor(deprecatedBlock);
+                            if (deprecatedBlock.Predecessors.Count == 0)
+                                deprecatedBlock.IsExecutable = false;
                         }
                     }
                 }

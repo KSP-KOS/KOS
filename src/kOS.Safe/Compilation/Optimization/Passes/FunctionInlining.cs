@@ -37,23 +37,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 
         public static int CalculateFunctionLength(IRCodePart.IRFunction function)
         {
-            int length = 0;
-            foreach (IRCodePart.IRFunction.IRFunctionFragment fragment in function.Fragments)
-            {
-                foreach (IRInstruction instruction in fragment.Blocks.SelectMany(b => b.Instructions))
-                {
-                    if (instruction is IOperandInstructionBase operandInstruction)
-                        operandInstruction.ForEachOperand(op =>
-                        {
-                            if (op is IResultingInstruction resultingInstruction)
-                                length += resultingInstruction.OpcodeCount;
-                            else
-                                length += 1;
-
-                        });
-                    length += 1;
-                }
-            }
+            int length = function.Fragments.Sum(f => BasicBlock.GetOpcodeCount(f.Blocks));
             return length / function.Fragments.Count;
         }
 

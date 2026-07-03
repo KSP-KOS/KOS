@@ -166,8 +166,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 
             // This implementation of Clone gives the original
             // expression back because the scope can't be assured.
-            public IInterimOperand Clone(BasicBlock block)
-                => Value.Clone(block);
+            public IInterimOperand Clone(BasicBlock block, bool maintainSSAReferences = false)
+                => Value.Clone(block, maintainSSAReferences);
 
             public IEnumerable<Opcode> EmitOpcodes()
             {

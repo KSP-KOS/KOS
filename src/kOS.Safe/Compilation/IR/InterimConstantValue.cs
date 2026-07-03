@@ -9,7 +9,7 @@ namespace kOS.Safe.Compilation.IR
         protected readonly short sourceLine, sourceColumn;
 
         public virtual bool IsInvariant => true;
-        public object Value { get; }
+        public object Value { get; set; }
         public Type Type { get; protected set; }
         public bool IsPrimitive { get => Type.IsPrimitive || typeof(Encapsulation.PrimitiveStructure).IsAssignableFrom(Type); }
         public InterimConstantValue(object value, Opcode opcode) : this(value, opcode.SourceLine, opcode.SourceColumn) { }
@@ -48,8 +48,8 @@ namespace kOS.Safe.Compilation.IR
         InterimConstantValue IEvaluatableToConstant.Evaluate()
             => this;
 
-        IInterimOperand IInterimOperand.Clone(BasicBlock _)
-            => this;
+        public IInterimOperand Clone(BasicBlock _, bool __ = false)
+            => new InterimConstantValue(Value, sourceLine, sourceColumn);
     }
 
     public class IRRelocateLater : InterimConstantValue
@@ -108,6 +108,32 @@ namespace kOS.Safe.Compilation.IR
             }
         }
 
+        //                Depth: 0      1
+        // Left operand     -> Left
+        // Right operand    -> Right, Left
+        // Opcode           -> Result
+
+        // Left param       -> Left
+        // Right operand    -> Right, Left
+        // Opcode           -> Result
+
+        // Both params      -> Right, Left
+        // Opcode           -> Result
+
+        // Both params      -> Right, (Left)
+        // Left resolved    -> Left, Right
+        // !! Breaks if not commutative !!
+        // Opcode           -> Result
+
+        // Both params      -> (Right), Left
+        // Right resolved   -> Right, Left
+        // Opcode           -> Result
+
+        // Parameters must not be resolved if a higher stack value (lower depth index) is not resolved.
+        // Higher stack values will be later in a Depth First search.
+        // Since both values will be consumed by the operand, the search originates from
+        // the consuming instruction.
+
         public HashSet<IRParameter> RequiredToBeResolvable { get; } = new HashSet<IRParameter>();
         public IRParameter(int index, BasicBlock block)
         {
@@ -123,8 +149,8 @@ namespace kOS.Safe.Compilation.IR
             ((StackTransferObject?.IsResolvable ?? false) &&
             StackTransferObject.Value.Equals(other));
 
-        public IInterimOperand Clone(BasicBlock block)
-            => new IRParameter(index, block);
+        public IInterimOperand Clone(BasicBlock block, bool _ = false)
+            => new IRParameter(index, block ?? Block);
 
         public override string ToString()
             => $"Parameter #{index}, BasicBlock#{Block.ID}, Resolved: {StackTransferObject?.IsResolvable}";

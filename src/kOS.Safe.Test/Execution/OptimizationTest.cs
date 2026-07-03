@@ -956,8 +956,8 @@ namespace kOS.Safe.Test.Execution
             List<CodePart> _code = CompileCodePart("integration/branching/until.ks");
             List<Safe.Compilation.Opcode> opcodes = _code[0].MainCode;
             Assert.AreEqual(opcodes[4].ToString(), opcodes[10].ToString());
-            Assert.IsInstanceOf(typeof(OpcodeBranchIfTrue), opcodes[5]);
-            Assert.IsInstanceOf(typeof(OpcodeBranchIfFalse), opcodes[11]);
+            Assert.IsInstanceOf<OpcodeBranchIfTrue>(opcodes[5]);
+            Assert.IsInstanceOf<OpcodeBranchIfFalse>(opcodes[11]);
         }
         [Test]
         public void TestForLoopCondition()
@@ -967,8 +967,8 @@ namespace kOS.Safe.Test.Execution
             List<Safe.Compilation.Opcode> opcodes = _code[0].MainCode;
             Assert.AreEqual(opcodes[8].ToString(), opcodes[15].ToString());
             Assert.AreEqual(opcodes[9].ToString(), opcodes[16].ToString());
-            Assert.IsInstanceOf(typeof(OpcodeBranchIfFalse), opcodes[10]);
-            Assert.IsInstanceOf(typeof(OpcodeBranchIfTrue), opcodes[17]);
+            Assert.IsInstanceOf<OpcodeBranchIfFalse>(opcodes[10]);
+            Assert.IsInstanceOf<OpcodeBranchIfTrue>(opcodes[17]);
         }
         [Test]
         public void TestFromLoopCondition()
@@ -981,8 +981,8 @@ namespace kOS.Safe.Test.Execution
             Assert.AreEqual(opcodes[7].ToString(), opcodes[19].ToString());
             Assert.AreEqual(opcodes[8].ToString(), opcodes[20].ToString());
             Assert.AreEqual(opcodes[9].ToString(), opcodes[21].ToString());
-            Assert.IsInstanceOf(typeof(OpcodeBranchIfTrue), opcodes[10]);
-            Assert.IsInstanceOf(typeof(OpcodeBranchIfFalse), opcodes[22]);
+            Assert.IsInstanceOf<OpcodeBranchIfTrue>(opcodes[10]);
+            Assert.IsInstanceOf<OpcodeBranchIfFalse>(opcodes[22]);
         }
         #endregion
 
@@ -1097,6 +1097,59 @@ namespace kOS.Safe.Test.Execution
                 "5",
                 "6",
                 "1"
+            );
+        }
+
+        [Test]
+        public void TestForLoopUnrolling()
+        {
+            EnsureAtLeastLevel(OptimizationLevel.Extreme);
+            List<CodePart> _code = CompileCodePart("integration/branching/for_range.ks");
+            List<Safe.Compilation.Opcode> opcodes = _code[0].MainCode;
+            Assert.IsInstanceOf<OpcodePush>(opcodes[17]);
+            Assert.AreEqual(new Encapsulation.ScalarIntValue(3), (opcodes[17] as OpcodePush)?.Argument);
+
+            RunScript("integration/branching/for_range.ks");
+            RunSingleStep();
+            AssertOutput(
+                "beginning",
+                "0",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "trunk"
+            );
+        }
+        [Test]
+        public void TestFromLoopUnrolling()
+        {
+            EnsureAtLeastLevel(OptimizationLevel.Extreme);
+            List<CodePart> _code = CompileCodePart("integration/branching/from.ks");
+            List<Safe.Compilation.Opcode> opcodes = _code[0].MainCode;
+            Assert.IsInstanceOf<OpcodePush>(opcodes[17]);
+            Assert.AreEqual(new Encapsulation.ScalarIntValue(3), (opcodes[17] as OpcodePush)?.Argument);
+
+            RunScript("integration/branching/from.ks");
+            RunSingleStep();
+            AssertOutput(
+                "beginning",
+                "0",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "trunk"
             );
         }
     }

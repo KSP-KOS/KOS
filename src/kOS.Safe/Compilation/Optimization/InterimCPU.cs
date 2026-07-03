@@ -111,7 +111,10 @@ namespace kOS.Safe.Compilation.Optimization
         public IUserDelegate MakeUserDelegate(int entryPoint, bool withClosure)
             => throw new NotImplementedException();
         public object PeekRawArgument(int digDepth, out bool checkOkay)
-            => throw new NotImplementedException();
+        {
+            checkOkay = stack.PeekCheckArgument(digDepth, out object returnValue);
+            return returnValue;
+        }
         public object PeekRawScope(int digDepth, out bool checkOkay)
             => throw new NotImplementedException();
         public Structure PeekStructureEncapsulatedArgument(int digDepth, bool barewordOkay = false)
