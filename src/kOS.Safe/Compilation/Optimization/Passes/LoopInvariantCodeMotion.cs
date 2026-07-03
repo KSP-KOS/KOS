@@ -5,19 +5,15 @@ using kOS.Safe.Compilation.IR;
 
 namespace kOS.Safe.Compilation.Optimization.Passes
 {
-    public class LoopInvariantCodeMotion : IHolisticOptimizationPass
+    public class LoopInvariantCodeMotion : IOptimizationPass<ICodeComponent>
     {
         public OptimizationLevel OptimizationLevel => OptimizationLevel.Balanced;
         public short SortIndex => 2100;
 
-        public void ApplyPass(IRCodePart codePart)
+        public void ApplyPass(IEnumerable<ICodeComponent> codeComponents)
         {
-            foreach (IRCodePart.IRFunction function in codePart.Functions)
-                foreach (IRCodePart.IRFunction.IRFunctionFragment fragment in function.Fragments)
-                    ApplyPass(fragment.Blocks[0]);
-            foreach (IRCodePart.IRTrigger trigger in codePart.Triggers)
-                ApplyPass(trigger.Blocks[0]);
-            ApplyPass(codePart.MainCode[0]);
+            foreach (ICodeComponent component in codeComponents)
+                ApplyPass(component.RootBlock);
         }
 
         private static void ApplyPass(BasicBlock root)
