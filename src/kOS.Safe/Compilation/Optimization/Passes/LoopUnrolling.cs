@@ -132,7 +132,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 #if DEBUG
                     throw new NotImplementedException("Range object reference type is not implemented in LoopUnrolling.cs");
 #else
-                    return false;
+                    return null;
 #endif
             }
         }
