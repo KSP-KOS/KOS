@@ -362,7 +362,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 // Emit a bogus set of indices that will
                 // trigger logic to not unroll the loop.
                 indices["!error"] = Enumerable.Repeat<Encapsulation.Structure>(Encapsulation.BooleanValue.False, maxIterations + 1).ToList();
-                return;
+                return indices;
 #endif
             }
 
