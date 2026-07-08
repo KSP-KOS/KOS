@@ -391,6 +391,20 @@ namespace kOS.Safe.Compilation.IR
             postorder.Add(block);
         }
 
+        public bool IsDominatedBy(BasicBlock block, BasicBlock stopAt = null)
+        {
+            BasicBlock current = this;
+            while (current != null)
+            {
+                if (current == stopAt)
+                    return false;
+                if (current == block)
+                    return true;
+                current = current.Dominator;
+            }
+            return false;
+        }
+
         /// <summary>
         /// Adds a parameter to this block.
         /// </summary>

@@ -58,6 +58,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             IInterimOperand condition = (data.branchBlock.Instructions.Last() as IRBranch).Condition;
             indices = null;
             int maxUnrollIterations = maxUnrolledSize / BasicBlock.GetOpcodeCount(data.GetBody());
+            if (maxUnrollIterations < 1)
+                return false;
 
             if (condition is IRSuffixGet getNext &&
                 getNext.Suffix.Equals("next", StringComparison.OrdinalIgnoreCase) &&
@@ -90,24 +92,20 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             else
             {
                 // Index-based loops:
-                // Variables referenced in the condition must be
-                // strictly known.
-                List<IInterimVariableReference> variablesReferenced;
-                if (condition is IOperandInstructionBase operandInstruction)
-                    variablesReferenced = GetVariableReferences(operandInstruction).ToList();
-                else if (condition is IInterimVariableReference variableReference)
-                    variablesReferenced = new List<IInterimVariableReference>() { variableReference };
-                else
+
+
+                Dictionary<SSADefinition, IInterimOperand> variableReplacements = new Dictionary<SSADefinition, IInterimOperand>();
+                Dictionary<string, InterimConstantValue> iterators = new Dictionary<string, InterimConstantValue>();
+                Dictionary<string, IInterimOperand> incrementFuncs = new Dictionary<string, IInterimOperand>();
+                condition = condition.Clone(null, true);
+                // BuildIterators is a recursive function that will
+                // construct the appropriate iteration simulation
+                // objects, or return null if an invalid operand is used.
+                condition = BuildIterators(condition, iterators, incrementFuncs, variableReplacements, data);
+                if (condition == null)
                     return false;
 
-                HashSet<SSADefinition> definitions = new HashSet<SSADefinition>(variablesReferenced.Select(r => ((InterimResolvedReference)r).Reference));
-
-                foreach (SSADefinition definition in definitions)
-                    if (!DefinitionIsAllowable(definition, data))
-                        return false;
-
-                indices = new Dictionary<string, List<Encapsulation.Structure>>();
-                PopulateIndices(condition, definitions, indices, data, maxUnrollIterations);
+                indices = PopulateIndices(condition, iterators, incrementFuncs, maxUnrollIterations);
 
                 return indices.Values.All(idx => idx.Count <= maxUnrollIterations && idx.Count > 1);
             }
@@ -137,101 +135,223 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             }
         }
 
-        private static IEnumerable<IInterimVariableReference> GetVariableReferences(IOperandInstructionBase operandInstruction)
+        private static IInterimOperand BuildIterators(IInterimOperand operand, Dictionary<string, InterimConstantValue> iterators, Dictionary<string, IInterimOperand> incrementFuncs, Dictionary<SSADefinition, IInterimOperand> variableReplacements, BlockOrdering.LoopData data)
         {
-            IRInstruction instruction = (IRInstruction)operandInstruction;
-            foreach (IRInstruction subInstruction in instruction.DepthFirst())
+            bool IsBuildingIteratorsInvalid(IOperandInstructionBase operandInstruction)
             {
-                if (subInstruction is ISingleOperandInstruction singleOperandInstruction &&
-                    singleOperandInstruction.Operand is IInterimVariableReference singleResult)
-                    yield return singleResult;
-                else if (subInstruction is IMultipleOperandInstruction multipleOperandInstruction)
+                bool invalid = false;
+                IInterimOperand BuildIteratorsRecursive(IInterimOperand op)
                 {
-                    foreach (IInterimOperand op in multipleOperandInstruction.Operands)
+                    if (invalid)
+                        return op;
+                    IInterimOperand result = BuildIterators(op, iterators, incrementFuncs, variableReplacements, data);
+                    if (result == null)
+                        invalid = true;
+                    return result;
+                }
+                operandInstruction.MutateEachOperand(BuildIteratorsRecursive);
+                return invalid;
+            }
+            switch (operand)
+            {
+                case IRCall call:
+                    if (!call.IsInert)
+                        return null;
+                    if (IsBuildingIteratorsInvalid(call))
+                        return null;
+                    return operand;
+                case InterimVariableReference _:
+                case InterimUnresolvedReference _:
+                case IRRelocateLater _:
+                    return null;
+                case IRParameter _:
+                    // TODO: resolve this somehow.
+                    return null;
+                case InterimResolvedReference resolvedReference:
+                    // Return the variable's replacement.
+                    if (resolvedReference.Reference.State != SSADefinition.SetState.Set)
+                        return null;
+                    if (variableReplacements.TryGetValue(resolvedReference.Reference, out IInterimOperand replacement))
+                        return replacement;
+                    IInterimOperand result;
+                    switch (resolvedReference.Reference)
                     {
-                        if (op is IInterimVariableReference multipleResult)
-                            yield return multipleResult;
+                        case SSASetDefinition setDefinition:
+                            // Internally set variables are replaced with their increment function
+                            if (data.BodyContains(setDefinition.DefinedAt.Block))
+                            {
+                                result = BuildIterators(setDefinition.DefinedAt.Value.Clone(null, true), iterators, incrementFuncs, variableReplacements, data);
+                            }
+                            // Externally set variables are replaced with their incoming value.
+                            else
+                            {
+                                IEvaluatableToConstant incomingValue = setDefinition.DefinedAt.Value as IEvaluatableToConstant;
+                                if (incomingValue?.IsInvariant ?? false)
+                                {
+                                    result = incomingValue.Evaluate();
+                                }
+                                else
+                                    return null;
+                            }
+                            variableReplacements[setDefinition] = result;
+                            return result;
+                        case SSAPotentialDefinition _:
+                            return null;
+                        case PhiVariable phi:
+                            IEnumerable<KeyValuePair<BasicBlock, SSADefinition>> possibleValues = phi.Node.PossibleValues.Where(kvp => kvp.Key.IsExecutable);
+                            int numPossibleValues = possibleValues.Select(kvp => kvp.Value).Distinct().Count();
+                            // More than 2 or zero possible values is unhandled.
+                            if (numPossibleValues > 2 || numPossibleValues == 0)
+                                return null;
+                            // Handle one possible value as if it were the nested value.
+                            if (numPossibleValues == 1)
+                            {
+                                resolvedReference = new InterimResolvedReference(phi.Node.PossibleValues.First(kvp => kvp.Key.IsExecutable).Value, resolvedReference.SourceLine, resolvedReference.SourceColumn);
+                                return BuildIterators(resolvedReference, iterators, incrementFuncs, variableReplacements, data);
+                            }
+                            // More than 1 possible external value means the loop length is not invariant.
+                            int numPossibleExternalValues = possibleValues.Where(kvp => !data.BodyContains(kvp.Key)).Select(kvp => kvp.Value).Distinct().Count();
+                            if (numPossibleExternalValues > 1)
+                                return null;
+                            // One internal and one external value means this variable is an iterator.
+                            int numPossibleInternalValues = possibleValues.Where(kvp => data.BodyContains(kvp.Key)).Select(kvp => kvp.Value).Distinct().Count();
+                            short line = resolvedReference.SourceLine;
+                            short column = resolvedReference.SourceColumn;
+                            if (numPossibleInternalValues == 1 && numPossibleExternalValues == 1)
+                            {
+
+                                // Set the iterator value to the incoming value, which must resolve to a single, constant value.
+                                resolvedReference = new InterimResolvedReference(phi.Node.PossibleValues.First(kvp => kvp.Key.IsExecutable && !data.BodyContains(kvp.Key)).Value, line, column);
+                                result = BuildIterators(resolvedReference, null, null, variableReplacements, data);
+                                if (!(result is IEvaluatableToConstant constantIn &&
+                                    constantIn.IsInvariant))
+                                    return null;
+                                result = constantIn.Evaluate();
+                                iterators.Add(phi.Name, (InterimConstantValue)result);
+                                variableReplacements.Add(phi, result);
+
+                                // Set the increment function to the looping value
+                                resolvedReference = new InterimResolvedReference(phi.Node.PossibleValues.First(kvp => kvp.Key.IsExecutable && data.BodyContains(kvp.Key)).Value, line, column);
+                                IInterimOperand iteratorFunc = BuildIterators(resolvedReference, iterators, incrementFuncs, variableReplacements, data);
+                                if (iteratorFunc == null)
+                                    return null;
+                                incrementFuncs.Add(phi.Name, iteratorFunc);
+                                return result;
+                            }
+                            // Two internal values means the result can come
+                            // from one of two branches inside the loop.
+                            else if (numPossibleInternalValues == 2)
+                            {
+                                TernaryOperand ternaryOperand = new TernaryOperand();
+                                variableReplacements.Add(phi, ternaryOperand);
+
+                                IRBranch branch = GetBranch(possibleValues.Select(kvp => kvp.Key));
+                                IInterimOperand condition = branch.Condition.Clone(null, true);
+                                condition = BuildIterators(condition, iterators, incrementFuncs, variableReplacements, data);
+                                if (condition == null)
+                                    return null;
+
+                                BasicBlock trueBlock = phi.Node.PossibleValues.Keys.FirstOrDefault(b => b.IsDominatedBy(branch.True, branch.Block));
+                                if (trueBlock == null)
+                                    return null;
+                                IInterimOperand trueValue = new InterimResolvedReference(phi.Node.PossibleValues[trueBlock], line, column);
+                                trueValue = BuildIterators(trueValue, iterators, incrementFuncs, variableReplacements, data);
+                                if (trueValue == null)
+                                    return null;
+
+                                BasicBlock falseBlock = phi.Node.PossibleValues.Keys.FirstOrDefault(b => b.IsDominatedBy(branch.False, branch.Block));
+                                if (falseBlock == null)
+                                    return null;
+                                IInterimOperand falseValue = new InterimResolvedReference(phi.Node.PossibleValues[falseBlock], line, column);
+                                falseValue = BuildIterators(falseValue, iterators, incrementFuncs, variableReplacements, data);
+                                if (falseValue == null)
+                                    return null;
+
+                                ternaryOperand.Condition = condition;
+                                ternaryOperand.TrueValue = trueValue;
+                                ternaryOperand.FalseValue = falseValue;
+                                return ternaryOperand;
+                            }
+                            else
+                                return null;
+                        default:
+#if DEBUG
+                            throw new NotImplementedException();
+#else
+                            return null;
+#endif
                     }
+                case IResultingInstruction _:
+                    if (operand is IOperandInstructionBase operandInstruction)
+                    {
+                        if (IsBuildingIteratorsInvalid(operandInstruction))
+                            return null;
+                        return operand;
+                    }
+                    else
+                        return null;
+                case InterimConstantValue _:
+                    return operand;
+                case TernaryOperand ternary:
+                    if (IsBuildingIteratorsInvalid(ternary))
+                        return null;
+                    return ternary;
+                default:
+#if DEBUG
+                    throw new NotImplementedException();
+#else
+                    return null;
+#endif
+            }
+        }
+        private static IRBranch GetBranch(IEnumerable<BasicBlock> blocks)
+        {
+            List<BasicBlock> blockList = blocks.ToList();
+            int maxIndex = blockList.Count - 1;
+            HashSet<BasicBlock> visited = new HashSet<BasicBlock>();
+            while (true)
+            {
+                for (int i = maxIndex; i >= 0; i--)
+                {
+                    if (blockList[i] != null && !visited.Add(blockList[i]))
+                        return blockList[i].Instructions.LastOrDefault() as IRBranch;
+                    blockList[i] = blockList[i]?.Dominator;
                 }
             }
         }
 
-        private static bool DefinitionIsAllowable(SSADefinition definition, BlockOrdering.LoopData loopData, HashSet<SSADefinition> passed = null)
+        private static Dictionary<string, List<Encapsulation.Structure>> PopulateIndices(IInterimOperand condition, Dictionary<string, InterimConstantValue> iterators, Dictionary<string, IInterimOperand> incrementFuncs, int maxIterations)
         {
-            if (passed == null)
-                passed = new HashSet<SSADefinition>();
-            if (!passed.Add(definition))
-                return true;
-            if (definition.State != SSADefinition.SetState.Set)
-                return false;
-            switch (definition)
-            {
-                case SSASetDefinition setDefinition:
-                    if (!loopData.BodyContains(setDefinition.DefinedAt.Block))
-                        return true;
-                    return GetVariableReferences(setDefinition.DefinedAt).All(r =>
-                        r is InterimResolvedReference resolvedRef &&
-                        DefinitionIsAllowable(resolvedRef.Reference, loopData, passed));
-                case SSAPotentialDefinition potentialDefinition:
-                    return false;
-                case PhiVariable phi:
-                    // The external one must be invariant.
-                    // Any internal ones (where executable) must be allowable.
-                    foreach (KeyValuePair<BasicBlock, SSADefinition> possibleValue in phi.Node.PossibleValues)
-                    {
-                        if (!possibleValue.Key.IsExecutable)
-                            continue;
-                        if (loopData.BodyContains(possibleValue.Key))
-                        {
-                            if (!DefinitionIsAllowable(possibleValue.Value, loopData, passed))
-                                return false;
-                        }
-                        else
-                        {
-                            if (!possibleValue.Value.IsInvariant)
-                                return false;
-                        }
-                    }
-                    return true;
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-
-        private static void PopulateIndices(IInterimOperand condition, IEnumerable<SSADefinition> definitions, Dictionary<string, List<Encapsulation.Structure>> indices, BlockOrdering.LoopData loopData, int maxIterations)
-        {
-            Dictionary<string, IInterimOperand> incrementFuncs = new Dictionary<string, IInterimOperand>();
-            Dictionary<SSADefinition, InterimConstantValue> lastValue = new Dictionary<SSADefinition, InterimConstantValue>();
-            Dictionary<string, InterimConstantValue> iterators = new Dictionary<string, InterimConstantValue>();
+            Dictionary<string, List<Encapsulation.Structure>> indices = new Dictionary<string, List<Encapsulation.Structure>>();
+            Dictionary<string, Encapsulation.Structure> nextIndex = new Dictionary<string, Encapsulation.Structure>();
             List<string> iteratorVariables = new List<string>();
-
-            foreach (SSADefinition definition in definitions.Where(def => loopData.body.IncomingVariableDefinitions.Keys.Any(scopleSlot => scopleSlot.Name.Equals(def.Name, StringComparison.OrdinalIgnoreCase))))
+            foreach (string name in iterators.Keys)
             {
-                InterimConstantValue input = (InterimConstantValue)GetFirstExternalValue(definition, loopData).Clone(null);
-                indices[definition.Name] = new List<Encapsulation.Structure>() { };
-                lastValue[definition] = input;
-                iterators[definition.Name] = input;
-                iteratorVariables.Add(definition.Name);
+                indices.Add(name, new List<Encapsulation.Structure>());
+                iteratorVariables.Add(name);
+                indices[name].Add((Encapsulation.Structure)iterators[name].Value);
+                nextIndex[name] = (Encapsulation.Structure)((IEvaluatableToConstant)incrementFuncs[name]).Evaluate().Value;
             }
-            foreach (SSADefinition definition in definitions)
-                incrementFuncs[definition.Name] = BuildIncrementFunc(definition, lastValue, loopData);
 
-            condition = ReplaceVariableReferences(condition.Clone(null, true), lastValue, loopData);
-
-            int iteration = 0;
+            int iteration = 1;
             try
             {
                 // Things shouldn't be able to throw an exception here,
                 // but better safe than sorry.
-                while (!Convert.ToBoolean(((IEvaluatableToConstant)condition).Evaluate().Value))
+                // The loop is already structured in a do-while format
+                // because of the LoopConditionalRelocation pass
+                do
                 {
                     if (iteration++ > maxIterations)
                         break;
                     foreach (string name in iteratorVariables)
-                        indices[name].Add((Encapsulation.Structure)iterators[name].Value);
+                    {
+                        iterators[name].Value = nextIndex[name];
+                        indices[name].Add(nextIndex[name]);
+                    }
                     foreach (string name in iteratorVariables)
-                        iterators[name].Value = ((IEvaluatableToConstant)incrementFuncs[name]).Evaluate().Value;
-                }
+                        nextIndex[name] = (Encapsulation.Structure)((IEvaluatableToConstant)incrementFuncs[name]).Evaluate().Value;
+                } while (!Convert.ToBoolean(((IEvaluatableToConstant)condition).Evaluate().Value));
             }
             catch (Exception)
             {
@@ -245,84 +365,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 return;
 #endif
             }
-        }
 
-        private static InterimConstantValue GetFirstExternalValue(SSADefinition definition, BlockOrdering.LoopData loopData)
-        {
-            IRScope scope = loopData.body.Scope;
-            SSADefinition incomingDefinition = null;
-            while (scope != null)
-            {
-                if (loopData.body.IncomingVariableDefinitions.TryGetValue((definition.Name, scope), out incomingDefinition))
-                    break;
-                scope = scope.ParentScope;
-            }
-            switch (incomingDefinition)
-            {
-                case SSASetDefinition setDefinition:
-                    return definition.Evaluate();
-                case PhiVariable phi:
-                    return phi.Node.PossibleValues.FirstOrDefault(kvp => kvp.Key.IsExecutable && !loopData.BodyContains(kvp.Key)).Value.Evaluate();
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-        private static IInterimOperand BuildIncrementFunc(SSADefinition definition, Dictionary<SSADefinition, InterimConstantValue> values, BlockOrdering.LoopData loopData)
-        {
-            IInterimOperand result = GetFirstInternalSet(definition, loopData).DefinedAt.Value.Clone(null, true);
-            result = ReplaceVariableReferences(result, values, loopData);
-            return result;
-        }
-        private static SSASetDefinition GetFirstInternalSet(SSADefinition ssaDef, BlockOrdering.LoopData loopData)
-        {
-            switch (ssaDef)
-            {
-                case SSASetDefinition setDefinition:
-                    return setDefinition;
-                case PhiVariable phi:
-                    if (phi.Node.PossibleValues.Keys.Where(b => b.IsExecutable && loopData.BodyContains(b)).Count() > 1)
-                        throw new InvalidOperationException();
-                    SSADefinition result = phi.Node.PossibleValues.FirstOrDefault(kvp => kvp.Key.IsExecutable && (loopData.BodyContains(kvp.Key) || loopData.branchBlock == kvp.Key)).Value;
-                    switch (result)
-                    {
-                        case null:
-                            throw new InvalidOperationException();
-                        case SSASetDefinition setDefinition:
-                            return setDefinition;
-                        case PhiVariable nestedPhi:
-                            return GetFirstInternalSet(nestedPhi, loopData);
-                        default:
-                            throw new InvalidOperationException();
-                    }
-                default:
-                    throw new InvalidOperationException();
-            }
-        }
-        private static IInterimOperand ReplaceVariableReferences(IInterimOperand operand, Dictionary<SSADefinition, InterimConstantValue> values, BlockOrdering.LoopData loopData)
-        {
-            IInterimOperand ReplaceVariableReferenceMutation(IInterimOperand op)
-                => ReplaceVariableReferences(op, values, loopData);
-
-            switch (operand)
-            {
-                case IOperandInstructionBase operandInstruction:
-                    operandInstruction.MutateEachOperand(ReplaceVariableReferenceMutation);
-                    return operand;
-                case InterimResolvedReference variableReference:
-                    // For an external variable, return its evaluated constant as stored in values.
-                    // Phis with an executable internal value are taken as the internal value.
-                    // For an internal variable, return a reference to its InterimConstantValue object from values.
-                    if (values.TryGetValue(GetFirstInternalSet(variableReference.Reference, loopData), out InterimConstantValue value))
-                        return value;
-                    else
-                        return BuildIncrementFunc(variableReference.Reference, values, loopData);
-                case InterimUnresolvedReference _:
-                    throw new InvalidOperationException();
-                // If values does not contain it and it is internal, it must be an intermediate reference
-                // and so can be replaced by the result of BuildIncrementFunc.
-                default:
-                    return operand;
-            }
+            return indices;
         }
 
         private void UnrollLoop(BlockOrdering.LoopData loopData, Dictionary<string, List<Encapsulation.Structure>> indices)
@@ -407,6 +451,122 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             replacements.TryGetValue(reference.Reference, out Encapsulation.Structure result) ?
                             new InterimConstantValue(result, reference.SourceLine, reference.SourceColumn) : op);
                     }
+                }
+            }
+        }
+
+        public class TernaryOperand : IInterimOperand, IMultipleOperandInstruction, IEvaluatableToConstant
+        {
+            public IInterimOperand Condition { get; set; }
+            public IInterimOperand TrueValue { get; set; }
+            public IInterimOperand FalseValue { get; set; }
+            public bool IsInvariant
+            {
+                get
+                {
+                    bool? condition = EvaluateCondition();
+                    if (condition == null)
+                        return false;
+                    if (condition == true)
+                        return TrueValue.IsInvariant;
+                    else
+                        return FalseValue.IsInvariant;
+                }
+            }
+            public Type Type
+            {
+                get
+                {
+                    bool? condition = EvaluateCondition();
+                    if (condition == null)
+                        return PhiNode<IInterimOperand>.GetFirstCommonBaseType(TrueValue.Type, FalseValue.Type);
+                    if (condition == true)
+                        return TrueValue.Type;
+                    else
+                        return FalseValue.Type;
+                }
+            }
+            public IEnumerable<IInterimOperand> Operands => throw new NotImplementedException();
+            public int OperandCount => 3;
+
+            private bool? EvaluateCondition()
+            {
+                if ((Condition?.IsInvariant ?? false) &&
+                    Condition is IEvaluatableToConstant evaluatable)
+                    return Convert.ToBoolean(evaluatable.Evaluate().Value);
+                return null;
+            }
+            public bool AllOperands(Func<IInterimOperand, bool> predicate)
+                => predicate(Condition) &&
+                predicate(TrueValue) &&
+                predicate(FalseValue);
+
+            public bool AnyOperand(Func<IInterimOperand, bool> predicate)
+                => predicate(Condition) ||
+                predicate(TrueValue) ||
+                predicate(FalseValue);
+
+            public IEnumerable<Opcode> EmitOpcodes()
+            {
+                bool? condition = EvaluateCondition();
+                if (condition == null)
+                {
+                    throw new NotImplementedException();
+                    yield break;
+                }
+                IEnumerable<Opcode> result;
+                if (condition == true)
+                    result = TrueValue.EmitOpcodes();
+                else
+                    result = FalseValue.EmitOpcodes();
+                foreach (Opcode op in result)
+                    yield return op;
+            }
+
+            public bool Equals(IInterimOperand other)
+                => other is TernaryOperand ternary &&
+                ternary.Condition.Equals(Condition) &&
+                ternary.TrueValue.Equals(TrueValue) &&
+                ternary.FalseValue.Equals(FalseValue);
+
+            public void ForEachOperand(Action<IInterimOperand> action)
+            {
+                action(Condition);
+                action(TrueValue);
+                action(FalseValue);
+            }
+
+            public void MutateEachOperand(Func<IInterimOperand, IInterimOperand> mutateFunc)
+            {
+                Condition = mutateFunc(Condition);
+                TrueValue = mutateFunc(TrueValue);
+                FalseValue = mutateFunc(FalseValue);
+            }
+
+            public IInterimOperand Clone(BasicBlock block, bool maintainSSAReferences = false)
+                => new TernaryOperand()
+                {
+                    Condition = Condition.Clone(block, maintainSSAReferences),
+                    TrueValue = TrueValue.Clone(block, maintainSSAReferences),
+                    FalseValue = FalseValue.Clone(block, maintainSSAReferences)
+                };
+
+            public InterimConstantValue Evaluate()
+            {
+                bool condition = EvaluateCondition() ?? throw new InvalidOperationException();
+                if (condition)
+                {
+                    if (!(TrueValue.IsInvariant &&
+                        TrueValue is IEvaluatableToConstant trueValue))
+                        throw new InvalidOperationException();
+                    return trueValue.Evaluate();
+                }
+                else
+                {
+                    if (!(FalseValue.IsInvariant &&
+                        FalseValue is IEvaluatableToConstant falseValue))
+                        throw new NotImplementedException();
+                    return falseValue.Evaluate();
                 }
             }
         }

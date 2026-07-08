@@ -1152,5 +1152,27 @@ namespace kOS.Safe.Test.Execution
                 "trunk"
             );
         }
+        [Test]
+        public void TestFromLoopBranchingUnrolling()
+        {
+            EnsureAtLeastLevel(OptimizationLevel.Extreme);
+            List<CodePart> _code = CompileCodePart("integration/branching/fromIntermittent.ks");
+            List<Safe.Compilation.Opcode> opcodes = _code[0].MainCode;
+            Assert.IsInstanceOf<OpcodePush>(opcodes[17]);
+            Assert.AreEqual(new Encapsulation.ScalarIntValue(5), (opcodes[17] as OpcodePush)?.Argument);
+
+            RunScript("integration/branching/fromIntermittent.ks");
+            RunSingleStep();
+            AssertOutput(
+                "beginning",
+                "0",
+                "1",
+                "3",
+                "5",
+                "7",
+                "9",
+                "trunk"
+            );
+        }
     }
 }
