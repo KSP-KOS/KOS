@@ -119,7 +119,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     // Process instructions.
                     foreach (IRInstruction instruction in block.Instructions)
                     {
-                        foreach (IOperandInstructionBase inst in instruction.DepthFirst().Where(i => i is IOperandInstructionBase).Cast<IOperandInstructionBase>())
+                        foreach (IOperandInstructionBase inst in instruction.DepthFirst())
                         {
                             inst.ForEachOperand(op =>
                             {

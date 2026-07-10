@@ -45,16 +45,15 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 {
                     foreach (BasicBlock block in fragment.Blocks)
                     {
-                        foreach (IRInstruction instruction in block.Instructions.DepthFirst())
+                        foreach (IOperandInstructionBase operandInstruction in block.Instructions.DepthFirst())
                         {
-                            if (instruction is IOperandInstructionBase operandInstruction)
-                                operandInstruction.MutateEachOperand(op =>
-                                {
-                                    if (op is InterimVariableReference reference &&
-                                    reference.Name.Equals(resolvedReference.Name, StringComparison.OrdinalIgnoreCase))
-                                        return resolvedReference.CloneReferenceTo(reference.SourceLine, reference.SourceColumn);
-                                    return op;
-                                });
+                            operandInstruction.MutateEachOperand(op =>
+                            {
+                                if (op is InterimVariableReference reference &&
+                                reference.Name.Equals(resolvedReference.Name, StringComparison.OrdinalIgnoreCase))
+                                    return resolvedReference.CloneReferenceTo(reference.SourceLine, reference.SourceColumn);
+                                return op;
+                            });
                         }
                     }
                 }

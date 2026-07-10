@@ -412,7 +412,7 @@ namespace kOS.Safe.Compilation.IR
                         fragment.Blocks.Where(block => block.IsExecutable).All(block =>
                             block.Instructions.All(instruction =>
                             {
-                                foreach (IRInstruction operation in instruction.DepthFirst())
+                                foreach (IRInstruction operation in instruction.DepthFirstInstructions())
                                     if (operation is IActionInstruction actionInstruction &&
                                         !actionInstruction.IsInert)
                                         return false;

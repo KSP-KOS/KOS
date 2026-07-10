@@ -54,21 +54,21 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 bool breaking = false;
                 for (; callIndex < instructions.Count; callIndex++)
                 {
-                    foreach (IRInstruction instruction in instructions[callIndex].DepthFirst())
+                    foreach (IOperandInstructionBase operandInstruction in instructions[callIndex].DepthFirst())
                     {
-                        if (breaking && instruction is IOperandInstructionBase operandInstruction)
+                        if (breaking)
                         {
-                            breaking = false;
+                            bool innerBreaking = false;
                             operandInstruction.ForEachOperand(op =>
                             {
                                 if (op == call)
-                                    breaking = true;
-                                if (!breaking)
+                                    innerBreaking = true;
+                                if (!innerBreaking)
                                     necessaryStackState.Add(op);
                             });
                             break;
                         }
-                        if (instruction == call)
+                        if (operandInstruction == call)
                             breaking = true;
                     }
                     if (breaking)
@@ -95,10 +95,9 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 }
 
                 IRParameter resultParameter = new IRParameter(0, successor);
-                foreach (IRInstruction instruction in successor.Instructions[0].DepthFirst())
+                foreach (IOperandInstructionBase operandInstruction in successor.Instructions[0].DepthFirst())
                 {
-                    if (instruction is IOperandInstructionBase operandInstruction &&
-                        operandInstruction.AnyOperand(op => op == call))
+                    if (operandInstruction.AnyOperand(op => op == call))
                     {
                         operandInstruction.MutateEachOperand(op =>
                         {

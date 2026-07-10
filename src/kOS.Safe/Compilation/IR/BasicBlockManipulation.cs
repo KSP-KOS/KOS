@@ -81,7 +81,7 @@ namespace kOS.Safe.Compilation.IR
 
             for (int i = newStartIndex; i < Instructions.Count; i++)
             {
-                foreach (IRInstruction instruction in Instructions[i].DepthFirst())
+                foreach (IRInstruction instruction in Instructions[i].DepthFirstInstructions())
                     instruction.Block = successorBlock;
                 successorBlock.Instructions.Add(Instructions[i]);
             }
@@ -106,23 +106,28 @@ namespace kOS.Safe.Compilation.IR
             before.AddSuccessor(patternRoot);
             if (before.FallthroughJump != null)
                 before.FallthroughJump.Target = patternRoot;
-            else if (before.Instructions.Last() is IRJump jump)
-                jump.Target = patternRoot;
             else
-                before.FallthroughJump = new IRJump(before, patternRoot, before.Instructions.Last().SourceLine, before.Instructions.Last().SourceColumn);
+                before.FallthroughJump = new IRJump(before, patternRoot, before.Instructions.LastOrDefault()?.SourceLine ?? -1, before.Instructions.LastOrDefault()?.SourceColumn ?? -1);
+            if (before.Instructions.LastOrDefault() is IRJump)
+                before.Instructions.RemoveAt(before.Instructions.Count - 1);
             
             foreach (BasicBlock returnBlock in pattern.Where(b => b.PostDominator == null || b.PostDominator is SyntheticReturnBlock))
             {
                 returnBlock.AddSuccessor(after);
                 if (returnBlock.FallthroughJump != null)
                     returnBlock.FallthroughJump.Target = after;
-                else if (returnBlock.Instructions.Last() is IRJump jump)
-                    jump.Target = after;
                 else
-                    returnBlock.FallthroughJump = new IRJump(returnBlock, after, returnBlock.Instructions.Last().SourceLine, returnBlock.Instructions.Last().SourceColumn);
-                
-                returnBlock.successors.RemoveWhere(b => b is SyntheticReturnBlock);
-                returnBlock.PostDominator?.predecessors.Remove(returnBlock);
+                    returnBlock.FallthroughJump = new IRJump(returnBlock, after, returnBlock.Instructions.LastOrDefault()?.SourceLine ?? -1, returnBlock.Instructions.LastOrDefault()?.SourceColumn ?? -1);
+                if (returnBlock.Instructions.LastOrDefault() is IRJump)
+                    returnBlock.Instructions.RemoveAt(returnBlock.Instructions.Count - 1);
+
+
+                SyntheticReturnBlock syntheticReturn = (SyntheticReturnBlock)returnBlock.Successors.FirstOrDefault(b => b is SyntheticReturnBlock);
+                while (syntheticReturn != null)
+                {
+                    returnBlock.RemoveSuccessor(syntheticReturn);
+                    syntheticReturn = (SyntheticReturnBlock)returnBlock.Successors.FirstOrDefault(b => b is SyntheticReturnBlock);
+                }
             }
             if (before.Successors.Contains(after))
                 before.RemoveSuccessor(after);

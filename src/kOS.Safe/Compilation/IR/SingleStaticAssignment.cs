@@ -629,72 +629,71 @@ namespace kOS.Safe.Compilation.IR
         private static List<IStackTransferObject> PopulateParameters(BasicBlock block, Dictionary<BasicBlock, List<IStackTransferObject>> stackOut, Queue<BasicBlock> worklist, bool setValues = true)
         {
             List<IStackTransferObject> stack = new List<IStackTransferObject>(block.IncomingStackState);
-            foreach (IRInstruction instruction in block.Instructions.DepthFirst())
+            foreach (IOperandInstructionBase operandInstruction in block.Instructions.DepthFirst())
             {
-                if (instruction is IOperandInstructionBase operandInstruction)
-                    operandInstruction.ForEachOperand(op =>
+                operandInstruction.ForEachOperand(op =>
+                {
+                    if (op is IRParameter parameter)
                     {
-                        if (op is IRParameter parameter)
+                        if (stack.Count == 0)
                         {
-                            if (stack.Count == 0)
+                            IRPushStack externalPush = IRPushStack.ExternalPush();
+                            HashSet<BasicBlock> addedTo = new HashSet<BasicBlock>();
+                            Queue<BasicBlock> addTo = new Queue<BasicBlock>();
+                            addTo.Enqueue(block);
+                            while (addTo.Count > 0)
                             {
-                                IRPushStack externalPush = IRPushStack.ExternalPush();
-                                HashSet<BasicBlock> addedTo = new HashSet<BasicBlock>();
-                                Queue<BasicBlock> addTo = new Queue<BasicBlock>();
-                                addTo.Enqueue(block);
-                                while (addTo.Count > 0)
+                                BasicBlock current = addTo.Dequeue();
+                                if (addedTo.Add(current))
                                 {
-                                    BasicBlock current = addTo.Dequeue();
-                                    if (addedTo.Add(current))
+                                    if (current != block && stackOut.ContainsKey(current))
                                     {
-                                        if (current != block && stackOut.ContainsKey(current))
-                                        {
-                                            stackOut[current].Add(externalPush);
-                                            foreach (BasicBlock successor in block.Successors.Where(b => !worklist.Contains(b)))
-                                                worklist.Enqueue(successor);
-                                        }
-                                        current.IncomingStackState.Add(externalPush);
-                                        foreach (BasicBlock predecessor in current.Predecessors)
-                                            addTo.Enqueue(predecessor);
+                                        stackOut[current].Add(externalPush);
+                                        foreach (BasicBlock successor in block.Successors.Where(b => !worklist.Contains(b)))
+                                            worklist.Enqueue(successor);
                                     }
+                                    current.IncomingStackState.Add(externalPush);
+                                    foreach (BasicBlock predecessor in current.Predecessors)
+                                        addTo.Enqueue(predecessor);
                                 }
-                                stack.Add(externalPush);
                             }
-                            if (setValues)
-                            {
-                                parameter.StackTransferObject = stack[0];
-                                parameter.RequiredToBeResolvable.UnionWith(GetFollowingParameters(operandInstruction, parameter));
-                            }
-                            stack.RemoveAt(0);
+                            stack.Add(externalPush);
                         }
-                        else if (op is IRCall call)
+                        if (setValues)
                         {
-                            while (stack.Count > 0)
-                            {
-                                IStackTransferObject stackValue = stack[0];
-                                stack.RemoveAt(0);
-
-                                if (IsOrContainsArgMarker(stackValue))
-                                {
-                                    if (stackValue is StackTransferPhi phi &&
-                                        phi.PossibleValues.Values.Any(v => !IsOrContainsArgMarker(v)))
-                                        throw new Exceptions.KOSCompileException(new KS.LineCol(call.SourceLine, call.SourceColumn),
-                                            "Cannot handle a variable number of arguments to a function");
-                                    foreach (IRPushStackArgMarker argMarker in GetArgMarkerPushes(stackValue))
-                                        argMarker.Call = call;
-                                    break;
-                                }
-
-                                if (!setValues)
-                                    continue;
-
-                                IRParameter newParameter = new IRParameter(block.IncomingStackState.IndexOf(stackValue), block) { StackTransferObject = stackValue };
-                                call.Arguments.Insert(0, newParameter);
-                                newParameter.RequiredToBeResolvable.UnionWith(GetFollowingParameters(call, newParameter));
-                            }
+                            parameter.StackTransferObject = stack[0];
+                            parameter.RequiredToBeResolvable.UnionWith(GetFollowingParameters(operandInstruction, parameter));
                         }
-                    });
-                if (instruction is IRPushStack pushStack)
+                        stack.RemoveAt(0);
+                    }
+                    else if (op is IRCall call)
+                    {
+                        while (stack.Count > 0)
+                        {
+                            IStackTransferObject stackValue = stack[0];
+                            stack.RemoveAt(0);
+
+                            if (IsOrContainsArgMarker(stackValue))
+                            {
+                                if (stackValue is StackTransferPhi phi &&
+                                    phi.PossibleValues.Values.Any(v => !IsOrContainsArgMarker(v)))
+                                    throw new Exceptions.KOSCompileException(new KS.LineCol(call.SourceLine, call.SourceColumn),
+                                        "Cannot handle a variable number of arguments to a function");
+                                foreach (IRPushStackArgMarker argMarker in GetArgMarkerPushes(stackValue))
+                                    argMarker.Call = call;
+                                break;
+                            }
+
+                            if (!setValues)
+                                continue;
+
+                            IRParameter newParameter = new IRParameter(block.IncomingStackState.IndexOf(stackValue), block) { StackTransferObject = stackValue };
+                            call.Arguments.Insert(0, newParameter);
+                            newParameter.RequiredToBeResolvable.UnionWith(GetFollowingParameters(call, newParameter));
+                        }
+                    }
+                });
+                if (operandInstruction is IRPushStack pushStack)
                     stack.Insert(0, pushStack);
             }
             return stack;
@@ -728,11 +727,8 @@ namespace kOS.Safe.Compilation.IR
                     if (block.Phis.ContainsKey(definitionSet.Key))
                     {
                         PhiNode phiVar = block.Phis[definitionSet.Key];
-                        foreach ((_, _, SSADefinition definition) in definitionSet)
-                        {
+                        foreach (SSADefinition definition in phiVar.Result.Replaces)
                             definition.ReplacedBy.Remove(phiVar.Result);
-                            phiVar.Result.Replaces.Remove(definition);
-                        }
                         block.Phis.Remove(definitionSet.Key);
                     }
                     result.Add(definitionSet.Key, definitionSet.First().Variable);
@@ -845,9 +841,9 @@ namespace kOS.Safe.Compilation.IR
             foreach (IRInstruction instruction in block.Instructions)
             {
                 // Process call sites and replace variable definitions.
-                foreach (IRInstruction inst in instruction.DepthFirst())
+                foreach (IOperandInstructionBase operandInstruction in instruction.DepthFirst())
                 {
-                    if (inst is IRCall call)
+                    if (operandInstruction is IRCall call)
                     {
                         IRFunction function = codePart.GetFunction(call);
                         if (function != null)
@@ -856,8 +852,7 @@ namespace kOS.Safe.Compilation.IR
                         }
                         ProcessCall(call, codePart, liveDefinitions, triggerBlacklist, triggerWriteBlacklist, null, true);
                     }
-                    if (inst is IOperandInstructionBase operandInstruction)
-                        operandInstruction.MutateEachOperand(ScopedSSAReplacement);
+                    operandInstruction.MutateEachOperand(ScopedSSAReplacement);
                 }
 
                 // Process assignments, unsets, and new triggers.

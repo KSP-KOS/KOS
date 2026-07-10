@@ -106,7 +106,8 @@ namespace kOS.Safe.Compilation.Optimization
                 if (PassesToSkip.Contains(pass.GetType()))
                 {
                     if (!(pass is Passes.SCCPWithTypePropagation ||
-                        pass is SingleStaticAssignment))
+                        pass is SingleStaticAssignment ||
+                        pass is Passes.TernaryOperandConstruction))
                         continue;
                 }
 

@@ -82,7 +82,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         {
             foreach (IRInstruction instruction in block.Instructions)
             {
-                foreach (IRInstruction subexpression in instruction.DepthFirst())
+                foreach (IOperandInstructionBase operandInstruction in instruction.DepthFirst())
                 {
                     bool breaking = false;
                     void AddToExpressions(IInterimOperand operand)
@@ -97,16 +97,15 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         else if (operand is IResultingInstruction resultingInstruction)
                         {
                             if (expressions.TryGetValue((resultingInstruction, block.Scope), out ExpressionData data))
-                                data.uses.Add((IOperandInstructionBase)subexpression);
+                                data.uses.Add(operandInstruction);
                             else
-                                expressions[(resultingInstruction, block.Scope)] = new ExpressionData((IOperandInstructionBase)subexpression);
+                                expressions[(resultingInstruction, block.Scope)] = new ExpressionData(operandInstruction);
                         }
                     }
 
                     if (breaking)
                         break;
-                    if (subexpression is IOperandInstructionBase operandInstruction)
-                        operandInstruction.ForEachOperand(AddToExpressions);
+                    operandInstruction.ForEachOperand(AddToExpressions);
                 }
             }
         }

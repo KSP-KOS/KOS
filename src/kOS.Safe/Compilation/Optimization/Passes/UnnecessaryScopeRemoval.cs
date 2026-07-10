@@ -46,7 +46,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     !(block.Instructions.Last() is IRReturn))
                     continue;
 
-                AttemptPopReturnCollapse(block);
+                AttemptPopReturnCollapse(block, block);
             }
         }
 
@@ -101,31 +101,30 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 throw new KOSYouShouldNeverSeeThisException($"The last instruction ({lastInstruction}) in scope footer block {footer} was not OpcodePopScope or OpcodeReturn.");
         }
 
-        private static void AttemptPopReturnCollapse(BasicBlock returnBlock)
+        private static void AttemptPopReturnCollapse(BasicBlock target, BasicBlock returnBlock)
         {
             // Don't do anything if there is more than one predecessor
-            int numPredecessors = returnBlock.Predecessors.Count;
+            int numPredecessors = target.Predecessors.Count;
             if (numPredecessors == 0 || numPredecessors > 1)
                 return;
 
-            BasicBlock predecessorBlock = returnBlock.Predecessors.First();
+            BasicBlock predecessorBlock = target.Predecessors.First();
 
-            if (predecessorBlock.Instructions.Last() is IRNoStackInstruction popInstruction &&
+            if (predecessorBlock.Instructions.LastOrDefault() is IRNoStackInstruction popInstruction &&
                 popInstruction.Operation is OpcodePopScope)
             {
                 predecessorBlock.Instructions.RemoveAt(predecessorBlock.Instructions.Count - 1);
                 ((IRReturn)returnBlock.Instructions.Last()).Depth += 1;
                 returnBlock.Scope = predecessorBlock.Scope;
                 returnBlock.Scope.FooterBlock = returnBlock;
-                //BasicBlock.Merge(predecessorBlock, returnBlock);
+            }
 
-                // Since a pop closes a BasicBlock, then if there are no instructions remaining,
-                // there's a chance that the pop's predecessor also ends with a pop that we can remove,
-                // if the pop only has a single predecessor.
-                if (predecessorBlock.Instructions.Count == 0)
-                {
-                    AttemptPopReturnCollapse(returnBlock);
-                }
+            // Since a pop closes a BasicBlock, then if there are no instructions remaining,
+            // there's a chance that the pop's predecessor also ends with a pop that we can remove,
+            // if the pop only has a single predecessor.
+            if (predecessorBlock.Instructions.Count == 0)
+            {
+                AttemptPopReturnCollapse(predecessorBlock, returnBlock);
             }
         }
     }

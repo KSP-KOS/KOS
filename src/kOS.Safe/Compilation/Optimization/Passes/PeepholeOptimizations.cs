@@ -20,12 +20,11 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             for (int i = 0; i < code.Count; i++)
             {
                 IRInstruction instruction = code[i];
-                foreach (IRInstruction nestedInstruction in instruction.DepthFirst())
+                foreach (IOperandInstructionBase operandInstruction in instruction.DepthFirst())
                 {
-                    if (nestedInstruction is IOperandInstructionBase operandInstruction)
-                        operandInstruction.MutateEachOperand(OperandPeepholeFilter_Internal);
+                    operandInstruction.MutateEachOperand(OperandPeepholeFilter_Internal);
 
-                    InstructionPeepholeFilter(nestedInstruction);
+                    InstructionPeepholeFilter(operandInstruction);
                 }
 
                 //  Replace lex indexing with string constant with suffixing where possible.
@@ -75,7 +74,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             return operand;
         }
 
-        private static void InstructionPeepholeFilter(IRInstruction instruction)
+        private static void InstructionPeepholeFilter(IOperandInstructionBase instruction)
         {
             // Branch logical simplification (e.g. !X branch = X branch!)
             if (instruction is IRBranch branch &&

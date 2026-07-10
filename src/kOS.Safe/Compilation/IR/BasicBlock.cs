@@ -238,6 +238,8 @@ namespace kOS.Safe.Compilation.IR
 
                     });
                 length += 1;
+                if (instruction is IRPushStack)
+                    length -= 1;
             }
             if (FallthroughJump != null)
                 length += 1;

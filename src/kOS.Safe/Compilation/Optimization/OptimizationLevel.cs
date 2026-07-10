@@ -6,6 +6,7 @@ namespace kOS.Safe.Compilation
      * O0:
      * -2000. Conversion to SSA (analysis pass)
      * -1000. Type Propagation
+     * -990. Ternary Operand Construction
      *  
      * O1:
      * -1000. SCCP with Type Propagation

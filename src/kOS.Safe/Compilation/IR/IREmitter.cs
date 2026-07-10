@@ -34,7 +34,7 @@ namespace kOS.Safe.Compilation.IR
                     jump.DestinationLabel != null && jumpLabels[jump.DestinationLabel] == i + 1 + labelIndex)
                 {
                     foreach (var key in jumpLabels.Keys.ToArray())
-                        if (jumpLabels[key] >= i)
+                        if (jumpLabels[key] >= i + 1 + labelIndex)
                             jumpLabels[key] = jumpLabels[key] - 1;
                     result.RemoveAt(i);
                     i--;

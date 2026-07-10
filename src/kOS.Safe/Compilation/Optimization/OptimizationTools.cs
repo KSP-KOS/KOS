@@ -7,27 +7,47 @@ namespace kOS.Safe.Compilation.Optimization
 {
     public static class OptimizationTools
     {
-        public static IEnumerable<IRInstruction> DepthFirst(this IEnumerable<IRInstruction> instructions)
-            => instructions.SelectMany(DepthFirst);
+        public static IEnumerable<IRInstruction> DepthFirstInstructions(this IEnumerable<IRInstruction> instructions)
+            => instructions.SelectMany(DepthFirstInstructions);
         
-        public static IEnumerable<IRInstruction> DepthFirst(this IRInstruction instruction)
+        public static IEnumerable<IRInstruction> DepthFirstInstructions(this IRInstruction instruction)
         {
-            if (instruction is ISingleOperandInstruction singleOperandInstruction)
+            if (instruction is IOperandInstructionBase operandInstruction)
             {
-                if (singleOperandInstruction.Operand is IRInstruction inst)
-                    foreach (IRInstruction predecessor in DepthFirst(inst))
+                foreach (IOperandInstructionBase predecessor in DepthFirst(operandInstruction))
+                    if (predecessor is IRInstruction predecessorInstruction)
+                        yield return predecessorInstruction;
+            }
+            else
+                yield return instruction;
+        }
+
+        public static IEnumerable<IOperandInstructionBase> DepthFirst(this IEnumerable<IRInstruction> instructions)
+            => instructions.SelectMany(DepthFirst);
+
+        public static IEnumerable<IOperandInstructionBase> DepthFirst(this IRInstruction instruction)
+            => instruction is IOperandInstructionBase operandInstruction ?
+            DepthFirst(operandInstruction) :
+            Enumerable.Empty<IOperandInstructionBase>();
+
+        private static IEnumerable<IOperandInstructionBase> DepthFirst(this IOperandInstructionBase operandInstruction)
+        {
+            if (operandInstruction is ISingleOperandInstruction singleOperandInstruction)
+            {
+                if (singleOperandInstruction.Operand is IOperandInstructionBase op)
+                    foreach (IOperandInstructionBase predecessor in DepthFirst(op))
                         yield return predecessor;
             }
-            else if (instruction is IMultipleOperandInstruction multipleOperandInstruction)
+            else if (operandInstruction is IMultipleOperandInstruction multipleOperandInstruction)
             {
                 foreach (IInterimOperand operand in multipleOperandInstruction.Operands)
                 {
-                    if (operand is IRInstruction inst)
-                        foreach (IRInstruction predecessor in DepthFirst(inst))
+                    if (operand is IOperandInstructionBase op)
+                        foreach (IOperandInstructionBase predecessor in DepthFirst(op))
                             yield return predecessor;
                 }
             }
-            yield return instruction;
+            yield return operandInstruction;
         }
     }
 }

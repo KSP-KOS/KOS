@@ -458,6 +458,8 @@ namespace kOS.Safe.Test.Execution
                 "9",
                 "5",
                 "6",
+                "1",
+                "2",
                 "1"
             );
         }
@@ -1096,6 +1098,8 @@ namespace kOS.Safe.Test.Execution
                 "9",
                 "5",
                 "6",
+                "1",
+                "2",
                 "1"
             );
         }

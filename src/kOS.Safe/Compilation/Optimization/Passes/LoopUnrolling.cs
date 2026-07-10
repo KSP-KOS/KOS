@@ -245,7 +245,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                                 TernaryOperand ternaryOperand = new TernaryOperand();
                                 variableReplacements.Add(phi, ternaryOperand);
 
-                                IRBranch branch = GetBranch(possibleValues.Select(kvp => kvp.Key));
+                                IRBranch branch = TernaryOperandConstruction.GetBranch(possibleValues.Select(kvp => kvp.Key));
                                 IInterimOperand condition = branch.Condition.Clone(null, true);
                                 condition = BuildIterators(condition, iterators, incrementFuncs, variableReplacements, data);
                                 if (condition == null)
@@ -304,21 +304,6 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 #endif
             }
         }
-        private static IRBranch GetBranch(IEnumerable<BasicBlock> blocks)
-        {
-            List<BasicBlock> blockList = blocks.ToList();
-            int maxIndex = blockList.Count - 1;
-            HashSet<BasicBlock> visited = new HashSet<BasicBlock>();
-            while (true)
-            {
-                for (int i = maxIndex; i >= 0; i--)
-                {
-                    if (blockList[i] != null && !visited.Add(blockList[i]))
-                        return blockList[i].Instructions.LastOrDefault() as IRBranch;
-                    blockList[i] = blockList[i]?.Dominator;
-                }
-            }
-        }
 
         private static Dictionary<string, List<Encapsulation.Structure>> PopulateIndices(IInterimOperand condition, Dictionary<string, InterimConstantValue> iterators, Dictionary<string, IInterimOperand> incrementFuncs, int maxIterations)
         {
@@ -374,16 +359,19 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             BasicBlock incoming = loopData.body.Dominator;
             int numUnrolls = indices.First().Value.Count;
             List<BasicBlock> originalBody = loopData.GetBody().ToList();
-            if (incoming.Instructions.Last() is IRJump jump)
-                jump.Target = loopData.exit;
+            if (incoming.FallthroughJump != null)
+                incoming.FallthroughJump.Target = loopData.exit;
+            else
+                incoming.FallthroughJump = new IRJump(incoming, loopData.exit, -1, -1);
             if (incoming.Instructions.LastOrDefault() is IRBranch)
-                incoming.Instructions[incoming.Instructions.Count - 1] = new IRJump(incoming, loopData.exit, -1, -1);
+                incoming.Instructions.RemoveAt(incoming.Instructions.Count - 1);
             incoming.AddSuccessor(loopData.exit);
             loopData.body.Dominator.RemoveSuccessor(loopData.body);
             loopData.branchBlock.RemoveSuccessor(loopData.exit);
             loopData.branchBlock.RemoveSuccessor(loopData.body);
             IRBranch branch = loopData.branchBlock.Instructions[loopData.branchBlock.Instructions.Count - 1] as IRBranch;
-            loopData.branchBlock.Instructions[loopData.branchBlock.Instructions.Count - 1] = new IRJump(loopData.branchBlock, loopData.exit, branch.SourceLine, branch.SourceColumn);
+            loopData.branchBlock.FallthroughJump = new IRJump(loopData.branchBlock, loopData.exit, branch.SourceLine, branch.SourceColumn);
+            loopData.branchBlock.Instructions.RemoveAt(loopData.branchBlock.Instructions.Count - 1);
             
             foreach (BasicBlock block in originalBody)
             {
@@ -442,131 +430,12 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             }
             foreach (BasicBlock block in body)
             {
-                foreach (IRInstruction instruction in block.Instructions.DepthFirst())
+                foreach (IOperandInstructionBase operandInstruction in block.Instructions.DepthFirst())
                 {
-                    if (instruction is IOperandInstructionBase operandInstruction)
-                    {
-                        operandInstruction.MutateEachOperand(op =>
-                            op is InterimResolvedReference reference &&
-                            replacements.TryGetValue(reference.Reference, out Encapsulation.Structure result) ?
-                            new InterimConstantValue(result, reference.SourceLine, reference.SourceColumn) : op);
-                    }
-                }
-            }
-        }
-
-        public class TernaryOperand : IInterimOperand, IMultipleOperandInstruction, IEvaluatableToConstant
-        {
-            public IInterimOperand Condition { get; set; }
-            public IInterimOperand TrueValue { get; set; }
-            public IInterimOperand FalseValue { get; set; }
-            public bool IsInvariant
-            {
-                get
-                {
-                    bool? condition = EvaluateCondition();
-                    if (condition == null)
-                        return false;
-                    if (condition == true)
-                        return TrueValue.IsInvariant;
-                    else
-                        return FalseValue.IsInvariant;
-                }
-            }
-            public Type Type
-            {
-                get
-                {
-                    bool? condition = EvaluateCondition();
-                    if (condition == null)
-                        return PhiNode<IInterimOperand>.GetFirstCommonBaseType(TrueValue.Type, FalseValue.Type);
-                    if (condition == true)
-                        return TrueValue.Type;
-                    else
-                        return FalseValue.Type;
-                }
-            }
-            public IEnumerable<IInterimOperand> Operands => throw new NotImplementedException();
-            public int OperandCount => 3;
-
-            private bool? EvaluateCondition()
-            {
-                if ((Condition?.IsInvariant ?? false) &&
-                    Condition is IEvaluatableToConstant evaluatable)
-                    return Convert.ToBoolean(evaluatable.Evaluate().Value);
-                return null;
-            }
-            public bool AllOperands(Func<IInterimOperand, bool> predicate)
-                => predicate(Condition) &&
-                predicate(TrueValue) &&
-                predicate(FalseValue);
-
-            public bool AnyOperand(Func<IInterimOperand, bool> predicate)
-                => predicate(Condition) ||
-                predicate(TrueValue) ||
-                predicate(FalseValue);
-
-            public IEnumerable<Opcode> EmitOpcodes()
-            {
-                bool? condition = EvaluateCondition();
-                if (condition == null)
-                {
-                    throw new NotImplementedException();
-                    yield break;
-                }
-                IEnumerable<Opcode> result;
-                if (condition == true)
-                    result = TrueValue.EmitOpcodes();
-                else
-                    result = FalseValue.EmitOpcodes();
-                foreach (Opcode op in result)
-                    yield return op;
-            }
-
-            public bool Equals(IInterimOperand other)
-                => other is TernaryOperand ternary &&
-                ternary.Condition.Equals(Condition) &&
-                ternary.TrueValue.Equals(TrueValue) &&
-                ternary.FalseValue.Equals(FalseValue);
-
-            public void ForEachOperand(Action<IInterimOperand> action)
-            {
-                action(Condition);
-                action(TrueValue);
-                action(FalseValue);
-            }
-
-            public void MutateEachOperand(Func<IInterimOperand, IInterimOperand> mutateFunc)
-            {
-                Condition = mutateFunc(Condition);
-                TrueValue = mutateFunc(TrueValue);
-                FalseValue = mutateFunc(FalseValue);
-            }
-
-            public IInterimOperand Clone(BasicBlock block, bool maintainSSAReferences = false)
-                => new TernaryOperand()
-                {
-                    Condition = Condition.Clone(block, maintainSSAReferences),
-                    TrueValue = TrueValue.Clone(block, maintainSSAReferences),
-                    FalseValue = FalseValue.Clone(block, maintainSSAReferences)
-                };
-
-            public InterimConstantValue Evaluate()
-            {
-                bool condition = EvaluateCondition() ?? throw new InvalidOperationException();
-                if (condition)
-                {
-                    if (!(TrueValue.IsInvariant &&
-                        TrueValue is IEvaluatableToConstant trueValue))
-                        throw new InvalidOperationException();
-                    return trueValue.Evaluate();
-                }
-                else
-                {
-                    if (!(FalseValue.IsInvariant &&
-                        FalseValue is IEvaluatableToConstant falseValue))
-                        throw new NotImplementedException();
-                    return falseValue.Evaluate();
+                    operandInstruction.MutateEachOperand(op =>
+                        op is InterimResolvedReference reference &&
+                        replacements.TryGetValue(reference.Reference, out Encapsulation.Structure result) ?
+                        new InterimConstantValue(result, reference.SourceLine, reference.SourceColumn) : op);
                 }
             }
         }

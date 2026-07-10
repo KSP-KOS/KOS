@@ -15,12 +15,9 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             for (int i = 0; i < code.Count; i++)
             {
                 IRInstruction instruction = code[i];
-                foreach (IRInstruction inst in instruction.DepthFirst())
+                foreach (IOperandInstructionBase operandInstruction in instruction.DepthFirst())
                 {
-                    if (inst is IOperandInstructionBase operandInstruction)
-                    {
-                        operandInstruction.MutateEachOperand(AttemptReplacement);
-                    }
+                    operandInstruction.MutateEachOperand(AttemptReplacement);
                 }
             }
         }

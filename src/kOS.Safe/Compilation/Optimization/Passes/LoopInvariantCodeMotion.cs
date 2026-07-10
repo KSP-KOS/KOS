@@ -75,7 +75,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     if (instruction is IRBranch ||
                         instruction is IRNoStackInstruction)
                         continue;
-                    foreach (IRInstruction inst in instruction.DepthFirst())
+                    foreach (IRInstruction inst in instruction.DepthFirstInstructions())
                     {
                         if (inst is IActionInstruction action &&
                             !action.IsInert)

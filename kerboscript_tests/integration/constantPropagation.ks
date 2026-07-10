@@ -62,3 +62,6 @@ until b = 1 {
 }
 
 print(b).   // 1
+
+print(choose 1 if _false else 2).   // 2
+print(choose 1 if d = 5 else 2).    // 1

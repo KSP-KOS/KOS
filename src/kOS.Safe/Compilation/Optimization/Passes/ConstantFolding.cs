@@ -54,12 +54,9 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         }
                     }
                 }
-                foreach (IRInstruction inst in instruction.DepthFirst())
+                foreach (IOperandInstructionBase operandInstruction in instruction.DepthFirst())
                 {
-                    if (inst is IOperandInstructionBase operandInstruction)
-                    {
-                        operandInstruction.MutateEachOperand(AttemptReduction_Internal);
-                    }
+                    operandInstruction.MutateEachOperand(AttemptReduction_Internal);
                 }
             }
         }
