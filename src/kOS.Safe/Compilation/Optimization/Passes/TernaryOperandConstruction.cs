@@ -122,12 +122,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     if (firstSuccessor.Dominator == falseBlock || firstSuccessor.Dominator == null)
                         firstSuccessor.CodeComponent.Blocks.Remove(firstSuccessor);
 
-                    return new TernaryOperand()
-                    {
-                        Condition = condition,
-                        TrueValue = trueValue,
-                        FalseValue = falseValue
-                    };
+                    return new TernaryOperand(condition, trueValue, falseValue);
                 default:
                     throw new InvalidOperationException();
             }

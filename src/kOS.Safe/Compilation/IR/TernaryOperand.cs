@@ -46,6 +46,13 @@ namespace kOS.Safe.Compilation.IR
         }
         public int OperandCount => 3;
 
+        public TernaryOperand(IInterimOperand condition, IInterimOperand trueValue, IInterimOperand falseValue)
+        {
+            Condition = condition;
+            TrueValue = trueValue;
+            FalseValue = falseValue;
+        }
+
         private bool? EvaluateCondition()
         {
             if ((Condition?.IsInvariant ?? false) &&
@@ -66,30 +73,19 @@ namespace kOS.Safe.Compilation.IR
 
         public IEnumerable<Opcode> EmitOpcodes()
         {
-            bool? condition = EvaluateCondition();
-            if (condition == null)
-            {
-                foreach (Opcode op in Condition.EmitOpcodes())
-                    yield return op;
-
-                List<Opcode> opcodes = FalseValue.EmitOpcodes().ToList();
-                yield return new OpcodeBranchIfTrue() { Distance = opcodes.Count + 2 };
-                foreach (Opcode op in opcodes)
-                    yield return op;
-
-                opcodes = TrueValue.EmitOpcodes().ToList();
-                yield return new OpcodeBranchJump() { Distance = opcodes.Count + 1 };
-                foreach (Opcode op in opcodes)
-                    yield return op;
-                yield break;
-            }
-            IEnumerable<Opcode> result;
-            if (condition == true)
-                result = TrueValue.EmitOpcodes();
-            else
-                result = FalseValue.EmitOpcodes();
-            foreach (Opcode op in result)
+            foreach (Opcode op in Condition.EmitOpcodes())
                 yield return op;
+
+            List<Opcode> opcodes = FalseValue.EmitOpcodes().ToList();
+            yield return new OpcodeBranchIfTrue() { Distance = opcodes.Count + 2 };
+            foreach (Opcode op in opcodes)
+                yield return op;
+
+            opcodes = TrueValue.EmitOpcodes().ToList();
+            yield return new OpcodeBranchJump() { Distance = opcodes.Count + 1 };
+            foreach (Opcode op in opcodes)
+                yield return op;
+            yield break;
         }
 
         public bool Equals(IInterimOperand other)
@@ -124,26 +120,24 @@ namespace kOS.Safe.Compilation.IR
         }
 
         public IInterimOperand Clone(BasicBlock block, bool maintainSSAReferences = false)
-            => new TernaryOperand()
-            {
-                Condition = Condition.Clone(block, maintainSSAReferences),
-                TrueValue = TrueValue.Clone(block, maintainSSAReferences),
-                FalseValue = FalseValue.Clone(block, maintainSSAReferences)
-            };
+            => new TernaryOperand(
+                Condition?.Clone(block, maintainSSAReferences),
+                TrueValue?.Clone(block, maintainSSAReferences),
+                FalseValue?.Clone(block, maintainSSAReferences));
 
         public InterimConstantValue Evaluate()
         {
             bool condition = EvaluateCondition() ?? throw new InvalidOperationException();
             if (condition)
             {
-                if (!(TrueValue.IsInvariant &&
+                if (!((TrueValue?.IsInvariant ?? false) &&
                     TrueValue is IEvaluatableToConstant trueValue))
                     throw new InvalidOperationException();
                 return trueValue.Evaluate();
             }
             else
             {
-                if (!(FalseValue.IsInvariant &&
+                if (!((FalseValue?.IsInvariant ?? false) &&
                     FalseValue is IEvaluatableToConstant falseValue))
                     throw new InvalidOperationException();
                 return falseValue.Evaluate();
