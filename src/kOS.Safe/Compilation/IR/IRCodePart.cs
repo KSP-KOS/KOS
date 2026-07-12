@@ -61,6 +61,8 @@ namespace kOS.Safe.Compilation.IR
         IRCodePart ICodeComponent.CodePart => this;
         public BasicBlock RootBlock { get; set; }
 
+        BasicBlock ICodeComponent.TerminalBlock { get; set; }
+
         /// <summary>
         /// Gets the reachable variables for a given call site.
         /// </summary>
@@ -273,6 +275,7 @@ namespace kOS.Safe.Compilation.IR
             public IRScope ClosureScope { get; }
 
             public BasicBlock RootBlock { get; set; }
+            BasicBlock ICodeComponent.TerminalBlock { get; set; }
             public IRCodePart CodePart { get; }
 
             /// <summary>
@@ -283,14 +286,14 @@ namespace kOS.Safe.Compilation.IR
             public IRTrigger(IRBuilder builder, Trigger trigger, IRCodePart codePart)
             {
                 this.trigger = trigger;
+                CodePart = codePart;
                 Identifier = trigger.Code.FirstOrDefault()?.Label ?? "";
                 ClosureScope = codePart.closureScopes[Identifier].Scope;
-                Blocks = builder.Lower(trigger.Code, codePart, ClosureScope);
+                Blocks = builder.Lower(trigger.Code, this, ClosureScope);
                 if (Blocks.Count > 0)
                 {
                     RootBlock = Blocks[0];
                 }
-                CodePart = codePart;
             }
             /// <summary>
             /// Emits the code into Opcode representation back into the
@@ -483,6 +486,7 @@ namespace kOS.Safe.Compilation.IR
                 /// </summary>
                 public List<BasicBlock> Blocks { get; set; }
                 public BasicBlock RootBlock { get; set; }
+                BasicBlock ICodeComponent.TerminalBlock { get; set; }
                 public IRCodePart CodePart { get; }
                 /// <summary>
                 /// Initializes a new instance of the <see cref="IRFunctionFragment"/> class.
@@ -491,10 +495,10 @@ namespace kOS.Safe.Compilation.IR
                 /// <param name="codeFragment">The function code fragment to convert.</param>
                 public IRFunctionFragment(IRBuilder builder, UserFunctionCodeFragment codeFragment, IRCodePart codePart, IRScope ClosureScope)
                 {
-                    fragment = codeFragment;
-                    Blocks = builder.Lower(codeFragment.Code, codePart, ClosureScope);
-                    RootBlock = Blocks.FirstOrDefault();
                     CodePart = codePart;
+                    fragment = codeFragment;
+                    Blocks = builder.Lower(codeFragment.Code, this, ClosureScope);
+                    RootBlock = Blocks.FirstOrDefault();
                 }
                 /// <summary>
                 /// Emits the code into Opcode representation back into the

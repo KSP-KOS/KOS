@@ -96,7 +96,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             {
                 BasicBlock block = results[i];
                 if (block.Instructions.Count > 0 &&
-                    block.Instructions[block.Instructions.Count - 1] is IRBranch branch &&
+                    block.Continuation is BranchContinuation branch &&
                     branch.True == results[i + 1])
                     branch.PreferFalse = true;
             }
@@ -110,14 +110,12 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             {
                 foreach (BasicBlock b in results)
                 {
-                    List<IRInstruction> instructions = b.Instructions;
-                    int branchIdx = instructions.Count - 1;
-                    if (branchIdx >= 0 && instructions[branchIdx] is IRBranch branch)
+                    if (b.Continuation is BranchContinuation branch)
                     {
                         if (!inclusionPredicate(branch.True))
-                            instructions[branchIdx] = new IRJump(branch.Block, branch.False, branch.SourceLine, branch.SourceColumn);
+                            b.Continuation = new JumpContinuation(branch.False, branch.SourceLine, branch.SourceColumn);
                         else if (!inclusionPredicate(branch.False))
-                            instructions[branchIdx] = new IRJump(branch.Block, branch.True, branch.SourceLine, branch.SourceColumn);
+                            b.Continuation = new JumpContinuation(branch.True, branch.SourceLine, branch.SourceColumn);
                     }
                 }
             }
@@ -344,17 +342,14 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         }
 
         private static bool HasBranchInstruction(BasicBlock block)
-            => block.Instructions.Count > 0 &&
-            block.Instructions[block.Instructions.Count - 1] is IRBranch;
+            => block.Continuation is BranchContinuation;
 
         public static bool IdentifyBranch(BasicBlock branchingBlock, BasicBlock regionExit, out BranchData branchData)
         {
             branchData = new BranchData();
 
             // Get the branch instruction (or return false).
-            if (branchingBlock.Instructions.Count == 0)
-                return false;
-            if (!(branchingBlock.Instructions[branchingBlock.Instructions.Count - 1] is IRBranch branch))
+            if (!(branchingBlock.Continuation is BranchContinuation branch))
                 return false;
 
             // Use the context cues for which branch is which.

@@ -80,13 +80,39 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             Dictionary<SSADefinition, (Type, bool)> typeAndInvarianceCache = new Dictionary<SSADefinition, (Type, bool)>(SSADefinition.ReferenceEqualityComparer);
             Dictionary<IStackTransferObject, Type> paramTypeCache = new Dictionary<IStackTransferObject, Type>();
 
-                // The queue of blocks that are executable
-                Queue<BasicBlock> blockQueue = new Queue<BasicBlock>();
-                // Queues the entry block
-                blockQueue.Enqueue(root);
+            void OperandMapping(IInterimOperand op, IOperandInstructionBase baseInstruction, IOperandInstructionBase nestedInstruction)
+            {
+                if (op is IInterimVariableReference reference &&
+                    !(op is InterimVariableReference))
+                {
+                    foreach (SSADefinition variable in GetSSADefinitionsFromReferences(reference))
+                    {
+                        // Add this instruction to the list of uses for each operand.
+                        GetOrCreate(variableUses, variable).Add(nestedInstruction);
 
-                // The queue of instructions that need updating
-                Queue<IOperandInstructionBase> instructionQueue = new Queue<IOperandInstructionBase>();
+                        // Also add the base instruction,
+                        // which is the more important reference
+                        // since anything else is a temp result.
+                        if (baseInstruction != null)
+                            GetOrCreate(variableUses, variable).Add(baseInstruction);
+                    }
+                }
+                else if (op is IRParameter parameter &&
+                    parameter.StackTransferObject != null)
+                {
+                    GetOrCreate(parameterUses, parameter.StackTransferObject).Add(nestedInstruction);
+                    if (baseInstruction != null)
+                        GetOrCreate(parameterUses, parameter.StackTransferObject).Add(baseInstruction);
+                }
+            }
+
+            // The queue of blocks that are executable
+            Queue<BasicBlock> blockQueue = new Queue<BasicBlock>();
+            // Queues the entry block
+            blockQueue.Enqueue(root);
+
+            // The queue of instructions that need updating
+            Queue<IOperandInstructionBase> instructionQueue = new Queue<IOperandInstructionBase>();
 
             while (blockQueue.Count > 0 || instructionQueue.Count > 0)
             {
@@ -121,31 +147,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     {
                         foreach (IOperandInstructionBase inst in instruction.DepthFirst())
                         {
-                            inst.ForEachOperand(op =>
-                            {
-                                if (op is IInterimVariableReference reference &&
-                                    !(op is InterimVariableReference))
-                                {
-                                    foreach (SSADefinition variable in GetSSADefinitionsFromReferences(reference))
-                                    {
-                                        // Add this instruction to the list of uses for each operand.
-                                        GetOrCreate(variableUses, variable).Add(inst);
-
-                                        // Also add the base instruction,
-                                        // which is the more important reference
-                                        // since anything else is a temp result.
-                                        if (instruction is IOperandInstructionBase opInst)
-                                            GetOrCreate(variableUses, variable).Add(opInst);
-                                    }
-                                }
-                                else if (op is IRParameter parameter &&
-                                    parameter.StackTransferObject != null)
-                                {
-                                    GetOrCreate(parameterUses, parameter.StackTransferObject).Add(inst);
-                                    if (instruction is IOperandInstructionBase opInst)
-                                        GetOrCreate(parameterUses, parameter.StackTransferObject).Add(opInst);
-                                }
-                            });
+                            inst.ForEachOperand(op => OperandMapping(op, instruction as IOperandInstructionBase, inst));
                             // Calls get to be special to address their external read needs.
                             if (inst is IRCall call)
                             {
@@ -180,6 +182,14 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                                         instructionQueue.Enqueue(use);
                             }
                         }
+                    }
+
+                    if (block.Continuation is IOperandInstructionBase operandContinuation)
+                    {
+                        // Abbreviated version of the above.
+                        foreach (IOperandInstructionBase inst in operandContinuation.DepthFirst())
+                            inst.ForEachOperand(op => OperandMapping(op, operandContinuation, inst));
+                        VisitInstruction(operandContinuation, blockQueue, typeAndInvarianceCache, paramTypeCache);
                     }
 
                     // Multiple successors are covered in VisitInstruction()
@@ -268,7 +278,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     return true;
                 }
             }
-            else if (instruction is IRBranch branch)
+            else if (instruction is BranchContinuation branch)
             {
                 if (branch.IsInvariant)
                 {

@@ -4,36 +4,42 @@ using kOS.Safe.Compilation.IR;
 
 namespace kOS.Safe.Compilation.Optimization.Passes
 {
-    public class PeepholeOptimizations : IOptimizationPass<IRInstruction>, ILinkedOptimizationPass
+    public class PeepholeOptimizations : IOptimizationPass<BasicBlock>, ILinkedOptimizationPass
     {
         public Optimizer Optimizer { get; set; }
         public OptimizationLevel OptimizationLevel => OptimizationLevel.Minimal;
 
         public short SortIndex => 1050;
 
-        public void ApplyPass(IEnumerable<IRInstruction> codeList)
+        public void ApplyPass(IEnumerable<BasicBlock> blocks)
         {
-            List<IRInstruction> code = (List<IRInstruction>)codeList;
-            IInterimOperand OperandPeepholeFilter_Internal(IInterimOperand operand)
-                => OperandPeepholeFilter(operand, Optimizer.AllowClobberBuiltins);
-
-            for (int i = 0; i < code.Count; i++)
+            foreach (BasicBlock block in blocks)
             {
-                IRInstruction instruction = code[i];
-                foreach (IOperandInstructionBase operandInstruction in instruction.DepthFirst())
-                {
-                    operandInstruction.MutateEachOperand(OperandPeepholeFilter_Internal);
+                List<IRInstruction> code = block.Instructions;
+                IInterimOperand OperandPeepholeFilter_Internal(IInterimOperand operand)
+                    => OperandPeepholeFilter(operand, Optimizer.AllowClobberBuiltins);
 
-                    InstructionPeepholeFilter(operandInstruction);
+                for (int i = 0; i < code.Count; i++)
+                {
+                    IRInstruction instruction = code[i];
+                    foreach (IOperandInstructionBase operandInstruction in instruction.DepthFirst())
+                    {
+                        operandInstruction.MutateEachOperand(OperandPeepholeFilter_Internal);
+
+                        InstructionPeepholeFilter(operandInstruction);
+                    }
+
+                    //  Replace lex indexing with string constant with suffixing where possible.
+                    if (instruction is IRIndexSet indexSet)
+                    {
+                        IRInstruction potentialResult = AttemptReplaceIndexSetWithSuffixSet(indexSet);
+                        if (potentialResult != null)
+                            code[i] = potentialResult;
+                    }
                 }
 
-                //  Replace lex indexing with string constant with suffixing where possible.
-                if (instruction is IRIndexSet indexSet)
-                {
-                    IRInstruction potentialResult = AttemptReplaceIndexSetWithSuffixSet(indexSet);
-                    if (potentialResult != null)
-                        code[i] = potentialResult;
-                }
+                if (block.Continuation is IOperandInstructionBase operandContinuation)
+                    InstructionPeepholeFilter(operandContinuation);
             }
         }
 
@@ -77,7 +83,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         private static void InstructionPeepholeFilter(IOperandInstructionBase instruction)
         {
             // Branch logical simplification (e.g. !X branch = X branch!)
-            if (instruction is IRBranch branch &&
+            if (instruction is BranchContinuation branch &&
                 branch.Condition is IRUnaryOp negateBranch &&
                 negateBranch.Operation is OpcodeLogicNot)
             {
@@ -149,7 +155,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             return null;
         }
 
-        private static void ReplaceRedundantNotBranch(IRBranch branch)
+        private static void ReplaceRedundantNotBranch(BranchContinuation branch)
         {
             branch.Condition = AlgebraicSimplifications.GetDoubleNestedValue(branch);
             branch.PreferFalse = !branch.PreferFalse;

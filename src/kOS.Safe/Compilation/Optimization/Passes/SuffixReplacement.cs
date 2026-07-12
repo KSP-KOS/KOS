@@ -4,21 +4,17 @@ using kOS.Safe.Compilation.IR;
 
 namespace kOS.Safe.Compilation.Optimization.Passes
 {
-    public class SuffixReplacement : IOptimizationPass<IRInstruction>
+    public class SuffixReplacement : IOptimizationPass<BasicBlock>
     {
         public OptimizationLevel OptimizationLevel => OptimizationLevel.Minimal;
         public short SortIndex => 10;
 
-        public void ApplyPass(IEnumerable<IRInstruction> codeList)
+        public void ApplyPass(IEnumerable<BasicBlock> blocks)
         {
-            List<IRInstruction> code = (List<IRInstruction>)codeList;
-            for (int i = 0; i < code.Count; i++)
+            foreach (BasicBlock block in blocks)
             {
-                IRInstruction instruction = code[i];
-                foreach (IOperandInstructionBase operandInstruction in instruction.DepthFirst())
-                {
+                foreach (IOperandInstructionBase operandInstruction in block.DepthFirstOperandInstructions())
                     operandInstruction.MutateEachOperand(AttemptReplacement);
-                }
             }
         }
 

@@ -67,6 +67,7 @@ namespace kOS.Safe.Compilation.IR
                 }
             }
             leaders.Add(code.Count);
+
             foreach (int startIndex in leaders.Take(leaders.Count - 1))
             {
                 int endIndex = leaders.First(i => i > startIndex) - 1;
@@ -77,34 +78,33 @@ namespace kOS.Safe.Compilation.IR
 
                 blocks.Add(block);
             }
+
+            BasicBlock rootBlock = GetBlockFromStartIndex(blocks, 0);
+            BasicBlock unifiedReturn = new SyntheticReturnBlock(codeComponent.CodePart) { Scope = globalScope };
+            codeComponent.RootBlock = rootBlock;
+            if (codeComponent.TerminalBlock == null)
+                codeComponent.TerminalBlock = unifiedReturn;
+            else
+                unifiedReturn = codeComponent.TerminalBlock;
+
             foreach (BasicBlock block in blocks)
             {
                 Opcode lastOpcode = code[block.EndIndex];
-                if (lastOpcode is BranchOpcode branch)
-                {
-                    int destinationIndex = branch.DestinationLabel != string.Empty ? labels[branch.DestinationLabel] : block.EndIndex + branch.Distance;
-                    block.AddSuccessor(GetBlockFromStartIndex(blocks, destinationIndex));
-                    if (!(branch is OpcodeBranchJump))
-                        block.AddSuccessor(GetBlockFromStartIndex(blocks, block.EndIndex + 1));
-                }
-                else if (blocks.Any(b => b.StartIndex == block.EndIndex + 1))
+                if (blocks.Any(b => b.StartIndex == block.EndIndex + 1))
                 {
                     BasicBlock successor = GetBlockFromStartIndex(blocks, block.EndIndex + 1);
-                    block.FallthroughJump = new IRJump(block, successor, lastOpcode.SourceLine, lastOpcode.SourceColumn);
-                    block.AddSuccessor(successor);
+                    block.Continuation = new JumpContinuation(successor, lastOpcode.SourceLine, lastOpcode.SourceColumn);
                 }
 #if DEBUG
                 block.OriginalOpcodes = code.ToArray();
 #endif
             }
 
-            BasicBlock rootBlock = GetBlockFromStartIndex(blocks, 0);
-            rootBlock.EstablishDominance();
-
             List<BasicBlock> exitBlocks = blocks.Where(b => !b.Successors.Any()).ToList();
-            BasicBlock unifiedReturn = new SyntheticReturnBlock(codeComponent.CodePart) { Scope = globalScope };
             foreach (BasicBlock exitBlock in exitBlocks)
-                exitBlock.AddSuccessor(unifiedReturn);
+                exitBlock.Continuation = new JumpContinuation(unifiedReturn, code[exitBlock.EndIndex].SourceLine, code[exitBlock.EndIndex].SourceColumn);
+            
+            rootBlock.EstablishDominance();
             unifiedReturn.EstablishPostDominance();
 
             AssignScopes(rootBlock, globalScope, scopePushes, scopePops);
@@ -154,12 +154,6 @@ namespace kOS.Safe.Compilation.IR
         private static void SetStackState(Stack<IInterimOperand> stack, BasicBlock block)
         {
             List<IRInstruction> instructions = block.Instructions;
-            int insertIndex = instructions.Count > 0 ? instructions.Count - 1 : 0;
-            while (insertIndex > 0 &&
-                (instructions[insertIndex - 1] is IRBranch ||
-                instructions[insertIndex - 1] is IRJump ||
-                instructions[insertIndex - 1] is IRJumpStack))
-                insertIndex--;
 
             while (stack.Count > 0)
             {
@@ -170,7 +164,7 @@ namespace kOS.Safe.Compilation.IR
                     push = new IRPushStackArgMarker(block, stackValue);
                 else
                     push = new IRPushStack(block, stackValue);
-                instructions.Insert(insertIndex, push);
+                instructions.Add(push);
             }
         }
 
@@ -254,24 +248,24 @@ namespace kOS.Safe.Compilation.IR
                         target = index + branchIfTrue.Distance;
                     else
                         target = labels[branchIfTrue.DestinationLabel];
-                    currentBlock.Add(new IRBranch(currentBlock, PopStack(),
+                    currentBlock.Continuation = new BranchContinuation(PopStack(),
                         GetBlockFromStartIndex(blocks, target),
                         GetBlockFromStartIndex(blocks, currentBlock.EndIndex + 1),
-                        branchIfTrue));
+                        branchIfTrue);
                     break;
                 case OpcodeBranchIfFalse branchIfFalse:
                     if (string.IsNullOrEmpty(branchIfFalse.DestinationLabel))
                         target = index + branchIfFalse.Distance;
                     else
                         target = labels[branchIfFalse.DestinationLabel];
-                    currentBlock.Add(new IRBranch(currentBlock, PopStack(),
+                    currentBlock.Continuation = new BranchContinuation(PopStack(),
                         GetBlockFromStartIndex(blocks, currentBlock.EndIndex + 1),
                         GetBlockFromStartIndex(blocks, target),
-                        branchIfFalse));
+                        branchIfFalse);
                     break;
                 case OpcodeBranchJump branchJump:
                     int destinationIndex = branchJump.DestinationLabel != string.Empty ? labels[branchJump.DestinationLabel] : index + branchJump.Distance;
-                    currentBlock.Add(new IRJump(currentBlock, GetBlockFromStartIndex(blocks, destinationIndex), branchJump));
+                    currentBlock.Continuation = new JumpContinuation(GetBlockFromStartIndex(blocks, destinationIndex), branchJump.SourceLine, branchJump.SourceColumn);
                     break;
                 case OpcodeJumpStack _:
                     throw new NotImplementedException("OpcodeJumpStack is not implemented for optimization because it is non-deterministic. Use OptimizationLevel.None.");

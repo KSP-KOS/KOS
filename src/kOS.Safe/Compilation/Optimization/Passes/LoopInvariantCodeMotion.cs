@@ -60,7 +60,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             List<IRInstruction> relocatedInstructions =
                 loop.body.Dominator?.PostDominator == loop.body ? loop.body.Dominator.Instructions :
                 new List<IRInstruction>();
-            int insertionIndex = GetInsertionIndex(relocatedInstructions);
+            int insertionIndex = relocatedInstructions.Count;
             int originalCount = relocatedInstructions.Count;
 
             BasicBlock block = loop.body;
@@ -72,8 +72,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     IRInstruction instruction = block.Instructions[i];
                     // Check that nothing invalidating occurs:
                     bool invalid = false;
-                    if (instruction is IRBranch ||
-                        instruction is IRNoStackInstruction)
+                    if (instruction is IRNoStackInstruction)
                         continue;
                     foreach (IRInstruction inst in instruction.DepthFirstInstructions())
                     {
@@ -134,17 +133,6 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 default:
                     return false;
             }
-        }
-
-        private static int GetInsertionIndex(List<IRInstruction> instructionList)
-        {
-            int insertionIndex = instructionList.Count;
-            while (insertionIndex > 0 &&
-                (instructionList[insertionIndex - 1] is IRBranch ||
-                instructionList[insertionIndex - 1] is IRJump ||
-                instructionList[insertionIndex - 1] is IRJumpStack))
-                insertionIndex--;
-            return insertionIndex;
         }
     }
 }

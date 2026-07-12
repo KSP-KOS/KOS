@@ -55,7 +55,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 
         private static bool IsLoopConstantLength(BlockOrdering.LoopData data, out Dictionary<string, List<Encapsulation.Structure>> indices)
         {
-            IInterimOperand condition = (data.branchBlock.Instructions.Last() as IRBranch).Condition;
+            IInterimOperand condition = (data.branchBlock.Continuation as BranchContinuation).Condition;
             indices = null;
             int maxUnrollIterations = maxUnrolledSize / BasicBlock.GetOpcodeCount(data.GetBody());
             if (maxUnrollIterations < 1)
@@ -63,7 +63,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 
             if (condition is IRSuffixGet getNext &&
                 getNext.Suffix.Equals("next", StringComparison.OrdinalIgnoreCase) &&
-                getNext.Object.Type == typeof(Encapsulation.Enumerator) &&
+                typeof(Encapsulation.Enumerator).IsAssignableFrom(getNext.Object.Type) &&
                 getNext.Object is InterimResolvedReference resolvedReference &&
                 resolvedReference.Reference is SSASetDefinition setDefinition &&
                 setDefinition.DefinedAt.Value is IRSuffixGet getIterator &&
@@ -242,16 +242,16 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             // from one of two branches inside the loop.
                             else if (numPossibleInternalValues == 2)
                             {
-                                TernaryOperand ternaryOperand = new TernaryOperand();
+                                TernaryOperand ternaryOperand = new TernaryOperand(null, null, null);
                                 variableReplacements.Add(phi, ternaryOperand);
 
-                                IRBranch branch = TernaryOperandConstruction.GetBranch(possibleValues.Select(kvp => kvp.Key));
+                                BranchContinuation branch = TernaryOperandConstruction.GetBranch(possibleValues.Select(kvp => kvp.Key));
                                 IInterimOperand condition = branch.Condition.Clone(null, true);
                                 condition = BuildIterators(condition, iterators, incrementFuncs, variableReplacements, data);
                                 if (condition == null)
                                     return null;
 
-                                BasicBlock trueBlock = phi.Node.PossibleValues.Keys.FirstOrDefault(b => b.IsDominatedBy(branch.True, branch.Block));
+                                BasicBlock trueBlock = phi.Node.PossibleValues.Keys.FirstOrDefault(b => b.IsDominatedBy(branch.True, branch.AssignedTo));
                                 if (trueBlock == null)
                                     return null;
                                 IInterimOperand trueValue = new InterimResolvedReference(phi.Node.PossibleValues[trueBlock], line, column);
@@ -259,7 +259,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                                 if (trueValue == null)
                                     return null;
 
-                                BasicBlock falseBlock = phi.Node.PossibleValues.Keys.FirstOrDefault(b => b.IsDominatedBy(branch.False, branch.Block));
+                                BasicBlock falseBlock = phi.Node.PossibleValues.Keys.FirstOrDefault(b => b.IsDominatedBy(branch.False, branch.AssignedTo));
                                 if (falseBlock == null)
                                     return null;
                                 IInterimOperand falseValue = new InterimResolvedReference(phi.Node.PossibleValues[falseBlock], line, column);
@@ -359,20 +359,12 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             BasicBlock incoming = loopData.body.Dominator;
             int numUnrolls = indices.First().Value.Count;
             List<BasicBlock> originalBody = loopData.GetBody().ToList();
-            if (incoming.FallthroughJump != null)
-                incoming.FallthroughJump.Target = loopData.exit;
-            else
-                incoming.FallthroughJump = new IRJump(incoming, loopData.exit, -1, -1);
-            if (incoming.Instructions.LastOrDefault() is IRBranch)
-                incoming.Instructions.RemoveAt(incoming.Instructions.Count - 1);
-            incoming.AddSuccessor(loopData.exit);
-            loopData.body.Dominator.RemoveSuccessor(loopData.body);
-            loopData.branchBlock.RemoveSuccessor(loopData.exit);
-            loopData.branchBlock.RemoveSuccessor(loopData.body);
-            IRBranch branch = loopData.branchBlock.Instructions[loopData.branchBlock.Instructions.Count - 1] as IRBranch;
-            loopData.branchBlock.FallthroughJump = new IRJump(loopData.branchBlock, loopData.exit, branch.SourceLine, branch.SourceColumn);
-            loopData.branchBlock.Instructions.RemoveAt(loopData.branchBlock.Instructions.Count - 1);
-            
+
+            incoming.Continuation = new JumpContinuation(loopData.exit, incoming.Continuation?.SourceLine ?? -1, incoming.Continuation?.SourceColumn ?? -1);
+
+            BranchContinuation branch = loopData.branchBlock.Continuation as BranchContinuation;
+            loopData.branchBlock.Continuation = new JumpContinuation(loopData.exit, branch?.SourceLine ?? -1, branch?.SourceColumn ?? -1);
+
             foreach (BasicBlock block in originalBody)
             {
                 block.IsExecutable = false;
@@ -383,13 +375,12 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             for (int i = 0; i < numUnrolls; i++)
             {
                 List<BasicBlock> loopBody = BasicBlock.ClonePattern(originalBody, incomingVariables: loopData.body.IncomingVariableDefinitions).ToList();
-                
-                nextIncoming = loopBody[loopBody.Count - 1];
-                while (nextIncoming.PostDominator != null)
-                    nextIncoming = nextIncoming.PostDominator;
+
+                nextIncoming = loopBody.First(b => b.PostDominator == loopData.exit);
                 BasicBlock first = loopBody[0];
                 while (first.Dominator != null)
                     first = first.Dominator;
+
                 ReplaceIncomingVariables(loopBody, loopData.body, indices, i);
                 if (!Optimizer.PassesToSkip.Contains(typeof(ConstantFolding)))
                 {
@@ -430,7 +421,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             }
             foreach (BasicBlock block in body)
             {
-                foreach (IOperandInstructionBase operandInstruction in block.Instructions.DepthFirst())
+                foreach (IOperandInstructionBase operandInstruction in block.DepthFirstOperandInstructions())
                 {
                     operandInstruction.MutateEachOperand(op =>
                         op is InterimResolvedReference reference &&

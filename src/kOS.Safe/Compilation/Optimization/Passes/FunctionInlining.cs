@@ -134,14 +134,10 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     successor.IncomingStackState.Insert(0, stackTransferPhi);
                 }
 
-                if (successor.Instructions[0].IsInvariant)
-                    successor.Instructions.RemoveAt(0);
-
                 BasicBlock functionRoot = inlinedFunction.First();
                 while (functionRoot.Dominator != null)
                     functionRoot = functionRoot.Dominator;
 
-                int instructionCount = callingBlock.Instructions.Count;
                 for (int i = call.Arguments.Count - 1; i >= 0; i--)
                 {
                     IRPushStack paramPush = (IRPushStack)functionRoot.IncomingStackState[i];
@@ -198,7 +194,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     }
                 }
 
-                if (rootBlock.Instructions.Last() is IRBranch branch &&
+                if (rootBlock.Continuation is BranchContinuation branch &&
                     branch.Condition is IRNonVarPush testArgBottom &&
                     testArgBottom.Operation is OpcodeTestArgBottom)
                 {
@@ -207,18 +203,13 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         branch.Condition = new InterimConstantValue(Encapsulation.BooleanValue.False, testArgBottom);
                         branch.True.IsExecutable = false;
                         argsRemaining--;
-                        rootBlock.Instructions[rootBlock.Instructions.Count - 1] =
-                            new IRJump(rootBlock, branch.False, branch.SourceLine, branch.SourceColumn);
-                        rootBlock.RemoveSuccessor(branch.True);
+                        rootBlock.Continuation = new JumpContinuation(branch.False, branch.SourceLine, branch.SourceColumn);
                     }
                     else
                     {
                         branch.Condition = new InterimConstantValue(Encapsulation.BooleanValue.True, testArgBottom);
                         branch.True.IncomingStackState.RemoveAt(0);
-                        rootBlock.Instructions[rootBlock.Instructions.Count - 1] =
-                            new IRJump(rootBlock, branch.True, branch.SourceLine, branch.SourceColumn);
-
-                        rootBlock.RemoveSuccessor(branch.False);
+                        rootBlock.Continuation = new JumpContinuation(branch.True, branch.SourceLine, branch.SourceColumn);
 
                         foreach (StackTransferPhi stackPhi in branch.False.IncomingStackState.Where(s => s is StackTransferPhi).Cast<StackTransferPhi>())
                         {

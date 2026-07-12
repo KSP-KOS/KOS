@@ -38,7 +38,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 // Replace the original branch with a jump to the rejoining block
                 // Replace the IRParameter with a TernaryOperand (including nesting).
 
-                foreach (IOperandInstructionBase operandInstruction in block.Instructions.DepthFirst())
+                foreach (IOperandInstructionBase operandInstruction in block.DepthFirstOperandInstructions())
                 {
                     operandInstruction.MutateEachOperand(op =>
                     {
@@ -78,7 +78,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     if (phi.PossibleValues.Count != 2)
                         return false;
                     if (phi.PossibleValues.Keys.Any(b =>
-                        b.Instructions.Any(i => !(i is IRPushStack || i is IRJump)) ||
+                        b.Instructions.Any(i => !(i is IRPushStack)) ||
                         b.Successors.Count > 1))
                         return false;
                     return phi.PossibleValues.Values.All(ParameterCanBeReplaced);
@@ -101,32 +101,26 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         throw new InvalidOperationException();
                     return pushStack.Value.Clone(block, true);
                 case StackTransferPhi phi:
-                    IRBranch branch = GetBranch(phi.PossibleValues.Select(kvp => kvp.Key));
+                    BranchContinuation branch = GetBranch(phi.PossibleValues.Select(kvp => kvp.Key));
                     IInterimOperand condition = branch.Condition;
 
-                    BasicBlock trueBlock = phi.PossibleValues.Keys.FirstOrDefault(b => b.IsDominatedBy(branch.True, branch.Block));
+                    BasicBlock trueBlock = phi.PossibleValues.Keys.FirstOrDefault(b => b.IsDominatedBy(branch.True, branch.AssignedTo));
                     IInterimOperand trueValue = CreateOperand(phi.PossibleValues[trueBlock], block, eliminatedObjects);
 
-                    BasicBlock falseBlock = phi.PossibleValues.Keys.FirstOrDefault(b => b.IsDominatedBy(branch.False, branch.Block));
+                    BasicBlock falseBlock = phi.PossibleValues.Keys.FirstOrDefault(b => b.IsDominatedBy(branch.False, branch.AssignedTo));
                     IInterimOperand falseValue = CreateOperand(phi.PossibleValues[falseBlock], block, eliminatedObjects);
 
-                    branch.Block.FallthroughJump = new IRJump(branch.Block, block, branch.SourceLine, branch.SourceColumn);
-                    branch.Block.Instructions.RemoveAt(branch.Block.Instructions.Count - 1);
-                    branch.Block.AddSuccessor(block);
-                    branch.Block.RemoveSuccessor(branch.True);
-                    branch.Block.RemoveSuccessor(branch.False);
+                    branch.AssignedTo.Continuation = new JumpContinuation(block, branch.SourceLine, branch.SourceColumn);
 
-                    branch.Block.CodeComponent.Blocks.Remove(branch.True);
-                    branch.Block.CodeComponent.Blocks.Remove(branch.False);
+                    branch.True.CodeComponent.Blocks.Remove(branch.True);
+                    branch.False.CodeComponent.Blocks.Remove(branch.False);
 
                     BasicBlock firstSuccessor = trueBlock.Successors.First();
-                    trueBlock.RemoveSuccessor(firstSuccessor);
                     if (firstSuccessor.Dominator == trueBlock || firstSuccessor.Dominator == null)
-                        branch.Block.CodeComponent.Blocks.Remove(firstSuccessor);
+                        firstSuccessor.CodeComponent.Blocks.Remove(firstSuccessor);
                     firstSuccessor = falseBlock.Successors.First();
-                    falseBlock.RemoveSuccessor(firstSuccessor);
                     if (firstSuccessor.Dominator == falseBlock || firstSuccessor.Dominator == null)
-                        branch.Block.CodeComponent.Blocks.Remove(firstSuccessor);
+                        firstSuccessor.CodeComponent.Blocks.Remove(firstSuccessor);
 
                     return new TernaryOperand()
                     {
@@ -138,7 +132,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     throw new InvalidOperationException();
             }
         }
-        public static IRBranch GetBranch(IEnumerable<BasicBlock> blocks)
+        public static BranchContinuation GetBranch(IEnumerable<BasicBlock> blocks)
         {
             List<BasicBlock> blockList = blocks.ToList();
             int maxIndex = blockList.Count - 1;
@@ -148,7 +142,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 for (int i = maxIndex; i >= 0; i--)
                 {
                     if (blockList[i] != null && !visited.Add(blockList[i]))
-                        return blockList[i].Instructions.LastOrDefault() as IRBranch;
+                        return blockList[i].Continuation as BranchContinuation;
                     blockList[i] = blockList[i]?.Dominator;
                 }
             }
@@ -157,7 +151,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         private static void RemoveUnnecessaryStackItems(BasicBlock block, HashSet<IStackTransferObject> eliminatedStackItems)
         {
             block.IncomingStackState.RemoveAll(eliminatedStackItems.Contains);
-            foreach (IOperandInstructionBase operandInstruction in block.Instructions.DepthFirst())
+            foreach (IOperandInstructionBase operandInstruction in block.DepthFirstOperandInstructions())
                 operandInstruction.ForEachOperand(op =>
                 {
                     if (op is IRParameter parameter)

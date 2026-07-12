@@ -33,30 +33,29 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         continue;
                     }
                 }
-                else if (instruction is IRBranch branch)
-                {
-                    if (branch.True == branch.False)
-                    {
-                        block.Instructions[i] = new IRJump(block, branch.True, branch.SourceLine, branch.SourceColumn);
-                        continue;
-                    }
-                    if (branch.IsInvariant)
-                    {
-                        BasicBlock permanentBlock, deprecatedBlock;
-                        InterimConstantValue branchConstant = (branch.Condition as IEvaluatableToConstant).Evaluate();
-                        if (branchConstant != null)
-                        {
-                            (permanentBlock, deprecatedBlock) = Convert.ToBoolean(branchConstant.Value) ? (branch.True, branch.False) : (branch.False, branch.True);
-                            block.Instructions[i] = new IRJump(block, permanentBlock, new OpcodeBranchJump() { SourceLine = branch.SourceLine, SourceColumn = branch.SourceColumn });
-                            block.RemoveSuccessor(deprecatedBlock);
-                            if (deprecatedBlock.Predecessors.Count == 0)
-                                deprecatedBlock.IsExecutable = false;
-                        }
-                    }
-                }
                 foreach (IOperandInstructionBase operandInstruction in instruction.DepthFirst())
-                {
                     operandInstruction.MutateEachOperand(AttemptReduction_Internal);
+            }
+            if (block.Continuation is IOperandInstructionBase operandContinuation)
+                operandContinuation.MutateEachOperand(AttemptReduction_Internal);
+
+            if (block.Continuation is BranchContinuation branch)
+            {
+                if (branch.True == branch.False)
+                {
+                    block.Continuation = new JumpContinuation(branch.True, branch.SourceLine, branch.SourceColumn);
+                }
+                else if (branch.IsInvariant)
+                {
+                    BasicBlock permanentBlock, deprecatedBlock;
+                    InterimConstantValue branchConstant = (branch.Condition as IEvaluatableToConstant).Evaluate();
+                    if (branchConstant != null)
+                    {
+                        (permanentBlock, deprecatedBlock) = Convert.ToBoolean(branchConstant.Value) ? (branch.True, branch.False) : (branch.False, branch.True);
+                        block.Continuation = new JumpContinuation(permanentBlock, branch.SourceLine, branch.SourceColumn);
+                        if (deprecatedBlock.Predecessors.Count == 0)
+                            deprecatedBlock.IsExecutable = false;
+                    }
                 }
             }
         }

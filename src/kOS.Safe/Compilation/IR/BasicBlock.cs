@@ -22,12 +22,13 @@ namespace kOS.Safe.Compilation.IR
         private readonly List<IRParameter> parameters = new List<IRParameter>();
         private readonly string nonSequentialLabel = null;
         private IRScope scope;
+        private BlockContinuation continuation;
 
         public static void ResetNextID()
             => nextID = 0;
 
         public IRCodePart CodePart { get; }
-        public ICodeComponent CodeComponent { get; }
+        public ICodeComponent CodeComponent { get; private set; }
         /// <summary>
         /// Gets or sets a value indicating whether this block is executable (reachable).
         /// </summary>
@@ -186,7 +187,28 @@ namespace kOS.Safe.Compilation.IR
         /// Gets or sets the <see cref="IRJump"/> instruction that this
         /// block will terminate with if it does not branch to another.
         /// </summary>
-        public IRJump FallthroughJump { get; set; } = null;
+        public BlockContinuation Continuation
+        {
+            get => continuation;
+            set
+            {
+                if (continuation == value)
+                    return;
+                List<BasicBlock> removed = new List<BasicBlock>(continuation?.Destinations ?? Enumerable.Empty<BasicBlock>());
+                if (continuation != null)
+                {
+                    continuation.DestinationChanged -= OnDestinationChanged;
+                    continuation.AssignedTo = null;
+                }
+                continuation = value;
+                continuation.AssignedTo = this;
+                if (continuation != null)
+                    continuation.DestinationChanged += OnDestinationChanged;
+                List<BasicBlock> added = new List<BasicBlock>(continuation?.Destinations ?? Enumerable.Empty<BasicBlock>());
+
+                OnDestinationChanged(this, new BlockContinuation.TargetChangedEvent(added.Except(removed), removed.Except(added)));
+            }
+        }
 #if DEBUG
         internal Opcode[] OriginalOpcodes { get; set; }
         internal Opcode[] GeneratedOpcodes => EmitOpCodes().ToArray();
@@ -241,53 +263,36 @@ namespace kOS.Safe.Compilation.IR
                 if (instruction is IRPushStack)
                     length -= 1;
             }
-            if (FallthroughJump != null)
-                length += 1;
+            length += Continuation?.OpcodeCount() ?? 0;
             return length;
         }
         public static int GetOpcodeCount(IEnumerable<BasicBlock> blocks)
             => blocks.Sum(b => b.GetOpcodeCount());
 
-        /// <summary>
-        /// Adds a successor block.
-        /// </summary>
-        /// <param name="successor">The successor block to add.</param>
-        public void AddSuccessor(BasicBlock successor)
+        protected void OnDestinationChanged(object sender, BlockContinuation.TargetChangedEvent eventData)
         {
-            successors.Add(successor);
-            successor.AddPredecessor(this);
-        }
+            List<BasicBlock> removed = eventData.BlocksRemoved.ToList();
+            List<BasicBlock> added = eventData.BlocksAdded.ToList();
 
-        /// <summary>
-        /// Adds a predecessor block.
-        /// </summary>
-        /// <param name="predecessor">The predecessor block to add.</param>
-        protected void AddPredecessor(BasicBlock predecessor)
-        {
-            predecessors.Add(predecessor);
-        }
-
-        /// <summary>
-        /// Removes a successor block.
-        /// </summary>
-        /// <param name="successor">The successor block to remove.</param>
-        /// <exception cref="ArgumentException">Cannot remove <paramref name="successor"/> as it is not a successor.</exception>
-        public void RemoveSuccessor(BasicBlock successor)
-        {
-            // Break the appropriate links
-            if (!successors.Remove(successor))
-                throw new ArgumentException($"Cannot remove {successor} as it is not a successor.");
-            successor.predecessors.Remove(this);
-
-            // Recompute the Dominance tree(s)
-            EstablishDominance();
-
-            // Recompute the Post-Dominance tree(s)
-            successor.EstablishPostDominance();
+            foreach (BasicBlock successor in added.Except(removed))
+            {
+                successors.Add(successor);
+                successor.predecessors.Add(this);
+            }
+            foreach (BasicBlock oldSuccessor in removed.Except(added))
+            {
+                successors.Remove(oldSuccessor);
+                oldSuccessor.predecessors.Remove(this);
+            }
+            foreach (ICodeComponent component in new[] { this }.Concat(added.Concat(removed)).Select(b => b.CodeComponent).Distinct())
+            {
+                component.RootBlock.EstablishDominance();
+                component.RootBlock.EstablishPostDominance();
+            }
         }
 
         public static IEnumerable<BasicBlock> GetSuccessors(BasicBlock block)
-            => block.successors;
+            => block.Successors;
         private static BasicBlock GetDominator(BasicBlock block)
             => block.Dominator;
         private static void SetDominator(BasicBlock block, BasicBlock dominator)
@@ -297,10 +302,10 @@ namespace kOS.Safe.Compilation.IR
         /// Establishes the dominance tree.
         /// </summary>
         public void EstablishDominance()
-            => EstablishDominanceCore(this, GetPredecessors, GetSuccessors, GetDominator, SetDominator);
+            => EstablishDominanceCore(CodeComponent.RootBlock, GetPredecessors, GetSuccessors, GetDominator, SetDominator);
 
         public static IEnumerable<BasicBlock> GetPredecessors(BasicBlock block)
-            => block.predecessors;
+            => block.Predecessors;
         private static BasicBlock GetPostDominator(BasicBlock block)
             => block.PostDominator;
         private static void SetPostDominator(BasicBlock block, BasicBlock postDominator)
@@ -309,13 +314,10 @@ namespace kOS.Safe.Compilation.IR
         /// <summary>
         /// Establishes the post-dominance tree.
         public void EstablishPostDominance()
-            => EstablishDominanceCore(this, GetSuccessors, GetPredecessors, GetPostDominator, SetPostDominator);
+            => EstablishDominanceCore(CodeComponent.TerminalBlock, GetSuccessors, GetPredecessors, GetPostDominator, SetPostDominator);
 
         private static void EstablishDominanceCore(BasicBlock root, Func<BasicBlock, IEnumerable<BasicBlock>> getPrecedents, Func<BasicBlock, IEnumerable<BasicBlock>> getSubsequents, Func<BasicBlock, BasicBlock> getDominator, Action<BasicBlock, BasicBlock> setDominator)
         {
-            while (getDominator(root) != null)
-                root = getDominator(root);
-
             // Compute reverse postorder
             List<BasicBlock> reversePostOrder = GetReversePostOrder(root, getSubsequents);
 
@@ -438,26 +440,18 @@ namespace kOS.Safe.Compilation.IR
         /// Emits the the sequence of Opcodes for the instructions
         /// contained in this block.
         /// </summary>
-        public IEnumerable<Opcode> EmitOpCodes()
+        public virtual IEnumerable<Opcode> EmitOpCodes()
         {
-            bool addedFallthrough = FallthroughJump != null && Instructions.LastOrDefault() == FallthroughJump;
-            if (addedFallthrough)
-                Instructions.Add(FallthroughJump);
             bool first = true;
-            foreach (IRInstruction instruction in Instructions)
+            foreach (Opcode opcode in Instructions.SelectMany(i => i.EmitOpcodes()).Union(Continuation?.EmitOpcodes() ?? Enumerable.Empty<Opcode>()))
             {
-                foreach (Opcode opcode in instruction.EmitOpcodes())
+                if (first)
                 {
-                    if (first)
-                    {
-                        opcode.Label = Label;
-                        first = false;
-                    }
-                    yield return opcode;
+                    opcode.Label = Label;
+                    first = false;
                 }
+                yield return opcode;
             }
-            if (addedFallthrough)
-                Instructions.Remove(FallthroughJump);
         }
     }
 

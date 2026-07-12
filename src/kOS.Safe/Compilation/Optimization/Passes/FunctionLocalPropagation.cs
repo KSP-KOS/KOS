@@ -45,7 +45,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 {
                     foreach (BasicBlock block in fragment.Blocks)
                     {
-                        foreach (IOperandInstructionBase operandInstruction in block.Instructions.DepthFirst())
+                        foreach (IOperandInstructionBase operandInstruction in block.DepthFirstOperandInstructions())
                         {
                             operandInstruction.MutateEachOperand(op =>
                             {

@@ -7,6 +7,15 @@ namespace kOS.Safe.Compilation.Optimization
 {
     public static class OptimizationTools
     {
+        public static IEnumerable<IOperandInstructionBase> DepthFirstOperandInstructions(this BasicBlock block)
+        {
+            foreach (IOperandInstructionBase operandInstruction in block.Instructions.DepthFirst())
+                yield return operandInstruction;
+            if (block.Continuation is IOperandInstructionBase operandContinuation)
+                foreach (IOperandInstructionBase operandInstruction in operandContinuation.DepthFirst())
+                    yield return operandInstruction;
+        }
+
         public static IEnumerable<IRInstruction> DepthFirstInstructions(this IEnumerable<IRInstruction> instructions)
             => instructions.SelectMany(DepthFirstInstructions);
         
@@ -30,7 +39,7 @@ namespace kOS.Safe.Compilation.Optimization
             DepthFirst(operandInstruction) :
             Enumerable.Empty<IOperandInstructionBase>();
 
-        private static IEnumerable<IOperandInstructionBase> DepthFirst(this IOperandInstructionBase operandInstruction)
+        public static IEnumerable<IOperandInstructionBase> DepthFirst(this IOperandInstructionBase operandInstruction)
         {
             if (operandInstruction is ISingleOperandInstruction singleOperandInstruction)
             {

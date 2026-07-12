@@ -152,6 +152,7 @@ namespace kOS.Safe.Compilation.IR
                             funcOrTrigger?.TriggersCreated.Add(trigger);
                         }
                         break;
+                        // TODO: Look at branch instructions that employ eq and propagate that definition.
                 }
             }
 
@@ -574,7 +575,7 @@ namespace kOS.Safe.Compilation.IR
             {
                 if (predecessor.Predecessors.Count == 1 &&
                     predecessor.Predecessors.First().Instructions.Any() &&
-                    predecessor.Predecessors.First().Instructions.Last() is IRBranch branch &&
+                    predecessor.Predecessors.First().Continuation is BranchContinuation branch &&
                     branch.Condition is IRNonVarPush testArgBottom &&
                     testArgBottom.Operation is OpcodeTestArgBottom &&
                     predecessor == branch.True)
@@ -629,7 +630,7 @@ namespace kOS.Safe.Compilation.IR
         private static List<IStackTransferObject> PopulateParameters(BasicBlock block, Dictionary<BasicBlock, List<IStackTransferObject>> stackOut, Queue<BasicBlock> worklist, bool setValues = true)
         {
             List<IStackTransferObject> stack = new List<IStackTransferObject>(block.IncomingStackState);
-            foreach (IOperandInstructionBase operandInstruction in block.Instructions.DepthFirst())
+            foreach (IOperandInstructionBase operandInstruction in block.DepthFirstOperandInstructions())
             {
                 operandInstruction.ForEachOperand(op =>
                 {
@@ -649,7 +650,7 @@ namespace kOS.Safe.Compilation.IR
                                     if (current != block && stackOut.ContainsKey(current))
                                     {
                                         stackOut[current].Add(externalPush);
-                                        foreach (BasicBlock successor in block.Successors.Where(b => !worklist.Contains(b)))
+                                        foreach (BasicBlock successor in current.Successors.Where(b => !worklist.Contains(b)))
                                             worklist.Enqueue(successor);
                                     }
                                     current.IncomingStackState.Add(externalPush);
@@ -664,6 +665,7 @@ namespace kOS.Safe.Compilation.IR
                             parameter.StackTransferObject = stack[0];
                             parameter.RequiredToBeResolvable.UnionWith(GetFollowingParameters(operandInstruction, parameter));
                         }
+                        // TODO: Add a sub-pass to swap binary operands to optimize the number of resolvable operands.
                         stack.RemoveAt(0);
                     }
                     else if (op is IRCall call)
@@ -873,6 +875,11 @@ namespace kOS.Safe.Compilation.IR
                         }
                         break;
                 }
+            }
+            if (block.Continuation is IOperandInstructionBase operandContinuation)
+            {
+                foreach (IOperandInstructionBase operandInstruction in operandContinuation.DepthFirst())
+                    operandInstruction.MutateEachOperand(ScopedSSAReplacement);
             }
         }
 

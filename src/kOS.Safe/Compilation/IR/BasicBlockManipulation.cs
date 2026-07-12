@@ -23,23 +23,31 @@ namespace kOS.Safe.Compilation.IR
             betweenBlock.IncomingVariableDefinitions = new Dictionary<(string, IRScope), SSADefinition>();
             foreach (var key in successor.IncomingVariableDefinitions.Keys)
                 betweenBlock.IncomingVariableDefinitions[key] = successor.IncomingVariableDefinitions[key];
-            betweenBlock.FallthroughJump = new IRJump(betweenBlock, successor, -1, -1);
-            betweenBlock.AddSuccessor(successor);
-            precursor.AddSuccessor(betweenBlock);
-            precursor.RemoveSuccessor(successor);
-            if (precursor.FallthroughJump != null)
-                precursor.FallthroughJump = new IRJump(precursor,
-                    betweenBlock,
-                    precursor.FallthroughJump.SourceLine,
-                    precursor.FallthroughJump.SourceColumn);
-            if (precursor.Instructions.Count > 0 &&
-                precursor.Instructions[precursor.Instructions.Count - 1] is IRBranch branch)
+
+            betweenBlock.Dominator = precursor;
+            betweenBlock.PostDominator = successor;
+            betweenBlock.Continuation = new JumpContinuation(successor, -1, -1);
+
+            switch (precursor.Continuation)
             {
-                if (branch.True == successor)
-                    branch.True = betweenBlock;
-                if (branch.False == successor)
-                    branch.False = betweenBlock;
+                case null:
+                    precursor.Continuation = new JumpContinuation(betweenBlock, -1, -1);
+                    break;
+                case JumpContinuation jump:
+                    jump.Target = betweenBlock;
+                    break;
+                case BranchContinuation branch:
+                    if (branch.True == successor)
+                        branch.True = betweenBlock;
+                    if (branch.False == successor)
+                        branch.False = betweenBlock;
+                    break;
+                case JumpStackContinuation _:
+                    throw new NotImplementedException();
+                default:
+                    throw new NotImplementedException();
             }
+
             betweenBlock.IncomingStackState.AddRange(SingleStaticAssignment.GetOutgoingStack(precursor));
             successor.IncomingStackState.Clear();
             successor.IncomingStackState.AddRange(SingleStaticAssignment.GetOutgoingStack(betweenBlock));
@@ -67,16 +75,10 @@ namespace kOS.Safe.Compilation.IR
             successorBlock.IncomingVariableDefinitions = new Dictionary<(string, IRScope), SSADefinition>();
             foreach (var key in IncomingVariableDefinitions.Keys)
                 successorBlock.IncomingVariableDefinitions[key] = IncomingVariableDefinitions[key];
-            FallthroughJump = new IRJump(this,
-                successorBlock,
-                Instructions[Math.Max(newStartIndex - 1, 0)].SourceLine,
-                Instructions[Math.Max(newStartIndex - 1, 0)].SourceColumn);
 
-            foreach (BasicBlock successor in Successors)
-                successorBlock.AddSuccessor(successor);
-            AddSuccessor(successorBlock);
-            foreach (BasicBlock successor in Successors.Where(b => b != successorBlock).ToArray())
-                RemoveSuccessor(successor);
+            successorBlock.Continuation = Continuation;
+            Continuation = new JumpContinuation(successorBlock, Continuation?.SourceLine ?? -1, Continuation?.SourceColumn ?? -1);
+
             CodeComponent.Blocks.Add(successorBlock);
 
             for (int i = newStartIndex; i < Instructions.Count; i++)
@@ -93,49 +95,39 @@ namespace kOS.Safe.Compilation.IR
         {
             if (pattern == null || !pattern.Any())
                 throw new ArgumentException($"{nameof(pattern)} cannot be null or empty.");
-            if (before.Successors.Count > 1 ||
-                (before.Successors.Count == 1 &&
-                !before.Successors.Contains(after)))
-                throw new ArgumentException("The 'before' block must have either zero successors or only the 'after' block.");
+            if (!before.Successors.Contains(after))
+                throw new ArgumentException("The 'before' block must have the 'after' block as a successor.");
+
+            foreach (BasicBlock block in pattern)
+                block.CodeComponent = before.CodeComponent;
 
             BasicBlock patternRoot = pattern.First();
             while (patternRoot.Dominator != null &&
                 pattern.Contains(patternRoot.Dominator))
                 patternRoot = patternRoot.Dominator;
 
-            before.AddSuccessor(patternRoot);
-            if (before.FallthroughJump != null)
-                before.FallthroughJump.Target = patternRoot;
-            else
-                before.FallthroughJump = new IRJump(before, patternRoot, before.Instructions.LastOrDefault()?.SourceLine ?? -1, before.Instructions.LastOrDefault()?.SourceColumn ?? -1);
-            if (before.Instructions.LastOrDefault() is IRJump)
-                before.Instructions.RemoveAt(before.Instructions.Count - 1);
-            
+            switch (before.Continuation)
+            {
+                case null:
+                    before.Continuation = new JumpContinuation(patternRoot, -1, -1);
+                    break;
+                case JumpContinuation jump:
+                    jump.Target = patternRoot;
+                    break;
+                case BranchContinuation branch:
+                    if (branch.True == after)
+                        branch.True = patternRoot;
+                    if (branch.False == after)
+                        branch.False = patternRoot;
+                    break;
+                case JumpStackContinuation _:
+                    throw new NotImplementedException();
+                default:
+                    throw new NotImplementedException();
+            }
+
             foreach (BasicBlock returnBlock in pattern.Where(b => b.PostDominator == null || b.PostDominator is SyntheticReturnBlock))
-            {
-                returnBlock.AddSuccessor(after);
-                if (returnBlock.FallthroughJump != null)
-                    returnBlock.FallthroughJump.Target = after;
-                else
-                    returnBlock.FallthroughJump = new IRJump(returnBlock, after, returnBlock.Instructions.LastOrDefault()?.SourceLine ?? -1, returnBlock.Instructions.LastOrDefault()?.SourceColumn ?? -1);
-                if (returnBlock.Instructions.LastOrDefault() is IRJump)
-                    returnBlock.Instructions.RemoveAt(returnBlock.Instructions.Count - 1);
-
-
-                SyntheticReturnBlock syntheticReturn = (SyntheticReturnBlock)returnBlock.Successors.FirstOrDefault(b => b is SyntheticReturnBlock);
-                while (syntheticReturn != null)
-                {
-                    returnBlock.RemoveSuccessor(syntheticReturn);
-                    syntheticReturn = (SyntheticReturnBlock)returnBlock.Successors.FirstOrDefault(b => b is SyntheticReturnBlock);
-                }
-            }
-            if (before.Successors.Contains(after))
-                before.RemoveSuccessor(after);
-            else
-            {
-                before.EstablishDominance();
-                after.EstablishPostDominance();
-            }
+                ((JumpContinuation)returnBlock.Continuation).Target = after;
 
             before.CodeComponent.Blocks.AddRange(pattern.Where(b => !before.CodeComponent.Blocks.Contains(b)));
         }
@@ -204,32 +196,41 @@ namespace kOS.Safe.Compilation.IR
             if (original.PostDominator != null &&
                 replacements.ContainsKey(original.PostDominator))
                 block.PostDominator = replacements[original.PostDominator];
-            if (original.FallthroughJump != null)
+
+            block.Continuation = original.Continuation?.Clone(block);
+
+            switch (block.Continuation)
             {
-                block.FallthroughJump = (IRJump)original.FallthroughJump.Clone(block);
-                if (replacements.TryGetValue(block.FallthroughJump.Target, out BasicBlock target))
-                    block.FallthroughJump.Target = target;
+                case JumpContinuation jump:
+                    if (replacements.TryGetValue(jump.Target, out BasicBlock newTarget))
+                        jump.Target = newTarget;
+                    break;
+                case BranchContinuation branch:
+                    if (replacements.TryGetValue(branch.True, out newTarget))
+                        branch.True = newTarget;
+                    if (replacements.TryGetValue(branch.False, out newTarget))
+                        branch.False = newTarget;
+                    break;
+                case JumpStackContinuation jumpStack:
+                    List<BasicBlock> destinations = jumpStack.Targets.ToList();
+                    for (int i = 0; i < destinations.Count; i++)
+                    {
+                        if (replacements.TryGetValue(destinations[i], out newTarget))
+                            destinations[i] = newTarget;
+                    }
+                    jumpStack.Targets = destinations;
+                    break;
+                case null:
+                    break;
+                default:
+                    throw new NotImplementedException();
+
             }
 
             block.IsExecutable = original.IsExecutable;
 
             foreach ((string, IRScope) key in original.Phis.Keys)
                 block.Phis[key] = original.Phis[key];
-
-            foreach (BasicBlock predecessor in original.Predecessors)
-            {
-                if (replacements.TryGetValue(predecessor, out BasicBlock replacementPredecessor))
-                    replacementPredecessor.AddSuccessor(block);
-                else
-                    predecessor.AddSuccessor(block);
-            }
-            foreach (BasicBlock successor in original.Successors)
-            {
-                if (replacements.TryGetValue(successor, out BasicBlock replacementSuccessor))
-                    block.AddSuccessor(replacementSuccessor);
-                else
-                    block.AddSuccessor(successor);
-            }
 
             foreach (IRInstruction instruction in original.Instructions)
             {
@@ -238,26 +239,6 @@ namespace kOS.Safe.Compilation.IR
                 if (instruction is IRAssign ||
                     instruction is IRUnset)
                     replacementInstructions[instruction] = newInstruction;
-                if (newInstruction is IRBranch branch)
-                {
-                    if (replacements.TryGetValue(branch.True, out BasicBlock newTarget))
-                        branch.True = newTarget;
-                    if (replacements.TryGetValue(branch.False, out newTarget))
-                        branch.False = newTarget;
-                }
-                if (newInstruction is IRJump jump)
-                {
-                    if (replacements.TryGetValue(jump.Target, out BasicBlock newTarget))
-                        jump.Target = newTarget;
-                }
-                if (newInstruction is IRJumpStack jumpStack)
-                {
-                    for (int i = 0; i < jumpStack.Targets.Count; i++)
-                    {
-                        if (replacements.TryGetValue(jumpStack.Targets[i], out BasicBlock newTarget))
-                            jumpStack.Targets[i] = newTarget;
-                    }
-                }
             }
 
             if (replacementScopes.TryGetValue(original.Scope, out IRScope newScope))

@@ -301,6 +301,7 @@ namespace kOS.Safe.Test.Execution
         {
             HashSet<Type> passesToSkip = Safe.Compilation.Optimization.Optimizer.PassesToSkip;
             passesToSkip.Add(typeof(Safe.Compilation.Optimization.Passes.ConstantFolding));
+            passesToSkip.Add(typeof(Safe.Compilation.Optimization.Passes.CommonExpressionElimination));
             // Test that certain suffixes are replaced
             RunScript("integration/peepholeOptimizations.ks");
             RunSingleStep();

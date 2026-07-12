@@ -41,14 +41,10 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             while (block.PostDominator?.Dominator == block)
                 block = block.PostDominator;
 
-            IRBranch newBranch = (IRBranch)header.Instructions[header.Instructions.Count - 1];
-            newBranch = (IRBranch)newBranch.Clone(block);
-            newBranch.PreferFalse = !newBranch.PreferFalse;
 
-            block.Instructions[block.Instructions.Count - 1] = newBranch;
-            block.AddSuccessor(newBranch.True);
-            block.AddSuccessor(newBranch.False);
-            block.RemoveSuccessor(header);
+            BranchContinuation newBranch = (BranchContinuation)header.Continuation.Clone(block);
+            newBranch.PreferFalse = !newBranch.PreferFalse;
+            block.Continuation = newBranch;
         }
 
         public static List<BlockOrdering.LoopData> FindLoops(BasicBlock root, Stack<BasicBlock> regionExits)

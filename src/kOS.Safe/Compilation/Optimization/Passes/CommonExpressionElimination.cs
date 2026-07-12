@@ -80,33 +80,30 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         }
         private void IdentifyExpressions(BasicBlock block, Dictionary<(IResultingInstruction Expression, IRScope Scope), ExpressionData> expressions)
         {
-            foreach (IRInstruction instruction in block.Instructions)
+            foreach (IOperandInstructionBase operandInstruction in block.DepthFirstOperandInstructions())
             {
-                foreach (IOperandInstructionBase operandInstruction in instruction.DepthFirst())
+                bool breaking = false;
+                void AddToExpressions(IInterimOperand operand)
                 {
-                    bool breaking = false;
-                    void AddToExpressions(IInterimOperand operand)
+                    // Break from the subexpression loop if a
+                    // non-invariant call is encountered so as
+                    // to not 'optimize' away a call that does something.
+                    if (operand is IRCall call && !call.IsInvariant)
+                        breaking = true;
+                    else if (operand is IRParameter parameter && !parameter.IsResolvable)
+                        breaking = true;
+                    else if (operand is IResultingInstruction resultingInstruction)
                     {
-                        // Break from the subexpression loop if a
-                        // non-invariant call is encountered so as
-                        // to not 'optimize' away a call that does something.
-                        if (operand is IRCall call && !call.IsInvariant)
-                            breaking = true;
-                        else if (operand is IRParameter parameter && !parameter.IsResolvable)
-                            breaking = true;
-                        else if (operand is IResultingInstruction resultingInstruction)
-                        {
-                            if (expressions.TryGetValue((resultingInstruction, block.Scope), out ExpressionData data))
-                                data.uses.Add(operandInstruction);
-                            else
-                                expressions[(resultingInstruction, block.Scope)] = new ExpressionData(operandInstruction);
-                        }
+                        if (expressions.TryGetValue((resultingInstruction, block.Scope), out ExpressionData data))
+                            data.uses.Add(operandInstruction);
+                        else
+                            expressions[(resultingInstruction, block.Scope)] = new ExpressionData(operandInstruction);
                     }
-
-                    if (breaking)
-                        break;
-                    operandInstruction.ForEachOperand(AddToExpressions);
                 }
+
+                if (breaking)
+                    break;
+                operandInstruction.ForEachOperand(AddToExpressions);
             }
         }
         // Custom equality comparer to ensure the scoping of the

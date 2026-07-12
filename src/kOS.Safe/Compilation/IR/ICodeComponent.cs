@@ -8,5 +8,6 @@ namespace kOS.Safe.Compilation.IR
         IRCodePart CodePart { get; }
         List<BasicBlock> Blocks { get; set; }
         BasicBlock RootBlock { get; set; }
+        BasicBlock TerminalBlock { get; set; }
     }
 }
