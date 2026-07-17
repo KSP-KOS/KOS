@@ -7,6 +7,7 @@ using UnityEngine.Networking;
 using kOS.Safe.Screen;
 using kOS.Safe.Encapsulation;
 using kOS.Module;
+using KSPCommunityPartModules.Modules;
 using kOS.UserIO;
 using kOS.Safe.UserIO;
 using KSP.UI.Dialogs;
@@ -1162,7 +1163,7 @@ namespace kOS.Screen
         
         internal string CalcualteTitle()
         {
-           KOSNameTag partTag = shared.KSPPart.Modules.OfType<KOSNameTag>().FirstOrDefault();
+           ModuleNameTag partTag = shared.KSPPart.Modules.OfType<ModuleNameTag>().FirstOrDefault();
            return String.Format("{0} CPU: {1} ({2})",
                                 shared.Vessel.vesselName,
                                 shared.KSPPart.partInfo.title.Split(' ')[0], // just the first word of the name, i.e "CX-4181"

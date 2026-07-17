@@ -6,6 +6,7 @@ using System.Linq;
 using kOS.Safe.Utilities;
 using UnityEngine;
 using kOS.Module;
+using KSPCommunityPartModules.Modules;
 using kOS.Safe.UserIO;
 using Math = System.Math;
 
@@ -196,7 +197,7 @@ namespace kOS.UserIO
             foreach (kOSProcessor kModule in availableCPUs)
             {
                 Part thisPart = kModule.part;
-                KOSNameTag partTag = thisPart.Modules.OfType<KOSNameTag>().FirstOrDefault();
+                ModuleNameTag partTag = thisPart.Modules.OfType<ModuleNameTag>().FirstOrDefault();
                 string partLabel = String.Format("{0}({1})",
                                              thisPart.partInfo.title.Split(' ')[0], // just the first word of the name, i.e "CX-4181"
                                              ((partTag == null) ? "" : partTag.nameTag)

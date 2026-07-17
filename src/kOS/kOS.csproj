@@ -13,6 +13,10 @@
     <Reference Include="$(KSPBT_ModRoot)\$(KSPBT_ModPluginFolder)\ICSharpCode.SharpZipLib.dll">
       <Private>false</Private>
     </Reference>
+    <Reference Include="$(KSPRoot)\GameData\KSPCommunityPartModules\Plugin\KSPCommunityPartModules.dll">
+      <Private>false</Private>
+      <CKANIdentifier>KSPCommunityPartModules</CKANIdentifier>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <KSPVersionFile Include=".">

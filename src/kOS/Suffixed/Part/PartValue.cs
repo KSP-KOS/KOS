@@ -1,4 +1,5 @@
 using kOS.Module;
+using KSPCommunityPartModules.Modules;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
@@ -240,14 +241,14 @@ namespace kOS.Suffixed.Part
 
         public StringValue GetTagName() // public because I picture this being a useful API method later
         {
-            KOSNameTag tagModule = Part.Modules.OfType<KOSNameTag>().FirstOrDefault();
+            ModuleNameTag tagModule = Part.Modules.OfType<ModuleNameTag>().FirstOrDefault();
             return tagModule == null ? string.Empty : tagModule.nameTag;
         }
 
         private void SetTagName(StringValue value)
         {
             ThrowIfNotCPUVessel();
-            KOSNameTag tagModule = Part.Modules.OfType<KOSNameTag>().FirstOrDefault();
+            ModuleNameTag tagModule = Part.Modules.OfType<ModuleNameTag>().FirstOrDefault();
             if (tagModule != null) tagModule.nameTag = value;
         }
 
@@ -397,7 +398,7 @@ namespace kOS.Suffixed.Part
         {
             return PartValueFactory.Construct(
                 DynamicFindPartsInBranch(
-                    p => p.Modules.OfType<KOSNameTag>().Any(
+                    p => p.Modules.OfType<ModuleNameTag>().Any(
                         tag => String.Equals(tag.nameTag, tagName, StringComparison.CurrentCultureIgnoreCase))),
                     Shared);
         }
@@ -406,7 +407,7 @@ namespace kOS.Suffixed.Part
             Regex r = new Regex(tagPattern, RegexOptions.IgnoreCase);
             return PartValueFactory.Construct(
                 DynamicFindPartsInBranch(
-                    p => p.Modules.OfType<KOSNameTag>().Any(
+                    p => p.Modules.OfType<ModuleNameTag>().Any(
                         tag => r.IsMatch(tag.nameTag))),
                     Shared);
         }
@@ -419,7 +420,7 @@ namespace kOS.Suffixed.Part
             StaticFindPartsInBranch(this.Part,
                 p => String.Equals(p.partInfo.title, searchTerm, StringComparison.CurrentCultureIgnoreCase), kspParts);
             StaticFindPartsInBranch(this.Part,
-                p => p.Modules.OfType<KOSNameTag>().Any(tag => String.Equals(tag.nameTag, searchTerm, StringComparison.CurrentCultureIgnoreCase)),
+                p => p.Modules.OfType<ModuleNameTag>().Any(tag => String.Equals(tag.nameTag, searchTerm, StringComparison.CurrentCultureIgnoreCase)),
                 kspParts);
 
             // The "Distinct" operation is there because it's possible for someone to use a tag name that matches the part name.
@@ -433,7 +434,7 @@ namespace kOS.Suffixed.Part
             List<global::Part> kspParts = new List<global::Part>();
             StaticFindPartsInBranch(this.Part, p => r.IsMatch(p.name), kspParts);
             StaticFindPartsInBranch(this.Part, p => r.IsMatch(p.partInfo.title), kspParts);
-            StaticFindPartsInBranch(this.Part, p => p.Modules.OfType<KOSNameTag>().Any(tag => r.IsMatch(tag.nameTag)), kspParts);
+            StaticFindPartsInBranch(this.Part, p => p.Modules.OfType<ModuleNameTag>().Any(tag => r.IsMatch(tag.nameTag)), kspParts);
 
             // The "Distinct" operation is there because it's possible for someone to use a tag name that matches the part name.
             return PartValueFactory.Construct(kspParts.Distinct(), Shared);
@@ -444,7 +445,7 @@ namespace kOS.Suffixed.Part
         /// <returns></returns>
         public ListValue GetAllTaggedParts()
         {
-            return PartValueFactory.Construct(DynamicFindPartsInBranch(p => p.Modules.OfType<KOSNameTag>()
+            return PartValueFactory.Construct(DynamicFindPartsInBranch(p => p.Modules.OfType<ModuleNameTag>()
                 .Any(tag => !String.Equals(tag.nameTag, "", StringComparison.CurrentCultureIgnoreCase))), Shared);
         }
 
