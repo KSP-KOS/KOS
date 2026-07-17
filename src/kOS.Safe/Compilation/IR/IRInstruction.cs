@@ -1181,8 +1181,7 @@ namespace kOS.Safe.Compilation.IR
                 (IsInvariant && // If the call is invariant, it may be equal to a constant.
                 other is IEvaluatableToConstant evaluatableToConstant &&
                 evaluatableToConstant.IsInvariant &&
-            // TODO: What if this.Evaluate == null???
-                Evaluate().Equals(evaluatableToConstant.Evaluate()));
+                (Evaluate()?.Equals(evaluatableToConstant.Evaluate()) ?? false));
         public override bool Equals(object obj)
             => obj is IInterimOperand operand &&
             Equals(operand);

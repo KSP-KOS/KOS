@@ -65,6 +65,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             // Skip calls if builtins may be clobbered because they may not be what is expected.
             if (!(allowClobberBuiltins && input is IRCall))
             {
+                // TODO: Add an "EXIT" (EOP) command to the language because reducing 1/0 will break the
+                // PRINT(1/0) shortcut to cause a program to terminate.
                 // Only fold into an IRConstant when it is a primitive that can be stored in ksm.
                 if (input is IEvaluatableToConstant evaluatableToConstant &&
                     evaluatableToConstant.IsInvariant &&
@@ -152,20 +154,28 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         // 0 * X = 0
                         if (Encapsulation.ScalarIntValue.Zero.Equals(constantL.Value))
                             return constantL;
+                        // +/-1 * X = X * +/-1 = +/-X
                         if (ReduceDivMult(instruction, constantL, out IInterimOperand newResult))
                             return newResult;
+                        {
+                            if (instruction.Right is InterimConstantValue constantR &&
+                                ReduceDivMult(instruction, constantR, out newResult))
+                                return newResult;
+                        }
                         break;
                     case OpcodeMathDivide _:
                         // 0 / X = 0
                         // Technically not true when X = 0
                         // But that would otherwise throw a "Tried to push infinite on to the stack" error
                         // So this is an acceptable assumption that improves performance and eliminates an error.
-                        // TODO: Add an "EXIT" (EOP) command to the language because this will break the
-                        // PRINT(1/0) shortcut to cause a program to terminate.
                         if (Encapsulation.ScalarIntValue.Zero.Equals(constantL.Value))
                             return constantL;
-                        if (ReduceDivMult(instruction, constantL, out newResult))
-                            return newResult;
+                        {
+                            // X / +/-1 = +/-X
+                            if (instruction.Right is InterimConstantValue constantR && 
+                                ReduceDivMult(instruction, constantR, out newResult))
+                                return newResult;
+                        }
                         break;
                     case OpcodeMathAdd _:
                     case OpcodeMathSubtract _:
@@ -198,7 +208,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 {
                     case OpcodeMathDivide _:
                         // X / 0 = Error
-                        if (Encapsulation.ScalarIntValue.Zero.Equals(constantR.Value))
+                        if (throwOnDivideByZero &&
+                            Encapsulation.ScalarIntValue.Zero.Equals(constantR.Value))
                             throw new KOSCompileException(instruction, new DivideByZeroException());
                         break;
                     case OpcodeMathPower _:
@@ -270,13 +281,13 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 
         private static bool ReduceDivMult(IRBinaryOp instruction, InterimConstantValue constantOperand, out IInterimOperand newResult)
         {
-            // 1 */ X = X
+            // X */ 1 = X
             if (Encapsulation.ScalarIntValue.One.Equals(constantOperand.Value))
             {
                 newResult = instruction.Right;
                 return true;
             }
-            // -1 */ X = -X
+            // X */ -1 = -X
             if (constantOperand.Value.Equals(-Encapsulation.ScalarIntValue.One))
             {
                 newResult = new IRUnaryOp(

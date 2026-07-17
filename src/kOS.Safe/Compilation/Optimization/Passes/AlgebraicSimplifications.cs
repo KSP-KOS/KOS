@@ -62,8 +62,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             if (binaryOp.Left is IRBinaryOp opL &&
                                 binaryOp.Right is IRBinaryOp opR &&
                                 opL.Operation is OpcodeMathDivide &&
-                                opR.Operation is OpcodeMathDivide &&
-                                binaryOp.IsCommutative)
+                                opR.Operation is OpcodeMathDivide)
                             {
                                 return DistributeDivision(binaryOp);
                             }
@@ -119,8 +118,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         if (binaryOp.Left is IRBinaryOp opL &&
                             binaryOp.Right is IRBinaryOp opR &&
                             opL.Operation is OpcodeMathDivide &&
-                            opR.Operation is OpcodeMathDivide &&
-                            binaryOp.IsCommutative)
+                            opR.Operation is OpcodeMathDivide)
                         {
                             return DistributeDivision(binaryOp);
                         }
@@ -231,19 +229,19 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             {
                 return DistributeMultiplication(binaryOp);
             }
-            if (opR.Left.Equals(opL.Right))
+            else if (opR.Left.Equals(opL.Right))
             {
                 if (!opL.SwapOperands())
                     return binaryOp;
                 return DistributeMultiplication(binaryOp);
             }
-            if (opR.Right.Equals(opL.Left))
+            else if (opR.Right.Equals(opL.Left))
             {
                 if (!opR.SwapOperands())
                     return binaryOp;
                 return DistributeMultiplication(binaryOp);
             }
-            if (opR.Right.Equals(opL.Right))
+            else if (opR.Right.Equals(opL.Right))
             {
                 if (!opL.SwapOperands() ||
                     !opR.SwapOperands())

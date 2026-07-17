@@ -41,6 +41,12 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             while (block.PostDominator?.Dominator == block)
                 block = block.PostDominator;
 
+            // An unresolved parameter cannot be relocated, and could indicate that multiple blocks would need to be created/relocated
+            foreach (IOperandInstructionBase conditionOperand in (header.Continuation as BranchContinuation).DepthFirst())
+            {
+                if (conditionOperand.AnyOperand(op => op is IRParameter))
+                    return;
+            }
 
             BranchContinuation newBranch = (BranchContinuation)header.Continuation.Clone(block);
             newBranch.PreferFalse = !newBranch.PreferFalse;

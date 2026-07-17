@@ -165,7 +165,6 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 case IRRelocateLater _:
                     return null;
                 case IRParameter _:
-                    // TODO: resolve this somehow.
                     return null;
                 case InterimResolvedReference resolvedReference:
                     // Return the variable's replacement.
