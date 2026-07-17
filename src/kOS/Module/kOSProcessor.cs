@@ -1,4 +1,5 @@
 using kOS.Binding;
+using KSPCommunityPartModules.Modules;
 using kOS.Callback;
 using kOS.Execution;
 using kOS.Communication;
@@ -46,13 +47,13 @@ namespace kOS.Module
         {
             get
             {
-                KOSNameTag tag = part.Modules.OfType<KOSNameTag>().FirstOrDefault();
+                ModuleNameTag tag = part.Modules.OfType<ModuleNameTag>().FirstOrDefault();
                 return tag == null ? string.Empty : tag.nameTag;
             }
             set
             {
-                KOSNameTag tag = part.Modules.OfType<KOSNameTag>().FirstOrDefault();
-                // Really a null tag shouldn't ever happen.  It would mean kOS is installed but KOSNameTag's aren't on all the things.
+                ModuleNameTag tag = part.Modules.OfType<ModuleNameTag>().FirstOrDefault();
+                // Really a null tag shouldn't ever happen.  It would mean kOS is installed but ModuleNameTag's aren't on all the things.
                 // And that should only happen if someone has a bad ModuleManager config that's screwing with kOS.
                 if (tag != null)
                     tag.nameTag = value;

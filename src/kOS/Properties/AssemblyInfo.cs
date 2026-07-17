@@ -14,3 +14,7 @@ using System.Runtime.InteropServices;
 [assembly: Guid("324da3fe-391b-421d-93b7-29499dcf9ef3")]
 
 [assembly: KSPAssemblyDependency("kOS.Safe", 0, 0)]
+
+// The name-tag part module lives in KSPCommunityPartModules, so KSP must load that mod before kOS.
+// This is a hard dependency: KSP refuses to load kOS unless it is present.
+[assembly: KSPAssemblyDependency("KSPCommunityPartModules", 0, 5)]
