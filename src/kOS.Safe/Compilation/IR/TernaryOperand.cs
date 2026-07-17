@@ -60,16 +60,38 @@ namespace kOS.Safe.Compilation.IR
                 return Convert.ToBoolean(evaluatable.Evaluate().Value);
             return null;
         }
-        // TODO: Consider interrupting All/Any/Foreach if one value is not executable.
+
         public bool AllOperands(Func<IInterimOperand, bool> predicate)
-            => predicate(Condition) &&
-            predicate(TrueValue) &&
-            predicate(FalseValue);
+        {
+            if (!predicate(Condition))
+                return false;
+            bool? condition = EvaluateCondition();
+            if (condition == null)
+            {
+                return predicate(TrueValue) &&
+                predicate(FalseValue);
+            }
+            if (condition == true)
+                return predicate(TrueValue);
+            else
+                return predicate(FalseValue);
+        }
 
         public bool AnyOperand(Func<IInterimOperand, bool> predicate)
-            => predicate(Condition) ||
-            predicate(TrueValue) ||
-            predicate(FalseValue);
+        {
+            if (predicate(Condition))
+                return true;
+            bool? condition = EvaluateCondition();
+            if (condition == null)
+            {
+                return predicate(TrueValue) ||
+                predicate(FalseValue);
+            }
+            if (condition == true)
+                return predicate(TrueValue);
+            else
+                return predicate(FalseValue);
+        }
 
         public IEnumerable<Opcode> EmitOpcodes()
         {
