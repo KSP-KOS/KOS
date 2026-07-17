@@ -69,7 +69,6 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             // of region exit blocks.
             List<BasicBlock> reversePostOrder = BasicBlock.GetReversePostOrder(root, GetEdges);
             Stack<BasicBlock> regionExits = new Stack<BasicBlock>();
-            regionExits.Push(reversePostOrder[reversePostOrder.Count - 1]);
 
             // MetaBlockSequences are sequences of sequences of blocks.
             // The first item will be the primary execution path.
@@ -78,13 +77,16 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 
             // This queue is used to process the root blocks of execution paths.
             // It starts with the entry block (root) and will add orphaned paths root blocks.
-            Queue<BasicBlock> sequenceStarts = new Queue<BasicBlock>();
-            sequenceStarts.Enqueue(root);
+            Queue<(BasicBlock, BasicBlock)> sequenceStarts = new Queue<(BasicBlock, BasicBlock)>();
+            sequenceStarts.Enqueue((root, reversePostOrder[reversePostOrder.Count - 1]));
 
             while (sequenceStarts.Count > 0)
             {
-                MetaBlockSequence sequence = ConstructMetaSequence(sequenceStarts.Dequeue(), regionExits, out Queue<BasicBlock> newStarts);
-                foreach (BasicBlock start in newStarts)
+                (BasicBlock sequenceRoot, BasicBlock sequenceExit) = sequenceStarts.Dequeue();
+                regionExits.Push(sequenceExit);
+                MetaBlockSequence sequence = ConstructMetaSequence(sequenceRoot, regionExits, out Queue<(BasicBlock, BasicBlock)> newStarts);
+                regionExits.Pop();
+                foreach ((BasicBlock, BasicBlock) start in newStarts)
                     sequenceStarts.Enqueue(start);
                 metaSequences.Add(sequence);
             }
@@ -99,6 +101,25 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     block.Continuation is BranchContinuation branch &&
                     branch.True == results[i + 1])
                     branch.PreferFalse = true;
+            }
+
+            // The streamlined sequence for the primary code path ends
+            // before the end of the file.
+            // This adds a jump to a nop at the end of the file so that
+            // code flow does not fall through to other blocks.
+            if (metaSequences.Count > 1 &&
+                !(metaSequences[0].Last.Instructions.LastOrDefault() is IRReturn))
+            {
+                JumpContinuation syntheticContinuation = metaSequences[0].Last.Continuation as JumpContinuation;
+                BasicBlock returnBlock = BasicBlock.InsertBlockBetween(metaSequences[0].Last, syntheticContinuation.Target);
+                returnBlock.Add(new IRNoStackInstruction(returnBlock,
+                    new OpcodeNOP()
+                    {
+                        SourceLine = syntheticContinuation.SourceLine,
+                        SourceColumn = syntheticContinuation.SourceColumn
+                    },
+                    true));
+                results.Add(returnBlock);
             }
 
             // This block is to avoid leaving branch instructions to blocks
@@ -123,12 +144,12 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             return results;
         }
 
-        private static MetaBlockSequence ConstructMetaSequence(BasicBlock root, Stack<BasicBlock> regionExits, out Queue<BasicBlock> newOffshoots)
+        private static MetaBlockSequence ConstructMetaSequence(BasicBlock root, Stack<BasicBlock> regionExits, out Queue<(BasicBlock Root, BasicBlock Exit)> newOffshoots)
         {
             // Create a new sequence with just the root block.
             MetaBlockSequence sequence = new MetaBlockSequence(root);
             BasicBlock block = root;
-            newOffshoots = new Queue<BasicBlock>();
+            newOffshoots = new Queue<(BasicBlock, BasicBlock)>();
             // If the block is the next region exit (or null),
             // that is the end of the current sequence.
             // Note that region exits are part of the enclosing region's sequence.
@@ -146,11 +167,11 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     // Push the next region exit.
                     regionExits.Push(loopData.exit);
                     // Add the sequence from the loop's body.
-                    sequence.Add(ConstructMetaSequence(loopData.body, regionExits, out Queue<BasicBlock> childOffshoots));
+                    sequence.Add(ConstructMetaSequence(loopData.body, regionExits, out Queue<(BasicBlock, BasicBlock)> childOffshoots));
                     // That region is now popped.
                     regionExits.Pop();
                     // Enqueue any new offshoots.
-                    foreach (BasicBlock child in childOffshoots)
+                    foreach ((BasicBlock, BasicBlock) child in childOffshoots)
                         newOffshoots.Enqueue(child);
                     // Set the exit block as the next block for this sequence.
                     block = loopData.exit;
@@ -168,10 +189,10 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     // The branch instruction will skip ahead to the exit, so this ordering
                     // allows the 'if/then' block to fall through to the exit.
                     regionExits.Push(branchData.exit ?? regionExits.Peek());
-                    sequence.Add(ConstructMetaSequence(branchData.ifBlock, regionExits, out Queue<BasicBlock> childOffshoots));
+                    sequence.Add(ConstructMetaSequence(branchData.ifBlock, regionExits, out Queue<(BasicBlock, BasicBlock)> childOffshoots));
                     regionExits.Pop();
                     // Enqueue any new offshoots.
-                    foreach (BasicBlock child in childOffshoots)
+                    foreach ((BasicBlock, BasicBlock) child in childOffshoots)
                         newOffshoots.Enqueue(child);
                     // If the exit block is null, that's probably because the
                     // 'else' block was categorized as the exit.
@@ -184,7 +205,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     {
                         // The 'else' block, if present, becomes a new offshoot.
                         if (branchData.elseBlock != null)
-                            newOffshoots.Enqueue(branchData.elseBlock);
+                            newOffshoots.Enqueue((branchData.elseBlock, branchData.exit));
                         // Set the 'exit' block as the next block for this sequence.
                         block = branchData.exit;
                     }
