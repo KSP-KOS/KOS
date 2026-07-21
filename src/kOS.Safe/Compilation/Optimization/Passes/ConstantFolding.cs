@@ -7,6 +7,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 {
     public class ConstantFolding : IOptimizationPass<BasicBlock>, ILinkedOptimizationPass
     {
+        public const bool throwOnDivideByZero = false;
         public Optimizer Optimizer { get; set; }
         public OptimizationLevel OptimizationLevel => OptimizationLevel.Minimal;
         public short SortIndex => 30;
@@ -65,8 +66,16 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             // Skip calls if builtins may be clobbered because they may not be what is expected.
             if (!(allowClobberBuiltins && input is IRCall))
             {
+                // Don't simplify a divide-by-zero when it is the only operation
+                // because that would break existing scripts.
                 // TODO: Add an "EXIT" (EOP) command to the language because reducing 1/0 will break the
                 // PRINT(1/0) shortcut to cause a program to terminate.
+                if (!throwOnDivideByZero &&
+                    input is IRBinaryOp binaryOp &&
+                    binaryOp.Operation is OpcodeMathDivide &&
+                    binaryOp.Right is InterimConstantValue zeroDivisor &&
+                    Encapsulation.ScalarIntValue.Zero.Equals(zeroDivisor.Value))
+                    return input;
                 // Only fold into an IRConstant when it is a primitive that can be stored in ksm.
                 if (input is IEvaluatableToConstant evaluatableToConstant &&
                     evaluatableToConstant.IsInvariant &&
@@ -183,6 +192,52 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         if (Encapsulation.ScalarIntValue.Zero.Equals(constantL.Value))
                             return instruction.Right;
                         break;
+                    case OpcodeCompareEqual _:
+                    case OpcodeCompareNE _:
+                    case OpcodeCompareGT _:
+                    case OpcodeCompareGTE _:
+                    case OpcodeCompareLT _:
+                    case OpcodeCompareLTE _:
+                        // C2 == X + C1 => C2 - C1 == X
+                        // C2 == X - C1 => C2 + C1 == X
+                        // C2 == X * C1 => C2 / C1 == X
+                        // C2 == X / C1 => C2 * C1 == X
+                        {
+                            while (instruction.Right is IRBinaryOp binaryRight &&
+                                binaryRight.IsReversible &&
+                                binaryRight.Right is InterimConstantValue constantR)
+                            {
+                                instruction.Right = binaryRight.Left;
+                                IRBinaryOp newOperation = binaryRight.Reverse(instruction.Left, constantR);
+                                instruction.Left = newOperation;
+
+                                if ((newOperation.Operation is OpcodeMathDivide || newOperation.Operation is OpcodeMathMultiply) &&
+                                    constantR.Value is Encapsulation.ScalarValue scalar &&
+                                    scalar < 0)
+                                {
+                                    switch (instruction.Operation)
+                                    {
+                                        case OpcodeCompareGT _:
+                                            instruction.Operation = new OpcodeCompareLT();
+                                            break;
+                                        case OpcodeCompareGTE _:
+                                            instruction.Operation = new OpcodeCompareLTE();
+                                            break;
+                                        case OpcodeCompareLT _:
+                                            instruction.Operation = new OpcodeCompareGT();
+                                            break;
+                                        case OpcodeCompareLTE _:
+                                            instruction.Operation = new OpcodeCompareGTE();
+                                            break;
+                                    }
+                                }
+
+                                if (instruction.Left is IEvaluatableToConstant constantL2 &&
+                                    constantL2.IsInvariant)
+                                    instruction.Left = constantL2.Evaluate();
+                            }
+                        }
+                        break;
                 }
             }
             else if (instruction.Right is InterimConstantValue constantR)
@@ -208,7 +263,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 {
                     case OpcodeMathDivide _:
                         // X / 0 = Error
-                        if (Encapsulation.ScalarIntValue.Zero.Equals(constantR.Value))
+                        if (throwOnDivideByZero &&
+                            Encapsulation.ScalarIntValue.Zero.Equals(constantR.Value))
                             throw new KOSCompileException(instruction, new DivideByZeroException());
                         break;
                     case OpcodeMathPower _:
