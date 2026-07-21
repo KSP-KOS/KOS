@@ -10,49 +10,25 @@ namespace kOS.Safe.Compilation
         {
             return new StringValue(string.Concat(pair.Left, pair.Right));
         }
-        public override Type GetAddResultType(Type leftType, Type rightType)
-            => typeof(StringValue);
-        public override bool IsAdditionCommutative(Type leftType, Type rightType)
-            => false;
 
         public override object Subtract(OperandPair pair)
         {
             throw new KOSBinaryOperandTypeException(pair, "subtract", "from");
         }
-        public override Type GetSubtractResultType(Type leftType, Type rightType)
-        {
-            throw new KOSBinaryOperandTypeException(leftType, rightType, "subtract", "from");
-        }
-        public override bool IsSubtractionCommutativeWithNegation(Type leftType, Type rightType)
-            => false;
 
         public override object Multiply(OperandPair pair)
         {
             throw new KOSBinaryOperandTypeException(pair, "multiply", "by");
         }
-        public override Type GetMultiplyResultType(Type leftType, Type rightType)
-        {
-            throw new KOSBinaryOperandTypeException(leftType, rightType, "multiply", "by");
-        }
-        public override bool IsMultiplicationCommmutative(Type leftType, Type rightType)
-            => false;
 
         public override object Divide(OperandPair pair)
         {
             throw new KOSBinaryOperandTypeException(pair, "divide", "by");
         }
-        public override Type GetDivideResultType(Type leftType, Type rightType)
-        {
-            throw new KOSBinaryOperandTypeException(leftType, rightType, "divide", "by");
-        }
 
         public override object Power(OperandPair pair)
         {
             throw new KOSBinaryOperandTypeException(pair, "exponentiate", "by");
-        }
-        public override Type GetPowerResultType(Type leftType, Type rightType)
-        {
-            throw new KOSBinaryOperandTypeException(leftType, rightType, "exponentiate", "by");
         }
 
         public override object GreaterThan(OperandPair pair)

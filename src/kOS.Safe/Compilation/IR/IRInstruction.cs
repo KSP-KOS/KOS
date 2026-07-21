@@ -195,34 +195,7 @@ namespace kOS.Safe.Compilation.IR
             {
                 if (Left.Type == null || Right.Type == null)
                     return null;
-                Calculator calculator = Calculator.GetCalculator(Left.Type, Right.Type);
-                switch (Operation)
-                {
-                    case OpcodeMathAdd _:
-                        return calculator.GetAddResultType(Left.Type, Right.Type);
-                    case OpcodeMathSubtract _:
-                        return calculator.GetSubtractResultType(Left.Type, Right.Type);
-                    case OpcodeMathMultiply _:
-                        return calculator.GetMultiplyResultType(Left.Type, Right.Type);
-                    case OpcodeMathDivide _:
-                        return calculator.GetDivideResultType(Left.Type, Right.Type);
-                    case OpcodeMathPower _:
-                        return calculator.GetPowerResultType(Left.Type, Right.Type);
-                    case OpcodeCompareEqual _:
-                        return calculator.GetEqualResultType(Left.Type, Right.Type);
-                    case OpcodeCompareNE _:
-                        return calculator.GetNotEqualResultType(Left.Type, Right.Type);
-                    case OpcodeCompareGT _:
-                        return calculator.GetGreaterThanResultType(Left.Type, Right.Type);
-                    case OpcodeCompareLT _:
-                        return calculator.GetLessThanResultType(Left.Type, Right.Type);
-                    case OpcodeCompareGTE _:
-                        return calculator.GetGreaterThanEqualResultType(Left.Type, Right.Type);
-                    case OpcodeCompareLTE _:
-                        return calculator.GetLessThanEqualResultType(Left.Type, Right.Type);
-                    default:
-                        throw new NotImplementedException();
-                }
+                return MetaCalculator.GetResultType(Left.Type, Right.Type, Operation);
             }
         }
         public ushort OpcodeCount
@@ -261,36 +234,20 @@ namespace kOS.Safe.Compilation.IR
             {
                 if (Left.Type == null || Right.Type == null)
                     return false;
-                Calculator calculator = Calculator.GetCalculator(Left.Type, Right.Type);
-                switch (Operation)
-                {
-                    case OpcodeMathAdd _:
-                        return calculator.IsAdditionCommutative(Left.Type, Right.Type);
-                    case OpcodeMathSubtract _:
-                        return calculator.IsSubtractionCommutativeWithNegation(Left.Type, Right.Type) &&
-                            !(IRParameter.IsOrContainsParameter(Left) || IRParameter.IsOrContainsParameter(Right));
-                    case OpcodeMathMultiply _:
-                        return calculator.IsMultiplicationCommmutative(Left.Type, Right.Type);
-                    case OpcodeMathDivide _:
-                        return calculator.IsDivisionCommutative(Left.Type, Right.Type) &&
-                            !(IRParameter.IsOrContainsParameter(Left) || IRParameter.IsOrContainsParameter(Right));
-                    case OpcodeMathPower _:
-                        return false;
-                    case OpcodeCompareEqual _:
-                    case OpcodeCompareNE _:
-                        return true;
-                    case OpcodeCompareGT _:
-                    case OpcodeCompareLT _:
-                    case OpcodeCompareGTE _:
-                    case OpcodeCompareLTE _:
-                        return !(IRParameter.IsOrContainsParameter(Left) || IRParameter.IsOrContainsParameter(Right));
-                    default:
-#if DEBUG
-                        throw new NotImplementedException();
-#else
-                        return false;
-#endif
-                }
+                if (IRParameter.IsOrContainsParameter(Left) || IRParameter.IsOrContainsParameter(Right))
+                    return false;
+                return MetaCalculator.IsCommutative(Left.Type, Right.Type, Operation);
+            }
+        }
+        public bool IsReversible
+        {
+            get
+            {
+                if (Left.Type == null || Right.Type == null)
+                    return false;
+                if (IRParameter.IsOrContainsParameter(Left) || IRParameter.IsOrContainsParameter(Right))
+                    return false;
+                return MetaCalculator.IsReversible(Left.Type, Right.Type, Operation);
             }
         }
 
@@ -312,6 +269,8 @@ namespace kOS.Safe.Compilation.IR
                 return false;
             if (Operation is OpcodeMathSubtract)
             {
+                if (!MetaCalculator.IsNegatable(Left.Type, Right.Type))
+                    return false;
                 Right = new IRUnaryOp(Block, new OpcodeMathNegate(), Right);
                 Operation = new OpcodeMathAdd();
             }
@@ -431,6 +390,35 @@ namespace kOS.Safe.Compilation.IR
             catch (KOSBinaryOperandTypeException binaryTypeException)
             {
                 throw new KOSCompileException(this, binaryTypeException);
+            }
+        }
+
+        public IRBinaryOp Reverse(IInterimOperand left, IInterimOperand right)
+        {
+            if (!IsReversible)
+                throw new InvalidOperationException();
+
+            switch (Operation)
+            {
+                case OpcodeMathAdd _:
+                    return new IRBinaryOp(Block, new OpcodeMathSubtract() { SourceLine = SourceLine, SourceColumn = SourceColumn }, left, right);
+                case OpcodeMathSubtract _:
+                    return new IRBinaryOp(Block, new OpcodeMathAdd() { SourceLine = SourceLine, SourceColumn = SourceColumn }, left, right);
+                case OpcodeMathMultiply _:
+                    return new IRBinaryOp(Block, new OpcodeMathDivide() { SourceLine = SourceLine, SourceColumn = SourceColumn }, left, right);
+                case OpcodeMathDivide _:
+                    return new IRBinaryOp(Block, new OpcodeMathMultiply() { SourceLine = SourceLine, SourceColumn = SourceColumn }, left, right);
+                case OpcodeMathPower _:
+                    throw new InvalidOperationException();
+                case OpcodeCompareEqual _:
+                case OpcodeCompareNE _:
+                case OpcodeCompareGT _:
+                case OpcodeCompareGTE _:
+                case OpcodeCompareLT _:
+                case OpcodeCompareLTE _:
+                    throw new InvalidOperationException();
+                default:
+                    throw new NotImplementedException();
             }
         }
     }

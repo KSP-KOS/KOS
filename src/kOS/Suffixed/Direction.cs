@@ -158,7 +158,7 @@ namespace kOS.Suffixed
             AddSuffix("INVERSE", new Suffix<Direction>(() => new Direction(Quaternion.Inverse(rotation)), "Returns the inverse of this direction - meaning the rotation that would go FROM this direction TO the universe's raw orientation."));
         }
 
-        [kOS.Safe.Compilation.Commutative(false)]
+        [kOS.Safe.Compilation.Commutative(false)]   // Matrix multiplication is not commutative
         public static Direction operator *(Direction a, Direction b)
         {
             return new Direction(a.Rotation * b.Rotation);
@@ -184,13 +184,13 @@ namespace kOS.Suffixed
             return new Vector(a.Rotation * (Vector3d)b);
         }
 
-        [kOS.Safe.Compilation.Commutative(false)]
+        [kOS.Safe.Compilation.Commutative(false)]   // Matrix multiplication is not commutative
         public static Direction operator +(Direction a, Direction b)
         {
             return new Direction(a.Euler + b.Euler, true);
         }
 
-        [kOS.Safe.Compilation.Commutative(false)]
+        [kOS.Safe.Compilation.Commutative(false)]   // Matrix multiplication is not commutative
         public static Direction operator -(Direction a, Direction b)
         {
             return new Direction(a.Euler - b.Euler, true);

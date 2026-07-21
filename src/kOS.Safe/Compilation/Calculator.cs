@@ -17,29 +17,6 @@ namespace kOS.Safe.Compilation
         public abstract object NotEqual(OperandPair pair);
         public abstract object Equal(OperandPair pair);
 
-        public abstract Type GetAddResultType(Type leftType, Type rightType);
-        public abstract Type GetSubtractResultType(Type leftType, Type rightType);
-        public abstract Type GetMultiplyResultType(Type leftType, Type rightType);
-        public abstract Type GetDivideResultType(Type leftType, Type rightType);
-        public abstract Type GetPowerResultType(Type leftType, Type rightType);
-        public virtual Type GetGreaterThanResultType(Type leftType, Type rightType) => typeof(BooleanValue);
-        public virtual Type GetLessThanResultType(Type leftType, Type rightType) => typeof(BooleanValue);
-        public virtual Type GetGreaterThanEqualResultType(Type leftType, Type rightType) => typeof(BooleanValue);
-        public virtual Type GetLessThanEqualResultType(Type leftType, Type rightType) => typeof(BooleanValue);
-        public virtual Type GetNotEqualResultType(Type leftType, Type rightType) => typeof(BooleanValue);
-        public virtual Type GetEqualResultType(Type leftType, Type rightType) => typeof(BooleanValue);
-
-        public virtual bool IsAdditionCommutative(Type leftType, Type rightType) => true;
-        /// <summary>
-        /// Determines whether subtraction is commutative with negation/addition.
-        /// </summary>
-        /// <returns>
-        ///   <c>true</c> if subtraction is commutative with negation/addition; otherwise, <c>false</c>.
-        /// </returns>
-        public virtual bool IsSubtractionCommutativeWithNegation(Type leftType, Type rightType) => true;
-        public virtual bool IsMultiplicationCommmutative(Type leftType, Type rightType) => true;
-        public virtual bool IsDivisionCommutative(Type leftType, Type rightType) => false;
-
         private static readonly CalculatorScalar calculatorScalar = new CalculatorScalar();
         private static readonly CalculatorString calculatorString = new CalculatorString();
         private static readonly CalculatorBool calculatorBool = new CalculatorBool();

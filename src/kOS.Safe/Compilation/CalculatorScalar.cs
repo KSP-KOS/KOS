@@ -9,36 +9,26 @@ namespace kOS.Safe.Compilation
         {
             return ScalarValue.Create(pair.Left) + ScalarValue.Create(pair.Right);
         }
-        public override Type GetAddResultType(Type leftType, Type rightType)
-            => typeof(ScalarValue);
 
         public override object Subtract(OperandPair pair)
         {
             return ScalarValue.Create(pair.Left) - ScalarValue.Create(pair.Right);
         }
-        public override Type GetSubtractResultType(Type leftType, Type rightType)
-            => typeof(ScalarValue);
 
         public override object Multiply(OperandPair pair)
         {
             return ScalarValue.Create(pair.Left) * ScalarValue.Create(pair.Right);
         }
-        public override Type GetMultiplyResultType(Type leftType, Type rightType)
-            => typeof(ScalarValue);
 
         public override object Divide(OperandPair pair)
         {
             return ScalarValue.Create(pair.Left) / ScalarValue.Create(pair.Right);
         }
-        public override Type GetDivideResultType(Type leftType, Type rightType)
-            => typeof(ScalarValue);
 
         public override object Power(OperandPair pair)
         {
             return ScalarValue.Create(pair.Left) ^ ScalarValue.Create(pair.Right);
         }
-        public override Type GetPowerResultType(Type leftType, Type rightType)
-            => typeof(ScalarValue);
 
         public override object GreaterThan(OperandPair pair)
         {
