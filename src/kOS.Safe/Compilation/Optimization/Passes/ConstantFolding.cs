@@ -208,8 +208,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 {
                     case OpcodeMathDivide _:
                         // X / 0 = Error
-                        if (throwOnDivideByZero &&
-                            Encapsulation.ScalarIntValue.Zero.Equals(constantR.Value))
+                        if (Encapsulation.ScalarIntValue.Zero.Equals(constantR.Value))
                             throw new KOSCompileException(instruction, new DivideByZeroException());
                         break;
                     case OpcodeMathPower _:
