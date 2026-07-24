@@ -20,6 +20,9 @@ namespace kOS.Safe.Compilation.IR
         /// </summary>
         Type Type { get; }
 
+        short SourceLine { get; }
+        short SourceColumn { get; }
+
         /// <summary>
         /// Emits the opcodes that will generate the operand.
         /// </summary>

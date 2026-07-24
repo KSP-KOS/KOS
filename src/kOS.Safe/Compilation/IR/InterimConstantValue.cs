@@ -6,27 +6,27 @@ namespace kOS.Safe.Compilation.IR
 {
     public class InterimConstantValue : IInterimOperand, IEvaluatableToConstant
     {
-        protected readonly short sourceLine, sourceColumn;
-
         public virtual bool IsInvariant => true;
         public object Value { get; set; }
         public Type Type { get; protected set; }
+        public short SourceLine { get; }
+        public short SourceColumn { get; }
         public bool IsPrimitive { get => Type.IsPrimitive || typeof(Encapsulation.PrimitiveStructure).IsAssignableFrom(Type); }
         public InterimConstantValue(object value, Opcode opcode) : this(value, opcode.SourceLine, opcode.SourceColumn) { }
         public InterimConstantValue(object value, IRInstruction instruction) : this(value, instruction.SourceLine, instruction.SourceColumn) { }
         public InterimConstantValue(object value, short sourceLine, short sourceColumn)
         {
             Value = value;
-            this.sourceLine = sourceLine;
-            this.sourceColumn = sourceColumn;
+            SourceLine = sourceLine;
+            SourceColumn = sourceColumn;
             Type = value.GetType();
         }
         public virtual IEnumerable<Opcode> EmitOpcodes()
         {
             yield return new OpcodePush(Value)
             {
-                SourceLine = sourceLine,
-                SourceColumn = sourceColumn
+                SourceLine = SourceLine,
+                SourceColumn = SourceColumn
             };
         }
         public bool Equals(InterimConstantValue other)
@@ -49,7 +49,7 @@ namespace kOS.Safe.Compilation.IR
             => this;
 
         public IInterimOperand Clone(BasicBlock _, bool __ = false)
-            => new InterimConstantValue(Value, sourceLine, sourceColumn);
+            => new InterimConstantValue(Value, SourceLine, SourceColumn);
     }
 
     public class IRRelocateLater : InterimConstantValue
@@ -64,8 +64,8 @@ namespace kOS.Safe.Compilation.IR
         {
             yield return new OpcodePushRelocateLater((string)Value)
             {
-                SourceLine = sourceLine,
-                SourceColumn = sourceColumn
+                SourceLine = SourceLine,
+                SourceColumn = SourceColumn
             };
         }
     }
@@ -81,8 +81,8 @@ namespace kOS.Safe.Compilation.IR
         {
             yield return new OpcodePushDelegateRelocateLater((string)Value, WithClosure)
             {
-                SourceLine = sourceLine,
-                SourceColumn = sourceColumn
+                SourceLine = SourceLine,
+                SourceColumn = SourceColumn
             };
         }
     }
@@ -96,6 +96,9 @@ namespace kOS.Safe.Compilation.IR
         public bool IsInvariant =>
             (StackTransferObject?.IsResolvable ?? false) &&
             (StackTransferObject.Value?.IsInvariant ?? false);
+        public short SourceLine => -1;
+        public short SourceColumn => -1;
+
         public bool IsResolvable => IsSetResolvable(this);
         public IStackTransferObject StackTransferObject
         {

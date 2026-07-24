@@ -9,6 +9,10 @@ namespace kOS.Safe.Compilation.IR
         public IInterimOperand Condition { get; set; }
         public IInterimOperand TrueValue { get; set; }
         public IInterimOperand FalseValue { get; set; }
+
+        public short SourceLine => Condition?.SourceLine ?? -1;
+        public short SourceColumn => Condition?.SourceColumn ?? -1;
+
         public bool IsInvariant
         {
             get
