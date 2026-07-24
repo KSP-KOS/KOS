@@ -130,10 +130,31 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             }
         }
 
+        public static class TemporaryVariableIssuer
+        {
+            // This identifier is impossible for a user to
+            // create in a .ks file.
+            public const string identifierPrefix = "$compiler.Temp.";
+            private static ushort nextID = 0;
+            private static ushort GetNextID()
+            {
+                ushort result = nextID;
+                // Wrapping is fine - no one should have more than
+                // 65,000 re-used expressions in a single scope.
+                unchecked
+                {
+                    nextID++;
+                }
+                return result;
+            }
+            public static string GetNewIdentifier()
+                => $"{identifierPrefix}{GetNextID()}";
+        }
+
         public class CompilerTemporaryVariable : IResultingInstruction, IOperandInstructionBase
         {
-            private static ushort nextID;
-
+            public short SourceLine => Value.SourceLine;
+            public short SourceColumn => Value.SourceColumn;
             public IResultingInstruction Value { get; }
             public SSASetDefinition Definition { get; }
             public string Identifier { get; }
@@ -147,16 +168,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             public CompilerTemporaryVariable(IResultingInstruction value, BasicBlock block)
             {
                 Value = value;
-                ushort id;
-                // Wrapping is fine - no one should have more than
-                // 65,000 re-used expressions in a single scope.
-                unchecked
-                {
-                    id = nextID++;
-                }
-                // This identified is impossible for a user to
-                // create in a .ks file.
-                Identifier = $"$compiler.Temp.{id}";
+                Identifier = TemporaryVariableIssuer.GetNewIdentifier();
                 Definition = new SSASetDefinition(Identifier, new IRAssign(block, new OpcodeStoreLocal(Identifier), value));
             }
 
