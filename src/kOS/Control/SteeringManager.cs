@@ -788,7 +788,9 @@ namespace kOS.Control
                 {
                     KSPUtil.ToDiagonalMatrix2(part.rb.inertiaTensor, ref partTensor);
 
-                    Quaternion rot = Quaternion.Inverse(vesselRotation) * part.transform.rotation * part.rb.inertiaTensorRotation;
+                    // Quaternion.Euler(90, 0, 0) is to recover vesselRotation from kOS reference frame to Unity frame.
+                    // To keep concensus with shared.Vessel.MOI
+                    Quaternion rot = Quaternion.Inverse(vesselRotation * Quaternion.Euler(90, 0, 0)) * part.transform.rotation * part.rb.inertiaTensorRotation;
                     Quaternion inv = Quaternion.Inverse(rot);
 
                     Matrix4x4 rotMatrix = Matrix4x4.TRS(Vector3.zero, rot, Vector3.one);
