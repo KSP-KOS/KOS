@@ -27,6 +27,7 @@ namespace kOS.Safe.Compilation.IR
             Dictionary<IRFunction, HashSet<IRFunction>> funcCallTrees = new Dictionary<IRFunction, HashSet<IRFunction>>();
             Dictionary<IRFunction, HashSet<IRFunction>> callers = new Dictionary<IRFunction, HashSet<IRFunction>>();
             Queue<IRFunction> functionQueue = new Queue<IRFunction>(codePart.Functions.OrderBy(f => f.FunctionCalls.Count));
+            Dictionary<IRFunction, Dictionary<(string, IRScope), SSADefinition>> externalSets = new Dictionary<IRFunction, Dictionary<(string, IRScope), SSADefinition>>();
 
             // Establish the call trees and ensure that all propagated effects are current.
             while (functionQueue.Count > 0)
@@ -39,14 +40,25 @@ namespace kOS.Safe.Compilation.IR
 
                 FlattenCallTree(function);
 
+                bool same = true;
+                // Require that the call tree reaches a stable point.
                 if (funcCallTrees.TryGetValue(function, out HashSet<IRFunction> cachedCalls))
                 {
-                    if (cachedCalls.SetEquals(functionCalls))
-                        continue;
-                    funcCallTrees[function].UnionWith(function.FunctionCalls);
+                    bool callsEqual = cachedCalls.SetEquals(functionCalls);
+                    same &= callsEqual;
+                    if (!callsEqual)
+                        funcCallTrees[function].UnionWith(function.FunctionCalls);
                 }
                 else
                     funcCallTrees.Add(function, new HashSet<IRFunction>(function.FunctionCalls));
+                
+                // Also require that the function's terminal block IncomingVariables is unchanged.
+                // We'll use that the propagate ExternalSet SSA definitions at call sites.
+                bool setsEqual = externalSets.TryGetValue(function, out Dictionary<(string, IRScope), SSADefinition> cachedSetDefinitions) &&
+                    cachedSetDefinitions.ContentsEqual((function as ICodeComponent).TerminalBlock.IncomingVariableDefinitions);
+                same &= setsEqual;
+                if (!setsEqual)
+                    externalSets[function] = new Dictionary<(string, IRScope), SSADefinition>(function.TerminalBlock.IncomingVariableDefinitions);
 
                 foreach (IRFunction callee in function.FunctionCalls)
                 {
@@ -451,7 +463,10 @@ namespace kOS.Safe.Compilation.IR
                     if (variables.TryGetValue((varName, scope), out SSADefinition ssaDef) &&
                         ssaDef.State != SSADefinition.SetState.Unset)
                     {
-                        ReplaceDefinition(variables, (varName, scope), ssaDef.PotentiallyOverwrite(SSASetDefinition.FromCallSite(varName, call), writeReplaceChain), writeReplaceChain);
+                        if (function.TerminalBlock.IncomingVariableDefinitions.TryGetValue((varName, function.ClosureScope.ParentScope), out SSADefinition writeDefinition))
+                            ReplaceDefinition(variables, (varName, scope), writeDefinition, writeReplaceChain);
+                        else
+                            ReplaceDefinition(variables, (varName, scope), ssaDef.PotentiallyOverwrite(SSASetDefinition.FromCallSite(varName, call), writeReplaceChain), writeReplaceChain);
 
                         if (ssaDef.State == SSADefinition.SetState.Set)
                             break;
@@ -477,6 +492,7 @@ namespace kOS.Safe.Compilation.IR
                 => (obj.Item1.GetHashCode(), SSADefinition.ReferenceEqualityComparer.GetHashCode(obj.Item2)).GetHashCode();
         }
 
+        private static readonly Dictionary<(BasicBlock, string), SSASetDefinition> externalDefinitionsCache = new Dictionary<(BasicBlock, string), SSASetDefinition>();
         public static void BuildPhis(BasicBlock root, bool stackAdoptsTypeHints, Dictionary<(string, IRScope), SSADefinition> incomingVariables = null)
             => BuildPhis(root, root.CodePart, null, stackAdoptsTypeHints, incomingVariables);
         private static void BuildPhis(BasicBlock root, IRCodePart codePart, IClosureVariableUser funcOrTrigger, bool stackAdoptsTypeHints, Dictionary<(string, IRScope), SSADefinition> incomingVariables = null)
@@ -526,6 +542,28 @@ namespace kOS.Safe.Compilation.IR
                 }
 
                 List<IStackTransferObject> stackResult = PopulateParameters(block, stackOut, worklist);
+
+                // Patch in a bogus definition if not all paths to this
+                // block provide a definition for a given external variable.
+                if (block.Predecessors.Count > 1)
+                {
+                    List<(BasicBlock, IRScope, SSADefinition)> globalNullVars = new List<(BasicBlock, IRScope, SSADefinition)>();
+                    foreach (IGrouping<SSADefinition, (BasicBlock Block, IRScope Scope, SSADefinition)> globalDef in
+                        varsIn.Where(v => v.Scope.IsGlobalScope).GroupBy(v => v.Variable))
+                    {
+                        IRScope scope = globalDef.First().Scope;
+                        foreach (BasicBlock predecessor in block.Predecessors.Except(globalDef.Select(v => v.Block)))
+                        {
+                            if (!externalDefinitionsCache.TryGetValue((predecessor, globalDef.Key.Name), out SSASetDefinition definition))
+                            {
+                                definition = new SSASetDefinition(globalDef.Key.Name, (IRAssign)null);
+                                externalDefinitionsCache[(predecessor, globalDef.Key.Name)] = definition;
+                            }
+                            globalNullVars.Add((predecessor, scope, definition));
+                        }
+                    }
+                    varsIn.AddRange(globalNullVars);
+                }
                 
                 // Group variable definitions by their scope slot.
                 // If a scope slot has multiple distinct definitions, generate a phi.
@@ -543,8 +581,7 @@ namespace kOS.Safe.Compilation.IR
                 if (variablesOut.ContainsKey(block))
                 {
                     Dictionary<(string, IRScope), SSADefinition> oldDefinition = variablesOut[block];
-                    same &= oldDefinition.Count == varsOut.Count &&
-                        varsOut.All(kvp => oldDefinition.ContainsKey(kvp.Key) && SSADefinition.ReferenceEqualityComparer.Equals(oldDefinition[kvp.Key], kvp.Value));
+                    same &= oldDefinition.ContentsEqual(varsOut, SSADefinition.ReferenceEqualityComparer);
                 }
                 else
                     same = false;
@@ -666,6 +703,7 @@ namespace kOS.Safe.Compilation.IR
                             parameter.RequiredToBeResolvable.UnionWith(GetFollowingParameters(operandInstruction, parameter));
                         }
                         // TODO: Add a sub-pass to swap binary operands to optimize the number of resolvable operands.
+                        // Not really required now that TernaryOperands are implemented in IR.
                         stack.RemoveAt(0);
                     }
                     else if (op is IRCall call)

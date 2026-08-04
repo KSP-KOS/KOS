@@ -61,7 +61,7 @@ namespace kOS.Safe.Compilation.IR
         IRCodePart ICodeComponent.CodePart => this;
         public BasicBlock RootBlock { get; set; }
 
-        BasicBlock ICodeComponent.TerminalBlock { get; set; }
+        public BasicBlock TerminalBlock { get; set; }
 
         /// <summary>
         /// Gets the reachable variables for a given call site.
@@ -275,7 +275,7 @@ namespace kOS.Safe.Compilation.IR
             public IRScope ClosureScope { get; }
 
             public BasicBlock RootBlock { get; set; }
-            BasicBlock ICodeComponent.TerminalBlock { get; set; }
+            public BasicBlock TerminalBlock { get; set; }
             public IRCodePart CodePart { get; }
 
             /// <summary>
@@ -429,6 +429,7 @@ namespace kOS.Safe.Compilation.IR
             public HashSet<IRCall> CallSites { get; } = new HashSet<IRCall>(IRInstruction.ReferenceEqualityComparer);
 
             public List<BasicBlock> RootBlocks { get; } = new List<BasicBlock>();
+            public BasicBlock TerminalBlock { get; set; }
 
             /// <summary>
             /// Initializes a new instance of the <see cref="IRFunction"/> class.
@@ -444,7 +445,7 @@ namespace kOS.Safe.Compilation.IR
                 userFunctionFragments = function.PeekNewCodeFragments().ToList();
                 foreach (UserFunctionCodeFragment fragment in userFunctionFragments)
                 {
-                    fragments.Add(fragment, new IRFunctionFragment(builder, fragment, codePart, ClosureScope));
+                    fragments.Add(fragment, new IRFunctionFragment(builder, fragment, codePart, this));
                 }
                 userFunctionFragments.Reverse();
 
@@ -485,19 +486,25 @@ namespace kOS.Safe.Compilation.IR
                 /// Gets or sets the function code, in BasicBlock representation.
                 /// </summary>
                 public List<BasicBlock> Blocks { get; set; }
+                public IRFunction Function { get; set; }
                 public BasicBlock RootBlock { get; set; }
-                BasicBlock ICodeComponent.TerminalBlock { get; set; }
+                public BasicBlock TerminalBlock
+                {
+                    get => Function.TerminalBlock;
+                    set => Function.TerminalBlock = value;
+                }
                 public IRCodePart CodePart { get; }
                 /// <summary>
                 /// Initializes a new instance of the <see cref="IRFunctionFragment"/> class.
                 /// </summary>
                 /// <param name="builder">The IRBuilder object in use.</param>
                 /// <param name="codeFragment">The function code fragment to convert.</param>
-                public IRFunctionFragment(IRBuilder builder, UserFunctionCodeFragment codeFragment, IRCodePart codePart, IRScope ClosureScope)
+                public IRFunctionFragment(IRBuilder builder, UserFunctionCodeFragment codeFragment, IRCodePart codePart, IRFunction function)
                 {
+                    Function = function;
                     CodePart = codePart;
                     fragment = codeFragment;
-                    Blocks = builder.Lower(codeFragment.Code, this, ClosureScope);
+                    Blocks = builder.Lower(codeFragment.Code, this, function.ClosureScope);
                     RootBlock = Blocks.FirstOrDefault();
                 }
                 /// <summary>

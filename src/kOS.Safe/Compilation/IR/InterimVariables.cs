@@ -323,7 +323,7 @@ namespace kOS.Safe.Compilation.IR
             new Dictionary<(string, IRCall), SSASetDefinition>();
 
         public IRAssign DefinedAt { get; }
-        public override bool IsInvariant => State != SetState.PotentiallyUnset && AssignedAt.IsInvariant;
+        public override bool IsInvariant => State != SetState.PotentiallyUnset && (AssignedAt?.IsInvariant ?? false);
         public override Type Type => AssignedType;
         public Type AssignedType { get; set; }
 
@@ -331,7 +331,7 @@ namespace kOS.Safe.Compilation.IR
         {
             DefinedAt = assignedAt;
             potentialUnsetSites = new Dictionary<IRUnset, SSADefinition>();
-            AssignedType = DefinedAt.Value.Type;
+            AssignedType = DefinedAt?.Value?.Type ?? typeof(Encapsulation.Structure);
         }
         public SSASetDefinition(string name, IRUnset unsetAt) : base(name, SetState.Unset, unsetAt)
         {

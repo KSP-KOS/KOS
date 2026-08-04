@@ -18,7 +18,10 @@ local function func {
     print(b+c). // 6
     print(b+d). // 9
     print(b+a). // 7
-    set h to true.
+    if (random() <= 1)
+    {
+        set h to true.
+    }
 }
 
 func().

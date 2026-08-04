@@ -58,5 +58,29 @@ namespace kOS.Safe.Compilation.Optimization
             }
             yield return operandInstruction;
         }
+
+        public static bool ContentsEqual<TKey, TValue>(this IDictionary<TKey, TValue> a, IDictionary<TKey, TValue> b, IEqualityComparer<TValue> comparer = null)
+        {
+            if (comparer == null)
+                comparer = EqualityComparer<TValue>.Default;
+
+            if (a.Count != b.Count)
+                return false;
+            foreach (TKey key in a.Keys)
+            {
+                if (!b.TryGetValue(key, out TValue value) || !comparer.Equals(a[key], value))
+                    return false;
+            }
+            return true;
+        }
+        public class DictionaryContentsComparer<TKey, TValue> : IEqualityComparer<IDictionary<TKey, TValue>>
+        {
+            public bool Equals(IDictionary<TKey, TValue> x, IDictionary<TKey, TValue> y)
+                => ContentsEqual(x, y);
+
+            // TODO: Make a better implementation of this.
+            public int GetHashCode(IDictionary<TKey, TValue> obj)
+                => obj.Count;
+        }
     }
 }
