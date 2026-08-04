@@ -183,7 +183,8 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("random", ReturnType = typeof(ScalarDoubleValue), IsInvariant = false, IsInert = true)]
+    // This is not inert because calling random() changes the value of the next call to random().
+    [Function("random", ReturnType = typeof(ScalarDoubleValue), IsInvariant = false, IsInert = false)]
     public class FunctionRandom : SafeFunctionBase
     {
         private readonly Random random = new Random();
