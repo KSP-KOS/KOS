@@ -73,14 +73,5 @@ namespace kOS.Safe.Compilation.Optimization
             }
             return true;
         }
-        public class DictionaryContentsComparer<TKey, TValue> : IEqualityComparer<IDictionary<TKey, TValue>>
-        {
-            public bool Equals(IDictionary<TKey, TValue> x, IDictionary<TKey, TValue> y)
-                => ContentsEqual(x, y);
-
-            // TODO: Make a better implementation of this.
-            public int GetHashCode(IDictionary<TKey, TValue> obj)
-                => obj.Count;
-        }
     }
 }
