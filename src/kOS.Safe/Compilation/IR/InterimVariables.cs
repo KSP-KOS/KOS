@@ -621,12 +621,12 @@ namespace kOS.Safe.Compilation.IR
         }
 
     }
-    public class PhiOperand : PhiNode<IInterimOperand>
+    public class PhiOperand<T> : PhiNode<T> where T : IRInstruction, ISingleOperandInstruction
     {
-        protected override bool ObjIsInvariant(IInterimOperand obj)
-            => obj == null || (obj.IsInvariant && obj is IEvaluatableToConstant);
-        protected override Type ObjType(IInterimOperand obj)
-            => obj.Type;
+        protected override bool ObjIsInvariant(T obj)
+            => obj == null || (obj.IsInvariant && obj.Operand is IEvaluatableToConstant);
+        protected override Type ObjType(T obj)
+            => obj.Operand.Type;
 
         public override InterimConstantValue Evaluate()
         {
@@ -635,16 +635,16 @@ namespace kOS.Safe.Compilation.IR
             return base.Evaluate();
         }
 
-        protected override InterimConstantValue EvaluateObj(IInterimOperand obj)
-            => (obj as IEvaluatableToConstant)?.Evaluate();
+        protected override InterimConstantValue EvaluateObj(T obj)
+            => (obj.Operand as IEvaluatableToConstant)?.Evaluate();
 
         protected override void MutateEachOperand(Func<IInterimOperand, IInterimOperand> mutateFunc)
         {
             foreach (BasicBlock block in PossibleValues.Keys)
-                PossibleValues[block] = mutateFunc(PossibleValues[block]);
+                PossibleValues[block].Operand = mutateFunc(PossibleValues[block].Operand);
         }
-        protected override IInterimOperand ValueAsOperand(IInterimOperand item)
-            => item;
+        protected override IInterimOperand ValueAsOperand(T item)
+            => item.Operand;
     }
     
     public abstract class PhiNode<T> : IMultipleOperandInstruction

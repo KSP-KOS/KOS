@@ -359,29 +359,7 @@ namespace kOS.Safe.Compilation.IR
             /// <summary>
             /// Gets the return value of this function.
             /// </summary>
-            public PhiOperand Returns
-            {
-                get
-                {
-                    foreach (IRFunctionFragment fragment in Fragments)
-                    {
-                        foreach (BasicBlock block in fragment.Blocks)
-                        {
-                            if (block.Successors.Any())
-                            {
-                                returns.PossibleValues.Remove(block);
-                                continue;
-                            }
-                            if (!(block.Instructions[block.Instructions.Count - 1] is IRReturn ret))
-                                returns.PossibleValues[block] = null;
-                            else
-                                returns.PossibleValues[block] = ret.Value;
-                        }
-                    }
-                    return returns;
-                }
-            }
-            private readonly PhiOperand returns = new PhiOperand();
+            public PhiOperand<IRReturn> Returns { get; } = new PhiOperand<IRReturn>();
             /// <summary>
             /// Gets a value indicating whether this instance is invariant.
             /// A user function must also be inert to be considered invariant.
@@ -455,6 +433,16 @@ namespace kOS.Safe.Compilation.IR
                 {
                     if (fragment.Blocks.Count > 0)
                         RootBlocks.Add(fragment.Blocks[0]);
+
+                    foreach (BasicBlock block in fragment.Blocks)
+                    {
+                        if (block.Successors.Any(b => !(b is SyntheticReturnBlock)))
+                            continue;
+                        if (!(block.Instructions[block.Instructions.Count - 1] is IRReturn ret))
+                            Returns.PossibleValues[block] = null;
+                        else
+                            Returns.PossibleValues[block] = ret;
+                    }
                 }
             }
 
