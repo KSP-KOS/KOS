@@ -50,7 +50,7 @@ namespace kOS.Safe.Compilation.IR
                         jumpLabels.TryGetValue(opcode.DestinationLabel, out int destination) &&
                         result[destination - labelIndex] is OpcodeBranchJump)
                     {
-                        opcode.DestinationLabel = result[destination].DestinationLabel;
+                        opcode.DestinationLabel = result[destination - labelIndex].DestinationLabel;
                         changed = true;
                     }
                 }
