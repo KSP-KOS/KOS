@@ -34,7 +34,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 
                 RemovePushScope(scope.HeaderBlock);
 
-                RemovePopScope(scope.FooterBlock);
+                foreach (BasicBlock footer in scope.FooterBlocks)
+                    RemovePopScope(footer);
 
                 removedScopes.Add(scope);
             }
@@ -93,9 +94,12 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     throw new KOSYouShouldNeverSeeThisException($"After removing unecessary scopes, the return statement in {footer} had negative depth.");
             }
             else if (lastInstruction is IRNoStackInstruction popInstruction &&
-                popInstruction.Operation is OpcodePopScope)
+                popInstruction.Operation is OpcodePopScope popScope)
             {
-                footer.Instructions.RemoveAt(lastIndex);
+                if (popScope.NumLevels > 1)
+                    popScope.NumLevels--;
+                else
+                    footer.Instructions.RemoveAt(lastIndex);
             }
             else
                 throw new KOSYouShouldNeverSeeThisException($"The last instruction ({lastInstruction}) in scope footer block {footer} was not OpcodePopScope or OpcodeReturn.");
@@ -111,12 +115,13 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             BasicBlock predecessorBlock = target.Predecessors.First();
 
             if (predecessorBlock.Instructions.LastOrDefault() is IRNoStackInstruction popInstruction &&
-                popInstruction.Operation is OpcodePopScope)
+                popInstruction.Operation is OpcodePopScope popScope)
             {
                 predecessorBlock.Instructions.RemoveAt(predecessorBlock.Instructions.Count - 1);
-                ((IRReturn)returnBlock.Instructions.Last()).Depth += 1;
+                ((IRReturn)returnBlock.Instructions.Last()).Depth += popScope.NumLevels;
                 returnBlock.Scope = predecessorBlock.Scope;
-                returnBlock.Scope.FooterBlock = returnBlock;
+                returnBlock.Scope.FooterBlocks.Remove(predecessorBlock);
+                returnBlock.Scope.FooterBlocks.Add(returnBlock);
             }
 
             // Since a pop closes a BasicBlock, then if there are no instructions remaining,

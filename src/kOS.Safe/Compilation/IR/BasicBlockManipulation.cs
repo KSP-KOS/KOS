@@ -66,8 +66,11 @@ namespace kOS.Safe.Compilation.IR
                 IsExecutable = IsExecutable
             };
 
-            if (Scope.FooterBlock == this)
-                Scope.FooterBlock = successorBlock;
+            if (Scope.FooterBlocks.Contains(this))
+            {
+                Scope.FooterBlocks.Remove(this);
+                Scope.FooterBlocks.Add(successorBlock);
+            }
 
             successorBlock.TriggerPropagationBlacklist.UnionWith(TriggerPropagationBlacklist);
             foreach (var key in TriggerUnsetBlacklist.Keys)
@@ -181,10 +184,13 @@ namespace kOS.Safe.Compilation.IR
             else
                 scope = new IRScope(original.ParentScope, replacementBlocks[original.HeaderBlock]);
 
-            if (replacementBlocks.TryGetValue(original.FooterBlock, out BasicBlock newFooter))
-                scope.FooterBlock = newFooter;
-            else
-                scope.FooterBlock = original.FooterBlock;
+            foreach (BasicBlock footer in original.FooterBlocks)
+            {
+                if (replacementBlocks.TryGetValue(footer, out BasicBlock newFooter))
+                    scope.FooterBlocks.Add(newFooter);
+                else
+                    scope.FooterBlocks.Add(footer);
+            }
 
             return scope;
         }

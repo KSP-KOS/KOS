@@ -10,7 +10,7 @@ namespace kOS.Safe.Compilation.IR
     /// instance must be used for a complete program element
     /// (i.e. a <see cref="CodePart"/>).
     /// </summary>
-    public class IRBuilder
+    public static class IRBuilder
     {
         /// <summary>
         /// Lowers the specified code from a sequence of <see cref="Opcode"/>s
@@ -18,23 +18,33 @@ namespace kOS.Safe.Compilation.IR
         /// </summary>
         /// <param name="code">The code to lower.</param>
         /// <returns>A sequence of <see cref="BasicBlock"/> objects, representing the instructions.</returns>
-        public List<BasicBlock> Lower(List<Opcode> code, ICodeComponent codeComponent, IRScope parentScope = null)
+        public static List<BasicBlock> Lower(List<Opcode> code, ICodeComponent codeComponent, IRScope parentScope = null)
         {
-            List<BasicBlock> blocks = new List<BasicBlock>();
             if (code.Count == 0)
-                return blocks;
+                return new List<BasicBlock>();
             Dictionary<string, int> labels = ProgramBuilder.MapLabels(code);
-            CreateBlocks(code, codeComponent, labels, blocks, parentScope);
-            FillBlocks(code, labels, blocks, codeComponent);
+            List<BasicBlock> blocks = CreateBlocks(code, codeComponent, labels, parentScope, out HashSet<int> scopePushes, out Dictionary<int, int> scopePops);
+            FillBlocks(code, labels, blocks, out List<(string, string, BasicBlock, bool)> functionsToEnroll, out List<(string, BasicBlock)> closuresToEnroll);
+
+            IRScope globalScope = parentScope ?? new IRScope(parentScope, null);
+            AssignScopes(GetBlockFromStartIndex(blocks, 0), globalScope, scopePushes, scopePops);
+
+            foreach ((string identifier, string pointer, BasicBlock block, bool global) in functionsToEnroll)
+                codeComponent.CodePart.EnrollFunction(identifier, pointer, block.Scope, global);
+            foreach ((string identifier, BasicBlock block) in closuresToEnroll)
+                codeComponent.CodePart.EnrollClosure(identifier, block.Scope);
+
             return blocks;
         }
 
-        private void CreateBlocks(List<Opcode> code, ICodeComponent codeComponent, Dictionary<string, int> labels, List<BasicBlock> blocks, IRScope parentScope)
+        private static List<BasicBlock> CreateBlocks(List<Opcode> code, ICodeComponent codeComponent, Dictionary<string, int> labels, IRScope parentScope,
+            out HashSet<int> scopePushes, out Dictionary<int, int> scopePops)
         {
+            List<BasicBlock> blocks = new List<BasicBlock>();
             IRScope globalScope = parentScope ?? new IRScope(parentScope, null);
             SortedSet<int> leaders = new SortedSet<int>() { 0 };
-            HashSet<int> scopePushes = new HashSet<int>();
-            HashSet<int> scopePops = new HashSet<int>();
+            scopePushes = new HashSet<int>();
+            scopePops = new Dictionary<int, int>();
             for (int i = 0; i < code.Count; i++)
             {
                 if (code[i] is BranchOpcode branch)
@@ -53,17 +63,17 @@ namespace kOS.Safe.Compilation.IR
                 {
                     leaders.Add(i + 1);
                     if (ret.Depth > 0)
-                        scopePops.Add(i);
+                        scopePops.Add(i, ret.Depth);
                 }
                 else if (code[i] is OpcodePushScope)
                 {
                     leaders.Add(i);
                     scopePushes.Add(i);
                 }
-                else if (code[i] is OpcodePopScope)
+                else if (code[i] is OpcodePopScope popScope)
                 {
                     leaders.Add(i + 1);
-                    scopePops.Add(i);
+                    scopePops.Add(i, popScope.NumLevels);
                 }
             }
             leaders.Add(code.Count);
@@ -107,27 +117,44 @@ namespace kOS.Safe.Compilation.IR
             rootBlock.EstablishDominance();
             unifiedReturn.EstablishPostDominance();
 
-            AssignScopes(rootBlock, globalScope, scopePushes, scopePops);
+            return blocks;
         }
 
-        private BasicBlock GetBlockFromStartIndex(List<BasicBlock> blocks, int startIndex)
+        private static BasicBlock GetBlockFromStartIndex(List<BasicBlock> blocks, int startIndex)
             => blocks.First(b => b.StartIndex == startIndex);
 
-        private static void AssignScopes(BasicBlock root, IRScope globalScope, HashSet<int> scopePushIndices, HashSet<int> scopePopIndices)
+        private static void AssignScopes(BasicBlock root, IRScope globalScope, HashSet<int> scopePushIndices, Dictionary<int, int> scopePopIndices)
         {
-            Stack<IRScope> scopeStack = new Stack<IRScope>();
-            scopeStack.Push(globalScope);
-
             void Visit(BasicBlock block)
             {
+                IRScope incomingScope;
+                int numLevels;
+                if (block.Dominator == null)
+                    incomingScope = globalScope;
+                else
+                {
+                    incomingScope = block.Dominator.Scope;
+                    if (scopePopIndices.TryGetValue(block.Dominator.EndIndex, out numLevels))
+                    {
+                        for (int i = 0; i < numLevels; i++)
+                            incomingScope = incomingScope.ParentScope;
+                    }
+                }
+
                 if (scopePushIndices.Contains(block.StartIndex))
-                    scopeStack.Push(new IRScope(scopeStack.Peek(), block));
+                    block.Scope = new IRScope(incomingScope, block);
+                else
+                    block.Scope = incomingScope;
 
-                block.Scope = scopeStack.Peek();
-
-                // Return statements can pop multiple scopes
-                if (scopePopIndices.Contains(block.EndIndex))
-                    scopeStack.Pop().FooterBlock = block;
+                if (scopePopIndices.TryGetValue(block.EndIndex, out numLevels))
+                {
+                    IRScope scope = block.Scope;
+                    for (int i = 0; i < numLevels; i++)
+                    {
+                        scope.FooterBlocks.Add(block);
+                        scope = scope.ParentScope;
+                    }
+                }
 
                 foreach (BasicBlock child in block.Dominates)
                     Visit(child);
@@ -136,10 +163,13 @@ namespace kOS.Safe.Compilation.IR
             Visit(root);
         }
 
-        private void FillBlocks(List<Opcode> code, Dictionary<string, int> labels, List<BasicBlock> blocks, ICodeComponent codeComponent)
+        private static void FillBlocks(List<Opcode> code, Dictionary<string, int> labels, List<BasicBlock> blocks,
+            out List<(string, string, BasicBlock, bool)> functionsToEnroll, out List<(string, BasicBlock)> closuresToEnroll)
         {
             Stack<IInterimOperand> stack = new Stack<IInterimOperand>();
             BasicBlock currentBlock = GetBlockFromStartIndex(blocks, 0);
+            closuresToEnroll = new List<(string, BasicBlock)>();
+            functionsToEnroll = new List<(string, string, BasicBlock, bool)>();
             for (int i = 0; i < code.Count; i++)
             {
                 if (i > currentBlock.EndIndex)
@@ -147,7 +177,7 @@ namespace kOS.Safe.Compilation.IR
                     SetStackState(stack, currentBlock);
                     currentBlock = GetBlockFromStartIndex(blocks, i);
                 }
-                ParseInstruction(code[i], currentBlock, stack, labels, i, blocks, codeComponent);
+                ParseInstruction(code[i], currentBlock, stack, labels, i, blocks, ref functionsToEnroll, ref closuresToEnroll);
             }
         }
 
@@ -175,7 +205,8 @@ namespace kOS.Safe.Compilation.IR
             return block.AddParameter();
         }
 
-        private void ParseInstruction(Opcode opcode, BasicBlock currentBlock, Stack<IInterimOperand> stack, Dictionary<string, int> labels, int index, List<BasicBlock> blocks, ICodeComponent codeComponent)
+        private static void ParseInstruction(Opcode opcode, BasicBlock currentBlock, Stack<IInterimOperand> stack, Dictionary<string, int> labels, int index, List<BasicBlock> blocks,
+            ref List<(string, string, BasicBlock, bool)> functionsToEnroll, ref List<(string, BasicBlock)> closuresToEnroll)
         {
             IInterimOperand PopStack()
                 =>PopFromStack(stack, currentBlock);
@@ -183,16 +214,16 @@ namespace kOS.Safe.Compilation.IR
             switch (opcode)
             {
                 case OpcodeStore store:
-                    Store(PopStack(), currentBlock, store, codeComponent.CodePart);
+                    Store(PopStack(), currentBlock, store, functionsToEnroll);
                     break;
                 case OpcodeStoreExist storeExist:
-                    Store(PopStack(), currentBlock, storeExist, codeComponent.CodePart, assertExist: true);
+                    Store(PopStack(), currentBlock, storeExist, functionsToEnroll, assertExist: true);
                     break;
                 case OpcodeStoreLocal storeLocal:
-                    Store(PopStack(), currentBlock, storeLocal, codeComponent.CodePart, IRAssign.StoreScope.Local);
+                    Store(PopStack(), currentBlock, storeLocal, functionsToEnroll, IRAssign.StoreScope.Local);
                     break;
                 case OpcodeStoreGlobal storeGlobal:
-                    Store(PopStack(), currentBlock, storeGlobal, codeComponent.CodePart, IRAssign.StoreScope.Global);
+                    Store(PopStack(), currentBlock, storeGlobal, functionsToEnroll, IRAssign.StoreScope.Global);
                     break;
                 case OpcodeExists exists:
                     IResultingInstruction instruction = new IRUnaryOp(currentBlock, exists, PopStack());
@@ -326,7 +357,7 @@ namespace kOS.Safe.Compilation.IR
                 case OpcodeAddTrigger _:
                     IInterimOperand pointer = PopStack();
                     currentBlock.Add(new IRUnaryConsumer(currentBlock, opcode, pointer, false));
-                    codeComponent.CodePart.EnrollClosure((string)((InterimConstantValue)pointer).Value, currentBlock.Scope);
+                    closuresToEnroll.Add(((string)((InterimConstantValue)pointer).Value, currentBlock));
                     break;
                 case OpcodeRemoveTrigger _:
                     currentBlock.Add(new IRUnaryConsumer(currentBlock, opcode, PopStack(), false));
@@ -351,13 +382,14 @@ namespace kOS.Safe.Compilation.IR
             }
         }
 
-        private static void Store(IInterimOperand value, BasicBlock block, OpcodeIdentifierBase opcode, IRCodePart codePart, IRAssign.StoreScope storeScope = IRAssign.StoreScope.Ambivalent, bool assertExist = false)
+        private static void Store(IInterimOperand value, BasicBlock block, OpcodeIdentifierBase opcode, List<(string, string, BasicBlock, bool)> functionsToEnroll, IRAssign.StoreScope storeScope = IRAssign.StoreScope.Ambivalent, bool assertExist = false)
         {
             IRAssign assignment = new IRAssign(block, opcode, value) { Scope = storeScope, AssertExists = assertExist };
             block.Add(assignment);
 
+
             if (value is IRRelocateLater lockOrFunctionPointer)
-                codePart.EnrollFunction(opcode.Identifier, (string)lockOrFunctionPointer.Value, block.Scope, storeScope == IRAssign.StoreScope.Global);
+                functionsToEnroll.Add((opcode.Identifier, (string)lockOrFunctionPointer.Value, block, storeScope == IRAssign.StoreScope.Global));
         }
 
         private static bool IsPushingVariable(OpcodePush opcodePush)

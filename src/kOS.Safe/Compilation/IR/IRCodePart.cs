@@ -91,8 +91,7 @@ namespace kOS.Safe.Compilation.IR
             if (codePart.FunctionsCode.Count > 0)
                 throw new ArgumentException($"{nameof(codePart)} has function code and is structured unexpectedly.");
             
-            IRBuilder builder = new IRBuilder();
-            MainCode = builder.Lower(codePart.MainCode, this);
+            MainCode = IRBuilder.Lower(codePart.MainCode, this);
 
             Functions = new List<IRFunction>();
             Queue<UserFunction> functionsToLower = new Queue<UserFunction>(userFunctions.Where(f => closureScopes.ContainsKey(f.Identifier)));
@@ -100,7 +99,7 @@ namespace kOS.Safe.Compilation.IR
             while (functionsToLower.Count > 0)
             {
                 UserFunction function = functionsToLower.Dequeue();
-                Functions.Add(new IRFunction(builder, function, this));
+                Functions.Add(new IRFunction(function, this));
                 completedFunctions.Add(function);
                 foreach (UserFunction func in userFunctions.Where(
                     f => closureScopes.ContainsKey(f.Identifier) &&
@@ -108,9 +107,9 @@ namespace kOS.Safe.Compilation.IR
                     !functionsToLower.Contains(f)))
                     functionsToLower.Enqueue(func);
             }
-            Triggers = triggers.Select(t => new IRTrigger(builder, t, this)).ToList();
+            Triggers = triggers.Select(t => new IRTrigger(t, this)).ToList();
             foreach (UserFunction func in userFunctions.Except(completedFunctions))
-                Functions.Add(new IRFunction(builder, func, this));
+                Functions.Add(new IRFunction(func, this));
 
             if (MainCode.Count > 0)
                 RootBlock = MainCode[0];
@@ -124,8 +123,7 @@ namespace kOS.Safe.Compilation.IR
         /// </remarks>
         public IRCodePart(List<Opcode> mainCode, List<UserFunction> userFunctions, List<Trigger> triggers)
         {
-            IRBuilder builder = new IRBuilder();
-            MainCode = builder.Lower(mainCode, this);
+            MainCode = IRBuilder.Lower(mainCode, this);
 
             Functions = new List<IRFunction>();
             Queue<UserFunction> functionsToLower = new Queue<UserFunction>(userFunctions.Where(f => closureScopes.ContainsKey(f.Identifier)));
@@ -133,7 +131,7 @@ namespace kOS.Safe.Compilation.IR
             while (functionsToLower.Count > 0)
             {
                 UserFunction function = functionsToLower.Dequeue();
-                Functions.Add(new IRFunction(builder, function, this));
+                Functions.Add(new IRFunction(function, this));
                 completedFunctions.Add(function);
                 foreach (UserFunction func in userFunctions.Where(
                     f => closureScopes.ContainsKey(f.Identifier) &&
@@ -141,9 +139,9 @@ namespace kOS.Safe.Compilation.IR
                     !functionsToLower.Contains(f)))
                     functionsToLower.Enqueue(func);
             }
-            Triggers = triggers.Select(t => new IRTrigger(builder, t, this)).ToList();
+            Triggers = triggers.Select(t => new IRTrigger(t, this)).ToList();
             foreach (UserFunction func in userFunctions.Except(completedFunctions))
-                Functions.Add(new IRFunction(builder, func, this));
+                Functions.Add(new IRFunction(func, this));
 
             if (MainCode.Count > 0)
                 RootBlock = MainCode[0];
@@ -283,13 +281,13 @@ namespace kOS.Safe.Compilation.IR
             /// </summary>
             /// <param name="builder">The IRBuilder object in use.</param>
             /// <param name="trigger">The trigger object to convert.</param>
-            public IRTrigger(IRBuilder builder, Trigger trigger, IRCodePart codePart)
+            public IRTrigger(Trigger trigger, IRCodePart codePart)
             {
                 this.trigger = trigger;
                 CodePart = codePart;
                 Identifier = trigger.Code.FirstOrDefault()?.Label ?? "";
                 ClosureScope = codePart.closureScopes[Identifier].Scope;
-                Blocks = builder.Lower(trigger.Code, this, ClosureScope);
+                Blocks = IRBuilder.Lower(trigger.Code, this, ClosureScope);
                 if (Blocks.Count > 0)
                 {
                     RootBlock = Blocks[0];
@@ -414,16 +412,16 @@ namespace kOS.Safe.Compilation.IR
             /// </summary>
             /// <param name="builder">The IRBuilder object in use.</param>
             /// <param name="function">The user function object to convert.</param>
-            public IRFunction(IRBuilder builder, UserFunction function, IRCodePart codePart)
+            public IRFunction(UserFunction function, IRCodePart codePart)
             {
                 CodePart = codePart;
                 this.function = function;
                 (ClosureScope, IsGlobal) = codePart.closureScopes[Identifier];
-                InitializationCode = builder.Lower(function.InitializationCode, codePart, ClosureScope);
+                InitializationCode = IRBuilder.Lower(function.InitializationCode, codePart, ClosureScope);
                 userFunctionFragments = function.PeekNewCodeFragments().ToList();
                 foreach (UserFunctionCodeFragment fragment in userFunctionFragments)
                 {
-                    fragments.Add(fragment, new IRFunctionFragment(builder, fragment, codePart, this));
+                    fragments.Add(fragment, new IRFunctionFragment(fragment, codePart, this));
                 }
                 userFunctionFragments.Reverse();
 
@@ -487,12 +485,12 @@ namespace kOS.Safe.Compilation.IR
                 /// </summary>
                 /// <param name="builder">The IRBuilder object in use.</param>
                 /// <param name="codeFragment">The function code fragment to convert.</param>
-                public IRFunctionFragment(IRBuilder builder, UserFunctionCodeFragment codeFragment, IRCodePart codePart, IRFunction function)
+                public IRFunctionFragment(UserFunctionCodeFragment codeFragment, IRCodePart codePart, IRFunction function)
                 {
                     Function = function;
                     CodePart = codePart;
                     fragment = codeFragment;
-                    Blocks = builder.Lower(codeFragment.Code, this, function.ClosureScope);
+                    Blocks = IRBuilder.Lower(codeFragment.Code, this, function.ClosureScope);
                     RootBlock = Blocks.FirstOrDefault();
                 }
                 /// <summary>

@@ -48,9 +48,9 @@ namespace kOS.Safe.Compilation.IR
         /// </summary>
         public BasicBlock HeaderBlock { get; set; }
         /// <summary>
-        /// Gets or sets the block where this scope is popped upon exiting.
+        /// Gets or sets the collection of blocks where this scope is popped upon exiting.
         /// </summary>
-        public BasicBlock FooterBlock { get; set; }
+        public HashSet<BasicBlock> FooterBlocks { get; } = new HashSet<BasicBlock>();
         /// <summary>
         /// Gets the collection of variable names associated with this scope.
         /// </summary>

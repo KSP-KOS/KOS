@@ -861,6 +861,10 @@ namespace kOS.Safe.Compilation.IR
             // Start with a clone of the block's incoming variable definitions.
             Dictionary<(string Name, IRScope Scope), SSADefinition> liveDefinitions =
                 new Dictionary<(string, IRScope), SSADefinition>();
+
+            if (block.IncomingVariableDefinitions == null && !block.Predecessors.Any())
+                block.IncomingVariableDefinitions = new Dictionary<(string Name, IRScope Scope), SSADefinition>();
+
             foreach (KeyValuePair<(string Name, IRScope Scope), SSADefinition> definition in block.IncomingVariableDefinitions)
                 liveDefinitions[definition.Key] = definition.Value;
 
