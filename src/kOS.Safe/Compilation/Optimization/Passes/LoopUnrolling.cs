@@ -92,8 +92,6 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             else
             {
                 // Index-based loops:
-
-
                 Dictionary<SSADefinition, IInterimOperand> variableReplacements = new Dictionary<SSADefinition, IInterimOperand>();
                 Dictionary<string, InterimConstantValue> iterators = new Dictionary<string, InterimConstantValue>();
                 Dictionary<string, IInterimOperand> incrementFuncs = new Dictionary<string, IInterimOperand>();
@@ -185,6 +183,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             else
                             {
                                 IEvaluatableToConstant incomingValue = setDefinition.DefinedAt.Value as IEvaluatableToConstant;
+                                // TODO: This should be made to work with the result of functions which are invariant but not inert.
+                                // Right now, non-inert functions are considered non-invariant as well.
                                 if (incomingValue?.IsInvariant ?? false)
                                 {
                                     result = incomingValue.Evaluate();
@@ -225,6 +225,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                                 if (!(result is IEvaluatableToConstant constantIn &&
                                     constantIn.IsInvariant))
                                     return null;
+                                // TODO: This should be made to work with the result of functions which are invariant but not inert.
+                                // Right now, non-inert functions are considered non-invariant as well.
                                 result = constantIn.Evaluate();
                                 iterators.Add(phi.Name, (InterimConstantValue)result);
                                 variableReplacements.Add(phi, result);
@@ -313,6 +315,14 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             {
                 indices.Add(name, new List<Encapsulation.Structure>());
                 iteratorVariables.Add(name);
+            }
+
+            // Fallback check in case the loop never iterates.
+            if (Convert.ToBoolean(((IEvaluatableToConstant)condition).Evaluate().Value))
+                return indices;
+
+            foreach (string name in iteratorVariables)
+            {
                 indices[name].Add((Encapsulation.Structure)iterators[name].Value);
                 nextIndex[name] = (Encapsulation.Structure)((IEvaluatableToConstant)incrementFuncs[name]).Evaluate().Value;
             }
@@ -350,6 +360,16 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 #endif
             }
 
+            // If the LoopConditionalRelocation pass did not occur,
+            // we need to remove the last item that was added because
+            // the check would have occured before incrementing (until).
+            if (Optimizer.PassesToSkip.Contains(typeof(LoopConditionalRelocation)))
+            {
+                int lastIndex = indices.First().Value.Count - 1;
+                foreach (string name in iteratorVariables)
+                    indices[name].RemoveAt(lastIndex);
+            }
+
             return indices;
         }
 
@@ -368,6 +388,11 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             {
                 block.IsExecutable = false;
                 loopData.body.CodeComponent.Blocks.Remove(block);
+            }
+
+            if (Optimizer.PassesToSkip.Contains(typeof(LoopConditionalRelocation)))
+            {
+                (originalBody.First(b => b.PostDominator == loopData.header).Continuation as JumpContinuation).Target = loopData.exit;
             }
 
             BasicBlock nextIncoming;

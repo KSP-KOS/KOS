@@ -1158,6 +1158,12 @@ namespace kOS.Safe.Test.Execution
             );
         }
         [Test]
+        public void TestFromLoopUnrollingWithoutRelocation()
+        {
+            Safe.Compilation.Optimization.Optimizer.PassesToSkip.Add(typeof(Safe.Compilation.Optimization.Passes.LoopConditionalRelocation));
+            TestFromLoopUnrolling();
+        }
+        [Test]
         public void TestFromLoopBranchingUnrolling()
         {
             EnsureAtLeastLevel(OptimizationLevel.Extreme);
