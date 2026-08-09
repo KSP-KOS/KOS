@@ -56,6 +56,8 @@ namespace kOS.Safe.Compilation.Optimization
                             yield return predecessor;
                 }
             }
+            else
+                throw new NotImplementedException();
             yield return operandInstruction;
         }
 
@@ -72,6 +74,31 @@ namespace kOS.Safe.Compilation.Optimization
                     return false;
             }
             return true;
+        }
+
+        public static IEnumerable<IInterimOperand> GetOperandsWhere(this IOperandInstructionBase instruction, Predicate<IInterimOperand> predicate)
+        {
+            if (instruction is ISingleOperandInstruction singleOperandInstruction)
+            {
+                if (singleOperandInstruction.Operand is IOperandInstructionBase operandInstruction)
+                    foreach (IInterimOperand operand in operandInstruction.GetOperandsWhere(predicate))
+                        yield return operand;
+                if (predicate(singleOperandInstruction.Operand))
+                    yield return singleOperandInstruction.Operand;
+            }
+            else if (instruction is IMultipleOperandInstruction multipleOperandInstruction)
+            {
+                foreach (IInterimOperand operand in multipleOperandInstruction.Operands)
+                {
+                    if (operand is IOperandInstructionBase operandInstruction)
+                        foreach (IInterimOperand op in operandInstruction.GetOperandsWhere(predicate))
+                            yield return op;
+                    if (predicate(operand))
+                        yield return operand;
+                }
+            }
+            else
+                throw new NotImplementedException();
         }
     }
 }

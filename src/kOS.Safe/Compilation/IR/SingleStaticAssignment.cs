@@ -1064,10 +1064,43 @@ namespace kOS.Safe.Compilation.IR
             return false;
         }
 
-        public static void RemoveAssignment(IRAssign assignment, bool overrideProtectionCheck = false)
+        public static bool RemoveAssignment(IRAssign assignment, bool overrideProtectionCheck = false)
         {
             if (!overrideProtectionCheck && DefinitionIsProtected(assignment.Target))
-                throw new InvalidOperationException();
+                return false;
+
+            // Assignments which consume a parameter may only be eliminated if the parameter can also be eliminated
+            // I.e. the function is a local function and all call sites have that parameter removed.
+            if (IRParameter.IsOrContainsParameter(assignment.Value))
+            {
+                if (assignment.Block.CodeComponent is IRFunction.IRFunctionFragment fragment &&
+                    !fragment.Function.IsGlobal)
+                {
+                    foreach (IRParameter parameter in assignment.GetOperandsWhere(op => op is IRParameter).Cast<IRParameter>())
+                    {
+                        int index = GetParameterIndex(assignment.Block.CodeComponent, parameter);
+                        if (parameter.StackTransferObject is StackTransferPhi stackTransferPhi)
+                            stackTransferPhi.RemoveReference(parameter);
+                        parameter.StackTransferObject = null;
+                        foreach (IRCall call in fragment.Function.CallSites)
+                        {
+                            if (call.Arguments.Count > index)
+                                call.Arguments.RemoveAt(index);
+                        }
+                    }
+                    if (assignment.Block.Instructions.FirstOrDefault() == assignment &&
+                        assignment.Block.Dominator.Continuation is BranchContinuation branch &&
+                        branch.Condition is IRNonVarPush testArg &&
+                        testArg.Operation is OpcodeTestArgBottom)
+                    {
+                        assignment.Block.Dominator.Continuation = new JumpContinuation(assignment.Block, branch.SourceLine, branch.SourceColumn);
+                        branch.True.Continuation = null;
+                        branch.True.IsExecutable = false;
+                    }
+                }
+                else
+                    return false;
+            }
 
             // Remove this assignment instruction
             assignment.Block.Instructions.Remove(assignment);
@@ -1133,6 +1166,34 @@ namespace kOS.Safe.Compilation.IR
 
             definition.ReplacedBy.Clear();
             definition.Replaces.Clear();
+
+            return true;
+        }
+
+        private static int GetParameterIndex(ICodeComponent codeComponent, IRParameter parameter)
+        {
+            int index = 0;
+            foreach (BasicBlock block in BasicBlock.GetReversePostOrder(codeComponent.RootBlock, BasicBlock.GetSuccessors))
+            {
+                bool breaking = false;
+                foreach (IOperandInstructionBase instruction in block.Instructions.DepthFirst())
+                {
+                    instruction.ForEachOperand(op =>
+                    {
+                        if (op == parameter)
+                            breaking = true;
+                        if (breaking)
+                            return;
+                        if (op is IRParameter param &&
+                            param.StackTransferObject is IRPushStack pushStack &&
+                            pushStack.Value == null)  // Exclude ternary operands / linked items - we only need external.
+                            index++;
+                    });
+                }
+                if (breaking)
+                    break;
+            }
+            return index;
         }
     }
 }

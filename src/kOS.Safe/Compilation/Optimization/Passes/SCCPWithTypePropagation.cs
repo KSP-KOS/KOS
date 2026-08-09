@@ -410,8 +410,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 if (block.Instructions[i] is IRAssign assignment &&
                     AssignmentMayBeEliminated(assignment, usedVariables))
                 {
-                    SingleStaticAssignment.RemoveAssignment(assignment);
-                    i--;
+                    if (SingleStaticAssignment.RemoveAssignment(assignment))
+                        i--;
                 }
             }
         }

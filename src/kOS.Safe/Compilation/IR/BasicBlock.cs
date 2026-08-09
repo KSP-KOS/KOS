@@ -201,9 +201,11 @@ namespace kOS.Safe.Compilation.IR
                     continuation.AssignedTo = null;
                 }
                 continuation = value;
-                continuation.AssignedTo = this;
                 if (continuation != null)
+                {
                     continuation.DestinationChanged += OnDestinationChanged;
+                    continuation.AssignedTo = this;
+                }
                 List<BasicBlock> added = new List<BasicBlock>(continuation?.Destinations ?? Enumerable.Empty<BasicBlock>());
 
                 OnDestinationChanged(this, new BlockContinuation.TargetChangedEvent(added.Except(removed), removed.Except(added)));
@@ -351,7 +353,7 @@ namespace kOS.Safe.Compilation.IR
                         if (predecessor == newIdom)
                             continue;
 
-                        if (getDominator(predecessor) != null)
+                        if (getDominator(predecessor) != null || predecessor == root)
                             newIdom = Intersect(predecessor, newIdom, index, getDominator);
                     }
 
