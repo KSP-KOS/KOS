@@ -7,8 +7,6 @@ namespace kOS.Safe.Compilation.IR
     public interface IInterimVariableReference : IInterimOperand
     {
         string Name { get; }
-        short SourceLine { get; }
-        short SourceColumn { get; }
         IInterimVariableReference CloneReferenceTo(short sourceLine, short sourceColumn);
     }
     public readonly struct InterimVariableReference : IInterimVariableReference
@@ -274,6 +272,25 @@ namespace kOS.Safe.Compilation.IR
                 ReplacedBy.Add(newDefinition);
             }
             return result;
+        }
+
+        public SSASetDefinition GetSetDefinition()
+        {
+            switch (this)
+            {
+                case SSASetDefinition setDefinition:
+                    return setDefinition;
+                case SSAPotentialDefinition potentialDefinition:
+                    if (potentialDefinition.Conditional.IsExecutable)
+                        throw new InvalidCastException();
+                    return potentialDefinition.Preceding.GetSetDefinition();
+                case PhiVariable phi:
+                    if (phi.Node.PossibleValues.Where(kvp => kvp.Key.IsExecutable).Select(kvp => kvp.Value).Distinct().Count() > 1)
+                        throw new InvalidCastException();
+                    return phi.Node.PossibleValues.FirstOrDefault(kvp => kvp.Key.IsExecutable).Value.GetSetDefinition();
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         protected static string SetState_ToString(SetState state)

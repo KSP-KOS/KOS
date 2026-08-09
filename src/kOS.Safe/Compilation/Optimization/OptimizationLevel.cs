@@ -32,6 +32,7 @@ namespace kOS.Safe.Compilation
      *          Particularly: Any expression of 3 opcodes used more than twice,
      *          or any expression of >3 opcodes used more than once
      *  2100. Code motion - moving expressions outside loops if they do not depend on loop variables
+     *  4100. Single-use (redundant) assignment elimination.
      *  
      *  Loop jamming? (Combining adjacent loops into one)
      *  Unswitching (moving conditional evaluation outside the loop) - low priority
@@ -41,7 +42,7 @@ namespace kOS.Safe.Compilation
      *  2000. Local function inlining (also calls constant folding again on the affected blocks)
      *  21.   Local variable propagation to local functions (mostly useful for constants)
      *  
-     *  3500. Loop stack manipulation (delayed setting of either index or aggregator)
+     *  3500. Loop stack manipulation (delayed setting of either index or aggregator) - Not yet implemented.
      *  
      * O4:
      *  4000. Constant length loop unrolling

@@ -410,7 +410,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 if (block.Instructions[i] is IRAssign assignment &&
                     AssignmentMayBeEliminated(assignment, usedVariables))
                 {
-                    RemoveAssignment(assignment);
+                    SingleStaticAssignment.RemoveAssignment(assignment);
                     i--;
                 }
             }
@@ -433,12 +433,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             // Must not remove definitions that are used.
             if (usedVariables.Contains(definition))
                 return true;
-            // Must not remove assignments that are later unset, if those unsets cannot also be removed.
-            // Unsets can only be removed if they may unset anything besides this one.
-            if (definition.ReplacedBy.Any(ssaDef => ssaDef.State == SSADefinition.SetState.Unset && ssaDef.Replaces.Count > 1))
-                return true;
-            // Must not remove assignments whose lifespan is not invariant.
-            if (definition.ReplacedBy.Any(ssaDef => ssaDef.State == SSADefinition.SetState.PotentiallyUnset))
+            if (SingleStaticAssignment.DefinitionIsProtected(definition))
                 return true;
             // Must not remove assignments that feed into a phi if there are multiple possible incoming values.
             foreach (PhiVariable phi in definition.ReplacedBy.Where(ssaDef => ssaDef is PhiVariable).Cast<PhiVariable>())
@@ -456,58 +451,6 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             }
             // If none of the above apply, it is safe to delete this definition.
             return false;
-        }
-
-        private static void RemoveAssignment(IRAssign assignment)
-        {
-            // Remove this assignment instruction
-            assignment.Block.Instructions.Remove(assignment);
-
-            // Remove this assignment from all scopes.
-            IRScope scope = assignment.Block.Scope;
-            while (scope != null)
-            {
-                scope.Assignments.Remove(assignment);
-                scope = scope.ParentScope;
-            }
-
-            SSASetDefinition definition = assignment.Target;
-            // Remove subsequent unsets
-            // We've already assured no inadvertent side effects of this in DefinitionIsProtected()
-            foreach (IRUnset unset in definition.ReplacedBy.
-                Where(ssaDef => ssaDef.State == SSADefinition.SetState.Unset).
-                Select(ssaDef => ssaDef.AssignedAt).Cast<IRUnset>())
-            {
-                unset.Block.Instructions.Remove(unset);
-            }
-
-            // Convert subsequent assignments to be declarative
-            foreach (IRAssign nextAssign in definition.ReplacedBy.
-                Where(ssaDef => ssaDef.State == SSADefinition.SetState.Set).
-                Select(ssaDef => GetSetDefinition(ssaDef).DefinedAt))
-            {
-                nextAssign.Scope = IRAssign.StoreScope.Local;
-                nextAssign.AssertExists = false;
-            }
-        }
-
-        private static SSASetDefinition GetSetDefinition(SSADefinition definition)
-        {
-            switch (definition)
-            {
-                case SSASetDefinition setDefinition:
-                    return setDefinition;
-                case SSAPotentialDefinition potentialDefinition:
-                    if (potentialDefinition.Conditional.IsExecutable)
-                        throw new InvalidCastException();
-                    return GetSetDefinition(potentialDefinition.Preceding);
-                case PhiVariable phi:
-                    if (phi.Node.PossibleValues.Where(kvp => kvp.Key.IsExecutable).Select(kvp => kvp.Value).Distinct().Count() > 1)
-                        throw new InvalidCastException();
-                    return GetSetDefinition(phi.Node.PossibleValues.FirstOrDefault(kvp => kvp.Key.IsExecutable).Value);
-                default:
-                    throw new NotImplementedException();
-            }
         }
 
         private static IInterimOperand PropagateConstant(IInterimOperand operand, SSADefinition definition, InterimConstantValue constant)

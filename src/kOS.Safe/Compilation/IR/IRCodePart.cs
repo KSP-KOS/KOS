@@ -61,19 +61,29 @@ namespace kOS.Safe.Compilation.IR
         IRCodePart ICodeComponent.CodePart => this;
         public BasicBlock RootBlock { get; set; }
 
-        public BasicBlock TerminalBlock { get; set; }
+        BasicBlock ICodeComponent.TerminalBlock { get; set; }
 
         /// <summary>
         /// Gets the reachable variables for a given call site.
         /// </summary>
-        /// <remarks>This is populated in <see cref="SingleStaticAssignment.ApplyUses"/></remarks>
+        /// <remarks>
+        /// This is populated in <see cref="SingleStaticAssignment.ApplyUses"/>
+        /// <para/>
+        /// Note that the data contained here may become outdated by other optimization passes.
+        /// Use <see cref="SingleStaticAssignment.ApplyUses(BasicBlock)"/> to update it.
+        /// </remarks>
         public Dictionary<IRInstruction, HashSet<IInterimVariableReference>> ReachableVariables { get; } =
             new Dictionary<IRInstruction, HashSet<IInterimVariableReference>>(IRInstruction.ReferenceEqualityComparer);
 
         /// <summary>
         /// Gets or sets the variable uses.
         /// </summary>
-        /// <remarks>The set accessor is used to populate this in <see cref="Optimization.Passes.SCCPWithTypePropagation.ApplyPass"/></remarks>
+        /// <remarks>
+        /// The set accessor is used to populate this in <see cref="Optimization.Passes.SCCPWithTypePropagation.ApplyPass"/>.
+        /// <para/>
+        /// Note that the data contained here may become outdated by other optimization passes.
+        /// Use <see cref="Optimization.Passes.SCCPWithTypePropagation.MapUsesAndPropagateTypes(IRCodePart)"/> to get an updated collection.
+        /// </remarks>
         public Dictionary<SSADefinition, HashSet<IOperandInstructionBase>> VariableUses { get; set; } =
             new Dictionary<SSADefinition, HashSet<IOperandInstructionBase>>(SSADefinition.ReferenceEqualityComparer);
 

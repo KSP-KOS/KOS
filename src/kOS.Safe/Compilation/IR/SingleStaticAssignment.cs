@@ -164,7 +164,7 @@ namespace kOS.Safe.Compilation.IR
                             funcOrTrigger?.TriggersCreated.Add(trigger);
                         }
                         break;
-                        // TODO: Look at branch instructions that employ eq and propagate that definition.
+                        // TODO: Look at branch instructions that employ eq and neq and propagate that definition.
                 }
             }
 
@@ -884,6 +884,9 @@ namespace kOS.Safe.Compilation.IR
 
             foreach (IRInstruction instruction in block.Instructions)
             {
+                codePart.ReachableVariables[instruction] = DetermineReaches(
+                    instruction, liveDefinitions.Keys.Select(def => def.Name).Distinct(StringComparer.OrdinalIgnoreCase),
+                    liveDefinitions, triggerBlacklist);
                 // Process call sites and replace variable definitions.
                 foreach (IOperandInstructionBase operandInstruction in instruction.DepthFirst())
                 {
@@ -1032,6 +1035,104 @@ namespace kOS.Safe.Compilation.IR
                     reachableVariables.Add(result);
             }
             return reachableVariables;
+        }
+        private static HashSet<IInterimVariableReference> DetermineReaches(IRInstruction instruction, IEnumerable<string> variablesToTest, Dictionary<(string, IRScope), SSADefinition> liveDefinitions, HashSet<(string, IRScope)> triggerBlacklist)
+        {
+            HashSet<IInterimVariableReference> reachableVariables = new HashSet<IInterimVariableReference>();
+
+            foreach (string name in variablesToTest)
+            {
+                IInterimVariableReference result = AttemptResolveReference(
+                    new InterimVariableReference(name, instruction), instruction.Block.Scope,
+                    liveDefinitions, triggerBlacklist, out _);
+                if (!(result is InterimVariableReference))
+                    reachableVariables.Add(result);
+            }
+            return reachableVariables;
+        }
+
+        public static bool DefinitionIsProtected(SSADefinition definition)
+        {
+            // Must not remove assignments that are later unset, if those unsets cannot also be removed.
+            // Unsets can only be removed if they may unset anything besides this one.
+            if (definition.ReplacedBy.Any(ssaDef => ssaDef.State == SSADefinition.SetState.Unset && ssaDef.Replaces.Count > 1))
+                return true;
+            // Must not remove assignments whose lifespan is not invariant.
+            if (definition.ReplacedBy.Any(ssaDef => ssaDef.State == SSADefinition.SetState.PotentiallyUnset))
+                return true;
+            // If none of the above apply, it is safe to delete this definition.
+            return false;
+        }
+
+        public static void RemoveAssignment(IRAssign assignment, bool overrideProtectionCheck = false)
+        {
+            if (!overrideProtectionCheck && DefinitionIsProtected(assignment.Target))
+                throw new InvalidOperationException();
+
+            // Remove this assignment instruction
+            assignment.Block.Instructions.Remove(assignment);
+
+            // Remove this assignment from all scopes.
+            IRScope scope = assignment.Block.Scope;
+            while (scope != null)
+            {
+                scope.Assignments.Remove(assignment);
+                scope = scope.ParentScope;
+            }
+
+            SSASetDefinition definition = assignment.Target;
+            // Remove subsequent unsets
+            // We've already assured no inadvertent side effects of this in SCCPWithTypePropagation.DefinitionIsProtected() or equivalent.
+            foreach (IRUnset unset in definition.ReplacedBy.
+                Where(ssaDef => ssaDef.State == SSADefinition.SetState.Unset).
+                Select(ssaDef => ssaDef.AssignedAt).Cast<IRUnset>())
+            {
+                unset.Block.Instructions.Remove(unset);
+            }
+
+            // Convert subsequent assignments to be declarative
+            foreach (IRAssign nextAssign in definition.ReplacedBy.
+                Where(ssaDef => ssaDef.State == SSADefinition.SetState.Set).
+                Select(ssaDef => ssaDef.GetSetDefinition().DefinedAt))
+            {
+                nextAssign.Scope = IRAssign.StoreScope.Local;
+                nextAssign.AssertExists = false;
+            }
+
+            foreach (SSADefinition replaced in definition.Replaces)
+            {
+                replaced.ReplacedBy.Remove(definition);
+            }
+            foreach (SSADefinition replacedBy in definition.ReplacedBy)
+            {
+                replacedBy.Replaces.Remove(definition);
+                foreach (SSADefinition replaced in definition.Replaces)
+                {
+                    replaced.ReplacedBy.Add(replacedBy);
+                    replacedBy.Replaces.Add(replaced);
+                }
+            }
+
+            // Remove the definition from IncomingVariables
+            foreach (BasicBlock b in assignment.Block.CodeComponent.Blocks)
+            {
+                HashSet<(string, IRScope)> itemsToRemove = new HashSet<(string, IRScope)>(
+                    b.IncomingVariableDefinitions.Where(kvp => kvp.Value == assignment.Target).Select(kvp => kvp.Key)
+                    );
+                foreach ((string, IRScope) key in itemsToRemove)
+                {
+                    b.IncomingVariableDefinitions.Remove(key);
+                    if (definition.Replaces.Count == 1)
+                    {
+                        b.IncomingVariableDefinitions[key] = definition.Replaces.First();
+                    }
+                    else if (definition.Replaces.Count > 1)
+                        throw new InvalidOperationException();
+                }
+            }
+
+            definition.ReplacedBy.Clear();
+            definition.Replaces.Clear();
         }
     }
 }
