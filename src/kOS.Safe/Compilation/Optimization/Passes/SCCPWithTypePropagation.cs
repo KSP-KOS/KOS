@@ -172,10 +172,15 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         {
                             if (VisitInstruction(operandInstruction, blockQueue, typeAndInvarianceCache, paramTypeCache))
                             {
-                                if (operandInstruction is IRAssign assignment &&
-                                    variableUses.TryGetValue(assignment.Target, out HashSet<IOperandInstructionBase> uses))
-                                    foreach (IOperandInstructionBase use in uses)
-                                        instructionQueue.Enqueue(use);
+                                HashSet<IOperandInstructionBase> uses;
+                                if (operandInstruction is IRAssign assignment)
+                                {
+                                    if (variableUses.TryGetValue(assignment.Target, out uses))
+                                        foreach (IOperandInstructionBase use in uses)
+                                            instructionQueue.Enqueue(use);
+                                    else
+                                        variableUses.Add(assignment.Target, new HashSet<IOperandInstructionBase>());
+                                }
                                 if (operandInstruction is IRPushStack pushStack &&
                                     parameterUses.TryGetValue(pushStack, out uses))
                                     foreach (IOperandInstructionBase use in uses)
@@ -379,18 +384,22 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     => PropagateConstant(operand, constantDef, replacements[constantDef]);
                 foreach (IOperandInstructionBase instruction in ssaUses[constantDef])
                 {
-                    if (instruction is PhiNode)
-                        continue;
-                    if (instruction is IRUnaryOp unaryOp &&
-                        unaryOp.Operation is OpcodeExists)
-                        continue;
-                    if (instruction is IRUnset)
-                        continue;
-                    instruction.MutateEachOperand(Propagate);
+                    foreach (IOperandInstructionBase operandInstruction in instruction.DepthFirst())
+                    {
+                        if (operandInstruction is PhiNode)
+                            continue;
+                        if (operandInstruction is IRUnaryOp unaryOp &&
+                            unaryOp.Operation is OpcodeExists)
+                            continue;
+                        if (operandInstruction is IRUnset)
+                            continue;
+                        operandInstruction.MutateEachOperand(Propagate);
+                    }
                 }
             }
 
             requiredDefinitions.UnionWith(ssaUses.Keys.Except(constantVariables));
+            requiredDefinitions.RemoveWhere(v => ssaUses[v].Count == 0);
 
             return requiredDefinitions;
         }

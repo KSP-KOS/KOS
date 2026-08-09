@@ -5,10 +5,11 @@ using kOS.Safe.Compilation.IR;
 
 namespace kOS.Safe.Compilation.Optimization.Passes
 {
-    public class RedundantAssignmentElimination : IOptimizationPass<ICodeComponent>
+    public class RedundantAssignmentElimination : IOptimizationPass<ICodeComponent>, ILinkedOptimizationPass
     {
         public OptimizationLevel OptimizationLevel => OptimizationLevel.Balanced;
         public short SortIndex => 4100;
+        public Optimizer Optimizer { get; set; }
 
         public void ApplyPass(IEnumerable<ICodeComponent> code)
         {
@@ -22,10 +23,14 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 while (changed)
                 {
                     changed = false;
+                    foreach ((IRAssign, IOperandInstructionBase) item in requeue)
+                        singleUseVariables.Enqueue(item);
+                    requeue.Clear();
                     while (singleUseVariables.Count > 0)
                     {
                         (IRAssign definition, IOperandInstructionBase use) = singleUseVariables.Dequeue();
-                        while (replacementDestinations.TryGetValue(use, out IOperandInstructionBase newUse))
+                        while (use != null &&
+                            replacementDestinations.TryGetValue(use, out IOperandInstructionBase newUse))
                             use = newUse;
 
                         if (!DefinitionCanBeRelocated(definition, use, out bool mustRelocateArgB))
@@ -38,16 +43,16 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             replacementDestinations[definition] = use;
                         changed = true;
                     }
-                    foreach ((IRAssign, IOperandInstructionBase) item in requeue)
-                        singleUseVariables.Enqueue(item);
-                    requeue.Clear();
                 }
             }
         }
 
-        private static bool DefinitionCanBeRelocated(IRAssign definition, IOperandInstructionBase use, out bool nextInstructionIsArgB)
+        private bool DefinitionCanBeRelocated(IRAssign definition, IOperandInstructionBase use, out bool nextInstructionIsArgB)
         {
             nextInstructionIsArgB = false;
+
+            if (!definition.IsInert)
+                return false;
 
             if (SingleStaticAssignment.DefinitionIsProtected(definition.Target))
                 return false;
@@ -103,7 +108,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     phi.PossibleValues.Keys.Count(b => b.IsExecutable) > 1))
                     return false;
                 nextInstructionIsArgB = NextInstructionIsArgB(definition);
-                if (use is IRReturn &&
+                if (use == null ||
+                    use is IRReturn &&
                     nextInstructionIsArgB)
                     return false;
                 if (ParameterReferenceBetween(definition, use))
@@ -119,10 +125,12 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             return true;
         }
 
-        private static bool NonInertObjectBetween(IRInstruction first, IRInstruction second)
+        private bool NonInertObjectBetween(IRInstruction first, IRInstruction second)
             => OccursBetween(first, second, IsNonInert);
         private static bool OccursBetween(IRInstruction first, IRInstruction second, Predicate<IRInstruction> predicate)
         {
+            if (second == null)
+                return false;
             int firstIndex = first.Block.Instructions.IndexOf(first) + 1;
 
             List<IRInstruction> instructions = second.Block.Instructions;
@@ -168,10 +176,12 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             return false;
         }
 
-        private static bool IsNonInert(object obj)
+        private bool IsNonInert(object obj)
         {
+            // Print/PrintAt aren't really non-inert,
+            // they just shouldn't be optimized away.
             if (obj is IRCall call &&
-                call.Block.CodePart.GetFunction(call.Function) == null &&
+                !Optimizer.AllowClobberBuiltins &&
                 (call.Function.Equals("print()", StringComparison.OrdinalIgnoreCase) ||
                  call.Function.Equals("printat()", StringComparison.OrdinalIgnoreCase)))
                 return false;
@@ -253,6 +263,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 
         private static bool AllVariableReferencesReachable(IRAssign definition, IRInstruction instruction)
         {
+            if (instruction == null)
+                return true;
             HashSet<SSADefinition> references = new HashSet<SSADefinition>();
             bool invalid = false;
             foreach (IOperandInstructionBase operandInstruction in ((IOperandInstructionBase)definition).DepthFirst())
@@ -284,7 +296,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 
         private static bool RelocateOperand(IRAssign definition, IOperandInstructionBase use, bool relocateArgB)
         {
-            bool replaced = false;
+            bool replaced = use == null;
             foreach (IOperandInstructionBase instruction in use.DepthFirst())
             {
                 instruction.MutateEachOperand(op =>
@@ -336,6 +348,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                     !StringUtil.IsValidIdentifier(definition.Name.Substring(1)))
                     continue;
                 HashSet<IOperandInstructionBase> uses = varUses[definition];
+                if (uses.Count == 0)
+                    singleUseVariables.Add((setDefinition.DefinedAt, null));
                 if (uses.Count > 2)
                     continue;
                 IOperandInstructionBase use = uses.FirstOrDefault(u => u is IActionInstruction && !(u is IRCall));

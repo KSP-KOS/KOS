@@ -1066,6 +1066,9 @@ namespace kOS.Safe.Compilation.IR
 
         public static bool RemoveAssignment(IRAssign assignment, bool overrideProtectionCheck = false, bool overrideParameterProtection = false)
         {
+            if (!assignment.IsInert)
+                return false;
+
             if (!overrideProtectionCheck && DefinitionIsProtected(assignment.Target))
                 return false;
 

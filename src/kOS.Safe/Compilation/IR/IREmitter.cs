@@ -35,8 +35,6 @@ namespace kOS.Safe.Compilation.IR
                     Opcode opcode = result[i];
                     if (string.IsNullOrEmpty(opcode.Label) || opcode.Label.StartsWith("@"))
                         opcode.Label = CreateLabel(i + labelIndex);
-                    if (i >= result.Count - 1)
-                        continue;
                     if (opcode is OpcodeBranchJump jump &&
                         jump.DestinationLabel != null && jumpLabels[jump.DestinationLabel] == i + 1 + labelIndex)
                     {

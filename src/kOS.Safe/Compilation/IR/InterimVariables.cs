@@ -632,8 +632,8 @@ namespace kOS.Safe.Compilation.IR
         protected override IInterimOperand ValueAsOperand(SSADefinition item)
         {
             SSASetDefinition ssaDef = item as SSASetDefinition;
-            short sourceLine = ssaDef?.DefinedAt.SourceLine ?? -1;
-            short sourceColumn = ssaDef?.DefinedAt.SourceColumn ?? -1;
+            short sourceLine = ssaDef?.DefinedAt?.SourceLine ?? -1;
+            short sourceColumn = ssaDef?.DefinedAt?.SourceColumn ?? -1;
             return new InterimResolvedReference(item, sourceLine, sourceColumn);
         }
 

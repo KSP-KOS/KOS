@@ -164,6 +164,9 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 {
                     foreach (BasicBlock block in inlinedFunction)
                         ConstantFolding.ApplyPass(block, Optimizer.AllowClobberBuiltins);
+                    if (successor.Instructions[0] is IRPop pop &&
+                        pop.IsInvariant)
+                        successor.Instructions.RemoveAt(0);
                 }
 
                 BasicBlock.Stitch(callingBlock, successor, inlinedFunction);
@@ -177,6 +180,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             if (argsProvided > maxPossibleArgs)
                 throw new Exceptions.KOSCompileException(new KS.LineCol(callSite.SourceLine, callSite.SourceColumn), "Function was called with too many arguments.");
 
+            HashSet<IStackTransferObject> incomingParameters = new HashSet<IStackTransferObject>(rootBlock.IncomingStackState);
             int argsRemaining = argsProvided;
             while (maxPossibleArgs >= 0)
             {
@@ -186,6 +190,7 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 foreach (IRAssign assignment in rootBlock.Instructions.Where(i => i is IRAssign).Cast<IRAssign>())
                 {
                     if (assignment.Value is IRParameter parameter &&
+                        incomingParameters.Contains(parameter.StackTransferObject) &&
                         maxPossibleArgs >= 0)
                     {
                         maxPossibleArgs--;

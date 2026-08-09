@@ -56,6 +56,8 @@ namespace kOS.Safe.Compilation.Optimization
                             yield return predecessor;
                 }
             }
+            else if (operandInstruction == null)
+                yield break;
             else
                 throw new NotImplementedException();
             yield return operandInstruction;
