@@ -255,7 +255,7 @@ namespace kOS.Safe.Compilation
                 return result;
             }
 
-            commutativityCache[(leftType, rightType, methodName)] = false;
+            commutativityCache[(leftType, rightType, methodName)] = SafeCommutativity(methodName, leftType, rightType);
             return false;
         }
 
@@ -301,6 +301,26 @@ namespace kOS.Safe.Compilation
                     return true;
                 case "op_Subtraction":
                     return IsNegatable(leftType, rightType);
+                case "op_Division":
+                case "op_ExclusiveOr":
+                default:
+                    return false;
+            }
+        }
+        private static bool SafeCommutativity(string methodName, Type leftType, Type rightType)
+        {
+            switch (methodName)
+            {
+                case "op_GreaterThan":
+                case "op_LessThan":
+                case "op_GreaterThanEqual":
+                case "op_LessThanEqual":
+                case "op_Equality":
+                case "op_Inequality":
+                    return true;    // Comparisons are all commutative (with normal switching of direction).
+                case "op_Addition": // String addition (concatenation) is not commutative.
+                case "op_Multiply": // Matrix multiplication is not commutative.
+                case "op_Subtraction":  // Generic subtraction cannot assume negation exists.
                 case "op_Division":
                 case "op_ExclusiveOr":
                 default:

@@ -1064,7 +1064,7 @@ namespace kOS.Safe.Compilation.IR
             return false;
         }
 
-        public static bool RemoveAssignment(IRAssign assignment, bool overrideProtectionCheck = false)
+        public static bool RemoveAssignment(IRAssign assignment, bool overrideProtectionCheck = false, bool overrideParameterProtection = false)
         {
             if (!overrideProtectionCheck && DefinitionIsProtected(assignment.Target))
                 return false;
@@ -1073,8 +1073,10 @@ namespace kOS.Safe.Compilation.IR
             // I.e. the function is a local function and all call sites have that parameter removed.
             if (IRParameter.IsOrContainsParameter(assignment.Value))
             {
-                if (assignment.Block.CodeComponent is IRFunction.IRFunctionFragment fragment &&
-                    !fragment.Function.IsGlobal)
+                IRFunction.IRFunctionFragment fragment = assignment.Block.CodeComponent as IRFunction.IRFunctionFragment;
+                if ((fragment != null &&
+                    !fragment.Function.IsGlobal) ||
+                    overrideParameterProtection)
                 {
                     foreach (IRParameter parameter in assignment.GetOperandsWhere(op => op is IRParameter).Cast<IRParameter>())
                     {
@@ -1082,12 +1084,18 @@ namespace kOS.Safe.Compilation.IR
                         if (parameter.StackTransferObject is StackTransferPhi stackTransferPhi)
                             stackTransferPhi.RemoveReference(parameter);
                         parameter.StackTransferObject = null;
-                        foreach (IRCall call in fragment.Function.CallSites)
+                        foreach (IRCall call in fragment?.Function.CallSites)
                         {
                             if (call.Arguments.Count > index)
                                 call.Arguments.RemoveAt(index);
                         }
                     }
+
+                    // If the assignment is the first in a block and the incoming parameter
+                    // has a default value, we should remove that branch/push.
+                    // Note that this may be broken if multiple optional parameters are involved
+                    // in the assignment that was removed. This should only be possible when the
+                    // IR is modified since regular code is 'store var <- parameter'.
                     if (assignment.Block.Instructions.FirstOrDefault() == assignment &&
                         assignment.Block.Dominator.Continuation is BranchContinuation branch &&
                         branch.Condition is IRNonVarPush testArg &&

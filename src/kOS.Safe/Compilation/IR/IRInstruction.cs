@@ -234,8 +234,19 @@ namespace kOS.Safe.Compilation.IR
             {
                 if (Left.Type == null || Right.Type == null)
                     return false;
-                if (IRParameter.IsOrContainsParameter(Left) || IRParameter.IsOrContainsParameter(Right))
-                    return false;
+                switch (Operation)
+                {
+                    case OpcodeMathSubtract _:
+                    case OpcodeMathDivide _:
+                    case OpcodeMathPower _:
+                    case OpcodeCompareGT _:
+                    case OpcodeCompareGTE _:
+                    case OpcodeCompareLT _:
+                    case OpcodeCompareLTE _:
+                        if (IRParameter.IsOrContainsParameter(Left) || IRParameter.IsOrContainsParameter(Right))
+                            return false;
+                        break;
+                }
                 return MetaCalculator.IsCommutative(Left.Type, Right.Type, Operation);
             }
         }
@@ -267,6 +278,7 @@ namespace kOS.Safe.Compilation.IR
         {
             if (!IsCommutative)
                 return false;
+
             if (Operation is OpcodeMathSubtract)
             {
                 if (!MetaCalculator.IsNegatable(Left.Type, Right.Type))

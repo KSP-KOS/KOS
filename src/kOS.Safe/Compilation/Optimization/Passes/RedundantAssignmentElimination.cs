@@ -14,22 +14,34 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         {
             foreach (ICodeComponent codeComponent in code)
             {
-                List<(IRAssign, IOperandInstructionBase)> singleUseVariables = GetSingleUseAssignments(codeComponent);
+                Queue<(IRAssign, IOperandInstructionBase)> singleUseVariables = new Queue<(IRAssign, IOperandInstructionBase)>(GetSingleUseAssignments(codeComponent));
+                Dictionary<IOperandInstructionBase, IOperandInstructionBase> replacementDestinations = new Dictionary<IOperandInstructionBase, IOperandInstructionBase>();
+                List<(IRAssign, IOperandInstructionBase)> requeue = new List<(IRAssign, IOperandInstructionBase)>();
 
-                HashSet<IRAssign> replacedDefinitions = new HashSet<IRAssign>();
-                do
+                bool changed = true;
+                while (changed)
                 {
-                    replacedDefinitions.Clear();
-                    foreach ((IRAssign definition, IOperandInstructionBase use) in singleUseVariables)
+                    changed = false;
+                    while (singleUseVariables.Count > 0)
                     {
+                        (IRAssign definition, IOperandInstructionBase use) = singleUseVariables.Dequeue();
+                        while (replacementDestinations.TryGetValue(use, out IOperandInstructionBase newUse))
+                            use = newUse;
+
                         if (!DefinitionCanBeRelocated(definition, use, out bool mustRelocateArgB))
+                        {
+                            requeue.Add((definition, use));
                             continue;
+                        }
 
                         if (RelocateOperand(definition, use, mustRelocateArgB))
-                            replacedDefinitions.Add(definition);
+                            replacementDestinations[definition] = use;
+                        changed = true;
                     }
-                    singleUseVariables.RemoveAll(item => replacedDefinitions.Contains(item.Item1));
-                } while (replacedDefinitions.Count > 0);
+                    foreach ((IRAssign, IOperandInstructionBase) item in requeue)
+                        singleUseVariables.Enqueue(item);
+                    requeue.Clear();
+                }
             }
         }
 
@@ -83,6 +95,13 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             bool containsParameter = IsOrHasNested(definition.Value, op => op is IRParameter);
             if (containsParameter)
             {
+                // Optional parameters cannot be relocated.
+                // At least not without a lot of work on how argument tests are done.
+                if (IsOrHasNested(definition.Value, op =>
+                    op is IRParameter parameter &&
+                    parameter.StackTransferObject is StackTransferPhi phi &&
+                    phi.PossibleValues.Keys.Count(b => b.IsExecutable) > 1))
+                    return false;
                 nextInstructionIsArgB = NextInstructionIsArgB(definition);
                 if (use is IRReturn &&
                     nextInstructionIsArgB)
@@ -158,6 +177,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 return false;
             if (obj is IRNoStackInstruction noStackInstruction &&
                 noStackInstruction.Operation is OpcodeArgBottom)
+                return false;
+            if (obj is IRPushStack)
                 return false;
             if (obj is IActionInstruction action &&
                 !action.IsInert)
@@ -295,13 +316,13 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                         destinationInstructions.Insert(argBIndex, argB);
                     argB.Block = useInstruction.Block;
                 }
-                SingleStaticAssignment.RemoveAssignment(definition);
+                SingleStaticAssignment.RemoveAssignment(definition, overrideParameterProtection: true);
             }
 
             return replaced;
         }
 
-        private static List<(IRAssign, IOperandInstructionBase)> GetSingleUseAssignments(ICodeComponent codeComponent)
+        private static IEnumerable<(IRAssign, IOperandInstructionBase)> GetSingleUseAssignments(ICodeComponent codeComponent)
         {
             List<(IRAssign, IOperandInstructionBase)> singleUseVariables =
                 new List<(IRAssign, IOperandInstructionBase)>();
