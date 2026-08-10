@@ -28,6 +28,7 @@ namespace kOS.Safe.Compilation
      *  
      * O2:
      * -10000. Loop condition reorganization
+     *  -1500. User Function argument checks at compile time (removing the argb/targ instructions for local functions)
      *  32100. Common expression elimination
      *          Particularly: Any expression of 3 opcodes used more than twice,
      *          or any expression of >3 opcodes used more than once

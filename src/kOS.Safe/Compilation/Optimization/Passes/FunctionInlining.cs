@@ -178,7 +178,11 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         private static void ReduceArgumentParameters(BasicBlock rootBlock, int argsProvided, int maxPossibleArgs, IRCall callSite)
         {
             if (argsProvided > maxPossibleArgs)
-                throw new Exceptions.KOSCompileException(new KS.LineCol(callSite.SourceLine, callSite.SourceColumn), "Function was called with too many arguments.");
+                throw new Exceptions.KOSCompileException(callSite,
+                    new Exceptions.KOSArgumentMismatchException("Too many arguments were passed to " + callSite.Function.Replace("$", "").Replace("*", "")));
+            if (argsProvided < rootBlock.IncomingStackState.FindIndex(obj => obj.Controllers.Count > 0))
+                throw new Exceptions.KOSCompileException(callSite,
+                    new Exceptions.KOSArgumentMismatchException("Too few arguments were passed to " + callSite.Function.Replace("$", "").Replace("*", "")));
 
             HashSet<IStackTransferObject> incomingParameters = new HashSet<IStackTransferObject>(rootBlock.IncomingStackState);
             int argsRemaining = argsProvided;

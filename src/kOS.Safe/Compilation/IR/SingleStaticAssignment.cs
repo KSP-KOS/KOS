@@ -643,21 +643,25 @@ namespace kOS.Safe.Compilation.IR
                     }
                     else if (block.IncomingStackState[i] is IRPushStack pushStack)
                     {
-                        StackTransferPhi newPhi = new StackTransferPhi()
-                        {
-                            AdoptTypeHints = stackAdoptsTypeHints
-                        };
-                        newPhi.PossibleValues[predecessor] = predStackOut[i];
-                        predStackOut[i].AddController(newPhi);
                         BasicBlock otherPredecessor = pushStack.Block ??
                             block.Predecessors.FirstOrDefault(b =>
                                 b != predecessor &&
                                 stackOut.ContainsKey(b) &&
                                 stackOut[b].Count > i &&
                                 stackOut[b][i].Equals(pushStack));
-                        newPhi.PossibleValues[otherPredecessor] = pushStack;
-                        pushStack.AddController(newPhi);
-                        block.IncomingStackState[i] = newPhi;
+                        if (otherPredecessor != null)
+                        {
+                            StackTransferPhi newPhi = new StackTransferPhi()
+                            {
+                                AdoptTypeHints = stackAdoptsTypeHints
+                            };
+                            // TODO: Fix this holding on to old controllers.
+                            newPhi.PossibleValues[predecessor] = predStackOut[i];
+                            predStackOut[i].AddController(newPhi);
+                            newPhi.PossibleValues[otherPredecessor] = pushStack;
+                            pushStack.AddController(newPhi);
+                            block.IncomingStackState[i] = newPhi;
+                        }
                     }
                 }
             }
