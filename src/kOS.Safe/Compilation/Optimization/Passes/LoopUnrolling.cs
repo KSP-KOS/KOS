@@ -22,12 +22,8 @@ namespace kOS.Safe.Compilation.Optimization.Passes
 
         private void ApplyPass(BasicBlock root)
         {
-            IEnumerable<BasicBlock> GetEdges(BasicBlock block)
-                => block.Successors.Where(BlockOrdering.AllBlocksPredicate);
-
-            List<BasicBlock> reversePostOrder = BasicBlock.GetReversePostOrder(root, GetEdges);
             Stack<BasicBlock> regionExits = new Stack<BasicBlock>();
-            regionExits.Push(reversePostOrder[reversePostOrder.Count - 1]);
+            regionExits.Push(root.CodeComponent.TerminalBlock);
 
             List<BlockOrdering.LoopData> loopData = LoopConditionalRelocation.FindLoops(root, regionExits);
             // Loops are found in reverse post-order, so the list is

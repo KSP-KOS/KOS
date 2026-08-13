@@ -316,7 +316,12 @@ namespace kOS.Safe.Compilation.IR
         /// <summary>
         /// Establishes the post-dominance tree.
         public void EstablishPostDominance()
-            => EstablishDominanceCore(CodeComponent.TerminalBlock, GetSuccessors, GetPredecessors, GetPostDominator, SetPostDominator);
+        {
+            List<BasicBlock> reversePostOrder = GetReversePostOrder(CodeComponent.RootBlock, GetSuccessors);
+            BasicBlock tail = reversePostOrder.Contains(CodeComponent.TerminalBlock) ?
+                CodeComponent.TerminalBlock : reversePostOrder.Last();
+            EstablishDominanceCore(tail, GetSuccessors, GetPredecessors, GetPostDominator, SetPostDominator);
+        }
 
         private static void EstablishDominanceCore(BasicBlock root, Func<BasicBlock, IEnumerable<BasicBlock>> getPrecedents, Func<BasicBlock, IEnumerable<BasicBlock>> getSubsequents, Func<BasicBlock, BasicBlock> getDominator, Action<BasicBlock, BasicBlock> setDominator)
         {

@@ -78,7 +78,9 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             // This queue is used to process the root blocks of execution paths.
             // It starts with the entry block (root) and will add orphaned paths root blocks.
             Queue<(BasicBlock, BasicBlock)> sequenceStarts = new Queue<(BasicBlock, BasicBlock)>();
-            sequenceStarts.Enqueue((root, reversePostOrder[reversePostOrder.Count - 1]));
+            sequenceStarts.Enqueue(
+                (root, reversePostOrder.Contains(root.CodeComponent.TerminalBlock) ?
+                    root.CodeComponent.TerminalBlock : reversePostOrder.Last()));
 
             while (sequenceStarts.Count > 0)
             {
@@ -153,7 +155,9 @@ namespace kOS.Safe.Compilation.Optimization.Passes
             // If the block is the next region exit (or null),
             // that is the end of the current sequence.
             // Note that region exits are part of the enclosing region's sequence.
-            while (block != null && block != regionExits.Peek())
+            while (block != null && (
+                block != regionExits.Peek() ||
+                (regionExits.Count == 1 && block != root.CodeComponent.TerminalBlock)))
             {
                 // Identify loops first because loop branches are subsets of branches.
                 // If root == loopData.body it's because this was just called recursively
@@ -289,6 +293,19 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                             exit: exit);
                         return true;
                     }
+                }
+                else if (latch != null && latch.Successors.Count == 1 && latch.Successors.First() == block)
+                {
+                    // -- Case 3: infinite loop ---
+                    // The block is entered unconditionally (no branch at the header).
+                    // There is no branch, but there is a back edge to the entry block.
+
+                    loopData = new LoopData(
+                        header: null,
+                        branchBlock: null,
+                        body: block,
+                        exit: regionExit);
+                    return true;
                 }
             }
             return false;

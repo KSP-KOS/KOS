@@ -17,14 +17,10 @@ namespace kOS.Safe.Compilation.Optimization.Passes
                 ApplyPass(component.RootBlock);
         }
 
-        private static IEnumerable<BasicBlock> GetEdges(BasicBlock block)
-            => block.Successors.Where(BlockOrdering.AllBlocksPredicate);
-
         private static void ApplyPass(BasicBlock root)
         {
-            List<BasicBlock> reversePostOrder = BasicBlock.GetReversePostOrder(root, GetEdges);
             Stack<BasicBlock> regionExits = new Stack<BasicBlock>();
-            regionExits.Push(reversePostOrder[reversePostOrder.Count - 1]);
+            regionExits.Push(root.CodeComponent.TerminalBlock);
 
             List<BlockOrdering.LoopData> loopData = FindLoops(root, regionExits);
 
