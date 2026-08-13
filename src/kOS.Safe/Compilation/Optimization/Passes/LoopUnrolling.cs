@@ -53,7 +53,13 @@ namespace kOS.Safe.Compilation.Optimization.Passes
         {
             IInterimOperand condition = (data.branchBlock.Continuation as BranchContinuation).Condition;
             indices = null;
-            int maxUnrollIterations = maxUnrolledSize / BasicBlock.GetOpcodeCount(data.GetBody());
+            int bodySize = BasicBlock.GetOpcodeCount(data.GetBody());
+            int maxUnrollIterations;
+            if (bodySize == 0)
+                maxUnrollIterations = maxUnrolledSize;
+            else
+                maxUnrollIterations = maxUnrolledSize / bodySize;
+
             if (maxUnrollIterations < 1)
                 return false;
 
