@@ -233,8 +233,8 @@ namespace kOS.Safe.Compilation
             }
         }
 
-        private void ReplaceLabels(List<Opcode> program)
-        {            
+        public static Dictionary<string, int> MapLabels(List<Opcode> program)
+        {
             var labels = new Dictionary<string, int>();
 
             // get the index of every label
@@ -259,7 +259,13 @@ namespace kOS.Safe.Compilation
                     labels.Add(program[index].Label, index);
                 }
             }
- 
+            return labels;
+        }
+
+        private void ReplaceLabels(List<Opcode> program)
+        {
+            Dictionary<string, int> labels = MapLabels(program);
+
             // replace destination labels with the corresponding index
             for (int index = 0; index < program.Count; index++)
             {

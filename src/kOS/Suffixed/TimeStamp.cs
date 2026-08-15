@@ -79,6 +79,7 @@ namespace kOS.Suffixed
         // Binary arithmetic operators in which both operands are TimeStamp:
         //
         public static TimeStamp operator +(TimeStamp a, TimeStamp b) { throw new KOSBinaryOperandTypeException(new OperandPair(a, b), "add", "to"); }
+
         public static TimeSpan operator -(TimeStamp a, TimeStamp b) { return new TimeSpan(a.ToUnixStyleTime() - b.ToUnixStyleTime()); }
         public static TimeStamp operator *(TimeStamp a, TimeStamp b) { throw new KOSBinaryOperandTypeException(new OperandPair(a, b), "multiply", "by"); }
         public static TimeStamp operator /(TimeStamp a, TimeStamp b) { throw new KOSBinaryOperandTypeException(new OperandPair(a, b), "divide", "by"); }

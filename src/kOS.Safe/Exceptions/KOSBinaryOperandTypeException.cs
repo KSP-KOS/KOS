@@ -27,5 +27,18 @@ namespace kOS.Safe.Exceptions
             base(String.Format(TERSE_MSG_FMT, verb, pair.Left.GetType().Name, preposition, pair.Right.GetType().Name))
         {
         }
+
+        /// <summary>
+        /// Describe the error in terms of the two operands and the verb/preposition
+        /// being done with them.  For example:
+        /// </summary>
+        /// <param name="leftType">The <see cref="Type"/> of the left operand.</param>
+        /// <param name="rightType">The <see cref="Type"/> of the right operand.</param>
+        /// <param name="verb">present-tense singular conjugation of the operation's verb, i.e "add"</param>
+        /// <param name="preposition">preposition usually used with the verb, i.e you add "to", but divide "by".</param>
+        public KOSBinaryOperandTypeException(Type leftType, Type rightType, string verb, string preposition) :
+            base(String.Format(TERSE_MSG_FMT, verb, leftType.Name, preposition, rightType.Name))
+        {
+        }
     }
 }

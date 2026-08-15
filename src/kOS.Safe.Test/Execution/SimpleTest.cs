@@ -83,7 +83,12 @@ namespace kOS.Safe.Test.Execution
                 "True",
                 "True",
                 "True",
-                "True"
+                "True",
+                "Ab",
+                "0",
+                "1",
+                "0",
+                "1"
             );
         }
 

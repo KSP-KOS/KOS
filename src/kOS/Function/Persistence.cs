@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Function;
 using kOS.Safe.Persistence;
@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 namespace kOS.Function
 {
-    [Function("edit")]
+    [Function("edit", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class FunctionEdit : FunctionBase
     {
         public override void Execute(SharedObjects shared)

@@ -1,3 +1,4 @@
+using System;
 using kOS.Safe.Encapsulation;
 
 namespace kOS.Safe.Compilation
