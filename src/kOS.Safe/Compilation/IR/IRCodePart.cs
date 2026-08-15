@@ -35,23 +35,19 @@ namespace kOS.Safe.Compilation.IR
         public IEnumerable<ICodeComponent> Components =>
             new ICodeComponent[] { this }.
             Union(Triggers).
-            Union(Functions.SelectMany(GetFunctionFragments));
-        public IEnumerable<BasicBlock> RootBlocks =>
-            new BasicBlock[] { RootBlock }.
-            Union(Triggers.Select(GetRootBlock)).
-            Union(Functions.SelectMany(GetFunctionFragments).Select(GetRootBlock));
-        private IEnumerable<IRFunction.IRFunctionFragment> GetFunctionFragments(IRFunction function)
-            => function.Fragments;
-        private BasicBlock GetRootBlock(ICodeComponent codeComponent)
+            Union(Functions.SelectMany(GetFunctionComponents));
+        public IEnumerable<BasicBlock> RootBlocks => Components.Select(GetRootBlock);
+        private static IEnumerable<ICodeComponent> GetFunctionComponents(IRFunction function)
+            => (function.InitializationCode?.Any() ?? false) ?
+                Enumerable.Concat<ICodeComponent>(new[] { function }, function.Fragments) :
+                function.Fragments;
+        private static BasicBlock GetRootBlock(ICodeComponent codeComponent)
             => codeComponent.RootBlock;
         /// <summary>
         /// Gets the collection of blocks, across all program elements.
         /// </summary>
-        public IEnumerable<BasicBlock> Blocks =>
-            MainCode.
-            Union(Triggers.SelectMany(GetBlocks)).
-            Union(Functions.SelectMany(GetFunctionFragments).SelectMany(GetBlocks));
-        private IEnumerable<BasicBlock> GetBlocks(ICodeComponent codeComponent)
+        public IEnumerable<BasicBlock> Blocks => Components.SelectMany(GetBlocks);
+        private static IEnumerable<BasicBlock> GetBlocks(ICodeComponent codeComponent)
             => codeComponent.Blocks;
         List<BasicBlock> ICodeComponent.Blocks
         {
@@ -321,11 +317,17 @@ namespace kOS.Safe.Compilation.IR
         /// This class represents a user-defined function.
         /// </summary>
         /// <seealso cref="IClosureVariableUser" />
-        public class IRFunction : IClosureVariableUser
+        /// <seealso cref="ICodeComponent"/>
+        /// <remarks>
+        /// The implementation of <see cref="ICodeComponent"/> is limited to the
+        /// initialization code. The true content of the function is the fragment(s).
+        /// </remarks>
+        public class IRFunction : IClosureVariableUser, ICodeComponent
         {
             private readonly UserFunction function;
             private readonly List<UserFunctionCodeFragment> userFunctionFragments;
             private readonly Dictionary<UserFunctionCodeFragment, IRFunctionFragment> fragments = new Dictionary<UserFunctionCodeFragment, IRFunctionFragment>();
+            private BasicBlock initializationRootBlock;
 
             /// <summary>
             /// Gets the code part to which this function belongs.
@@ -347,6 +349,16 @@ namespace kOS.Safe.Compilation.IR
             /// Gets or sets the initialization code, in BasicBlock format.
             /// </summary>
             public List<BasicBlock> InitializationCode { get; set; }
+            List<BasicBlock> ICodeComponent.Blocks
+            {
+                get => InitializationCode;
+                set => InitializationCode = value;
+            }
+            BasicBlock ICodeComponent.RootBlock
+            {
+                get => initializationRootBlock;
+                set => initializationRootBlock = value;
+            }
             /// <summary>
             /// Gets the collection of function fragments.
             /// </summary>
@@ -414,7 +426,7 @@ namespace kOS.Safe.Compilation.IR
 
             public HashSet<IRCall> CallSites { get; } = new HashSet<IRCall>(IRInstruction.ReferenceEqualityComparer);
 
-            public List<BasicBlock> RootBlocks { get; } = new List<BasicBlock>();
+            public IEnumerable<BasicBlock> RootBlocks => GetFunctionComponents(this).Select(GetRootBlock);
             public BasicBlock TerminalBlock { get; set; }
 
             /// <summary>
@@ -427,7 +439,7 @@ namespace kOS.Safe.Compilation.IR
                 CodePart = codePart;
                 this.function = function;
                 (ClosureScope, IsGlobal) = codePart.closureScopes[Identifier];
-                InitializationCode = IRBuilder.Lower(function.InitializationCode, codePart, ClosureScope);
+                InitializationCode = IRBuilder.Lower(function.InitializationCode, this, ClosureScope);
                 userFunctionFragments = function.PeekNewCodeFragments().ToList();
                 foreach (UserFunctionCodeFragment fragment in userFunctionFragments)
                 {
@@ -435,13 +447,8 @@ namespace kOS.Safe.Compilation.IR
                 }
                 userFunctionFragments.Reverse();
 
-                if (function.InitializationCode.Count > 0)
-                    RootBlocks.Add(InitializationCode[0]);
                 foreach (IRFunctionFragment fragment in Fragments)
                 {
-                    if (fragment.Blocks.Count > 0)
-                        RootBlocks.Add(fragment.Blocks[0]);
-
                     foreach (BasicBlock block in fragment.Blocks)
                     {
                         if (block.Successors.Any(b => !(b is SyntheticReturnBlock)))
