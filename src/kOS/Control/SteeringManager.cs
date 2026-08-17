@@ -591,8 +591,9 @@ namespace kOS.Control
             
             // TODO: If stock vessel.MOI stops being so weird, we might be able to change the following line
             // into this instead.  (See the comment on FindMOI()'s header):
-            //      momentOfInertia = shared.Vessel.MOI;
-            momentOfInertia = FindMoI(); 
+            // 20260817: According to Lamont, this issue has long been fixed, so we switch to stock vessel.MOI
+            momentOfInertia = shared.Vessel.MOI;
+            // momentOfInertia = FindMoI(); 
 
             adjustTorque = Vector3d.zero;
             measuredTorque = Vector3d.Scale(momentOfInertia, angularAcceleration);
@@ -788,7 +789,9 @@ namespace kOS.Control
                 {
                     KSPUtil.ToDiagonalMatrix2(part.rb.inertiaTensor, ref partTensor);
 
-                    Quaternion rot = Quaternion.Inverse(vesselRotation) * part.transform.rotation * part.rb.inertiaTensorRotation;
+                    // Quaternion.Euler(90, 0, 0) is to recover vesselRotation from kOS reference frame to Unity frame.
+                    // To keep concensus with shared.Vessel.MOI
+                    Quaternion rot = Quaternion.Inverse(vesselRotation * Quaternion.Euler(90, 0, 0)) * part.transform.rotation * part.rb.inertiaTensorRotation;
                     Quaternion inv = Quaternion.Inverse(rot);
 
                     Matrix4x4 rotMatrix = Matrix4x4.TRS(Vector3.zero, rot, Vector3.one);
