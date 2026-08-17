@@ -591,8 +591,9 @@ namespace kOS.Control
             
             // TODO: If stock vessel.MOI stops being so weird, we might be able to change the following line
             // into this instead.  (See the comment on FindMOI()'s header):
-            //      momentOfInertia = shared.Vessel.MOI;
-            momentOfInertia = FindMoI(); 
+            // 20260817: According to Lamont, this issue has long been fixed, so we switch to stock vessel.MOI
+            momentOfInertia = shared.Vessel.MOI;
+            // momentOfInertia = FindMoI(); 
 
             adjustTorque = Vector3d.zero;
             measuredTorque = Vector3d.Scale(momentOfInertia, angularAcceleration);
