@@ -83,7 +83,12 @@ namespace kOS.Safe.Test.Execution
                 "True",
                 "True",
                 "True",
-                "True"
+                "True",
+                "Ab",
+                "0",
+                "1",
+                "0",
+                "1"
             );
         }
 
@@ -114,6 +119,34 @@ namespace kOS.Safe.Test.Execution
                 "3",
                 "0",
                 "False"
+            );
+        }
+
+        [Test]
+        public void TestDelegates()
+        {
+            RunScript("integration/delegates.ks");
+            RunSingleStep();
+            AssertOutput(
+                "0",
+                "1",
+                "1",
+                "2",
+                "1",
+                "6.12303176911189E-17",
+                "2",
+                "4",
+                "0.707106781186547",
+                "0.707106781186548",
+                "3",
+                "6",
+                "0.707106781186547",
+                "0.707106781186548",
+                "3",
+                "7",
+                "0.707106781186548",
+                "0.707106781186548",
+                "1"
             );
         }
     }

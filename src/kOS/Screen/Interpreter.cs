@@ -140,7 +140,8 @@ namespace kOS.Screen
                     FuncManager = Shared.FunctionManager,
                     BindManager = Shared.BindingMgr,
                     AllowClobberBuiltins = SafeHouse.Config.AllowClobberBuiltIns,
-                    IsCalledFromRun = false
+                    IsCalledFromRun = false,
+                    OptimizationLevel = OptimizationLevel.None
                 };
 
                 List<CodePart> commandParts = Shared.ScriptHandler.Compile(new InterpreterPath(this),

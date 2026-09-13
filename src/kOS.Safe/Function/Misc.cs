@@ -10,7 +10,7 @@ using System.Text;
 
 namespace kOS.Safe.Function
 {
-    [Function("print")]
+    [Function("print", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class FunctionPrint : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -21,7 +21,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("printat")]
+    [Function("printat", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class FunctionPrintAt : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -34,7 +34,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("toggleflybywire")]
+    [Function("toggleflybywire", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class FunctionToggleFlyByWire : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -46,7 +46,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("selectautopilotmode")]
+    [Function("selectautopilotmode", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class FunctionSelectAutopilotMode : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -57,7 +57,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("run")]
+    [Function("run", ReturnType = null, IsInvariant = false, IsInert = false)]
     public class FunctionRun : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -133,7 +133,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [FunctionAttribute("load")]
+    [Function("load", ReturnType = null, IsInvariant = false, IsInert = false)]
     public class FunctionLoad : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -150,6 +150,9 @@ namespace kOS.Safe.Function
             bool defaultOutput = false;
             bool justCompiling = false; // is this load() happening to compile, or to run?
             GlobalPath outPath = null;
+            OptimizationLevel compilationOptLevel = (OptimizationLevel)Enum.Parse(
+                typeof(OptimizationLevel),
+                Utilities.SafeHouse.Config.OptimizationLevel);
             object topStack = PopValueAssert(shared, true); // null if there's no output file (output file means compile, not run).
             if (topStack != null)
             {
@@ -159,6 +162,29 @@ namespace kOS.Safe.Function
                     defaultOutput = true;
                 else
                     outPath = shared.VolumeMgr.GlobalPathFromObject(outputArg);
+
+                if (CountRemainingArgs(shared) > 0)
+                {
+                    topStack = PopValueAssert(shared, true);
+                    if (topStack != null)
+                    {
+                        switch (topStack)
+                        {
+                            case StringValue stringValue:
+                                if (!Enum.TryParse(stringValue, out compilationOptLevel))
+                                    throw new KOSException($"Invalid optimization level specified: {stringValue}.");
+                                break;
+                            case ScalarValue scalarValue:
+                                int intValue = scalarValue.GetIntValue();
+                                if (intValue < 0 || intValue > 4)
+                                    throw new KOSException($"Invalid optimization level specified: {intValue}.");
+                                compilationOptLevel = (OptimizationLevel)intValue;
+                                break;
+                            default:
+                                throw new KOSException($"Invalid optimization level specified: {topStack}.");
+                        }
+                    }
+                }
             }
 
             object skipAlreadyObject = PopValueAssert(shared, false);
@@ -217,7 +243,8 @@ namespace kOS.Safe.Function
                     LoadProgramsInSameAddressSpace = true,
                     FuncManager = shared.FunctionManager,
                     AllowClobberBuiltins = Utilities.SafeHouse.Config.AllowClobberBuiltIns,
-                    BindManager = shared.BindingMgr
+                    BindManager = shared.BindingMgr,
+                    OptimizationLevel = compilationOptLevel
                 };
                 // add this program to the address space of the parent program,
                 // or to a file to save:
@@ -262,7 +289,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("logfile")]
+    [Function("logfile", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class FunctionLogFile : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -300,7 +327,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("reboot")]
+    [Function("reboot", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class FunctionReboot : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -315,7 +342,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("shutdown")]
+    [Function("shutdown", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class FunctionShutdown : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -326,7 +353,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("debugdump")]
+    [Function("debugdump", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class DebugDump : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -336,7 +363,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("debugfreezegame")]
+    [Function("debugfreezegame", ReturnType = null, IsInvariant = true, IsInert = false)]
     /// <summary>
     /// Deliberately cause physics lag by making the main game thread sleep.
     /// Clearly not something there's a good reason to do *except* when
@@ -361,7 +388,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("profileresult")]
+    [Function("profileresult", ReturnType = typeof(StringValue), IsInvariant = false, IsInert = true)]
     public class ProfileResult : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -383,7 +410,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("makebuiltindelegate")]
+    [Function("makebuiltindelegate", ReturnType = typeof(BuiltinDelegate), IsInvariant = false, IsInert = true)]
     public class MakeBuiltinDelegate : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -395,7 +422,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("droppriority")]
+    [Function("droppriority", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class AllowInterrupt : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)

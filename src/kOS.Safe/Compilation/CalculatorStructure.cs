@@ -225,6 +225,12 @@ namespace kOS.Safe.Compilation
             string t2 = pair.Right == null ? "<null>" : KOSNomenclature.GetKOSName(pair.Right.GetType());
             return string.Format("Cannot perform the operation: {0} On Structures {1} and {2}", op, t1, t2);
         }
+        private static string GetMessage(string op, Type left, Type right)
+        {
+            string t1 = left == null ? "<null>" : KOSNomenclature.GetKOSName(left);
+            string t2 = right == null ? "<null>" : KOSNomenclature.GetKOSName(right);
+            return string.Format("Cannot perform the operation: {0} On Structures {1} and {2}", op, t1, t2);
+        }
 
         /// <summary>
         /// By default when you call MethodInfo.Invoke() it masks the exceptions
@@ -315,6 +321,5 @@ namespace kOS.Safe.Compilation
 
             return couldCoerce;
         }
-
     }
 }

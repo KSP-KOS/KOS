@@ -4,7 +4,7 @@ using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Function
 {
-    [Function("abs")]
+    [Function("abs", ReturnType = typeof(ScalarValue), IsInvariant = true, IsInert = true)]
     public class FunctionAbs : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -16,7 +16,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("mod")]
+    [Function("mod", ReturnType = typeof(ScalarValue), IsInvariant = true, IsInert = true)]
     public class FunctionMod : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -29,7 +29,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("floor")]
+    [Function("floor", ReturnType = typeof(ScalarValue), IsInvariant = true, IsInert = true)]
     public class FunctionFloor : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -44,7 +44,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("ceiling")]
+    [Function("ceiling", ReturnType = typeof(ScalarValue), IsInvariant = true, IsInert = true)]
     public class FunctionCeiling : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -59,7 +59,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("round")]
+    [Function("round", ReturnType = typeof(ScalarValue), IsInvariant = true, IsInert = true)]
     public class FunctionRound : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -86,7 +86,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("sqrt")]
+    [Function("sqrt", ReturnType = typeof(ScalarValue), IsInvariant = true, IsInert = true)]
     public class FunctionSqrt : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -99,7 +99,7 @@ namespace kOS.Safe.Function
     }
 
 
-    [Function("ln")]
+    [Function("ln", ReturnType = typeof(ScalarValue), IsInvariant = true, IsInert = true)]
     public class FunctionLn : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -111,7 +111,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("log10")]
+    [Function("log10", ReturnType = typeof(ScalarValue), IsInvariant = true, IsInert = true)]
     public class FunctionLog10 : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -123,7 +123,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("min")]
+    [Function("min", ReturnType = typeof(ScalarValue), IsInvariant = true, IsInert = true)]
     public class FunctionMin : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -153,7 +153,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("max")]
+    [Function("max", ReturnType = typeof(ScalarValue), IsInvariant = true, IsInert = true)]
     public class FunctionMax : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -183,7 +183,8 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("random")]
+    // This is not inert because calling random() changes the value of the next call to random().
+    [Function("random", ReturnType = typeof(ScalarDoubleValue), IsInvariant = false, IsInert = false)]
     public class FunctionRandom : SafeFunctionBase
     {
         private readonly Random random = new Random();
@@ -201,7 +202,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("randomseed")]
+    [Function("randomseed", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class FunctionRandomSeed : SafeFunctionBase
     {
         private readonly Random random = new Random();
@@ -215,7 +216,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("char")]
+    [Function("char", ReturnType = typeof(StringValue), IsInvariant = true, IsInert = true)]
     public class FunctionChar : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)
@@ -227,7 +228,7 @@ namespace kOS.Safe.Function
         }
     }
 
-    [Function("unchar")]
+    [Function("unchar", ReturnType = typeof(ScalarIntValue), IsInvariant = true, IsInert = true)]
     public class FunctionUnchar : SafeFunctionBase
     {
         public override void Execute(SafeSharedObjects shared)

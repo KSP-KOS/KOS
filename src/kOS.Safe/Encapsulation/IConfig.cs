@@ -25,6 +25,8 @@ namespace kOS.Safe.Encapsulation
         int TerminalDefaultHeight { get; set; }
         bool AllowClobberBuiltIns { get; set; }
         bool SuppressAutopilot { get; set; }
+        string OptimizationLevel { get; set; }
+        bool ThrowOnDivideByZeroAtCompilation { get; set; }
 
 
         /// <summary>

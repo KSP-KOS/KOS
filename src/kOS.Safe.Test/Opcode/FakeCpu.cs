@@ -277,7 +277,7 @@ namespace kOS.Safe.Test.Opcode
             throw new NotImplementedException();
         }
 
-        public Compilation.Opcode GetOpcodeAt(int instructionPtr)
+        public Safe.Compilation.Opcode GetOpcodeAt(int instructionPtr)
         {
             throw new NotImplementedException();
         }
@@ -297,7 +297,7 @@ namespace kOS.Safe.Test.Opcode
             throw new NotImplementedException();
         }
 
-        public void RunProgram(List<Compilation.Opcode> program)
+        public void RunProgram(List<Safe.Compilation.Opcode> program)
         {
             throw new NotImplementedException();
         }
@@ -318,7 +318,7 @@ namespace kOS.Safe.Test.Opcode
             throw new NotImplementedException();
         }
 
-        public Compilation.Opcode GetCurrentOpcode()
+        public Safe.Compilation.Opcode GetCurrentOpcode()
         {
             throw new NotImplementedException();
         }

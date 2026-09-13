@@ -18,7 +18,7 @@ namespace kOS.Safe
     [kOS.Safe.Utilities.KOSNomenclature("Path")]
     public class PathValue : SerializableStructure
     {
-        [Function("path")]
+        [Function("path", ReturnType = typeof(PathValue), IsInvariant = false, IsInert = false)]
         public class FunctionPath : SafeFunctionBase
         {
             public override void Execute(SafeSharedObjects shared)

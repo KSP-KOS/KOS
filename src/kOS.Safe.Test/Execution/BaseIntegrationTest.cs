@@ -35,10 +35,11 @@ namespace kOS.Safe.Test.Execution
 
     public abstract class BaseIntegrationTest
     {
-        private ICpu cpu;
-        private SafeSharedObjects shared;
         private Screen screen;
-        private string baseDir;
+        protected ICpu cpu;
+        protected SafeSharedObjects shared;
+        protected string baseDir;
+        protected virtual OptimizationLevel OptimizationLevel => OptimizationLevel.None;
 
         private string FindKerboscriptTests()
         {
@@ -86,12 +87,14 @@ namespace kOS.Safe.Test.Execution
                 IsCalledFromRun = false,
                 FuncManager = shared.FunctionManager,
                 BindManager = shared.BindingMgr,
-                AllowClobberBuiltins = SafeHouse.Config.AllowClobberBuiltIns
+                AllowClobberBuiltins = SafeHouse.Config.AllowClobberBuiltIns,
+                OptimizationLevel = OptimizationLevel
             });
             cpu.Boot();
 
             screen.ClearOutput();
 
+            cpu.PushArgumentStack(new KOSArgMarkerType());
             cpu.GetCurrentContext().AddParts(compiled);
         }
 

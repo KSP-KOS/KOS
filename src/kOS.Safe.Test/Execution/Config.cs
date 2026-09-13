@@ -254,6 +254,10 @@ namespace kOS.Safe.Test
             }
         }
 
+        public string OptimizationLevel { get; set; } = Safe.Compilation.OptimizationLevel.Balanced.ToString();
+
+        public bool ThrowOnDivideByZeroAtCompilation { get; set; } = true;
+
         public IList<ConfigKey> GetConfigKeys()
         {
             return new List<ConfigKey>();

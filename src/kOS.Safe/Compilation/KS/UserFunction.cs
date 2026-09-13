@@ -135,6 +135,9 @@ namespace kOS.Safe.Compilation.KS
             return String.Format("{0}-{1}", Identifier, expressionHash.ToString("x"));
         }
         
+        internal IEnumerable<UserFunctionCodeFragment> PeekNewCodeFragments()
+            => newFunctions;
+
         public CodePart GetCodePart()
         {
             var mergedPart = new CodePart

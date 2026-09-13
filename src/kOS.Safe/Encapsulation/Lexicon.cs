@@ -11,10 +11,10 @@ using kOS.Safe.Function;
 namespace kOS.Safe.Encapsulation
 {
     [kOS.Safe.Utilities.KOSNomenclature("Lexicon")]
-    [kOS.Safe.Utilities.KOSNomenclature("Lex", CSharpToKOS = false) ]
+    [kOS.Safe.Utilities.KOSNomenclature("Lex", CSharpToKOS = false)]
     public class Lexicon : SerializableStructure, IDictionary<Structure, Structure>, IIndexable
     {
-        [Function("lex", "lexicon")]
+        [Function("lex", "lexicon", ReturnType = typeof(Lexicon), IsInvariant = true, IsInert = true)]
         public class FunctionLexicon : SafeFunctionBase
         {
             public override void Execute(SafeSharedObjects shared)

@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace kOS.Function
 {
-    [Function("buildlist")]
+    [Function("buildlist", ReturnType = typeof(ListValue), IsInvariant = false, IsInert = true)]
     public class FunctionBuildList : FunctionBase
     {
         public override void Execute(SharedObjects shared)

@@ -35,6 +35,9 @@ namespace kOS.Safe.Compilation.KS
             return GetParts(triggers.Values.ToList());
         }
 
+
+        internal List<Trigger> PeekNewParts()
+            => newTriggers;
         public IEnumerable<CodePart> GetNewParts()
         {
             List<CodePart> parts = GetParts(newTriggers);

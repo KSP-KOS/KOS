@@ -18,6 +18,7 @@ namespace kOS.Safe.Compilation
         public bool AllowClobberBuiltins { get; set; }
         public IFunctionManager FuncManager { get; set; }
         public IBindingManager BindManager { get; set; }
+        public OptimizationLevel OptimizationLevel { get; set; }
         public CompilerOptions()
         {
             LoadDefaults();
@@ -30,6 +31,7 @@ namespace kOS.Safe.Compilation
             BindManager = null;
             IsCalledFromRun = true;
             AllowClobberBuiltins = false;
+            OptimizationLevel = OptimizationLevel.Balanced;
         }
         
         public bool BuiltInFunctionExists(string identifier)

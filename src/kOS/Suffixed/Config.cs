@@ -39,6 +39,8 @@ namespace kOS.Suffixed
         // NOTE TO FUTURE MAINTAINERS:  If it looks like overkill to use a double instead of a float for this next field, you're right.
         // But KSP seems to have a bug where single-precision floats don't get saved in the config XML file.  Doubles seem to work, though.
         public double TerminalBrightness {get { return GetPropValue<double>(PropId.TerminalBrightness); } set { SetPropValue(PropId.TerminalBrightness, value); } }
+        public string OptimizationLevel { get { return GetPropValue<string>(PropId.OptimizationLevel); } set { SetPropValue(PropId.OptimizationLevel, value); } }
+        public bool ThrowOnDivideByZeroAtCompilation { get { return GetPropValue<bool>(PropId.ThrowOnDivideByZeroAtCompilation); } set { SetPropValue(PropId.ThrowOnDivideByZeroAtCompilation, value); } }
 
         private Config()
         {
@@ -69,6 +71,12 @@ namespace kOS.Suffixed
             AddSuffix("DEFAULTWIDTH", new ClampSetSuffix<ScalarValue>(() => TerminalDefaultWidth, value => TerminalDefaultWidth = value, 15f, 255f, 1f));
             AddSuffix("DEFAULTHEIGHT", new ClampSetSuffix<ScalarValue>(() => TerminalDefaultHeight, value => TerminalDefaultHeight = value, 3f, 160f, 1f));
             AddSuffix("SUPPRESSAUTOPILOT", new SetSuffix<BooleanValue>(() => SuppressAutopilot, value => SuppressAutopilot = value));
+            AddSuffix("OPTIMIZATIONLEVEL", new SetSuffix<PrimitiveStructure>(
+                () => (StringValue)OptimizationLevel,
+                value => OptimizationLevel = value is ScalarValue scalar ?
+                    ((Safe.Compilation.OptimizationLevel)scalar.GetIntValue()).ToString() :
+                    (string)(StringValue)value));
+            AddSuffix(new string[] { "THROWONDIVIDEBYZEROATCOMPILATION", "THROWONDIVIDEBYZERO" }, new SetSuffix<BooleanValue>(() => ThrowOnDivideByZeroAtCompilation, value => ThrowOnDivideByZeroAtCompilation = value));
         }
 
         private void BuildValuesDictionary()
@@ -92,6 +100,10 @@ namespace kOS.Suffixed
                 new ConfigKey("TerminalDefaultHeight", "DEFAULTHEIGHT", "Initial Terminal:HEIGHT when a terminal is first opened", 36, 3, 160, typeof(int)));
             AddConfigKey(PropId.SuppressAutopilot,
                 new ConfigKey("SuppressAutopilot", "SUPPRESSAUTOPILOT", "Suppress all kOS autopiloting for emergency manual control", false, false, true, typeof(bool)));
+            AddConfigKey(PropId.OptimizationLevel,
+                new ConfigKey("OptimizationLevel", "OPTIMIZATIONLEVEL", "The default level of optimization to be applied when compiling or running scripts", Safe.Compilation.OptimizationLevel.Balanced.ToString(), "none", "extreme", typeof(string)));
+            AddConfigKey(PropId.ThrowOnDivideByZeroAtCompilation,
+                new ConfigKey("ThrowOnDivideByZeroAtCompilation", "THROWONDIVIDEBYZERO", "Whether the compiler should throw an exception when it sees division by zero", false, false, true, typeof(bool)));
         }
 
         private void AddConfigKey(PropId id, ConfigKey key)
@@ -256,7 +268,9 @@ namespace kOS.Suffixed
             TerminalBrightness = 17,
             TerminalDefaultWidth = 18,
             TerminalDefaultHeight = 19,
-            SuppressAutopilot = 20
+            SuppressAutopilot = 20,
+            OptimizationLevel = 21,
+            ThrowOnDivideByZeroAtCompilation = 22
         }
     }
 }

@@ -19,7 +19,7 @@ using kOS.Safe;
 
 namespace kOS.Function
 {
-    [Function("clearscreen")]
+    [Function("clearscreen", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class FunctionClearScreen : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -29,7 +29,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("hudtext")]
+    [Function("hudtext", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class FunctionHudText : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -71,7 +71,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("stage")]
+    [Function("stage", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class FunctionStage : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -93,7 +93,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("add")]
+    [Function("add", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class FunctionAddNode : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -104,7 +104,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("remove")]
+    [Function("remove", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class FunctionRemoveNode : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -115,7 +115,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("warpto")]
+    [Function("warpto", ReturnType = null, IsInvariant = true, IsInert = false)]
     public class WarpTo : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -137,7 +137,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("processor")]
+    [Function("processor", ReturnType = typeof(PartModuleFields), IsInvariant = false, IsInert = true)]
     public class FunctionProcessor : FunctionBase
     {
         public override void Execute(SharedObjects shared)
