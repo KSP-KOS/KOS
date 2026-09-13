@@ -1120,22 +1120,53 @@ namespace kOS.Safe.Compilation
 
     /// <summary>
     /// <para>
-    /// Pops a Int32 from the stack and then unconditionally
-    /// advances the instruction pointer by it
+    /// Pops an Int32 from the stack and advances the instruction
+    /// pointer by it. Should the popped stack value be greater
+    /// than the specified max distance or less than or equal to
+    /// zero, jumps to fallback.
     /// </para>
     /// <para></para>
-    /// <para>... dist ...</para>
+    /// <para>jumpstack maxDistance fallback</para>
+    /// <para>... distance -- ...</para>
     /// </summary>
-    public class OpcodeJumpStack : Opcode
+    public class OpcodeJumpStack : BranchOpcode
     {
+        [MLField(0,false)]
+        public int MaxDistance {get; set;}
+
         protected override string Name { get { return "jumpstack"; } }
         public override ByteCode Code { get { return ByteCode.JUMPSTACK; } }
+
+        public override void PopulateFromMLFields(List<object> fields)
+        {
+            if (fields == null || fields.Count < 2)
+                throw new Exception("Saved field in ML file for OpcodeJumpStack seems to be missing. Version mismatch?");
+            int fieldMaxDistance = Convert.ToInt32(fields[0]);
+
+            if (fieldMaxDistance <= 0)
+                throw new Exception("Saved field maxDistance in ML file for OpcodeJumpStack cannot be negative or zero.");
+            MaxDistance = fieldMaxDistance;
+
+            // This is essentially a modified BranchOpcode, so we still need to fill Distance or DestinationLabel
+            if (fields[1] is string)
+                DestinationLabel = (string)fields[1];
+            else
+                Distance = (int)fields[1];
+        }
 
         public override void Execute(ICpu cpu)
         {
             object popval = cpu.PopValueArgument();
-            int distance = Convert.ToInt32(popval);
-            DeltaInstructionPointer = distance;
+            int stackDistance = Convert.ToInt32(popval);
+            if (stackDistance > MaxDistance || stackDistance <= 0)
+                DeltaInstructionPointer = Distance;
+            else
+                DeltaInstructionPointer = stackDistance;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0} +1..+{1} || {2:+#;-#;+0}", Name, MaxDistance, Distance);
         }
     }
     
