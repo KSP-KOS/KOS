@@ -79,6 +79,12 @@ namespace kOS.Screen
         private GUISkin terminalLetterSkin;
             
         private bool isLocked;
+        /// <summary>IMGUI control ID the terminal holds keyboard focus with while locked.</summary>
+        private int keyboardFocusControlId;
+        /// <summary>Lock() happened; take IMGUI keyboard focus on the next GUI pass.</summary>
+        private bool takeKeyboardFocus;
+        /// <summary>Unlock() happened; release IMGUI keyboard focus on the next GUI pass.</summary>
+        private bool releaseKeyboardFocus;
         /// <summary>How long blinks should last for, for various blinking needs</summary>
         private readonly TimeSpan blinkDuration = System.TimeSpan.FromMilliseconds(150);
         /// <summary>How long to pad between consecutive blinks to ensure they are visibly detectable as distinct blinks.</summary>
@@ -297,6 +303,8 @@ namespace kOS.Screen
             if (isLocked) return;
 
             isLocked = true;
+            takeKeyboardFocus = true;
+            releaseKeyboardFocus = false;
             ShowCursor = true;
             BringToFront();
 
@@ -319,10 +327,20 @@ namespace kOS.Screen
             EditorLogic editor = EditorLogic.fetch;
             if (editor != null) editor.Unlock(CONTROL_LOCKOUT);
 
+            // GUIUtility.keyboardControl only takes effect when set during OnGUI.
+            takeKeyboardFocus = false;
+            releaseKeyboardFocus = true;
         }
 
         void OnGUI()
         {
+            if (releaseKeyboardFocus)
+            {
+                releaseKeyboardFocus = false;
+                if (keyboardFocusControlId != 0 && GUIUtility.keyboardControl == keyboardFocusControlId)
+                    GUIUtility.keyboardControl = 0;
+            }
+
             if (!IsOpen) return;
 
             GetFontIfChanged(true);
@@ -891,6 +909,18 @@ namespace kOS.Screen
 
         void TerminalGui(int windowId)
         {
+            // Take IMGUI keyboard focus when locked, as a focused text field does.
+            // Other mods check GUIUtility.keyboardControl or GUI.GetNameOfFocusedControl()
+            // rather than InputLockManager before acting on their hotkeys.
+            // Only taken once per Lock(), so a click into another window can take it away.
+            GUI.SetNextControlName(CONTROL_LOCKOUT + UniqueId);
+            keyboardFocusControlId = GUIUtility.GetControlID(FocusType.Keyboard);
+            if (takeKeyboardFocus)
+            {
+                takeKeyboardFocus = false;
+                GUIUtility.keyboardControl = keyboardFocusControlId;
+            }
+
             if (!allTexturesFound)
             {
                 GUI.Label(new Rect(15, 15, 450, 300),
