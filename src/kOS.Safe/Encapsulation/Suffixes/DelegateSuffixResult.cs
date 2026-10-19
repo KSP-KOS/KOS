@@ -85,7 +85,13 @@ namespace kOS.Safe.Encapsulation.Suffixes
                     // If it's not directly assignable to the expected type, maybe it's "castable" to it:
                     try
                     {
-                        arg = Convert.ChangeType(arg, Type.GetTypeCode(paramType));
+                        // Convert.ChangeType() treats every Structure type as TypeCode.Object and
+                        // returns the arg unchanged, so booleans need their own conversion to match
+                        // what the language does in conditions (scalar 0 is false, nonzero is true):
+                        if (paramType == typeof(BooleanValue))
+                            arg = new BooleanValue(Convert.ToBoolean(arg));
+                        else
+                            arg = Convert.ChangeType(arg, Type.GetTypeCode(paramType));
                     }
                     catch (InvalidCastException)
                     {
@@ -99,6 +105,10 @@ namespace kOS.Safe.Encapsulation.Suffixes
                     {
                         throw new Exception(string.Format("Argument {0}({1}) to method {2} should be {3} instead of {4}.", (delInfo.Parameters.Length - i), arg, delInfo.Name, paramType.Name, argType));
                     }
+                    // A conversion that returned the arg unchanged would otherwise fail later as a
+                    // bare InvalidCastException when the suffix casts it to the parameter type:
+                    if (typeof(Structure).IsAssignableFrom(paramType) && !paramType.IsInstanceOfType(Structure.FromPrimitive(arg)))
+                        throw new KOSCastException(argType, paramType);
                 }
 
                 if (isParamArrayArg)

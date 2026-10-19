@@ -48,5 +48,57 @@ namespace kOS.Safe.Test.Structure
 
             mockDel.ReceivedWithAnyArgs(1);
         }
+
+        private BooleanValue InvokeWithBooleanParam(object arg)
+        {
+            BooleanValue received = null;
+            var suffix = new TwoArgsSuffix<StringValue, BooleanValue>((one, two) => { received = two; });
+            var del = suffix.Get() as DelegateSuffixResult;
+            Assert.IsNotNull(del);
+
+            cpu.PushArgumentStack(null);
+            cpu.PushArgumentStack(new KOSArgMarkerType());
+            cpu.PushArgumentStack(new StringValue("toggle"));
+            cpu.PushArgumentStack(arg);
+
+            del.Invoke(cpu);
+            return received;
+        }
+
+        [Test]
+        public void CanConvertScalarToBooleanArg()
+        {
+            Assert.IsTrue(InvokeWithBooleanParam(ScalarIntValue.One));
+            Assert.IsFalse(InvokeWithBooleanParam(ScalarIntValue.Zero));
+            Assert.IsTrue(InvokeWithBooleanParam(ScalarValue.Create(0.5)));
+            Assert.IsTrue(InvokeWithBooleanParam(ScalarValue.Create(-1)));
+        }
+
+        [Test]
+        public void CanConvertStringToBooleanArg()
+        {
+            Assert.IsFalse(InvokeWithBooleanParam(new StringValue("")));
+            Assert.IsTrue(InvokeWithBooleanParam(new StringValue("false")));
+        }
+
+        [Test]
+        public void ThrowsKOSCastExceptionForUnconvertibleBooleanArg()
+        {
+            Assert.Throws<kOS.Safe.Exceptions.KOSCastException>(() => InvokeWithBooleanParam(new Lexicon()));
+        }
+
+        [Test]
+        public void ThrowsKOSCastExceptionForUnconvertibleArg()
+        {
+            var suffix = new TwoArgsSuffix<ScalarValue, ScalarValue>((one, two) => { });
+            var del = suffix.Get() as DelegateSuffixResult;
+
+            cpu.PushArgumentStack(null);
+            cpu.PushArgumentStack(new KOSArgMarkerType());
+            cpu.PushArgumentStack(ScalarIntValue.Zero);
+            cpu.PushArgumentStack(new StringValue("abc"));
+
+            Assert.Throws<kOS.Safe.Exceptions.KOSCastException>(() => del.Invoke(cpu));
+        }
     }
 }
